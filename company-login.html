@@ -1,4 +1,4 @@
-```html
+```html id="xq7m2p"
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,6 +19,7 @@
             min-height: 75vh;
             padding: 80px 5%;
             background: #faf8f5;
+
             display: flex;
             align-items: center;
             justify-content: center;
@@ -27,10 +28,16 @@
         .company-login-box {
             width: 100%;
             max-width: 450px;
+
             background: white;
+
             padding: 40px;
+
             border-radius: 18px;
-            box-shadow: 0 10px 35px rgba(0,0,0,.08);
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,.08);
         }
 
         .company-login-box p:first-child {
@@ -59,11 +66,17 @@
 
         .form-group input {
             width: 100%;
+
             padding: 13px 15px;
+
             border: 1px solid #ddd;
+
             border-radius: 8px;
+
             box-sizing: border-box;
+
             font-size: 15px;
+
             outline: none;
         }
 
@@ -73,9 +86,13 @@
 
         .company-login-btn {
             width: 100%;
+
             border: none;
+
             cursor: pointer;
+
             font-size: 16px;
+
             margin-top: 5px;
         }
 
@@ -86,8 +103,11 @@
 
         .company-message {
             text-align: center;
+
             margin-top: 18px;
+
             font-weight: bold;
+
             min-height: 22px;
         }
 
@@ -101,7 +121,8 @@
 
 <header>
 
-    <a href="index.html" class="logo">
+    <a href="index.html"
+       class="logo">
 
         <span>
             LIARA
@@ -249,16 +270,6 @@ const supabaseClient =
 
 
 /* =========================
-   COMPANY EMAIL
-========================= */
-
-
-const COMPANY_EMAIL =
-    "info@liara.co.in";
-
-
-
-/* =========================
    LOGIN
 ========================= */
 
@@ -268,6 +279,7 @@ document.getElementById(
 ).addEventListener(
     "submit",
     async function(event) {
+
 
         event.preventDefault();
 
@@ -296,38 +308,21 @@ document.getElementById(
             );
 
 
-        message.innerText = "";
+        message.innerText =
+            "";
 
 
-        button.disabled = true;
+        button.disabled =
+            true;
 
 
         button.innerText =
             "Logging in...";
 
 
-        /* COMPANY EMAIL CHECK */
-
-
-        if (
-            email.toLowerCase() !==
-            COMPANY_EMAIL.toLowerCase()
-        ) {
-
-            message.innerText =
-                "Company access only.";
-
-            button.disabled = false;
-
-            button.innerText =
-                "Company Login";
-
-            return;
-
-        }
-
-
-        /* SUPABASE LOGIN */
+        /* =========================
+           SUPABASE AUTH LOGIN
+        ========================= */
 
 
         const {
@@ -337,37 +332,57 @@ document.getElementById(
             .auth
             .signInWithPassword({
 
-                email: email,
+                email:
+                    email,
 
-                password: password
+                password:
+                    password
 
             });
 
 
+        /* =========================
+           LOGIN ERROR
+        ========================= */
+
+
         if (error) {
 
-            console.log(error);
+
+            console.log(
+                "Login error:",
+                error
+            );
+
 
             message.innerText =
                 error.message;
 
-            button.disabled = false;
+
+            button.disabled =
+                false;
+
 
             button.innerText =
                 "Company Login";
+
 
             return;
 
         }
 
 
-        /* SUCCESS */
+        /* =========================
+           LOGIN SUCCESS
+        ========================= */
 
 
         if (data.user) {
 
+
             message.innerText =
                 "Company login successful ✓";
+
 
             button.innerText =
                 "Opening Orders...";
@@ -382,6 +397,7 @@ document.getElementById(
                 },
                 500
             );
+
 
         }
 
