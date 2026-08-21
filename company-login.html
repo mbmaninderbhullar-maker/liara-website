@@ -1,0 +1,372 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Liara Professional™ | Company Login</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+    <style>
+
+        .company-login-section {
+            min-height: 75vh;
+            padding: 80px 5%;
+            background: #faf8f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .company-login-box {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,.08);
+        }
+
+        .company-login-box h2 {
+            margin: 0 0 8px;
+        }
+
+        .company-subtitle {
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .company-login-btn {
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .company-message {
+            text-align: center;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <a href="index.html"
+       class="logo">
+
+        <span>LIARA</span>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </a>
+
+</header>
+
+
+
+<section class="company-login-section">
+
+
+    <div class="company-login-box">
+
+
+        <p>
+            LIARA PROFESSIONAL™
+        </p>
+
+
+        <h2>
+            Company Login
+        </h2>
+
+
+        <p class="company-subtitle">
+            Secure Company / Admin Access
+        </p>
+
+
+        <form id="companyLoginForm">
+
+
+            <div class="form-group">
+
+                <label>
+                    Company Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter company email"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    required>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn company-login-btn"
+                id="loginButton">
+
+                Company Login
+
+            </button>
+
+
+            <div
+                id="message"
+                class="company-message">
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</section>
+
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        LIARA
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </div>
+
+
+    <p>
+        © 2026 Liara Group Private Limited.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+
+const SUPABASE_URL =
+    "https://oinafbuicwhleudztzyz.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_y_K_Jn5Gu";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* =========================
+   COMPANY EMAIL
+========================= */
+
+
+/*
+   ETHHE OH EMAIL PAO
+   JO TUSI SUPABASE USERS
+   VICH COMPANY LAYI BANAYI AA
+*/
+
+const COMPANY_EMAIL =
+    "YOUR-COMPANY-EMAIL@example.com";
+
+
+
+/* =========================
+   COMPANY LOGIN
+========================= */
+
+
+document.getElementById(
+    "companyLoginForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+
+        event.preventDefault();
+
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        const password =
+            document.getElementById(
+                "password"
+            ).value;
+
+
+        const button =
+            document.getElementById(
+                "loginButton"
+            );
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        button.disabled = true;
+
+        button.innerText =
+            "Logging in...";
+
+
+        if (
+            email.toLowerCase() !==
+            COMPANY_EMAIL.toLowerCase()
+        ) {
+
+            message.innerText =
+                "Company access only.";
+
+            button.disabled = false;
+
+            button.innerText =
+                "Company Login";
+
+            return;
+
+        }
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .auth
+            .signInWithPassword({
+
+                email: email,
+
+                password: password
+
+            });
+
+
+        if (error) {
+
+
+            console.log(error);
+
+
+            message.innerText =
+                error.message;
+
+
+            button.disabled = false;
+
+            button.innerText =
+                "Company Login";
+
+            return;
+
+        }
+
+
+        message.innerText =
+            "Login successful ✓";
+
+
+        setTimeout(
+            function() {
+
+                window.location.href =
+                    "admin-orders.html";
+
+            },
+            500
+        );
+
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>
+```
