@@ -19,6 +19,7 @@
             min-height: 75vh;
             padding: 80px 5%;
             background: #faf8f5;
+
             display: flex;
             align-items: center;
             justify-content: center;
@@ -27,14 +28,20 @@
         .company-login-box {
             width: 100%;
             max-width: 450px;
+
             background: white;
+
             padding: 40px;
+
             border-radius: 18px;
-            box-shadow: 0 10px 35px rgba(0,0,0,.08);
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,.08);
         }
 
         .company-login-box h2 {
-            margin-bottom: 8px;
+            margin: 0 0 8px;
         }
 
         .company-subtitle {
@@ -55,25 +62,43 @@
         .form-group input {
             width: 100%;
             padding: 13px 15px;
+
             border: 1px solid #ddd;
             border-radius: 8px;
+
             box-sizing: border-box;
+
             font-size: 15px;
             outline: none;
         }
 
+        .form-group input:focus {
+            border-color: #ad8232;
+        }
+
         .company-login-btn {
             width: 100%;
+
             border: none;
             cursor: pointer;
+
             font-size: 16px;
+
             margin-top: 5px;
+        }
+
+        .company-login-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
         }
 
         .company-message {
             text-align: center;
+
             margin-top: 18px;
+
             font-weight: bold;
+
             min-height: 22px;
         }
 
@@ -89,7 +114,9 @@
 
     <a href="index.html" class="logo">
 
-        <span>LIARA</span>
+        <span>
+            LIARA
+        </span>
 
         <small>
             PROFESSIONAL™
@@ -103,15 +130,19 @@
 
 <section class="company-login-section">
 
+
     <div class="company-login-box">
+
 
         <p>
             LIARA PROFESSIONAL™
         </p>
 
+
         <h2>
             Company Login
         </h2>
+
 
         <p class="company-subtitle">
             Secure Company / Admin Access
@@ -171,6 +202,7 @@
 
         </form>
 
+
     </div>
 
 </section>
@@ -189,9 +221,12 @@
 
     </div>
 
+
     <p>
+
         © 2026 Liara Group Private Limited.
         All Rights Reserved.
+
     </p>
 
 </footer>
@@ -204,17 +239,17 @@
 <script>
 
 
+/* =====================================
+   SUPABASE CONNECTION
+===================================== */
+
+
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
 
 
-/*
-   PASTE YOUR SUPABASE
-   PUBLISHABLE KEY HERE
-*/
-
 const SUPABASE_KEY =
-    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_y_K_Jn5Gu";
 
 
 const supabaseClient =
@@ -223,6 +258,11 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
+
+
+/* =====================================
+   COMPANY LOGIN
+===================================== */
 
 
 document.getElementById(
@@ -261,10 +301,17 @@ document.getElementById(
 
         message.innerText = "";
 
+
         button.disabled = true;
+
 
         button.innerText =
             "Logging in...";
+
+
+        /* =====================================
+           SUPABASE AUTH
+        ===================================== */
 
 
         const {
@@ -274,34 +321,57 @@ document.getElementById(
             .auth
             .signInWithPassword({
 
-                email: email,
+                email:
+                    email,
 
-                password: password
+                password:
+                    password
 
             });
 
 
+        /* =====================================
+           ERROR
+        ===================================== */
+
+
         if (error) {
 
-            console.log(error);
+
+            console.log(
+                "Supabase Login Error:",
+                error
+            );
+
 
             message.innerText =
                 error.message;
 
-            button.disabled = false;
+
+            button.disabled =
+                false;
+
 
             button.innerText =
                 "Company Login";
+
 
             return;
 
         }
 
 
+        /* =====================================
+           SUCCESS
+        ===================================== */
+
+
         if (data.user) {
+
 
             message.innerText =
                 "Company login successful ✓";
+
 
             button.innerText =
                 "Opening Orders...";
@@ -314,7 +384,7 @@ document.getElementById(
                         "admin-orders.html";
 
                 },
-                500
+                700
             );
 
         }
