@@ -1,4 +1,4 @@
-```html id="8k6z2v"
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,6 +31,7 @@
 
             background: white;
             padding: 40px;
+
             border-radius: 18px;
 
             box-shadow:
@@ -272,7 +273,7 @@ const ADMIN_EMAIL =
 
 
 /* =====================================
-   LOGIN
+   COMPANY LOGIN
 ===================================== */
 
 
@@ -333,9 +334,11 @@ document.getElementById(
                 .auth
                 .signInWithPassword({
 
-                    email: email,
+                    email:
+                        email,
 
-                    password: password
+                    password:
+                        password
 
                 });
 
@@ -344,7 +347,7 @@ document.getElementById(
 
 
                 console.error(
-                    "Login Error:",
+                    "Supabase Login Error:",
                     error
                 );
 
@@ -370,10 +373,7 @@ document.getElementById(
             }
 
 
-            if (
-                data &&
-                data.user
-            ) {
+            if (data.user) {
 
 
                 if (
@@ -431,7 +431,6 @@ document.getElementById(
                 );
 
             }
-
 
         }
 
