@@ -1,4 +1,4 @@
-```html
+```html id="8x8x2r"
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,13 +11,12 @@
 
     <title>Liara Professional™ | Customer Orders</title>
 
-    <link rel="stylesheet"
-          href="style.css">
+    <link rel="stylesheet" href="style.css">
 
     <style>
 
         .admin-section {
-            padding: 70px 6%;
+            padding: 70px 5%;
             background: #faf8f5;
             min-height: 75vh;
         }
@@ -31,7 +30,10 @@
             background: white;
             padding: 30px;
             border-radius: 18px;
-            box-shadow: 0 10px 35px rgba(0,0,0,.08);
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,.08);
+
             overflow-x: auto;
         }
 
@@ -58,7 +60,7 @@
             background: #ad8232;
             color: white;
             padding: 12px 20px;
-            border-radius: 6px;
+            border-radius: 7px;
             cursor: pointer;
             font-weight: bold;
         }
@@ -86,6 +88,10 @@
             font-weight: bold;
         }
 
+        .order-id {
+            font-weight: bold;
+        }
+
         .status {
             color: #ad8232;
             font-weight: bold;
@@ -108,6 +114,22 @@
             text-align: center;
             padding: 40px;
             color: #777;
+        }
+
+        .refresh-btn {
+            border: 1px solid #ad8232;
+            background: white;
+            color: #ad8232;
+            padding: 10px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .refresh-btn:hover {
+            background: #ad8232;
+            color: white;
         }
 
         @media (max-width: 700px) {
@@ -140,7 +162,9 @@
     <a href="index.html"
        class="logo">
 
-        <span>LIARA</span>
+        <span>
+            LIARA
+        </span>
 
         <small>
             PROFESSIONAL™
@@ -175,12 +199,15 @@
 
 <section class="admin-section">
 
+
     <div class="admin-container">
+
 
         <div class="admin-box">
 
 
             <div class="admin-header">
+
 
                 <div>
 
@@ -203,13 +230,27 @@
 
                 </button>
 
+
             </div>
+
+
+
+            <button
+                class="refresh-btn"
+                onclick="loadOrders()">
+
+                🔄 Refresh Orders
+
+            </button>
+
 
 
             <div id="orders">
 
                 <div class="loading">
+
                     Loading orders...
+
                 </div>
 
             </div>
@@ -217,13 +258,16 @@
 
         </div>
 
+
     </div>
+
 
 </section>
 
 
 
 <footer>
+
 
     <div class="footer-brand">
 
@@ -243,6 +287,7 @@
 
     </p>
 
+
 </footer>
 
 
@@ -253,9 +298,9 @@
 <script>
 
 
-/* =========================
+/* =====================================
    SUPABASE
-========================= */
+===================================== */
 
 
 const SUPABASE_URL =
@@ -263,7 +308,7 @@ const SUPABASE_URL =
 
 
 const SUPABASE_KEY =
-    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_y_K_Jn5Gu";
 
 
 const supabaseClient =
@@ -274,27 +319,19 @@ const supabaseClient =
 
 
 
-/* =========================
-   ADMIN EMAIL
-========================= */
-
-
-/*
-   IMPORTANT:
-
-   Ethhe apna EXACT
-   Supabase login email pao.
-*/
+/* =====================================
+   COMPANY ADMIN EMAIL
+===================================== */
 
 
 const ADMIN_EMAIL =
-    "YOUR-ADMIN-EMAIL@example.com";
+    "info@liara.co.in";
 
 
 
-/* =========================
-   CHECK ADMIN
-========================= */
+/* =====================================
+   CHECK ADMIN LOGIN
+===================================== */
 
 
 async function checkAdmin() {
@@ -303,7 +340,9 @@ async function checkAdmin() {
     const {
         data,
         error
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient
+        .auth
+        .getUser();
 
 
     if (error) {
@@ -311,7 +350,7 @@ async function checkAdmin() {
         console.log(error);
 
         window.location.href =
-            "login.html";
+            "company-login.html";
 
         return false;
 
@@ -325,7 +364,7 @@ async function checkAdmin() {
     if (!user) {
 
         window.location.href =
-            "login.html";
+            "company-login.html";
 
         return false;
 
@@ -333,7 +372,7 @@ async function checkAdmin() {
 
 
     console.log(
-        "Logged in email:",
+        "Logged in account:",
         user.email
     );
 
@@ -374,9 +413,9 @@ async function checkAdmin() {
 
 
 
-/* =========================
-   LOAD ORDERS
-========================= */
+/* =====================================
+   LOAD CUSTOMER ORDERS
+===================================== */
 
 
 async function loadOrders() {
@@ -399,18 +438,46 @@ async function loadOrders() {
         );
 
 
+    ordersBox.innerHTML = `
+
+        <div class="loading">
+
+            Loading orders...
+
+        </div>
+
+    `;
+
+
+
+    /* GET ORDERS */
+
+
     const {
         data,
         error
     } = await supabaseClient
         .from("orders")
-        .select("*");
+        .select("*")
+        .order(
+            "id",
+            {
+                ascending: false
+            }
+        );
+
+
+
+    /* ERROR */
 
 
     if (error) {
 
 
-        console.log(error);
+        console.log(
+            "Orders error:",
+            error
+        );
 
 
         ordersBox.innerHTML = `
@@ -433,6 +500,10 @@ async function loadOrders() {
     }
 
 
+
+    /* NO ORDERS */
+
+
     if (
         !data ||
         data.length === 0
@@ -453,6 +524,10 @@ async function loadOrders() {
         return;
 
     }
+
+
+
+    /* TABLE */
 
 
     let html = `
@@ -500,6 +575,7 @@ async function loadOrders() {
     `;
 
 
+
     data.forEach(
         function(order) {
 
@@ -508,29 +584,47 @@ async function loadOrders() {
 
                 <tr>
 
-                    <td>
+                    <td class="order-id">
+
                         ${order.id || "-"}
+
                     </td>
 
+
                     <td>
+
                         ${order.customer_name || "-"}
+
                     </td>
 
+
                     <td>
+
                         ${order.phone || "-"}
+
                     </td>
 
+
                     <td>
+
                         ${order.address || "-"}
+
                     </td>
 
+
                     <td>
+
                         ${order.quantity || 0}
+
                     </td>
 
+
                     <td>
+
                         ₹${order.total || 0}
+
                     </td>
+
 
                     <td class="status">
 
@@ -547,6 +641,7 @@ async function loadOrders() {
     );
 
 
+
     html += `
 
             </tbody>
@@ -556,6 +651,7 @@ async function loadOrders() {
     `;
 
 
+
     ordersBox.innerHTML =
         html;
 
@@ -563,9 +659,9 @@ async function loadOrders() {
 
 
 
-/* =========================
+/* =====================================
    LOGOUT
-========================= */
+===================================== */
 
 
 async function logoutAdmin() {
@@ -577,15 +673,15 @@ async function logoutAdmin() {
 
 
     window.location.href =
-        "login.html";
+        "company-login.html";
 
 }
 
 
 
-/* =========================
+/* =====================================
    START
-========================= */
+===================================== */
 
 
 loadOrders();
