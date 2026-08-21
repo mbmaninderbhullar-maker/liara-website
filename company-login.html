@@ -11,8 +11,7 @@
 
     <title>Liara Professional™ | Company Login</title>
 
-    <link rel="stylesheet"
-          href="style.css">
+    <link rel="stylesheet" href="style.css">
 
     <style>
 
@@ -32,6 +31,11 @@
             padding: 40px;
             border-radius: 18px;
             box-shadow: 0 10px 35px rgba(0,0,0,.08);
+        }
+
+        .company-login-box p:first-child {
+            color: #ad8232;
+            font-weight: bold;
         }
 
         .company-login-box h2 {
@@ -63,6 +67,10 @@
             outline: none;
         }
 
+        .form-group input:focus {
+            border-color: #ad8232;
+        }
+
         .company-login-btn {
             width: 100%;
             border: none;
@@ -71,10 +79,16 @@
             margin-top: 5px;
         }
 
+        .company-login-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
         .company-message {
             text-align: center;
             margin-top: 18px;
             font-weight: bold;
+            min-height: 22px;
         }
 
     </style>
@@ -87,10 +101,11 @@
 
 <header>
 
-    <a href="index.html"
-       class="logo">
+    <a href="index.html" class="logo">
 
-        <span>LIARA</span>
+        <span>
+            LIARA
+        </span>
 
         <small>
             PROFESSIONAL™
@@ -136,6 +151,7 @@
                     type="email"
                     id="email"
                     placeholder="Enter company email"
+                    autocomplete="username"
                     required>
 
             </div>
@@ -150,7 +166,8 @@
                 <input
                     type="password"
                     id="password"
-                    placeholder="Enter password"
+                    placeholder="Enter company password"
+                    autocomplete="current-password"
                     required>
 
             </div>
@@ -236,19 +253,13 @@ const supabaseClient =
 ========================= */
 
 
-/*
-   ETHHE OH EMAIL PAO
-   JO TUSI SUPABASE USERS
-   VICH COMPANY LAYI BANAYI AA
-*/
-
 const COMPANY_EMAIL =
-    "YOUR-COMPANY-EMAIL@example.com";
+    "info@liara.co.in";
 
 
 
 /* =========================
-   COMPANY LOGIN
+   LOGIN
 ========================= */
 
 
@@ -257,7 +268,6 @@ document.getElementById(
 ).addEventListener(
     "submit",
     async function(event) {
-
 
         event.preventDefault();
 
@@ -286,10 +296,17 @@ document.getElementById(
             );
 
 
+        message.innerText = "";
+
+
         button.disabled = true;
+
 
         button.innerText =
             "Logging in...";
+
+
+        /* COMPANY EMAIL CHECK */
 
 
         if (
@@ -310,6 +327,9 @@ document.getElementById(
         }
 
 
+        /* SUPABASE LOGIN */
+
+
         const {
             data,
             error
@@ -326,13 +346,10 @@ document.getElementById(
 
         if (error) {
 
-
             console.log(error);
-
 
             message.innerText =
                 error.message;
-
 
             button.disabled = false;
 
@@ -344,20 +361,29 @@ document.getElementById(
         }
 
 
-        message.innerText =
-            "Login successful ✓";
+        /* SUCCESS */
 
 
-        setTimeout(
-            function() {
+        if (data.user) {
 
-                window.location.href =
-                    "admin-orders.html";
+            message.innerText =
+                "Company login successful ✓";
 
-            },
-            500
-        );
+            button.innerText =
+                "Opening Orders...";
 
+
+            setTimeout(
+                function() {
+
+                    window.location.href =
+                        "admin-orders.html";
+
+                },
+                500
+            );
+
+        }
 
     }
 );
