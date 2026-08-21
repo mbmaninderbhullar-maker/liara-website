@@ -110,24 +110,10 @@
             margin-top: 10px;
         }
 
-        .place-order:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
         .message {
             text-align: center;
             margin-top: 15px;
             font-weight: bold;
-            line-height: 1.5;
-        }
-
-        .error-message {
-            color: #b00020;
-        }
-
-        .success-message {
-            color: #287a35;
         }
 
         @media (max-width: 800px) {
@@ -165,17 +151,29 @@
 
     <nav>
 
-        <a href="index.html">Home</a>
+        <a href="index.html">
+            Home
+        </a>
 
-        <a href="index.html#about">About</a>
+        <a href="index.html#about">
+            About
+        </a>
 
-        <a href="index.html#products">Products</a>
+        <a href="index.html#products">
+            Products
+        </a>
 
-        <a href="cart.html">Cart 🛒</a>
+        <a href="cart.html">
+            Cart 🛒
+        </a>
 
-        <a href="account.html">My Account</a>
+        <a href="account.html">
+            My Account
+        </a>
 
-        <a href="index.html#contact">Contact</a>
+        <a href="index.html#contact">
+            Contact
+        </a>
 
     </nav>
 
@@ -374,6 +372,8 @@
 
 
 
+<!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
@@ -387,14 +387,17 @@
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+
 
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
+
 
 
 /* =========================
@@ -406,27 +409,35 @@ let cart =
         localStorage.getItem("liaraCart")
     ) || [];
 
+
 let total = 0;
 
+
 const orderItems =
-    document.getElementById("order-items");
+    document.getElementById(
+        "order-items"
+    );
 
 
 if (cart.length === 0) {
 
     orderItems.innerHTML = `
-        <p>Your cart is empty.</p>
+        <p>
+            Your cart is empty.
+        </p>
     `;
 
 } else {
 
     orderItems.innerHTML = "";
 
+
     cart.forEach(function(product) {
 
         total +=
             Number(product.price) *
             Number(product.quantity);
+
 
         orderItems.innerHTML += `
 
@@ -463,6 +474,7 @@ document.getElementById(
 ).innerText = total;
 
 
+
 /* =========================
    PLACE ORDER
 ========================= */
@@ -476,40 +488,10 @@ document.getElementById(
         event.preventDefault();
 
 
-        const button =
-            document.getElementById(
-                "placeOrderButton"
-            );
-
-
-        button.disabled = true;
-
-        button.innerText =
-            "Checking Login...";
-
-
-        /* =========================
-           CHECK LOGIN SESSION
-        ========================= */
-
-        const {
-            data: sessionData,
-            error: sessionError
-        } =
-        await supabaseClient.auth.getSession();
-
-
-        if (sessionError) {
-
-            button.disabled = false;
-
-            button.innerText =
-                "Place Order";
+        if (cart.length === 0) {
 
             showMessage(
-                "Login check failed: " +
-                sessionError.message,
-                true
+                "Your cart is empty."
             );
 
             return;
@@ -517,21 +499,22 @@ document.getElementById(
         }
 
 
-        const session =
-            sessionData.session;
+        /* CHECK LOGIN */
+
+        const {
+            data: {
+                user
+            },
+            error: userError
+        } = await supabaseClient.auth.getUser();
 
 
-        if (!session || !session.user) {
-
-            button.disabled = false;
-
-            button.innerText =
-                "Place Order";
+        if (userError || !user) {
 
             showMessage(
-                "Please login before placing an order.",
-                true
+                "Please login before placing an order."
             );
+
 
             setTimeout(function() {
 
@@ -540,45 +523,14 @@ document.getElementById(
 
             }, 1500);
 
-            return;
-
-        }
-
-
-        const user =
-            session.user;
-
-
-        console.log(
-            "Logged in user:",
-            user.id
-        );
-
-
-        /* =========================
-           CHECK CART
-        ========================= */
-
-        if (cart.length === 0) {
-
-            button.disabled = false;
-
-            button.innerText =
-                "Place Order";
-
-            showMessage(
-                "Your cart is empty.",
-                true
-            );
 
             return;
 
         }
 
 
-        /* =========================
-           CUSTOMER DETAILS
-        ========================= */
+
+        /* CUSTOMER DETAILS */
 
         const customerName =
             document.getElementById(
@@ -604,14 +556,21 @@ document.getElementById(
             ).value;
 
 
-        /* =========================
-           QUANTITY
-        ========================= */
+
+        /* PRODUCT INFORMATION */
+
+        let productNames = "";
 
         let quantity = 0;
 
 
         cart.forEach(function(product) {
+
+            productNames +=
+                product.name +
+                " × " +
+                product.quantity +
+                ", ";
 
             quantity +=
                 Number(product.quantity);
@@ -619,80 +578,87 @@ document.getElementById(
         });
 
 
-        /* =========================
-           BUTTON
-        ========================= */
+        productNames =
+            productNames.replace(
+                /,\s*$/,
+                ""
+            );
+
+
+
+        /* BUTTON */
+
+        const button =
+            document.getElementById(
+                "placeOrderButton"
+            );
+
+
+        button.disabled = true;
 
         button.innerText =
             "Placing Order...";
 
 
+
         /* =========================
-           INSERT ORDER
+           SAVE ORDER TO SUPABASE
         ========================= */
-
-        const orderData = {
-
-            user_id:
-                user.id,
-
-            customer_name:
-                customerName,
-
-            phone:
-                phone,
-
-            address:
-                address,
-
-            quantity:
-                quantity,
-
-            total:
-                total,
-
-            status:
-                "Order Received"
-
-        };
-
-
-        console.log(
-            "Order data:",
-            orderData
-        );
-
 
         const {
             error
-        } =
-        await supabaseClient
+        } = await supabaseClient
             .from("orders")
-            .insert(orderData);
+            .insert([{
+
+                user_id:
+                    user.id,
+
+                customer_name:
+                    customerName,
+
+                phone:
+                    phone,
+
+                address:
+                    address,
+
+                product:
+                    productNames,
+
+                quantity:
+                    quantity,
+
+                total:
+                    total,
+
+                status:
+                    "Order Received"
+
+            }]);
 
 
-        /* =========================
-           ERROR
-        ========================= */
+
+        /* ERROR */
 
         if (error) {
 
             console.log(
-                "Supabase order error:",
+                "ORDER ERROR:",
                 error
             );
 
 
-            button.disabled = false;
+            button.disabled =
+                false;
 
             button.innerText =
                 "Place Order";
 
 
             showMessage(
-                "Order could not be placed:<br>" +
-                error.message,
-                true
+                "Order could not be placed: " +
+                error.message
             );
 
 
@@ -701,9 +667,8 @@ document.getElementById(
         }
 
 
-        /* =========================
-           SUCCESS
-        ========================= */
+
+        /* SUCCESS */
 
         localStorage.removeItem(
             "liaraCart"
@@ -711,13 +676,13 @@ document.getElementById(
 
 
         showMessage(
-            "🎉 Order placed successfully!",
-            false
+            "🎉 Order placed successfully!"
         );
 
 
         button.innerText =
             "Order Placed ✓";
+
 
 
         setTimeout(function() {
@@ -731,38 +696,19 @@ document.getElementById(
 );
 
 
+
 /* =========================
    MESSAGE
 ========================= */
 
-function showMessage(
-    text,
-    isError
-) {
+function showMessage(text) {
 
-    const message =
-        document.getElementById(
-            "message"
-        );
-
-
-    message.innerHTML =
-        text;
-
-
-    if (isError) {
-
-        message.className =
-            "message error-message";
-
-    } else {
-
-        message.className =
-            "message success-message";
-
-    }
+    document.getElementById(
+        "message"
+    ).innerText = text;
 
 }
+
 
 </script>
 
