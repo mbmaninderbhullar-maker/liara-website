@@ -1,4 +1,4 @@
-```html
+```html id="8k6z2v"
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,9 +30,7 @@
             max-width: 450px;
 
             background: white;
-
             padding: 40px;
-
             border-radius: 18px;
 
             box-shadow:
@@ -249,7 +247,7 @@
 
 
 /* =====================================
-   SUPABASE
+   SUPABASE CONNECTION
 ===================================== */
 
 
@@ -258,7 +256,7 @@ const SUPABASE_URL =
 
 
 const SUPABASE_KEY =
-    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_y_K_Jn5Gu";
+    "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
 
 const supabaseClient =
@@ -268,47 +266,13 @@ const supabaseClient =
     );
 
 
-
-/* =====================================
-   CHECK EXISTING COMPANY LOGIN
-===================================== */
-
-
-async function checkExistingLogin() {
-
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .auth
-        .getUser();
-
-
-    if (
-        !error &&
-        data &&
-        data.user &&
-        data.user.email &&
-        data.user.email.toLowerCase() ===
-        "info@liara.co.in"
-    ) {
-
-        window.location.href =
-            "admin-orders.html";
-
-    }
-
-}
-
-
-checkExistingLogin();
+const ADMIN_EMAIL =
+    "info@liara.co.in";
 
 
 
 /* =====================================
-   COMPANY LOGIN
+   LOGIN
 ===================================== */
 
 
@@ -380,7 +344,7 @@ document.getElementById(
 
 
                 console.error(
-                    "Supabase Login Error:",
+                    "Login Error:",
                     error
                 );
 
@@ -408,11 +372,40 @@ document.getElementById(
 
             if (
                 data &&
-                data.user &&
-                data.user.email &&
-                data.user.email.toLowerCase() ===
-                "info@liara.co.in"
+                data.user
             ) {
+
+
+                if (
+                    data.user.email.toLowerCase() !==
+                    ADMIN_EMAIL.toLowerCase()
+                ) {
+
+
+                    await supabaseClient
+                        .auth
+                        .signOut();
+
+
+                    message.innerText =
+                        "Company access only.";
+
+
+                    message.className =
+                        "company-message error";
+
+
+                    button.disabled =
+                        false;
+
+
+                    button.innerText =
+                        "Company Login";
+
+
+                    return;
+
+                }
 
 
                 message.innerText =
@@ -437,31 +430,7 @@ document.getElementById(
                     500
                 );
 
-
-                return;
-
             }
-
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-            message.innerText =
-                "This account is not authorized for company access.";
-
-
-            message.className =
-                "company-message error";
-
-
-            button.disabled =
-                false;
-
-
-            button.innerText =
-                "Company Login";
 
 
         }
