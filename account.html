@@ -2,14 +2,19 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Liara Professional™ | My Account</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+          href="style.css">
 
     <style>
+
         .account-section {
             min-height: 75vh;
             padding: 80px 8%;
@@ -17,11 +22,11 @@
         }
 
         .account-box {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
             background: white;
             padding: 35px;
-            border-radius: 12px;
+            border-radius: 18px;
             box-shadow: 0 10px 35px rgba(0,0,0,.08);
         }
 
@@ -34,7 +39,7 @@
         }
 
         .account-header h2 {
-            margin-bottom: 5px;
+            margin: 0 0 6px;
         }
 
         .account-email {
@@ -43,11 +48,11 @@
         }
 
         .logout-btn {
-            padding: 12px 20px;
+            padding: 12px 22px;
             background: #ad8232;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
         }
@@ -64,14 +69,21 @@
 
         .order-card {
             border: 1px solid #eee;
-            padding: 20px;
-            margin-top: 15px;
-            border-radius: 8px;
+            padding: 22px;
+            margin-top: 18px;
+            border-radius: 12px;
+            background: #fff;
         }
 
         .order-card p {
-            margin: 5px 0;
-            color: #666;
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .order-id {
+            font-weight: bold;
+            color: #ad8232;
+            margin-bottom: 15px;
         }
 
         .status {
@@ -84,10 +96,19 @@
             padding: 20px 0;
         }
 
+        .error-message {
+            color: #b33;
+            padding: 20px 0;
+        }
+
         @media (max-width: 600px) {
 
             .account-section {
                 padding: 50px 5%;
+            }
+
+            .account-box {
+                padding: 25px 18px;
             }
 
             .account-header {
@@ -98,35 +119,67 @@
             .logout-btn {
                 width: 100%;
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <header>
 
-    <a href="index.html" class="logo">
+    <a href="index.html"
+       class="logo">
+
         <span>LIARA</span>
-        <small>PROFESSIONAL™</small>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
     </a>
 
+
     <nav>
-        <a href="index.html">Home</a>
-        <a href="index.html#products">Products</a>
-        <a href="cart.html">Cart 🛒</a>
-        <a href="account.html">My Account</a>
-        <a href="index.html#contact">Contact</a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#products">
+            Products
+        </a>
+
+        <a href="cart.html">
+            Cart 🛒
+        </a>
+
+        <a href="account.html">
+            My Account
+        </a>
+
+        <a href="index.html#contact">
+            Contact
+        </a>
+
     </nav>
 
 </header>
 
 
+
 <section class="account-section">
+
 
     <div class="account-box">
 
+
         <div class="account-header">
+
 
             <div>
 
@@ -137,10 +190,13 @@
                 <div
                     class="account-email"
                     id="userEmail">
+
                     Loading...
+
                 </div>
 
             </div>
+
 
             <button
                 class="logout-btn"
@@ -150,47 +206,74 @@
 
             </button>
 
+
         </div>
 
 
+
         <h3 class="orders-title">
+
             My Orders
+
         </h3>
 
 
         <div id="orders">
+
             Loading orders...
+
         </div>
+
 
     </div>
 
+
 </section>
+
 
 
 <footer>
 
     <div class="footer-brand">
+
         LIARA
-        <small>PROFESSIONAL™</small>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
     </div>
 
+
     <p>
+
         © 2026 Liara Group Private Limited.
         All Rights Reserved.
+
     </p>
 
 </footer>
 
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
+
+
+/* =========================
+   SUPABASE
+========================= */
+
 
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -199,13 +282,22 @@ const supabaseClient =
     );
 
 
+
+/* =========================
+   LOAD ACCOUNT
+========================= */
+
+
 async function loadAccount() {
+
 
     const {
         data: {
             user
         }
-    } = await supabaseClient.auth.getUser();
+    } =
+    await supabaseClient.auth.getUser();
+
 
 
     if (!user) {
@@ -218,9 +310,12 @@ async function loadAccount() {
     }
 
 
+
     document.getElementById(
         "userEmail"
-    ).innerText = user.email;
+    ).innerText =
+        user.email;
+
 
 
     loadOrders(user.id);
@@ -228,93 +323,246 @@ async function loadAccount() {
 }
 
 
+
+/* =========================
+   LOAD ORDERS
+========================= */
+
+
 async function loadOrders(userId) {
 
+
     const ordersBox =
-        document.getElementById("orders");
+        document.getElementById(
+            "orders"
+        );
+
 
 
     const {
         data,
         error
-    } = await supabaseClient
+    } =
+    await supabaseClient
         .from("orders")
         .select("*")
-        .eq("user_id", userId)
-        .order("created_at", {
-            ascending: false
-        });
+        .eq(
+            "user_id",
+            userId
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
 
 
     if (error) {
 
-        ordersBox.innerHTML =
-            "<p>Unable to load orders.</p>";
 
-        return;
+        console.log(error);
 
-    }
-
-
-    if (!data || data.length === 0) {
 
         ordersBox.innerHTML = `
-            <div class="no-orders">
-                You haven't placed any orders yet.
+
+            <div class="error-message">
+
+                Unable to load orders.
+
+                <br><br>
+
+                ${error.message}
+
             </div>
+
         `;
 
         return;
 
     }
+
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+
+        ordersBox.innerHTML = `
+
+            <div class="no-orders">
+
+                You haven't placed
+                any orders yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
 
 
     let html = "";
 
 
-    data.forEach(function(order) {
 
-        html += `
-
-            <div class="order-card">
-
-                <p>
-                    <strong>Order:</strong>
-                    ${order.product}
-                </p>
-
-                <p>
-                    <strong>Quantity:</strong>
-                    ${order.quantity}
-                </p>
-
-                <p>
-                    <strong>Total:</strong>
-                    ₹${order.total}
-                </p>
-
-                <p>
-                    <strong>Status:</strong>
-                    <span class="status">
-                        ${order.status}
-                    </span>
-                </p>
-
-            </div>
-
-        `;
-
-    });
+    data.forEach(
+        function(order) {
 
 
-    ordersBox.innerHTML = html;
+            let orderDate = "";
+
+
+            if (order.created_at) {
+
+                orderDate =
+                    new Date(
+                        order.created_at
+                    ).toLocaleString(
+                        "en-IN"
+                    );
+
+            }
+
+
+
+            html += `
+
+                <div class="order-card">
+
+
+                    <div class="order-id">
+
+                        Order ID:
+                        ${order.id}
+
+                    </div>
+
+
+                    <p>
+
+                        <strong>
+                            Product:
+                        </strong>
+
+                        ${order.product || "Order"}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Customer Name:
+                        </strong>
+
+                        ${order.customer_name || "-"}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Phone:
+                        </strong>
+
+                        ${order.phone || "-"}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Address:
+                        </strong>
+
+                        ${order.address || "-"}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Quantity:
+                        </strong>
+
+                        ${order.quantity || 0}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Total:
+                        </strong>
+
+                        ₹${order.total || 0}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Status:
+                        </strong>
+
+                        <span class="status">
+
+                            ${order.status || "Order Received"}
+
+                        </span>
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Order Date:
+                        </strong>
+
+                        ${orderDate}
+
+                    </p>
+
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+
+    ordersBox.innerHTML =
+        html;
 
 }
 
 
+
+/* =========================
+   LOGOUT
+========================= */
+
+
 async function logoutUser() {
 
+
     await supabaseClient.auth.signOut();
+
 
     window.location.href =
         "login.html";
@@ -322,9 +570,17 @@ async function logoutUser() {
 }
 
 
+
+/* =========================
+   START
+========================= */
+
+
 loadAccount();
 
+
 </script>
+
 
 </body>
 
