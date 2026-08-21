@@ -22,7 +22,7 @@
         }
 
         .admin-container {
-            max-width: 1250px;
+            max-width: 1400px;
             margin: auto;
         }
 
@@ -53,38 +53,38 @@
         }
 
         .logout-btn,
-        .refresh-btn {
+        .refresh-btn,
+        .save-btn {
             border: none;
             background: #ad8232;
             color: white;
-            padding: 12px 20px;
+            padding: 10px 16px;
             border-radius: 7px;
             cursor: pointer;
             font-weight: bold;
+        }
+
+        .logout-btn {
+            padding: 12px 20px;
         }
 
         .refresh-btn {
             margin-bottom: 20px;
         }
 
-        .message {
-            text-align: center;
-            padding: 40px 20px;
-            font-weight: bold;
+        .save-btn {
+            background: #287a3e;
         }
 
-        .error {
-            color: #a33;
-        }
-
-        .success {
-            color: green;
+        .save-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
         }
 
         .order-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1000px;
+            min-width: 1250px;
         }
 
         .order-table th,
@@ -97,11 +97,51 @@
 
         .order-table th {
             background: #f7f1e7;
+            font-weight: bold;
         }
 
-        .status {
-            color: #ad8232;
+        .order-id {
             font-weight: bold;
+        }
+
+        .date-time {
+            white-space: nowrap;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .status-select {
+            padding: 9px 10px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            min-width: 160px;
+            background: white;
+        }
+
+        .tracking-input {
+            padding: 9px 10px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            width: 170px;
+            box-sizing: border-box;
+        }
+
+        .message {
+            text-align: center;
+            padding: 45px 20px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #a33;
+        }
+
+        .success {
+            color: #287a3e;
+        }
+
+        .saving {
+            opacity: .6;
         }
 
         @media (max-width: 700px) {
@@ -149,12 +189,15 @@
 
 <section class="admin-section">
 
+
     <div class="admin-container">
+
 
         <div class="admin-box">
 
 
             <div class="admin-header">
+
 
                 <div>
 
@@ -176,6 +219,7 @@
                     Logout
 
                 </button>
+
 
             </div>
 
@@ -222,8 +266,10 @@
 
 
     <p>
+
         © 2026 Liara Group Private Limited.
         All Rights Reserved.
+
     </p>
 
 </footer>
@@ -237,7 +283,7 @@
 
 
 /* =========================================
-   SUPABASE CONNECTION
+   SUPABASE
 ========================================= */
 
 
@@ -246,7 +292,7 @@ const SUPABASE_URL =
 
 
 const SUPABASE_KEY =
-    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+    "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
 
 const supabaseClient =
@@ -262,7 +308,62 @@ const ADMIN_EMAIL =
 
 
 /* =========================================
-   LOAD CUSTOMER ORDERS
+   CHECK COMPANY LOGIN
+========================================= */
+
+
+async function checkAdmin() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .auth
+        .getUser();
+
+
+    if (
+        error ||
+        !data ||
+        !data.user
+    ) {
+
+        window.location.href =
+            "company-login.html";
+
+        return null;
+
+    }
+
+
+    const user =
+        data.user;
+
+
+    if (
+        !user.email ||
+        user.email.toLowerCase() !==
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+        window.location.href =
+            "company-login.html";
+
+        return null;
+
+    }
+
+
+    return user;
+
+}
+
+
+
+/* =========================================
+   LOAD ORDERS
 ========================================= */
 
 
@@ -278,113 +379,29 @@ async function loadOrders() {
     box.innerHTML = `
 
         <div class="message">
-            Checking company login...
+            Loading customer orders...
         </div>
 
     `;
 
 
+    const user =
+        await checkAdmin();
+
+
+    if (!user) {
+
+        return;
+
+    }
+
+
     try {
 
 
-        /* GET CURRENT USER */
-
-
         const {
-            data: userData,
-            error: userError
-        } =
-        await supabaseClient
-            .auth
-            .getUser();
-
-
-        if (userError) {
-
-
-            console.error(
-                "LOGIN ERROR:",
-                userError
-            );
-
-
-            box.innerHTML = `
-
-                <div class="message error">
-
-                    ${userError.message}
-
-                </div>
-
-            `;
-
-
-            return;
-
-        }
-
-
-        const user =
-            userData.user;
-
-
-        if (!user) {
-
-
-            window.location.href =
-                "company-login.html";
-
-
-            return;
-
-        }
-
-
-        /* CHECK COMPANY ACCOUNT */
-
-
-        if (
-            user.email.toLowerCase() !==
-            ADMIN_EMAIL.toLowerCase()
-        ) {
-
-
-            box.innerHTML = `
-
-                <div class="message error">
-
-                    Access denied.
-
-                    <br><br>
-
-                    Logged in account:
-                    ${user.email}
-
-                </div>
-
-            `;
-
-
-            return;
-
-        }
-
-
-        box.innerHTML = `
-
-            <div class="message">
-                Loading customer orders...
-            </div>
-
-        `;
-
-
-        /* GET ORDERS */
-
-
-        const {
-            data: orders,
-            error: ordersError
+            data,
+            error
         } =
         await supabaseClient
             .from("orders")
@@ -397,12 +414,12 @@ async function loadOrders() {
             );
 
 
-        if (ordersError) {
+        if (error) {
 
 
             console.error(
-                "ORDERS ERROR:",
-                ordersError
+                "Orders Error:",
+                error
             );
 
 
@@ -414,7 +431,7 @@ async function loadOrders() {
 
                     <br><br>
 
-                    ${ordersError.message}
+                    ${error.message}
 
                 </div>
 
@@ -426,18 +443,15 @@ async function loadOrders() {
         }
 
 
-        /* NO ORDERS */
-
-
         if (
-            !orders ||
-            orders.length === 0
+            !data ||
+            data.length === 0
         ) {
 
 
             box.innerHTML = `
 
-                <div class="message success">
+                <div class="message">
 
                     No customer orders yet.
 
@@ -451,9 +465,6 @@ async function loadOrders() {
         }
 
 
-        /* BUILD TABLE */
-
-
         let html = `
 
             <table class="order-table">
@@ -464,6 +475,10 @@ async function loadOrders() {
 
                         <th>
                             Order ID
+                        </th>
+
+                        <th>
+                            Order Date
                         </th>
 
                         <th>
@@ -490,6 +505,14 @@ async function loadOrders() {
                             Status
                         </th>
 
+                        <th>
+                            Tracking ID
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
                     </tr>
 
                 </thead>
@@ -499,40 +522,155 @@ async function loadOrders() {
         `;
 
 
-        orders.forEach(
+        data.forEach(
             function(order) {
+
+
+                /*
+                   DATE
+                   Try created_at first.
+                   If unavailable, show "-"
+                */
+
+
+                let orderDate = "-";
+
+
+                if (order.created_at) {
+
+                    orderDate =
+                        new Date(
+                            order.created_at
+                        ).toLocaleString(
+                            "en-IN",
+                            {
+                                dateStyle:
+                                    "medium",
+                                timeStyle:
+                                    "short"
+                            }
+                        );
+
+                }
 
 
                 html += `
 
                     <tr>
 
-                        <td>
+                        <td class="order-id">
+
                             ${order.id || "-"}
+
                         </td>
 
+
+                        <td class="date-time">
+
+                            ${orderDate}
+
+                        </td>
+
+
                         <td>
+
                             ${order.customer_name || "-"}
+
                         </td>
 
+
                         <td>
+
                             ${order.phone || "-"}
+
                         </td>
 
+
                         <td>
+
                             ${order.address || "-"}
+
                         </td>
 
+
                         <td>
+
                             ${order.quantity || 0}
+
                         </td>
+
 
                         <td>
+
                             ₹${order.total || 0}
+
                         </td>
 
-                        <td class="status">
-                            ${order.status || "Order Received"}
+
+                        <td>
+
+                            <select
+                                class="status-select"
+                                id="status-${order.id}">
+
+                                <option value="Order Received"
+                                    ${order.status === "Order Received" ? "selected" : ""}>
+                                    Order Received
+                                </option>
+
+                                <option value="Confirmed"
+                                    ${order.status === "Confirmed" ? "selected" : ""}>
+                                    Confirmed
+                                </option>
+
+                                <option value="Packed"
+                                    ${order.status === "Packed" ? "selected" : ""}>
+                                    Packed
+                                </option>
+
+                                <option value="Shipped"
+                                    ${order.status === "Shipped" ? "selected" : ""}>
+                                    Shipped
+                                </option>
+
+                                <option value="Delivered"
+                                    ${order.status === "Delivered" ? "selected" : ""}>
+                                    Delivered
+                                </option>
+
+                                <option value="Cancelled"
+                                    ${order.status === "Cancelled" ? "selected" : ""}>
+                                    Cancelled
+                                </option>
+
+                            </select>
+
+                        </td>
+
+
+                        <td>
+
+                            <input
+                                type="text"
+                                class="tracking-input"
+                                id="tracking-${order.id}"
+                                value="${order.tracking_id || ""}"
+                                placeholder="Tracking ID">
+
+                        </td>
+
+
+                        <td>
+
+                            <button
+                                class="save-btn"
+                                id="save-${order.id}"
+                                onclick="saveOrder(${order.id})">
+
+                                Save
+
+                            </button>
+
                         </td>
 
                     </tr>
@@ -556,11 +694,12 @@ async function loadOrders() {
             html;
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
 
         console.error(
-            "GENERAL ERROR:",
             error
         );
 
@@ -569,11 +708,159 @@ async function loadOrders() {
 
             <div class="message error">
 
+                Something went wrong.
+
+                <br><br>
+
                 ${error.message}
 
             </div>
 
         `;
+
+    }
+
+}
+
+
+
+/* =========================================
+   SAVE ORDER STATUS + TRACKING
+========================================= */
+
+
+async function saveOrder(orderId) {
+
+
+    const status =
+        document.getElementById(
+            "status-" + orderId
+        ).value;
+
+
+    const tracking =
+        document.getElementById(
+            "tracking-" + orderId
+        ).value.trim();
+
+
+    const button =
+        document.getElementById(
+            "save-" + orderId
+        );
+
+
+    button.disabled = true;
+
+    button.classList.add(
+        "saving"
+    );
+
+    button.innerText =
+        "Saving...";
+
+
+    try {
+
+
+        const {
+            error
+        } =
+        await supabaseClient
+            .from("orders")
+            .update({
+
+                status:
+                    status,
+
+                tracking_id:
+                    tracking || null
+
+            })
+            .eq(
+                "id",
+                orderId
+            );
+
+
+        if (error) {
+
+
+            console.error(
+                "Update Error:",
+                error
+            );
+
+
+            alert(
+                "Unable to update order:\n\n" +
+                error.message
+            );
+
+
+            button.disabled =
+                false;
+
+            button.classList.remove(
+                "saving"
+            );
+
+            button.innerText =
+                "Save";
+
+
+            return;
+
+        }
+
+
+        button.innerText =
+            "✓ Saved";
+
+
+        button.classList.remove(
+            "saving"
+        );
+
+
+        setTimeout(
+            function() {
+
+                button.disabled =
+                    false;
+
+                button.innerText =
+                    "Save";
+
+            },
+            1500
+        );
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Something went wrong."
+        );
+
+
+        button.disabled =
+            false;
+
+        button.classList.remove(
+            "saving"
+        );
+
+        button.innerText =
+            "Save";
 
     }
 
