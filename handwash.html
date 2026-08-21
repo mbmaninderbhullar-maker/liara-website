@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Liara Professional™ | Herbal Hand Wash</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <a href="index.html" class="logo">
+        <span>LIARA</span>
+        <small>PROFESSIONAL™</small>
+    </a>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#products">Products</a>
+        <a href="cart.html">Cart 🛒</a>
+        <a href="index.html#why-us">Why Liara</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+</header>
+
+
+<section class="products">
+
+    <div class="heading">
+        <p>LIARA PROFESSIONAL™</p>
+        <h2>Herbal Hand Wash Collection</h2>
+    </div>
+
+
+    <div class="product-grid">
+
+        <div class="product-card">
+
+            <img src="images/handwash.jpg"
+                 alt="Herbal Hand Wash">
+
+            <h3>Herbal Hand Wash</h3>
+
+            <p>
+                Gentle cleansing hand wash for clean, fresh
+                and soft-looking hands.
+            </p>
+
+            <p>
+                <strong>Price: ₹249</strong>
+            </p>
+
+            <br>
+
+            <button class="btn"
+                    onclick="addToCart('Herbal Hand Wash', 249, 'images/handwash.jpg')">
+                Add to Cart 🛒
+            </button>
+
+            <button class="btn"
+                    onclick="buyNow('Herbal Hand Wash', 249, 'images/handwash.jpg')">
+                Buy Now
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div class="footer-brand">
+        LIARA
+        <small>PROFESSIONAL™</small>
+    </div>
+
+    <p>
+        © 2026 Liara Group Private Limited.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+function addToCart(name, price, image) {
+
+    let cart = JSON.parse(localStorage.getItem("liaraCart")) || [];
+
+    let existingProduct = cart.find(function(product) {
+        return product.name === name;
+    });
+
+    if (existingProduct) {
+
+        existingProduct.quantity += 1;
+
+    } else {
+
+        cart.push({
+            name: name,
+            price: price,
+            image: image,
+            quantity: 1
+        });
+
+    }
+
+    localStorage.setItem("liaraCart", JSON.stringify(cart));
+
+    alert(name + " added to cart 🛒");
+
+}
+
+
+function buyNow(name, price, image) {
+
+    let cart = [{
+        name: name,
+        price: price,
+        image: image,
+        quantity: 1
+    }];
+
+    localStorage.setItem("liaraCart", JSON.stringify(cart));
+
+    window.location.href = "cart.html";
+
+}
+
+</script>
+
+</body>
+</html>

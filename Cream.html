@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Liara Professional™ | Cream</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <a href="index.html" class="logo">
+        <span>LIARA</span>
+        <small>PROFESSIONAL™</small>
+    </a>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#products">Products</a>
+        <a href="cart.html">Cart 🛒</a>
+        <a href="index.html#why-us">Why Liara</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+</header>
+
+
+<section class="products">
+
+    <div class="heading">
+        <p>LIARA PROFESSIONAL™</p>
+        <h2>Cream Collection</h2>
+    </div>
+
+
+    <div class="product-grid">
+
+
+        <!-- MOISTURIZING CREAM -->
+
+        <div class="product-card">
+
+            <img src="images/moisturizing-cream.jpg"
+                 alt="Moisturizing Cream">
+
+            <h3>Moisturizing Cream</h3>
+
+            <p>
+                Helps keep skin soft, smooth and moisturized.
+            </p>
+
+            <p>
+                <strong>Price: ₹499</strong>
+            </p>
+
+            <br>
+
+            <button class="btn"
+                    onclick="addToCart('Moisturizing Cream', 499, 'images/moisturizing-cream.jpg')">
+                Add to Cart 🛒
+            </button>
+
+            <button class="btn"
+                    onclick="buyNow('Moisturizing Cream', 499, 'images/moisturizing-cream.jpg')">
+                Buy Now
+            </button>
+
+        </div>
+
+
+        <!-- BRIGHTENING CREAM -->
+
+        <div class="product-card">
+
+            <img src="images/brightening-cream.jpg"
+                 alt="Brightening Cream">
+
+            <h3>Brightening Cream</h3>
+
+            <p>
+                Helps improve the appearance of dull skin.
+            </p>
+
+            <p>
+                <strong>Price: ₹499</strong>
+            </p>
+
+            <br>
+
+            <button class="btn"
+                    onclick="addToCart('Brightening Cream', 499, 'images/brightening-cream.jpg')">
+                Add to Cart 🛒
+            </button>
+
+            <button class="btn"
+                    onclick="buyNow('Brightening Cream', 499, 'images/brightening-cream.jpg')">
+                Buy Now
+            </button>
+
+        </div>
+
+
+        <!-- ANTI-AGING CREAM -->
+
+        <div class="product-card">
+
+            <img src="images/anti-aging-cream.jpg"
+                 alt="Anti-Aging Cream">
+
+            <h3>Anti-Aging Cream</h3>
+
+            <p>
+                Nourishes the skin and supports a smoother appearance.
+            </p>
+
+            <p>
+                <strong>Price: ₹499</strong>
+            </p>
+
+            <br>
+
+            <button class="btn"
+                    onclick="addToCart('Anti-Aging Cream', 499, 'images/anti-aging-cream.jpg')">
+                Add to Cart 🛒
+            </button>
+
+            <button class="btn"
+                    onclick="buyNow('Anti-Aging Cream', 499, 'images/anti-aging-cream.jpg')">
+                Buy Now
+            </button>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div class="footer-brand">
+        LIARA
+        <small>PROFESSIONAL™</small>
+    </div>
+
+    <p>
+        © 2026 Liara Group Private Limited.
+        All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+function addToCart(name, price, image) {
+
+    let cart = JSON.parse(localStorage.getItem("liaraCart")) || [];
+
+    let existingProduct = cart.find(function(product) {
+        return product.name === name;
+    });
+
+    if (existingProduct) {
+
+        existingProduct.quantity += 1;
+
+    } else {
+
+        cart.push({
+            name: name,
+            price: price,
+            image: image,
+            quantity: 1
+        });
+
+    }
+
+    localStorage.setItem("liaraCart", JSON.stringify(cart));
+
+    alert(name + " added to cart 🛒");
+
+}
+
+
+function buyNow(name, price, image) {
+
+    let cart = [{
+        name: name,
+        price: price,
+        image: image,
+        quantity: 1
+    }];
+
+    localStorage.setItem("liaraCart", JSON.stringify(cart));
+
+    window.location.href = "cart.html";
+
+}
+
+</script>
+
+</body>
+</html>
