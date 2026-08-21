@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Liara Professional™ | Checkout</title>
 
@@ -40,7 +44,6 @@
             border: 1px solid #eee;
             padding: 22px;
             border-radius: 14px;
-            margin-bottom: 25px;
         }
 
         .order-item {
@@ -106,11 +109,10 @@
             margin-top: 10px;
         }
 
-        .secure-text {
+        .message {
             text-align: center;
             margin-top: 15px;
-            font-size: 13px;
-            color: #777;
+            font-weight: bold;
         }
 
         @media (max-width: 800px) {
@@ -129,41 +131,70 @@
 
 </head>
 
+
 <body>
 
-
-<!-- HEADER -->
 
 <header>
 
     <a href="index.html" class="logo">
+
         <span>LIARA</span>
-        <small>PROFESSIONAL™</small>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
     </a>
 
+
     <nav>
-        <a href="index.html">Home</a>
-        <a href="index.html#about">About</a>
-        <a href="index.html#products">Products</a>
-        <a href="cart.html">Cart 🛒</a>
-        <a href="index.html#why-us">Why Liara</a>
-        <a href="index.html#contact">Contact</a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#about">
+            About
+        </a>
+
+        <a href="index.html#products">
+            Products
+        </a>
+
+        <a href="cart.html">
+            Cart 🛒
+        </a>
+
+        <a href="account.html">
+            My Account
+        </a>
+
+        <a href="index.html#contact">
+            Contact
+        </a>
+
     </nav>
 
 </header>
 
 
-<!-- CHECKOUT -->
 
 <section class="checkout-section">
 
+
     <div class="heading">
 
-        <p>LIARA PROFESSIONAL™</p>
+        <p>
+            LIARA PROFESSIONAL™
+        </p>
 
-        <h2>Complete Your Order</h2>
+        <h2>
+            Complete Your Order
+        </h2>
 
     </div>
+
 
 
     <div class="checkout-container">
@@ -173,9 +204,14 @@
 
         <div class="checkout-box">
 
-            <h3>Your Order</h3>
+            <h3>
+                Your Order
+            </h3>
 
-            <div id="order-items" class="order-summary">
+
+            <div
+                id="order-items"
+                class="order-summary">
 
                 Loading your order...
 
@@ -184,20 +220,27 @@
 
             <div class="total-box">
 
-                <span>Total</span>
+                <span>
+                    Total
+                </span>
 
-                <span>₹<span id="checkout-total">0</span></span>
+                <span>
+                    ₹<span id="checkout-total">0</span>
+                </span>
 
             </div>
 
         </div>
 
 
+
         <!-- CUSTOMER DETAILS -->
 
         <div class="checkout-box">
 
-            <h3>Customer Details</h3>
+            <h3>
+                Customer Details
+            </h3>
 
 
             <form id="checkoutForm">
@@ -205,63 +248,60 @@
 
                 <div class="form-group">
 
-                    <label>Full Name</label>
+                    <label>
+                        Full Name
+                    </label>
 
                     <input
                         type="text"
                         id="name"
                         placeholder="Enter your full name"
-                        required
-                    >
+                        required>
 
                 </div>
 
 
+
                 <div class="form-group">
 
-                    <label>Mobile Number</label>
+                    <label>
+                        Mobile Number
+                    </label>
 
                     <input
                         type="tel"
                         id="mobile"
                         placeholder="Enter your mobile number"
-                        required
-                    >
+                        required>
 
                 </div>
 
 
-                <div class="form-group">
-
-                    <label>Email Address</label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="Enter your email address"
-                    >
-
-                </div>
-
 
                 <div class="form-group">
 
-                    <label>Delivery Address</label>
+                    <label>
+                        Delivery Address
+                    </label>
 
                     <textarea
                         id="address"
                         placeholder="House No, Street, City, State, PIN Code"
-                        required
-                    ></textarea>
+                        required></textarea>
 
                 </div>
 
 
+
                 <div class="form-group">
 
-                    <label>Payment Method</label>
+                    <label>
+                        Payment Method
+                    </label>
 
-                    <select id="payment" required>
+                    <select
+                        id="payment"
+                        required>
 
                         <option value="">
                             Select Payment Method
@@ -280,18 +320,21 @@
                 </div>
 
 
+
                 <button
                     type="submit"
-                    class="btn place-order">
+                    class="btn place-order"
+                    id="placeOrderButton">
 
                     Place Order
 
                 </button>
 
 
-                <p class="secure-text">
-                    🔒 Your information is used only for order processing.
-                </p>
+                <div
+                    id="message"
+                    class="message">
+                </div>
 
 
             </form>
@@ -303,7 +346,6 @@
 </section>
 
 
-<!-- FOOTER -->
 
 <footer>
 
@@ -311,9 +353,12 @@
 
         LIARA
 
-        <small>PROFESSIONAL™</small>
+        <small>
+            PROFESSIONAL™
+        </small>
 
     </div>
+
 
     <p>
 
@@ -325,35 +370,76 @@
 </footer>
 
 
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
 
 
-/* LOAD CART */
+/* =========================
+   SUPABASE
+========================= */
+
+
+const SUPABASE_URL =
+    "https://oinafbuicwhleudztzyz.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* =========================
+   CART
+========================= */
+
 
 let cart =
-    JSON.parse(localStorage.getItem("liaraCart")) || [];
-
-
-let orderItems =
-    document.getElementById("order-items");
+    JSON.parse(
+        localStorage.getItem("liaraCart")
+    ) || [];
 
 
 let total = 0;
 
 
+const orderItems =
+    document.getElementById(
+        "order-items"
+    );
+
+
 if (cart.length === 0) {
 
-    orderItems.innerHTML =
-        "<p>Your cart is empty.</p>";
+    orderItems.innerHTML = `
+        <p>
+            Your cart is empty.
+        </p>
+    `;
 
 } else {
 
+
     orderItems.innerHTML = "";
+
 
     cart.forEach(function(product) {
 
+
         total +=
-            product.price * product.quantity;
+            product.price *
+            product.quantity;
 
 
         orderItems.innerHTML += `
@@ -362,8 +448,7 @@ if (cart.length === 0) {
 
                 <img
                     src="${product.image}"
-                    alt="${product.name}"
-                >
+                    alt="${product.name}">
 
                 <div>
 
@@ -392,75 +477,201 @@ document.getElementById(
 ).innerText = total;
 
 
-/* PLACE ORDER */
+
+/* =========================
+   PLACE ORDER
+========================= */
+
 
 document.getElementById(
     "checkoutForm"
 ).addEventListener(
     "submit",
-    function(event) {
+    async function(event) {
+
 
         event.preventDefault();
 
 
-        let name =
+        if (cart.length === 0) {
+
+            showMessage(
+                "Your cart is empty."
+            );
+
+            return;
+
+        }
+
+
+
+        /* CHECK LOGIN */
+
+
+        const {
+            data: {
+                user
+            }
+        } = await supabaseClient.auth.getUser();
+
+
+        if (!user) {
+
+            showMessage(
+                "Please login before placing an order."
+            );
+
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "login.html";
+
+            }, 1500);
+
+
+            return;
+
+        }
+
+
+
+        /* CUSTOMER DETAILS */
+
+
+        const customerName =
             document.getElementById(
                 "name"
-            ).value;
+            ).value.trim();
 
-        let mobile =
+
+        const phone =
             document.getElementById(
                 "mobile"
-            ).value;
+            ).value.trim();
 
-        let email =
-            document.getElementById(
-                "email"
-            ).value;
 
-        let address =
+        const address =
             document.getElementById(
                 "address"
-            ).value;
+            ).value.trim();
 
-        let payment =
+
+        const payment =
             document.getElementById(
                 "payment"
             ).value;
 
 
-        let order = {
 
-            customerName: name,
-
-            mobile: mobile,
-
-            email: email,
-
-            address: address,
-
-            paymentMethod: payment,
-
-            products: cart,
-
-            total: total,
-
-            date: new Date().toLocaleString()
-
-        };
+        /* PRODUCT INFORMATION */
 
 
-        localStorage.setItem(
-            "liaraOrder",
-            JSON.stringify(order)
-        );
+        let productNames = "";
 
 
-        alert(
-            "Thank you " +
-            name +
-            "! Your order has been placed successfully."
-        );
+        let quantity = 0;
+
+
+        cart.forEach(function(product) {
+
+            productNames +=
+                product.name +
+                " × " +
+                product.quantity +
+                ", ";
+
+            quantity +=
+                Number(product.quantity);
+
+        });
+
+
+        productNames =
+            productNames.replace(/,\s*$/, "");
+
+
+
+        /* BUTTON */
+
+
+        const button =
+            document.getElementById(
+                "placeOrderButton"
+            );
+
+
+        button.disabled = true;
+
+
+        button.innerText =
+            "Placing Order...";
+
+
+
+        /* SAVE ORDER */
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("orders")
+            .insert([{
+
+                user_id:
+                    user.id,
+
+                customer_name:
+                    customerName,
+
+                phone:
+                    phone,
+
+                address:
+                    address,
+
+                quantity:
+                    quantity,
+
+                total:
+                    total,
+
+                status:
+                    "Order Received"
+
+            }])
+            .select();
+
+
+
+        if (error) {
+
+
+            console.log(error);
+
+
+            button.disabled =
+                false;
+
+
+            button.innerText =
+                "Place Order";
+
+
+            showMessage(
+                "Order could not be placed: " +
+                error.message
+            );
+
+
+            return;
+
+        }
+
+
+
+        /* SUCCESS */
 
 
         localStorage.removeItem(
@@ -468,14 +679,46 @@ document.getElementById(
         );
 
 
-        window.location.href =
-            "index.html";
+        showMessage(
+            "🎉 Order placed successfully!"
+        );
+
+
+        button.innerText =
+            "Order Placed ✓";
+
+
+
+        setTimeout(function() {
+
+            window.location.href =
+                "account.html";
+
+        }, 1500);
+
 
     }
 );
+
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+
+function showMessage(text) {
+
+    document.getElementById(
+        "message"
+    ).innerText = text;
+
+}
+
 
 </script>
 
 
 </body>
+
 </html>
