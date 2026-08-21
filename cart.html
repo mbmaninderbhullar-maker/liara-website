@@ -1,236 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Liara - Cart</title>
+    <meta charset="UTF-8">
 
-<style>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-* {
-    box-sizing: border-box;
-}
+    <title>Liara Professional™ | Shopping Cart</title>
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f8f6f2;
-    color: #222;
-}
+    <link rel="stylesheet"
+          href="style.css">
 
-header {
-    padding: 20px;
-    text-align: center;
-    background: white;
-    border-bottom: 1px solid #ddd;
-}
+    <style>
 
-header h1 {
-    margin: 0;
-    font-size: 28px;
-}
+        .cart-section {
+            padding: 80px 8%;
+            background: #faf8f5;
+            min-height: 70vh;
+        }
 
-.cart-container {
-    max-width: 900px;
-    margin: 30px auto;
-    padding: 15px;
-}
+        .cart-container {
+            max-width: 1100px;
+            margin: auto;
+        }
 
-.cart-item {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: white;
-    padding: 18px;
-    margin-bottom: 15px;
-    border-radius: 15px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-}
+        .cart-box {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+        }
 
-.cart-image {
-    width: 110px;
-    height: 110px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 22px 0;
+            border-bottom: 1px solid #eee;
+        }
 
-.cart-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 10px;
-}
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
 
-.cart-details {
-    flex: 1;
-}
+        .cart-info {
+            flex: 1;
+        }
 
-.cart-details h3 {
-    margin: 0 0 8px;
-    font-size: 20px;
-}
+        .cart-info h3 {
+            margin: 0 0 8px;
+        }
 
-.cart-price {
-    font-size: 17px;
-    margin-bottom: 12px;
-}
+        .cart-price {
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
 
-.quantity-box {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-}
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.quantity-box button {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: #222;
-    color: white;
-    border-radius: 6px;
-    font-size: 20px;
-    cursor: pointer;
-}
+        .quantity-box button {
+            width: 34px;
+            height: 34px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+        }
 
-.quantity {
-    font-size: 17px;
-    min-width: 20px;
-    text-align: center;
-}
+        .quantity {
+            min-width: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
 
-.cart-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
+        .cart-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-.btn,
-.remove-btn {
-    border: none;
-    padding: 10px 16px;
-    border-radius: 7px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-}
+        .remove-btn {
+            border: none;
+            background: #f5f5f5;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #a33;
+        }
 
-.remove-btn {
-    background: #eee;
-    color: #222;
-}
+        .buy-btn {
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
 
-.buy-btn {
-    background: #222;
-    color: white;
-}
+        .item-total {
+            font-size: 18px;
+            font-weight: bold;
+        }
 
-.item-total {
-    font-size: 18px;
-    font-weight: bold;
-    white-space: nowrap;
-}
+        .cart-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
 
-.cart-bottom {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    margin-top: 20px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-}
+        .cart-total {
+            font-size: 25px;
+            font-weight: bold;
+        }
 
-.cart-total {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 18px;
-}
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
 
-.checkout-btn {
-    background: #222;
-    color: white;
-    width: 100%;
-    text-align: center;
-    padding: 14px;
-    border-radius: 8px;
-    text-decoration: none;
-    display: block;
-}
+        @media (max-width: 700px) {
 
-.empty-cart {
-    text-align: center;
-    background: white;
-    padding: 40px 20px;
-    border-radius: 15px;
-}
+            .cart-section {
+                padding: 50px 5%;
+            }
 
-.empty-cart h2 {
-    margin-bottom: 10px;
-}
+            .cart-item {
+                align-items: flex-start;
+            }
 
-@media (max-width: 600px) {
+            .cart-item img {
+                width: 75px;
+                height: 75px;
+            }
 
-    .cart-item {
-        gap: 12px;
-        padding: 12px;
-    }
+            .item-total {
+                display: none;
+            }
 
-    .cart-image {
-        width: 80px;
-        height: 80px;
-    }
+            .cart-bottom {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-    .cart-details h3 {
-        font-size: 16px;
-    }
+        }
 
-    .cart-price {
-        font-size: 15px;
-    }
+    </style>
 
-    .item-total {
-        font-size: 15px;
-    }
-
-}
-
-</style>
 </head>
+
 
 <body>
 
+
+<!-- HEADER -->
+
 <header>
-    <h1>My Cart</h1>
+
+    <a href="index.html"
+       class="logo">
+
+        <span>LIARA</span>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </a>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#products">
+            Products
+        </a>
+
+        <a href="cart.html">
+            Cart 🛒
+        </a>
+
+        <a href="index.html#contact">
+            Contact
+        </a>
+
+    </nav>
+
 </header>
 
-<div class="cart-container">
 
-    <div id="cartBox"></div>
 
-</div>
+<!-- CART -->
+
+<section class="cart-section">
+
+
+    <div class="heading">
+
+        <p>
+            LIARA PROFESSIONAL™
+        </p>
+
+        <h2>
+            Your Shopping Cart
+        </h2>
+
+    </div>
+
+
+    <div class="cart-container">
+
+        <div class="cart-box"
+             id="cart-box">
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="footer-brand">
+
+        LIARA
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </div>
+
+
+    <p>
+
+        © 2026 Liara Group Private Limited.
+        All Rights Reserved.
+
+    </p>
+
+</footer>
+
+
 
 <script>
 
-let cart = JSON.parse(localStorage.getItem("liaraCart")) || [];
+
+let cart =
+    JSON.parse(
+        localStorage.getItem("liaraCart")
+    ) || [];
+
 
 
 function displayCart() {
 
-    let cartBox = document.getElementById("cartBox");
+
+    let cartBox =
+        document.getElementById(
+            "cart-box"
+        );
+
 
     if (cart.length === 0) {
 
+
         cartBox.innerHTML = `
+
             <div class="empty-cart">
-                <h2>Your Cart is Empty</h2>
-                <p>Add some products to your cart.</p>
+
+                <h3>
+                    Your cart is empty 🛒
+                </h3>
+
+                <p>
+                    Add a product to your cart
+                    before buying.
+                </p>
+
+                <br>
+
+                <a
+                    href="index.html#products"
+                    class="btn">
+
+                    Explore Products
+
+                </a>
+
             </div>
+
         `;
 
         return;
+
     }
 
 
@@ -239,110 +319,119 @@ function displayCart() {
     let total = 0;
 
 
-    cart.forEach((product, index) => {
-
-        let itemTotal =
-            Number(product.price) * Number(product.quantity);
-
-        total += itemTotal;
+    cart.forEach(
+        function(product, index) {
 
 
-        html += `
+            let itemTotal =
+                product.price *
+                product.quantity;
 
-            <div class="cart-item">
 
-                <div class="cart-image">
+            total += itemTotal;
+
+
+            html += `
+
+                <div class="cart-item">
+
 
                     <img
                         src="${product.image}"
                         alt="${product.name}"
-                        onerror="this.style.display='none'"
                     >
 
-                </div>
+
+                    <div class="cart-info">
 
 
-                <div class="cart-details">
-
-                    <h3>
-                        ${product.name}
-                    </h3>
+                        <h3>
+                            ${product.name}
+                        </h3>
 
 
-                    <div class="cart-price">
+                        <div class="cart-price">
 
-                        ₹${product.price}
+                            ₹${product.price}
+
+                        </div>
+
+
+                        <div class="quantity-box">
+
+
+                            <button
+                                onclick="decreaseQuantity(${index})">
+
+                                −
+
+                            </button>
+
+
+                            <span class="quantity">
+
+                                ${product.quantity}
+
+                            </span>
+
+
+                            <button
+                                onclick="increaseQuantity(${index})">
+
+                                +
+
+                            </button>
+
+
+                        </div>
+
+
+                        <div class="cart-actions">
+
+
+                            <button
+                                class="remove-btn"
+                                onclick="removeProduct(${index})">
+
+                                Remove
+
+                            </button>
+
+
+                            <button
+                                class="btn buy-btn"
+                                onclick="buyThisProduct(${index})">
+
+                                Buy Now
+
+                            </button>
+
+
+                        </div>
+
 
                     </div>
 
 
-                    <div class="quantity-box">
+                    <div class="item-total">
 
-                        <button
-                            onclick="decreaseQuantity(${index})">
-
-                            −
-
-                        </button>
-
-
-                        <span class="quantity">
-
-                            ${product.quantity}
-
-                        </span>
-
-
-                        <button
-                            onclick="increaseQuantity(${index})">
-
-                            +
-
-                        </button>
+                        ₹${itemTotal}
 
                     </div>
 
 
-                    <div class="cart-actions">
-
-                        <button
-                            class="remove-btn"
-                            onclick="removeProduct(${index})">
-
-                            Remove
-
-                        </button>
-
-
-                        <button
-                            class="btn buy-btn"
-                            onclick="buyThisProduct(${index})">
-
-                            Buy Now
-
-                        </button>
-
-                    </div>
-
                 </div>
 
+            `;
 
-                <div class="item-total">
-
-                    ₹${itemTotal}
-
-                </div>
-
-            </div>
-
-        `;
-
-    });
+        }
+    );
 
 
     html += `
 
         <div class="cart-bottom">
+
 
             <div class="cart-total">
 
@@ -353,11 +442,12 @@ function displayCart() {
 
             <a
                 href="checkout.html"
-                class="checkout-btn">
+                class="btn">
 
                 Proceed to Checkout →
 
             </a>
+
 
         </div>
 
@@ -458,9 +548,13 @@ function saveCart() {
 }
 
 
+
 displayCart();
+
 
 </script>
 
+
 </body>
+
 </html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Liara Professional™ | Customer Login</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+    <style>
+
+        .login-section {
+            min-height: 75vh;
+            padding: 80px 20px;
+            background: #f7f1e7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 10px 35px rgba(0,0,0,.10);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: #ad8232;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-button:hover {
+            background: #866326;
+        }
+
+        .switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .switch a {
+            color: #ad8232;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <a href="index.html"
+       class="logo">
+
+        <span>LIARA</span>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </a>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#products">
+            Products
+        </a>
+
+        <a href="cart.html">
+            Cart 🛒
+        </a>
+
+        <a href="login.html">
+            Login
+        </a>
+
+        <a href="index.html#contact">
+            Contact
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<section class="login-section">
+
+
+    <div class="login-box">
+
+
+        <h2 id="formTitle">
+            Customer Login
+        </h2>
+
+
+        <p class="subtitle"
+           id="formSubtitle">
+
+            Login to your Liara Professional account
+
+        </p>
+
+
+
+        <div id="signupFields"
+             style="display:none;">
+
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Full Name"
+                autocomplete="name">
+
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Mobile Number"
+                autocomplete="tel">
+
+        </div>
+
+
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Email Address"
+            autocomplete="email">
+
+
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            autocomplete="new-password">
+
+
+
+        <button
+            type="button"
+            class="login-button"
+            id="mainButton"
+            onclick="loginUser()">
+
+            Login
+
+        </button>
+
+
+
+        <div class="switch">
+
+            <span id="switchText">
+                Don't have an account?
+            </span>
+
+            <a
+                id="switchLink"
+                onclick="toggleForm()">
+
+                Create Account
+
+            </a>
+
+        </div>
+
+
+
+        <div id="message"></div>
+
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        LIARA
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </div>
+
+
+    <p>
+
+        © 2026 Liara Group Private Limited.
+        All Rights Reserved.
+
+    </p>
+
+</footer>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+const SUPABASE_URL =
+    "https://oinafbuicwhleudztzyz.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+let signupMode = false;
+
+
+
+function toggleForm() {
+
+    signupMode = !signupMode;
+
+
+    const fields =
+        document.getElementById("signupFields");
+
+    const title =
+        document.getElementById("formTitle");
+
+    const subtitle =
+        document.getElementById("formSubtitle");
+
+    const button =
+        document.getElementById("mainButton");
+
+    const switchText =
+        document.getElementById("switchText");
+
+    const switchLink =
+        document.getElementById("switchLink");
+
+
+    if (signupMode) {
+
+        fields.style.display = "block";
+
+        title.innerText =
+            "Create Customer Account";
+
+        subtitle.innerText =
+            "Create your Liara Professional account";
+
+        button.innerText =
+            "Create Account";
+
+        button.onclick =
+            signupUser;
+
+        switchText.innerText =
+            "Already have an account?";
+
+        switchLink.innerText =
+            "Login";
+
+
+        document.getElementById("password")
+            .setAttribute("autocomplete", "new-password");
+
+
+    } else {
+
+        fields.style.display = "none";
+
+        title.innerText =
+            "Customer Login";
+
+        subtitle.innerText =
+            "Login to your Liara Professional account";
+
+        button.innerText =
+            "Login";
+
+        button.onclick =
+            loginUser;
+
+        switchText.innerText =
+            "Don't have an account?";
+
+        switchLink.innerText =
+            "Create Account";
+
+
+        document.getElementById("password")
+            .setAttribute("autocomplete", "current-password");
+
+    }
+
+}
+
+
+
+/* =========================
+   CREATE ACCOUNT
+========================= */
+
+
+async function signupUser() {
+
+
+    const name =
+        document.getElementById("fullName")
+        .value
+        .trim();
+
+
+    const phone =
+        document.getElementById("phone")
+        .value
+        .trim();
+
+
+    const email =
+        document.getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+        document.getElementById("password")
+        .value;
+
+
+    if (!name || !email || !password) {
+
+        showMessage(
+            "Please fill Name, Email and Password."
+        );
+
+        return;
+
+    }
+
+
+    if (password.length < 6) {
+
+        showMessage(
+            "Password must be at least 6 characters."
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Creating your account..."
+    );
+
+
+    const { data, error } =
+        await supabaseClient.auth.signUp({
+
+            email: email,
+
+            password: password,
+
+            options: {
+
+                data: {
+
+                    full_name: name,
+
+                    phone: phone
+
+                }
+
+            }
+
+        });
+
+
+    if (error) {
+
+        showMessage(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    /* CLEAR ALL FORM DATA */
+
+    document.getElementById("fullName").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
+
+
+    showMessage(
+        "Account created! Please check your email to verify your account."
+    );
+
+}
+
+
+
+/* =========================
+   LOGIN
+========================= */
+
+
+async function loginUser() {
+
+
+    const email =
+        document.getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+        document.getElementById("password")
+        .value;
+
+
+    if (!email || !password) {
+
+        showMessage(
+            "Please enter Email and Password."
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Logging in..."
+    );
+
+
+    const { data, error } =
+        await supabaseClient.auth
+        .signInWithPassword({
+
+            email: email,
+
+            password: password
+
+        });
+
+
+    if (error) {
+
+        showMessage(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Login successful!"
+    );
+
+
+    setTimeout(function() {
+
+        window.location.href =
+            "index.html";
+
+    }, 1000);
+
+}
+
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+
+function showMessage(text) {
+
+    document.getElementById("message")
+        .innerText = text;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
