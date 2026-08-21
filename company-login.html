@@ -40,6 +40,12 @@
                 rgba(0,0,0,.08);
         }
 
+        .company-login-box > p:first-child {
+            color: #ad8232;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
         .company-login-box h2 {
             margin: 0 0 8px;
         }
@@ -78,12 +84,9 @@
 
         .company-login-btn {
             width: 100%;
-
             border: none;
             cursor: pointer;
-
             font-size: 16px;
-
             margin-top: 5px;
         }
 
@@ -94,12 +97,17 @@
 
         .company-message {
             text-align: center;
-
             margin-top: 18px;
-
             font-weight: bold;
-
             min-height: 22px;
+        }
+
+        .company-message.success {
+            color: #287a3e;
+        }
+
+        .company-message.error {
+            color: #a33;
         }
 
     </style>
@@ -154,7 +162,7 @@
 
             <div class="form-group">
 
-                <label>
+                <label for="email">
                     Company Email
                 </label>
 
@@ -163,6 +171,7 @@
                     id="email"
                     value="info@liara.co.in"
                     autocomplete="username"
+                    readonly
                     required>
 
             </div>
@@ -170,7 +179,7 @@
 
             <div class="form-group">
 
-                <label>
+                <label for="password">
                     Password
                 </label>
 
@@ -240,7 +249,7 @@
 
 
 /* =====================================
-   SUPABASE CONNECTION
+   SUPABASE
 ===================================== */
 
 
@@ -257,6 +266,44 @@ const supabaseClient =
         SUPABASE_URL,
         SUPABASE_KEY
     );
+
+
+
+/* =====================================
+   CHECK EXISTING COMPANY LOGIN
+===================================== */
+
+
+async function checkExistingLogin() {
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .auth
+        .getUser();
+
+
+    if (
+        !error &&
+        data &&
+        data.user &&
+        data.user.email &&
+        data.user.email.toLowerCase() ===
+        "info@liara.co.in"
+    ) {
+
+        window.location.href =
+            "admin-orders.html";
+
+    }
+
+}
+
+
+checkExistingLogin();
 
 
 
@@ -301,51 +348,112 @@ document.getElementById(
 
         message.innerText = "";
 
+        message.className =
+            "company-message";
+
 
         button.disabled = true;
-
 
         button.innerText =
             "Logging in...";
 
 
-        /* =====================================
-           SUPABASE AUTH
-        ===================================== */
+        try {
 
 
-        const {
-            data,
-            error
-        } = await supabaseClient
-            .auth
-            .signInWithPassword({
-
-                email:
-                    email,
-
-                password:
-                    password
-
-            });
-
-
-        /* =====================================
-           ERROR
-        ===================================== */
-
-
-        if (error) {
-
-
-            console.log(
-                "Supabase Login Error:",
+            const {
+                data,
                 error
-            );
+            } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
+            if (error) {
+
+
+                console.error(
+                    "Supabase Login Error:",
+                    error
+                );
+
+
+                message.innerText =
+                    error.message;
+
+
+                message.className =
+                    "company-message error";
+
+
+                button.disabled =
+                    false;
+
+
+                button.innerText =
+                    "Company Login";
+
+
+                return;
+
+            }
+
+
+            if (
+                data &&
+                data.user &&
+                data.user.email &&
+                data.user.email.toLowerCase() ===
+                "info@liara.co.in"
+            ) {
+
+
+                message.innerText =
+                    "Company login successful ✓";
+
+
+                message.className =
+                    "company-message success";
+
+
+                button.innerText =
+                    "Opening Orders...";
+
+
+                setTimeout(
+                    function() {
+
+                        window.location.href =
+                            "admin-orders.html";
+
+                    },
+                    500
+                );
+
+
+                return;
+
+            }
+
+
+            await supabaseClient
+                .auth
+                .signOut();
 
 
             message.innerText =
-                error.message;
+                "This account is not authorized for company access.";
+
+
+            message.className =
+                "company-message error";
 
 
             button.disabled =
@@ -356,36 +464,31 @@ document.getElementById(
                 "Company Login";
 
 
-            return;
-
         }
 
-
-        /* =====================================
-           SUCCESS
-        ===================================== */
+        catch (error) {
 
 
-        if (data.user) {
+            console.error(
+                "Login Error:",
+                error
+            );
 
 
             message.innerText =
-                "Company login successful ✓";
+                "Something went wrong. Please try again.";
+
+
+            message.className =
+                "company-message error";
+
+
+            button.disabled =
+                false;
 
 
             button.innerText =
-                "Opening Orders...";
-
-
-            setTimeout(
-                function() {
-
-                    window.location.href =
-                        "admin-orders.html";
-
-                },
-                700
-            );
+                "Company Login";
 
         }
 
