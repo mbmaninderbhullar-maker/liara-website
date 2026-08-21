@@ -1,0 +1,563 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Liara Professional™ | Admin Orders</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .admin-section {
+            padding: 70px 6%;
+            background: #faf8f5;
+            min-height: 75vh;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .admin-box {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,.08);
+            overflow-x: auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .admin-header h2 {
+            margin: 0;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #ad8232;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        .order-table th,
+        .order-table td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .order-table th {
+            background: #f7f1e7;
+        }
+
+        .status {
+            font-weight: bold;
+            color: #ad8232;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 30px;
+            color: #a33;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+
+            .admin-section {
+                padding: 50px 5%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <a href="index.html" class="logo">
+
+        <span>LIARA</span>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </a>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#products">
+            Products
+        </a>
+
+        <a href="cart.html">
+            Cart 🛒
+        </a>
+
+        <a href="account.html">
+            My Account
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<section class="admin-section">
+
+    <div class="admin-container">
+
+        <div class="admin-box">
+
+            <div class="admin-header">
+
+                <div>
+
+                    <p>
+                        LIARA PROFESSIONAL™
+                    </p>
+
+                    <h2>
+                        Customer Orders
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="logout-btn"
+                    onclick="logoutAdmin()">
+
+                    Logout
+
+                </button>
+
+            </div>
+
+
+            <div id="orders">
+
+                Loading orders...
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        LIARA
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </div>
+
+
+    <p>
+
+        © 2026 Liara Group Private Limited.
+        All Rights Reserved.
+
+    </p>
+
+</footer>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+/* =========================
+   SUPABASE
+========================= */
+
+
+const SUPABASE_URL =
+    "https://oinafbuicwhleudztzyz.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/* =========================
+   ADMIN EMAIL
+========================= */
+
+
+/*
+   APNA SUPABASE LOGIN EMAIL
+   ETHHE PAO
+*/
+
+
+const ADMIN_EMAIL =
+    "YOUR-ADMIN-EMAIL@example.com";
+
+
+
+/* =========================
+   CHECK ADMIN
+========================= */
+
+
+async function checkAdmin() {
+
+    const {
+        data: {
+            user
+        }
+    } = await supabaseClient.auth.getUser();
+
+
+    if (!user) {
+
+        window.location.href =
+            "login.html";
+
+        return null;
+
+    }
+
+
+    if (
+        user.email.toLowerCase() !==
+        ADMIN_EMAIL.toLowerCase()
+    ) {
+
+        document.getElementById(
+            "orders"
+        ).innerHTML = `
+
+            <div class="error-message">
+
+                Access denied.
+
+            </div>
+
+        `;
+
+        return null;
+
+    }
+
+
+    return user;
+
+}
+
+
+
+/* =========================
+   LOAD ORDERS
+========================= */
+
+
+async function loadOrders() {
+
+
+    const user =
+        await checkAdmin();
+
+
+    if (!user) {
+
+        return;
+
+    }
+
+
+    const ordersBox =
+        document.getElementById(
+            "orders"
+        );
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("orders")
+        .select("*")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (error) {
+
+
+        console.log(error);
+
+
+        ordersBox.innerHTML = `
+
+            <div class="error-message">
+
+                Unable to load orders.
+
+                <br><br>
+
+                ${error.message}
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+
+        ordersBox.innerHTML = `
+
+            <div class="no-orders">
+
+                No customer orders yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <table class="order-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Order ID
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Customer
+                    </th>
+
+                    <th>
+                        Mobile
+                    </th>
+
+                    <th>
+                        Address
+                    </th>
+
+                    <th>
+                        Product
+                    </th>
+
+                    <th>
+                        Quantity
+                    </th>
+
+                    <th>
+                        Total
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+    data.forEach(
+        function(order) {
+
+
+            let orderDate =
+                order.created_at
+                    ? new Date(
+                        order.created_at
+                      ).toLocaleString(
+                        "en-IN"
+                      )
+                    : "-";
+
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${order.id || "-"}
+                    </td>
+
+                    <td>
+                        ${orderDate}
+                    </td>
+
+                    <td>
+                        ${order.customer_name || "-"}
+                    </td>
+
+                    <td>
+                        ${order.phone || "-"}
+                    </td>
+
+                    <td>
+                        ${order.address || "-"}
+                    </td>
+
+                    <td>
+                        ${order.product || "-"}
+                    </td>
+
+                    <td>
+                        ${order.quantity || 0}
+                    </td>
+
+                    <td>
+                        ₹${order.total || 0}
+                    </td>
+
+                    <td class="status">
+
+                        ${order.status ||
+                         "Order Received"}
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+    `;
+
+
+    ordersBox.innerHTML =
+        html;
+
+}
+
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+
+async function logoutAdmin() {
+
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* =========================
+   START
+========================= */
+
+
+loadOrders();
+
+
+</script>
+
+
+</body>
+
+</html>
+```
