@@ -9,9 +9,10 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Liara Professional™ | Admin Orders</title>
+    <title>Liara Professional™ | Customer Orders</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet"
+          href="style.css">
 
     <style>
 
@@ -22,7 +23,7 @@
         }
 
         .admin-container {
-            max-width: 1200px;
+            max-width: 1250px;
             margin: auto;
         }
 
@@ -39,7 +40,13 @@
             justify-content: space-between;
             align-items: center;
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+        }
+
+        .admin-header p {
+            margin: 0 0 5px;
+            color: #ad8232;
+            font-weight: bold;
         }
 
         .admin-header h2 {
@@ -50,16 +57,20 @@
             border: none;
             background: #ad8232;
             color: white;
-            padding: 11px 18px;
+            padding: 12px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
         }
 
+        .logout-btn:hover {
+            background: #866326;
+        }
+
         .order-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 900px;
+            min-width: 1000px;
         }
 
         .order-table th,
@@ -72,30 +83,46 @@
 
         .order-table th {
             background: #f7f1e7;
+            font-weight: bold;
         }
 
         .status {
-            font-weight: bold;
             color: #ad8232;
+            font-weight: bold;
         }
 
         .no-orders {
             text-align: center;
-            padding: 40px;
+            padding: 50px 20px;
             color: #777;
         }
 
         .error-message {
             text-align: center;
-            padding: 30px;
+            padding: 40px 20px;
             color: #a33;
             font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
         }
 
         @media (max-width: 700px) {
 
             .admin-section {
                 padding: 50px 5%;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logout-btn {
+                width: 100%;
             }
 
         }
@@ -110,7 +137,8 @@
 
 <header>
 
-    <a href="index.html" class="logo">
+    <a href="index.html"
+       class="logo">
 
         <span>LIARA</span>
 
@@ -151,6 +179,7 @@
 
         <div class="admin-box">
 
+
             <div class="admin-header">
 
                 <div>
@@ -179,9 +208,12 @@
 
             <div id="orders">
 
-                Loading orders...
+                <div class="loading">
+                    Loading orders...
+                </div>
 
             </div>
+
 
         </div>
 
@@ -248,8 +280,10 @@ const supabaseClient =
 
 
 /*
-   APNA SUPABASE LOGIN EMAIL
-   ETHHE PAO
+   IMPORTANT:
+
+   Ethhe apna EXACT
+   Supabase login email pao.
 */
 
 
@@ -265,11 +299,27 @@ const ADMIN_EMAIL =
 
 async function checkAdmin() {
 
+
     const {
-        data: {
-            user
-        }
+        data,
+        error
     } = await supabaseClient.auth.getUser();
+
+
+    if (error) {
+
+        console.log(error);
+
+        window.location.href =
+            "login.html";
+
+        return false;
+
+    }
+
+
+    const user =
+        data.user;
 
 
     if (!user) {
@@ -277,15 +327,23 @@ async function checkAdmin() {
         window.location.href =
             "login.html";
 
-        return null;
+        return false;
 
     }
 
 
+    console.log(
+        "Logged in email:",
+        user.email
+    );
+
+
     if (
+        !user.email ||
         user.email.toLowerCase() !==
         ADMIN_EMAIL.toLowerCase()
     ) {
+
 
         document.getElementById(
             "orders"
@@ -295,16 +353,22 @@ async function checkAdmin() {
 
                 Access denied.
 
+                <br><br>
+
+                Logged in account:
+                ${user.email || "Unknown"}
+
             </div>
 
         `;
 
-        return null;
+
+        return false;
 
     }
 
 
-    return user;
+    return true;
 
 }
 
@@ -318,11 +382,11 @@ async function checkAdmin() {
 async function loadOrders() {
 
 
-    const user =
+    const allowed =
         await checkAdmin();
 
 
-    if (!user) {
+    if (!allowed) {
 
         return;
 
@@ -340,10 +404,7 @@ async function loadOrders() {
         error
     } = await supabaseClient
         .from("orders")
-        .select("*")
-        .order("created_at", {
-            ascending: false
-        });
+        .select("*");
 
 
     if (error) {
@@ -366,6 +427,7 @@ async function loadOrders() {
 
         `;
 
+
         return;
 
     }
@@ -387,6 +449,7 @@ async function loadOrders() {
 
         `;
 
+
         return;
 
     }
@@ -405,10 +468,6 @@ async function loadOrders() {
                     </th>
 
                     <th>
-                        Date
-                    </th>
-
-                    <th>
                         Customer
                     </th>
 
@@ -418,10 +477,6 @@ async function loadOrders() {
 
                     <th>
                         Address
-                    </th>
-
-                    <th>
-                        Product
                     </th>
 
                     <th>
@@ -449,26 +504,12 @@ async function loadOrders() {
         function(order) {
 
 
-            let orderDate =
-                order.created_at
-                    ? new Date(
-                        order.created_at
-                      ).toLocaleString(
-                        "en-IN"
-                      )
-                    : "-";
-
-
             html += `
 
                 <tr>
 
                     <td>
                         ${order.id || "-"}
-                    </td>
-
-                    <td>
-                        ${orderDate}
                     </td>
 
                     <td>
@@ -481,10 +522,6 @@ async function loadOrders() {
 
                     <td>
                         ${order.address || "-"}
-                    </td>
-
-                    <td>
-                        ${order.product || "-"}
                     </td>
 
                     <td>
