@@ -8,20 +8,168 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Liara Professional™ | Company Orders</title>
+<title>Liara Professional™ | Company Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
 
-/* =========================================
-   COMPANY ORDERS DASHBOARD
-========================================= */
+/* =====================================================
+   ADMIN DASHBOARD
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #faf8f5;
+}
+
+
+/* =====================================================
+   LAYOUT
+===================================================== */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* =====================================================
+   SIDE MENU
+===================================================== */
+
+.sidebar {
+    width: 235px;
+    min-height: 100vh;
+    background: #211d18;
+    padding: 25px 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    color: #c89b4b;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    padding: 5px 15px 20px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    margin-bottom: 15px;
+}
+
+.side-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.side-menu button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #ddd;
+    padding: 13px 14px;
+    border-radius: 9px;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.side-menu button:hover {
+    background: #302a22;
+    color: white;
+}
+
+.side-menu button.active {
+    background: #ad8232;
+    color: white;
+}
+
+.side-menu .logout-side {
+    margin-top: 15px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 18px;
+    border-radius: 0;
+}
+
+
+/* =====================================================
+   MAIN AREA
+===================================================== */
+
+.dashboard-main {
+    margin-left: 235px;
+    width: calc(100% - 235px);
+    min-height: 100vh;
+}
+
+
+/* =====================================================
+   TOP HEADER
+===================================================== */
+
+.dashboard-header {
+    background: white;
+    min-height: 78px;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+.dashboard-logo {
+    text-decoration: none;
+    color: #222;
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1;
+}
+
+.dashboard-logo span {
+    font-size: 23px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.dashboard-logo small {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #ad8232;
+    margin-top: 4px;
+}
+
+.mobile-menu-btn {
+    display: none;
+    border: none;
+    background: #ad8232;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 13px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   ADMIN SECTION
+===================================================== */
 
 .admin-section {
-    padding: 45px 4%;
-    background: #faf8f5;
-    min-height: 80vh;
+    padding: 35px 3%;
+    min-height: calc(100vh - 78px);
 }
 
 .admin-container {
@@ -37,7 +185,9 @@
 }
 
 
-/* HEADER */
+/* =====================================================
+   HEADER
+===================================================== */
 
 .admin-header {
     display: flex;
@@ -58,6 +208,7 @@
 .admin-header h2 {
     margin: 0;
     font-size: 32px;
+    color: #222;
 }
 
 .logout-btn {
@@ -75,9 +226,9 @@
 }
 
 
-/* =========================================
+/* =====================================================
    SUMMARY CARDS
-========================================= */
+===================================================== */
 
 .summary-grid {
     display: grid;
@@ -120,9 +271,9 @@
 }
 
 
-/* =========================================
+/* =====================================================
    TOOLS
-========================================= */
+===================================================== */
 
 .order-tools {
     display: flex;
@@ -165,9 +316,9 @@
 }
 
 
-/* =========================================
-   ORDERS TABLE
-========================================= */
+/* =====================================================
+   TABLE
+===================================================== */
 
 .table-wrapper {
     width: 100%;
@@ -181,6 +332,7 @@
     border-collapse: collapse;
     table-layout: fixed;
     font-size: 12px;
+    min-width: 1050px;
 }
 
 .order-table th {
@@ -260,7 +412,9 @@
 }
 
 
-/* PRODUCT */
+/* =====================================================
+   PRODUCT / PAYMENT / STATUS
+===================================================== */
 
 .product-name {
     font-weight: bold;
@@ -276,9 +430,6 @@
     font-weight: bold;
 }
 
-
-/* PAYMENT */
-
 .payment-badge {
     display: inline-block;
     padding: 5px 8px;
@@ -288,9 +439,6 @@
     background: #f3eee5;
     color: #8c6a28;
 }
-
-
-/* STATUS */
 
 .status-select {
     width: 100%;
@@ -306,9 +454,6 @@
     outline: none;
     border-color: #ad8232;
 }
-
-
-/* SAVE */
 
 .save-btn {
     margin-top: 7px;
@@ -332,16 +477,15 @@
     cursor: not-allowed;
 }
 
-
-/* DATE */
-
 .date-time {
     color: #555;
     font-size: 10px;
 }
 
 
-/* MESSAGE */
+/* =====================================================
+   MESSAGES
+===================================================== */
 
 .message {
     text-align: center;
@@ -359,9 +503,46 @@
 }
 
 
-/* =========================================
+/* =====================================================
+   OTHER MENU MESSAGE
+===================================================== */
+
+.menu-placeholder {
+    background: white;
+    border-radius: 18px;
+    padding: 70px 30px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,.07);
+}
+
+.menu-placeholder .big-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.menu-placeholder h2 {
+    margin: 0 0 10px;
+    color: #222;
+}
+
+.menu-placeholder p {
+    margin: 0;
+    color: #777;
+}
+
+
+/* =====================================================
+   OVERLAY
+===================================================== */
+
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* =====================================================
    MOBILE
-========================================= */
+===================================================== */
 
 @media (max-width: 1100px) {
 
@@ -376,10 +557,52 @@
 }
 
 
+@media (max-width: 800px) {
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .dashboard-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.45);
+        z-index: 950;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    .dashboard-header {
+        padding: 13px 18px;
+    }
+
+    .dashboard-logo span {
+        font-size: 20px;
+    }
+
+}
+
+
 @media (max-width: 700px) {
 
     .admin-section {
-        padding: 30px 3%;
+        padding: 25px 3%;
     }
 
     .admin-header {
@@ -412,14 +635,8 @@
         width: 100%;
     }
 
-    /*
-       Mobile table is allowed to scroll
-       because 10 columns cannot safely
-       fit on a small phone screen.
-    */
-
     .order-table {
-        min-width: 950px;
+        min-width: 1050px;
     }
 
 }
@@ -432,46 +649,154 @@
 <body>
 
 
-<!-- =========================================
-     HEADER
-========================================= -->
+<!-- =====================================================
+     SIDE MENU
+===================================================== -->
 
-<header>
+<aside class="sidebar" id="sidebar">
 
-    <a href="index.html" class="logo">
+    <div class="sidebar-title">
+        COMPANY PANEL
+    </div>
 
-        <span>LIARA</span>
+    <div class="side-menu">
 
-        <small>PROFESSIONAL™</small>
+        <button
+            class="active"
+            onclick="showSection('orders', this)">
+            🛒 Orders
+        </button>
+
+        <button
+            onclick="showSection('sales', this)">
+            💰 Sales
+        </button>
+
+        <button
+            onclick="showSection('stock', this)">
+            📦 Stock
+        </button>
+
+        <button
+            onclick="showSection('add-product', this)">
+            ➕ Add Product
+        </button>
+
+        <button
+            onclick="showSection('products', this)">
+            🧴 Products
+        </button>
+
+        <button
+            onclick="showSection('customers', this)">
+            👥 Customers
+        </button>
+
+        <button
+            onclick="showSection('reports', this)">
+            📊 Reports
+        </button>
+
+        <button
+            onclick="showSection('delivery', this)">
+            🚚 Delivery
+        </button>
+
+        <button
+            onclick="showSection('notifications', this)">
+            🔔 Notifications
+        </button>
+
+        <button
+            onclick="showSection('settings', this)">
+            ⚙️ Settings
+        </button>
+
+        <button
+            class="logout-side"
+            onclick="logoutAdmin()">
+            🚪 Logout
+        </button>
+
+    </div>
+
+</aside>
+
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+    onclick="closeSidebar()">
+</div>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="dashboard-main">
+
+
+<!-- =====================================================
+     TOP HEADER
+===================================================== -->
+
+<header class="dashboard-header">
+
+    <button
+        class="mobile-menu-btn"
+        onclick="openSidebar()">
+        ☰
+    </button>
+
+
+    <a
+        href="index.html"
+        class="dashboard-logo">
+
+        <span>
+            LIARA
+        </span>
+
+        <small>
+            PROFESSIONAL™
+        </small>
 
     </a>
+
 
 </header>
 
 
 
-<!-- =========================================
-     DASHBOARD
-========================================= -->
+<!-- =====================================================
+     ORDERS SECTION
+===================================================== -->
 
-<section class="admin-section">
+<section
+    class="admin-section"
+    id="orders-section">
 
 <div class="admin-container">
 
 <div class="admin-box">
 
 
-<!-- HEADER -->
-
 <div class="admin-header">
 
     <div>
 
-        <p>LIARA PROFESSIONAL™</p>
+        <p>
+            LIARA PROFESSIONAL™
+        </p>
 
-        <h2>Company Orders Dashboard</h2>
+        <h2>
+            Company Orders Dashboard
+        </h2>
 
     </div>
+
 
     <button
         class="logout-btn"
@@ -485,16 +810,16 @@
 
 
 
-<!-- =========================================
-     SUMMARY
-========================================= -->
+<!-- SUMMARY -->
 
 <div class="summary-grid">
 
 
     <div class="summary-card">
 
-        <span>Total Orders</span>
+        <span>
+            Total Orders
+        </span>
 
         <strong id="totalOrders">
             0
@@ -505,7 +830,9 @@
 
     <div class="summary-card sales">
 
-        <span>Total Sales</span>
+        <span>
+            Total Sales
+        </span>
 
         <strong id="totalSales">
             ₹0
@@ -516,7 +843,9 @@
 
     <div class="summary-card pending">
 
-        <span>Pending Orders</span>
+        <span>
+            Pending Orders
+        </span>
 
         <strong id="pendingOrders">
             0
@@ -527,7 +856,9 @@
 
     <div class="summary-card delivered">
 
-        <span>Delivered Orders</span>
+        <span>
+            Delivered Orders
+        </span>
 
         <strong id="deliveredOrders">
             0
@@ -540,12 +871,9 @@
 
 
 
-<!-- =========================================
-     SEARCH + REFRESH
-========================================= -->
+<!-- SEARCH -->
 
 <div class="order-tools">
-
 
     <div class="search-box">
 
@@ -566,14 +894,11 @@
 
     </button>
 
-
 </div>
 
 
 
-<!-- =========================================
-     ORDERS
-========================================= -->
+<!-- ORDERS -->
 
 <div id="orders">
 
@@ -594,9 +919,46 @@
 
 
 
-<!-- =========================================
+<!-- =====================================================
+     OTHER SECTIONS
+===================================================== -->
+
+<section
+    class="admin-section"
+    id="other-section"
+    style="display:none;">
+
+<div class="admin-container">
+
+    <div class="menu-placeholder">
+
+        <div
+            class="big-icon"
+            id="placeholderIcon">
+            📦
+        </div>
+
+
+        <h2 id="placeholderTitle">
+            Stock
+        </h2>
+
+
+        <p id="placeholderText">
+            This section is ready to be connected.
+        </p>
+
+    </div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
      FOOTER
-========================================= -->
+===================================================== -->
 
 <footer>
 
@@ -619,16 +981,19 @@
 
 
 
-<!-- SUPABASE -->
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
-/* =========================================
+
+/* =====================================================
    SUPABASE
-========================================= */
+===================================================== */
 
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
@@ -652,9 +1017,199 @@ const ADMIN_EMAIL =
 let allOrders = [];
 
 
-/* =========================================
-   CHECK ADMIN LOGIN
-========================================= */
+
+/* =====================================================
+   MENU
+===================================================== */
+
+function showSection(
+    section,
+    button
+) {
+
+    const ordersSection =
+        document.getElementById(
+            "orders-section"
+        );
+
+    const otherSection =
+        document.getElementById(
+            "other-section"
+        );
+
+
+    document
+        .querySelectorAll(
+            ".side-menu button"
+        )
+        .forEach(
+            function(btn) {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    if (button) {
+
+        button.classList.add(
+            "active"
+        );
+
+    }
+
+
+    if (section === "orders") {
+
+        ordersSection.style.display =
+            "block";
+
+        otherSection.style.display =
+            "none";
+
+    }
+
+    else {
+
+        ordersSection.style.display =
+            "none";
+
+        otherSection.style.display =
+            "block";
+
+
+        const details = {
+
+            sales: {
+                icon: "💰",
+                title: "Sales",
+                text: "Sales management will appear here."
+            },
+
+            stock: {
+                icon: "📦",
+                title: "Stock",
+                text: "Stock management will appear here."
+            },
+
+            "add-product": {
+                icon: "➕",
+                title: "Add Product",
+                text: "New product creation will appear here."
+            },
+
+            products: {
+                icon: "🧴",
+                title: "Products",
+                text: "Your product list will appear here."
+            },
+
+            customers: {
+                icon: "👥",
+                title: "Customers",
+                text: "Customer management will appear here."
+            },
+
+            reports: {
+                icon: "📊",
+                title: "Reports",
+                text: "Business reports will appear here."
+            },
+
+            delivery: {
+                icon: "🚚",
+                title: "Delivery",
+                text: "Delivery management will appear here."
+            },
+
+            notifications: {
+                icon: "🔔",
+                title: "Notifications",
+                text: "Notifications will appear here."
+            },
+
+            settings: {
+                icon: "⚙️",
+                title: "Settings",
+                text: "Dashboard settings will appear here."
+            }
+
+        };
+
+
+        const selected =
+            details[section];
+
+
+        if (selected) {
+
+            document.getElementById(
+                "placeholderIcon"
+            ).innerText =
+                selected.icon;
+
+
+            document.getElementById(
+                "placeholderTitle"
+            ).innerText =
+                selected.title;
+
+
+            document.getElementById(
+                "placeholderText"
+            ).innerText =
+                selected.text;
+
+        }
+
+    }
+
+
+    closeSidebar();
+
+}
+
+
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+function openSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.add("open");
+
+
+    document
+        .getElementById("sidebarOverlay")
+        .classList.add("show");
+
+}
+
+
+function closeSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+
+    document
+        .getElementById("sidebarOverlay")
+        .classList.remove("show");
+
+}
+
+
+
+/* =====================================================
+   CHECK ADMIN
+===================================================== */
 
 async function checkAdmin() {
 
@@ -704,24 +1259,29 @@ async function checkAdmin() {
 }
 
 
-/* =========================================
-   NUMBER HELPER
-========================================= */
+
+/* =====================================================
+   MONEY
+===================================================== */
 
 function money(value) {
 
     const number =
         Number(value || 0);
 
+
     return "₹" +
-        number.toLocaleString("en-IN");
+        number.toLocaleString(
+            "en-IN"
+        );
 
 }
 
 
-/* =========================================
-   PRODUCT NAME
-========================================= */
+
+/* =====================================================
+   PRODUCT
+===================================================== */
 
 function getProductName(order) {
 
@@ -737,9 +1297,10 @@ function getProductName(order) {
 }
 
 
-/* =========================================
+
+/* =====================================================
    PRICE
-========================================= */
+===================================================== */
 
 function getPrice(order) {
 
@@ -748,7 +1309,9 @@ function getPrice(order) {
         order.price !== null
     ) {
 
-        return Number(order.price);
+        return Number(
+            order.price
+        );
 
     }
 
@@ -758,7 +1321,9 @@ function getPrice(order) {
         order.unit_price !== null
     ) {
 
-        return Number(order.unit_price);
+        return Number(
+            order.unit_price
+        );
 
     }
 
@@ -768,16 +1333,23 @@ function getPrice(order) {
         order.product_price !== null
     ) {
 
-        return Number(order.product_price);
+        return Number(
+            order.product_price
+        );
 
     }
 
 
     const quantity =
-        Number(order.quantity || 1);
+        Number(
+            order.quantity || 1
+        );
+
 
     const total =
-        Number(order.total || 0);
+        Number(
+            order.total || 0
+        );
 
 
     if (quantity > 0) {
@@ -792,9 +1364,10 @@ function getPrice(order) {
 }
 
 
-/* =========================================
+
+/* =====================================================
    PAYMENT
-========================================= */
+===================================================== */
 
 function getPayment(order) {
 
@@ -809,14 +1382,17 @@ function getPayment(order) {
 }
 
 
-/* =========================================
+
+/* =====================================================
    LOAD ORDERS
-========================================= */
+===================================================== */
 
 async function loadOrders() {
 
     const box =
-        document.getElementById("orders");
+        document.getElementById(
+            "orders"
+        );
 
 
     box.innerHTML = `
@@ -870,7 +1446,9 @@ async function loadOrders() {
 
                     <br><br>
 
-                    ${error.message}
+                    ${escapeHtml(
+                        error.message
+                    )}
 
                 </div>
 
@@ -894,12 +1472,14 @@ async function loadOrders() {
             allOrders
         );
 
-
     }
+
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         box.innerHTML = `
@@ -910,7 +1490,9 @@ async function loadOrders() {
 
                 <br><br>
 
-                ${error.message}
+                ${escapeHtml(
+                    error.message
+                )}
 
             </div>
 
@@ -921,14 +1503,14 @@ async function loadOrders() {
 }
 
 
-/* =========================================
+
+/* =====================================================
    SUMMARY
-========================================= */
+===================================================== */
 
 function updateSummary(
     orders
 ) {
-
 
     const totalOrders =
         orders.length;
@@ -936,16 +1518,13 @@ function updateSummary(
 
     let totalSales = 0;
 
-
     let pending = 0;
-
 
     let delivered = 0;
 
 
     orders.forEach(
         function(order) {
-
 
             totalSales +=
                 Number(
@@ -961,7 +1540,8 @@ function updateSummary(
 
 
             if (
-                status === "delivered"
+                status ===
+                "delivered"
             ) {
 
                 delivered++;
@@ -994,7 +1574,9 @@ function updateSummary(
     document.getElementById(
         "totalSales"
     ).innerText =
-        money(totalSales);
+        money(
+            totalSales
+        );
 
 
     document.getElementById(
@@ -1011,14 +1593,14 @@ function updateSummary(
 }
 
 
-/* =========================================
+
+/* =====================================================
    RENDER ORDERS
-========================================= */
+===================================================== */
 
 function renderOrders(
     orders
 ) {
-
 
     const box =
         document.getElementById(
@@ -1087,7 +1669,6 @@ function renderOrders(
 
     orders.forEach(
         function(order) {
-
 
             let orderDate =
                 "-";
@@ -1170,12 +1751,6 @@ function renderOrders(
                 "Pending";
 
 
-            /*
-              DATABASE ID IS STILL USED
-              INTERNALLY.
-              IT IS NOT SHOWN TO CUSTOMER.
-            */
-
             const orderId =
                 order.id;
 
@@ -1185,71 +1760,53 @@ function renderOrders(
                 <tr>
 
                     <td class="date-time">
-
-                        ${orderDate}
-
+                        ${escapeHtml(orderDate)}
                     </td>
 
 
                     <td>
-
                         <strong>
                             ${escapeHtml(customer)}
                         </strong>
-
                     </td>
 
 
                     <td>
-
                         ${escapeHtml(phone)}
-
                     </td>
 
 
                     <td class="product-name">
-
                         ${escapeHtml(product)}
-
                     </td>
 
 
                     <td class="price">
-
                         ${money(price)}
-
                     </td>
 
 
                     <td>
-
                         ${quantity}
-
                     </td>
 
 
                     <td class="total">
-
                         ${money(total)}
-
                     </td>
 
 
                     <td>
 
                         <span class="payment-badge">
-
                             ${escapeHtml(payment)}
-
                         </span>
 
                     </td>
 
 
                     <td>
-
                         ${escapeHtml(address)}
-
                     </td>
 
 
@@ -1257,7 +1814,7 @@ function renderOrders(
 
                         <select
                             class="status-select"
-                            id="status-${orderId}">
+                            id="status-${escapeHtml(orderId)}">
 
                             <option value="Pending"
                                 ${status === "Pending" ? "selected" : ""}>
@@ -1294,8 +1851,8 @@ function renderOrders(
 
                         <button
                             class="save-btn"
-                            id="save-${orderId}"
-                            onclick="saveOrder('${orderId}')">
+                            id="save-${escapeHtml(orderId)}"
+                            onclick="saveOrder('${escapeHtml(orderId)}')">
 
                             Save
 
@@ -1328,12 +1885,12 @@ function renderOrders(
 }
 
 
-/* =========================================
+
+/* =====================================================
    SEARCH
-========================================= */
+===================================================== */
 
 function filterOrders() {
-
 
     const search =
         document.getElementById(
@@ -1358,7 +1915,6 @@ function filterOrders() {
     const filtered =
         allOrders.filter(
             function(order) {
-
 
                 const text = (
 
@@ -1392,32 +1948,50 @@ function filterOrders() {
 }
 
 
-/* =========================================
+
+/* =====================================================
    ESCAPE HTML
-========================================= */
+===================================================== */
 
 function escapeHtml(
     value
 ) {
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return String(
+        value
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
 
-/* =========================================
-   SAVE STATUS
-========================================= */
+
+/* =====================================================
+   SAVE ORDER STATUS
+===================================================== */
 
 async function saveOrder(
     orderId
 ) {
-
 
     const select =
         document.getElementById(
@@ -1451,7 +2025,6 @@ async function saveOrder(
 
 
     try {
-
 
         const {
             error
@@ -1501,17 +2074,14 @@ async function saveOrder(
             "✓ Saved";
 
 
-        /*
-           Update local order
-        */
-
         const order =
             allOrders.find(
                 function(item) {
 
                     return String(
                         item.id
-                    ) === String(
+                    ) ===
+                    String(
                         orderId
                     );
 
@@ -1545,11 +2115,10 @@ async function saveOrder(
             1200
         );
 
-
     }
 
-    catch (error) {
 
+    catch (error) {
 
         console.error(
             error
@@ -1573,12 +2142,12 @@ async function saveOrder(
 }
 
 
-/* =========================================
+
+/* =====================================================
    LOGOUT
-========================================= */
+===================================================== */
 
 async function logoutAdmin() {
-
 
     await supabaseClient
         .auth
@@ -1591,9 +2160,10 @@ async function logoutAdmin() {
 }
 
 
-/* =========================================
+
+/* =====================================================
    START
-========================================= */
+===================================================== */
 
 loadOrders();
 
