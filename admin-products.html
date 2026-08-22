@@ -1,1 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Liara Professional™ | Products & Stock</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #faf8f5;
+    color: #222;
+}
+
+header {
+    background: white;
+    padding: 18px 5%;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+
+.logo {
+    text-decoration: none;
+    color: #222;
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.logo span {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.logo small {
+    color: #ad8232;
+    letter-spacing: 2px;
+}
+
+.section {
+    padding: 50px 4%;
+    min-height: 80vh;
+}
+
+.container {
+    max-width: 1400px;
+    margin: auto;
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.08);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.header p {
+    color: #ad8232;
+    font-weight: bold;
+    margin: 0 0 5px;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 11px 17px;
+    font-weight: bold;
+}
+
+.logout {
+    background: #ad8232;
+    color: white;
+}
+
+.add-btn {
+    background: #287a3e;
+    color: white;
+    margin-bottom: 25px;
+}
+
+.edit-btn {
+    background: #ad8232;
+    color: white;
+}
+
+.delete-btn {
+    background: #a33;
+    color: white;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+}
+
+th,
+td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+th {
+    background: #f7f1e7;
+}
+
+.product-image {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.low-stock {
+    color: #b36b00;
+    font-weight: bold;
+}
+
+.out-stock {
+    color: #a33;
+    font-weight: bold;
+}
+
+.in-stock {
+    color: #287a3e;
+    font-weight: bold;
+}
+
+.status-active {
+    color: #287a3e;
+    font-weight: bold;
+}
+
+.status-inactive {
+    color: #a33;
+    font-weight: bold;
+}
+
+.message {
+    text-align: center;
+    padding: 40px;
+    font-weight: bold;
+}
+
+.error {
+    color: #a33;
+}
+
+/* MODAL */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 16px;
+    padding: 28px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close {
+    background: #eee;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    font-size: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.submit-btn {
+    width: 100%;
+    background: #287a3e;
+    color: white;
+    margin-top: 10px;
+}
+
+@media(max-width:700px) {
+
+    .section {
+        padding: 30px 3%;
+    }
+
+    .box {
+        padding: 18px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logout {
+        width: 100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<a href="index.html" class="logo">
+<span>LIARA</span>
+<small>PROFESSIONAL™</small>
+</a>
+
+</header>
+
+
+<section class="section">
+
+<div class="container">
+
+<div class="box">
+
+<div class="header">
+
+<div>
+
+<p>LIARA PROFESSIONAL™</p>
+
+<h2>Products & Stock Management</h2>
+
+</div>
+
+<button
+class="logout"
+onclick="logoutAdmin()">
+
+Logout
+
+</button>
+
+</div>
+
+
+<button
+class="add-btn"
+onclick="openAddProduct()">
+
+＋ Add New Product
+
+</button>
+
+
+<div id="products">
+
+<div class="message">
+Loading products...
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<footer style="
+background:#222;
+color:white;
+text-align:center;
+padding:25px;
+">
+
+LIARA PROFESSIONAL™
+<br>
+
+<small style="color:#ccc;">
+© 2026 Liara Group Private Limited. All Rights Reserved.
+</small>
+
+</footer>
+
+
+<!-- PRODUCT MODAL -->
+
+<div
+id="productModal"
+class="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h3 id="modalTitle">
+Add Product
+</h3>
+
+<button
+class="close"
+onclick="closeModal()">
+
+×
+
+</button>
+
+</div>
+
+
+<form
+id="productForm"
+onsubmit="saveProduct(event)">
+
+
+<input
+type="hidden"
+id="productId">
+
+
+<div class="form-group">
+
+<label>
+Product Name
+</label>
+
+<input
+type="text"
+id="productName"
+required
+placeholder="Example: Herbal Face Wash">
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Price (₹)
+</label>
+
+<input
+type="number"
+id="productPrice"
+min="0"
+step="0.01"
+required
+placeholder="299">
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Stock Quantity
+</label>
+
+<input
+type="number"
+id="productStock"
+min="0"
+required
+placeholder="50">
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Product Image URL
+</label>
+
+<input
+type="text"
+id="productImage"
+placeholder="https://...">
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Description
+</label>
+
+<textarea
+id="productDescription"
+placeholder="Product description"></textarea>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Product Status
+</label>
+
+<select id="productActive">
+
+<option value="true">
+Active
+</option>
+
+<option value="false">
+Inactive
+</option>
+
+</select>
+
+</div>
+
+
+<button
+type="submit"
+class="submit-btn"
+id="submitButton">
+
+Save Product
+
+</button>
+
+
+</form>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+const ADMIN_EMAIL =
+"info@liara.co.in";
+
+let productsData = [];
+
+
+/* =========================
+   CHECK ADMIN
+========================= */
+
+async function checkAdmin() {
+
+const {
+data,
+error
+} =
+await supabaseClient
+.auth
+.getUser();
+
+if (
+error ||
+!data ||
+!data.user
+) {
+
+window.location.href =
+"company-login.html";
+
+return null;
+
+}
+
+const user =
+data.user;
+
+if (
+!user.email ||
+user.email.toLowerCase() !==
+ADMIN_EMAIL.toLowerCase()
+) {
+
+window.location.href =
+"company-login.html";
+
+return null;
+
+}
+
+return user;
+
+}
+
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+async function loadProducts() {
+
+const box =
+document.getElementById(
+"products"
+);
+
+box.innerHTML = `
+<div class="message">
+Loading products...
+</div>
+`;
+
+const user =
+await checkAdmin();
+
+if (!user) {
+return;
+}
+
+try {
+
+const {
+data,
+error
+} =
+await supabaseClient
+.from("products")
+.select("*")
+.order(
+"id",
+{
+ascending:false
+}
+);
+
+if (error) {
+
+box.innerHTML = `
+<div class="message error">
+Unable to load products.
+<br><br>
+${error.message}
+</div>
+`;
+
+return;
+
+}
+
+productsData =
+data || [];
+
+if (
+productsData.length === 0
+) {
+
+box.innerHTML = `
+<div class="message">
+No products added yet.
+<br><br>
+Click "Add New Product" to add your first product.
+</div>
+`;
+
+return;
+
+}
+
+
+let html = `
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Image</th>
+<th>Product</th>
+<th>Price</th>
+<th>Stock</th>
+<th>Stock Status</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+
+productsData.forEach(
+function(product) {
+
+let stockStatus = "";
+
+if (
+Number(product.stock) === 0
+) {
+
+stockStatus =
+`<span class="out-stock">
+Out of Stock
+</span>`;
+
+}
+else if (
+Number(product.stock) <= 10
+) {
+
+stockStatus =
+`<span class="low-stock">
+Low Stock
+</span>`;
+
+}
+else {
+
+stockStatus =
+`<span class="in-stock">
+In Stock
+</span>`;
+
+}
+
+
+const activeStatus =
+product.active
+?
+`<span class="status-active">
+Active
+</span>`
+:
+`<span class="status-inactive">
+Inactive
+</span>`;
+
+
+html += `
+
+<tr>
+
+<td>
+
+${
+product.image_url
+?
+`<img
+class="product-image"
+src="${escapeHtml(product.image_url)}"
+alt="${escapeHtml(product.name)}">`
+:
+"No Image"
+}
+
+</td>
+
+
+<td>
+
+<strong>
+${escapeHtml(product.name)}
+</strong>
+
+<br>
+
+<small>
+${escapeHtml(product.description || "")}
+</small>
+
+</td>
+
+
+<td>
+
+₹${Number(
+product.price || 0
+).toLocaleString("en-IN")}
+
+</td>
+
+
+<td>
+
+<strong>
+${Number(
+product.stock || 0
+)}
+</strong>
+
+</td>
+
+
+<td>
+
+${stockStatus}
+
+</td>
+
+
+<td>
+
+${activeStatus}
+
+</td>
+
+
+<td>
+
+<button
+class="edit-btn"
+onclick="editProduct(${product.id})">
+
+Edit
+
+</button>
+
+
+<button
+class="delete-btn"
+onclick="deleteProduct(${product.id})">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+box.innerHTML =
+html;
+
+}
+
+catch(error) {
+
+box.innerHTML = `
+<div class="message error">
+${error.message}
+</div>
+`;
+
+}
+
+}
+
+
+/* =========================
+   OPEN ADD
+========================= */
+
+function openAddProduct() {
+
+document.getElementById(
+"modalTitle"
+).innerText =
+"Add Product";
+
+document.getElementById(
+"productForm"
+).reset();
+
+document.getElementById(
+"productId"
+).value = "";
+
+document.getElementById(
+"productActive"
+).value =
+"true";
+
+document.getElementById(
+"productModal"
+).style.display =
+"flex";
+
+}
+
+
+/* =========================
+   EDIT PRODUCT
+========================= */
+
+function editProduct(id) {
+
+const product =
+productsData.find(
+function(item) {
+
+return Number(item.id) ===
+Number(id);
+
+}
+);
+
+if (!product) {
+return;
+}
+
+document.getElementById(
+"modalTitle"
+).innerText =
+"Edit Product";
+
+document.getElementById(
+"productId"
+).value =
+product.id;
+
+document.getElementById(
+"productName"
+).value =
+product.name || "";
+
+document.getElementById(
+"productPrice"
+).value =
+product.price || 0;
+
+document.getElementById(
+"productStock"
+).value =
+product.stock || 0;
+
+document.getElementById(
+"productImage"
+).value =
+product.image_url || "";
+
+document.getElementById(
+"productDescription"
+).value =
+product.description || "";
+
+document.getElementById(
+"productActive"
+).value =
+product.active
+?
+"true"
+:
+"false";
+
+document.getElementById(
+"productModal"
+).style.display =
+"flex";
+
+}
+
+
+/* =========================
+   SAVE PRODUCT
+========================= */
+
+async function saveProduct(event) {
+
+event.preventDefault();
+
+const user =
+await checkAdmin();
+
+if (!user) {
+return;
+}
+
+const id =
+document.getElementById(
+"productId"
+).value;
+
+const product = {
+
+name:
+document.getElementById(
+"productName"
+).value.trim(),
+
+price:
+Number(
+document.getElementById(
+"productPrice"
+).value
+),
+
+stock:
+Number(
+document.getElementById(
+"productStock"
+).value
+),
+
+image_url:
+document.getElementById(
+"productImage"
+).value.trim() ||
+null,
+
+description:
+document.getElementById(
+"productDescription"
+).value.trim() ||
+null,
+
+active:
+document.getElementById(
+"productActive"
+).value ===
+"true"
+
+};
+
+
+const button =
+document.getElementById(
+"submitButton"
+);
+
+button.disabled =
+true;
+
+button.innerText =
+"Saving...";
+
+
+try {
+
+let result;
+
+
+if (id) {
+
+result =
+await supabaseClient
+.from("products")
+.update(product)
+.eq("id", id);
+
+}
+else {
+
+result =
+await supabaseClient
+.from("products")
+.insert(product);
+
+}
+
+
+if (result.error) {
+
+alert(
+"Unable to save product:\n\n" +
+result.error.message
+);
+
+button.disabled =
+false;
+
+button.innerText =
+"Save Product";
+
+return;
+
+}
+
+
+alert(
+id
+?
+"Product updated successfully."
+:
+"Product added successfully."
+);
+
+closeModal();
+
+loadProducts();
+
+}
+
+catch(error) {
+
+alert(
+"Something went wrong:\n\n" +
+error.message
+);
+
+}
+
+finally {
+
+button.disabled =
+false;
+
+button.innerText =
+"Save Product";
+
+}
+
+}
+
+
+/* =========================
+   DELETE / DEACTIVATE
+========================= */
+
+async function deleteProduct(id) {
+
+const product =
+productsData.find(
+function(item) {
+
+return Number(item.id) ===
+Number(id);
+
+}
+);
+
+if (!product) {
+return;
+}
+
+
+const confirmDelete =
+confirm(
+`Deactivate "${product.name}"?\n\nThe product will remain in the database but become inactive.`
+);
+
+if (!confirmDelete) {
+return;
+}
+
+
+const {
+error
+} =
+await supabaseClient
+.from("products")
+.update({
+active:false
+})
+.eq(
+"id",
+id
+);
+
+
+if (error) {
+
+alert(
+"Unable to deactivate product:\n\n" +
+error.message
+);
+
+return;
+
+}
+
+
+alert(
+"Product deactivated."
+);
+
+loadProducts();
+
+}
+
+
+/* =========================
+   CLOSE MODAL
+========================= */
+
+function closeModal() {
+
+document.getElementById(
+"productModal"
+).style.display =
+"none";
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logoutAdmin() {
+
+await supabaseClient
+.auth
+.signOut();
+
+window.location.href =
+"company-login.html";
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value) {
+
+return String(value || "")
+.replace(/&/g, "&amp;")
+.replace(/</g, "&lt;")
+.replace(/>/g, "&gt;")
+.replace(/"/g, "&quot;")
+.replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
