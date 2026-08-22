@@ -1,248 +1,276 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
+```
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-    <title>Liara Professional™ | Company Login</title>
+<title>
+    Liara Professional™ | Company Login
+</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 
-    <style>
+<style>
 
-        .company-login-section {
-            min-height: 75vh;
-            padding: 80px 5%;
-            background: #faf8f5;
+    .company-login-section {
+        min-height: 75vh;
+        padding: 80px 5%;
+        background: #faf8f5;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .company-login-box {
-            width: 100%;
-            max-width: 450px;
+    .company-login-box {
+        width: 100%;
+        max-width: 450px;
 
-            background: white;
-            padding: 40px;
+        background: white;
 
-            border-radius: 18px;
+        padding: 40px;
 
-            box-shadow:
-                0 10px 35px
-                rgba(0,0,0,.08);
-        }
+        border-radius: 18px;
 
-        .company-login-box > p:first-child {
-            color: #ad8232;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
+        box-shadow:
+            0 10px 35px
+            rgba(0,0,0,.08);
+    }
 
-        .company-login-box h2 {
-            margin: 0 0 8px;
-        }
+    .company-login-box > p:first-child {
+        color: #ad8232;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+    }
 
-        .company-subtitle {
-            color: #777;
-            margin-bottom: 30px;
-        }
+    .company-login-box h2 {
+        margin: 0 0 8px;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    .company-subtitle {
+        color: #777;
+        margin-bottom: 30px;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
+    .form-group {
+        margin-bottom: 20px;
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 13px 15px;
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
 
-            border: 1px solid #ddd;
-            border-radius: 8px;
+    .form-group input {
+        width: 100%;
+        padding: 13px 15px;
 
-            box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 8px;
 
-            font-size: 15px;
-            outline: none;
-        }
+        box-sizing: border-box;
 
-        .form-group input:focus {
-            border-color: #ad8232;
-        }
+        font-size: 15px;
+        outline: none;
+    }
 
-        .company-login-btn {
-            width: 100%;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 5px;
-        }
+    .form-group input:focus {
+        border-color: #ad8232;
+    }
 
-        .company-login-btn:disabled {
-            opacity: .6;
-            cursor: not-allowed;
-        }
+    .company-login-btn {
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 5px;
+    }
 
-        .company-message {
-            text-align: center;
-            margin-top: 18px;
-            font-weight: bold;
-            min-height: 22px;
-        }
+    .company-login-btn:disabled {
+        opacity: .6;
+        cursor: not-allowed;
+    }
 
-        .company-message.success {
-            color: #287a3e;
-        }
+    .company-message {
+        text-align: center;
+        margin-top: 18px;
+        font-weight: bold;
+        min-height: 22px;
+    }
 
-        .company-message.error {
-            color: #a33;
-        }
+    .back-home {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #ad8232;
+        text-decoration: none;
+        font-size: 14px;
+    }
 
-    </style>
+    .back-home:hover {
+        text-decoration: underline;
+    }
+
+</style>
+```
 
 </head>
 
-
 <body>
 
+<!-- HEADER -->
 
 <header>
 
-    <a href="index.html" class="logo">
+```
+<a href="/" class="logo">
 
-        <span>
-            LIARA
-        </span>
+    <span>
+        LIARA
+    </span>
 
-        <small>
-            PROFESSIONAL™
-        </small>
+    <small>
+        PROFESSIONAL™
+    </small>
 
-    </a>
+</a>
+```
 
 </header>
 
-
+<!-- COMPANY LOGIN -->
 
 <section class="company-login-section">
 
-
-    <div class="company-login-box">
-
-
-        <p>
-            LIARA PROFESSIONAL™
-        </p>
-
-
-        <h2>
-            Company Login
-        </h2>
-
-
-        <p class="company-subtitle">
-            Secure Company / Admin Access
-        </p>
-
-
-        <form id="companyLoginForm">
-
-
-            <div class="form-group">
-
-                <label for="email">
-                    Company Email
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    value="info@liara.co.in"
-                    autocomplete="username"
-                    readonly
-                    required>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="password">
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter company password"
-                    autocomplete="current-password"
-                    required>
-
-            </div>
-
-
-            <button
-                type="submit"
-                class="btn company-login-btn"
-                id="loginButton">
-
-                Company Login
-
-            </button>
-
-
-            <div
-                id="message"
-                class="company-message">
-            </div>
-
-
-        </form>
-
-
-    </div>
-
-</section>
-
-
-
-<footer>
-
-    <div class="footer-brand">
-
-        LIARA
-
-        <small>
-            PROFESSIONAL™
-        </small>
-
-    </div>
+```
+<div class="company-login-box">
 
 
     <p>
-
-        © 2026 Liara Group Private Limited.
-        All Rights Reserved.
-
+        LIARA PROFESSIONAL™
     </p>
+
+
+    <h2>
+        Company Login
+    </h2>
+
+
+    <p class="company-subtitle">
+        Secure Company / Admin Access
+    </p>
+
+
+
+    <form id="companyLoginForm">
+
+
+        <div class="form-group">
+
+            <label for="email">
+                Company Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                value="info@liara.co.in"
+                autocomplete="username"
+                required>
+
+        </div>
+
+
+
+        <div class="form-group">
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter company password"
+                autocomplete="current-password"
+                required>
+
+        </div>
+
+
+
+        <button
+            type="submit"
+            class="btn company-login-btn"
+            id="loginButton">
+
+            Company Login
+
+        </button>
+
+
+
+        <div
+            id="message"
+            class="company-message">
+        </div>
+
+
+    </form>
+
+
+
+    <a
+        href="/"
+        class="back-home">
+
+        ← Back to Website
+
+    </a>
+
+
+</div>
+```
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+```
+<div class="footer-brand">
+
+    LIARA
+
+    <small>
+        PROFESSIONAL™
+    </small>
+
+</div>
+
+
+<p>
+
+    © 2026 Liara Group Private Limited.
+    All Rights Reserved.
+
+</p>
+```
 
 </footer>
 
-
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -250,7 +278,6 @@
 /* =====================================
    SUPABASE CONNECTION
 ===================================== */
-
 
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
@@ -267,86 +294,109 @@ const supabaseClient =
     );
 
 
+
+/* =====================================
+   COMPANY ADMIN EMAIL
+===================================== */
+
 const ADMIN_EMAIL =
     "info@liara.co.in";
 
 
 
 /* =====================================
-   COMPANY LOGIN
+   LOGIN FORM
 ===================================== */
 
-
-document.getElementById(
-    "companyLoginForm"
-).addEventListener(
-    "submit",
-    async function(event) {
-
-
-        event.preventDefault();
+document
+    .getElementById("companyLoginForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
 
 
-        const email =
-            document.getElementById(
-                "email"
-            ).value.trim();
+            event.preventDefault();
 
 
-        const password =
-            document.getElementById(
-                "password"
-            ).value;
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
 
 
-        const button =
-            document.getElementById(
-                "loginButton"
-            );
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
 
 
-        const message =
-            document.getElementById(
-                "message"
-            );
+            const button =
+                document
+                    .getElementById("loginButton");
 
 
-        message.innerText = "";
-
-        message.className =
-            "company-message";
-
-
-        button.disabled = true;
-
-        button.innerText =
-            "Logging in...";
+            const message =
+                document
+                    .getElementById("message");
 
 
-        try {
+            message.innerText = "";
 
+
+            button.disabled = true;
+
+            button.innerText =
+                "Logging in...";
+
+
+            /* =============================
+               CHECK EMAIL
+            ============================= */
+
+            if (
+                email.toLowerCase() !==
+                ADMIN_EMAIL.toLowerCase()
+            ) {
+
+                message.innerText =
+                    "This account is not authorized.";
+
+                button.disabled = false;
+
+                button.innerText =
+                    "Company Login";
+
+                return;
+
+            }
+
+
+            /* =============================
+               SUPABASE LOGIN
+            ============================= */
 
             const {
                 data,
                 error
-            } =
-            await supabaseClient
+            } = await supabaseClient
                 .auth
                 .signInWithPassword({
 
-                    email:
-                        email,
+                    email: email,
 
-                    password:
-                        password
+                    password: password
 
                 });
 
 
+            /* =============================
+               LOGIN ERROR
+            ============================= */
+
             if (error) {
 
-
-                console.error(
+                console.log(
                     "Supabase Login Error:",
                     error
                 );
@@ -354,10 +404,6 @@ document.getElementById(
 
                 message.innerText =
                     error.message;
-
-
-                message.className =
-                    "company-message error";
 
 
                 button.disabled =
@@ -373,47 +419,15 @@ document.getElementById(
             }
 
 
-            if (data.user) {
+            /* =============================
+               SUCCESS
+            ============================= */
 
-
-                if (
-                    data.user.email.toLowerCase() !==
-                    ADMIN_EMAIL.toLowerCase()
-                ) {
-
-
-                    await supabaseClient
-                        .auth
-                        .signOut();
-
-
-                    message.innerText =
-                        "Company access only.";
-
-
-                    message.className =
-                        "company-message error";
-
-
-                    button.disabled =
-                        false;
-
-
-                    button.innerText =
-                        "Company Login";
-
-
-                    return;
-
-                }
+            if (data && data.user) {
 
 
                 message.innerText =
                     "Company login successful ✓";
-
-
-                message.className =
-                    "company-message success";
 
 
                 button.innerText =
@@ -427,47 +441,18 @@ document.getElementById(
                             "admin-orders.html";
 
                     },
-                    500
+                    700
                 );
+
 
             }
 
         }
-
-        catch (error) {
-
-
-            console.error(
-                "Login Error:",
-                error
-            );
-
-
-            message.innerText =
-                "Something went wrong. Please try again.";
-
-
-            message.className =
-                "company-message error";
-
-
-            button.disabled =
-                false;
-
-
-            button.innerText =
-                "Company Login";
-
-        }
-
-    }
-);
+    );
 
 
 </script>
 
-
 </body>
 
 </html>
-```
