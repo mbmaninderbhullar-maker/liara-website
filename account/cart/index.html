@@ -1,1 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Liara Professional™ | Shopping Cart</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+    <style>
+
+        .cart-section {
+            padding: 80px 8%;
+            background: #faf8f5;
+            min-height: 70vh;
+        }
+
+        .cart-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .cart-box {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 22px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .cart-info {
+            flex: 1;
+        }
+
+        .cart-info h3 {
+            margin: 0 0 8px;
+        }
+
+        .cart-price {
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-box button {
+            width: 34px;
+            height: 34px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .quantity {
+            min-width: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .cart-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .remove-btn {
+            border: none;
+            background: #f5f5f5;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #a33;
+        }
+
+        .buy-btn {
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .item-total {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cart-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .cart-total {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        @media (max-width: 700px) {
+
+            .cart-section {
+                padding: 50px 5%;
+            }
+
+            .cart-item {
+                align-items: flex-start;
+            }
+
+            .cart-item img {
+                width: 75px;
+                height: 75px;
+            }
+
+            .item-total {
+                display: none;
+            }
+
+            .cart-bottom {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <a href="index.html"
+       class="logo">
+
+        <span>LIARA</span>
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </a>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#about">
+            About
+        </a>
+
+        <a href="index.html#products">
+            Products
+        </a>
+
+        <a href="cart.html">
+            Cart 🛒
+        </a>
+
+        <a href="account.html">
+            My Account
+        </a>
+
+        <a href="index.html#why-us">
+            Why Liara
+        </a>
+
+        <a href="index.html#contact">
+            Contact
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- CART -->
+
+<section class="cart-section">
+
+
+    <div class="heading">
+
+        <p>
+            LIARA PROFESSIONAL™
+        </p>
+
+        <h2>
+            Your Shopping Cart
+        </h2>
+
+    </div>
+
+
+    <div class="cart-container">
+
+        <div class="cart-box"
+             id="cart-box">
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="footer-brand">
+
+        LIARA
+
+        <small>
+            PROFESSIONAL™
+        </small>
+
+    </div>
+
+
+    <p>
+
+        © 2026 Liara Group Private Limited.
+        All Rights Reserved.
+
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+let cart =
+    JSON.parse(
+        localStorage.getItem("liaraCart")
+    ) || [];
+
+
+
+function displayCart() {
+
+
+    let cartBox =
+        document.getElementById(
+            "cart-box"
+        );
+
+
+    if (cart.length === 0) {
+
+
+        cartBox.innerHTML = `
+
+            <div class="empty-cart">
+
+                <h3>
+                    Your cart is empty 🛒
+                </h3>
+
+                <p>
+                    Add a product to your cart
+                    before buying.
+                </p>
+
+                <br>
+
+                <a
+                    href="index.html#products"
+                    class="btn">
+
+                    Explore Products
+
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = "";
+
+    let total = 0;
+
+
+    cart.forEach(
+        function(product, index) {
+
+
+            let itemTotal =
+                product.price *
+                product.quantity;
+
+
+            total += itemTotal;
+
+
+            html += `
+
+                <div class="cart-item">
+
+
+                    <img
+                        src="${product.image}"
+                        alt="${product.name}"
+                    >
+
+
+                    <div class="cart-info">
+
+
+                        <h3>
+                            ${product.name}
+                        </h3>
+
+
+                        <div class="cart-price">
+
+                            ₹${product.price}
+
+                        </div>
+
+
+                        <div class="quantity-box">
+
+
+                            <button
+                                onclick="decreaseQuantity(${index})">
+
+                                −
+
+                            </button>
+
+
+                            <span class="quantity">
+
+                                ${product.quantity}
+
+                            </span>
+
+
+                            <button
+                                onclick="increaseQuantity(${index})">
+
+                                +
+
+                            </button>
+
+
+                        </div>
+
+
+                        <div class="cart-actions">
+
+
+                            <button
+                                class="remove-btn"
+                                onclick="removeProduct(${index})">
+
+                                Remove
+
+                            </button>
+
+
+                            <button
+                                class="btn buy-btn"
+                                onclick="buyThisProduct(${index})">
+
+                                Buy Now
+
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="item-total">
+
+                        ₹${itemTotal}
+
+                    </div>
+
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+        <div class="cart-bottom">
+
+
+            <div class="cart-total">
+
+                Total: ₹${total}
+
+            </div>
+
+
+            <a
+                href="checkout.html"
+                class="btn">
+
+                Proceed to Checkout →
+
+            </a>
+
+
+        </div>
+
+    `;
+
+
+    cartBox.innerHTML = html;
+
+}
+
+
+
+function increaseQuantity(index) {
+
+    cart[index].quantity++;
+
+    saveCart();
+
+}
+
+
+
+function decreaseQuantity(index) {
+
+    if (cart[index].quantity > 1) {
+
+        cart[index].quantity--;
+
+    }
+
+    saveCart();
+
+}
+
+
+
+function removeProduct(index) {
+
+    cart.splice(index, 1);
+
+    saveCart();
+
+}
+
+
+
+function buyThisProduct(index) {
+
+    let product = cart[index];
+
+
+    let buyNowCart = [
+
+        {
+
+            name: product.name,
+
+            price: product.price,
+
+            image: product.image,
+
+            quantity: product.quantity
+
+        }
+
+    ];
+
+
+    localStorage.setItem(
+
+        "liaraCart",
+
+        JSON.stringify(buyNowCart)
+
+    );
+
+
+    window.location.href =
+        "checkout.html";
+
+}
+
+
+
+function saveCart() {
+
+    localStorage.setItem(
+
+        "liaraCart",
+
+        JSON.stringify(cart)
+
+    );
+
+
+    displayCart();
+
+}
+
+
+
+displayCart();
+
+
+</script>
+
+
+</body>
+
+</html>
