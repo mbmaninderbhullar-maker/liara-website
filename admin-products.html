@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Liara Professional™ | Products & Stock</title>
@@ -18,6 +21,8 @@ body {
     background: #faf8f5;
     color: #222;
 }
+
+/* HEADER */
 
 header {
     background: white;
@@ -43,6 +48,8 @@ header {
     letter-spacing: 2px;
 }
 
+/* MAIN */
+
 .section {
     padding: 50px 4%;
     min-height: 80vh;
@@ -60,33 +67,38 @@ header {
     box-shadow: 0 10px 35px rgba(0,0,0,.08);
 }
 
-.header {
+/* HEADER AREA */
+
+.page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
     gap: 20px;
+    margin-bottom: 30px;
 }
 
-.header p {
+.page-header p {
+    margin: 0 0 6px;
     color: #ad8232;
     font-weight: bold;
-    margin: 0 0 5px;
+    letter-spacing: 1px;
 }
 
-.header h2 {
+.page-header h2 {
     margin: 0;
 }
 
+/* BUTTONS */
+
 button {
     border: none;
-    cursor: pointer;
     border-radius: 8px;
     padding: 11px 17px;
     font-weight: bold;
+    cursor: pointer;
 }
 
-.logout {
+.logout-btn {
     background: #ad8232;
     color: white;
 }
@@ -100,21 +112,70 @@ button {
 .edit-btn {
     background: #ad8232;
     color: white;
+    margin-right: 5px;
 }
 
-.delete-btn {
+.deactivate-btn {
     background: #a33;
     color: white;
 }
 
+.save-btn {
+    width: 100%;
+    background: #287a3e;
+    color: white;
+    margin-top: 10px;
+}
+
+/* SUMMARY */
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 22px;
+}
+
+.summary-card span {
+    display: block;
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.summary-card strong {
+    font-size: 28px;
+}
+
+.green {
+    color: #287a3e;
+}
+
+.gold {
+    color: #ad8232;
+}
+
+.red {
+    color: #a33;
+}
+
+/* TABLE */
+
 .table-wrapper {
+    width: 100%;
     overflow-x: auto;
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
     min-width: 1000px;
+    border-collapse: collapse;
 }
 
 th,
@@ -122,10 +183,12 @@ td {
     padding: 14px;
     border-bottom: 1px solid #eee;
     text-align: left;
+    vertical-align: middle;
 }
 
 th {
     background: #f7f1e7;
+    white-space: nowrap;
 }
 
 .product-image {
@@ -136,34 +199,40 @@ th {
     border: 1px solid #eee;
 }
 
-.low-stock {
-    color: #b36b00;
+.product-name {
     font-weight: bold;
 }
 
-.out-stock {
-    color: #a33;
-    font-weight: bold;
-}
-
-.in-stock {
+.stock-good {
     color: #287a3e;
     font-weight: bold;
 }
 
-.status-active {
+.stock-low {
+    color: #ad8232;
+    font-weight: bold;
+}
+
+.stock-out {
+    color: #a33;
+    font-weight: bold;
+}
+
+.active {
     color: #287a3e;
     font-weight: bold;
 }
 
-.status-inactive {
+.inactive {
     color: #a33;
     font-weight: bold;
 }
+
+/* MESSAGE */
 
 .message {
     text-align: center;
-    padding: 40px;
+    padding: 45px 20px;
     font-weight: bold;
 }
 
@@ -185,13 +254,13 @@ th {
 }
 
 .modal-box {
-    background: white;
     width: 100%;
     max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
-    border-radius: 16px;
-    padding: 28px;
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
 }
 
 .modal-header {
@@ -201,21 +270,25 @@ th {
     margin-bottom: 20px;
 }
 
-.close {
+.modal-header h3 {
+    margin: 0;
+}
+
+.close-btn {
     background: #eee;
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
     padding: 0;
-    font-size: 20px;
+    font-size: 22px;
 }
 
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 17px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 7px;
     font-weight: bold;
 }
 
@@ -223,7 +296,7 @@ th {
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 11px;
+    padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 15px;
@@ -234,14 +307,43 @@ th {
     resize: vertical;
 }
 
-.submit-btn {
-    width: 100%;
-    background: #287a3e;
+/* FOOTER */
+
+footer {
+    background: #222;
     color: white;
-    margin-top: 10px;
+    text-align: center;
+    padding: 25px;
 }
 
-@media(max-width:700px) {
+.footer-brand {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.footer-brand small {
+    display: block;
+    color: #ad8232;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+footer p {
+    color: #ccc;
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
 
     .section {
         padding: 30px 3%;
@@ -251,27 +353,37 @@ th {
         padding: 18px;
     }
 
-    .header {
+    .page-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .logout {
+    .logout-btn {
         width: 100%;
+    }
+
+    .summary {
+        grid-template-columns: 1fr;
     }
 
 }
 
 </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
 <a href="index.html" class="logo">
+
 <span>LIARA</span>
+
 <small>PROFESSIONAL™</small>
+
 </a>
 
 </header>
@@ -283,7 +395,10 @@ th {
 
 <div class="box">
 
-<div class="header">
+
+<!-- PAGE HEADER -->
+
+<div class="page-header">
 
 <div>
 
@@ -294,7 +409,7 @@ th {
 </div>
 
 <button
-class="logout"
+class="logout-btn"
 onclick="logoutAdmin()">
 
 Logout
@@ -303,6 +418,73 @@ Logout
 
 </div>
 
+
+<!-- SUMMARY -->
+
+<div class="summary">
+
+<div class="summary-card">
+
+<span>Total Products</span>
+
+<strong
+id="totalProducts">
+
+0
+
+</strong>
+
+</div>
+
+
+<div class="summary-card">
+
+<span>Total Stock</span>
+
+<strong
+id="totalStock"
+class="green">
+
+0
+
+</strong>
+
+</div>
+
+
+<div class="summary-card">
+
+<span>Low Stock</span>
+
+<strong
+id="lowStock"
+class="gold">
+
+0
+
+</strong>
+
+</div>
+
+
+<div class="summary-card">
+
+<span>Out of Stock</span>
+
+<strong
+id="outStock"
+class="red">
+
+0
+
+</strong>
+
+</div>
+
+</div>
+
+
+<!-- ADD PRODUCT -->
 
 <button
 class="add-btn"
@@ -313,10 +495,14 @@ onclick="openAddProduct()">
 </button>
 
 
+<!-- PRODUCTS -->
+
 <div id="products">
 
 <div class="message">
+
 Loading products...
+
 </div>
 
 </div>
@@ -329,24 +515,27 @@ Loading products...
 </section>
 
 
-<footer style="
-background:#222;
-color:white;
-text-align:center;
-padding:25px;
-">
+<footer>
 
-LIARA PROFESSIONAL™
-<br>
+<div class="footer-brand">
 
-<small style="color:#ccc;">
-© 2026 Liara Group Private Limited. All Rights Reserved.
-</small>
+LIARA
+
+<small>PROFESSIONAL™</small>
+
+</div>
+
+<p>
+
+© 2026 Liara Group Private Limited.
+All Rights Reserved.
+
+</p>
 
 </footer>
 
 
-<!-- PRODUCT MODAL -->
+<!-- MODAL -->
 
 <div
 id="productModal"
@@ -354,14 +543,15 @@ class="modal">
 
 <div class="modal-box">
 
+
 <div class="modal-header">
 
 <h3 id="modalTitle">
-Add Product
+Add New Product
 </h3>
 
 <button
-class="close"
+class="close-btn"
 onclick="closeModal()">
 
 ×
@@ -390,8 +580,8 @@ Product Name
 <input
 type="text"
 id="productName"
-required
-placeholder="Example: Herbal Face Wash">
+placeholder="Example: Herbal Face Wash"
+required>
 
 </div>
 
@@ -399,7 +589,7 @@ placeholder="Example: Herbal Face Wash">
 <div class="form-group">
 
 <label>
-Price (₹)
+Selling Price (₹)
 </label>
 
 <input
@@ -407,8 +597,8 @@ type="number"
 id="productPrice"
 min="0"
 step="0.01"
-required
-placeholder="299">
+placeholder="299"
+required>
 
 </div>
 
@@ -423,8 +613,8 @@ Stock Quantity
 type="number"
 id="productStock"
 min="0"
-required
-placeholder="50">
+placeholder="50"
+required>
 
 </div>
 
@@ -438,7 +628,7 @@ Product Image URL
 <input
 type="text"
 id="productImage"
-placeholder="https://...">
+placeholder="https://example.com/image.jpg">
 
 </div>
 
@@ -451,7 +641,7 @@ Description
 
 <textarea
 id="productDescription"
-placeholder="Product description"></textarea>
+placeholder="Write product description"></textarea>
 
 </div>
 
@@ -479,8 +669,8 @@ Inactive
 
 <button
 type="submit"
-class="submit-btn"
-id="submitButton">
+class="save-btn"
+id="saveProductBtn">
 
 Save Product
 
@@ -494,13 +684,16 @@ Save Product
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
 
 <script>
 
-/* =========================
+/* =========================================
    SUPABASE
-========================= */
+========================================= */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -520,9 +713,9 @@ const ADMIN_EMAIL =
 let productsData = [];
 
 
-/* =========================
-   CHECK ADMIN
-========================= */
+/* =========================================
+   ADMIN CHECK
+========================================= */
 
 async function checkAdmin() {
 
@@ -547,12 +740,11 @@ return null;
 
 }
 
-const user =
-data.user;
+const email =
+data.user.email || "";
 
 if (
-!user.email ||
-user.email.toLowerCase() !==
+email.toLowerCase() !==
 ADMIN_EMAIL.toLowerCase()
 ) {
 
@@ -563,14 +755,14 @@ return null;
 
 }
 
-return user;
+return data.user;
 
 }
 
 
-/* =========================
+/* =========================================
    LOAD PRODUCTS
-========================= */
+========================================= */
 
 async function loadProducts() {
 
@@ -580,10 +772,15 @@ document.getElementById(
 );
 
 box.innerHTML = `
+
 <div class="message">
+
 Loading products...
+
 </div>
+
 `;
+
 
 const user =
 await checkAdmin();
@@ -592,6 +789,7 @@ if (!user) {
 return;
 }
 
+
 try {
 
 const {
@@ -599,42 +797,68 @@ data,
 error
 } =
 await supabaseClient
+
 .from("products")
+
 .select("*")
+
 .order(
 "id",
 {
-ascending:false
+ascending: false
 }
 );
 
+
 if (error) {
 
+console.error(error);
+
 box.innerHTML = `
+
 <div class="message error">
+
 Unable to load products.
+
 <br><br>
-${error.message}
+
+${escapeHtml(error.message)}
+
 </div>
+
 `;
 
 return;
 
 }
 
+
 productsData =
 data || [];
+
+
+updateSummary(
+productsData
+);
+
 
 if (
 productsData.length === 0
 ) {
 
 box.innerHTML = `
+
 <div class="message">
+
 No products added yet.
+
 <br><br>
-Click "Add New Product" to add your first product.
+
+Click <b>＋ Add New Product</b>
+to add your first product.
+
 </div>
+
 `;
 
 return;
@@ -653,11 +877,17 @@ let html = `
 <tr>
 
 <th>Image</th>
+
 <th>Product</th>
+
 <th>Price</th>
+
 <th>Stock</th>
+
 <th>Stock Status</th>
+
 <th>Status</th>
+
 <th>Action</th>
 
 </tr>
@@ -672,48 +902,90 @@ let html = `
 productsData.forEach(
 function(product) {
 
-let stockStatus = "";
+
+let stock =
+Number(
+product.stock || 0
+);
+
+
+let stockStatus;
+
 
 if (
-Number(product.stock) === 0
+stock === 0
 ) {
 
-stockStatus =
-`<span class="out-stock">
+stockStatus = `
+
+<span class="stock-out">
+
 Out of Stock
-</span>`;
+
+</span>
+
+`;
 
 }
+
 else if (
-Number(product.stock) <= 10
+stock <= 10
 ) {
 
-stockStatus =
-`<span class="low-stock">
+stockStatus = `
+
+<span class="stock-low">
+
 Low Stock
-</span>`;
+
+</span>
+
+`;
 
 }
+
 else {
 
-stockStatus =
-`<span class="in-stock">
+stockStatus = `
+
+<span class="stock-good">
+
 In Stock
-</span>`;
+
+</span>
+
+`;
 
 }
 
 
-const activeStatus =
+let status =
 product.active
 ?
-`<span class="status-active">
+
+`<span class="active">
 Active
 </span>`
+
 :
-`<span class="status-inactive">
+
+`<span class="inactive">
 Inactive
 </span>`;
+
+
+let image =
+product.image_url
+?
+
+`<img
+src="${escapeHtml(product.image_url)}"
+class="product-image"
+alt="${escapeHtml(product.name)}">`
+
+:
+
+`No Image`;
 
 
 html += `
@@ -722,30 +994,25 @@ html += `
 
 <td>
 
-${
-product.image_url
-?
-`<img
-class="product-image"
-src="${escapeHtml(product.image_url)}"
-alt="${escapeHtml(product.name)}">`
-:
-"No Image"
-}
+${image}
 
 </td>
 
 
 <td>
 
-<strong>
-${escapeHtml(product.name)}
-</strong>
+<div class="product-name">
 
-<br>
+${escapeHtml(product.name)}
+
+</div>
 
 <small>
-${escapeHtml(product.description || "")}
+
+${escapeHtml(
+product.description || ""
+)}
+
 </small>
 
 </td>
@@ -763,9 +1030,9 @@ product.price || 0
 <td>
 
 <strong>
-${Number(
-product.stock || 0
-)}
+
+${stock}
+
 </strong>
 
 </td>
@@ -780,7 +1047,7 @@ ${stockStatus}
 
 <td>
 
-${activeStatus}
+${status}
 
 </td>
 
@@ -789,18 +1056,17 @@ ${activeStatus}
 
 <button
 class="edit-btn"
-onclick="editProduct(${product.id})">
+onclick="editProduct(${Number(product.id)})">
 
 Edit
 
 </button>
 
-
 <button
-class="delete-btn"
-onclick="deleteProduct(${product.id})">
+class="deactivate-btn"
+onclick="deactivateProduct(${Number(product.id)})">
 
-Delete
+Deactivate
 
 </button>
 
@@ -823,6 +1089,7 @@ html += `
 
 `;
 
+
 box.innerHTML =
 html;
 
@@ -830,10 +1097,20 @@ html;
 
 catch(error) {
 
+console.error(error);
+
 box.innerHTML = `
+
 <div class="message error">
-${error.message}
+
+Something went wrong.
+
+<br><br>
+
+${escapeHtml(error.message)}
+
 </div>
+
 `;
 
 }
@@ -841,29 +1118,104 @@ ${error.message}
 }
 
 
-/* =========================
-   OPEN ADD
-========================= */
+/* =========================================
+   SUMMARY
+========================================= */
+
+function updateSummary(
+products
+) {
+
+let totalStock = 0;
+
+let lowStock = 0;
+
+let outStock = 0;
+
+
+products.forEach(
+function(product) {
+
+let stock =
+Number(
+product.stock || 0
+);
+
+totalStock +=
+stock;
+
+
+if (
+stock === 0
+) {
+
+outStock++;
+
+}
+else if (
+stock <= 10
+) {
+
+lowStock++;
+
+}
+
+});
+
+
+document.getElementById(
+"totalProducts"
+).innerText =
+products.length;
+
+
+document.getElementById(
+"totalStock"
+).innerText =
+totalStock;
+
+
+document.getElementById(
+"lowStock"
+).innerText =
+lowStock;
+
+
+document.getElementById(
+"outStock"
+).innerText =
+outStock;
+
+}
+
+
+/* =========================================
+   OPEN ADD PRODUCT
+========================================= */
 
 function openAddProduct() {
 
 document.getElementById(
 "modalTitle"
 ).innerText =
-"Add Product";
+"Add New Product";
+
 
 document.getElementById(
 "productForm"
 ).reset();
 
+
 document.getElementById(
 "productId"
 ).value = "";
+
 
 document.getElementById(
 "productActive"
 ).value =
 "true";
+
 
 document.getElementById(
 "productModal"
@@ -873,9 +1225,9 @@ document.getElementById(
 }
 
 
-/* =========================
+/* =========================================
    EDIT PRODUCT
-========================= */
+========================================= */
 
 function editProduct(id) {
 
@@ -889,44 +1241,59 @@ Number(id);
 }
 );
 
+
 if (!product) {
+
+alert(
+"Product not found."
+);
+
 return;
+
 }
+
 
 document.getElementById(
 "modalTitle"
 ).innerText =
 "Edit Product";
 
+
 document.getElementById(
 "productId"
 ).value =
 product.id;
+
 
 document.getElementById(
 "productName"
 ).value =
 product.name || "";
 
+
 document.getElementById(
 "productPrice"
 ).value =
 product.price || 0;
+
 
 document.getElementById(
 "productStock"
 ).value =
 product.stock || 0;
 
+
 document.getElementById(
 "productImage"
 ).value =
 product.image_url || "";
 
+
 document.getElementById(
 "productDescription"
 ).value =
 product.description || "";
+
 
 document.getElementById(
 "productActive"
@@ -937,6 +1304,7 @@ product.active
 :
 "false";
 
+
 document.getElementById(
 "productModal"
 ).style.display =
@@ -945,13 +1313,16 @@ document.getElementById(
 }
 
 
-/* =========================
+/* =========================================
    SAVE PRODUCT
-========================= */
+========================================= */
 
-async function saveProduct(event) {
+async function saveProduct(
+event
+) {
 
 event.preventDefault();
+
 
 const user =
 await checkAdmin();
@@ -960,63 +1331,84 @@ if (!user) {
 return;
 }
 
+
 const id =
 document.getElementById(
 "productId"
 ).value;
 
-const product = {
 
-name:
+const name =
 document.getElementById(
 "productName"
-).value.trim(),
+).value.trim();
 
-price:
+
+const price =
 Number(
 document.getElementById(
 "productPrice"
 ).value
-),
+);
 
-stock:
+
+const stock =
 Number(
 document.getElementById(
 "productStock"
 ).value
-),
+);
 
-image_url:
+
+const image =
 document.getElementById(
 "productImage"
-).value.trim() ||
-null,
+).value.trim();
 
-description:
+
+const description =
 document.getElementById(
 "productDescription"
-).value.trim() ||
-null,
+).value.trim();
 
-active:
+
+const active =
 document.getElementById(
 "productActive"
 ).value ===
-"true"
-
-};
+"true";
 
 
 const button =
 document.getElementById(
-"submitButton"
+"saveProductBtn"
 );
+
 
 button.disabled =
 true;
 
 button.innerText =
 "Saving...";
+
+
+const productData = {
+
+name: name,
+
+price: price,
+
+stock: stock,
+
+image_url:
+image || null,
+
+description:
+description || null,
+
+active: active
+
+};
 
 
 try {
@@ -1028,17 +1420,30 @@ if (id) {
 
 result =
 await supabaseClient
+
 .from("products")
-.update(product)
-.eq("id", id);
+
+.update(
+productData
+)
+
+.eq(
+"id",
+id
+);
 
 }
+
 else {
 
 result =
 await supabaseClient
+
 .from("products")
-.insert(product);
+
+.insert(
+productData
+);
 
 }
 
@@ -1049,12 +1454,6 @@ alert(
 "Unable to save product:\n\n" +
 result.error.message
 );
-
-button.disabled =
-false;
-
-button.innerText =
-"Save Product";
 
 return;
 
@@ -1069,9 +1468,10 @@ id
 "Product added successfully."
 );
 
+
 closeModal();
 
-loadProducts();
+await loadProducts();
 
 }
 
@@ -1097,11 +1497,13 @@ button.innerText =
 }
 
 
-/* =========================
-   DELETE / DEACTIVATE
-========================= */
+/* =========================================
+   DEACTIVATE PRODUCT
+========================================= */
 
-async function deleteProduct(id) {
+async function deactivateProduct(
+id
+) {
 
 const product =
 productsData.find(
@@ -1113,17 +1515,23 @@ Number(id);
 }
 );
 
+
 if (!product) {
 return;
 }
 
 
-const confirmDelete =
+const confirmAction =
 confirm(
-`Deactivate "${product.name}"?\n\nThe product will remain in the database but become inactive.`
+
+'Are you sure you want to deactivate "' +
+product.name +
+'"?'
+
 );
 
-if (!confirmDelete) {
+
+if (!confirmAction) {
 return;
 }
 
@@ -1132,10 +1540,13 @@ const {
 error
 } =
 await supabaseClient
+
 .from("products")
+
 .update({
-active:false
+active: false
 })
+
 .eq(
 "id",
 id
@@ -1155,17 +1566,18 @@ return;
 
 
 alert(
-"Product deactivated."
+"Product deactivated successfully."
 );
+
 
 loadProducts();
 
 }
 
 
-/* =========================
+/* =========================================
    CLOSE MODAL
-========================= */
+========================================= */
 
 function closeModal() {
 
@@ -1177,9 +1589,9 @@ document.getElementById(
 }
 
 
-/* =========================
+/* =========================================
    LOGOUT
-========================= */
+========================================= */
 
 async function logoutAdmin() {
 
@@ -1193,29 +1605,54 @@ window.location.href =
 }
 
 
-/* =========================
+/* =========================================
    ESCAPE HTML
-========================= */
+========================================= */
 
-function escapeHtml(value) {
+function escapeHtml(
+value
+) {
 
-return String(value || "")
-.replace(/&/g, "&amp;")
-.replace(/</g, "&lt;")
-.replace(/>/g, "&gt;")
-.replace(/"/g, "&quot;")
-.replace(/'/g, "&#039;");
+return String(
+value || ""
+)
+
+.replace(
+/&/g,
+"&amp;"
+)
+
+.replace(
+/</g,
+"&lt;"
+)
+
+.replace(
+/>/g,
+"&gt;"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/'/g,
+"&#039;"
+);
 
 }
 
 
-/* =========================
+/* =========================================
    START
-========================= */
+========================================= */
 
 loadProducts();
 
 </script>
 
 </body>
+
 </html>
