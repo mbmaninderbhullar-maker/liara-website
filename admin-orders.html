@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
@@ -21,7 +20,7 @@ body{
     color:#222;
 }
 
-/* SIDEBAR */
+/* ================= SIDEBAR ================= */
 
 .sidebar{
     width:235px;
@@ -79,7 +78,7 @@ body{
     padding-top:18px!important;
 }
 
-/* MAIN */
+/* ================= MAIN ================= */
 
 .dashboard-main{
     margin-left:235px;
@@ -124,7 +123,7 @@ body{
     cursor:pointer;
 }
 
-/* SECTION */
+/* ================= SECTION ================= */
 
 .admin-section{
     padding:35px 3%;
@@ -164,6 +163,8 @@ body{
     font-size:30px;
 }
 
+/* ================= BUTTON ================= */
+
 .btn{
     border:0;
     background:#ad8232;
@@ -178,7 +179,19 @@ body{
     background:#866326;
 }
 
-/* SUMMARY */
+.green-btn{
+    background:#287a3e;
+}
+
+.red-btn{
+    background:#a33;
+}
+
+.gray-btn{
+    background:#666;
+}
+
+/* ================= SUMMARY ================= */
 
 .summary-grid{
     display:grid;
@@ -205,7 +218,8 @@ body{
     margin-top:10px;
 }
 
-.sales strong{
+.sales strong,
+.delivered strong{
     color:#287a3e;
 }
 
@@ -213,79 +227,44 @@ body{
     color:#ad8232;
 }
 
-.delivered strong{
-    color:#287a3e;
-}
-
 .cancelled strong{
     color:#a33;
 }
 
-/* SALES SUMMARY */
+/* ================= DATE FILTER ================= */
 
-.sales-summary{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:18px;
-    margin-bottom:30px;
+.sales-filter{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:end;
+    margin-bottom:25px;
+    padding:20px;
+    background:#faf8f5;
+    border:1px solid #eee;
+    border-radius:14px;
 }
 
-.sales-card{
-    border:1px solid #eee;
-    border-radius:15px;
-    padding:23px;
+.date-field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.date-field label{
+    font-size:12px;
+    font-weight:bold;
+    color:#666;
+}
+
+.date-field input{
+    padding:11px 12px;
+    border:1px solid #ddd;
+    border-radius:8px;
     background:#fff;
 }
 
-.sales-card span{
-    display:block;
-    color:#777;
-    font-size:14px;
-}
-
-.sales-card strong{
-    display:block;
-    font-size:27px;
-    margin-top:10px;
-}
-
-.sales-total strong{
-    color:#287a3e;
-}
-
-.sales-paid strong{
-    color:#287a3e;
-}
-
-.sales-pending strong{
-    color:#ad8232;
-}
-
-.sales-cancelled strong{
-    color:#a33;
-}
-
-/* TOOLS */
-
-.order-tools{
-    display:flex;
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.search-box{
-    flex:1;
-}
-
-.search-box input{
-    width:100%;
-    padding:13px 15px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    outline:none;
-}
-
-/* TABLE */
+/* ================= TABLE ================= */
 
 .table-wrapper{
     width:100%;
@@ -296,19 +275,20 @@ body{
 
 .order-table{
     width:100%;
-    min-width:1050px;
+    min-width:1000px;
     border-collapse:collapse;
-    font-size:12px;
+    font-size:13px;
 }
 
 .order-table th{
     background:#f7f1e7;
-    padding:13px 7px;
+    padding:13px 9px;
     text-align:left;
+    white-space:nowrap;
 }
 
 .order-table td{
-    padding:12px 7px;
+    padding:12px 9px;
     border-bottom:1px solid #eee;
     vertical-align:middle;
 }
@@ -335,46 +315,38 @@ body{
 }
 
 .status-badge{
-    padding:6px 9px;
+    display:inline-block;
+    padding:5px 9px;
     border-radius:20px;
-    font-size:10px;
+    font-size:11px;
     font-weight:bold;
+    background:#eee;
 }
 
-.status-pending{
-    background:#fff4d8;
-    color:#9b751f;
-}
-
-.status-paid{
-    background:#e5f4e8;
+.status-delivered{
+    background:#e8f3e9;
     color:#287a3e;
 }
 
+.status-pending{
+    background:#f8f0dd;
+    color:#9a7427;
+}
+
 .status-cancelled{
-    background:#f8dfdf;
+    background:#f7dddd;
     color:#a33;
 }
 
-.status-select{
-    width:100%;
-    padding:8px;
-    border:1px solid #ddd;
-    border-radius:7px;
-}
-
-.save-btn,
-.stock-save{
+.view-btn{
     border:0;
-    background:#287a3e;
+    background:#211d18;
     color:white;
     padding:8px 12px;
-    border-radius:6px;
+    border-radius:7px;
     cursor:pointer;
-    margin-top:6px;
+    font-weight:bold;
 }
-
-/* MESSAGE */
 
 .message{
     text-align:center;
@@ -387,92 +359,83 @@ body{
     color:#a33;
 }
 
-/* ADD PRODUCT */
+/* ================= ORDERS ================= */
 
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
+.order-tools{
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
 }
 
-.form-group{
-    margin-bottom:18px;
+.search-box{
+    flex:1;
 }
 
-.form-group.full{
-    grid-column:1/-1;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:7px;
-    font-weight:bold;
-    font-size:14px;
-}
-
-.form-group input,
-.form-group textarea{
+.search-box input{
     width:100%;
-    padding:13px;
+    padding:13px 15px;
     border:1px solid #ddd;
     border-radius:8px;
     outline:none;
-    font-family:inherit;
 }
 
-.form-group textarea{
-    min-height:120px;
-    resize:vertical;
+/* ================= STOCK ================= */
+
+.stock-cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:25px;
 }
 
-.upload-box{
-    border:2px dashed #d2b477;
-    border-radius:12px;
-    padding:25px;
-    text-align:center;
-    background:#fffdf9;
+.stock-card{
+    border:1px solid #eee;
+    border-radius:15px;
+    padding:22px;
 }
 
-.upload-box input{
-    margin-top:15px;
+.stock-card span{
+    color:#777;
 }
 
-.photo-preview{
-    margin-top:18px;
-    display:none;
+.stock-card strong{
+    display:block;
+    font-size:30px;
+    margin-top:8px;
 }
 
-.photo-preview img{
-    width:180px;
-    height:180px;
-    object-fit:cover;
-    border-radius:12px;
+.stock-input{
+    width:90px;
+    padding:8px;
     border:1px solid #ddd;
+    border-radius:7px;
 }
 
-.upload-status{
-    margin-top:10px;
-    font-size:13px;
+.stock-ok{
     color:#287a3e;
     font-weight:bold;
 }
 
-.form-actions{
-    display:flex;
-    gap:10px;
-    margin-top:10px;
+.stock-low{
+    color:#ad8232;
+    font-weight:bold;
 }
 
-.clear-btn{
-    border:1px solid #ddd;
-    background:white;
-    color:#555;
-    padding:12px 20px;
-    border-radius:8px;
+.stock-out{
+    color:#b22;
+    font-weight:bold;
+}
+
+.stock-save{
+    border:0;
+    background:#287a3e;
+    color:white;
+    padding:8px 12px;
+    border-radius:6px;
     cursor:pointer;
 }
 
-/* PRODUCTS */
+/* ================= PRODUCTS ================= */
 
 .product-grid{
     display:grid;
@@ -547,72 +510,204 @@ body{
     color:#287a3e;
 }
 
-/* STOCK */
+/* ================= ADD PRODUCT ================= */
 
-.stock-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-}
-
-.stock-cards{
+.form-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-    margin-bottom:25px;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
 }
 
-.stock-card{
-    border:1px solid #eee;
-    border-radius:15px;
-    padding:22px;
+.form-group{
+    margin-bottom:18px;
 }
 
-.stock-card span{
-    color:#777;
+.form-group.full{
+    grid-column:1/-1;
 }
 
-.stock-card strong{
+.form-group label{
     display:block;
-    font-size:30px;
-    margin-top:8px;
+    margin-bottom:7px;
+    font-weight:bold;
+    font-size:14px;
 }
 
-.stock-input{
-    width:90px;
-    padding:8px;
+.form-group input,
+.form-group textarea{
+    width:100%;
+    padding:13px;
     border:1px solid #ddd;
-    border-radius:7px;
+    border-radius:8px;
+    outline:none;
+    font-family:inherit;
 }
 
-.stock-ok{
+.form-group textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.upload-box{
+    border:2px dashed #d2b477;
+    border-radius:12px;
+    padding:25px;
+    text-align:center;
+    background:#fffdf9;
+}
+
+.upload-box input{
+    margin-top:15px;
+}
+
+.photo-preview{
+    margin-top:18px;
+    display:none;
+}
+
+.photo-preview img{
+    width:180px;
+    height:180px;
+    object-fit:cover;
+    border-radius:12px;
+    border:1px solid #ddd;
+}
+
+.upload-status{
+    margin-top:10px;
+    font-size:13px;
     color:#287a3e;
     font-weight:bold;
 }
 
-.stock-low{
+/* ================= MODAL ================= */
+
+.order-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    z-index:5000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.order-modal-box{
+    width:100%;
+    max-width:850px;
+    max-height:92vh;
+    overflow-y:auto;
+    background:white;
+    border-radius:16px;
+    padding:28px;
+}
+
+.modal-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-top h2{
+    margin:0;
+}
+
+.close-modal{
+    border:0;
+    background:#eee;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.order-detail{
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:20px;
+}
+
+.detail-header{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    border-bottom:1px solid #eee;
+    padding-bottom:18px;
+    margin-bottom:18px;
+}
+
+.detail-company{
+    font-size:20px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.detail-company small{
+    display:block;
     color:#ad8232;
-    font-weight:bold;
+    font-size:10px;
+    margin-top:5px;
 }
 
-.stock-out{
-    color:#b22;
-    font-weight:bold;
+.detail-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:20px;
 }
 
-/* SIDEBAR OVERLAY */
+.detail-item{
+    padding:12px;
+    background:#faf8f5;
+    border-radius:8px;
+}
+
+.detail-item span{
+    display:block;
+    color:#777;
+    font-size:11px;
+    margin-bottom:4px;
+}
+
+.detail-item strong{
+    font-size:14px;
+}
+
+.detail-total{
+    border-top:2px solid #211d18;
+    margin-top:20px;
+    padding-top:15px;
+    display:flex;
+    justify-content:flex-end;
+    gap:20px;
+    font-size:20px;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    margin-top:20px;
+}
+
+/* ================= PRINT AREA ================= */
+
+.print-only{
+    display:none;
+}
+
+/* ================= MOBILE ================= */
 
 .sidebar-overlay{
     display:none;
 }
 
-/* MOBILE */
-
 @media(max-width:1100px){
 
-    .summary-grid,
-    .sales-summary{
+    .summary-grid{
         grid-template-columns:repeat(2,1fr);
     }
 
@@ -653,19 +748,21 @@ body{
     .form-grid{
         grid-template-columns:1fr;
     }
+
+    .detail-grid{
+        grid-template-columns:1fr;
+    }
 }
 
 @media(max-width:600px){
 
     .summary-grid,
-    .sales-summary,
     .product-grid,
     .stock-cards{
         grid-template-columns:1fr;
     }
 
     .admin-header,
-    .stock-header,
     .order-tools{
         flex-direction:column;
         align-items:stretch;
@@ -675,280 +772,313 @@ body{
         padding:18px;
     }
 
+    .sales-filter{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
     .form-group.full{
         grid-column:auto;
     }
 }
 
+/* ================= A4 PRINT ================= */
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    body *{
+        visibility:hidden;
+    }
+
+    #printArea,
+    #printArea *{
+        visibility:visible;
+    }
+
+    #printArea{
+        display:block!important;
+        position:absolute;
+        left:0;
+        top:0;
+        width:210mm;
+        min-height:297mm;
+        padding:15mm;
+        background:white;
+    }
+
+    @page{
+        size:A4;
+        margin:0;
+    }
+
+    .print-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        border-bottom:2px solid #222;
+        padding-bottom:14px;
+        margin-bottom:20px;
+    }
+
+    .print-brand{
+        font-size:25px;
+        font-weight:bold;
+        letter-spacing:3px;
+    }
+
+    .print-brand small{
+        display:block;
+        color:#ad8232;
+        font-size:10px;
+        letter-spacing:2px;
+        margin-top:4px;
+    }
+
+    .print-company{
+        text-align:right;
+        font-size:12px;
+        line-height:1.6;
+    }
+
+    .print-title{
+        text-align:center;
+        margin:20px 0;
+    }
+
+    .print-title h2{
+        margin:0;
+        font-size:22px;
+    }
+
+    .print-meta{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+        margin-bottom:20px;
+    }
+
+    .print-meta div{
+        border:1px solid #ddd;
+        padding:9px;
+    }
+
+    .print-meta span{
+        display:block;
+        font-size:10px;
+        color:#777;
+        margin-bottom:3px;
+    }
+
+    .print-table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:20px;
+    }
+
+    .print-table th,
+    .print-table td{
+        border:1px solid #ccc;
+        padding:10px;
+        text-align:left;
+        font-size:12px;
+    }
+
+    .print-table th{
+        background:#f3f0eb;
+    }
+
+    .print-grand-total{
+        text-align:right;
+        margin-top:18px;
+        font-size:18px;
+        font-weight:bold;
+    }
+
+    .print-footer{
+        margin-top:55px;
+        border-top:1px solid #ddd;
+        padding-top:12px;
+        font-size:10px;
+        color:#666;
+        text-align:center;
+    }
+
+}
+
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- SIDEBAR -->
+<!-- ================= SIDEBAR ================= -->
 
 <aside class="sidebar" id="sidebar">
 
-<div class="sidebar-title">
-COMPANY PANEL
-</div>
+    <div class="sidebar-title">
+        COMPANY PANEL
+    </div>
 
+    <div class="side-menu">
 
-<div class="side-menu">
+        <button class="active"
+            onclick="showSection('orders',this)">
+            🛒 Orders
+        </button>
 
-<button
-class="active"
-onclick="showSection('orders',this)">
-🛒 Orders
-</button>
+        <button onclick="showSection('sales',this)">
+            💰 Sales
+        </button>
 
+        <button onclick="showSection('stock',this)">
+            📦 Stock
+        </button>
 
-<button
-onclick="showSection('sales',this)">
-💰 Sales
-</button>
+        <button onclick="showSection('add-product',this)">
+            ➕ Add Product
+        </button>
 
+        <button onclick="showSection('products',this)">
+            🧴 Products
+        </button>
 
-<button
-onclick="showSection('stock',this)">
-📦 Stock
-</button>
+        <button onclick="showSection('customers',this)">
+            👥 Customers
+        </button>
 
+        <button onclick="showSection('reports',this)">
+            📊 Reports
+        </button>
 
-<button
-onclick="showSection('add-product',this)">
-➕ Add Product
-</button>
+        <button onclick="showSection('delivery',this)">
+            🚚 Delivery
+        </button>
 
+        <button onclick="showSection('notifications',this)">
+            🔔 Notifications
+        </button>
 
-<button
-onclick="showSection('products',this)">
-🧴 Products
-</button>
+        <button onclick="showSection('settings',this)">
+            ⚙️ Settings
+        </button>
 
+        <button class="logout-side"
+            onclick="logoutAdmin()">
+            🚪 Logout
+        </button>
 
-<button
-onclick="showSection('customers',this)">
-👥 Customers
-</button>
-
-
-<button
-onclick="showSection('reports',this)">
-📊 Reports
-</button>
-
-
-<button
-onclick="showSection('delivery',this)">
-🚚 Delivery
-</button>
-
-
-<button
-onclick="showSection('notifications',this)">
-🔔 Notifications
-</button>
-
-
-<button
-onclick="showSection('settings',this)">
-⚙️ Settings
-</button>
-
-
-<button
-class="logout-side"
-onclick="logoutAdmin()">
-🚪 Logout
-</button>
-
-</div>
-
+    </div>
 </aside>
 
-
-<div
-class="sidebar-overlay"
-id="sidebarOverlay"
-onclick="closeSidebar()">
+<div class="sidebar-overlay"
+     id="sidebarOverlay"
+     onclick="closeSidebar()">
 </div>
 
-
-<!-- MAIN -->
 
 <main class="dashboard-main">
 
-
 <header class="dashboard-header">
 
-<button
-class="mobile-menu-btn"
-onclick="openSidebar()">
-☰
-</button>
+    <button class="mobile-menu-btn"
+        onclick="openSidebar()">
+        ☰
+    </button>
 
-
-<div class="logo">
-
-LIARA
-
-<small>
-PROFESSIONAL™
-</small>
-
-</div>
+    <div class="logo">
+        LIARA
+        <small>PROFESSIONAL™</small>
+    </div>
 
 </header>
 
 
-<!-- ORDERS -->
+<!-- ================= ORDERS ================= -->
 
-<section
-class="admin-section"
-id="orders-section">
+<section class="admin-section"
+         id="orders-section">
 
 <div class="admin-container">
 
 <div class="admin-box">
 
-
 <div class="admin-header">
 
 <div>
-
-<p>
-LIARA PROFESSIONAL™
-</p>
-
-<h2>
-Company Orders Dashboard
-</h2>
-
+<p>LIARA PROFESSIONAL™</p>
+<h2>Company Orders Dashboard</h2>
 </div>
 
-
-<button
-class="btn"
-onclick="logoutAdmin()">
-Logout
+<button class="btn"
+    onclick="logoutAdmin()">
+    Logout
 </button>
 
 </div>
 
-
 <div class="summary-grid">
 
-
 <div class="summary-card">
-
-<span>
-Total Orders
-</span>
-
-<strong
-id="totalOrders">
-0
-</strong>
-
+<span>Total Orders</span>
+<strong id="totalOrders">0</strong>
 </div>
-
 
 <div class="summary-card sales">
-
-<span>
-Total Sales
-</span>
-
-<strong
-id="totalSales">
-₹0
-</strong>
-
+<span>Total Sales</span>
+<strong id="totalSales">₹0</strong>
 </div>
-
 
 <div class="summary-card pending">
-
-<span>
-Pending Orders
-</span>
-
-<strong
-id="pendingOrders">
-0
-</strong>
-
+<span>Pending Orders</span>
+<strong id="pendingOrders">0</strong>
 </div>
-
 
 <div class="summary-card delivered">
-
-<span>
-Delivered Orders
-</span>
-
-<strong
-id="deliveredOrders">
-0
-</strong>
-
+<span>Delivered Orders</span>
+<strong id="deliveredOrders">0</strong>
 </div>
 
-
 </div>
-
 
 <div class="order-tools">
 
 <div class="search-box">
 
 <input
-id="searchInput"
-placeholder="Search customer, mobile, product..."
-oninput="filterOrders()">
+    id="searchInput"
+    placeholder="Search customer, mobile, product..."
+    oninput="filterOrders()">
 
 </div>
 
-
-<button
-class="btn"
-onclick="loadOrders()">
-
-🔄 Refresh Orders
-
+<button class="btn"
+    onclick="loadOrders()">
+    🔄 Refresh Orders
 </button>
 
 </div>
 
-
 <div id="orders">
 
 <div class="message">
-
 Loading customer orders...
-
 </div>
 
 </div>
 
-
 </div>
-
 </div>
-
 </section>
 
 
-<!-- OTHER SECTIONS -->
+<!-- ================= OTHER ================= -->
 
-<section
-class="admin-section"
-id="other-section"
-style="display:none;">
+<section class="admin-section"
+         id="other-section"
+         style="display:none;">
 
 <div class="admin-container">
 
@@ -958,20 +1088,64 @@ style="display:none;">
 
 </section>
 
-
 </main>
 
 
-<script
-src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-</script>
+<!-- ================= ORDER MODAL ================= -->
 
+<div class="order-modal"
+     id="orderModal">
+
+<div class="order-modal-box">
+
+<div class="modal-top">
+
+<h2>
+Order Details
+</h2>
+
+<button class="close-modal"
+        onclick="closeOrderModal()">
+×
+</button>
+
+</div>
+
+<div id="orderDetailContent">
+</div>
+
+<div class="modal-actions">
+
+<button class="btn gray-btn"
+        onclick="closeOrderModal()">
+Close
+</button>
+
+<button class="btn green-btn"
+        onclick="printCurrentOrder()">
+🖨️ Print A4
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================= PRINT AREA ================= -->
+
+<div id="printArea"
+     class="print-only">
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-/* =========================================
-   SUPABASE
-========================================= */
+/* ================= SUPABASE ================= */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -981,8 +1155,8 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+    SUPABASE_URL,
+    SUPABASE_KEY
 );
 
 const ADMIN_EMAIL =
@@ -991,3340 +1165,3005 @@ const ADMIN_EMAIL =
 const IMAGE_BUCKET =
 "product-images";
 
-
-let allOrders = [];
-
-let allProducts = [];
-
-
-/* =========================================
-   MENU
-========================================= */
-
-function showSection(
-section,
-button
-){
-
-document
-.querySelectorAll(
-".side-menu button"
-)
-.forEach(btn=>{
-
-btn.classList.remove(
-"active"
-);
-
-});
+let allOrders=[];
+let allProducts=[];
+let currentOrder=null;
 
 
-if(button){
+/* ================= MENU ================= */
 
-button.classList.add(
-"active"
-);
+function showSection(section,button){
 
+    document.querySelectorAll(
+        ".side-menu button"
+    ).forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    document.getElementById(
+        "orders-section"
+    ).style.display =
+        section==="orders"
+        ? "block"
+        : "none";
+
+    document.getElementById(
+        "other-section"
+    ).style.display =
+        section==="orders"
+        ? "none"
+        : "block";
+
+    if(section==="sales"){
+        loadSales();
+    }
+
+    else if(section==="stock"){
+        loadStock();
+    }
+
+    else if(section==="add-product"){
+        showAddProduct();
+    }
+
+    else if(section==="products"){
+        loadProducts();
+    }
+
+    else{
+        showPlaceholder(section);
+    }
+
+    closeSidebar();
 }
 
 
-document.getElementById(
-"orders-section"
-).style.display =
-section === "orders"
-? "block"
-: "none";
+/* ================= PLACEHOLDER ================= */
 
+function showPlaceholder(section){
 
-document.getElementById(
-"other-section"
-).style.display =
-section === "orders"
-? "none"
-: "block";
+    const details={
 
+        customers:[
+            "👥",
+            "Customers",
+            "Customer management will appear here."
+        ],
 
-if(section === "sales"){
+        reports:[
+            "📊",
+            "Reports",
+            "Business reports will appear here."
+        ],
 
-loadSales();
+        delivery:[
+            "🚚",
+            "Delivery",
+            "Delivery management will appear here."
+        ],
 
-}
+        notifications:[
+            "🔔",
+            "Notifications",
+            "Notifications will appear here."
+        ],
 
-else if(section === "stock"){
+        settings:[
+            "⚙️",
+            "Settings",
+            "Dashboard settings will appear here."
+        ]
 
-loadStock();
+    };
 
-}
+    const d=details[section];
 
-else if(section === "add-product"){
+    document.getElementById(
+        "other-content"
+    ).innerHTML=`
 
-showAddProduct();
+    <div class="admin-box"
+         style="text-align:center;padding:80px 30px">
 
-}
+        <div style="font-size:50px">
+            ${d ? d[0] : "📦"}
+        </div>
 
-else if(section === "products"){
+        <h2>
+            ${d ? d[1] : "Section"}
+        </h2>
 
-loadProducts();
+        <p style="color:#777">
+            ${d ? d[2] : ""}
+        </p>
 
-}
+    </div>
 
-else{
-
-showPlaceholder(section);
-
-}
-
-
-closeSidebar();
-
-}
-
-
-/* =========================================
-   SALES SECTION
-========================================= */
-
-async function loadSales(){
-
-document.getElementById(
-"other-content"
-).innerHTML = `
-
-<div class="admin-box">
-
-<div class="admin-header">
-
-<div>
-
-<p>
-LIARA PROFESSIONAL™
-</p>
-
-<h2>
-💰 Sales Management
-</h2>
-
-</div>
-
-
-<button
-class="btn"
-onclick="loadSales()">
-
-🔄 Refresh Sales
-
-</button>
-
-</div>
-
-
-<div class="sales-summary">
-
-
-<div class="sales-card sales-total">
-
-<span>
-Total Sales
-</span>
-
-<strong
-id="salesTotalAmount">
-₹0
-</strong>
-
-</div>
-
-
-<div class="sales-card sales-paid">
-
-<span>
-Paid Sales
-</span>
-
-<strong
-id="salesPaidAmount">
-₹0
-</strong>
-
-</div>
-
-
-<div class="sales-card sales-pending">
-
-<span>
-Pending Payment
-</span>
-
-<strong
-id="salesPendingAmount">
-₹0
-</strong>
-
-</div>
-
-
-<div class="sales-card sales-cancelled">
-
-<span>
-Cancelled Sales
-</span>
-
-<strong
-id="salesCancelledAmount">
-₹0
-</strong>
-
-</div>
-
-</div>
-
-
-<div class="order-tools">
-
-<div class="search-box">
-
-<input
-id="salesSearch"
-placeholder="Search customer, mobile, product..."
-oninput="filterSales()">
-
-</div>
-
-
-<button
-class="btn"
-onclick="loadSales()">
-
-🔄 Refresh
-
-</button>
-
-</div>
-
-
-<div id="salesTable">
-
-<div class="message">
-
-Loading sales...
-
-</div>
-
-</div>
-
-
-</div>
-
-`;
-
-
-const user =
-await checkAdmin();
-
-if(!user){
-
-return;
-
+    `;
 }
 
 
-const {
-data,
-error
-} =
-await supabaseClient
-
-.from("orders")
-
-.select("*")
-
-.order(
-"created_at",
-{
-ascending:false
-}
-);
-
-
-if(error){
-
-document.getElementById(
-"salesTable"
-).innerHTML = `
-
-<div class="message error">
-
-Unable to load sales.
-
-<br><br>
-
-${escapeHtml(
-error.message
-)}
-
-</div>
-
-`;
-
-return;
-
-}
-
-
-allOrders =
-data || [];
-
-
-calculateSales(
-allOrders
-);
-
-
-renderSales(
-allOrders
-);
-
-}
-
-
-/* =========================================
-   CALCULATE SALES
-========================================= */
-
-function calculateSales(
-orders
-){
-
-let totalSales = 0;
-
-let paidSales = 0;
-
-let pendingSales = 0;
-
-let cancelledSales = 0;
-
-
-orders.forEach(
-order=>{
-
-const total =
-Number(
-order.total || 0
-);
-
-
-const status =
-String(
-order.status || "Pending"
-).toLowerCase();
-
-
-const payment =
-String(
-order.payment_status ||
-order.payment_method ||
-order.payment ||
-"Pending"
-).toLowerCase();
-
-
-if(
-status !== "cancelled"
-){
-
-totalSales += total;
-
-}
-
-
-/*
-   PAYMENT CALCULATION
-*/
-
-if(
-payment.includes("paid") ||
-payment.includes("success") ||
-payment.includes("completed") ||
-payment.includes("cod")
-){
-
-if(
-status !== "cancelled"
-){
-
-paidSales += total;
-
-}
-
-}
-
-else{
-
-if(
-status !== "cancelled"
-){
-
-pendingSales += total;
-
-}
-
-}
-
-
-/*
-   CANCELLED
-*/
-
-if(
-status === "cancelled"
-){
-
-cancelledSales += total;
-
-}
-
-});
-
-
-document.getElementById(
-"salesTotalAmount"
-).innerText =
-money(totalSales);
-
-
-document.getElementById(
-"salesPaidAmount"
-).innerText =
-money(paidSales);
-
-
-document.getElementById(
-"salesPendingAmount"
-).innerText =
-money(pendingSales);
-
-
-document.getElementById(
-"salesCancelledAmount"
-).innerText =
-money(cancelledSales);
-
-}
-
-
-/* =========================================
-   RENDER SALES
-========================================= */
-
-function renderSales(
-orders
-){
-
-const box =
-document.getElementById(
-"salesTable"
-);
-
-
-if(!orders.length){
-
-box.innerHTML = `
-
-<div class="message">
-
-No sales/orders found.
-
-</div>
-
-`;
-
-return;
-
-}
-
-
-let html = `
-
-<div class="table-wrapper">
-
-<table class="order-table">
-
-<thead>
-
-<tr>
-
-<th>Date</th>
-
-<th>Customer</th>
-
-<th>Mobile</th>
-
-<th>Product</th>
-
-<th>Qty</th>
-
-<th>Price</th>
-
-<th>Total</th>
-
-<th>Payment</th>
-
-<th>Order Status</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-`;
-
-
-orders.forEach(
-order=>{
-
-const date =
-order.created_at
-?
-new Date(
-order.created_at
-).toLocaleString(
-"en-IN"
-)
-:
-"-";
-
-
-const customer =
-order.customer_name ||
-order.name ||
-"-";
-
-
-const phone =
-order.phone ||
-order.mobile ||
-"-";
-
-
-const product =
-productName(order);
-
-
-const qty =
-Number(
-order.quantity || 1
-);
-
-
-const price =
-productPrice(order);
-
-
-const total =
-Number(
-order.total || 0
-);
-
-
-const paymentStatus =
-payment(order);
-
-
-const status =
-order.status ||
-"Pending";
-
-
-let statusClass =
-"status-pending";
-
-
-if(
-String(status).toLowerCase()
-=== "cancelled"
-){
-
-statusClass =
-"status-cancelled";
-
-}
-
-else if(
-String(
-paymentStatus
-).toLowerCase()
-.includes("paid") ||
-String(
-paymentStatus
-).toLowerCase()
-.includes("success")
-){
-
-statusClass =
-"status-paid";
-
-}
-
-
-html += `
-
-<tr>
-
-
-<td>
-
-${escapeHtml(date)}
-
-</td>
-
-
-<td>
-
-<strong>
-
-${escapeHtml(
-customer
-)}
-
-</strong>
-
-</td>
-
-
-<td>
-
-${escapeHtml(
-phone
-)}
-
-</td>
-
-
-<td class="product-name">
-
-${escapeHtml(
-product
-)}
-
-</td>
-
-
-<td>
-
-${qty}
-
-</td>
-
-
-<td class="price">
-
-${money(
-price
-)}
-
-</td>
-
-
-<td class="total">
-
-${money(
-total
-)}
-
-</td>
-
-
-<td>
-
-<span class="payment-badge">
-
-${escapeHtml(
-paymentStatus
-)}
-
-</span>
-
-</td>
-
-
-<td>
-
-<span
-class="status-badge ${statusClass}">
-
-${escapeHtml(
-status
-)}
-
-</span>
-
-</td>
-
-
-</tr>
-
-`;
-
-});
-
-
-html += `
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
-
-
-box.innerHTML =
-html;
-
-}
-
-
-/* =========================================
-   FILTER SALES
-========================================= */
-
-function filterSales(){
-
-const search =
-document.getElementById(
-"salesSearch"
-).value
-.toLowerCase()
-.trim();
-
-
-if(!search){
-
-renderSales(
-allOrders
-);
-
-return;
-
-}
-
-
-const filtered =
-allOrders.filter(
-order=>{
-
-const text =
-
-(
-order.customer_name ||
-""
-) +
-
-" " +
-
-(
-order.name ||
-""
-) +
-
-" " +
-
-(
-order.phone ||
-""
-) +
-
-" " +
-
-(
-order.mobile ||
-""
-) +
-
-" " +
-
-productName(order);
-
-
-return text
-.toLowerCase()
-.includes(search);
-
-});
-
-
-renderSales(
-filtered
-);
-
-}
-
-
-/* =========================================
-   PLACEHOLDER
-========================================= */
-
-function showPlaceholder(
-section
-){
-
-const details = {
-
-customers:[
-"👥",
-"Customers",
-"Customer management will appear here."
-],
-
-reports:[
-"📊",
-"Reports",
-"Business reports will appear here."
-],
-
-delivery:[
-"🚚",
-"Delivery",
-"Delivery management will appear here."
-],
-
-notifications:[
-"🔔",
-"Notifications",
-"Notifications will appear here."
-],
-
-settings:[
-"⚙️",
-"Settings",
-"Dashboard settings will appear here."
-]
-
-};
-
-
-const d =
-details[section];
-
-
-document.getElementById(
-"other-content"
-).innerHTML = `
-
-<div
-class="admin-box"
-style="
-text-align:center;
-padding:80px 30px">
-
-<div
-style="font-size:50px">
-
-${d ? d[0] : "📦"}
-
-</div>
-
-
-<h2>
-
-${d ? d[1] : "Section"}
-
-</h2>
-
-
-<p
-style="color:#777">
-
-${d ? d[2] : ""}
-
-</p>
-
-</div>
-
-`;
-
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
+/* ================= MOBILE ================= */
 
 function openSidebar(){
 
-document.getElementById(
-"sidebar"
-).classList.add(
-"open"
-);
+    document.getElementById(
+        "sidebar"
+    ).classList.add("open");
 
-document.getElementById(
-"sidebarOverlay"
-).classList.add(
-"show"
-);
-
+    document.getElementById(
+        "sidebarOverlay"
+    ).classList.add("show");
 }
-
 
 function closeSidebar(){
 
-document.getElementById(
-"sidebar"
-).classList.remove(
-"open"
-);
+    document.getElementById(
+        "sidebar"
+    ).classList.remove("open");
 
-document.getElementById(
-"sidebarOverlay"
-).classList.remove(
-"show"
-);
-
+    document.getElementById(
+        "sidebarOverlay"
+    ).classList.remove("show");
 }
 
 
-/* =========================================
-   ADMIN CHECK
-========================================= */
+/* ================= ADMIN ================= */
 
 async function checkAdmin(){
 
-const {
-data,
-error
-} =
-await supabaseClient
-.auth
-.getUser();
+    const {data,error} =
+        await supabaseClient
+        .auth
+        .getUser();
 
+    if(
+        error ||
+        !data ||
+        !data.user
+    ){
 
-if(
-error ||
-!data ||
-!data.user
-){
+        window.location.href=
+            "company-login.html";
 
-window.location.href =
-"company-login.html";
+        return null;
+    }
 
-return null;
+    if(
+        !data.user.email ||
+        data.user.email.toLowerCase()
+        !==ADMIN_EMAIL.toLowerCase()
+    ){
 
+        window.location.href=
+            "company-login.html";
+
+        return null;
+    }
+
+    return data.user;
 }
 
 
-if(
-!data.user.email ||
-data.user.email
-.toLowerCase()
-!== ADMIN_EMAIL
-.toLowerCase()
-){
+/* ================= MONEY ================= */
 
-window.location.href =
-"company-login.html";
+function money(value){
 
-return null;
-
+    return "₹"+
+        Number(value||0)
+        .toLocaleString("en-IN");
 }
 
 
-return data.user;
+/* ================= ESCAPE ================= */
 
+function escapeHtml(value){
+
+    return String(value??"")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
 
-/* =========================================
-   MONEY
-========================================= */
+/* ================= ORDER ID ================= */
 
-function money(
-value
-){
+/*
+   Database id ton short Order ID.
+   order.order_number use nahi hunda.
+*/
 
-return "₹" +
+function shortOrderId(id){
 
-Number(
-value || 0
-)
-.toLocaleString(
-"en-IN"
-);
+    const raw=
+        String(id||"")
+        .replace(/-/g,"")
+        .toUpperCase();
 
+    return "LIARA-"+raw.substring(0,6);
 }
 
 
-/* =========================================
-   ESCAPE
-========================================= */
+/* ================= ORDER HELPERS ================= */
 
-function escapeHtml(
-value
-){
+function productName(order){
 
-return String(
-value ?? ""
-)
+    return order.product_name ||
+           order.product ||
+           order.productName ||
+           order.item_name ||
+           order.item ||
+           "Product";
+}
 
-.replace(
-/&/g,
-"&amp;"
-)
+function productPrice(order){
 
-.replace(
-/</g,
-"&lt;"
-)
+    if(order.price!=null){
+        return Number(order.price);
+    }
 
-.replace(
-/>/g,
-"&gt;"
-)
+    if(order.unit_price!=null){
+        return Number(order.unit_price);
+    }
 
-.replace(
-/"/g,
-"&quot;"
-)
+    const qty=
+        Number(order.quantity||1);
 
-.replace(
-/'/g,
-"&#039;"
-);
+    return qty
+        ? Number(order.total||0)/qty
+        : 0;
+}
 
+function payment(order){
+
+    return order.payment_status ||
+           order.payment_method ||
+           order.payment ||
+           "Pending";
 }
 
 
-/* =========================================
-   ORDERS
-========================================= */
+/* ================= ORDERS ================= */
 
 async function loadOrders(){
 
-const box =
-document.getElementById(
-"orders"
-);
+    const box=
+        document.getElementById("orders");
 
+    box.innerHTML=`
+        <div class="message">
+            Loading customer orders...
+        </div>
+    `;
 
-box.innerHTML = `
+    const user=
+        await checkAdmin();
 
-<div class="message">
+    if(!user)return;
 
-Loading customer orders...
+    const {data,error}=
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
 
-</div>
+    if(error){
 
-`;
+        box.innerHTML=`
+        <div class="message error">
+            Unable to load orders.
+            <br><br>
+            ${escapeHtml(error.message)}
+        </div>
+        `;
 
+        return;
+    }
 
-const user =
-await checkAdmin();
+    allOrders=data||[];
 
-if(!user){
+    updateSummary(allOrders);
 
-return;
-
+    renderOrders(allOrders);
 }
 
 
-const {
-data,
-error
-} =
-await supabaseClient
+/* ================= SUMMARY ================= */
 
-.from("orders")
+function updateSummary(orders){
 
-.select("*")
+    let sales=0;
+    let pending=0;
+    let delivered=0;
 
-.order(
-"created_at",
-{
-ascending:false
-}
-);
+    orders.forEach(order=>{
 
+        sales+=Number(
+            order.total||0
+        );
 
-if(error){
+        const status=
+            String(
+                order.status||"Pending"
+            ).toLowerCase();
 
-box.innerHTML = `
+        if(status==="delivered"){
+            delivered++;
+        }
 
-<div class="message error">
+        if([
+            "pending",
+            "confirmed",
+            "packed",
+            "shipped",
+            "order received"
+        ].includes(status)){
+            pending++;
+        }
 
-Unable to load orders.
+    });
 
-<br><br>
+    document.getElementById(
+        "totalOrders"
+    ).innerText=
+        orders.length;
 
-${escapeHtml(
-error.message
-)}
+    document.getElementById(
+        "totalSales"
+    ).innerText=
+        money(sales);
 
-</div>
+    document.getElementById(
+        "pendingOrders"
+    ).innerText=
+        pending;
 
-`;
-
-return;
-
-}
-
-
-allOrders =
-data || [];
-
-
-updateSummary(
-allOrders
-);
-
-
-renderOrders(
-allOrders
-);
-
-}
-
-
-/* =========================================
-   ORDER SUMMARY
-========================================= */
-
-function updateSummary(
-orders
-){
-
-let sales = 0;
-
-let pending = 0;
-
-let delivered = 0;
-
-
-orders.forEach(
-order=>{
-
-const total =
-Number(
-order.total || 0
-);
-
-
-const status =
-String(
-order.status ||
-"Pending"
-)
-.toLowerCase();
-
-
-if(
-status !== "cancelled"
-){
-
-sales += total;
-
+    document.getElementById(
+        "deliveredOrders"
+    ).innerText=
+        delivered;
 }
 
 
-if(
-status === "delivered"
-){
+/* ================= RENDER ORDERS ================= */
 
-delivered++;
+function renderOrders(orders){
 
+    const box=
+        document.getElementById("orders");
+
+    if(!orders.length){
+
+        box.innerHTML=`
+        <div class="message">
+            No customer orders yet.
+        </div>
+        `;
+
+        return;
+    }
+
+    let html=`
+
+    <div class="table-wrapper">
+
+    <table class="order-table">
+
+    <thead>
+
+    <tr>
+
+        <th>Order ID</th>
+        <th>Order Date</th>
+        <th>Customer</th>
+        <th>Mobile</th>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>View</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+    `;
+
+    orders.forEach(order=>{
+
+        const date=
+            order.created_at
+            ? new Date(
+                order.created_at
+              ).toLocaleString("en-IN")
+            : "-";
+
+        const customer=
+            order.customer_name||
+            order.name||
+            "-";
+
+        const phone=
+            order.phone||
+            order.mobile||
+            "-";
+
+        const qty=
+            Number(
+                order.quantity||1
+            );
+
+        const total=
+            Number(
+                order.total||0
+            );
+
+        const status=
+            order.status||
+            "Pending";
+
+        html+=`
+
+        <tr>
+
+        <td>
+            <strong>
+                ${escapeHtml(
+                    shortOrderId(order.id)
+                )}
+            </strong>
+        </td>
+
+        <td>
+            ${escapeHtml(date)}
+        </td>
+
+        <td>
+            ${escapeHtml(customer)}
+        </td>
+
+        <td>
+            ${escapeHtml(phone)}
+        </td>
+
+        <td class="product-name">
+            ${escapeHtml(
+                productName(order)
+            )}
+        </td>
+
+        <td>
+            ${qty}
+        </td>
+
+        <td class="total">
+            ${money(total)}
+        </td>
+
+        <td>
+            <span class="payment-badge">
+                ${escapeHtml(
+                    payment(order)
+                )}
+            </span>
+        </td>
+
+        <td>
+            ${statusBadge(status)}
+        </td>
+
+        <td>
+            <button
+                class="view-btn"
+                onclick="viewOrder('${escapeHtml(
+                    String(order.id)
+                )}')">
+
+                👁️ View
+
+            </button>
+        </td>
+
+        </tr>
+        `;
+
+    });
+
+    html+=`
+
+    </tbody>
+
+    </table>
+
+    </div>
+
+    `;
+
+    box.innerHTML=html;
 }
 
 
-if([
-"pending",
-"confirmed",
-"packed",
-"shipped",
-"order received"
-]
-.includes(status)){
+/* ================= STATUS ================= */
 
-pending++;
+function statusBadge(status){
 
-}
+    const s=
+        String(status||"Pending");
 
-});
+    const lower=
+        s.toLowerCase();
 
+    let cls="status-pending";
 
-document.getElementById(
-"totalOrders"
-).innerText =
-orders.length;
+    if(lower==="delivered"){
+        cls="status-delivered";
+    }
 
+    if(lower==="cancelled"){
+        cls="status-cancelled";
+    }
 
-document.getElementById(
-"totalSales"
-).innerText =
-money(sales);
-
-
-document.getElementById(
-"pendingOrders"
-).innerText =
-pending;
-
-
-document.getElementById(
-"deliveredOrders"
-).innerText =
-delivered;
-
+    return `
+        <span class="status-badge ${cls}">
+            ${escapeHtml(s)}
+        </span>
+    `;
 }
 
 
-/* =========================================
-   PRODUCT NAME
-========================================= */
-
-function productName(
-order
-){
-
-return order.product_name ||
-order.product ||
-order.productName ||
-order.item_name ||
-order.item ||
-"Product";
-
-}
-
-
-/* =========================================
-   PRODUCT PRICE
-========================================= */
-
-function productPrice(
-order
-){
-
-if(
-order.price != null
-){
-
-return Number(
-order.price
-);
-
-}
-
-
-if(
-order.unit_price != null
-){
-
-return Number(
-order.unit_price
-);
-
-}
-
-
-const qty =
-Number(
-order.quantity || 1
-);
-
-
-return qty
-?
-Number(
-order.total || 0
-) / qty
-:
-0;
-
-}
-
-
-/* =========================================
-   PAYMENT
-========================================= */
-
-function payment(
-order
-){
-
-return order.payment_status ||
-order.payment_method ||
-order.payment ||
-"Pending";
-
-}
-
-
-/* =========================================
-   RENDER ORDERS
-========================================= */
-
-function renderOrders(
-orders
-){
-
-const box =
-document.getElementById(
-"orders"
-);
-
-
-if(!orders.length){
-
-box.innerHTML = `
-
-<div class="message">
-
-No customer orders yet.
-
-</div>
-
-`;
-
-return;
-
-}
-
-
-let html = `
-
-<div class="table-wrapper">
-
-<table class="order-table">
-
-<thead>
-
-<tr>
-
-<th>Order Date</th>
-
-<th>Customer</th>
-
-<th>Mobile</th>
-
-<th>Product</th>
-
-<th>Price</th>
-
-<th>Qty</th>
-
-<th>Total</th>
-
-<th>Payment</th>
-
-<th>Address</th>
-
-<th>Status</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-`;
-
-
-orders.forEach(
-order=>{
-
-const id =
-String(
-order.id
-);
-
-
-const date =
-order.created_at
-?
-new Date(
-order.created_at
-)
-.toLocaleString(
-"en-IN"
-)
-:
-"-";
-
-
-const customer =
-order.customer_name ||
-order.name ||
-"-";
-
-
-const phone =
-order.phone ||
-order.mobile ||
-"-";
-
-
-const address =
-order.address ||
-order.shipping_address ||
-"-";
-
-
-const product =
-productName(order);
-
-
-const price =
-productPrice(order);
-
-
-const qty =
-Number(
-order.quantity || 1
-);
-
-
-const total =
-Number(
-order.total || 0
-);
-
-
-const pay =
-payment(order);
-
-
-const status =
-order.status ||
-"Pending";
-
-
-html += `
-
-<tr>
-
-<td>
-
-${escapeHtml(
-date
-)}
-
-</td>
-
-
-<td>
-
-<strong>
-
-${escapeHtml(
-customer
-)}
-
-</strong>
-
-</td>
-
-
-<td>
-
-${escapeHtml(
-phone
-)}
-
-</td>
-
-
-<td class="product-name">
-
-${escapeHtml(
-product
-)}
-
-</td>
-
-
-<td class="price">
-
-${money(
-price
-)}
-
-</td>
-
-
-<td>
-
-${qty}
-
-</td>
-
-
-<td class="total">
-
-${money(
-total
-)}
-
-</td>
-
-
-<td>
-
-<span class="payment-badge">
-
-${escapeHtml(
-pay
-)}
-
-</span>
-
-</td>
-
-
-<td>
-
-${escapeHtml(
-address
-)}
-
-</td>
-
-
-<td>
-
-<select
-class="status-select"
-id="status-${escapeHtml(id)}">
-
-${statusOption(
-"Pending",
-status
-)}
-
-${statusOption(
-"Confirmed",
-status
-)}
-
-${statusOption(
-"Packed",
-status
-)}
-
-${statusOption(
-"Shipped",
-status
-)}
-
-${statusOption(
-"Delivered",
-status
-)}
-
-${statusOption(
-"Cancelled",
-status
-)}
-
-</select>
-
-
-<button
-class="save-btn"
-onclick="saveOrder('${escapeHtml(id)}')">
-
-Save
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-
-html += `
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
-
-
-box.innerHTML =
-html;
-
-}
-
-
-/* =========================================
-   STATUS OPTION
-========================================= */
-
-function statusOption(
-value,
-current
-){
-
-return `
-
-<option
-value="${value}"
-${current === value
-? "selected"
-: ""}>
-
-${value}
-
-</option>
-
-`;
-
-}
-
-
-/* =========================================
-   FILTER ORDERS
-========================================= */
+/* ================= SEARCH ================= */
 
 function filterOrders(){
 
-const search =
-document.getElementById(
-"searchInput"
-).value
-.toLowerCase()
-.trim();
+    const search=
+        document.getElementById(
+            "searchInput"
+        ).value
+        .toLowerCase()
+        .trim();
 
+    if(!search){
 
-if(!search){
+        renderOrders(allOrders);
 
-renderOrders(
-allOrders
-);
+        return;
+    }
 
-return;
+    const filtered=
+        allOrders.filter(order=>{
 
+            const text=
+                (
+                    order.customer_name||""
+                )+" "+
+                (
+                    order.name||""
+                )+" "+
+                (
+                    order.phone||""
+                )+" "+
+                (
+                    order.mobile||""
+                )+" "+
+                productName(order)+" "+
+                shortOrderId(order.id);
+
+            return text
+                .toLowerCase()
+                .includes(search);
+        });
+
+    renderOrders(filtered);
 }
 
 
-const filtered =
-allOrders.filter(
-order=>{
+/* =========================================================
+   SALES SECTION
+========================================================= */
 
-const text =
+async function loadSales(){
 
-(
-order.customer_name ||
-""
-) +
+    document.getElementById(
+        "other-content"
+    ).innerHTML=`
 
-" " +
+    <div class="admin-box">
 
-(
-order.name ||
-""
-) +
+        <div class="admin-header">
 
-" " +
+            <div>
 
-(
-order.phone ||
-""
-) +
+                <p>
+                    LIARA PROFESSIONAL™
+                </p>
 
-" " +
+                <h2>
+                    💰 Sales Management
+                </h2>
 
-(
-order.mobile ||
-""
-) +
+            </div>
 
-" " +
+            <button
+                class="btn"
+                onclick="loadSales()">
 
-productName(order) +
+                🔄 Refresh
 
-" " +
+            </button>
 
-(
-order.address ||
-""
-);
+        </div>
 
 
-return text
-.toLowerCase()
-.includes(search);
+        <div class="sales-filter">
 
-});
+            <div class="date-field">
+
+                <label>
+                    From Date
+                </label>
+
+                <input
+                    type="date"
+                    id="salesFrom">
+
+            </div>
 
 
-renderOrders(
-filtered
-);
+            <div class="date-field">
 
+                <label>
+                    To Date
+                </label>
+
+                <input
+                    type="date"
+                    id="salesTo">
+
+            </div>
+
+
+            <button
+                class="btn"
+                onclick="filterSalesByDate()">
+
+                🔍 View Sales
+
+            </button>
+
+
+            <button
+                class="btn gray-btn"
+                onclick="clearSalesFilter()">
+
+                All Sales
+
+            </button>
+
+        </div>
+
+
+        <div class="summary-grid">
+
+            <div class="summary-card sales">
+
+                <span>
+                    Total Sales
+                </span>
+
+                <strong id="salesTotal">
+                    ₹0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <span>
+                    Total Orders
+                </span>
+
+                <strong id="salesOrders">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card delivered">
+
+                <span>
+                    Delivered
+                </span>
+
+                <strong id="salesDelivered">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-card pending">
+
+                <span>
+                    Pending
+                </span>
+
+                <strong id="salesPending">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div id="salesTable">
+
+            <div class="message">
+                Loading sales...
+            </div>
+
+        </div>
+
+    </div>
+    `;
+
+
+    const user=
+        await checkAdmin();
+
+    if(!user)return;
+
+
+    const {data,error}=
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+
+    if(error){
+
+        document.getElementById(
+            "salesTable"
+        ).innerHTML=`
+
+        <div class="message error">
+
+            Unable to load sales.
+
+            <br><br>
+
+            ${escapeHtml(
+                error.message
+            )}
+
+        </div>
+        `;
+
+        return;
+    }
+
+
+    allOrders=data||[];
+
+    renderSales(allOrders);
 }
 
 
-/* =========================================
-   SAVE ORDER
-========================================= */
+/* ================= SALES FILTER ================= */
 
-async function saveOrder(
-id
-){
+function filterSalesByDate(){
 
-const select =
-document.getElementById(
-"status-"+id
-);
+    const from=
+        document.getElementById(
+            "salesFrom"
+        ).value;
+
+    const to=
+        document.getElementById(
+            "salesTo"
+        ).value;
 
 
-if(!select){
+    let filtered=
+        [...allOrders];
 
-return;
 
+    if(from){
+
+        filtered=
+            filtered.filter(order=>{
+
+                if(!order.created_at)
+                    return false;
+
+                return new Date(
+                    order.created_at
+                ) >= new Date(
+                    from+"T00:00:00"
+                );
+
+            });
+
+    }
+
+
+    if(to){
+
+        filtered=
+            filtered.filter(order=>{
+
+                if(!order.created_at)
+                    return false;
+
+                return new Date(
+                    order.created_at
+                ) <= new Date(
+                    to+"T23:59:59"
+                );
+
+            });
+
+    }
+
+
+    renderSales(filtered);
 }
 
 
-const {
-error
-} =
-await supabaseClient
+function clearSalesFilter(){
 
-.from("orders")
+    document.getElementById(
+        "salesFrom"
+    ).value="";
 
-.update({
-status:
-select.value
-})
+    document.getElementById(
+        "salesTo"
+    ).value="";
 
-.eq(
-"id",
-id
-);
-
-
-if(error){
-
-alert(
-"Unable to update order:\n\n"+
-error.message
-);
-
-return;
-
+    renderSales(allOrders);
 }
 
 
-const order =
-allOrders.find(
-x =>
-String(x.id)
-===
-String(id)
-);
+/* ================= SALES RENDER ================= */
+
+function renderSales(orders){
+
+    let total=0;
+    let delivered=0;
+    let pending=0;
+
+    orders.forEach(order=>{
+
+        total+=Number(
+            order.total||0
+        );
+
+        const status=
+            String(
+                order.status||"Pending"
+            ).toLowerCase();
+
+        if(status==="delivered"){
+            delivered++;
+        }
+        else if(
+            status!=="cancelled"
+        ){
+            pending++;
+        }
+
+    });
 
 
-if(order){
+    document.getElementById(
+        "salesTotal"
+    ).innerText=
+        money(total);
 
-order.status =
-select.value;
+    document.getElementById(
+        "salesOrders"
+    ).innerText=
+        orders.length;
 
+    document.getElementById(
+        "salesDelivered"
+    ).innerText=
+        delivered;
+
+    document.getElementById(
+        "salesPending"
+    ).innerText=
+        pending;
+
+
+    const box=
+        document.getElementById(
+            "salesTable"
+        );
+
+
+    if(!orders.length){
+
+        box.innerHTML=`
+
+        <div class="message">
+
+            No sales found for selected date.
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    let html=`
+
+    <div class="table-wrapper">
+
+    <table class="order-table">
+
+    <thead>
+
+    <tr>
+
+        <th>Date</th>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Amount</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Action</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+    `;
+
+
+    orders.forEach(order=>{
+
+        const date=
+            order.created_at
+            ? new Date(
+                order.created_at
+              ).toLocaleDateString(
+                "en-IN"
+              )
+            : "-";
+
+
+        html+=`
+
+        <tr>
+
+            <td>
+                ${escapeHtml(date)}
+            </td>
+
+            <td>
+                <strong>
+                    ${escapeHtml(
+                        shortOrderId(
+                            order.id
+                        )
+                    )}
+                </strong>
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    order.customer_name||
+                    order.name||
+                    "-"
+                )}
+            </td>
+
+            <td class="product-name">
+                ${escapeHtml(
+                    productName(order)
+                )}
+            </td>
+
+            <td>
+                ${Number(
+                    order.quantity||1
+                )}
+            </td>
+
+            <td class="total">
+                ${money(
+                    order.total
+                )}
+            </td>
+
+            <td>
+
+                <span class="payment-badge">
+                    ${escapeHtml(
+                        payment(order)
+                    )}
+                </span>
+
+            </td>
+
+            <td>
+                ${statusBadge(
+                    order.status
+                )}
+            </td>
+
+            <td>
+
+                <button
+                    class="view-btn"
+                    onclick="viewOrder('${escapeHtml(
+                        String(order.id)
+                    )}')">
+
+                    👁️ View Order
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+
+    html+=`
+
+    </tbody>
+
+    </table>
+
+    </div>
+
+    `;
+
+
+    box.innerHTML=html;
 }
 
 
-updateSummary(
-allOrders
-);
+/* =========================================================
+   VIEW ORDER
+========================================================= */
+
+function viewOrder(id){
+
+    const order=
+        allOrders.find(
+            x=>String(x.id)===String(id)
+        );
 
 
-alert(
-"Order status updated."
-);
+    if(!order){
 
+        alert(
+            "Order not found."
+        );
+
+        return;
+    }
+
+
+    currentOrder=order;
+
+
+    const date=
+        order.created_at
+        ? new Date(
+            order.created_at
+          ).toLocaleString(
+            "en-IN"
+          )
+        : "-";
+
+
+    const customer=
+        order.customer_name||
+        order.name||
+        "-";
+
+
+    const phone=
+        order.phone||
+        order.mobile||
+        "-";
+
+
+    const address=
+        order.address||
+        order.shipping_address||
+        "-";
+
+
+    const product=
+        productName(order);
+
+
+    const qty=
+        Number(
+            order.quantity||1
+        );
+
+
+    const price=
+        productPrice(order);
+
+
+    const total=
+        Number(
+            order.total||0
+        );
+
+
+    const pay=
+        payment(order);
+
+
+    const status=
+        order.status||
+        "Pending";
+
+
+    document.getElementById(
+        "orderDetailContent"
+    ).innerHTML=`
+
+    <div class="order-detail">
+
+
+        <div class="detail-header">
+
+            <div>
+
+                <div class="detail-company">
+                    LIARA GROUP
+                </div>
+
+                <div style="
+                    font-size:12px;
+                    margin-top:5px;
+                    color:#666;">
+
+                    Private Limited
+
+                </div>
+
+            </div>
+
+
+            <div style="text-align:right">
+
+                <strong>
+                    ORDER
+                </strong>
+
+                <br>
+
+                <span style="
+                    color:#ad8232;
+                    font-weight:bold;">
+
+                    ${escapeHtml(
+                        shortOrderId(
+                            order.id
+                        )
+                    )}
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-grid">
+
+
+            <div class="detail-item">
+
+                <span>
+                    Order Date
+                </span>
+
+                <strong>
+                    ${escapeHtml(date)}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Order Status
+                </span>
+
+                <strong>
+                    ${escapeHtml(status)}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Customer Name
+                </span>
+
+                <strong>
+                    ${escapeHtml(customer)}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Mobile
+                </span>
+
+                <strong>
+                    ${escapeHtml(phone)}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Payment
+                </span>
+
+                <strong>
+                    ${escapeHtml(pay)}
+                </strong>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <span>
+                    Address
+                </span>
+
+                <strong>
+                    ${escapeHtml(address)}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <table class="order-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Product
+                    </th>
+
+                    <th>
+                        Qty
+                    </th>
+
+                    <th>
+                        Price
+                    </th>
+
+                    <th>
+                        Total
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(product)}
+                    </td>
+
+                    <td>
+                        ${qty}
+                    </td>
+
+                    <td>
+                        ${money(price)}
+                    </td>
+
+                    <td class="total">
+                        ${money(total)}
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+        <div class="detail-total">
+
+            <span>
+                Grand Total:
+            </span>
+
+            <strong>
+                ${money(total)}
+            </strong>
+
+        </div>
+
+
+    </div>
+
+    `;
+
+
+    document.getElementById(
+        "orderModal"
+    ).style.display="flex";
 }
 
 
-/* =========================================
-   ADD PRODUCT
-========================================= */
+function closeOrderModal(){
+
+    document.getElementById(
+        "orderModal"
+    ).style.display="none";
+}
+
+
+/* =========================================================
+   PRINT A4
+========================================================= */
+
+function printCurrentOrder(){
+
+    if(!currentOrder){
+
+        alert(
+            "Order select nahi hoya."
+        );
+
+        return;
+    }
+
+
+    const order=
+        currentOrder;
+
+
+    const date=
+        order.created_at
+        ? new Date(
+            order.created_at
+          ).toLocaleString(
+            "en-IN"
+          )
+        : "-";
+
+
+    const customer=
+        order.customer_name||
+        order.name||
+        "-";
+
+
+    const phone=
+        order.phone||
+        order.mobile||
+        "-";
+
+
+    const address=
+        order.address||
+        order.shipping_address||
+        "-";
+
+
+    const product=
+        productName(order);
+
+
+    const qty=
+        Number(
+            order.quantity||1
+        );
+
+
+    const price=
+        productPrice(order);
+
+
+    const total=
+        Number(
+            order.total||0
+        );
+
+
+    const pay=
+        payment(order);
+
+
+    const status=
+        order.status||
+        "Pending";
+
+
+    document.getElementById(
+        "printArea"
+    ).innerHTML=`
+
+    <div class="print-header">
+
+        <div>
+
+            <div class="print-brand">
+                LIARA GROUP
+            </div>
+
+            <div class="print-brand">
+                <small>
+                    PRIVATE LIMITED
+                </small>
+            </div>
+
+            <div style="
+                margin-top:8px;
+                font-size:10px;
+                color:#555;">
+
+                CIN / GST details can be added here
+
+            </div>
+
+        </div>
+
+
+        <div class="print-company">
+
+            <strong>
+                LIARA PROFESSIONAL™
+            </strong>
+
+            <br>
+
+            Beauty • Skincare • Personal Care
+
+            <br>
+
+            Official Order Invoice
+
+        </div>
+
+    </div>
+
+
+    <div class="print-title">
+
+        <h2>
+            ORDER INVOICE
+        </h2>
+
+        <div style="
+            font-size:12px;
+            margin-top:5px;">
+
+            Thank you for choosing Liara Professional™
+
+        </div>
+
+    </div>
+
+
+    <div class="print-meta">
+
+        <div>
+
+            <span>
+                ORDER ID
+            </span>
+
+            <strong>
+                ${escapeHtml(
+                    shortOrderId(
+                        order.id
+                    )
+                )}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                ORDER DATE
+            </span>
+
+            <strong>
+                ${escapeHtml(date)}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                CUSTOMER
+            </span>
+
+            <strong>
+                ${escapeHtml(customer)}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                MOBILE
+            </span>
+
+            <strong>
+                ${escapeHtml(phone)}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                PAYMENT
+            </span>
+
+            <strong>
+                ${escapeHtml(pay)}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                STATUS
+            </span>
+
+            <strong>
+                ${escapeHtml(status)}
+            </strong>
+
+        </div>
+
+
+        <div style="grid-column:1/-1">
+
+            <span>
+                DELIVERY ADDRESS
+            </span>
+
+            <strong>
+                ${escapeHtml(address)}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <table class="print-table">
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    #
+                </th>
+
+                <th>
+                    Product
+                </th>
+
+                <th>
+                    Quantity
+                </th>
+
+                <th>
+                    Unit Price
+                </th>
+
+                <th>
+                    Amount
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td>
+                    1
+                </td>
+
+                <td>
+                    ${escapeHtml(product)}
+                </td>
+
+                <td>
+                    ${qty}
+                </td>
+
+                <td>
+                    ${money(price)}
+                </td>
+
+                <td>
+                    ${money(total)}
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <div class="print-grand-total">
+
+        Grand Total:
+        ${money(total)}
+
+    </div>
+
+
+    <div class="print-footer">
+
+        <strong>
+            LIARA GROUP PRIVATE LIMITED
+        </strong>
+
+        <br>
+
+        LIARA PROFESSIONAL™
+
+        <br><br>
+
+        This is a computer-generated order document.
+
+        <br>
+
+        Thank you for your business.
+
+    </div>
+
+    `;
+
+
+    window.print();
+}
+
+
+/* ================= ADD PRODUCT ================= */
 
 function showAddProduct(){
 
-document.getElementById(
-"other-content"
-).innerHTML = `
+    document.getElementById(
+        "other-content"
+    ).innerHTML=`
 
-<div class="admin-box">
+    <div class="admin-box">
 
-<div class="form-title">
+        <div class="form-title">
 
-<p>
-PRODUCT MANAGEMENT
-</p>
+            <p>
+                PRODUCT MANAGEMENT
+            </p>
 
-<h2>
-➕ Add New Product
-</h2>
+            <h2>
+                ➕ Add New Product
+            </h2>
 
-</div>
+        </div>
 
-<br>
+        <br>
 
+        <div class="form-grid">
 
-<div class="form-grid">
+            <div class="form-group">
 
+                <label>
+                    Product Name
+                </label>
 
-<div class="form-group">
+                <input
+                    id="productNameInput"
+                    type="text"
+                    placeholder="e.g. Herbal Face Wash">
 
-<label>
-Product Name
-</label>
+            </div>
 
-<input
-id="productNameInput"
-type="text"
-placeholder="e.g. Herbal Face Wash">
 
-</div>
+            <div class="form-group">
 
+                <label>
+                    Price (₹)
+                </label>
 
-<div class="form-group">
+                <input
+                    id="productPriceInput"
+                    type="number"
+                    min="0"
+                    placeholder="299">
 
-<label>
-Price (₹)
-</label>
+            </div>
 
-<input
-id="productPriceInput"
-type="number"
-min="0"
-placeholder="299">
 
-</div>
+            <div class="form-group">
 
+                <label>
+                    Stock
+                </label>
 
-<div class="form-group">
+                <input
+                    id="productStockInput"
+                    type="number"
+                    min="0"
+                    value="0">
 
-<label>
-Stock
-</label>
+            </div>
 
-<input
-id="productStockInput"
-type="number"
-min="0"
-value="0">
 
-</div>
+            <div class="form-group">
 
+                <label>
+                    Low Stock Alert
+                </label>
 
-<div class="form-group">
+                <input
+                    id="productLowStockInput"
+                    type="number"
+                    min="0"
+                    value="5">
 
-<label>
-Low Stock Alert
-</label>
+            </div>
 
-<input
-id="productLowStockInput"
-type="number"
-min="0"
-value="5">
 
-</div>
+            <div class="form-group full">
 
+                <label>
+                    Description
+                </label>
 
-<div class="form-group full">
+                <textarea
+                    id="productDescriptionInput"
+                    placeholder="Write product description...">
+                </textarea>
 
-<label>
-Description
-</label>
+            </div>
 
-<textarea
-id="productDescriptionInput"
-placeholder="Write product description...">
-</textarea>
 
-</div>
+            <div class="form-group full">
 
+                <label>
+                    📷 Product Photo
+                </label>
 
-<div class="form-group full">
+                <div class="upload-box">
 
-<label>
-📷 Product Photo
-</label>
+                    <strong>
+                        Upload Product Photo
+                    </strong>
 
+                    <br>
 
-<div class="upload-box">
+                    <input
+                        id="productPhotoInput"
+                        type="file"
+                        accept="image/*"
+                        onchange="previewPhoto(event)">
 
-<strong>
-Upload Product Photo
-</strong>
+                    <div
+                        class="photo-preview"
+                        id="photoPreview">
 
-<br>
+                        <img
+                            id="previewImage"
+                            src=""
+                            alt="Preview">
 
+                    </div>
 
-<input
-id="productPhotoInput"
-type="file"
-accept="image/*"
-onchange="previewPhoto(event)">
+                    <div
+                        class="upload-status"
+                        id="uploadStatus">
+                    </div>
 
+                </div>
 
-<div
-class="photo-preview"
-id="photoPreview">
+            </div>
 
-<img
-id="previewImage"
-src=""
-alt="Preview">
+        </div>
 
-</div>
 
+        <div style="
+            display:flex;
+            gap:10px;
+            margin-top:10px;">
 
-<div
-class="upload-status"
-id="uploadStatus">
-</div>
+            <button
+                class="btn"
+                onclick="saveProduct()">
 
-</div>
+                💾 Save Product
 
-</div>
+            </button>
 
-</div>
+            <button
+                class="clear-btn"
+                onclick="clearProductForm()">
 
+                Clear
 
-<div class="form-actions">
+            </button>
 
-<button
-class="btn"
-onclick="saveProduct()">
+        </div>
 
-💾 Save Product
+    </div>
 
-</button>
-
-
-<button
-class="clear-btn"
-onclick="clearProductForm()">
-
-Clear
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
+    `;
 }
 
 
-/* =========================================
-   PHOTO PREVIEW
-========================================= */
+/* ================= PHOTO ================= */
 
-function previewPhoto(
-event
-){
+function previewPhoto(event){
 
-const file =
-event.target.files[0];
+    const file=
+        event.target.files[0];
 
+    if(!file)return;
 
-if(!file){
+    const preview=
+        document.getElementById(
+            "previewImage"
+        );
 
-return;
+    const box=
+        document.getElementById(
+            "photoPreview"
+        );
 
+    preview.src=
+        URL.createObjectURL(file);
+
+    box.style.display="block";
 }
 
 
-const preview =
-document.getElementById(
-"previewImage"
-);
-
-
-const box =
-document.getElementById(
-"photoPreview"
-);
-
-
-preview.src =
-URL.createObjectURL(
-file
-);
-
-
-box.style.display =
-"block";
-
-}
-
-
-/* =========================================
-   SAVE PRODUCT
-========================================= */
+/* ================= SAVE PRODUCT ================= */
 
 async function saveProduct(){
 
-const name =
-document.getElementById(
-"productNameInput"
-).value.trim();
+    const name=
+        document.getElementById(
+            "productNameInput"
+        ).value.trim();
+
+    const price=
+        Number(
+            document.getElementById(
+                "productPriceInput"
+            ).value
+        );
+
+    const stock=
+        Number(
+            document.getElementById(
+                "productStockInput"
+            ).value||0
+        );
+
+    const lowStock=
+        Number(
+            document.getElementById(
+                "productLowStockInput"
+            ).value||5
+        );
+
+    const description=
+        document.getElementById(
+            "productDescriptionInput"
+        ).value.trim();
+
+    const file=
+        document.getElementById(
+            "productPhotoInput"
+        ).files[0];
+
+    const status=
+        document.getElementById(
+            "uploadStatus"
+        );
 
 
-const price =
-Number(
-document.getElementById(
-"productPriceInput"
-).value
-);
+    if(!name){
+
+        alert(
+            "Product name pao."
+        );
+
+        return;
+    }
 
 
-const stock =
-Number(
-document.getElementById(
-"productStockInput"
-).value || 0
-);
+    if(price<0){
+
+        alert(
+            "Product price valid pao."
+        );
+
+        return;
+    }
 
 
-const lowStock =
-Number(
-document.getElementById(
-"productLowStockInput"
-).value || 5
-);
+    if(!file){
+
+        alert(
+            "Product photo upload karo."
+        );
+
+        return;
+    }
 
 
-const description =
-document.getElementById(
-"productDescriptionInput"
-).value.trim();
+    const user=
+        await checkAdmin();
+
+    if(!user)return;
 
 
-const file =
-document.getElementById(
-"productPhotoInput"
-).files[0];
+    status.innerText=
+        "Uploading photo...";
 
 
-const status =
-document.getElementById(
-"uploadStatus"
-);
+    try{
+
+        const extension=
+            file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
 
 
-if(!name){
+        const fileName=
+            Date.now()+
+            "-"+
+            Math.random()
+            .toString(36)
+            .substring(2)+
+            "."+
+            extension;
 
-alert(
-"Product name pao."
-);
 
-return;
+        const filePath=
+            "products/"+fileName;
 
+
+        const upload=
+            await supabaseClient
+            .storage
+            .from(IMAGE_BUCKET)
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl:"3600",
+                    upsert:false
+                }
+            );
+
+
+        if(upload.error){
+
+            alert(
+                "Photo upload failed:\n\n"+
+                upload.error.message
+            );
+
+            return;
+        }
+
+
+        const publicData=
+            supabaseClient
+            .storage
+            .from(IMAGE_BUCKET)
+            .getPublicUrl(
+                filePath
+            );
+
+
+        const imageUrl=
+            publicData.data.publicUrl;
+
+
+        const insert=
+            await supabaseClient
+            .from("products")
+            .insert({
+
+                name:name,
+                price:price,
+                stock:stock,
+                low_stock:lowStock,
+                description:description,
+                image_url:imageUrl
+
+            });
+
+
+        if(insert.error){
+
+            alert(
+                "Product save failed:\n\n"+
+                insert.error.message
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Product successfully add ho gaya."
+        );
+
+
+        clearProductForm();
+
+    }
+    catch(error){
+
+        alert(
+            "Something went wrong:\n\n"+
+            error.message
+        );
+
+    }
 }
 
 
-if(
-price < 0 ||
-isNaN(price)
-){
-
-alert(
-"Product price pao."
-);
-
-return;
-
-}
-
-
-if(!file){
-
-alert(
-"Product photo upload karo."
-);
-
-return;
-
-}
-
-
-if(stock < 0){
-
-alert(
-"Stock negative nahi ho sakda."
-);
-
-return;
-
-}
-
-
-const user =
-await checkAdmin();
-
-if(!user){
-
-return;
-
-}
-
-
-status.innerText =
-"Uploading photo...";
-
-
-try{
-
-const extension =
-file.name
-.split(".")
-.pop()
-.toLowerCase();
-
-
-const fileName =
-Date.now()+
-"-"+
-Math.random()
-.toString(36)
-.substring(2)+
-"."+extension;
-
-
-const filePath =
-"products/"+fileName;
-
-
-const upload =
-await supabaseClient
-.storage
-.from(IMAGE_BUCKET)
-.upload(
-filePath,
-file,
-{
-cacheControl:"3600",
-upsert:false
-}
-);
-
-
-if(upload.error){
-
-status.innerText="";
-
-alert(
-"Photo upload failed:\n\n"+
-upload.error.message
-);
-
-return;
-
-}
-
-
-status.innerText =
-"Photo uploaded. Saving product...";
-
-
-const publicData =
-supabaseClient
-.storage
-.from(IMAGE_BUCKET)
-.getPublicUrl(
-filePath
-);
-
-
-const imageUrl =
-publicData.data.publicUrl;
-
-
-const insert =
-await supabaseClient
-.from("products")
-.insert({
-
-name:name,
-
-price:price,
-
-stock:stock,
-
-low_stock:lowStock,
-
-description:description,
-
-image_url:imageUrl
-
-})
-.select()
-.single();
-
-
-if(insert.error){
-
-status.innerText="";
-
-alert(
-"Product save failed:\n\n"+
-insert.error.message
-);
-
-return;
-
-}
-
-
-status.innerText =
-"✓ Product saved successfully.";
-
-
-alert(
-"Product successfully add ho gaya."
-);
-
-
-clearProductForm();
-
-}
-catch(error){
-
-console.error(error);
-
-status.innerText="";
-
-alert(
-"Something went wrong:\n\n"+
-error.message
-);
-
-}
-
-}
-
-
-/* =========================================
-   CLEAR PRODUCT
-========================================= */
+/* ================= CLEAR ================= */
 
 function clearProductForm(){
 
-const ids = [
+    [
+        "productNameInput",
+        "productPriceInput",
+        "productDescriptionInput"
+    ].forEach(id=>{
 
-"productNameInput",
+        const el=
+            document.getElementById(id);
 
-"productPriceInput",
+        if(el)el.value="";
 
-"productDescriptionInput"
-
-];
-
-
-ids.forEach(
-id=>{
-
-const el =
-document.getElementById(
-id
-);
-
-if(el){
-
-el.value="";
-
-}
-
-});
+    });
 
 
-const stock =
-document.getElementById(
-"productStockInput"
-);
+    const stock=
+        document.getElementById(
+            "productStockInput"
+        );
 
-if(stock){
-
-stock.value="0";
-
-}
+    if(stock)stock.value="0";
 
 
-const low =
-document.getElementById(
-"productLowStockInput"
-);
+    const low=
+        document.getElementById(
+            "productLowStockInput"
+        );
 
-if(low){
-
-low.value="5";
-
-}
+    if(low)low.value="5";
 
 
-const photo =
-document.getElementById(
-"productPhotoInput"
-);
+    const photo=
+        document.getElementById(
+            "productPhotoInput"
+        );
 
-if(photo){
+    if(photo)photo.value="";
 
-photo.value="";
 
+    const preview=
+        document.getElementById(
+            "photoPreview"
+        );
+
+    if(preview)
+        preview.style.display="none";
+
+
+    const status=
+        document.getElementById(
+            "uploadStatus"
+        );
+
+    if(status)
+        status.innerText="";
 }
 
 
-const preview =
-document.getElementById(
-"photoPreview"
-);
-
-if(preview){
-
-preview.style.display="none";
-
-}
-
-
-const status =
-document.getElementById(
-"uploadStatus"
-);
-
-if(status){
-
-status.innerText="";
-
-}
-
-}
-
-
-/* =========================================
-   PRODUCTS
-========================================= */
+/* ================= PRODUCTS ================= */
 
 async function loadProducts(){
 
-document.getElementById(
-"other-content"
-).innerHTML = `
+    document.getElementById(
+        "other-content"
+    ).innerHTML=`
 
-<div class="admin-box">
+    <div class="admin-box">
 
-<div class="admin-header">
+        <div class="admin-header">
 
-<div>
+            <div>
 
-<p>
-PRODUCT MANAGEMENT
-</p>
+                <p>
+                    PRODUCT MANAGEMENT
+                </p>
 
-<h2>
-🧴 Products
-</h2>
+                <h2>
+                    🧴 Products
+                </h2>
 
-</div>
+            </div>
 
+            <button
+                class="btn"
+                onclick="showAddProduct()">
 
-<button
-class="btn"
-onclick="showAddProduct()">
+                ➕ Add Product
 
-➕ Add Product
+            </button>
 
-</button>
-
-</div>
-
-
-<div id="productsList">
-
-<div class="message">
-
-Loading products...
-
-</div>
-
-</div>
-
-</div>
-
-`;
+        </div>
 
 
-const user =
-await checkAdmin();
+        <div id="productsList">
 
-if(!user){
+            <div class="message">
+                Loading products...
+            </div>
 
-return;
+        </div>
 
+    </div>
+
+    `;
+
+
+    const user=
+        await checkAdmin();
+
+    if(!user)return;
+
+
+    const {data,error}=
+        await supabaseClient
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+
+    if(error){
+
+        document.getElementById(
+            "productsList"
+        ).innerHTML=`
+
+        <div class="message error">
+
+            ${escapeHtml(
+                error.message
+            )}
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    allProducts=data||[];
+
+    renderProducts(
+        allProducts
+    );
 }
 
 
-const {
-data,
-error
-} =
-await supabaseClient
+function renderProducts(products){
 
-.from("products")
-.select("*")
-.order(
-"created_at",
-{
-ascending:false
-}
-);
+    const box=
+        document.getElementById(
+            "productsList"
+        );
 
 
-if(error){
+    if(!products.length){
 
-document.getElementById(
-"productsList"
-).innerHTML = `
+        box.innerHTML=`
 
-<div class="message error">
+        <div class="message">
+            No products added yet.
+        </div>
 
-Unable to load products.
+        `;
 
-<br><br>
+        return;
+    }
 
-${escapeHtml(
-error.message
-)}
 
-</div>
+    let html=
+        `<div class="product-grid">`;
 
-`;
 
-return;
+    products.forEach(product=>{
 
-}
+        const stock=
+            Number(
+                product.stock||0
+            );
 
 
-allProducts =
-data || [];
+        let stockText=
+            "Stock: "+stock;
 
+        let stockClass=
+            "stock-ok";
 
-renderProducts(
-allProducts
-);
 
-}
+        if(stock<=0){
 
+            stockText=
+                "Out of Stock";
 
-/* =========================================
-   RENDER PRODUCTS
-========================================= */
+            stockClass=
+                "stock-out";
 
-function renderProducts(
-products
-){
+        }
 
-const box =
-document.getElementById(
-"productsList"
-);
+        else if(
+            stock<=Number(
+                product.low_stock||5
+            )
+        ){
 
+            stockText=
+                "Low Stock: "+stock;
 
-if(!products.length){
+            stockClass=
+                "stock-low";
+        }
 
-box.innerHTML = `
 
-<div class="message">
+        const image=
+            product.image_url||"";
 
-No products added yet.
 
-<br><br>
+        html+=`
 
-Click "Add Product" to add your first product.
+        <div class="product-card">
 
-</div>
+            ${
+                image
+                ?
+                `<img
+                    class="product-card-image"
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(product.name)}">`
+                :
+                `<div
+                    class="product-card-image"
+                    style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:50px;">
+                    🧴
+                </div>`
+            }
 
-`;
 
-return;
+            <div class="product-card-body">
 
-}
+                <h3>
+                    ${escapeHtml(
+                        product.name
+                    )}
+                </h3>
 
 
-let html =
-`<div class="product-grid">`;
+                <div class="product-description">
 
+                    ${escapeHtml(
+                        product.description||""
+                    )}
 
-products.forEach(
-product=>{
+                </div>
 
-const stock =
-Number(
-product.stock || 0
-);
 
+                <div class="product-price">
 
-let stockText =
-"Stock: "+stock;
+                    ${money(
+                        product.price
+                    )}
 
+                </div>
 
-let stockClass =
-"stock-ok";
 
+                <div
+                    class="product-stock ${stockClass}">
 
-if(stock <= 0){
+                    ${stockText}
 
-stockText =
-"Out of Stock";
+                </div>
 
-stockClass =
-"stock-out";
 
-}
+                <div class="product-card-actions">
 
-else if(
-stock <= Number(
-product.low_stock || 5
-)
-){
+                    <button
+                        class="update-product-stock"
+                        onclick="editProductStock('${escapeHtml(
+                            String(product.id)
+                        )}')">
 
-stockText =
-"Low Stock: "+stock;
+                        ✏️ Stock
 
-stockClass =
-"stock-low";
+                    </button>
 
-}
 
+                    <button
+                        class="delete-product"
+                        onclick="deleteProduct('${escapeHtml(
+                            String(product.id)
+                        )}')">
 
-const image =
-product.image_url ||
-"";
+                        🗑️ Delete
 
+                    </button>
 
-html += `
+                </div>
 
-<div class="product-card">
+            </div>
 
+        </div>
 
-${
-image
-?
+        `;
 
-`<img
-class="product-card-image"
-src="${escapeHtml(image)}"
-alt="${escapeHtml(product.name)}">`
+    });
 
-:
 
-`<div
-class="product-card-image"
-style="
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:50px;">
+    html+="</div>";
 
-🧴
-
-</div>`
-
-}
-
-
-<div class="product-card-body">
-
-
-<h3>
-
-${escapeHtml(
-product.name
-)}
-
-</h3>
-
-
-<div class="product-description">
-
-${escapeHtml(
-product.description || ""
-)}
-
-</div>
-
-
-<div class="product-price">
-
-${money(
-product.price
-)}
-
-</div>
-
-
-<div
-class="product-stock ${stockClass}">
-
-${stockText}
-
-</div>
-
-
-<div class="product-card-actions">
-
-
-<button
-class="update-product-stock"
-onclick="editProductStock('${escapeHtml(String(product.id))}')">
-
-✏️ Stock
-
-</button>
-
-
-<button
-class="delete-product"
-onclick="deleteProduct('${escapeHtml(String(product.id))}')">
-
-🗑️ Delete
-
-</button>
-
-
-</div>
-
-
-</div>
-
-</div>
-
-`;
-
-});
-
-
-html +=
-"</div>";
-
-
-box.innerHTML =
-html;
-
+    box.innerHTML=html;
 }
 
 
-/* =========================================
-   EDIT STOCK
-========================================= */
+/* ================= EDIT STOCK ================= */
 
-async function editProductStock(
-id
-){
+async function editProductStock(id){
 
-const product =
-allProducts.find(
-p =>
-String(p.id)
-===
-String(id)
-);
+    const product=
+        allProducts.find(
+            p=>String(p.id)===String(id)
+        );
 
 
-if(!product){
+    if(!product)return;
 
-return;
 
+    const value=
+        prompt(
+            "New stock quantity:",
+            product.stock||0
+        );
+
+
+    if(value===null)return;
+
+
+    const stock=
+        Number(value);
+
+
+    if(
+        !Number.isInteger(stock)||
+        stock<0
+    ){
+
+        alert(
+            "Valid stock quantity pao."
+        );
+
+        return;
+    }
+
+
+    const {error}=
+        await supabaseClient
+        .from("products")
+        .update({
+            stock:stock
+        })
+        .eq("id",id);
+
+
+    if(error){
+
+        alert(
+            "Stock update failed:\n\n"+
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Stock updated successfully."
+    );
+
+
+    loadProducts();
 }
 
 
-const value =
-prompt(
-"New stock quantity:",
-product.stock || 0
-);
+/* ================= DELETE PRODUCT ================= */
+
+async function deleteProduct(id){
+
+    const product=
+        allProducts.find(
+            p=>String(p.id)===String(id)
+        );
 
 
-if(value === null){
+    if(!product)return;
 
-return;
 
+    const yes=
+        confirm(
+            'Delete "'+
+            product.name+
+            '"?'
+        );
+
+
+    if(!yes)return;
+
+
+    const {error}=
+        await supabaseClient
+        .from("products")
+        .delete()
+        .eq("id",id);
+
+
+    if(error){
+
+        alert(
+            "Product delete failed:\n\n"+
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Product deleted successfully."
+    );
+
+
+    loadProducts();
 }
 
 
-const stock =
-Number(value);
-
-
-if(
-!Number.isInteger(stock) ||
-stock < 0
-){
-
-alert(
-"Valid stock quantity pao."
-);
-
-return;
-
-}
-
-
-const {
-error
-} =
-await supabaseClient
-
-.from("products")
-.update({
-stock:stock
-})
-.eq(
-"id",
-id
-);
-
-
-if(error){
-
-alert(
-"Stock update failed:\n\n"+
-error.message
-);
-
-return;
-
-}
-
-
-alert(
-"Stock updated successfully."
-);
-
-
-loadProducts();
-
-}
-
-
-/* =========================================
-   DELETE PRODUCT
-========================================= */
-
-async function deleteProduct(
-id
-){
-
-const product =
-allProducts.find(
-p =>
-String(p.id)
-===
-String(id)
-);
-
-
-if(!product){
-
-return;
-
-}
-
-
-const yes =
-confirm(
-'Delete "'+
-product.name+
-'"?'
-);
-
-
-if(!yes){
-
-return;
-
-}
-
-
-const {
-error
-} =
-await supabaseClient
-
-.from("products")
-.delete()
-.eq(
-"id",
-id
-);
-
-
-if(error){
-
-alert(
-"Product delete failed:\n\n"+
-error.message
-);
-
-return;
-
-}
-
-
-alert(
-"Product deleted successfully."
-);
-
-
-loadProducts();
-
-}
-
-
-/* =========================================
-   STOCK
-========================================= */
+/* ================= STOCK ================= */
 
 async function loadStock(){
 
-document.getElementById(
-"other-content"
-).innerHTML = `
+    document.getElementById(
+        "other-content"
+    ).innerHTML=`
 
-<div class="admin-box">
+    <div class="admin-box">
 
+        <div class="admin-header">
 
-<div class="stock-header">
+            <div>
 
-<div>
+                <p>
+                    INVENTORY
+                </p>
 
-<p
-style="
-color:#ad8232;
-font-size:13px;
-font-weight:bold;
-letter-spacing:2px;">
+                <h2>
+                    📦 Stock Management
+                </h2>
 
-INVENTORY
+            </div>
 
-</p>
+            <button
+                class="btn"
+                onclick="loadStock()">
 
+                🔄 Refresh
 
-<h2>
-📦 Stock Management
-</h2>
+            </button>
 
-</div>
-
-
-<button
-class="btn"
-onclick="loadStock()">
-
-🔄 Refresh
-
-</button>
-
-</div>
+        </div>
 
 
-<div class="stock-cards">
+        <div class="stock-cards">
+
+            <div class="stock-card">
+
+                <span>
+                    Total Products
+                </span>
+
+                <strong id="stockTotal">
+                    0
+                </strong>
+
+            </div>
 
 
-<div class="stock-card">
+            <div class="stock-card">
 
-<span>
-Total Products
-</span>
+                <span>
+                    Low Stock
+                </span>
 
-<strong
-id="stockTotal">
-0
-</strong>
+                <strong id="stockLow">
+                    0
+                </strong>
 
-</div>
-
-
-<div class="stock-card">
-
-<span>
-Low Stock
-</span>
-
-<strong
-id="stockLow">
-0
-</strong>
-
-</div>
+            </div>
 
 
-<div class="stock-card">
+            <div class="stock-card">
 
-<span>
-Out of Stock
-</span>
+                <span>
+                    Out of Stock
+                </span>
 
-<strong
-id="stockOut">
-0
-</strong>
+                <strong id="stockOut">
+                    0
+                </strong>
 
-</div>
+            </div>
 
-
-</div>
+        </div>
 
 
-<div id="stockTable">
+        <div id="stockTable">
 
-<div class="message">
+            <div class="message">
+                Loading stock...
+            </div>
 
-Loading stock...
+        </div>
 
-</div>
+    </div>
 
-</div>
-
-
-</div>
-
-`;
+    `;
 
 
-const user =
-await checkAdmin();
+    const user=
+        await checkAdmin();
 
-if(!user){
+    if(!user)return;
 
-return;
 
+    const {data,error}=
+        await supabaseClient
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+
+    if(error){
+
+        document.getElementById(
+            "stockTable"
+        ).innerHTML=`
+
+        <div class="message error">
+
+            ${escapeHtml(
+                error.message
+            )}
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    renderStock(
+        data||[]
+    );
 }
 
 
-const {
-data,
-error
-} =
-await supabaseClient
+function renderStock(products){
 
-.from("products")
-.select("*")
-.order(
-"created_at",
-{
-ascending:false
-}
-);
+    let low=0;
+    let out=0;
 
 
-if(error){
+    products.forEach(product=>{
 
-document.getElementById(
-"stockTable"
-).innerHTML = `
+        const stock=
+            Number(
+                product.stock||0
+            );
 
-<div class="message error">
+        const minimum=
+            Number(
+                product.low_stock||5
+            );
 
-${escapeHtml(
-error.message
-)}
 
-</div>
+        if(stock<=0){
+            out++;
+        }
 
-`;
+        else if(stock<=minimum){
+            low++;
+        }
 
-return;
+    });
 
-}
 
+    document.getElementById(
+        "stockTotal"
+    ).innerText=
+        products.length;
 
-renderStock(
-data || []
-);
 
-}
+    document.getElementById(
+        "stockLow"
+    ).innerText=
+        low;
 
 
-/* =========================================
-   RENDER STOCK
-========================================= */
+    document.getElementById(
+        "stockOut"
+    ).innerText=
+        out;
 
-function renderStock(
-products
-){
 
-let low = 0;
+    if(!products.length){
 
-let out = 0;
+        document.getElementById(
+            "stockTable"
+        ).innerHTML=`
 
+        <div class="message">
+            No products added yet.
+        </div>
 
-products.forEach(
-product=>{
+        `;
 
-const stock =
-Number(
-product.stock || 0
-);
+        return;
+    }
 
 
-const minimum =
-Number(
-product.low_stock || 5
-);
+    let html=`
 
+    <div class="table-wrapper">
 
-if(stock <= 0){
+    <table class="order-table">
 
-out++;
+    <thead>
 
-}
+    <tr>
 
-else if(
-stock <= minimum
-){
+        <th>
+            Product
+        </th>
 
-low++;
+        <th>
+            Price
+        </th>
 
-}
+        <th>
+            Stock
+        </th>
 
-});
+        <th>
+            Minimum
+        </th>
 
+        <th>
+            Status
+        </th>
 
-document.getElementById(
-"stockTotal"
-).innerText =
-products.length;
+        <th>
+            Update
+        </th>
 
+    </tr>
 
-document.getElementById(
-"stockLow"
-).innerText =
-low;
+    </thead>
 
+    <tbody>
 
-document.getElementById(
-"stockOut"
-).innerText =
-out;
+    `;
 
 
-if(!products.length){
+    products.forEach(product=>{
 
-document.getElementById(
-"stockTable"
-).innerHTML = `
+        const stock=
+            Number(
+                product.stock||0
+            );
 
-<div class="message">
+        const minimum=
+            Number(
+                product.low_stock||5
+            );
 
-No products added yet.
 
-</div>
+        let status="In Stock";
+        let cls="stock-ok";
 
-`;
 
-return;
+        if(stock<=0){
 
-}
+            status=
+                "Out of Stock";
 
+            cls=
+                "stock-out";
 
-let html = `
+        }
 
-<div class="table-wrapper">
+        else if(
+            stock<=minimum
+        ){
 
-<table class="order-table">
+            status=
+                "Low Stock";
 
-<thead>
+            cls=
+                "stock-low";
+        }
 
-<tr>
 
-<th>
-Product
-</th>
+        html+=`
 
-<th>
-Price
-</th>
+        <tr>
 
-<th>
-Stock
-</th>
+            <td>
 
-<th>
-Minimum
-</th>
+                <strong>
+                    ${escapeHtml(
+                        product.name
+                    )}
+                </strong>
 
-<th>
-Status
-</th>
+            </td>
 
-<th>
-Update
-</th>
 
-</tr>
+            <td>
+                ${money(
+                    product.price
+                )}
+            </td>
 
-</thead>
 
-<tbody>
+            <td>
 
-`;
+                <input
+                    class="stock-input"
+                    id="stock-${escapeHtml(
+                        String(product.id)
+                    )}"
+                    type="number"
+                    min="0"
+                    value="${stock}">
 
+            </td>
 
-products.forEach(
-product=>{
 
-const stock =
-Number(
-product.stock || 0
-);
+            <td>
+                ${minimum}
+            </td>
 
 
-const minimum =
-Number(
-product.low_stock || 5
-);
+            <td class="${cls}">
+                ${status}
+            </td>
 
 
-let status =
-"In Stock";
+            <td>
 
+                <button
+                    class="stock-save"
+                    onclick="updateStock('${escapeHtml(
+                        String(product.id)
+                    )}')">
 
-let cls =
-"stock-ok";
+                    Save
 
+                </button>
 
-if(stock <= 0){
+            </td>
 
-status =
-"Out of Stock";
+        </tr>
 
-cls =
-"stock-out";
+        `;
 
-}
+    });
 
-else if(
-stock <= minimum
-){
 
-status =
-"Low Stock";
+    html+=`
 
-cls =
-"stock-low";
+    </tbody>
 
-}
+    </table>
 
+    </div>
 
-html += `
+    `;
 
-<tr>
 
-
-<td>
-
-<strong>
-
-${escapeHtml(
-product.name
-)}
-
-</strong>
-
-</td>
-
-
-<td>
-
-${money(
-product.price
-)}
-
-</td>
-
-
-<td>
-
-<input
-class="stock-input"
-id="stock-${escapeHtml(String(product.id))}"
-type="number"
-min="0"
-value="${stock}">
-
-</td>
-
-
-<td>
-
-${minimum}
-
-</td>
-
-
-<td class="${cls}">
-
-${status}
-
-</td>
-
-
-<td>
-
-<button
-class="stock-save"
-onclick="updateStock('${escapeHtml(String(product.id))}')">
-
-Save
-
-</button>
-
-</td>
-
-
-</tr>
-
-`;
-
-});
-
-
-html += `
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
-
-
-document.getElementById(
-"stockTable"
-).innerHTML =
-html;
-
+    document.getElementById(
+        "stockTable"
+    ).innerHTML=
+        html;
 }
 
 
-/* =========================================
-   UPDATE STOCK
-========================================= */
+/* ================= UPDATE STOCK ================= */
 
-async function updateStock(
-id
-){
+async function updateStock(id){
 
-const input =
-document.getElementById(
-"stock-"+id
-);
+    const input=
+        document.getElementById(
+            "stock-"+id
+        );
 
 
-if(!input){
+    if(!input)return;
 
-return;
 
+    const stock=
+        Number(input.value);
+
+
+    if(
+        !Number.isInteger(stock)||
+        stock<0
+    ){
+
+        alert(
+            "Valid stock quantity pao."
+        );
+
+        return;
+    }
+
+
+    const {error}=
+        await supabaseClient
+        .from("products")
+        .update({
+            stock:stock
+        })
+        .eq("id",id);
+
+
+    if(error){
+
+        alert(
+            "Stock update failed:\n\n"+
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Stock updated successfully."
+    );
+
+
+    loadStock();
 }
 
 
-const stock =
-Number(
-input.value
-);
-
-
-if(
-!Number.isInteger(stock) ||
-stock < 0
-){
-
-alert(
-"Valid stock quantity pao."
-);
-
-return;
-
-}
-
-
-const {
-error
-} =
-await supabaseClient
-
-.from("products")
-.update({
-stock:stock
-})
-.eq(
-"id",
-id
-);
-
-
-if(error){
-
-alert(
-"Stock update failed:\n\n"+
-error.message
-);
-
-return;
-
-}
-
-
-alert(
-"Stock updated successfully."
-);
-
-
-loadStock();
-
-}
-
-
-/* =========================================
-   LOGOUT
-========================================= */
+/* ================= LOGOUT ================= */
 
 async function logoutAdmin(){
 
-await supabaseClient
-.auth
-.signOut();
+    await supabaseClient
+        .auth
+        .signOut();
 
-
-window.location.href =
-"company-login.html";
-
+    window.location.href=
+        "company-login.html";
 }
 
 
-/* =========================================
-   START
-========================================= */
+/* ================= START ================= */
 
 loadOrders();
 
 </script>
 
 </body>
-
 </html>
