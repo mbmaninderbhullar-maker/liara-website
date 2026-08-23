@@ -1,6 +1,6 @@
 /* =====================================================
    LIARA PROFESSIONAL™
-   MAIN WEBSITE STYLES
+   LUXURY COSMETIC WEBSITE STYLES
 ===================================================== */
 
 * {
@@ -19,14 +19,10 @@ body {
         Helvetica,
         sans-serif;
 
-    background: #fff;
-    color: #222;
+    background: #fbf8f2;
+    color: #242321;
     line-height: 1.6;
 }
-
-/* =====================================================
-   GLOBAL
-===================================================== */
 
 a {
     text-decoration: none;
@@ -41,23 +37,77 @@ section {
     width: 100%;
 }
 
+/* =====================================================
+   LUXURY COLORS
+===================================================== */
+
+:root {
+    --ivory: #fbf8f2;
+    --cream: #f5efe4;
+    --cream-dark: #eee5d6;
+
+    --gold: #b08a3c;
+    --gold-light: #d8bd7a;
+    --gold-soft: #ead9ad;
+
+    --dark: #242321;
+    --text: #5f5b54;
+    --muted: #89837a;
+
+    --white: #ffffff;
+
+    --border: rgba(176, 138, 60, 0.20);
+
+    --shadow:
+        0 15px 45px rgba(45, 38, 28, 0.08);
+}
+
+/* =====================================================
+   GLOBAL HEADINGS
+===================================================== */
+
 .heading {
     text-align: center;
     margin-bottom: 55px;
+    position: relative;
+    z-index: 2;
 }
 
 .heading p {
-    color: #ad8232;
-    font-size: 12px;
+    color: var(--gold);
+
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 12px;
+
+    text-transform: uppercase;
 }
 
 .heading h2 {
-    font-size: 38px;
+    font-size: 40px;
     line-height: 1.2;
-    color: #222;
+
+    color: var(--dark);
+
+    font-weight: 600;
+
+    letter-spacing: -0.5px;
+}
+
+.heading h2::after {
+    content: "";
+
+    display: block;
+
+    width: 55px;
+    height: 1px;
+
+    background: var(--gold);
+
+    margin: 20px auto 0;
 }
 
 /* =====================================================
@@ -66,7 +116,7 @@ section {
 
 header {
     width: 100%;
-    min-height: 78px;
+    min-height: 80px;
 
     padding: 0 7%;
 
@@ -74,21 +124,27 @@ header {
     align-items: center;
     justify-content: space-between;
 
-    background: rgba(255,255,255,0.96);
+    background: rgba(255, 253, 249, 0.94);
 
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(176, 138, 60, 0.16);
 
     position: sticky;
     top: 0;
     z-index: 1000;
 
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(14px);
+
+    box-shadow:
+        0 5px 25px rgba(0, 0, 0, 0.035);
 }
 
-/* LOGO */
+/* =====================================================
+   LOGO
+===================================================== */
 
 .logo {
     display: flex;
+
     flex-direction: column;
 
     line-height: 1;
@@ -96,39 +152,72 @@ header {
 
 .logo span {
     font-size: 27px;
+
     font-weight: 800;
+
     letter-spacing: 4px;
-    color: #222;
+
+    color: var(--dark);
 }
 
 .logo small {
     margin-top: 5px;
 
-    font-size: 9px;
+    font-size: 8px;
+
     letter-spacing: 3px;
 
-    color: #ad8232;
+    color: var(--gold);
 
     text-align: center;
 }
 
-/* NAVIGATION */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
 nav {
     display: flex;
+
     align-items: center;
-    gap: 25px;
+
+    gap: 26px;
 }
 
 nav a {
-    font-size: 13px;
-    color: #555;
+    position: relative;
 
-    transition: 0.25s;
+    font-size: 12px;
+
+    color: #55514b;
+
+    transition: 0.3s;
+}
+
+nav a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: -7px;
+
+    width: 0;
+    height: 1px;
+
+    background: var(--gold);
+
+    transform: translateX(-50%);
+
+    transition: 0.3s;
 }
 
 nav a:hover {
-    color: #ad8232;
+    color: var(--gold);
+}
+
+nav a:hover::after {
+    width: 100%;
 }
 
 /* =====================================================
@@ -141,33 +230,69 @@ nav a:hover {
     padding: 90px 8%;
 
     display: grid;
+
     grid-template-columns: 1.1fr 0.9fr;
 
     align-items: center;
 
-    background:
-        linear-gradient(
-            120deg,
-            #faf8f3,
-            #f4eee3
-        );
+    position: relative;
 
     overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 80% 30%,
+            rgba(216, 189, 122, 0.20),
+            transparent 30%
+        ),
+        linear-gradient(
+            120deg,
+            #fcfaf5,
+            #f2eadc
+        );
+}
+
+/* subtle watermark */
+
+.hero::before {
+    content: "LIARA";
+
+    position: absolute;
+
+    right: -30px;
+    bottom: -45px;
+
+    font-size: 150px;
+
+    font-weight: 800;
+
+    letter-spacing: 18px;
+
+    color: rgba(176, 138, 60, 0.045);
+
+    pointer-events: none;
 }
 
 .hero-content {
     max-width: 680px;
+
+    position: relative;
+
+    z-index: 2;
 }
 
 .eyebrow {
-    color: #ad8232;
+    color: var(--gold);
 
-    font-size: 13px;
+    font-size: 12px;
+
     font-weight: 700;
 
     letter-spacing: 4px;
 
     margin-bottom: 18px;
+
+    text-transform: uppercase;
 }
 
 .hero h1 {
@@ -175,32 +300,40 @@ nav a:hover {
 
     line-height: 1.02;
 
-    color: #222;
+    color: var(--dark);
 
     margin-bottom: 25px;
+
+    font-weight: 600;
+
+    letter-spacing: -2px;
 }
 
 .hero h1 span {
     display: block;
-    color: #ad8232;
+
+    color: var(--gold);
 }
 
 .hero-text {
     max-width: 570px;
 
-    color: #666;
+    color: var(--text);
 
-    font-size: 17px;
+    font-size: 16px;
 
-    line-height: 1.8;
+    line-height: 1.9;
 
     margin-bottom: 35px;
 }
 
-/* BUTTONS */
+/* =====================================================
+   BUTTONS
+===================================================== */
 
 .buttons {
     display: flex;
+
     gap: 14px;
 
     flex-wrap: wrap;
@@ -212,44 +345,57 @@ nav a:hover {
     align-items: center;
     justify-content: center;
 
-    min-height: 45px;
+    min-height: 46px;
 
-    padding: 12px 24px;
+    padding: 12px 26px;
 
-    border: none;
+    border: 1px solid var(--dark);
 
-    background: #222;
+    background: var(--dark);
 
     color: white;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: 600;
 
+    letter-spacing: 0.5px;
+
     cursor: pointer;
 
-    border-radius: 4px;
+    border-radius: 3px;
 
-    transition: 0.25s;
+    transition: 0.3s;
 }
 
 .btn:hover {
-    background: #ad8232;
+    background: var(--gold);
+
+    border-color: var(--gold);
+
     transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(176, 138, 60, 0.20);
 }
 
 .btn-light {
-    background: white;
-    color: #222;
+    background: rgba(255,255,255,0.65);
 
-    border: 1px solid #ddd;
+    color: var(--dark);
+
+    border: 1px solid rgba(176, 138, 60, 0.35);
 }
 
 .btn-light:hover {
+    background: var(--gold);
+
     color: white;
 }
 
-/* MINI INFO */
+/* =====================================================
+   MINI INFO
+===================================================== */
 
 .mini-info {
     margin-top: 50px;
@@ -261,20 +407,25 @@ nav a:hover {
 
 .mini-info div {
     display: flex;
+
     flex-direction: column;
 }
 
 .mini-info b {
-    color: #ad8232;
+    color: var(--gold);
+
     font-size: 13px;
 }
 
 .mini-info span {
-    color: #777;
-    font-size: 12px;
+    color: var(--muted);
+
+    font-size: 11px;
 }
 
-/* HERO VISUAL */
+/* =====================================================
+   HERO PRODUCT VISUAL
+===================================================== */
 
 .hero-image {
     position: relative;
@@ -285,6 +436,8 @@ nav a:hover {
 
     align-items: center;
     justify-content: center;
+
+    z-index: 2;
 }
 
 .gold-circle {
@@ -293,11 +446,19 @@ nav a:hover {
     width: 390px;
     height: 390px;
 
-    background: #e3c889;
+    background:
+        radial-gradient(
+            circle,
+            #ead6a3,
+            #d7b96f
+        );
 
     border-radius: 50%;
 
-    opacity: 0.55;
+    opacity: 0.50;
+
+    box-shadow:
+        inset 0 0 40px rgba(255,255,255,0.35);
 }
 
 .bottle {
@@ -309,7 +470,9 @@ nav a:hover {
     background:
         linear-gradient(
             90deg,
-            #d8d8d8,
+            #cfcfcf,
+            #ffffff,
+            #dedede,
             #ffffff,
             #cfcfcf
         );
@@ -317,7 +480,7 @@ nav a:hover {
     border-radius: 18px 18px 25px 25px;
 
     box-shadow:
-        0 30px 50px rgba(0,0,0,0.18);
+        0 30px 55px rgba(0,0,0,0.20);
 
     z-index: 2;
 }
@@ -328,12 +491,22 @@ nav a:hover {
     width: 125px;
     height: 48px;
 
-    background: #222;
+    background:
+        linear-gradient(
+            90deg,
+            #171717,
+            #383838,
+            #181818
+        );
 
     top: -43px;
+
     left: 42px;
 
     border-radius: 8px 8px 3px 3px;
+
+    box-shadow:
+        0 7px 12px rgba(0,0,0,0.18);
 }
 
 .bottle-label {
@@ -348,9 +521,12 @@ nav a:hover {
 
     text-align: center;
 
-    background: #faf7ef;
+    background: #fcfaf5;
 
     border: 1px solid #d4b46a;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.05);
 }
 
 .bottle-label strong {
@@ -359,12 +535,14 @@ nav a:hover {
     font-size: 25px;
 
     letter-spacing: 4px;
+
+    color: var(--dark);
 }
 
 .bottle-label small {
     display: block;
 
-    color: #ad8232;
+    color: var(--gold);
 
     font-size: 8px;
 
@@ -381,6 +559,8 @@ nav a:hover {
     letter-spacing: 3px;
 
     color: #777;
+
+    font-style: normal;
 }
 
 /* =====================================================
@@ -388,9 +568,32 @@ nav a:hover {
 ===================================================== */
 
 .about {
-    padding: 90px 8%;
+    padding: 95px 8%;
 
-    background: white;
+    position: relative;
+
+    overflow: hidden;
+
+    background: var(--ivory);
+}
+
+.about::before {
+    content: "LIARA";
+
+    position: absolute;
+
+    left: -30px;
+    top: 40px;
+
+    font-size: 130px;
+
+    font-weight: 800;
+
+    letter-spacing: 15px;
+
+    color: rgba(176, 138, 60, 0.045);
+
+    pointer-events: none;
 }
 
 .about-box {
@@ -398,7 +601,7 @@ nav a:hover {
 
     margin: auto;
 
-    padding: 45px;
+    padding: 48px;
 
     display: grid;
 
@@ -406,9 +609,17 @@ nav a:hover {
 
     gap: 35px;
 
-    background: #faf8f3;
+    position: relative;
 
-    border: 1px solid #eee;
+    z-index: 1;
+
+    background: rgba(255,255,255,0.90);
+
+    border: 1px solid rgba(176,138,60,0.18);
+
+    box-shadow: var(--shadow);
+
+    border-radius: 4px;
 }
 
 .about-number {
@@ -420,27 +631,32 @@ nav a:hover {
     align-items: center;
     justify-content: center;
 
-    background: #222;
+    background: var(--dark);
 
-    color: #d8b765;
+    color: var(--gold-light);
 
-    font-size: 32px;
+    font-size: 28px;
 
     border-radius: 50%;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.12);
 }
 
 .about-box h3 {
     font-size: 25px;
 
     margin-bottom: 15px;
+
+    color: var(--dark);
 }
 
 .about-box p {
-    color: #666;
+    color: var(--text);
 
     font-size: 15px;
 
-    line-height: 1.8;
+    line-height: 1.9;
 
     margin-bottom: 12px;
 }
@@ -450,22 +666,60 @@ nav a:hover {
 ===================================================== */
 
 .brand-intro {
-    padding: 75px 8%;
+    padding: 85px 8%;
 
-    background: #f8f5ef;
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8f3e9,
+            #eee5d5
+        );
 
     text-align: center;
 }
 
+.brand-intro::before {
+    content: "LIARA";
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    font-size: 145px;
+
+    font-weight: 800;
+
+    letter-spacing: 20px;
+
+    color: rgba(176,138,60,0.045);
+
+    white-space: nowrap;
+
+    pointer-events: none;
+}
+
 .brand-intro-inner {
     max-width: 900px;
+
     margin: auto;
+
+    position: relative;
+
+    z-index: 1;
 }
 
 .brand-intro-label {
-    color: #ad8232;
+    color: var(--gold);
 
-    font-size: 12px;
+    font-size: 11px;
 
     letter-spacing: 4px;
 
@@ -477,13 +731,15 @@ nav a:hover {
 .brand-intro h2 {
     font-size: 42px;
 
-    color: #222;
+    color: var(--dark);
 
     margin-bottom: 18px;
+
+    font-weight: 600;
 }
 
 .brand-intro h2 span {
-    color: #ad8232;
+    color: var(--gold);
 }
 
 .brand-intro p {
@@ -491,7 +747,7 @@ nav a:hover {
 
     margin: auto;
 
-    color: #666;
+    color: var(--text);
 
     line-height: 1.9;
 
@@ -503,9 +759,35 @@ nav a:hover {
 ===================================================== */
 
 .ceo-section {
-    padding: 85px 8%;
+    padding: 95px 8%;
 
-    background: #f8f5ef;
+    position: relative;
+
+    overflow: hidden;
+
+    background: var(--ivory);
+}
+
+.ceo-section::before {
+    content: "LIARA";
+
+    position: absolute;
+
+    right: -35px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    font-size: 150px;
+
+    font-weight: 800;
+
+    letter-spacing: 18px;
+
+    color: rgba(176,138,60,0.035);
+
+    pointer-events: none;
 }
 
 .ceo-content {
@@ -515,12 +797,15 @@ nav a:hover {
 
     display: grid;
 
-    grid-template-columns:
-        1fr 0.85fr;
+    grid-template-columns: 1fr 0.85fr;
 
     align-items: center;
 
     gap: 70px;
+
+    position: relative;
+
+    z-index: 1;
 }
 
 .ceo-text {
@@ -530,13 +815,13 @@ nav a:hover {
 .ceo-label {
     display: inline-block;
 
-    font-size: 12px;
+    font-size: 11px;
 
     font-weight: 700;
 
     letter-spacing: 3px;
 
-    color: #ad8232;
+    color: var(--gold);
 
     margin-bottom: 15px;
 }
@@ -548,27 +833,29 @@ nav a:hover {
 
     line-height: 1.1;
 
-    color: #222;
+    color: var(--dark);
+
+    font-weight: 600;
 }
 
 .ceo-text h3 {
     margin-bottom: 25px;
 
-    font-size: 19px;
+    font-size: 18px;
 
     font-weight: 500;
 
-    color: #ad8232;
+    color: var(--gold);
 }
 
 .ceo-text p {
     margin-bottom: 17px;
 
-    font-size: 16px;
+    font-size: 15px;
 
-    line-height: 1.8;
+    line-height: 1.9;
 
-    color: #666;
+    color: var(--text);
 }
 
 .ceo-signature {
@@ -583,12 +870,14 @@ nav a:hover {
 
 .ceo-signature strong {
     font-size: 21px;
+
+    color: var(--dark);
 }
 
 .ceo-signature span {
-    font-size: 12px;
+    font-size: 11px;
 
-    color: #999;
+    color: var(--muted);
 
     letter-spacing: 1px;
 }
@@ -611,12 +900,12 @@ nav a:hover {
     width: 100%;
     height: 100%;
 
-    top: 14px;
-    left: 14px;
+    top: 15px;
+    left: 15px;
 
-    border: 1px solid #c9a45d;
+    border: 1px solid var(--gold-light);
 
-    border-radius: 18px;
+    border-radius: 3px;
 
     z-index: 0;
 }
@@ -634,10 +923,10 @@ nav a:hover {
 
     display: block;
 
-    border-radius: 18px;
+    border-radius: 3px;
 
     box-shadow:
-        0 20px 50px rgba(0,0,0,0.12);
+        0 25px 55px rgba(0,0,0,0.13);
 }
 
 /* =====================================================
@@ -645,9 +934,33 @@ nav a:hover {
 ===================================================== */
 
 .products {
-    padding: 90px 8%;
+    padding: 95px 8%;
 
-    background: white;
+    position: relative;
+
+    overflow: hidden;
+
+    background: #f6f1e8;
+}
+
+.products::before {
+    content: "LIARA";
+
+    position: absolute;
+
+    left: -20px;
+
+    bottom: -50px;
+
+    font-size: 150px;
+
+    font-weight: 800;
+
+    letter-spacing: 18px;
+
+    color: rgba(176,138,60,0.035);
+
+    pointer-events: none;
 }
 
 .product-grid {
@@ -657,32 +970,39 @@ nav a:hover {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
 
     gap: 30px;
+
+    position: relative;
+
+    z-index: 1;
 }
 
 .product-card {
-    padding: 20px;
+    padding: 18px;
 
-    background: white;
+    background: var(--white);
 
-    border: 1px solid #eee;
+    border: 1px solid rgba(176,138,60,0.16);
 
-    border-radius: 12px;
+    border-radius: 4px;
 
     box-shadow:
-        0 8px 30px rgba(0,0,0,0.05);
+        0 12px 35px rgba(44,36,25,0.07);
 
-    transition: 0.3s;
+    transition: 0.35s;
+
+    position: relative;
 }
 
 .product-card:hover {
-    transform: translateY(-7px);
+    transform: translateY(-8px);
+
+    border-color: rgba(176,138,60,0.38);
 
     box-shadow:
-        0 18px 40px rgba(0,0,0,0.10);
+        0 22px 50px rgba(44,36,25,0.12);
 }
 
 .dynamic-product-image {
@@ -691,11 +1011,11 @@ nav a:hover {
 
     overflow: hidden;
 
-    border-radius: 10px;
+    border-radius: 2px;
 
-    background: #f5f1eb;
+    background: #f4efe6;
 
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
 .dynamic-product-image img {
@@ -706,26 +1026,30 @@ nav a:hover {
 
     display: block;
 
-    transition: 0.4s;
+    transition: 0.5s;
 }
 
 .product-card:hover
 .dynamic-product-image img {
-    transform: scale(1.04);
+    transform: scale(1.045);
 }
 
 .product-card h3 {
     font-size: 20px;
 
     margin-bottom: 8px;
+
+    color: var(--dark);
+
+    font-weight: 600;
 }
 
 .product-card p {
-    color: #777;
+    color: var(--muted);
 
-    font-size: 14px;
+    font-size: 13px;
 
-    line-height: 1.7;
+    line-height: 1.75;
 }
 
 .dynamic-product-bottom {
@@ -737,13 +1061,17 @@ nav a:hover {
 
     gap: 10px;
 
-    margin-top: 18px;
+    margin-top: 20px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #eee7dc;
 }
 
 .dynamic-product-bottom strong {
-    font-size: 20px;
+    font-size: 19px;
 
-    color: #ad8232;
+    color: var(--gold);
 }
 
 .product-buy-btn {
@@ -751,17 +1079,31 @@ nav a:hover {
 
     cursor: pointer;
 
-    font-size: 12px;
+    font-size: 11px;
 
-    padding: 10px 15px;
+    padding: 10px 16px;
+
+    background: var(--dark);
+
+    color: white;
+
+    border-radius: 2px;
+
+    transition: 0.25s;
+}
+
+.product-buy-btn:hover {
+    background: var(--gold);
+
+    transform: translateY(-2px);
 }
 
 .out-stock {
-    color: #b22;
+    color: #a33;
 
     font-weight: bold;
 
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .product-loading {
@@ -771,7 +1113,7 @@ nav a:hover {
 
     padding: 50px 20px;
 
-    color: #777;
+    color: var(--muted);
 
     grid-column: 1 / -1;
 }
@@ -781,9 +1123,33 @@ nav a:hover {
 ===================================================== */
 
 .why {
-    padding: 85px 8%;
+    padding: 90px 8%;
 
-    background: #f8f5ef;
+    position: relative;
+
+    overflow: hidden;
+
+    background: var(--ivory);
+}
+
+.why::before {
+    content: "LIARA";
+
+    position: absolute;
+
+    right: -25px;
+
+    bottom: -35px;
+
+    font-size: 140px;
+
+    font-weight: 800;
+
+    letter-spacing: 18px;
+
+    color: rgba(176,138,60,0.04);
+
+    pointer-events: none;
 }
 
 .why-grid {
@@ -793,31 +1159,44 @@ nav a:hover {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
 
     gap: 25px;
+
+    position: relative;
+
+    z-index: 1;
 }
 
 .why-card {
-    padding: 35px;
+    padding: 38px 30px;
 
-    background: white;
+    background: var(--white);
 
-    border: 1px solid #eee;
+    border: 1px solid rgba(176,138,60,0.15);
 
     text-align: center;
 
-    transition: 0.3s;
+    transition: 0.35s;
+
+    border-radius: 4px;
+
+    box-shadow:
+        0 10px 30px rgba(45,38,28,0.055);
 }
 
 .why-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-7px);
+
+    border-color: rgba(176,138,60,0.35);
+
+    box-shadow:
+        0 20px 45px rgba(45,38,28,0.10);
 }
 
 .icon {
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
 
     margin: 0 auto 20px;
 
@@ -828,25 +1207,32 @@ nav a:hover {
 
     border-radius: 50%;
 
-    background: #222;
+    background: var(--dark);
 
-    color: #d8b765;
+    color: var(--gold-light);
 
     font-size: 12px;
+
+    box-shadow:
+        0 7px 18px rgba(0,0,0,0.10);
 }
 
 .why-card h3 {
     margin-bottom: 12px;
 
     font-size: 19px;
+
+    color: var(--dark);
+
+    font-weight: 600;
 }
 
 .why-card p {
-    color: #777;
+    color: var(--muted);
 
-    font-size: 14px;
+    font-size: 13px;
 
-    line-height: 1.7;
+    line-height: 1.75;
 }
 
 /* =====================================================
@@ -854,11 +1240,18 @@ nav a:hover {
 ===================================================== */
 
 .contact {
-    padding: 65px 8%;
+    padding: 70px 8%;
 
     text-align: center;
 
-    background: white;
+    position: relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7f1e7,
+            #eee4d4
+        );
 }
 
 .contact .heading {
@@ -866,7 +1259,7 @@ nav a:hover {
 }
 
 .contact > p {
-    color: #777;
+    color: var(--text);
 
     margin-bottom: 25px;
 }
@@ -876,13 +1269,15 @@ nav a:hover {
 ===================================================== */
 
 footer {
-    padding: 45px 8% 30px;
+    padding: 48px 8% 30px;
 
-    background: #202020;
+    background: #242321;
 
     color: #ddd;
 
     text-align: center;
+
+    border-top: 1px solid rgba(216,189,122,0.20);
 }
 
 .footer-brand {
@@ -904,7 +1299,7 @@ footer {
 }
 
 .footer-brand small {
-    color: #d3b261;
+    color: var(--gold-light);
 
     font-size: 9px;
 
@@ -940,7 +1335,7 @@ footer p {
 }
 
 .footer-links a:hover {
-    color: #d3b261;
+    color: var(--gold-light);
 }
 
 .admin-login-link {
@@ -948,13 +1343,13 @@ footer p {
 
     margin-top: 10px;
 
-    color: #d3b261;
+    color: var(--gold-light);
 
     font-size: 12px;
 }
 
 /* =====================================================
-   MOBILE NAVIGATION
+   TABLET
 ===================================================== */
 
 @media (max-width: 900px) {
@@ -1018,13 +1413,11 @@ footer p {
     }
 
     .product-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .why-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .ceo-content {
@@ -1220,5 +1613,16 @@ footer p {
 
     .footer-links {
         gap: 12px 18px;
+    }
+
+    .hero::before,
+    .about::before,
+    .brand-intro::before,
+    .ceo-section::before,
+    .products::before,
+    .why::before {
+        font-size: 80px;
+
+        letter-spacing: 8px;
     }
 }
