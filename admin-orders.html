@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Liara Professional™ | Company Dashboard</title>
 
 <style>
-
 *{
     box-sizing:border-box;
 }
@@ -18,10 +16,6 @@ body{
     font-family:Arial, sans-serif;
     background:#faf8f5;
     color:#222;
-}
-
-button,input,select{
-    font-family:inherit;
 }
 
 .sidebar{
@@ -66,12 +60,12 @@ button,input,select{
 
 .side-menu button:hover{
     background:#302a22;
-    color:white;
+    color:#fff;
 }
 
 .side-menu button.active{
     background:#ad8232;
-    color:white;
+    color:#fff;
 }
 
 .logout-side{
@@ -87,39 +81,23 @@ button,input,select{
 }
 
 .dashboard-header{
-    height:78px;
-    background:white;
+    background:#fff;
+    min-height:70px;
+    padding:15px 30px;
     border-bottom:1px solid #eee;
     display:flex;
     align-items:center;
-    padding:15px 30px;
-    position:sticky;
-    top:0;
-    z-index:900;
-}
-
-.logo{
-    font-size:22px;
-    font-weight:bold;
-    letter-spacing:3px;
-}
-
-.logo small{
-    display:block;
-    font-size:9px;
-    letter-spacing:2px;
-    color:#ad8232;
-    margin-top:4px;
 }
 
 .mobile-menu-btn{
     display:none;
     border:0;
     background:#ad8232;
-    color:white;
+    color:#fff;
     border-radius:8px;
     padding:10px 13px;
     font-size:18px;
+    cursor:pointer;
 }
 
 .admin-section{
@@ -132,7 +110,7 @@ button,input,select{
 }
 
 .admin-box{
-    background:white;
+    background:#fff;
     padding:28px;
     border-radius:18px;
     box-shadow:0 8px 30px rgba(0,0,0,.07);
@@ -149,7 +127,7 @@ button,input,select{
 .admin-header p{
     margin:0 0 5px;
     color:#ad8232;
-    font-size:13px;
+    font-size:14px;
     font-weight:bold;
     letter-spacing:2px;
 }
@@ -159,18 +137,16 @@ button,input,select{
     font-size:30px;
 }
 
-.gold-btn{
+.logout-btn,
+.refresh-btn,
+.stock-refresh{
     border:0;
     background:#ad8232;
-    color:white;
+    color:#fff;
     padding:12px 20px;
     border-radius:8px;
     cursor:pointer;
     font-weight:bold;
-}
-
-.gold-btn:hover{
-    background:#866326;
 }
 
 .summary-grid{
@@ -181,56 +157,50 @@ button,input,select{
 }
 
 .summary-card{
-    background:white;
+    background:#fff;
     border:1px solid #eee;
     border-radius:15px;
-    padding:24px;
+    padding:25px;
     box-shadow:0 7px 25px rgba(0,0,0,.05);
 }
 
 .summary-card span{
+    display:block;
     color:#777;
     font-size:14px;
+    margin-bottom:12px;
 }
 
 .summary-card strong{
-    display:block;
     font-size:30px;
-    margin-top:10px;
 }
 
-.green{
+.sales strong,
+.delivered strong{
     color:#287a3e;
 }
 
-.gold{
+.pending strong{
     color:#ad8232;
 }
 
-.red{
-    color:#b22;
-}
-
-.tools{
+.order-tools{
     display:flex;
-    gap:12px;
+    gap:15px;
     margin-bottom:20px;
 }
 
-.search{
+.search-box{
     flex:1;
+    max-width:450px;
 }
 
-.search input{
+.search-box input{
     width:100%;
     padding:13px 15px;
     border:1px solid #ddd;
     border-radius:8px;
     outline:none;
-}
-
-.search input:focus{
-    border-color:#ad8232;
 }
 
 .table-wrapper{
@@ -240,36 +210,65 @@ button,input,select{
     border-radius:12px;
 }
 
-table{
+.order-table,
+.stock-table{
     width:100%;
     border-collapse:collapse;
-}
-
-th{
-    background:#f7f1e7;
-    padding:13px;
-    text-align:left;
+    min-width:1050px;
     font-size:12px;
 }
 
-td{
-    padding:13px;
+.order-table th,
+.stock-table th{
+    background:#f7f1e7;
+    padding:13px 8px;
+    text-align:left;
+}
+
+.order-table td,
+.stock-table td{
+    padding:12px 8px;
     border-bottom:1px solid #eee;
-    font-size:13px;
+    vertical-align:middle;
+}
+
+.product-name{
+    font-weight:bold;
+}
+
+.price{
+    font-weight:bold;
+}
+
+.total{
+    color:#287a3e;
+    font-weight:bold;
+}
+
+.payment-badge{
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+    background:#f3eee5;
+    color:#8c6a28;
 }
 
 .status-select{
-    padding:8px;
+    width:100%;
+    padding:8px 5px;
     border:1px solid #ddd;
     border-radius:7px;
 }
 
 .save-btn{
-    margin-left:5px;
+    margin-top:7px;
+    width:100%;
     border:0;
     background:#287a3e;
-    color:white;
-    padding:8px 12px;
+    color:#fff;
+    padding:7px;
     border-radius:6px;
     cursor:pointer;
 }
@@ -285,113 +284,140 @@ td{
     color:#a33;
 }
 
-.product-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
+/* ADD PRODUCT */
+
+.product-form{
+    max-width:750px;
 }
 
-.product-card{
-    border:1px solid #eee;
-    border-radius:15px;
-    overflow:hidden;
-    background:white;
+.form-title{
+    margin-bottom:25px;
 }
 
-.product-image{
+.form-title p{
+    margin:0 0 5px;
+    color:#ad8232;
+    font-weight:bold;
+    letter-spacing:2px;
+    font-size:13px;
+}
+
+.form-title h2{
+    margin:0;
+    font-size:30px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.form-group input{
     width:100%;
-    height:210px;
-    object-fit:cover;
-    background:#f5f1eb;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:14px;
+    outline:none;
 }
 
-.product-info{
-    padding:18px;
-}
-
-.product-info h3{
-    margin:0 0 8px;
-}
-
-.product-price{
-    color:#287a3e;
-    font-size:20px;
-    font-weight:bold;
-}
-
-.product-stock{
-    color:#777;
-    margin:8px 0 15px;
-}
-
-.card-actions{
-    display:flex;
-    gap:8px;
-}
-
-.edit-btn,
-.delete-btn{
-    flex:1;
-    border:0;
-    padding:10px;
-    border-radius:7px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.edit-btn{
-    background:#f1e6d1;
-    color:#795a20;
-}
-
-.delete-btn{
-    background:#f8dddd;
-    color:#a33;
-}
-
-.form-grid{
+.form-row{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:18px;
 }
 
-.form-group{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
+.photo-upload{
+    border:2px dashed #d7c39b;
+    background:#fffdf9;
+    padding:25px;
+    border-radius:12px;
+    text-align:center;
 }
 
-.form-group.full{
-    grid-column:1/-1;
-}
-
-.form-group label{
-    font-size:13px;
-    font-weight:bold;
-}
-
-.form-group input{
-    padding:13px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    outline:none;
-}
-
-.form-group input:focus{
-    border-color:#ad8232;
-}
-
-.form-actions{
-    margin-top:25px;
-    display:flex;
-    gap:10px;
-}
-
-.cancel-btn{
+.photo-upload input{
     border:0;
-    background:#eee;
-    padding:12px 20px;
-    border-radius:8px;
+    padding:0;
+}
+
+.photo-preview{
+    display:none;
+    margin:20px auto 0;
+    width:180px;
+    height:180px;
+    object-fit:cover;
+    border-radius:12px;
+    border:1px solid #ddd;
+}
+
+.add-product-btn{
+    width:100%;
+    border:0;
+    background:#ad8232;
+    color:#fff;
+    padding:15px;
+    border-radius:9px;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.add-product-btn:disabled{
+    opacity:.6;
+}
+
+.upload-status{
+    margin-top:12px;
+    text-align:center;
+    font-size:13px;
+    color:#777;
+}
+
+/* STOCK */
+
+.stock-cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stock-card{
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:15px;
+    padding:22px;
+}
+
+.stock-card span{
+    color:#777;
+}
+
+.stock-card strong{
+    display:block;
+    font-size:30px;
+    margin-top:8px;
+}
+
+.stock-input{
+    width:90px;
+    padding:8px;
+    border:1px solid #ddd;
+    border-radius:7px;
+}
+
+.stock-save{
+    border:0;
+    background:#287a3e;
+    color:#fff;
+    padding:8px 13px;
+    border-radius:6px;
     cursor:pointer;
 }
 
@@ -410,6 +436,49 @@ td{
     font-weight:bold;
 }
 
+/* PRODUCTS */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.product-card{
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.product-card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    background:#f5f1eb;
+}
+
+.product-card-content{
+    padding:16px;
+}
+
+.product-card h3{
+    margin:0 0 8px;
+}
+
+.product-card .product-price{
+    color:#287a3e;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.product-card .product-stock{
+    color:#777;
+    margin-top:8px;
+}
+
+/* MOBILE */
+
 .sidebar-overlay{
     display:none;
 }
@@ -423,7 +492,6 @@ td{
     .product-grid{
         grid-template-columns:repeat(2,1fr);
     }
-
 }
 
 @media(max-width:800px){
@@ -444,7 +512,6 @@ td{
 
     .mobile-menu-btn{
         display:block;
-        margin-right:15px;
     }
 
     .sidebar-overlay.show{
@@ -454,14 +521,17 @@ td{
         background:rgba(0,0,0,.45);
         z-index:950;
     }
-
 }
 
-@media(max-width:650px){
+@media(max-width:700px){
 
     .summary-grid,
-    .product-grid,
-    .form-grid{
+    .stock-cards,
+    .product-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-row{
         grid-template-columns:1fr;
     }
 
@@ -470,12 +540,22 @@ td{
         align-items:flex-start;
     }
 
-    .tools{
+    .logout-btn{
+        width:100%;
+    }
+
+    .order-tools{
         flex-direction:column;
     }
 
-}
+    .search-box{
+        max-width:none;
+    }
 
+    .refresh-btn{
+        width:100%;
+    }
+}
 </style>
 </head>
 
@@ -490,53 +570,61 @@ td{
     <div class="side-menu">
 
         <button class="active"
-                onclick="showSection('orders',this)">
+            onclick="showSection('orders',this)">
             🛒 Orders
         </button>
 
-        <button onclick="showSection('sales',this)">
+        <button
+            onclick="showSection('sales',this)">
             💰 Sales
         </button>
 
-        <button onclick="showSection('stock',this)">
+        <button
+            onclick="showSection('stock',this)">
             📦 Stock
         </button>
 
-        <button onclick="showSection('add-product',this)">
+        <button
+            onclick="showSection('add-product',this)">
             ➕ Add Product
         </button>
 
-        <button onclick="showSection('products',this)">
+        <button
+            onclick="showSection('products',this)">
             🧴 Products
         </button>
 
-        <button onclick="showSection('customers',this)">
+        <button
+            onclick="showSection('customers',this)">
             👥 Customers
         </button>
 
-        <button onclick="showSection('reports',this)">
+        <button
+            onclick="showSection('reports',this)">
             📊 Reports
         </button>
 
-        <button onclick="showSection('delivery',this)">
+        <button
+            onclick="showSection('delivery',this)">
             🚚 Delivery
         </button>
 
-        <button onclick="showSection('notifications',this)">
+        <button
+            onclick="showSection('notifications',this)">
             🔔 Notifications
         </button>
 
-        <button onclick="showSection('settings',this)">
+        <button
+            onclick="showSection('settings',this)">
             ⚙️ Settings
         </button>
 
         <button class="logout-side"
-                onclick="logoutAdmin()">
+            onclick="logoutAdmin()">
             🚪 Logout
         </button>
 
     </div>
-
 </aside>
 
 <div class="sidebar-overlay"
@@ -549,14 +637,9 @@ td{
 <header class="dashboard-header">
 
     <button class="mobile-menu-btn"
-            onclick="openSidebar()">
+        onclick="openSidebar()">
         ☰
     </button>
-
-    <div class="logo">
-        LIARA
-        <small>PROFESSIONAL™</small>
-    </div>
 
 </header>
 
@@ -577,9 +660,9 @@ td{
 <h2>Company Orders Dashboard</h2>
 </div>
 
-<button class="gold-btn"
-        onclick="logoutAdmin()">
-Logout
+<button class="logout-btn"
+    onclick="logoutAdmin()">
+    Logout
 </button>
 
 </div>
@@ -591,45 +674,48 @@ Logout
 <strong id="totalOrders">0</strong>
 </div>
 
-<div class="summary-card">
+<div class="summary-card sales">
 <span>Total Sales</span>
-<strong class="green"
-        id="totalSales">₹0</strong>
+<strong id="totalSales">₹0</strong>
 </div>
 
-<div class="summary-card">
+<div class="summary-card pending">
 <span>Pending Orders</span>
-<strong class="gold"
-        id="pendingOrders">0</strong>
+<strong id="pendingOrders">0</strong>
 </div>
 
-<div class="summary-card">
+<div class="summary-card delivered">
 <span>Delivered Orders</span>
-<strong class="green"
-        id="deliveredOrders">0</strong>
+<strong id="deliveredOrders">0</strong>
 </div>
 
 </div>
 
-<div class="tools">
+<div class="order-tools">
 
-<div class="search">
-<input id="searchInput"
-       placeholder="Search customer, mobile, product..."
-       oninput="filterOrders()">
+<div class="search-box">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search customer, mobile, product..."
+oninput="filterOrders()">
+
 </div>
 
-<button class="gold-btn"
-        onclick="loadOrders()">
-🔄 Refresh
+<button class="refresh-btn"
+onclick="loadOrders()">
+🔄 Refresh Orders
 </button>
 
 </div>
 
 <div id="orders">
+
 <div class="message">
 Loading customer orders...
 </div>
+
 </div>
 
 </div>
@@ -640,11 +726,15 @@ Loading customer orders...
 <!-- OTHER -->
 
 <section class="admin-section"
-         id="other-section"
-         style="display:none;">
+id="other-section"
+style="display:none;">
 
-<div class="admin-container"
-     id="other-content">
+<div class="admin-container">
+
+<div id="other-content">
+
+</div>
+
 </div>
 
 </section>
@@ -656,9 +746,9 @@ Loading customer orders...
 
 <script>
 
-/* ===============================
+/* =========================
 SUPABASE
-=============================== */
+========================= */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -668,26 +758,25 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
 const ADMIN_EMAIL =
 "info@liara.co.in";
 
 let allOrders=[];
-let allProducts=[];
 
 
-/* ===============================
+/* =========================
 MENU
-=============================== */
+========================= */
 
 function showSection(section,button){
 
-    document
-    .querySelectorAll(".side-menu button")
-    .forEach(btn=>{
+    document.querySelectorAll(
+        ".side-menu button"
+    ).forEach(btn=>{
         btn.classList.remove("active");
     });
 
@@ -695,97 +784,150 @@ function showSection(section,button){
         button.classList.add("active");
     }
 
-    document.getElementById("orders-section")
-        .style.display =
-        section==="orders" ? "block" : "none";
+    const orders =
+        document.getElementById(
+            "orders-section"
+        );
 
-    document.getElementById("other-section")
-        .style.display =
-        section==="orders" ? "none" : "block";
+    const other =
+        document.getElementById(
+            "other-section"
+        );
 
     if(section==="orders"){
-        loadOrders();
-    }
 
-    if(section==="stock"){
-        loadStock();
-    }
+        orders.style.display="block";
+        other.style.display="none";
 
-    if(section==="products"){
-        loadProducts();
-    }
+    }else{
 
-    if(section==="add-product"){
-        showAddProduct();
-    }
+        orders.style.display="none";
+        other.style.display="block";
 
-    if(section==="sales"){
-        showSales();
-    }
+        if(section==="stock"){
+            loadStock();
+        }
 
-    if(section==="customers"){
-        showCustomers();
-    }
+        else if(section==="add-product"){
+            showAddProduct();
+        }
 
-    if(section==="reports"){
-        showReports();
-    }
+        else if(section==="products"){
+            loadProducts();
+        }
 
-    if(section==="delivery"){
-        showDelivery();
-    }
+        else{
 
-    if(section==="notifications"){
-        showNotifications();
-    }
+            const info={
 
-    if(section==="settings"){
-        showSettings();
+                sales:[
+                    "💰",
+                    "Sales",
+                    "Sales management will appear here."
+                ],
+
+                customers:[
+                    "👥",
+                    "Customers",
+                    "Customer management will appear here."
+                ],
+
+                reports:[
+                    "📊",
+                    "Reports",
+                    "Business reports will appear here."
+                ],
+
+                delivery:[
+                    "🚚",
+                    "Delivery",
+                    "Delivery management will appear here."
+                ],
+
+                notifications:[
+                    "🔔",
+                    "Notifications",
+                    "Notifications will appear here."
+                ],
+
+                settings:[
+                    "⚙️",
+                    "Settings",
+                    "Dashboard settings will appear here."
+                ]
+
+            };
+
+            const item=info[section];
+
+            document.getElementById(
+                "other-content"
+            ).innerHTML=`
+
+            <div class="menu-placeholder">
+
+                <div class="big-icon"
+                style="font-size:50px">
+                ${item[0]}
+                </div>
+
+                <h2>${item[1]}</h2>
+
+                <p>${item[2]}</p>
+
+            </div>
+
+            `;
+        }
     }
 
     closeSidebar();
 }
 
 
-/* ===============================
+/* =========================
 MOBILE
-=============================== */
+========================= */
 
 function openSidebar(){
 
-    document
-    .getElementById("sidebar")
-    .classList.add("open");
+    document.getElementById(
+        "sidebar"
+    ).classList.add("open");
 
-    document
-    .getElementById("sidebarOverlay")
-    .classList.add("show");
+    document.getElementById(
+        "sidebarOverlay"
+    ).classList.add("show");
 }
 
 function closeSidebar(){
 
-    document
-    .getElementById("sidebar")
-    .classList.remove("open");
+    document.getElementById(
+        "sidebar"
+    ).classList.remove("open");
 
-    document
-    .getElementById("sidebarOverlay")
-    .classList.remove("show");
+    document.getElementById(
+        "sidebarOverlay"
+    ).classList.remove("show");
 }
 
 
-/* ===============================
-ADMIN CHECK
-=============================== */
+/* =========================
+ADMIN
+========================= */
 
 async function checkAdmin(){
 
     const {data,error} =
     await supabaseClient.auth.getUser();
 
-    if(error || !data || !data.user){
+    if(
+        error ||
+        !data ||
+        !data.user
+    ){
 
-        window.location.href =
+        window.location.href=
         "company-login.html";
 
         return null;
@@ -797,7 +939,7 @@ async function checkAdmin(){
         ADMIN_EMAIL.toLowerCase()
     ){
 
-        window.location.href =
+        window.location.href=
         "company-login.html";
 
         return null;
@@ -807,69 +949,122 @@ async function checkAdmin(){
 }
 
 
-/* ===============================
+/* =========================
 MONEY
-=============================== */
+========================= */
 
 function money(value){
 
-    return "₹" +
-    Number(value || 0)
+    return "₹"+
+    Number(value||0)
     .toLocaleString("en-IN");
+
 }
 
 
-/* ===============================
+/* =========================
 ESCAPE
-=============================== */
+========================= */
 
 function escapeHtml(value){
 
-    return String(value ?? "")
+    return String(value)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
+
 }
 
 
-/* ===============================
+/* =========================
 ORDERS
-=============================== */
+========================= */
+
+function getProductName(order){
+
+    return(
+        order.product_name ||
+        order.product ||
+        order.productName ||
+        order.item_name ||
+        order.item ||
+        "Product"
+    );
+}
+
+
+function getPrice(order){
+
+    if(order.price!==undefined &&
+       order.price!==null){
+
+        return Number(order.price);
+    }
+
+    if(order.unit_price!==undefined &&
+       order.unit_price!==null){
+
+        return Number(order.unit_price);
+    }
+
+    const qty=
+    Number(order.quantity||1);
+
+    const total=
+    Number(order.total||0);
+
+    return qty>0 ? total/qty : 0;
+}
+
+
+function getPayment(order){
+
+    return(
+        order.payment_status ||
+        order.payment_method ||
+        order.payment ||
+        "Pending"
+    );
+}
+
 
 async function loadOrders(){
 
-    const box =
+    const box=
     document.getElementById("orders");
 
-    box.innerHTML =
-    `<div class="message">
-        Loading customer orders...
+    box.innerHTML=`
+    <div class="message">
+    Loading customer orders...
     </div>`;
 
-    const user =
+    const user=
     await checkAdmin();
 
     if(!user)return;
 
-    const {data,error} =
+    const {data,error}=
     await supabaseClient
     .from("orders")
     .select("*")
-    .order("created_at",{ascending:false});
+    .order(
+        "created_at",
+        {ascending:false}
+    );
 
     if(error){
 
-        box.innerHTML =
-        `<div class="message error">
-            ${escapeHtml(error.message)}
+        box.innerHTML=`
+        <div class="message error">
+        ${escapeHtml(error.message)}
         </div>`;
 
         return;
     }
 
-    allOrders=data || [];
+    allOrders=data||[];
 
     updateSummary(allOrders);
     renderOrders(allOrders);
@@ -884,72 +1079,54 @@ function updateSummary(orders){
 
     orders.forEach(order=>{
 
-        sales += Number(order.total || 0);
+        sales+=Number(
+            order.total||0
+        );
 
-        const status =
-        String(order.status || "Pending")
-        .toLowerCase();
+        const status=
+        String(
+            order.status||"Pending"
+        ).toLowerCase();
 
         if(status==="delivered"){
             delivered++;
         }
 
         if(
-            status==="pending" ||
-            status==="confirmed" ||
-            status==="packed" ||
+            status==="pending"||
+            status==="confirmed"||
+            status==="packed"||
             status==="shipped"
         ){
             pending++;
         }
     });
 
-    document.getElementById("totalOrders")
-    .innerText=orders.length;
+    document.getElementById(
+        "totalOrders"
+    ).innerText=orders.length;
 
-    document.getElementById("totalSales")
-    .innerText=money(sales);
+    document.getElementById(
+        "totalSales"
+    ).innerText=money(sales);
 
-    document.getElementById("pendingOrders")
-    .innerText=pending;
+    document.getElementById(
+        "pendingOrders"
+    ).innerText=pending;
 
-    document.getElementById("deliveredOrders")
-    .innerText=delivered;
+    document.getElementById(
+        "deliveredOrders"
+    ).innerText=delivered;
 }
 
 
-function getProductName(order){
+function statusOption(value,current){
 
-    return order.product_name ||
-           order.product ||
-           order.productName ||
-           order.item_name ||
-           order.item ||
-           "Product";
-}
-
-
-function getPrice(order){
-
-    if(order.price != null)
-        return Number(order.price);
-
-    if(order.unit_price != null)
-        return Number(order.unit_price);
-
-    const qty=Number(order.quantity || 1);
-    const total=Number(order.total || 0);
-
-    return qty>0 ? total/qty : 0;
-}
-
-
-function getPayment(order){
-
-    return order.payment_status ||
-           order.payment_method ||
-           order.payment ||
-           "Pending";
+    return`
+    <option value="${value}"
+    ${current===value?"selected":""}>
+    ${value}
+    </option>`;
 }
 
 
@@ -960,9 +1137,9 @@ function renderOrders(orders){
 
     if(!orders.length){
 
-        box.innerHTML =
-        `<div class="message">
-            No customer orders yet.
+        box.innerHTML=`
+        <div class="message">
+        No customer orders yet.
         </div>`;
 
         return;
@@ -972,20 +1149,20 @@ function renderOrders(orders){
 
     <div class="table-wrapper">
 
-    <table>
+    <table class="order-table">
 
     <thead>
     <tr>
-        <th>Date</th>
-        <th>Customer</th>
-        <th>Mobile</th>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Qty</th>
-        <th>Total</th>
-        <th>Payment</th>
-        <th>Address</th>
-        <th>Status</th>
+    <th>Order Date</th>
+    <th>Customer</th>
+    <th>Mobile</th>
+    <th>Product</th>
+    <th>Price</th>
+    <th>Qty</th>
+    <th>Total</th>
+    <th>Payment</th>
+    <th>Address</th>
+    <th>Status</th>
     </tr>
     </thead>
 
@@ -995,53 +1172,96 @@ function renderOrders(orders){
 
         const id=order.id;
 
-        const date=order.created_at
-        ? new Date(order.created_at)
-          .toLocaleString("en-IN")
-        : "-";
+        const date=
+        order.created_at
+        ?new Date(
+            order.created_at
+        ).toLocaleString(
+            "en-IN",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        )
+        :"–";
 
         const customer=
-        order.customer_name ||
-        order.name || "-";
+        order.customer_name||
+        order.name||
+        "-";
 
         const phone=
-        order.phone ||
-        order.mobile || "-";
+        order.phone||
+        order.mobile||
+        "-";
 
         const address=
-        order.address ||
-        order.shipping_address || "-";
+        order.address||
+        order.shipping_address||
+        "-";
 
-        const product=getProductName(order);
-        const price=getPrice(order);
-        const qty=Number(order.quantity || 1);
-        const total=Number(order.total || 0);
-        const payment=getPayment(order);
-        const status=order.status || "Pending";
+        const product=
+        getProductName(order);
+
+        const price=
+        getPrice(order);
+
+        const qty=
+        Number(order.quantity||1);
+
+        const total=
+        Number(order.total||0);
+
+        const payment=
+        getPayment(order);
+
+        const status=
+        order.status||"Pending";
 
         html+=`
 
         <tr>
 
-        <td>${escapeHtml(date)}</td>
-
         <td>
-        <strong>${escapeHtml(customer)}</strong>
+        ${escapeHtml(date)}
         </td>
 
-        <td>${escapeHtml(phone)}</td>
+        <td>
+        <strong>
+        ${escapeHtml(customer)}
+        </strong>
+        </td>
 
-        <td>${escapeHtml(product)}</td>
+        <td>
+        ${escapeHtml(phone)}
+        </td>
 
-        <td>${money(price)}</td>
+        <td class="product-name">
+        ${escapeHtml(product)}
+        </td>
+
+        <td class="price">
+        ${money(price)}
+        </td>
 
         <td>${qty}</td>
 
-        <td class="green">${money(total)}</td>
+        <td class="total">
+        ${money(total)}
+        </td>
 
-        <td>${escapeHtml(payment)}</td>
+        <td>
+        <span class="payment-badge">
+        ${escapeHtml(payment)}
+        </span>
+        </td>
 
-        <td>${escapeHtml(address)}</td>
+        <td>
+        ${escapeHtml(address)}
+        </td>
 
         <td>
 
@@ -1062,9 +1282,7 @@ function renderOrders(orders){
         class="save-btn"
         id="save-${escapeHtml(id)}"
         onclick="saveOrder('${escapeHtml(id)}')">
-
         Save
-
         </button>
 
         </td>
@@ -1081,21 +1299,12 @@ function renderOrders(orders){
 }
 
 
-function statusOption(value,current){
-
-    return `
-    <option value="${value}"
-    ${current===value?"selected":""}>
-    ${value}
-    </option>`;
-}
-
-
 function filterOrders(){
 
     const search=
-    document.getElementById("searchInput")
-    .value
+    document.getElementById(
+        "searchInput"
+    ).value
     .toLowerCase()
     .trim();
 
@@ -1110,15 +1319,25 @@ function filterOrders(){
 
         const text=
         (
-            order.customer_name || "" 
-            +" "+(order.name || "")
-            +" "+(order.phone || "")
-            +" "+(order.mobile || "")
-            +" "+getProductName(order)
-            +" "+(order.address || "")
-        ).toLowerCase();
+            order.customer_name||""
+        )+" "+
+        (
+            order.name||""
+        )+" "+
+        (
+            order.phone||""
+        )+" "+
+        (
+            order.mobile||""
+        )+" "+
+        getProductName(order)+" "+
+        (
+            order.address||""
+        );
 
-        return text.includes(search);
+        return text
+        .toLowerCase()
+        .includes(search);
     });
 
     renderOrders(filtered);
@@ -1128,10 +1347,14 @@ function filterOrders(){
 async function saveOrder(id){
 
     const select=
-    document.getElementById("status-"+id);
+    document.getElementById(
+        "status-"+id
+    );
 
     const button=
-    document.getElementById("save-"+id);
+    document.getElementById(
+        "save-"+id
+    );
 
     if(!select)return;
 
@@ -1176,300 +1399,473 @@ async function saveOrder(id){
 }
 
 
-/* ===============================
-STOCK
-=============================== */
+/* =========================
+ADD PRODUCT FORM
+========================= */
 
-async function loadStock(){
+function showAddProduct(){
 
-    const content=
-    document.getElementById("other-content");
+    document.getElementById(
+        "other-content"
+    ).innerHTML=`
 
-    content.innerHTML=`
     <div class="admin-box">
 
-        <div class="admin-header">
+    <div class="product-form">
 
-            <div>
-                <p>INVENTORY</p>
-                <h2>Stock Management</h2>
-            </div>
+    <div class="form-title">
 
-            <button class="gold-btn"
-                    onclick="loadStock()">
-                🔄 Refresh
-            </button>
+    <p>LIARA PROFESSIONAL™</p>
 
-        </div>
+    <h2>Add New Product</h2>
 
-        <div id="stockTable">
-            <div class="message">
-                Loading stock...
-            </div>
-        </div>
+    </div>
 
-    </div>`;
+    <div class="form-group">
 
-    const user=await checkAdmin();
+    <label>Product Name</label>
+
+    <input
+    type="text"
+    id="productName"
+    placeholder="Example: Herbal Face Wash">
+
+    </div>
+
+    <div class="form-row">
+
+    <div class="form-group">
+
+    <label>Price (₹)</label>
+
+    <input
+    type="number"
+    id="productPrice"
+    min="0"
+    placeholder="299">
+
+    </div>
+
+    <div class="form-group">
+
+    <label>Stock</label>
+
+    <input
+    type="number"
+    id="productStock"
+    min="0"
+    placeholder="50">
+
+    </div>
+
+    </div>
+
+    <div class="form-group">
+
+    <label>Product Photo</label>
+
+    <div class="photo-upload">
+
+    <input
+    type="file"
+    id="productPhoto"
+    accept="image/*"
+    onchange="previewProductPhoto(event)">
+
+    <img
+    id="photoPreview"
+    class="photo-preview">
+
+    </div>
+
+    </div>
+
+    <button
+    class="add-product-btn"
+    id="addProductBtn"
+    onclick="addProduct()">
+
+    ➕ Add Product
+
+    </button>
+
+    <div
+    class="upload-status"
+    id="uploadStatus">
+    Select a product photo.
+    </div>
+
+    </div>
+
+    </div>
+
+    `;
+}
+
+
+function previewProductPhoto(event){
+
+    const file=
+    event.target.files[0];
+
+    const preview=
+    document.getElementById(
+        "photoPreview"
+    );
+
+    if(!file){
+
+        preview.style.display="none";
+        return;
+    }
+
+    if(!file.type.startsWith("image/")){
+
+        alert("Please select an image.");
+
+        event.target.value="";
+        preview.style.display="none";
+
+        return;
+    }
+
+    preview.src=
+    URL.createObjectURL(file);
+
+    preview.style.display="block";
+}
+
+
+/* =========================
+UPLOAD PHOTO
+========================= */
+
+async function uploadProductPhoto(file){
+
+    if(!file){
+        throw new Error(
+            "Please select a product photo."
+        );
+    }
+
+    const extension=
+    file.name
+    .split(".")
+    .pop()
+    .toLowerCase();
+
+    const fileName=
+    "product-"+Date.now()+
+    "-"+Math.random()
+    .toString(36)
+    .substring(2)+
+    "."+extension;
+
+    const filePath=
+    fileName;
+
+    const {error:uploadError}=
+    await supabaseClient
+    .storage
+    .from("product-images")
+    .upload(
+        filePath,
+        file,
+        {
+            cacheControl:"3600",
+            upsert:false
+        }
+    );
+
+    if(uploadError){
+        throw uploadError;
+    }
+
+    const {data}=
+    supabaseClient
+    .storage
+    .from("product-images")
+    .getPublicUrl(filePath);
+
+    if(!data || !data.publicUrl){
+
+        throw new Error(
+            "Unable to get photo URL."
+        );
+    }
+
+    return data.publicUrl;
+}
+
+
+/* =========================
+ADD PRODUCT
+========================= */
+
+async function addProduct(){
+
+    const name=
+    document.getElementById(
+        "productName"
+    ).value.trim();
+
+    const price=
+    Number(
+        document.getElementById(
+            "productPrice"
+        ).value
+    );
+
+    const stock=
+    Number(
+        document.getElementById(
+            "productStock"
+        ).value
+    );
+
+    const photoInput=
+    document.getElementById(
+        "productPhoto"
+    );
+
+    const button=
+    document.getElementById(
+        "addProductBtn"
+    );
+
+    const status=
+    document.getElementById(
+        "uploadStatus"
+    );
+
+
+    if(!name){
+
+        alert("Product name pao.");
+        return;
+    }
+
+    if(price<0 || !Number.isFinite(price)){
+
+        alert("Valid price pao.");
+        return;
+    }
+
+    if(stock<0 || !Number.isFinite(stock)){
+
+        alert("Valid stock pao.");
+        return;
+    }
+
+    if(
+        !photoInput.files ||
+        !photoInput.files[0]
+    ){
+
+        alert("Product photo select karo.");
+        return;
+    }
+
+
+    const user=
+    await checkAdmin();
 
     if(!user)return;
 
-    const {data,error}=
-    await supabaseClient
-    .from("products")
-    .select("*")
-    .order("created_at",{ascending:false});
 
-    if(error){
+    try{
 
-        document.getElementById("stockTable")
-        .innerHTML=
-        `<div class="message error">
-        ${escapeHtml(error.message)}
-        </div>`;
+        button.disabled=true;
+        button.innerText="Uploading...";
+        status.innerText=
+        "Photo upload ho rahi aa...";
 
-        return;
+
+        const imageUrl=
+        await uploadProductPhoto(
+            photoInput.files[0]
+        );
+
+
+        status.innerText=
+        "Product save ho reha...";
+
+
+        const {error}=
+        await supabaseClient
+        .from("products")
+        .insert({
+
+            name:name,
+            price:price,
+            stock:stock,
+            image_url:imageUrl
+
+        });
+
+
+        if(error){
+
+            throw error;
+        }
+
+
+        alert(
+            "✅ Product successfully add ho gaya!"
+        );
+
+
+        document.getElementById(
+            "productName"
+        ).value="";
+
+        document.getElementById(
+            "productPrice"
+        ).value="";
+
+        document.getElementById(
+            "productStock"
+        ).value="";
+
+        photoInput.value="";
+
+        document.getElementById(
+            "photoPreview"
+        ).style.display="none";
+
+        status.innerText=
+        "Product add ho gaya.";
+
+        button.disabled=false;
+        button.innerText="➕ Add Product";
+
     }
 
-    let html=`
-    <div class="table-wrapper">
-    <table>
+    catch(error){
 
-    <thead>
-    <tr>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Minimum</th>
-        <th>Status</th>
-        <th>Update</th>
-    </tr>
-    </thead>
+        console.error(error);
 
-    <tbody>`;
+        alert(
+            "Product add nahi hoya:\n\n"+
+            error.message
+        );
 
-    data.forEach(product=>{
+        status.innerText=
+        "Error: "+error.message;
 
-        const stock=
-        Number(product.stock || 0);
-
-        const minimum=
-        Number(product.low_stock || 5);
-
-        let status="In Stock";
-        let cls="stock-ok";
-
-        if(stock<=0){
-            status="Out of Stock";
-            cls="stock-out";
-        }
-        else if(stock<=minimum){
-            status="Low Stock";
-            cls="stock-low";
-        }
-
-        html+=`
-        <tr>
-
-        <td>
-        <strong>
-        ${escapeHtml(product.name)}
-        </strong>
-        </td>
-
-        <td>${money(product.price)}</td>
-
-        <td>
-        <input
-        class="stock-input"
-        type="number"
-        min="0"
-        id="stock-${product.id}"
-        value="${stock}">
-        </td>
-
-        <td>${minimum}</td>
-
-        <td class="${cls}">
-        ${status}
-        </td>
-
-        <td>
-        <button
-        class="save-btn"
-        onclick="updateStock('${product.id}')">
-        Save
-        </button>
-        </td>
-
-        </tr>`;
-    });
-
-    html+=`
-    </tbody>
-    </table>
-    </div>`;
-
-    document.getElementById("stockTable")
-    .innerHTML=html;
+        button.disabled=false;
+        button.innerText="➕ Add Product";
+    }
 }
 
 
-async function updateStock(id){
-
-    const input=
-    document.getElementById("stock-"+id);
-
-    const stock=Number(input.value);
-
-    if(stock<0){
-        alert("Stock cannot be negative.");
-        return;
-    }
-
-    const {error}=
-    await supabaseClient
-    .from("products")
-    .update({stock:stock})
-    .eq("id",id);
-
-    if(error){
-
-        alert(error.message);
-        return;
-    }
-
-    alert("Stock updated successfully.");
-
-    loadStock();
-}
-
-
-/* ===============================
-PRODUCTS
-=============================== */
+/* =========================
+PRODUCT LIST
+========================= */
 
 async function loadProducts(){
 
     const content=
-    document.getElementById("other-content");
+    document.getElementById(
+        "other-content"
+    );
 
     content.innerHTML=`
+
     <div class="admin-box">
 
-        <div class="admin-header">
+    <div class="form-title">
 
-            <div>
-                <p>LIARA PROFESSIONAL™</p>
-                <h2>Products</h2>
-            </div>
+    <p>LIARA PROFESSIONAL™</p>
 
-            <button class="gold-btn"
-                    onclick="showAddProduct()">
-                ➕ Add Product
-            </button>
+    <h2>Products</h2>
 
-        </div>
+    </div>
 
-        <div class="tools">
+    <div id="productList">
+    <div class="message">
+    Loading products...
+    </div>
+    </div>
 
-            <div class="search">
-                <input
-                id="productSearch"
-                placeholder="Search product..."
-                oninput="filterProducts()">
-            </div>
+    </div>
+    `;
 
-            <button
-            class="gold-btn"
-            onclick="loadProducts()">
-            🔄 Refresh
-            </button>
 
-        </div>
-
-        <div id="productGrid">
-            <div class="message">
-                Loading products...
-            </div>
-        </div>
-
-    </div>`;
-
-    const user=await checkAdmin();
+    const user=
+    await checkAdmin();
 
     if(!user)return;
+
 
     const {data,error}=
     await supabaseClient
     .from("products")
     .select("*")
-    .order("created_at",{ascending:false});
+    .order(
+        "created_at",
+        {ascending:false}
+    );
+
 
     if(error){
 
-        document.getElementById("productGrid")
-        .innerHTML=
-        `<div class="message error">
+        document.getElementById(
+            "productList"
+        ).innerHTML=`
+
+        <div class="message error">
         ${escapeHtml(error.message)}
         </div>`;
 
         return;
     }
 
-    allProducts=data || [];
 
-    renderProducts(allProducts);
-}
+    if(!data || !data.length){
 
+        document.getElementById(
+            "productList"
+        ).innerHTML=`
 
-function renderProducts(products){
-
-    const grid=
-    document.getElementById("productGrid");
-
-    if(!products.length){
-
-        grid.innerHTML=
-        `<div class="message">
+        <div class="message">
         No products added yet.
         </div>`;
 
         return;
     }
 
-    let html=`<div class="product-grid">`;
 
-    products.forEach(product=>{
+    let html=
+    `<div class="product-grid">`;
 
-        const image=
-        product.image_url ||
-        product.image ||
-        "";
+
+    data.forEach(product=>{
 
         html+=`
 
         <div class="product-card">
 
         ${
-            image
-            ?
-            `<img
-            class="product-image"
-            src="${escapeHtml(image)}"
-            onerror="this.style.display='none'">`
-            :
-            `<div
-            class="product-image"
-            style="display:flex;
+            product.image_url
+            ?`
+            <img
+            src="${escapeHtml(product.image_url)}"
+            alt="${escapeHtml(product.name)}">
+            `
+            :`
+            <div style="
+            height:220px;
+            display:flex;
             align-items:center;
             justify-content:center;
-            font-size:45px;">
+            background:#f5f1eb;">
             🧴
-            </div>`
+            </div>
+            `
         }
 
-        <div class="product-info">
+        <div class="product-card-content">
 
         <h3>
         ${escapeHtml(product.name)}
@@ -1480,493 +1876,304 @@ function renderProducts(products){
         </div>
 
         <div class="product-stock">
-        Stock:
-        ${Number(product.stock || 0)}
+        Stock: ${Number(product.stock||0)}
         </div>
-
-        <div class="card-actions">
-
-        <button
-        class="edit-btn"
-        onclick="editProduct('${product.id}')">
-        ✏️ Edit
-        </button>
-
-        <button
-        class="delete-btn"
-        onclick="deleteProduct('${product.id}')">
-        🗑️ Delete
-        </button>
 
         </div>
 
         </div>
 
-        </div>`;
+        `;
     });
+
 
     html+=`</div>`;
 
-    grid.innerHTML=html;
+    document.getElementById(
+        "productList"
+    ).innerHTML=html;
 }
 
 
-function filterProducts(){
+/* =========================
+STOCK
+========================= */
 
-    const search=
-    document.getElementById("productSearch")
-    .value
-    .toLowerCase()
-    .trim();
-
-    if(!search){
-
-        renderProducts(allProducts);
-        return;
-    }
-
-    renderProducts(
-        allProducts.filter(product=>
-            String(product.name || "")
-            .toLowerCase()
-            .includes(search)
-        )
-    );
-}
-
-
-/* ===============================
-ADD PRODUCT
-=============================== */
-
-function showAddProduct(){
+async function loadStock(){
 
     const content=
-    document.getElementById("other-content");
+    document.getElementById(
+        "other-content"
+    );
 
     content.innerHTML=`
 
     <div class="admin-box">
 
-    <div class="admin-header">
+    <div class="form-title">
 
-        <div>
-            <p>LIARA PROFESSIONAL™</p>
-            <h2>Add New Product</h2>
-        </div>
+    <p>INVENTORY</p>
 
-    </div>
-
-    <form id="productForm"
-          onsubmit="addProduct(event)">
-
-    <div class="form-grid">
-
-        <div class="form-group">
-            <label>Product Name</label>
-            <input
-            id="productName"
-            required
-            placeholder="Example: Herbal Face Wash">
-        </div>
-
-        <div class="form-group">
-            <label>Price ₹</label>
-            <input
-            id="productPrice"
-            type="number"
-            min="0"
-            required
-            placeholder="299">
-        </div>
-
-        <div class="form-group">
-            <label>Stock</label>
-            <input
-            id="productStock"
-            type="number"
-            min="0"
-            value="0"
-            required>
-        </div>
-
-        <div class="form-group">
-            <label>Minimum Stock Alert</label>
-            <input
-            id="productLowStock"
-            type="number"
-            min="0"
-            value="5"
-            required>
-        </div>
-
-        <div class="form-group full">
-            <label>Product Image URL</label>
-            <input
-            id="productImage"
-            placeholder="https://...">
-        </div>
+    <h2>Stock Management</h2>
 
     </div>
 
-    <div class="form-actions">
+    <div class="stock-cards">
 
-        <button
-        class="gold-btn"
-        type="submit">
-        ➕ Add Product
-        </button>
+    <div class="stock-card">
+    <span>Total Products</span>
+    <strong id="stockTotal">0</strong>
+    </div>
 
-        <button
-        class="cancel-btn"
-        type="button"
-        onclick="loadProducts()">
-        Cancel
-        </button>
+    <div class="stock-card">
+    <span>Low Stock</span>
+    <strong id="stockLow">0</strong>
+    </div>
+
+    <div class="stock-card">
+    <span>Out of Stock</span>
+    <strong id="stockOut">0</strong>
+    </div>
 
     </div>
 
-    </form>
+    <div id="stockTable">
 
-    </div>`;
-}
+    <div class="message">
+    Loading stock...
+    </div>
+
+    </div>
+
+    </div>
+    `;
 
 
-async function addProduct(event){
-
-    event.preventDefault();
-
-    const user=await checkAdmin();
+    const user=
+    await checkAdmin();
 
     if(!user)return;
 
-    const name=
-    document.getElementById("productName").value.trim();
 
-    const price=
-    Number(document.getElementById("productPrice").value);
-
-    const stock=
-    Number(document.getElementById("productStock").value);
-
-    const low_stock=
-    Number(document.getElementById("productLowStock").value);
-
-    const image_url=
-    document.getElementById("productImage").value.trim();
-
-    if(!name){
-
-        alert("Product name enter karo.");
-        return;
-    }
-
-    const {error}=
+    const {data,error}=
     await supabaseClient
     .from("products")
-    .insert({
+    .select("*")
+    .order(
+        "created_at",
+        {ascending:false}
+    );
 
-        name:name,
-        price:price,
-        stock:stock,
-        low_stock:low_stock,
-        image_url:image_url || null
-
-    });
 
     if(error){
 
+        document.getElementById(
+            "stockTable"
+        ).innerHTML=`
+
+        <div class="message error">
+        ${escapeHtml(error.message)}
+        </div>`;
+
+        return;
+    }
+
+
+    const products=data||[];
+
+    let low=0;
+    let out=0;
+
+
+    products.forEach(product=>{
+
+        const stock=
+        Number(product.stock||0);
+
+        if(stock<=0){
+            out++;
+        }
+
+        else if(stock<=5){
+            low++;
+        }
+    });
+
+
+    document.getElementById(
+        "stockTotal"
+    ).innerText=products.length;
+
+    document.getElementById(
+        "stockLow"
+    ).innerText=low;
+
+    document.getElementById(
+        "stockOut"
+    ).innerText=out;
+
+
+    if(!products.length){
+
+        document.getElementById(
+            "stockTable"
+        ).innerHTML=`
+
+        <div class="message">
+        No products added yet.
+        </div>`;
+
+        return;
+    }
+
+
+    let html=`
+
+    <div class="table-wrapper">
+
+    <table class="stock-table">
+
+    <thead>
+    <tr>
+    <th>Product</th>
+    <th>Price</th>
+    <th>Stock</th>
+    <th>Status</th>
+    <th>Update</th>
+    </tr>
+    </thead>
+
+    <tbody>`;
+
+
+    products.forEach(product=>{
+
+        const stock=
+        Number(product.stock||0);
+
+        let status="In Stock";
+        let cls="stock-ok";
+
+        if(stock<=0){
+
+            status="Out of Stock";
+            cls="stock-out";
+
+        }
+
+        else if(stock<=5){
+
+            status="Low Stock";
+            cls="stock-low";
+
+        }
+
+
+        html+=`
+
+        <tr>
+
+        <td>
+        <strong>
+        ${escapeHtml(product.name)}
+        </strong>
+        </td>
+
+        <td>
+        ${money(product.price)}
+        </td>
+
+        <td>
+
+        <input
+        class="stock-input"
+        type="number"
+        min="0"
+        id="stock-${escapeHtml(product.id)}"
+        value="${stock}">
+
+        </td>
+
+        <td class="${cls}">
+        ${status}
+        </td>
+
+        <td>
+
+        <button
+        class="stock-save"
+        onclick="updateStock('${escapeHtml(product.id)}')">
+        Save
+        </button>
+
+        </td>
+
+        </tr>`;
+    });
+
+
+    html+=`
+    </tbody>
+    </table>
+    </div>`;
+
+    document.getElementById(
+        "stockTable"
+    ).innerHTML=html;
+}
+
+
+async function updateStock(id){
+
+    const input=
+    document.getElementById(
+        "stock-"+id
+    );
+
+    const stock=
+    Number(input.value);
+
+    if(stock<0){
+
         alert(
-            "Product add nahi hoya:\n\n"+
-            error.message
+            "Stock negative nahi ho sakda."
         );
 
         return;
     }
 
-    alert("✅ Product successfully add ho gaya.");
-
-    loadProducts();
-}
-
-
-/* ===============================
-EDIT PRODUCT
-=============================== */
-
-async function editProduct(id){
-
-    const product=
-    allProducts.find(
-        p=>String(p.id)===String(id)
-    );
-
-    if(!product)return;
-
-    const name=
-    prompt(
-        "Product name:",
-        product.name || ""
-    );
-
-    if(name===null)return;
-
-    const price=
-    prompt(
-        "Price:",
-        product.price || 0
-    );
-
-    if(price===null)return;
-
-    const stock=
-    prompt(
-        "Stock:",
-        product.stock || 0
-    );
-
-    if(stock===null)return;
-
-    const image=
-    prompt(
-        "Image URL:",
-        product.image_url || ""
-    );
-
-    if(image===null)return;
 
     const {error}=
     await supabaseClient
     .from("products")
     .update({
-
-        name:name.trim(),
-        price:Number(price),
-        stock:Number(stock),
-        image_url:image.trim() || null
-
+        stock:stock
     })
     .eq("id",id);
 
-    if(error){
-
-        alert(error.message);
-        return;
-    }
-
-    alert("✅ Product updated.");
-
-    loadProducts();
-}
-
-
-/* ===============================
-DELETE
-=============================== */
-
-async function deleteProduct(id){
-
-    const product=
-    allProducts.find(
-        p=>String(p.id)===String(id)
-    );
-
-    if(!product)return;
-
-    const yes=
-    confirm(
-        "Delete "+product.name+"?"
-    );
-
-    if(!yes)return;
-
-    const {error}=
-    await supabaseClient
-    .from("products")
-    .delete()
-    .eq("id",id);
 
     if(error){
 
         alert(
-            "Delete failed:\n\n"+
+            "Stock update failed:\n\n"+
             error.message
         );
 
         return;
     }
 
-    alert("Product deleted.");
 
-    loadProducts();
+    alert(
+        "✅ Stock updated."
+    );
+
+    loadStock();
 }
 
 
-/* ===============================
-OTHER SECTIONS
-=============================== */
-
-async function showSales(){
-
-    const content=
-    document.getElementById("other-content");
-
-    let sales=0;
-
-    allOrders.forEach(order=>{
-        sales += Number(order.total || 0);
-    });
-
-    content.innerHTML=`
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>BUSINESS</p>
-                <h2>Sales</h2>
-            </div>
-        </div>
-
-        <div class="summary-grid">
-
-            <div class="summary-card">
-                <span>Total Orders</span>
-                <strong>
-                ${allOrders.length}
-                </strong>
-            </div>
-
-            <div class="summary-card">
-                <span>Total Sales</span>
-                <strong class="green">
-                ${money(sales)}
-                </strong>
-            </div>
-
-        </div>
-
-    </div>`;
-}
-
-
-function showCustomers(){
-
-    document.getElementById("other-content")
-    .innerHTML=`
-
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>LIARA PROFESSIONAL™</p>
-                <h2>Customers</h2>
-            </div>
-        </div>
-
-        <div class="message">
-            Customer data will be taken from orders.
-            <br><br>
-            Orders currently contain your customer details.
-        </div>
-
-    </div>`;
-}
-
-
-function showReports(){
-
-    document.getElementById("other-content")
-    .innerHTML=`
-
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>BUSINESS ANALYTICS</p>
-                <h2>Reports</h2>
-            </div>
-        </div>
-
-        <div class="message">
-            Reports section ready.
-        </div>
-
-    </div>`;
-}
-
-
-function showDelivery(){
-
-    document.getElementById("other-content")
-    .innerHTML=`
-
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>ORDER MANAGEMENT</p>
-                <h2>Delivery</h2>
-            </div>
-        </div>
-
-        <div class="message">
-            Delivery management will be connected with order status.
-            <br><br>
-            Use Orders → Status to update:
-            Pending → Confirmed → Packed → Shipped → Delivered
-        </div>
-
-    </div>`;
-}
-
-
-function showNotifications(){
-
-    document.getElementById("other-content")
-    .innerHTML=`
-
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>SYSTEM</p>
-                <h2>Notifications</h2>
-            </div>
-        </div>
-
-        <div class="message">
-            Notifications section ready.
-        </div>
-
-    </div>`;
-}
-
-
-function showSettings(){
-
-    document.getElementById("other-content")
-    .innerHTML=`
-
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>COMPANY PANEL</p>
-                <h2>Settings</h2>
-            </div>
-        </div>
-
-        <div class="message">
-            Dashboard settings section ready.
-        </div>
-
-    </div>`;
-}
-
-
-/* ===============================
+/* =========================
 LOGOUT
-=============================== */
+========================= */
 
 async function logoutAdmin(){
 
@@ -1979,9 +2186,9 @@ async function logoutAdmin(){
 }
 
 
-/* ===============================
+/* =========================
 START
-=============================== */
+========================= */
 
 loadOrders();
 
