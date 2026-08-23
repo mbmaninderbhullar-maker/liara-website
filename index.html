@@ -72,11 +72,11 @@
 
 
 /* =====================================================
-   CEO / LEADERSHIP SECTION
+   CEO SECTION
 ===================================================== */
 
 .ceo-section {
-    padding: 100px 8%;
+    padding: 90px 8%;
     background: #f8f5ef;
 }
 
@@ -85,10 +85,10 @@
     margin: auto;
 
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
+    grid-template-columns: 1fr 0.85fr;
 
     align-items: center;
-    gap: 80px;
+    gap: 70px;
 }
 
 .ceo-text {
@@ -104,29 +104,29 @@
 
     color: #ad8232;
 
-    margin-bottom: 18px;
+    margin-bottom: 15px;
 }
 
 .ceo-text h2 {
     margin: 0 0 8px;
 
-    font-size: 48px;
+    font-size: 46px;
     line-height: 1.1;
 
     color: #222;
 }
 
 .ceo-text h3 {
-    margin: 0 0 28px;
+    margin: 0 0 25px;
 
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 500;
 
     color: #ad8232;
 }
 
 .ceo-text p {
-    margin-bottom: 18px;
+    margin-bottom: 17px;
 
     font-size: 16px;
     line-height: 1.8;
@@ -135,7 +135,7 @@
 }
 
 .ceo-signature {
-    margin-top: 35px;
+    margin-top: 30px;
 
     display: flex;
     flex-direction: column;
@@ -149,14 +149,15 @@
 
 .ceo-signature span {
     font-size: 13px;
-    letter-spacing: 1px;
     color: #999;
+    letter-spacing: 1px;
 }
 
 .ceo-photo {
     width: 100%;
-    max-width: 430px;
+    max-width: 420px;
     margin-left: auto;
+
     position: relative;
 }
 
@@ -168,10 +169,11 @@
     width: 100%;
     height: 100%;
 
-    top: 18px;
-    left: 18px;
+    top: 16px;
+    left: 16px;
 
     border: 1px solid #c9a45d;
+
     border-radius: 18px;
 
     z-index: 0;
@@ -179,10 +181,11 @@
 
 .ceo-photo img {
     position: relative;
+
     z-index: 1;
 
     width: 100%;
-    height: 520px;
+    height: 510px;
 
     object-fit: cover;
 
@@ -190,7 +193,8 @@
 
     border-radius: 18px;
 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.12);
 }
 
 
@@ -201,12 +205,12 @@
 @media (max-width: 800px) {
 
     .ceo-section {
-        padding: 70px 6%;
+        padding: 65px 6%;
     }
 
     .ceo-content {
         grid-template-columns: 1fr;
-        gap: 50px;
+        gap: 45px;
     }
 
     .ceo-text h2 {
@@ -543,11 +547,10 @@
         </div>
 
 
-
         <div class="ceo-photo">
 
             <img
-                src="./maninder-bhullar.jpeg"
+                src="maninder-bhullar.jpeg"
                 alt="Maninder Bhullar - Founder & CEO"
             >
 
@@ -1051,7 +1054,8 @@ function openProduct(productId) {
 
 
     /*
-       Product page
+       Je product-details.html
+       page bani hoy ta othe jaavega.
     */
 
     window.location.href =
