@@ -15,7 +15,7 @@
 <style>
 
 /* =====================================================
-   ADMIN DASHBOARD
+   BASIC
 ===================================================== */
 
 * {
@@ -39,7 +39,7 @@ body {
 
 
 /* =====================================================
-   SIDE MENU
+   SIDEBAR
 ===================================================== */
 
 .sidebar {
@@ -81,7 +81,6 @@ body {
     text-align: left;
     font-size: 14px;
     cursor: pointer;
-    transition: .2s;
 }
 
 .side-menu button:hover {
@@ -94,16 +93,15 @@ body {
     color: white;
 }
 
-.side-menu .logout-side {
+.logout-side {
     margin-top: 15px;
-    border-top: 1px solid rgba(255,255,255,.08);
-    padding-top: 18px;
-    border-radius: 0;
+    border-top: 1px solid rgba(255,255,255,.08) !important;
+    padding-top: 18px !important;
 }
 
 
 /* =====================================================
-   MAIN AREA
+   MAIN
 ===================================================== */
 
 .dashboard-main {
@@ -114,7 +112,7 @@ body {
 
 
 /* =====================================================
-   TOP HEADER
+   HEADER
 ===================================================== */
 
 .dashboard-header {
@@ -123,32 +121,10 @@ body {
     padding: 15px 30px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     border-bottom: 1px solid #eee;
     position: sticky;
     top: 0;
     z-index: 900;
-}
-
-.dashboard-logo {
-    text-decoration: none;
-    color: #222;
-    display: inline-flex;
-    flex-direction: column;
-    line-height: 1;
-}
-
-.dashboard-logo span {
-    font-size: 23px;
-    font-weight: bold;
-    letter-spacing: 3px;
-}
-
-.dashboard-logo small {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: #ad8232;
-    margin-top: 4px;
 }
 
 .mobile-menu-btn {
@@ -164,7 +140,7 @@ body {
 
 
 /* =====================================================
-   ADMIN SECTION
+   SECTION
 ===================================================== */
 
 .admin-section {
@@ -221,13 +197,9 @@ body {
     font-weight: bold;
 }
 
-.logout-btn:hover {
-    background: #866326;
-}
-
 
 /* =====================================================
-   SUMMARY CARDS
+   SUMMARY
 ===================================================== */
 
 .summary-grid {
@@ -255,18 +227,17 @@ body {
 .summary-card strong {
     display: block;
     font-size: 30px;
-    color: #222;
 }
 
-.summary-card.sales strong {
+.sales strong {
     color: #287a3e;
 }
 
-.summary-card.pending strong {
+.pending strong {
     color: #ad8232;
 }
 
-.summary-card.delivered strong {
+.delivered strong {
     color: #287a3e;
 }
 
@@ -297,10 +268,6 @@ body {
     font-size: 14px;
 }
 
-.search-box input:focus {
-    border-color: #ad8232;
-}
-
 .refresh-btn {
     border: none;
     background: #ad8232;
@@ -309,10 +276,6 @@ body {
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
-}
-
-.refresh-btn:hover {
-    background: #866326;
 }
 
 
@@ -330,16 +293,12 @@ body {
 .order-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 12px;
     min-width: 1050px;
+    font-size: 12px;
 }
 
 .order-table th {
     background: #f7f1e7;
-    color: #222;
-    font-size: 11px;
-    font-weight: bold;
     padding: 13px 7px;
     text-align: left;
     border-bottom: 1px solid #e7dfd2;
@@ -349,76 +308,10 @@ body {
     padding: 12px 7px;
     border-bottom: 1px solid #eee;
     vertical-align: middle;
-    word-break: break-word;
-    overflow-wrap: anywhere;
 }
-
-.order-table tbody tr:hover {
-    background: #fffdf9;
-}
-
-
-/* COLUMN WIDTHS */
-
-.order-table th:nth-child(1),
-.order-table td:nth-child(1) {
-    width: 10%;
-}
-
-.order-table th:nth-child(2),
-.order-table td:nth-child(2) {
-    width: 9%;
-}
-
-.order-table th:nth-child(3),
-.order-table td:nth-child(3) {
-    width: 10%;
-}
-
-.order-table th:nth-child(4),
-.order-table td:nth-child(4) {
-    width: 16%;
-}
-
-.order-table th:nth-child(5),
-.order-table td:nth-child(5) {
-    width: 7%;
-}
-
-.order-table th:nth-child(6),
-.order-table td:nth-child(6) {
-    width: 5%;
-    text-align: center;
-}
-
-.order-table th:nth-child(7),
-.order-table td:nth-child(7) {
-    width: 8%;
-}
-
-.order-table th:nth-child(8),
-.order-table td:nth-child(8) {
-    width: 8%;
-}
-
-.order-table th:nth-child(9),
-.order-table td:nth-child(9) {
-    width: 14%;
-}
-
-.order-table th:nth-child(10),
-.order-table td:nth-child(10) {
-    width: 13%;
-}
-
-
-/* =====================================================
-   PRODUCT / PAYMENT / STATUS
-===================================================== */
 
 .product-name {
     font-weight: bold;
-    color: #333;
 }
 
 .price {
@@ -446,13 +339,6 @@ body {
     border: 1px solid #ddd;
     border-radius: 7px;
     background: white;
-    font-size: 11px;
-    cursor: pointer;
-}
-
-.status-select:focus {
-    outline: none;
-    border-color: #ad8232;
 }
 
 .save-btn {
@@ -464,17 +350,6 @@ body {
     padding: 7px 5px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-.save-btn:hover {
-    background: #216631;
-}
-
-.save-btn:disabled {
-    opacity: .6;
-    cursor: not-allowed;
 }
 
 .date-time {
@@ -484,7 +359,133 @@ body {
 
 
 /* =====================================================
-   MESSAGES
+   STOCK
+===================================================== */
+
+.stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stock-header p {
+    color: #ad8232;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 0 0 5px;
+}
+
+.stock-header h2 {
+    margin: 0;
+}
+
+.stock-refresh {
+    border: none;
+    background: #ad8232;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.stock-cards {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stock-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 15px;
+    padding: 22px;
+}
+
+.stock-card span {
+    color: #777;
+    font-size: 14px;
+}
+
+.stock-card strong {
+    display: block;
+    font-size: 30px;
+    margin-top: 8px;
+}
+
+.stock-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stock-table th {
+    background: #f7f1e7;
+    padding: 13px;
+    text-align: left;
+    font-size: 12px;
+}
+
+.stock-table td {
+    padding: 13px;
+    border-bottom: 1px solid #eee;
+}
+
+.stock-input {
+    width: 90px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+}
+
+.stock-save {
+    border: none;
+    background: #287a3e;
+    color: white;
+    padding: 8px 13px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.stock-ok {
+    color: #287a3e;
+    font-weight: bold;
+}
+
+.stock-low {
+    color: #ad8232;
+    font-weight: bold;
+}
+
+.stock-out {
+    color: #b22;
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   PLACEHOLDER
+===================================================== */
+
+.menu-placeholder {
+    background: white;
+    border-radius: 18px;
+    padding: 70px 30px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,.07);
+}
+
+.big-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+
+/* =====================================================
+   MESSAGE
 ===================================================== */
 
 .message {
@@ -498,66 +499,24 @@ body {
     color: #a33;
 }
 
-.success {
-    color: #287a3e;
-}
-
 
 /* =====================================================
-   OTHER MENU MESSAGE
-===================================================== */
-
-.menu-placeholder {
-    background: white;
-    border-radius: 18px;
-    padding: 70px 30px;
-    text-align: center;
-    box-shadow: 0 8px 30px rgba(0,0,0,.07);
-}
-
-.menu-placeholder .big-icon {
-    font-size: 50px;
-    margin-bottom: 15px;
-}
-
-.menu-placeholder h2 {
-    margin: 0 0 10px;
-    color: #222;
-}
-
-.menu-placeholder p {
-    margin: 0;
-    color: #777;
-}
-
-
-/* =====================================================
-   OVERLAY
+   MOBILE
 ===================================================== */
 
 .sidebar-overlay {
     display: none;
 }
 
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 1100px) {
+@media(max-width:1100px) {
 
     .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .admin-box {
-        padding: 20px;
+        grid-template-columns: repeat(2,1fr);
     }
 
 }
 
-
-@media (max-width: 800px) {
+@media(max-width:800px) {
 
     .sidebar {
         transform: translateX(-100%);
@@ -577,66 +536,34 @@ body {
         display: block;
     }
 
-    .sidebar-overlay {
+    .sidebar-overlay.show {
+        display: block;
         position: fixed;
         inset: 0;
         background: rgba(0,0,0,.45);
         z-index: 950;
     }
 
-    .sidebar-overlay.show {
-        display: block;
-    }
-
-    .dashboard-header {
-        padding: 13px 18px;
-    }
-
-    .dashboard-logo span {
-        font-size: 20px;
-    }
-
 }
 
-
-@media (max-width: 700px) {
-
-    .admin-section {
-        padding: 25px 3%;
-    }
-
-    .admin-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .admin-header h2 {
-        font-size: 25px;
-    }
-
-    .logout-btn {
-        width: 100%;
-    }
+@media(max-width:700px) {
 
     .summary-grid {
         grid-template-columns: 1fr;
     }
 
+    .stock-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .stock-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
     .order-tools {
         flex-direction: column;
         align-items: stretch;
-    }
-
-    .search-box {
-        max-width: none;
-    }
-
-    .refresh-btn {
-        width: 100%;
-    }
-
-    .order-table {
-        min-width: 1050px;
     }
 
 }
@@ -650,7 +577,7 @@ body {
 
 
 <!-- =====================================================
-     SIDE MENU
+     SIDEBAR
 ===================================================== -->
 
 <aside class="sidebar" id="sidebar">
@@ -663,52 +590,52 @@ body {
 
         <button
             class="active"
-            onclick="showSection('orders', this)">
+            onclick="showSection('orders',this)">
             🛒 Orders
         </button>
 
         <button
-            onclick="showSection('sales', this)">
+            onclick="showSection('sales',this)">
             💰 Sales
         </button>
 
         <button
-            onclick="showSection('stock', this)">
+            onclick="showSection('stock',this)">
             📦 Stock
         </button>
 
         <button
-            onclick="showSection('add-product', this)">
+            onclick="showSection('add-product',this)">
             ➕ Add Product
         </button>
 
         <button
-            onclick="showSection('products', this)">
+            onclick="showSection('products',this)">
             🧴 Products
         </button>
 
         <button
-            onclick="showSection('customers', this)">
+            onclick="showSection('customers',this)">
             👥 Customers
         </button>
 
         <button
-            onclick="showSection('reports', this)">
+            onclick="showSection('reports',this)">
             📊 Reports
         </button>
 
         <button
-            onclick="showSection('delivery', this)">
+            onclick="showSection('delivery',this)">
             🚚 Delivery
         </button>
 
         <button
-            onclick="showSection('notifications', this)">
+            onclick="showSection('notifications',this)">
             🔔 Notifications
         </button>
 
         <button
-            onclick="showSection('settings', this)">
+            onclick="showSection('settings',this)">
             ⚙️ Settings
         </button>
 
@@ -738,10 +665,6 @@ body {
 <main class="dashboard-main">
 
 
-<!-- =====================================================
-     TOP HEADER
-===================================================== -->
-
 <header class="dashboard-header">
 
     <button
@@ -750,28 +673,12 @@ body {
         ☰
     </button>
 
-
-    <a
-        href="index.html"
-        class="dashboard-logo">
-
-        <span>
-            LIARA
-        </span>
-
-        <small>
-            PROFESSIONAL™
-        </small>
-
-    </a>
-
-
 </header>
 
 
 
 <!-- =====================================================
-     ORDERS SECTION
+     ORDERS
 ===================================================== -->
 
 <section
@@ -781,7 +688,6 @@ body {
 <div class="admin-container">
 
 <div class="admin-box">
-
 
 <div class="admin-header">
 
@@ -797,81 +703,39 @@ body {
 
     </div>
 
-
     <button
         class="logout-btn"
         onclick="logoutAdmin()">
-
         Logout
-
     </button>
 
 </div>
 
 
-
-<!-- SUMMARY -->
-
 <div class="summary-grid">
 
-
     <div class="summary-card">
-
-        <span>
-            Total Orders
-        </span>
-
-        <strong id="totalOrders">
-            0
-        </strong>
-
+        <span>Total Orders</span>
+        <strong id="totalOrders">0</strong>
     </div>
-
 
     <div class="summary-card sales">
-
-        <span>
-            Total Sales
-        </span>
-
-        <strong id="totalSales">
-            ₹0
-        </strong>
-
+        <span>Total Sales</span>
+        <strong id="totalSales">₹0</strong>
     </div>
-
 
     <div class="summary-card pending">
-
-        <span>
-            Pending Orders
-        </span>
-
-        <strong id="pendingOrders">
-            0
-        </strong>
-
+        <span>Pending Orders</span>
+        <strong id="pendingOrders">0</strong>
     </div>
-
 
     <div class="summary-card delivered">
-
-        <span>
-            Delivered Orders
-        </span>
-
-        <strong id="deliveredOrders">
-            0
-        </strong>
-
+        <span>Delivered Orders</span>
+        <strong id="deliveredOrders">0</strong>
     </div>
-
 
 </div>
 
-
-
-<!-- SEARCH -->
 
 <div class="order-tools">
 
@@ -885,34 +749,24 @@ body {
 
     </div>
 
-
     <button
         class="refresh-btn"
         onclick="loadOrders()">
-
         🔄 Refresh Orders
-
     </button>
 
 </div>
 
 
-
-<!-- ORDERS -->
-
 <div id="orders">
 
     <div class="message">
-
         Loading customer orders...
-
     </div>
 
 </div>
 
-
 </div>
-
 </div>
 
 </section>
@@ -930,23 +784,24 @@ body {
 
 <div class="admin-container">
 
-    <div class="menu-placeholder">
+    <div id="other-content">
 
-        <div
-            class="big-icon"
-            id="placeholderIcon">
-            📦
+        <div class="menu-placeholder">
+
+            <div class="big-icon"
+                 id="placeholderIcon">
+                📦
+            </div>
+
+            <h2 id="placeholderTitle">
+                Stock
+            </h2>
+
+            <p id="placeholderText">
+                This section is ready.
+            </p>
+
         </div>
-
-
-        <h2 id="placeholderTitle">
-            Stock
-        </h2>
-
-
-        <p id="placeholderText">
-            This section is ready to be connected.
-        </p>
 
     </div>
 
@@ -955,29 +810,7 @@ body {
 </section>
 
 
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
-<footer>
-
-    <div class="footer-brand">
-
-        LIARA
-
-        <small>
-            PROFESSIONAL™
-        </small>
-
-    </div>
-
-    <p>
-        © 2026 Liara Group Private Limited.
-        All Rights Reserved.
-    </p>
-
-</footer>
+</main>
 
 
 
@@ -990,79 +823,54 @@ body {
 
 <script>
 
-
 /* =====================================================
    SUPABASE
 ===================================================== */
 
 const SUPABASE_URL =
-    "https://oinafbuicwhleudztzyz.supabase.co";
-
+"https://oinafbuicwhleudztzyz.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
-
+"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 const ADMIN_EMAIL =
-    "info@liara.co.in";
-
+"info@liara.co.in";
 
 let allOrders = [];
-
 
 
 /* =====================================================
    MENU
 ===================================================== */
 
-function showSection(
-    section,
-    button
-) {
+function showSection(section,button) {
 
     const ordersSection =
-        document.getElementById(
-            "orders-section"
-        );
+        document.getElementById("orders-section");
 
     const otherSection =
-        document.getElementById(
-            "other-section"
-        );
-
+        document.getElementById("other-section");
 
     document
-        .querySelectorAll(
-            ".side-menu button"
-        )
-        .forEach(
-            function(btn) {
+        .querySelectorAll(".side-menu button")
+        .forEach(function(btn) {
 
-                btn.classList.remove(
-                    "active"
-                );
+            btn.classList.remove("active");
 
-            }
-        );
+        });
 
-
-    if (button) {
-
-        button.classList.add(
-            "active"
-        );
-
+    if(button) {
+        button.classList.add("active");
     }
 
 
-    if (section === "orders") {
+    if(section === "orders") {
 
         ordersSection.style.display =
             "block";
@@ -1081,87 +889,89 @@ function showSection(
             "block";
 
 
-        const details = {
+        if(section === "stock") {
 
-            sales: {
-                icon: "💰",
-                title: "Sales",
-                text: "Sales management will appear here."
-            },
+            loadStock();
 
-            stock: {
-                icon: "📦",
-                title: "Stock",
-                text: "Stock management will appear here."
-            },
+        }
 
-            "add-product": {
-                icon: "➕",
-                title: "Add Product",
-                text: "New product creation will appear here."
-            },
+        else {
 
-            products: {
-                icon: "🧴",
-                title: "Products",
-                text: "Your product list will appear here."
-            },
+            const details = {
 
-            customers: {
-                icon: "👥",
-                title: "Customers",
-                text: "Customer management will appear here."
-            },
+                sales: {
+                    icon:"💰",
+                    title:"Sales",
+                    text:"Sales management will appear here."
+                },
 
-            reports: {
-                icon: "📊",
-                title: "Reports",
-                text: "Business reports will appear here."
-            },
+                "add-product": {
+                    icon:"➕",
+                    title:"Add Product",
+                    text:"New product creation will appear here."
+                },
 
-            delivery: {
-                icon: "🚚",
-                title: "Delivery",
-                text: "Delivery management will appear here."
-            },
+                products: {
+                    icon:"🧴",
+                    title:"Products",
+                    text:"Your product list will appear here."
+                },
 
-            notifications: {
-                icon: "🔔",
-                title: "Notifications",
-                text: "Notifications will appear here."
-            },
+                customers: {
+                    icon:"👥",
+                    title:"Customers",
+                    text:"Customer management will appear here."
+                },
 
-            settings: {
-                icon: "⚙️",
-                title: "Settings",
-                text: "Dashboard settings will appear here."
+                reports: {
+                    icon:"📊",
+                    title:"Reports",
+                    text:"Business reports will appear here."
+                },
+
+                delivery: {
+                    icon:"🚚",
+                    title:"Delivery",
+                    text:"Delivery management will appear here."
+                },
+
+                notifications: {
+                    icon:"🔔",
+                    title:"Notifications",
+                    text:"Notifications will appear here."
+                },
+
+                settings: {
+                    icon:"⚙️",
+                    title:"Settings",
+                    text:"Dashboard settings will appear here."
+                }
+
+            };
+
+
+            const selected =
+                details[section];
+
+
+            if(selected) {
+
+                document.getElementById(
+                    "placeholderIcon"
+                ).innerText =
+                    selected.icon;
+
+                document.getElementById(
+                    "placeholderTitle"
+                ).innerText =
+                    selected.title;
+
+                document.getElementById(
+                    "placeholderText"
+                ).innerText =
+                    selected.text;
+
             }
-
-        };
-
-
-        const selected =
-            details[section];
-
-
-        if (selected) {
-
-            document.getElementById(
-                "placeholderIcon"
-            ).innerText =
-                selected.icon;
-
-
-            document.getElementById(
-                "placeholderTitle"
-            ).innerText =
-                selected.title;
-
-
-            document.getElementById(
-                "placeholderText"
-            ).innerText =
-                selected.text;
 
         }
 
@@ -1173,9 +983,8 @@ function showSection(
 }
 
 
-
 /* =====================================================
-   MOBILE SIDEBAR
+   MOBILE
 ===================================================== */
 
 function openSidebar() {
@@ -1183,7 +992,6 @@ function openSidebar() {
     document
         .getElementById("sidebar")
         .classList.add("open");
-
 
     document
         .getElementById("sidebarOverlay")
@@ -1198,13 +1006,11 @@ function closeSidebar() {
         .getElementById("sidebar")
         .classList.remove("open");
 
-
     document
         .getElementById("sidebarOverlay")
         .classList.remove("show");
 
 }
-
 
 
 /* =====================================================
@@ -1222,11 +1028,7 @@ async function checkAdmin() {
         .getUser();
 
 
-    if (
-        error ||
-        !data ||
-        !data.user
-    ) {
+    if(error || !data || !data.user) {
 
         window.location.href =
             "company-login.html";
@@ -1236,13 +1038,9 @@ async function checkAdmin() {
     }
 
 
-    const user =
-        data.user;
-
-
-    if (
-        !user.email ||
-        user.email.toLowerCase() !==
+    if(
+        !data.user.email ||
+        data.user.email.toLowerCase() !==
         ADMIN_EMAIL.toLowerCase()
     ) {
 
@@ -1254,10 +1052,9 @@ async function checkAdmin() {
     }
 
 
-    return user;
+    return data.user;
 
 }
-
 
 
 /* =====================================================
@@ -1266,26 +1063,20 @@ async function checkAdmin() {
 
 function money(value) {
 
-    const number =
-        Number(value || 0);
-
-
     return "₹" +
-        number.toLocaleString(
-            "en-IN"
-        );
+        Number(value || 0)
+        .toLocaleString("en-IN");
 
 }
 
 
-
 /* =====================================================
-   PRODUCT
+   PRODUCT NAME
 ===================================================== */
 
 function getProductName(order) {
 
-    return (
+    return(
         order.product_name ||
         order.product ||
         order.productName ||
@@ -1297,72 +1088,41 @@ function getProductName(order) {
 }
 
 
-
 /* =====================================================
    PRICE
 ===================================================== */
 
 function getPrice(order) {
 
-    if (
-        order.price !== undefined &&
-        order.price !== null
-    ) {
+    if(order.price !== undefined &&
+       order.price !== null) {
 
-        return Number(
-            order.price
-        );
+        return Number(order.price);
 
     }
 
 
-    if (
-        order.unit_price !== undefined &&
-        order.unit_price !== null
-    ) {
+    if(order.unit_price !== undefined &&
+       order.unit_price !== null) {
 
-        return Number(
-            order.unit_price
-        );
+        return Number(order.unit_price);
 
     }
 
 
-    if (
-        order.product_price !== undefined &&
-        order.product_price !== null
-    ) {
-
-        return Number(
-            order.product_price
-        );
-
-    }
-
-
-    const quantity =
-        Number(
-            order.quantity || 1
-        );
-
+    const qty =
+        Number(order.quantity || 1);
 
     const total =
-        Number(
-            order.total || 0
-        );
+        Number(order.total || 0);
 
-
-    if (quantity > 0) {
-
-        return total / quantity;
-
+    if(qty > 0) {
+        return total / qty;
     }
-
 
     return 0;
 
 }
-
 
 
 /* =====================================================
@@ -1371,7 +1131,7 @@ function getPrice(order) {
 
 function getPayment(order) {
 
-    return (
+    return(
         order.payment_status ||
         order.payment_method ||
         order.payment ||
@@ -1382,7 +1142,6 @@ function getPayment(order) {
 }
 
 
-
 /* =====================================================
    LOAD ORDERS
 ===================================================== */
@@ -1390,10 +1149,7 @@ function getPayment(order) {
 async function loadOrders() {
 
     const box =
-        document.getElementById(
-            "orders"
-        );
-
+        document.getElementById("orders");
 
     box.innerHTML = `
         <div class="message">
@@ -1405,178 +1161,98 @@ async function loadOrders() {
     const user =
         await checkAdmin();
 
+    if(!user) return;
 
-    if (!user) {
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+
+    if(error) {
+
+        box.innerHTML = `
+            <div class="message error">
+                Unable to load orders.
+                <br><br>
+                ${escapeHtml(error.message)}
+            </div>
+        `;
 
         return;
 
     }
 
 
-    try {
-
-        const {
-            data,
-            error
-        } =
-        await supabaseClient
-            .from("orders")
-            .select("*")
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
+    allOrders =
+        data || [];
 
 
-        if (error) {
+    updateSummary(allOrders);
 
-            console.error(
-                "Orders Error:",
-                error
-            );
-
-
-            box.innerHTML = `
-
-                <div class="message error">
-
-                    Unable to load orders.
-
-                    <br><br>
-
-                    ${escapeHtml(
-                        error.message
-                    )}
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        allOrders =
-            data || [];
-
-
-        updateSummary(
-            allOrders
-        );
-
-
-        renderOrders(
-            allOrders
-        );
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        box.innerHTML = `
-
-            <div class="message error">
-
-                Something went wrong.
-
-                <br><br>
-
-                ${escapeHtml(
-                    error.message
-                )}
-
-            </div>
-
-        `;
-
-    }
+    renderOrders(allOrders);
 
 }
-
 
 
 /* =====================================================
    SUMMARY
 ===================================================== */
 
-function updateSummary(
-    orders
-) {
-
-    const totalOrders =
-        orders.length;
-
+function updateSummary(orders) {
 
     let totalSales = 0;
-
     let pending = 0;
-
     let delivered = 0;
 
 
-    orders.forEach(
-        function(order) {
+    orders.forEach(function(order) {
 
-            totalSales +=
-                Number(
-                    order.total || 0
-                );
+        totalSales +=
+            Number(order.total || 0);
 
 
-            const status =
-                String(
-                    order.status ||
-                    "Pending"
-                ).toLowerCase();
+        const status =
+            String(
+                order.status || "Pending"
+            ).toLowerCase();
 
 
-            if (
-                status ===
-                "delivered"
-            ) {
-
-                delivered++;
-
-            }
-
-
-            if (
-                status === "pending" ||
-                status === "order received" ||
-                status === "confirmed" ||
-                status === "packed" ||
-                status === "shipped"
-            ) {
-
-                pending++;
-
-            }
-
+        if(status === "delivered") {
+            delivered++;
         }
-    );
+
+
+        if(
+            status === "pending" ||
+            status === "confirmed" ||
+            status === "packed" ||
+            status === "shipped"
+        ) {
+            pending++;
+        }
+
+    });
 
 
     document.getElementById(
         "totalOrders"
     ).innerText =
-        totalOrders;
+        orders.length;
 
 
     document.getElementById(
         "totalSales"
     ).innerText =
-        money(
-            totalSales
-        );
+        money(totalSales);
 
 
     document.getElementById(
@@ -1593,34 +1269,22 @@ function updateSummary(
 }
 
 
-
 /* =====================================================
    RENDER ORDERS
 ===================================================== */
 
-function renderOrders(
-    orders
-) {
+function renderOrders(orders) {
 
     const box =
-        document.getElementById(
-            "orders"
-        );
+        document.getElementById("orders");
 
 
-    if (
-        !orders ||
-        orders.length === 0
-    ) {
+    if(!orders.length) {
 
         box.innerHTML = `
-
             <div class="message">
-
                 No customer orders yet.
-
             </div>
-
         `;
 
         return;
@@ -1630,252 +1294,178 @@ function renderOrders(
 
     let html = `
 
-        <div class="table-wrapper">
+    <div class="table-wrapper">
 
-        <table class="order-table">
+    <table class="order-table">
 
-        <thead>
+    <thead>
 
-        <tr>
+    <tr>
 
-            <th>Order Date</th>
+        <th>Order Date</th>
+        <th>Customer</th>
+        <th>Mobile</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Address</th>
+        <th>Status</th>
 
-            <th>Customer</th>
+    </tr>
 
-            <th>Mobile</th>
+    </thead>
 
-            <th>Product</th>
-
-            <th>Price</th>
-
-            <th>Qty</th>
-
-            <th>Total</th>
-
-            <th>Payment</th>
-
-            <th>Address</th>
-
-            <th>Status</th>
-
-        </tr>
-
-        </thead>
-
-        <tbody>
-
+    <tbody>
     `;
 
 
-    orders.forEach(
-        function(order) {
+    orders.forEach(function(order) {
 
-            let orderDate =
-                "-";
+        const orderId =
+            order.id;
 
-
-            if (
+        const date =
+            order.created_at
+            ? new Date(
                 order.created_at
-            ) {
-
-                orderDate =
-                    new Date(
-                        order.created_at
-                    ).toLocaleString(
-                        "en-IN",
-                        {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit"
-                        }
-                    );
-
-            }
+              ).toLocaleString(
+                "en-IN",
+                {
+                    day:"2-digit",
+                    month:"short",
+                    year:"numeric",
+                    hour:"2-digit",
+                    minute:"2-digit"
+                }
+              )
+            : "-";
 
 
-            const customer =
-                order.customer_name ||
-                order.name ||
-                order.customer ||
-                "-";
+        const customer =
+            order.customer_name ||
+            order.name ||
+            "-";
 
 
-            const phone =
-                order.phone ||
-                order.mobile ||
-                order.customer_phone ||
-                "-";
+        const phone =
+            order.phone ||
+            order.mobile ||
+            "-";
 
 
-            const address =
-                order.address ||
-                order.shipping_address ||
-                order.customer_address ||
-                "-";
+        const address =
+            order.address ||
+            order.shipping_address ||
+            "-";
 
 
-            const product =
-                getProductName(
-                    order
-                );
+        const product =
+            getProductName(order);
 
 
-            const price =
-                getPrice(
-                    order
-                );
+        const price =
+            getPrice(order);
 
 
-            const quantity =
-                Number(
-                    order.quantity || 1
-                );
+        const qty =
+            Number(order.quantity || 1);
 
 
-            const total =
-                Number(
-                    order.total || 0
-                );
+        const total =
+            Number(order.total || 0);
 
 
-            const payment =
-                getPayment(
-                    order
-                );
+        const payment =
+            getPayment(order);
 
 
-            const status =
-                order.status ||
-                "Pending";
+        const status =
+            order.status || "Pending";
 
 
-            const orderId =
-                order.id;
+        html += `
 
+        <tr>
 
-            html += `
+            <td class="date-time">
+                ${escapeHtml(date)}
+            </td>
 
-                <tr>
+            <td>
+                <strong>
+                    ${escapeHtml(customer)}
+                </strong>
+            </td>
 
-                    <td class="date-time">
-                        ${escapeHtml(orderDate)}
-                    </td>
+            <td>
+                ${escapeHtml(phone)}
+            </td>
 
+            <td class="product-name">
+                ${escapeHtml(product)}
+            </td>
 
-                    <td>
-                        <strong>
-                            ${escapeHtml(customer)}
-                        </strong>
-                    </td>
+            <td class="price">
+                ${money(price)}
+            </td>
 
+            <td>
+                ${qty}
+            </td>
 
-                    <td>
-                        ${escapeHtml(phone)}
-                    </td>
+            <td class="total">
+                ${money(total)}
+            </td>
 
+            <td>
+                <span class="payment-badge">
+                    ${escapeHtml(payment)}
+                </span>
+            </td>
 
-                    <td class="product-name">
-                        ${escapeHtml(product)}
-                    </td>
+            <td>
+                ${escapeHtml(address)}
+            </td>
 
+            <td>
 
-                    <td class="price">
-                        ${money(price)}
-                    </td>
+                <select
+                    class="status-select"
+                    id="status-${escapeHtml(orderId)}">
 
+                    ${statusOption("Pending",status)}
+                    ${statusOption("Confirmed",status)}
+                    ${statusOption("Packed",status)}
+                    ${statusOption("Shipped",status)}
+                    ${statusOption("Delivered",status)}
+                    ${statusOption("Cancelled",status)}
 
-                    <td>
-                        ${quantity}
-                    </td>
+                </select>
 
+                <button
+                    class="save-btn"
+                    id="save-${escapeHtml(orderId)}"
+                    onclick="saveOrder('${escapeHtml(orderId)}')">
 
-                    <td class="total">
-                        ${money(total)}
-                    </td>
+                    Save
 
+                </button>
 
-                    <td>
+            </td>
 
-                        <span class="payment-badge">
-                            ${escapeHtml(payment)}
-                        </span>
+        </tr>
 
-                    </td>
+        `;
 
-
-                    <td>
-                        ${escapeHtml(address)}
-                    </td>
-
-
-                    <td>
-
-                        <select
-                            class="status-select"
-                            id="status-${escapeHtml(orderId)}">
-
-                            <option value="Pending"
-                                ${status === "Pending" ? "selected" : ""}>
-                                Pending
-                            </option>
-
-                            <option value="Confirmed"
-                                ${status === "Confirmed" ? "selected" : ""}>
-                                Confirmed
-                            </option>
-
-                            <option value="Packed"
-                                ${status === "Packed" ? "selected" : ""}>
-                                Packed
-                            </option>
-
-                            <option value="Shipped"
-                                ${status === "Shipped" ? "selected" : ""}>
-                                Shipped
-                            </option>
-
-                            <option value="Delivered"
-                                ${status === "Delivered" ? "selected" : ""}>
-                                Delivered
-                            </option>
-
-                            <option value="Cancelled"
-                                ${status === "Cancelled" ? "selected" : ""}>
-                                Cancelled
-                            </option>
-
-                        </select>
-
-
-                        <button
-                            class="save-btn"
-                            id="save-${escapeHtml(orderId)}"
-                            onclick="saveOrder('${escapeHtml(orderId)}')">
-
-                            Save
-
-                        </button>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
+    });
 
 
     html += `
-
-        </tbody>
-
-        </table>
-
-        </div>
-
+    </tbody>
+    </table>
+    </div>
     `;
 
 
@@ -1884,6 +1474,17 @@ function renderOrders(
 
 }
 
+
+function statusOption(value,current) {
+
+    return `
+        <option value="${value}"
+            ${current === value ? "selected" : ""}>
+            ${value}
+        </option>
+    `;
+
+}
 
 
 /* =====================================================
@@ -1901,11 +1502,9 @@ function filterOrders() {
         .trim();
 
 
-    if (!search) {
+    if(!search) {
 
-        renderOrders(
-            allOrders
-        );
+        renderOrders(allOrders);
 
         return;
 
@@ -1913,91 +1512,45 @@ function filterOrders() {
 
 
     const filtered =
-        allOrders.filter(
-            function(order) {
+        allOrders.filter(function(order) {
 
-                const text = (
+            const text = (
 
-                    (order.customer_name || "") +
-                    " " +
-                    (order.name || "") +
-                    " " +
-                    (order.phone || "") +
-                    " " +
-                    (order.mobile || "") +
-                    " " +
-                    (getProductName(order)) +
-                    " " +
-                    (order.address || "")
+                (order.customer_name || "") +
+                " " +
+                (order.name || "") +
+                " " +
+                (order.phone || "") +
+                " " +
+                (order.mobile || "") +
+                " " +
+                getProductName(order) +
+                " " +
+                (order.address || "")
 
-                ).toLowerCase();
-
-
-                return text.includes(
-                    search
-                );
-
-            }
-        );
+            ).toLowerCase();
 
 
-    renderOrders(
-        filtered
-    );
+            return text.includes(search);
+
+        });
+
+
+    renderOrders(filtered);
 
 }
 
 
-
 /* =====================================================
-   ESCAPE HTML
+   SAVE ORDER
 ===================================================== */
 
-function escapeHtml(
-    value
-) {
-
-    return String(
-        value
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
-}
-
-
-
-/* =====================================================
-   SAVE ORDER STATUS
-===================================================== */
-
-async function saveOrder(
-    orderId
-) {
+async function saveOrder(orderId) {
 
     const select =
         document.getElementById(
             "status-" + orderId
         );
-
 
     const button =
         document.getElementById(
@@ -2005,142 +1558,498 @@ async function saveOrder(
         );
 
 
-    if (!select || !button) {
+    if(!select || !button) return;
+
+
+    button.disabled = true;
+    button.innerText = "Saving...";
+
+
+    const {
+        error
+    } =
+    await supabaseClient
+        .from("orders")
+        .update({
+            status:select.value
+        })
+        .eq("id",orderId);
+
+
+    if(error) {
+
+        alert(
+            "Unable to update order:\n\n" +
+            error.message
+        );
+
+        button.disabled = false;
+        button.innerText = "Save";
 
         return;
 
     }
 
 
-    const status =
-        select.value;
+    const order =
+        allOrders.find(function(item) {
+
+            return String(item.id) ===
+                   String(orderId);
+
+        });
 
 
-    button.disabled =
-        true;
-
-
-    button.innerText =
-        "Saving...";
-
-
-    try {
-
-        const {
-            error
-        } =
-        await supabaseClient
-            .from("orders")
-            .update({
-
-                status:
-                    status
-
-            })
-            .eq(
-                "id",
-                orderId
-            );
-
-
-        if (error) {
-
-            console.error(
-                "Update Error:",
-                error
-            );
-
-
-            alert(
-                "Unable to update order:\n\n" +
-                error.message
-            );
-
-
-            button.disabled =
-                false;
-
-
-            button.innerText =
-                "Save";
-
-
-            return;
-
-        }
-
-
-        button.innerText =
-            "✓ Saved";
-
-
-        const order =
-            allOrders.find(
-                function(item) {
-
-                    return String(
-                        item.id
-                    ) ===
-                    String(
-                        orderId
-                    );
-
-                }
-            );
-
-
-        if (order) {
-
-            order.status =
-                status;
-
-        }
-
-
-        updateSummary(
-            allOrders
-        );
-
-
-        setTimeout(
-            function() {
-
-                button.disabled =
-                    false;
-
-                button.innerText =
-                    "Save";
-
-            },
-            1200
-        );
-
+    if(order) {
+        order.status =
+            select.value;
     }
 
 
-    catch (error) {
+    updateSummary(allOrders);
 
-        console.error(
-            error
-        );
+    button.innerText = "✓ Saved";
 
 
-        alert(
-            "Something went wrong."
-        );
+    setTimeout(function() {
 
+        button.disabled = false;
+        button.innerText = "Save";
 
-        button.disabled =
-            false;
-
-
-        button.innerText =
-            "Save";
-
-    }
+    },1200);
 
 }
 
+
+/* =====================================================
+   STOCK
+===================================================== */
+
+async function loadStock() {
+
+    const content =
+        document.getElementById(
+            "other-content"
+        );
+
+
+    content.innerHTML = `
+
+        <div class="admin-box">
+
+            <div class="stock-header">
+
+                <div>
+
+                    <p>
+                        INVENTORY
+                    </p>
+
+                    <h2>
+                        Stock Management
+                    </h2>
+
+                </div>
+
+                <button
+                    class="stock-refresh"
+                    onclick="loadStock()">
+
+                    🔄 Refresh Stock
+
+                </button>
+
+            </div>
+
+
+            <div class="stock-cards">
+
+                <div class="stock-card">
+
+                    <span>
+                        Total Products
+                    </span>
+
+                    <strong
+                        id="stockTotalProducts">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stock-card">
+
+                    <span>
+                        Low Stock
+                    </span>
+
+                    <strong
+                        id="stockLowProducts">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stock-card">
+
+                    <span>
+                        Out of Stock
+                    </span>
+
+                    <strong
+                        id="stockOutProducts">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div id="stockTable">
+
+                <div class="message">
+                    Loading stock...
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+
+    if(error) {
+
+        document.getElementById(
+            "stockTable"
+        ).innerHTML = `
+
+            <div class="message error">
+
+                Unable to load stock.
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    renderStock(data || []);
+
+}
+
+
+/* =====================================================
+   RENDER STOCK
+===================================================== */
+
+function renderStock(products) {
+
+    let low = 0;
+    let out = 0;
+
+
+    products.forEach(function(product) {
+
+        const stock =
+            Number(product.stock || 0);
+
+        const minimum =
+            Number(product.low_stock || 5);
+
+
+        if(stock <= 0) {
+            out++;
+        }
+
+        else if(stock <= minimum) {
+            low++;
+        }
+
+    });
+
+
+    document.getElementById(
+        "stockTotalProducts"
+    ).innerText =
+        products.length;
+
+
+    document.getElementById(
+        "stockLowProducts"
+    ).innerText =
+        low;
+
+
+    document.getElementById(
+        "stockOutProducts"
+    ).innerText =
+        out;
+
+
+    if(!products.length) {
+
+        document.getElementById(
+            "stockTable"
+        ).innerHTML = `
+
+            <div class="message">
+
+                No products added yet.
+
+                <br><br>
+
+                Products table is ready.
+                Add products later from Add Product.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+    <div class="table-wrapper">
+
+    <table class="stock-table">
+
+    <thead>
+
+    <tr>
+
+        <th>Product</th>
+        <th>Price</th>
+        <th>Current Stock</th>
+        <th>Minimum</th>
+        <th>Status</th>
+        <th>Update</th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    `;
+
+
+    products.forEach(function(product) {
+
+        const stock =
+            Number(product.stock || 0);
+
+        const minimum =
+            Number(product.low_stock || 5);
+
+
+        let status;
+        let className;
+
+
+        if(stock <= 0) {
+
+            status = "Out of Stock";
+            className = "stock-out";
+
+        }
+
+        else if(stock <= minimum) {
+
+            status = "Low Stock";
+            className = "stock-low";
+
+        }
+
+        else {
+
+            status = "In Stock";
+            className = "stock-ok";
+
+        }
+
+
+        html += `
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${escapeHtml(product.name)}
+                </strong>
+            </td>
+
+            <td>
+                ${money(product.price)}
+            </td>
+
+            <td>
+
+                <input
+                    class="stock-input"
+                    type="number"
+                    min="0"
+                    id="stock-${product.id}"
+                    value="${stock}">
+
+            </td>
+
+            <td>
+                ${minimum}
+            </td>
+
+            <td class="${className}">
+                ${status}
+            </td>
+
+            <td>
+
+                <button
+                    class="stock-save"
+                    onclick="updateStock('${product.id}')">
+
+                    Save
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    `;
+
+
+    document.getElementById(
+        "stockTable"
+    ).innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   UPDATE STOCK
+===================================================== */
+
+async function updateStock(productId) {
+
+    const input =
+        document.getElementById(
+            "stock-" + productId
+        );
+
+
+    if(!input) return;
+
+
+    const stock =
+        Number(input.value);
+
+
+    if(stock < 0) {
+
+        alert(
+            "Stock cannot be negative."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        error
+    } =
+    await supabaseClient
+        .from("products")
+        .update({
+            stock:stock
+        })
+        .eq(
+            "id",
+            productId
+        );
+
+
+    if(error) {
+
+        alert(
+            "Stock update failed:\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Stock updated successfully."
+    );
+
+
+    loadStock();
+
+}
+
+
+/* =====================================================
+   ESCAPE
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
 
 
 /* =====================================================
@@ -2153,12 +2062,10 @@ async function logoutAdmin() {
         .auth
         .signOut();
 
-
     window.location.href =
         "company-login.html";
 
 }
-
 
 
 /* =====================================================
@@ -2169,7 +2076,5 @@ loadOrders();
 
 </script>
 
-
 </body>
-
 </html>
