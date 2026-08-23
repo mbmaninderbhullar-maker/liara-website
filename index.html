@@ -8,6 +8,12 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
+<meta name="description"
+      content="Liara Professional™ — Beauty, skincare and personal care products by Liara Group Private Limited.">
+
+<meta name="theme-color"
+      content="#111111">
+
 <title>
     Liara Professional™ | Beauty & Personal Care
 </title>
@@ -17,14 +23,204 @@
 <style>
 
 /* =====================================================
+   PREMIUM HOMEPAGE ADDITIONS
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+}
+
+
+/* =====================================================
+   MOBILE NAVIGATION
+===================================================== */
+
+.mobile-menu-btn {
+    display: none;
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    cursor: pointer;
+    color: #222;
+}
+
+
+/* =====================================================
+   TRUST BAR
+===================================================== */
+
+.trust-bar {
+    padding: 18px 8%;
+    background: #111;
+    color: #fff;
+
+    display: grid;
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    text-align: center;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.trust-item strong {
+    color: #d2aa5a;
+    font-size: 18px;
+}
+
+.trust-item span {
+    font-size: 13px;
+    letter-spacing: .4px;
+}
+
+
+/* =====================================================
+   CATEGORY SECTION
+===================================================== */
+
+.categories {
+    padding: 90px 8%;
+    background: #fff;
+}
+
+.category-grid {
+    max-width: 1200px;
+    margin: 45px auto 0;
+
+    display: grid;
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+.category-card {
+    padding: 35px 25px;
+
+    min-height: 190px;
+
+    border: 1px solid #eee;
+
+    border-radius: 18px;
+
+    background: #faf9f6;
+
+    text-align: center;
+
+    transition: .3s ease;
+
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.08);
+}
+
+.category-number {
+    font-size: 13px;
+
+    color: #b18a3b;
+
+    letter-spacing: 2px;
+
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+.category-card h3 {
+    margin: 0 0 10px;
+
+    font-size: 21px;
+
+    color: #222;
+}
+
+.category-card p {
+    margin: 0;
+
+    line-height: 1.7;
+
+    color: #777;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   PRODUCT SECTION
+===================================================== */
+
+.product-controls {
+    max-width: 1200px;
+
+    margin: 0 auto 35px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+.product-search {
+    width: 280px;
+
+    padding: 13px 16px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 30px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.product-search:focus {
+    border-color: #b18a3b;
+}
+
+.product-count {
+    font-size: 14px;
+
+    color: #777;
+}
+
+
+/* =====================================================
    PRODUCT LOADING
 ===================================================== */
 
 .product-loading {
     width: 100%;
+
     text-align: center;
-    padding: 50px 20px;
+
+    padding: 60px 20px;
+
     color: #777;
+
     grid-column: 1 / -1;
 }
 
@@ -35,18 +231,33 @@
 
 .dynamic-product-image {
     width: 100%;
+
     height: 280px;
+
     overflow: hidden;
-    border-radius: 12px;
+
+    border-radius: 14px;
+
     background: #f5f1eb;
+
     margin-bottom: 18px;
 }
 
 .dynamic-product-image img {
     width: 100%;
+
     height: 100%;
+
     object-fit: cover;
+
     display: block;
+
+    transition: transform .45s ease;
+}
+
+.product-card:hover
+.dynamic-product-image img {
+    transform: scale(1.04);
 }
 
 
@@ -56,28 +267,241 @@
 
 .dynamic-product-bottom {
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 10px;
+
     margin-top: 18px;
 }
 
 .dynamic-product-bottom strong {
     font-size: 20px;
+
     color: #ad8232;
 }
 
 .product-buy-btn {
     border: none;
+
     cursor: pointer;
+
     font-size: 13px;
+
     padding: 10px 15px;
 }
 
 .out-stock {
     color: #b22;
+
     font-weight: bold;
+
     font-size: 13px;
+}
+
+
+/* =====================================================
+   BRAND PROMISE
+===================================================== */
+
+.promise {
+    padding: 100px 8%;
+
+    background: #f7f3eb;
+}
+
+.promise-inner {
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+.promise-label {
+    color: #ad8232;
+
+    font-size: 13px;
+
+    letter-spacing: 3px;
+
+    font-weight: 700;
+
+    margin-bottom: 15px;
+}
+
+.promise h2 {
+    font-size: 44px;
+
+    line-height: 1.15;
+
+    margin: 0 0 25px;
+
+    color: #222;
+}
+
+.promise p {
+    color: #666;
+
+    line-height: 1.85;
+
+    font-size: 16px;
+
+    margin-bottom: 18px;
+}
+
+.promise-list {
+    margin-top: 30px;
+
+    display: grid;
+
+    gap: 14px;
+}
+
+.promise-list div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: #333;
+
+    font-size: 15px;
+}
+
+.promise-list b {
+    color: #ad8232;
+}
+
+.promise-box {
+    min-height: 430px;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #171717,
+            #3b3327
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 45px;
+
+    text-align: center;
+
+    color: white;
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.15);
+}
+
+.promise-box strong {
+    display: block;
+
+    font-size: 42px;
+
+    letter-spacing: 5px;
+
+    margin-bottom: 12px;
+}
+
+.promise-box span {
+    color: #d2aa5a;
+
+    letter-spacing: 3px;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   QUALITY SECTION
+===================================================== */
+
+.quality {
+    padding: 100px 8%;
+
+    background: #fff;
+}
+
+.quality-grid {
+    max-width: 1200px;
+
+    margin: 50px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+.quality-card {
+    padding: 38px 30px;
+
+    border: 1px solid #eee;
+
+    border-radius: 18px;
+
+    background: #fff;
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.04);
+}
+
+.quality-icon {
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: #f4ead5;
+
+    color: #ad8232;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 700;
+
+    margin-bottom: 22px;
+}
+
+.quality-card h3 {
+    margin: 0 0 12px;
+
+    color: #222;
+}
+
+.quality-card p {
+    margin: 0;
+
+    color: #777;
+
+    line-height: 1.75;
+
+    font-size: 14px;
 }
 
 
@@ -86,16 +510,20 @@
 ===================================================== */
 
 .ceo-section {
-    padding: 90px 8%;
+    padding: 100px 8%;
+
     background: #f8f5ef;
 }
 
 .ceo-content {
     max-width: 1200px;
+
     margin: auto;
 
     display: grid;
-    grid-template-columns: 1fr 0.85fr;
+
+    grid-template-columns:
+        1fr .85fr;
 
     align-items: center;
 
@@ -110,6 +538,7 @@
     display: inline-block;
 
     font-size: 13px;
+
     font-weight: 700;
 
     letter-spacing: 3px;
@@ -189,9 +618,11 @@
     position: absolute;
 
     width: 100%;
+
     height: 100%;
 
     top: 16px;
+
     left: 16px;
 
     border: 1px solid #c9a45d;
@@ -217,24 +648,444 @@
     border-radius: 18px;
 
     box-shadow:
-        0 20px 50px rgba(0,0,0,0.12);
+        0 20px 50px rgba(0,0,0,.12);
 }
 
 
 /* =====================================================
-   MOBILE CEO
+   WHY LIARA
 ===================================================== */
 
-@media (max-width: 800px) {
+.why {
+    padding: 100px 8%;
+
+    background: #fafafa;
+}
+
+.why-grid {
+    max-width: 1200px;
+
+    margin: 50px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+.why-card {
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 35px;
+
+    border: 1px solid #eee;
+
+    transition: .3s ease;
+}
+
+.why-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.07);
+}
+
+.why-card .icon {
+    color: #ad8232;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 20px;
+}
+
+.why-card h3 {
+    margin-bottom: 12px;
+}
+
+.why-card p {
+    color: #777;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   REVIEWS
+===================================================== */
+
+.reviews {
+    padding: 100px 8%;
+
+    background: #fff;
+}
+
+.review-grid {
+    max-width: 1200px;
+
+    margin: 50px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+.review-card {
+    padding: 35px;
+
+    border-radius: 18px;
+
+    background: #faf9f6;
+
+    border: 1px solid #eee;
+}
+
+.stars {
+    color: #ad8232;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 18px;
+}
+
+.review-card p {
+    color: #666;
+
+    line-height: 1.8;
+
+    font-size: 15px;
+
+    margin-bottom: 22px;
+}
+
+.review-card strong {
+    color: #222;
+
+    font-size: 14px;
+}
+
+.review-note {
+    text-align: center;
+
+    margin-top: 30px;
+
+    font-size: 12px;
+
+    color: #999;
+}
+
+
+/* =====================================================
+   FAQ
+===================================================== */
+
+.faq {
+    padding: 100px 8%;
+
+    background: #f7f3eb;
+}
+
+.faq-container {
+    max-width: 850px;
+
+    margin: 50px auto 0;
+}
+
+.faq-item {
+    background: #fff;
+
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    border: 1px solid #eee;
+}
+
+.faq-question {
+    width: 100%;
+
+    border: none;
+
+    background: white;
+
+    padding: 21px 24px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #222;
+}
+
+.faq-question span {
+    color: #ad8232;
+
+    font-size: 20px;
+}
+
+.faq-answer {
+    display: none;
+
+    padding: 0 24px 22px;
+
+    color: #777;
+
+    line-height: 1.75;
+
+    font-size: 14px;
+}
+
+.faq-item.active .faq-answer {
+    display: block;
+}
+
+
+/* =====================================================
+   CONTACT
+===================================================== */
+
+.contact {
+    padding: 100px 8%;
+
+    text-align: center;
+
+    background: #171717;
+
+    color: white;
+}
+
+.contact .heading p {
+    color: #d2aa5a;
+}
+
+.contact .heading h2 {
+    color: white;
+}
+
+.contact > p {
+    max-width: 600px;
+
+    margin: 0 auto 30px;
+
+    color: #bbb;
+
+    line-height: 1.7;
+}
+
+.contact-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+.contact-button {
+    display: inline-block;
+
+    padding: 13px 25px;
+
+    border-radius: 30px;
+
+    text-decoration: none;
+
+    border: 1px solid #c9a45d;
+
+    color: white;
+}
+
+
+/* =====================================================
+   POLICY LINKS
+===================================================== */
+
+.policy-links {
+    max-width: 1000px;
+
+    margin: 0 auto 25px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.policy-links a {
+    color: #777;
+
+    text-decoration: none;
+
+    font-size: 12px;
+}
+
+.policy-links a:hover {
+    color: #ad8232;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+    padding: 50px 8% 35px;
+
+    text-align: center;
+
+    background: #101010;
+
+    color: #999;
+}
+
+.footer-brand {
+    color: white;
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 12px;
+}
+
+.footer-brand small {
+    display: block;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    color: #c9a45d;
+
+    margin-top: 5px;
+}
+
+.footer-company {
+    font-size: 13px;
+
+    color: #777;
+
+    margin-bottom: 25px;
+}
+
+.admin-login-link {
+    display: inline-block;
+
+    margin-top: 10px;
+
+    color: #c9a45d;
+
+    text-decoration: none;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+    nav {
+        gap: 12px;
+    }
+
+    .trust-bar {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .category-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .promise-inner,
+    .ceo-content {
+        grid-template-columns: 1fr;
+    }
+
+    .promise-box {
+        min-height: 300px;
+    }
+
+    .quality-grid,
+    .why-grid,
+    .review-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ceo-photo {
+        margin: auto;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 15px 6%;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .trust-bar {
+        grid-template-columns: 1fr;
+    }
+
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-controls {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .product-search {
+        width: 100%;
+    }
+
+    .promise h2 {
+        font-size: 34px;
+    }
 
     .ceo-section {
         padding: 65px 6%;
-    }
-
-    .ceo-content {
-        grid-template-columns: 1fr;
-
-        gap: 45px;
     }
 
     .ceo-text h2 {
@@ -242,8 +1093,6 @@
     }
 
     .ceo-photo {
-        margin: auto;
-
         max-width: 360px;
     }
 
@@ -251,6 +1100,15 @@
         height: 440px;
     }
 
+}
+
+
+/* =====================================================
+   HIDDEN PRODUCT SEARCH
+===================================================== */
+
+.hidden-product {
+    display: none !important;
 }
 
 </style>
@@ -294,6 +1152,10 @@
         Leadership
     </a>
 
+    <a href="#categories">
+        Categories
+    </a>
+
     <a href="#products">
         Products
     </a>
@@ -304,10 +1166,6 @@
 
     <a href="cart.html">
         Cart 🛒
-    </a>
-
-    <a href="#why-us">
-        Why Liara
     </a>
 
     <a href="#contact">
@@ -368,41 +1226,18 @@
     <div class="mini-info">
 
         <div>
-
-            <b>
-                01
-            </b>
-
-            <span>
-                Quality Focused
-            </span>
-
+            <b>01</b>
+            <span>Quality Focused</span>
         </div>
 
-
         <div>
-
-            <b>
-                02
-            </b>
-
-            <span>
-                Modern Care
-            </span>
-
+            <b>02</b>
+            <span>Modern Care</span>
         </div>
 
-
         <div>
-
-            <b>
-                03
-            </b>
-
-            <span>
-                Everyday Beauty
-            </span>
-
+            <b>03</b>
+            <span>Everyday Beauty</span>
         </div>
 
     </div>
@@ -410,16 +1245,13 @@
 </div>
 
 
-
 <div class="hero-image">
 
     <div class="gold-circle"></div>
 
-
     <div class="bottle">
 
         <div class="bottle-cap"></div>
-
 
         <div class="bottle-label">
 
@@ -441,6 +1273,35 @@
 
 </div>
 
+</section>
+
+
+
+<!-- =====================================================
+     TRUST BAR
+===================================================== -->
+
+<section class="trust-bar">
+
+    <div class="trust-item">
+        <strong>01</strong>
+        <span>Quality Focused</span>
+    </div>
+
+    <div class="trust-item">
+        <strong>02</strong>
+        <span>Thoughtful Formulation</span>
+    </div>
+
+    <div class="trust-item">
+        <strong>03</strong>
+        <span>Customer Focused</span>
+    </div>
+
+    <div class="trust-item">
+        <strong>04</strong>
+        <span>Modern Personal Care</span>
+    </div>
 
 </section>
 
@@ -451,7 +1312,6 @@
 ===================================================== -->
 
 <section id="about" class="about">
-
 
 <div class="heading">
 
@@ -503,13 +1363,12 @@
 
 </div>
 
-
 </section>
 
 
 
 <!-- =====================================================
-     CEO / LEADERSHIP
+     LEADERSHIP
 ===================================================== -->
 
 <section id="leadership" class="ceo-section">
@@ -535,25 +1394,31 @@
 
 
         <p>
+
             Maninder Bhullar is the Founder and Chief
             Executive Officer of Liara Group Private Limited,
             the company behind Liara Professional™.
+
         </p>
 
 
         <p>
+
             With a vision to build a trusted and modern
             personal-care company, he leads Liara with
             a strong focus on quality, innovation,
             customer satisfaction and continuous growth.
+
         </p>
 
 
         <p>
+
             His vision is to develop Liara Professional™
             into a trusted name in beauty, skincare and
             personal care, combining thoughtful product
             development with a commitment to quality.
+
         </p>
 
 
@@ -572,13 +1437,117 @@
     </div>
 
 
-
     <div class="ceo-photo">
 
         <img
             src="maninder-bhullar.jpeg"
             alt="Maninder Bhullar - Founder & CEO"
+            onerror="this.style.display='none';"
         >
+
+    </div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CATEGORIES
+===================================================== -->
+
+<section id="categories" class="categories">
+
+<div class="heading">
+
+    <p>
+        EXPLORE LIARA
+    </p>
+
+    <h2>
+        Personal Care Categories
+    </h2>
+
+</div>
+
+
+<div class="category-grid">
+
+
+    <div class="category-card"
+         onclick="goProducts()">
+
+        <div class="category-number">
+            01
+        </div>
+
+        <h3>
+            Skincare
+        </h3>
+
+        <p>
+            Everyday skincare products created
+            with a modern approach to personal care.
+        </p>
+
+    </div>
+
+
+    <div class="category-card"
+         onclick="goProducts()">
+
+        <div class="category-number">
+            02
+        </div>
+
+        <h3>
+            Haircare
+        </h3>
+
+        <p>
+            Thoughtfully developed care for
+            healthy-looking, beautiful hair.
+        </p>
+
+    </div>
+
+
+    <div class="category-card"
+         onclick="goProducts()">
+
+        <div class="category-number">
+            03
+        </div>
+
+        <h3>
+            Body Care
+        </h3>
+
+        <p>
+            Daily body care designed for
+            a clean and enjoyable routine.
+        </p>
+
+    </div>
+
+
+    <div class="category-card"
+         onclick="goProducts()">
+
+        <div class="category-number">
+            04
+        </div>
+
+        <h3>
+            Personal Care
+        </h3>
+
+        <p>
+            Modern everyday essentials for
+            complete personal care.
+        </p>
 
     </div>
 
@@ -609,6 +1578,28 @@
 </div>
 
 
+<div class="product-controls">
+
+    <span
+        class="product-count"
+        id="productCount">
+
+        Our Products
+
+    </span>
+
+
+    <input
+        type="search"
+        id="productSearch"
+        class="product-search"
+        placeholder="Search products..."
+        autocomplete="off"
+    >
+
+</div>
+
+
 <div
     class="product-grid"
     id="dynamicProducts">
@@ -621,6 +1612,187 @@
 
 </div>
 
+
+</section>
+
+
+
+<!-- =====================================================
+     BRAND PROMISE
+===================================================== -->
+
+<section class="promise">
+
+<div class="promise-inner">
+
+
+    <div>
+
+        <div class="promise-label">
+            THE LIARA PROMISE
+        </div>
+
+
+        <h2>
+            Thoughtful Care.
+            Modern Beauty.
+        </h2>
+
+
+        <p>
+
+            We believe personal care should feel
+            simple, considered and enjoyable.
+
+        </p>
+
+
+        <p>
+
+            Liara Professional™ is built around a
+            commitment to thoughtful product
+            development, quality-focused processes
+            and customer satisfaction.
+
+        </p>
+
+
+        <div class="promise-list">
+
+            <div>
+                <b>✓</b>
+                <span>Quality-focused development</span>
+            </div>
+
+            <div>
+                <b>✓</b>
+                <span>Modern personal-care approach</span>
+            </div>
+
+            <div>
+                <b>✓</b>
+                <span>Customer-focused experience</span>
+            </div>
+
+            <div>
+                <b>✓</b>
+                <span>Continuous improvement</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="promise-box">
+
+        <div>
+
+            <strong>
+                LIARA
+            </strong>
+
+            <span>
+                PROFESSIONAL™
+            </span>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUALITY & STANDARDS
+===================================================== -->
+
+<section class="quality">
+
+<div class="heading">
+
+    <p>
+        OUR APPROACH
+    </p>
+
+    <h2>
+        Quality Matters
+    </h2>
+
+</div>
+
+
+<div class="quality-grid">
+
+
+    <div class="quality-card">
+
+        <div class="quality-icon">
+            01
+        </div>
+
+        <h3>
+            Ingredient Focus
+        </h3>
+
+        <p>
+
+            We focus on thoughtful ingredient
+            selection according to the intended
+            purpose of each product.
+
+        </p>
+
+    </div>
+
+
+    <div class="quality-card">
+
+        <div class="quality-icon">
+            02
+        </div>
+
+        <h3>
+            Product Development
+        </h3>
+
+        <p>
+
+            Products are developed with attention
+            to formulation, usability and overall
+            customer experience.
+
+        </p>
+
+    </div>
+
+
+    <div class="quality-card">
+
+        <div class="quality-icon">
+            03
+        </div>
+
+        <h3>
+            Continuous Improvement
+        </h3>
+
+        <p>
+
+            We believe good products can always
+            become better through testing,
+            feedback and improvement.
+
+        </p>
+
+    </div>
+
+
+</div>
 
 </section>
 
@@ -669,7 +1841,6 @@
     </div>
 
 
-
     <div class="why-card">
 
         <div class="icon">
@@ -688,7 +1859,6 @@
         </p>
 
     </div>
-
 
 
     <div class="why-card">
@@ -713,6 +1883,246 @@
 
 </div>
 
+</section>
+
+
+
+<!-- =====================================================
+     CUSTOMER EXPERIENCE
+===================================================== -->
+
+<section class="reviews">
+
+<div class="heading">
+
+    <p>
+        CUSTOMER EXPERIENCE
+    </p>
+
+    <h2>
+        What Our Customers Say
+    </h2>
+
+</div>
+
+
+<div class="review-grid">
+
+
+    <div class="review-card">
+
+        <div class="stars">
+            ★★★★★
+        </div>
+
+        <p>
+            Customer reviews will appear here as
+            genuine feedback is collected from
+            Liara customers.
+        </p>
+
+        <strong>
+            Liara Customer
+        </strong>
+
+    </div>
+
+
+    <div class="review-card">
+
+        <div class="stars">
+            ★★★★★
+        </div>
+
+        <p>
+            We value every customer's experience
+            and continuously work to improve our
+            products and service.
+        </p>
+
+        <strong>
+            Liara Customer
+        </strong>
+
+    </div>
+
+
+    <div class="review-card">
+
+        <div class="stars">
+            ★★★★★
+        </div>
+
+        <p>
+            Your feedback helps us build better
+            products and a stronger Liara
+            Professional™ experience.
+        </p>
+
+        <strong>
+            Liara Customer
+        </strong>
+
+    </div>
+
+
+</div>
+
+
+<div class="review-note">
+    Reviews shown on this website should represent genuine customer feedback.
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FAQ
+===================================================== -->
+
+<section class="faq">
+
+<div class="heading">
+
+    <p>
+        FAQ
+    </p>
+
+    <h2>
+        Frequently Asked Questions
+    </h2>
+
+</div>
+
+
+<div class="faq-container">
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            type="button">
+
+            What is Liara Professional™?
+
+            <span>
+                +
+            </span>
+
+        </button>
+
+        <div class="faq-answer">
+
+            Liara Professional™ is a beauty,
+            skincare and personal care brand
+            operated by Liara Group Private Limited.
+
+        </div>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            type="button">
+
+            Where can I view Liara products?
+
+            <span>
+                +
+            </span>
+
+        </button>
+
+        <div class="faq-answer">
+
+            You can explore the currently available
+            products in the Featured Products section
+            of this website.
+
+        </div>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            type="button">
+
+            How can I place an order?
+
+            <span>
+                +
+            </span>
+
+        </button>
+
+        <div class="faq-answer">
+
+            Select a product, open its product page
+            and follow the available purchase or
+            cart options.
+
+        </div>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            type="button">
+
+            How can I contact Liara?
+
+            <span>
+                +
+            </span>
+
+        </button>
+
+        <div class="faq-answer">
+
+            You can contact Liara through the
+            contact section or by email.
+
+        </div>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            type="button">
+
+            How can I track my order?
+
+            <span>
+                +
+            </span>
+
+        </button>
+
+        <div class="faq-answer">
+
+            Customers can use the My Account area
+            to access available order information.
+
+        </div>
+
+    </div>
+
+
+</div>
 
 </section>
 
@@ -740,19 +2150,41 @@
 
 <p>
 
-    Have a question about Liara Professional?
+    Have a question about Liara Professional™?
     We'd love to hear from you.
 
 </p>
 
 
-<a
-    href="mailto:info@liara.co.in"
-    class="btn">
+<div class="contact-buttons">
 
-    Contact Us
+    <a
+        href="mailto:info@liara.co.in"
+        class="btn">
 
-</a>
+        Email Us
+
+    </a>
+
+
+    <a
+        href="account.html"
+        class="contact-button">
+
+        My Account
+
+    </a>
+
+
+    <a
+        href="cart.html"
+        class="contact-button">
+
+        View Cart
+
+    </a>
+
+</div>
 
 
 </section>
@@ -777,12 +2209,40 @@
 </div>
 
 
+<div class="footer-company">
+
+    Liara Group Private Limited
+
+</div>
+
+
 <p>
 
     © 2026 Liara Group Private Limited.
     All Rights Reserved.
 
 </p>
+
+
+<div class="policy-links">
+
+    <a href="privacy.html">
+        Privacy Policy
+    </a>
+
+    <a href="terms.html">
+        Terms & Conditions
+    </a>
+
+    <a href="shipping.html">
+        Shipping Policy
+    </a>
+
+    <a href="returns.html">
+        Return & Refund Policy
+    </a>
+
+</div>
 
 
 <a
@@ -842,6 +2302,13 @@ function escapeHtml(value) {
 
 
 /* =====================================================
+   PRODUCT DATA
+===================================================== */
+
+let allProducts = [];
+
+
+/* =====================================================
    LOAD PRODUCTS
 ===================================================== */
 
@@ -873,9 +2340,9 @@ async function loadHomepageProducts() {
 
         /*
          * IMPORTANT:
-         * No created_at ordering here.
-         * This avoids failure if that column
-         * does not exist in products table.
+         * No created_at ordering.
+         * This keeps the existing working
+         * Supabase setup intact.
          */
 
         const {
@@ -934,135 +2401,12 @@ async function loadHomepageProducts() {
         }
 
 
-        box.innerHTML = "";
+        allProducts = data;
 
 
-        data.forEach(function(product) {
-
-
-            const productId =
-                product.id || "";
-
-
-            const productName =
-                product.name ||
-                product.product_name ||
-                product.title ||
-                "Liara Product";
-
-
-            const description =
-                product.description ||
-                product.details ||
-                "Premium beauty and personal care product.";
-
-
-            const price =
-                Number(
-                    product.price || 0
-                );
-
-
-            const stock =
-                Number(
-                    product.stock ?? product.quantity ?? 1
-                );
-
-
-            const image =
-                product.image_url ||
-                product.photo_url ||
-                product.image ||
-                product.photo ||
-                product.product_image ||
-                "facewash.jpg";
-
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "product-card";
-
-
-            card.innerHTML = `
-
-                <div class="dynamic-product-image">
-
-                    <img
-                        src="${escapeHtml(image)}"
-                        alt="${escapeHtml(productName)}"
-                        onerror="this.onerror=null; this.src='facewash.jpg';"
-                    >
-
-                </div>
-
-
-                <h3>
-
-                    ${escapeHtml(productName)}
-
-                </h3>
-
-
-                <p>
-
-                    ${escapeHtml(description)}
-
-                </p>
-
-
-                <div class="dynamic-product-bottom">
-
-                    <strong>
-
-                        ₹${price.toLocaleString("en-IN")}
-
-                    </strong>
-
-
-                    ${
-                        stock > 0
-
-                        ?
-
-                        `
-
-                        <button
-                            type="button"
-                            class="btn product-buy-btn"
-                            onclick="openProduct('${escapeHtml(productId)}')">
-
-                            View Product
-
-                        </button>
-
-                        `
-
-                        :
-
-                        `
-
-                        <span class="out-stock">
-
-                            Out of Stock
-
-                        </span>
-
-                        `
-                    }
-
-                </div>
-
-            `;
-
-
-            box.appendChild(card);
-
-        });
+        renderProducts(
+            allProducts
+        );
 
     }
 
@@ -1094,6 +2438,204 @@ async function loadHomepageProducts() {
 
 
 /* =====================================================
+   RENDER PRODUCTS
+===================================================== */
+
+function renderProducts(products) {
+
+    const box =
+        document.getElementById(
+            "dynamicProducts"
+        );
+
+
+    const count =
+        document.getElementById(
+            "productCount"
+        );
+
+
+    if (!box) {
+        return;
+    }
+
+
+    if (count) {
+
+        count.textContent =
+            products.length +
+            (
+                products.length === 1
+                ? " Product"
+                : " Products"
+            );
+
+    }
+
+
+    if (!products.length) {
+
+        box.innerHTML = `
+
+            <div class="product-loading">
+
+                No matching products found.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    products.forEach(function(product) {
+
+
+        const productId =
+            product.id || "";
+
+
+        const productName =
+            product.name ||
+            product.product_name ||
+            product.title ||
+            "Liara Product";
+
+
+        const description =
+            product.description ||
+            product.details ||
+            "Premium beauty and personal care product.";
+
+
+        const price =
+            Number(
+                product.price || 0
+            );
+
+
+        const stock =
+            Number(
+                product.stock ??
+                product.quantity ??
+                1
+            );
+
+
+        const image =
+            product.image_url ||
+            product.photo_url ||
+            product.image ||
+            product.photo ||
+            product.product_image ||
+            "facewash.jpg";
+
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "product-card";
+
+
+        card.setAttribute(
+            "data-product-name",
+            productName.toLowerCase()
+        );
+
+
+        card.innerHTML = `
+
+            <div class="dynamic-product-image">
+
+                <img
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(productName)}"
+                    onerror="
+                        this.onerror=null;
+                        this.src='facewash.jpg';
+                    "
+                >
+
+            </div>
+
+
+            <h3>
+
+                ${escapeHtml(productName)}
+
+            </h3>
+
+
+            <p>
+
+                ${escapeHtml(description)}
+
+            </p>
+
+
+            <div class="dynamic-product-bottom">
+
+                <strong>
+
+                    ₹${price.toLocaleString("en-IN")}
+
+                </strong>
+
+
+                ${
+                    stock > 0
+
+                    ?
+
+                    `
+
+                    <button
+                        type="button"
+                        class="btn product-buy-btn"
+                        onclick="openProduct('${escapeHtml(productId)}')">
+
+                        View Product
+
+                    </button>
+
+                    `
+
+                    :
+
+                    `
+
+                    <span class="out-stock">
+
+                        Out of Stock
+
+                    </span>
+
+                    `
+                }
+
+            </div>
+
+        `;
+
+
+        box.appendChild(
+            card
+        );
+
+    });
+
+}
+
+
+/* =====================================================
    OPEN PRODUCT
 ===================================================== */
 
@@ -1112,7 +2654,191 @@ function openProduct(productId) {
 
 
 /* =====================================================
-   START
+   GO TO PRODUCTS
+===================================================== */
+
+function goProducts() {
+
+    const section =
+        document.getElementById(
+            "products"
+        );
+
+
+    if (section) {
+
+        section.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+}
+
+
+/* =====================================================
+   PRODUCT SEARCH
+===================================================== */
+
+function setupProductSearch() {
+
+    const search =
+        document.getElementById(
+            "productSearch"
+        );
+
+
+    if (!search) {
+        return;
+    }
+
+
+    search.addEventListener(
+        "input",
+        function() {
+
+            const query =
+                search.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if (!query) {
+
+                renderProducts(
+                    allProducts
+                );
+
+                return;
+            }
+
+
+            const filtered =
+                allProducts.filter(
+                    function(product) {
+
+                        const name =
+                            String(
+                                product.name ||
+                                product.product_name ||
+                                product.title ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const description =
+                            String(
+                                product.description ||
+                                product.details ||
+                                ""
+                            ).toLowerCase();
+
+
+                        return (
+                            name.includes(query) ||
+                            description.includes(query)
+                        );
+
+                    }
+                );
+
+
+            renderProducts(
+                filtered
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   FAQ
+===================================================== */
+
+function setupFAQ() {
+
+    const questions =
+        document.querySelectorAll(
+            ".faq-question"
+        );
+
+
+    questions.forEach(
+        function(question) {
+
+            question.addEventListener(
+                "click",
+                function() {
+
+                    const item =
+                        question.closest(
+                            ".faq-item"
+                        );
+
+
+                    document
+                        .querySelectorAll(
+                            ".faq-item"
+                        )
+                        .forEach(
+                            function(other) {
+
+                                if (
+                                    other !== item
+                                ) {
+
+                                    other.classList
+                                        .remove(
+                                            "active"
+                                        );
+
+                                }
+
+                            }
+                        );
+
+
+                    item.classList.toggle(
+                        "active"
+                    );
+
+
+                    const symbol =
+                        question.querySelector(
+                            "span"
+                        );
+
+
+                    if (
+                        item.classList
+                            .contains(
+                                "active"
+                            )
+                    ) {
+
+                        symbol.textContent =
+                            "−";
+
+                    } else {
+
+                        symbol.textContent =
+                            "+";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   START WEBSITE
 ===================================================== */
 
 document.addEventListener(
@@ -1120,6 +2846,10 @@ document.addEventListener(
     function() {
 
         loadHomepageProducts();
+
+        setupProductSearch();
+
+        setupFAQ();
 
     }
 );
