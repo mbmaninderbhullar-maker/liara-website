@@ -7,13 +7,11 @@
 <title>Liara Professional™ | Company Dashboard</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
     margin:0;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     background:#faf8f5;
     color:#222;
 }
@@ -81,19 +79,36 @@ body{
 }
 
 .dashboard-header{
+    height:78px;
     background:#fff;
-    min-height:70px;
-    padding:15px 30px;
     border-bottom:1px solid #eee;
     display:flex;
     align-items:center;
+    padding:15px 30px;
+    position:sticky;
+    top:0;
+    z-index:900;
+}
+
+.logo{
+    font-size:23px;
+    font-weight:bold;
+    letter-spacing:3px;
+}
+
+.logo small{
+    display:block;
+    color:#ad8232;
+    font-size:9px;
+    letter-spacing:2px;
+    margin-top:4px;
 }
 
 .mobile-menu-btn{
     display:none;
     border:0;
     background:#ad8232;
-    color:#fff;
+    color:white;
     border-radius:8px;
     padding:10px 13px;
     font-size:18px;
@@ -124,10 +139,11 @@ body{
     margin-bottom:30px;
 }
 
-.admin-header p{
+.admin-header p,
+.form-title p{
     margin:0 0 5px;
     color:#ad8232;
-    font-size:14px;
+    font-size:13px;
     font-weight:bold;
     letter-spacing:2px;
 }
@@ -137,9 +153,7 @@ body{
     font-size:30px;
 }
 
-.logout-btn,
-.refresh-btn,
-.stock-refresh{
+.btn{
     border:0;
     background:#ad8232;
     color:#fff;
@@ -147,6 +161,10 @@ body{
     border-radius:8px;
     cursor:pointer;
     font-weight:bold;
+}
+
+.btn:hover{
+    background:#866326;
 }
 
 .summary-grid{
@@ -157,22 +175,21 @@ body{
 }
 
 .summary-card{
-    background:#fff;
     border:1px solid #eee;
     border-radius:15px;
-    padding:25px;
-    box-shadow:0 7px 25px rgba(0,0,0,.05);
+    padding:23px;
+    background:#fff;
 }
 
 .summary-card span{
-    display:block;
     color:#777;
     font-size:14px;
-    margin-bottom:12px;
 }
 
 .summary-card strong{
-    font-size:30px;
+    display:block;
+    font-size:29px;
+    margin-top:10px;
 }
 
 .sales strong,
@@ -192,7 +209,6 @@ body{
 
 .search-box{
     flex:1;
-    max-width:450px;
 }
 
 .search-box input{
@@ -210,24 +226,21 @@ body{
     border-radius:12px;
 }
 
-.order-table,
-.stock-table{
+.order-table{
     width:100%;
-    border-collapse:collapse;
     min-width:1050px;
+    border-collapse:collapse;
     font-size:12px;
 }
 
-.order-table th,
-.stock-table th{
+.order-table th{
     background:#f7f1e7;
-    padding:13px 8px;
+    padding:13px 7px;
     text-align:left;
 }
 
-.order-table td,
-.stock-table td{
-    padding:12px 8px;
+.order-table td{
+    padding:12px 7px;
     border-bottom:1px solid #eee;
     vertical-align:middle;
 }
@@ -246,31 +259,29 @@ body{
 }
 
 .payment-badge{
-    display:inline-block;
+    background:#f3eee5;
+    color:#8c6a28;
     padding:5px 8px;
     border-radius:20px;
     font-size:10px;
-    font-weight:bold;
-    background:#f3eee5;
-    color:#8c6a28;
 }
 
 .status-select{
     width:100%;
-    padding:8px 5px;
+    padding:8px;
     border:1px solid #ddd;
     border-radius:7px;
 }
 
-.save-btn{
-    margin-top:7px;
-    width:100%;
+.save-btn,
+.stock-save{
     border:0;
     background:#287a3e;
-    color:#fff;
-    padding:7px;
+    color:white;
+    padding:8px 12px;
     border-radius:6px;
     cursor:pointer;
+    margin-top:6px;
 }
 
 .message{
@@ -286,29 +297,18 @@ body{
 
 /* ADD PRODUCT */
 
-.product-form{
-    max-width:750px;
-}
-
-.form-title{
-    margin-bottom:25px;
-}
-
-.form-title p{
-    margin:0 0 5px;
-    color:#ad8232;
-    font-weight:bold;
-    letter-spacing:2px;
-    font-size:13px;
-}
-
-.form-title h2{
-    margin:0;
-    font-size:30px;
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
 }
 
 .form-group{
     margin-bottom:18px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
 }
 
 .form-group label{
@@ -318,37 +318,39 @@ body{
     font-size:14px;
 }
 
-.form-group input{
+.form-group input,
+.form-group textarea{
     width:100%;
     padding:13px;
     border:1px solid #ddd;
     border-radius:8px;
-    font-size:14px;
     outline:none;
+    font-family:inherit;
 }
 
-.form-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:18px;
+.form-group textarea{
+    min-height:120px;
+    resize:vertical;
 }
 
-.photo-upload{
-    border:2px dashed #d7c39b;
-    background:#fffdf9;
-    padding:25px;
+.upload-box{
+    border:2px dashed #d2b477;
     border-radius:12px;
+    padding:25px;
     text-align:center;
+    background:#fffdf9;
 }
 
-.photo-upload input{
-    border:0;
-    padding:0;
+.upload-box input{
+    margin-top:15px;
 }
 
 .photo-preview{
+    margin-top:18px;
     display:none;
-    margin:20px auto 0;
+}
+
+.photo-preview img{
     width:180px;
     height:180px;
     object-fit:cover;
@@ -356,30 +358,109 @@ body{
     border:1px solid #ddd;
 }
 
-.add-product-btn{
-    width:100%;
-    border:0;
-    background:#ad8232;
-    color:#fff;
-    padding:15px;
-    border-radius:9px;
-    font-size:15px;
+.upload-status{
+    margin-top:10px;
+    font-size:13px;
+    color:#287a3e;
     font-weight:bold;
+}
+
+.form-actions{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.clear-btn{
+    border:1px solid #ddd;
+    background:white;
+    color:#555;
+    padding:12px 20px;
+    border-radius:8px;
     cursor:pointer;
 }
 
-.add-product-btn:disabled{
-    opacity:.6;
+/* PRODUCTS */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
 }
 
-.upload-status{
-    margin-top:12px;
-    text-align:center;
-    font-size:13px;
+.product-card{
+    border:1px solid #eee;
+    border-radius:15px;
+    overflow:hidden;
+    background:white;
+}
+
+.product-card-image{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    background:#f5f2ed;
+}
+
+.product-card-body{
+    padding:17px;
+}
+
+.product-card h3{
+    margin:0 0 7px;
+    font-size:17px;
+}
+
+.product-description{
     color:#777;
+    font-size:13px;
+    min-height:38px;
+    margin-bottom:12px;
 }
 
-/* STOCK */
+.product-price{
+    font-size:20px;
+    font-weight:bold;
+    color:#287a3e;
+}
+
+.product-stock{
+    margin-top:8px;
+    color:#666;
+    font-size:13px;
+}
+
+.product-card-actions{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.product-card-actions button{
+    flex:1;
+    border:0;
+    padding:9px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.delete-product{
+    background:#f5dddd;
+    color:#a33;
+}
+
+.update-product-stock{
+    background:#e8f2e9;
+    color:#287a3e;
+}
+
+.stock-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
 
 .stock-cards{
     display:grid;
@@ -389,7 +470,6 @@ body{
 }
 
 .stock-card{
-    background:#fff;
     border:1px solid #eee;
     border-radius:15px;
     padding:22px;
@@ -412,79 +492,15 @@ body{
     border-radius:7px;
 }
 
-.stock-save{
-    border:0;
-    background:#287a3e;
-    color:#fff;
-    padding:8px 13px;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-.stock-ok{
-    color:#287a3e;
-    font-weight:bold;
-}
-
-.stock-low{
-    color:#ad8232;
-    font-weight:bold;
-}
-
-.stock-out{
-    color:#b22;
-    font-weight:bold;
-}
-
-/* PRODUCTS */
-
-.product-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
-}
-
-.product-card{
-    background:#fff;
-    border:1px solid #eee;
-    border-radius:15px;
-    overflow:hidden;
-}
-
-.product-card img{
-    width:100%;
-    height:220px;
-    object-fit:cover;
-    background:#f5f1eb;
-}
-
-.product-card-content{
-    padding:16px;
-}
-
-.product-card h3{
-    margin:0 0 8px;
-}
-
-.product-card .product-price{
-    color:#287a3e;
-    font-weight:bold;
-    font-size:18px;
-}
-
-.product-card .product-stock{
-    color:#777;
-    margin-top:8px;
-}
-
-/* MOBILE */
+.stock-ok{color:#287a3e;font-weight:bold}
+.stock-low{color:#ad8232;font-weight:bold}
+.stock-out{color:#b22;font-weight:bold}
 
 .sidebar-overlay{
     display:none;
 }
 
 @media(max-width:1100px){
-
     .summary-grid{
         grid-template-columns:repeat(2,1fr);
     }
@@ -495,7 +511,6 @@ body{
 }
 
 @media(max-width:800px){
-
     .sidebar{
         transform:translateX(-100%);
         transition:.25s;
@@ -512,6 +527,7 @@ body{
 
     .mobile-menu-btn{
         display:block;
+        margin-right:15px;
     }
 
     .sidebar-overlay.show{
@@ -521,39 +537,32 @@ body{
         background:rgba(0,0,0,.45);
         z-index:950;
     }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
 }
 
-@media(max-width:700px){
-
+@media(max-width:600px){
     .summary-grid,
-    .stock-cards,
-    .product-grid{
+    .product-grid,
+    .stock-cards{
         grid-template-columns:1fr;
     }
 
-    .form-row{
-        grid-template-columns:1fr;
-    }
-
-    .admin-header{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .logout-btn{
-        width:100%;
-    }
-
+    .admin-header,
+    .stock-header,
     .order-tools{
         flex-direction:column;
+        align-items:stretch;
     }
 
-    .search-box{
-        max-width:none;
+    .admin-box{
+        padding:18px;
     }
 
-    .refresh-btn{
-        width:100%;
+    .form-group.full{
+        grid-column:auto;
     }
 }
 </style>
@@ -574,48 +583,39 @@ body{
             🛒 Orders
         </button>
 
-        <button
-            onclick="showSection('sales',this)">
+        <button onclick="showSection('sales',this)">
             💰 Sales
         </button>
 
-        <button
-            onclick="showSection('stock',this)">
+        <button onclick="showSection('stock',this)">
             📦 Stock
         </button>
 
-        <button
-            onclick="showSection('add-product',this)">
+        <button onclick="showSection('add-product',this)">
             ➕ Add Product
         </button>
 
-        <button
-            onclick="showSection('products',this)">
+        <button onclick="showSection('products',this)">
             🧴 Products
         </button>
 
-        <button
-            onclick="showSection('customers',this)">
+        <button onclick="showSection('customers',this)">
             👥 Customers
         </button>
 
-        <button
-            onclick="showSection('reports',this)">
+        <button onclick="showSection('reports',this)">
             📊 Reports
         </button>
 
-        <button
-            onclick="showSection('delivery',this)">
+        <button onclick="showSection('delivery',this)">
             🚚 Delivery
         </button>
 
-        <button
-            onclick="showSection('notifications',this)">
+        <button onclick="showSection('notifications',this)">
             🔔 Notifications
         </button>
 
-        <button
-            onclick="showSection('settings',this)">
+        <button onclick="showSection('settings',this)">
             ⚙️ Settings
         </button>
 
@@ -641,6 +641,11 @@ body{
         ☰
     </button>
 
+    <div class="logo">
+        LIARA
+        <small>PROFESSIONAL™</small>
+    </div>
+
 </header>
 
 
@@ -660,7 +665,7 @@ body{
 <h2>Company Orders Dashboard</h2>
 </div>
 
-<button class="logout-btn"
+<button class="btn"
     onclick="logoutAdmin()">
     Logout
 </button>
@@ -694,28 +699,23 @@ body{
 <div class="order-tools">
 
 <div class="search-box">
-
 <input
-type="text"
-id="searchInput"
-placeholder="Search customer, mobile, product..."
-oninput="filterOrders()">
-
+    id="searchInput"
+    placeholder="Search customer, mobile, product..."
+    oninput="filterOrders()">
 </div>
 
-<button class="refresh-btn"
-onclick="loadOrders()">
-🔄 Refresh Orders
+<button class="btn"
+    onclick="loadOrders()">
+    🔄 Refresh Orders
 </button>
 
 </div>
 
 <div id="orders">
-
 <div class="message">
 Loading customer orders...
 </div>
-
 </div>
 
 </div>
@@ -723,18 +723,14 @@ Loading customer orders...
 </section>
 
 
-<!-- OTHER -->
+<!-- OTHER SECTION -->
 
 <section class="admin-section"
-id="other-section"
-style="display:none;">
+         id="other-section"
+         style="display:none;">
 
 <div class="admin-container">
-
-<div id="other-content">
-
-</div>
-
+<div id="other-content"></div>
 </div>
 
 </section>
@@ -746,10 +742,6 @@ style="display:none;">
 
 <script>
 
-/* =========================
-SUPABASE
-========================= */
-
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
 
@@ -758,19 +750,21 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+    SUPABASE_URL,
+    SUPABASE_KEY
 );
 
 const ADMIN_EMAIL =
 "info@liara.co.in";
 
-let allOrders=[];
+const IMAGE_BUCKET =
+"product-images";
+
+let allOrders = [];
+let allProducts = [];
 
 
-/* =========================
-MENU
-========================= */
+/* MENU */
 
 function showSection(section,button){
 
@@ -784,110 +778,108 @@ function showSection(section,button){
         button.classList.add("active");
     }
 
-    const orders =
-        document.getElementById(
-            "orders-section"
-        );
+    document.getElementById(
+        "orders-section"
+    ).style.display =
+        section === "orders"
+        ? "block"
+        : "none";
 
-    const other =
-        document.getElementById(
-            "other-section"
-        );
+    document.getElementById(
+        "other-section"
+    ).style.display =
+        section === "orders"
+        ? "none"
+        : "block";
 
-    if(section==="orders"){
-
-        orders.style.display="block";
-        other.style.display="none";
-
-    }else{
-
-        orders.style.display="none";
-        other.style.display="block";
-
-        if(section==="stock"){
-            loadStock();
-        }
-
-        else if(section==="add-product"){
-            showAddProduct();
-        }
-
-        else if(section==="products"){
-            loadProducts();
-        }
-
-        else{
-
-            const info={
-
-                sales:[
-                    "💰",
-                    "Sales",
-                    "Sales management will appear here."
-                ],
-
-                customers:[
-                    "👥",
-                    "Customers",
-                    "Customer management will appear here."
-                ],
-
-                reports:[
-                    "📊",
-                    "Reports",
-                    "Business reports will appear here."
-                ],
-
-                delivery:[
-                    "🚚",
-                    "Delivery",
-                    "Delivery management will appear here."
-                ],
-
-                notifications:[
-                    "🔔",
-                    "Notifications",
-                    "Notifications will appear here."
-                ],
-
-                settings:[
-                    "⚙️",
-                    "Settings",
-                    "Dashboard settings will appear here."
-                ]
-
-            };
-
-            const item=info[section];
-
-            document.getElementById(
-                "other-content"
-            ).innerHTML=`
-
-            <div class="menu-placeholder">
-
-                <div class="big-icon"
-                style="font-size:50px">
-                ${item[0]}
-                </div>
-
-                <h2>${item[1]}</h2>
-
-                <p>${item[2]}</p>
-
-            </div>
-
-            `;
-        }
+    if(section==="stock"){
+        loadStock();
+    }
+    else if(section==="add-product"){
+        showAddProduct();
+    }
+    else if(section==="products"){
+        loadProducts();
+    }
+    else{
+        showPlaceholder(section);
     }
 
     closeSidebar();
 }
 
 
-/* =========================
-MOBILE
-========================= */
+/* PLACEHOLDER */
+
+function showPlaceholder(section){
+
+    const details={
+
+        sales:[
+            "💰",
+            "Sales",
+            "Sales management will appear here."
+        ],
+
+        customers:[
+            "👥",
+            "Customers",
+            "Customer management will appear here."
+        ],
+
+        reports:[
+            "📊",
+            "Reports",
+            "Business reports will appear here."
+        ],
+
+        delivery:[
+            "🚚",
+            "Delivery",
+            "Delivery management will appear here."
+        ],
+
+        notifications:[
+            "🔔",
+            "Notifications",
+            "Notifications will appear here."
+        ],
+
+        settings:[
+            "⚙️",
+            "Settings",
+            "Dashboard settings will appear here."
+        ]
+
+    };
+
+    const d=details[section];
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML=`
+
+        <div class="admin-box"
+             style="text-align:center;padding:80px 30px">
+
+            <div style="font-size:50px">
+                ${d ? d[0] : "📦"}
+            </div>
+
+            <h2>
+                ${d ? d[1] : "Section"}
+            </h2>
+
+            <p style="color:#777">
+                ${d ? d[2] : ""}
+            </p>
+
+        </div>
+    `;
+}
+
+
+/* MOBILE */
 
 function openSidebar(){
 
@@ -912,35 +904,29 @@ function closeSidebar(){
 }
 
 
-/* =========================
-ADMIN
-========================= */
+/* ADMIN */
 
 async function checkAdmin(){
 
     const {data,error} =
-    await supabaseClient.auth.getUser();
+        await supabaseClient.auth.getUser();
 
-    if(
-        error ||
-        !data ||
-        !data.user
-    ){
+    if(error || !data || !data.user){
 
-        window.location.href=
-        "company-login.html";
+        window.location.href =
+            "company-login.html";
 
         return null;
     }
 
     if(
         !data.user.email ||
-        data.user.email.toLowerCase() !==
-        ADMIN_EMAIL.toLowerCase()
+        data.user.email.toLowerCase()
+        !== ADMIN_EMAIL.toLowerCase()
     ){
 
-        window.location.href=
-        "company-login.html";
+        window.location.href =
+            "company-login.html";
 
         return null;
     }
@@ -949,122 +935,69 @@ async function checkAdmin(){
 }
 
 
-/* =========================
-MONEY
-========================= */
+/* MONEY */
 
 function money(value){
 
-    return "₹"+
-    Number(value||0)
-    .toLocaleString("en-IN");
-
+    return "₹" +
+        Number(value || 0)
+        .toLocaleString("en-IN");
 }
 
 
-/* =========================
-ESCAPE
-========================= */
+/* ESCAPE */
 
 function escapeHtml(value){
 
-    return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
 
-/* =========================
-ORDERS
-========================= */
-
-function getProductName(order){
-
-    return(
-        order.product_name ||
-        order.product ||
-        order.productName ||
-        order.item_name ||
-        order.item ||
-        "Product"
-    );
-}
-
-
-function getPrice(order){
-
-    if(order.price!==undefined &&
-       order.price!==null){
-
-        return Number(order.price);
-    }
-
-    if(order.unit_price!==undefined &&
-       order.unit_price!==null){
-
-        return Number(order.unit_price);
-    }
-
-    const qty=
-    Number(order.quantity||1);
-
-    const total=
-    Number(order.total||0);
-
-    return qty>0 ? total/qty : 0;
-}
-
-
-function getPayment(order){
-
-    return(
-        order.payment_status ||
-        order.payment_method ||
-        order.payment ||
-        "Pending"
-    );
-}
-
+/* ORDERS */
 
 async function loadOrders(){
 
-    const box=
-    document.getElementById("orders");
+    const box =
+        document.getElementById("orders");
 
     box.innerHTML=`
-    <div class="message">
-    Loading customer orders...
-    </div>`;
+        <div class="message">
+            Loading customer orders...
+        </div>
+    `;
 
-    const user=
-    await checkAdmin();
+    const user=await checkAdmin();
 
     if(!user)return;
 
-    const {data,error}=
-    await supabaseClient
-    .from("orders")
-    .select("*")
-    .order(
-        "created_at",
-        {ascending:false}
-    );
+    const {data,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
 
     if(error){
 
         box.innerHTML=`
-        <div class="message error">
-        ${escapeHtml(error.message)}
-        </div>`;
+            <div class="message error">
+                Unable to load orders.
+                <br><br>
+                ${escapeHtml(error.message)}
+            </div>
+        `;
 
         return;
     }
 
-    allOrders=data||[];
+    allOrders=data || [];
 
     updateSummary(allOrders);
     renderOrders(allOrders);
@@ -1079,25 +1012,25 @@ function updateSummary(orders){
 
     orders.forEach(order=>{
 
-        sales+=Number(
-            order.total||0
+        sales += Number(
+            order.total || 0
         );
 
-        const status=
-        String(
-            order.status||"Pending"
+        const status=String(
+            order.status || "Pending"
         ).toLowerCase();
 
         if(status==="delivered"){
             delivered++;
         }
 
-        if(
-            status==="pending"||
-            status==="confirmed"||
-            status==="packed"||
-            status==="shipped"
-        ){
+        if([
+            "pending",
+            "confirmed",
+            "packed",
+            "shipped",
+            "order received"
+        ].includes(status)){
             pending++;
         }
     });
@@ -1120,27 +1053,58 @@ function updateSummary(orders){
 }
 
 
-function statusOption(value,current){
+function productName(order){
 
-    return`
-    <option value="${value}"
-    ${current===value?"selected":""}>
-    ${value}
-    </option>`;
+    return order.product_name ||
+           order.product ||
+           order.productName ||
+           order.item_name ||
+           order.item ||
+           "Product";
+}
+
+
+function productPrice(order){
+
+    if(order.price != null){
+        return Number(order.price);
+    }
+
+    if(order.unit_price != null){
+        return Number(order.unit_price);
+    }
+
+    const qty=Number(
+        order.quantity || 1
+    );
+
+    return qty
+        ? Number(order.total || 0)/qty
+        : 0;
+}
+
+
+function payment(order){
+
+    return order.payment_status ||
+           order.payment_method ||
+           order.payment ||
+           "Pending";
 }
 
 
 function renderOrders(orders){
 
     const box=
-    document.getElementById("orders");
+        document.getElementById("orders");
 
     if(!orders.length){
 
         box.innerHTML=`
-        <div class="message">
-        No customer orders yet.
-        </div>`;
+            <div class="message">
+                No customer orders yet.
+            </div>
+        `;
 
         return;
     }
@@ -1153,160 +1117,160 @@ function renderOrders(orders){
 
     <thead>
     <tr>
-    <th>Order Date</th>
-    <th>Customer</th>
-    <th>Mobile</th>
-    <th>Product</th>
-    <th>Price</th>
-    <th>Qty</th>
-    <th>Total</th>
-    <th>Payment</th>
-    <th>Address</th>
-    <th>Status</th>
+        <th>Order Date</th>
+        <th>Customer</th>
+        <th>Mobile</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Address</th>
+        <th>Status</th>
     </tr>
     </thead>
 
-    <tbody>`;
+    <tbody>
+    `;
 
     orders.forEach(order=>{
 
-        const id=order.id;
+        const id=String(order.id);
 
-        const date=
-        order.created_at
-        ?new Date(
-            order.created_at
-        ).toLocaleString(
-            "en-IN",
-            {
-                day:"2-digit",
-                month:"short",
-                year:"numeric",
-                hour:"2-digit",
-                minute:"2-digit"
-            }
-        )
-        :"–";
+        const date=order.created_at
+            ? new Date(
+                order.created_at
+              ).toLocaleString(
+                "en-IN"
+              )
+            : "-";
 
         const customer=
-        order.customer_name||
-        order.name||
-        "-";
+            order.customer_name ||
+            order.name || "-";
 
         const phone=
-        order.phone||
-        order.mobile||
-        "-";
+            order.phone ||
+            order.mobile || "-";
 
         const address=
-        order.address||
-        order.shipping_address||
-        "-";
+            order.address ||
+            order.shipping_address || "-";
 
         const product=
-        getProductName(order);
+            productName(order);
 
         const price=
-        getPrice(order);
+            productPrice(order);
 
         const qty=
-        Number(order.quantity||1);
+            Number(order.quantity || 1);
 
         const total=
-        Number(order.total||0);
+            Number(order.total || 0);
 
-        const payment=
-        getPayment(order);
+        const pay=
+            payment(order);
 
         const status=
-        order.status||"Pending";
+            order.status || "Pending";
 
         html+=`
 
         <tr>
 
-        <td>
-        ${escapeHtml(date)}
-        </td>
+        <td>${escapeHtml(date)}</td>
 
         <td>
-        <strong>
-        ${escapeHtml(customer)}
-        </strong>
+            <strong>
+                ${escapeHtml(customer)}
+            </strong>
         </td>
 
-        <td>
-        ${escapeHtml(phone)}
-        </td>
+        <td>${escapeHtml(phone)}</td>
 
         <td class="product-name">
-        ${escapeHtml(product)}
+            ${escapeHtml(product)}
         </td>
 
         <td class="price">
-        ${money(price)}
+            ${money(price)}
         </td>
 
         <td>${qty}</td>
 
         <td class="total">
-        ${money(total)}
+            ${money(total)}
         </td>
 
         <td>
-        <span class="payment-badge">
-        ${escapeHtml(payment)}
-        </span>
+            <span class="payment-badge">
+                ${escapeHtml(pay)}
+            </span>
         </td>
 
-        <td>
-        ${escapeHtml(address)}
-        </td>
+        <td>${escapeHtml(address)}</td>
 
         <td>
 
-        <select
-        class="status-select"
-        id="status-${escapeHtml(id)}">
+            <select
+                class="status-select"
+                id="status-${escapeHtml(id)}">
 
-        ${statusOption("Pending",status)}
-        ${statusOption("Confirmed",status)}
-        ${statusOption("Packed",status)}
-        ${statusOption("Shipped",status)}
-        ${statusOption("Delivered",status)}
-        ${statusOption("Cancelled",status)}
+                ${statusOption("Pending",status)}
+                ${statusOption("Confirmed",status)}
+                ${statusOption("Packed",status)}
+                ${statusOption("Shipped",status)}
+                ${statusOption("Delivered",status)}
+                ${statusOption("Cancelled",status)}
 
-        </select>
+            </select>
 
-        <button
-        class="save-btn"
-        id="save-${escapeHtml(id)}"
-        onclick="saveOrder('${escapeHtml(id)}')">
-        Save
-        </button>
+            <button
+                class="save-btn"
+                onclick="saveOrder('${escapeHtml(id)}')">
+
+                Save
+
+            </button>
 
         </td>
 
-        </tr>`;
+        </tr>
+        `;
     });
 
     html+=`
     </tbody>
     </table>
-    </div>`;
+    </div>
+    `;
 
     box.innerHTML=html;
+}
+
+
+function statusOption(value,current){
+
+    return `
+    <option value="${value}"
+        ${current===value
+            ? "selected"
+            : ""}>
+        ${value}
+    </option>
+    `;
 }
 
 
 function filterOrders(){
 
     const search=
-    document.getElementById(
-        "searchInput"
-    ).value
-    .toLowerCase()
-    .trim();
+        document.getElementById(
+            "searchInput"
+        ).value
+        .toLowerCase()
+        .trim();
 
     if(!search){
 
@@ -1315,30 +1279,30 @@ function filterOrders(){
     }
 
     const filtered=
-    allOrders.filter(order=>{
+        allOrders.filter(order=>{
 
-        const text=
-        (
-            order.customer_name||""
-        )+" "+
-        (
-            order.name||""
-        )+" "+
-        (
-            order.phone||""
-        )+" "+
-        (
-            order.mobile||""
-        )+" "+
-        getProductName(order)+" "+
-        (
-            order.address||""
-        );
+            const text=
+                (
+                    order.customer_name || ""
+                )+" "+
+                (
+                    order.name || ""
+                )+" "+
+                (
+                    order.phone || ""
+                )+" "+
+                (
+                    order.mobile || ""
+                )+" "+
+                productName(order)+" "+
+                (
+                    order.address || ""
+                );
 
-        return text
-        .toLowerCase()
-        .includes(search);
-    });
+            return text
+                .toLowerCase()
+                .includes(search);
+        });
 
     renderOrders(filtered);
 }
@@ -1347,42 +1311,34 @@ function filterOrders(){
 async function saveOrder(id){
 
     const select=
-    document.getElementById(
-        "status-"+id
-    );
-
-    const button=
-    document.getElementById(
-        "save-"+id
-    );
+        document.getElementById(
+            "status-"+id
+        );
 
     if(!select)return;
 
-    button.disabled=true;
-    button.innerText="Saving...";
-
     const {error}=
-    await supabaseClient
-    .from("orders")
-    .update({
-        status:select.value
-    })
-    .eq("id",id);
+        await supabaseClient
+        .from("orders")
+        .update({
+            status:select.value
+        })
+        .eq("id",id);
 
     if(error){
 
-        alert(error.message);
-
-        button.disabled=false;
-        button.innerText="Save";
+        alert(
+            "Unable to update order:\n\n"+
+            error.message
+        );
 
         return;
     }
 
     const order=
-    allOrders.find(
-        item=>String(item.id)===String(id)
-    );
+        allOrders.find(
+            x=>String(x.id)===String(id)
+        );
 
     if(order){
         order.status=select.value;
@@ -1390,18 +1346,11 @@ async function saveOrder(id){
 
     updateSummary(allOrders);
 
-    button.innerText="✓ Saved";
-
-    setTimeout(()=>{
-        button.disabled=false;
-        button.innerText="Save";
-    },1200);
+    alert("Order status updated.");
 }
 
 
-/* =========================
-ADD PRODUCT FORM
-========================= */
+/* ADD PRODUCT */
 
 function showAddProduct(){
 
@@ -1411,233 +1360,224 @@ function showAddProduct(){
 
     <div class="admin-box">
 
-    <div class="product-form">
+        <div class="form-title">
 
-    <div class="form-title">
+            <p>PRODUCT MANAGEMENT</p>
 
-    <p>LIARA PROFESSIONAL™</p>
+            <h2>
+                ➕ Add New Product
+            </h2>
 
-    <h2>Add New Product</h2>
+        </div>
+
+        <br>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Product Name
+                </label>
+
+                <input
+                    id="productNameInput"
+                    type="text"
+                    placeholder="e.g. Herbal Face Wash">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Price (₹)
+                </label>
+
+                <input
+                    id="productPriceInput"
+                    type="number"
+                    min="0"
+                    placeholder="299">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Stock
+                </label>
+
+                <input
+                    id="productStockInput"
+                    type="number"
+                    min="0"
+                    value="0">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Low Stock Alert
+                </label>
+
+                <input
+                    id="productLowStockInput"
+                    type="number"
+                    min="0"
+                    value="5">
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>
+                    Description
+                </label>
+
+                <textarea
+                    id="productDescriptionInput"
+                    placeholder="Write product description..."></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>
+                    📷 Product Photo
+                </label>
+
+                <div class="upload-box">
+
+                    <strong>
+                        Upload Product Photo
+                    </strong>
+
+                    <br>
+
+                    <input
+                        id="productPhotoInput"
+                        type="file"
+                        accept="image/*"
+                        onchange="previewPhoto(event)">
+
+                    <div
+                        class="photo-preview"
+                        id="photoPreview">
+
+                        <img
+                            id="previewImage"
+                            src=""
+                            alt="Preview">
+
+                    </div>
+
+                    <div
+                        class="upload-status"
+                        id="uploadStatus">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button
+                class="btn"
+                onclick="saveProduct()">
+
+                💾 Save Product
+
+            </button>
+
+            <button
+                class="clear-btn"
+                onclick="clearProductForm()">
+
+                Clear
+
+            </button>
+
+        </div>
 
     </div>
-
-    <div class="form-group">
-
-    <label>Product Name</label>
-
-    <input
-    type="text"
-    id="productName"
-    placeholder="Example: Herbal Face Wash">
-
-    </div>
-
-    <div class="form-row">
-
-    <div class="form-group">
-
-    <label>Price (₹)</label>
-
-    <input
-    type="number"
-    id="productPrice"
-    min="0"
-    placeholder="299">
-
-    </div>
-
-    <div class="form-group">
-
-    <label>Stock</label>
-
-    <input
-    type="number"
-    id="productStock"
-    min="0"
-    placeholder="50">
-
-    </div>
-
-    </div>
-
-    <div class="form-group">
-
-    <label>Product Photo</label>
-
-    <div class="photo-upload">
-
-    <input
-    type="file"
-    id="productPhoto"
-    accept="image/*"
-    onchange="previewProductPhoto(event)">
-
-    <img
-    id="photoPreview"
-    class="photo-preview">
-
-    </div>
-
-    </div>
-
-    <button
-    class="add-product-btn"
-    id="addProductBtn"
-    onclick="addProduct()">
-
-    ➕ Add Product
-
-    </button>
-
-    <div
-    class="upload-status"
-    id="uploadStatus">
-    Select a product photo.
-    </div>
-
-    </div>
-
-    </div>
-
     `;
 }
 
 
-function previewProductPhoto(event){
+/* PHOTO PREVIEW */
+
+function previewPhoto(event){
 
     const file=
-    event.target.files[0];
+        event.target.files[0];
+
+    if(!file)return;
 
     const preview=
-    document.getElementById(
-        "photoPreview"
-    );
+        document.getElementById(
+            "previewImage"
+        );
 
-    if(!file){
-
-        preview.style.display="none";
-        return;
-    }
-
-    if(!file.type.startsWith("image/")){
-
-        alert("Please select an image.");
-
-        event.target.value="";
-        preview.style.display="none";
-
-        return;
-    }
+    const box=
+        document.getElementById(
+            "photoPreview"
+        );
 
     preview.src=
-    URL.createObjectURL(file);
+        URL.createObjectURL(file);
 
-    preview.style.display="block";
+    box.style.display="block";
 }
 
 
-/* =========================
-UPLOAD PHOTO
-========================= */
+/* SAVE PRODUCT */
 
-async function uploadProductPhoto(file){
-
-    if(!file){
-        throw new Error(
-            "Please select a product photo."
-        );
-    }
-
-    const extension=
-    file.name
-    .split(".")
-    .pop()
-    .toLowerCase();
-
-    const fileName=
-    "product-"+Date.now()+
-    "-"+Math.random()
-    .toString(36)
-    .substring(2)+
-    "."+extension;
-
-    const filePath=
-    fileName;
-
-    const {error:uploadError}=
-    await supabaseClient
-    .storage
-    .from("product-images")
-    .upload(
-        filePath,
-        file,
-        {
-            cacheControl:"3600",
-            upsert:false
-        }
-    );
-
-    if(uploadError){
-        throw uploadError;
-    }
-
-    const {data}=
-    supabaseClient
-    .storage
-    .from("product-images")
-    .getPublicUrl(filePath);
-
-    if(!data || !data.publicUrl){
-
-        throw new Error(
-            "Unable to get photo URL."
-        );
-    }
-
-    return data.publicUrl;
-}
-
-
-/* =========================
-ADD PRODUCT
-========================= */
-
-async function addProduct(){
+async function saveProduct(){
 
     const name=
-    document.getElementById(
-        "productName"
-    ).value.trim();
+        document.getElementById(
+            "productNameInput"
+        ).value.trim();
 
     const price=
-    Number(
-        document.getElementById(
-            "productPrice"
-        ).value
-    );
+        Number(
+            document.getElementById(
+                "productPriceInput"
+            ).value
+        );
 
     const stock=
-    Number(
+        Number(
+            document.getElementById(
+                "productStockInput"
+            ).value || 0
+        );
+
+    const lowStock=
+        Number(
+            document.getElementById(
+                "productLowStockInput"
+            ).value || 5
+        );
+
+    const description=
         document.getElementById(
-            "productStock"
-        ).value
-    );
+            "productDescriptionInput"
+        ).value.trim();
 
-    const photoInput=
-    document.getElementById(
-        "productPhoto"
-    );
-
-    const button=
-    document.getElementById(
-        "addProductBtn"
-    );
+    const file=
+        document.getElementById(
+            "productPhotoInput"
+        ).files[0];
 
     const status=
-    document.getElementById(
-        "uploadStatus"
-    );
-
+        document.getElementById(
+            "uploadStatus"
+        );
 
     if(!name){
 
@@ -1645,325 +1585,581 @@ async function addProduct(){
         return;
     }
 
-    if(price<0 || !Number.isFinite(price)){
+    if(!price || price<0){
 
-        alert("Valid price pao.");
+        alert("Product price pao.");
         return;
     }
 
-    if(stock<0 || !Number.isFinite(stock)){
+    if(!file){
 
-        alert("Valid stock pao.");
+        alert("Product photo upload karo.");
         return;
     }
 
-    if(
-        !photoInput.files ||
-        !photoInput.files[0]
-    ){
+    if(stock<0){
 
-        alert("Product photo select karo.");
+        alert("Stock negative nahi ho sakda.");
         return;
     }
-
 
     const user=
-    await checkAdmin();
+        await checkAdmin();
 
     if(!user)return;
 
+    status.innerText=
+        "Uploading photo...";
 
     try{
 
-        button.disabled=true;
-        button.innerText="Uploading...";
-        status.innerText=
-        "Photo upload ho rahi aa...";
+        const extension=
+            file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
 
+        const fileName=
+            Date.now()+
+            "-" +
+            Math.random()
+            .toString(36)
+            .substring(2)+
+            "."+
+            extension;
 
-        const imageUrl=
-        await uploadProductPhoto(
-            photoInput.files[0]
-        );
+        const filePath=
+            "products/"+fileName;
 
+        const upload=
+            await supabaseClient
+            .storage
+            .from(IMAGE_BUCKET)
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl:"3600",
+                    upsert:false
+                }
+            );
 
-        status.innerText=
-        "Product save ho reha...";
+        if(upload.error){
 
+            status.innerText="";
 
-        const {error}=
-        await supabaseClient
-        .from("products")
-        .insert({
+            alert(
+                "Photo upload failed:\n\n"+
+                upload.error.message
+            );
 
-            name:name,
-            price:price,
-            stock:stock,
-            image_url:imageUrl
-
-        });
-
-
-        if(error){
-
-            throw error;
+            return;
         }
 
+        status.innerText=
+            "Photo uploaded. Saving product...";
 
-        alert(
-            "✅ Product successfully add ho gaya!"
-        );
+        const publicData=
+            supabaseClient
+            .storage
+            .from(IMAGE_BUCKET)
+            .getPublicUrl(filePath);
 
+        const imageUrl=
+            publicData.data.publicUrl;
 
-        document.getElementById(
-            "productName"
-        ).value="";
+        const insert=
+            await supabaseClient
+            .from("products")
+            .insert({
 
-        document.getElementById(
-            "productPrice"
-        ).value="";
+                name:name,
 
-        document.getElementById(
-            "productStock"
-        ).value="";
+                price:price,
 
-        photoInput.value="";
+                stock:stock,
 
-        document.getElementById(
-            "photoPreview"
-        ).style.display="none";
+                low_stock:lowStock,
+
+                description:description,
+
+                image_url:imageUrl
+
+            })
+            .select()
+            .single();
+
+        if(insert.error){
+
+            status.innerText="";
+
+            alert(
+                "Product save failed:\n\n"+
+                insert.error.message+
+                "\n\nPhoto upload ho chukki aa."
+            );
+
+            return;
+        }
 
         status.innerText=
-        "Product add ho gaya.";
+            "✓ Product saved successfully.";
 
-        button.disabled=false;
-        button.innerText="➕ Add Product";
+        alert(
+            "Product successfully add ho gaya."
+        );
+
+        clearProductForm();
 
     }
-
     catch(error){
 
         console.error(error);
 
+        status.innerText="";
+
         alert(
-            "Product add nahi hoya:\n\n"+
+            "Something went wrong:\n\n"+
             error.message
         );
-
-        status.innerText=
-        "Error: "+error.message;
-
-        button.disabled=false;
-        button.innerText="➕ Add Product";
     }
 }
 
 
-/* =========================
-PRODUCT LIST
-========================= */
+/* CLEAR FORM */
+
+function clearProductForm(){
+
+    const ids=[
+        "productNameInput",
+        "productPriceInput",
+        "productDescriptionInput"
+    ];
+
+    ids.forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.value="";
+    });
+
+    const stock=
+        document.getElementById(
+            "productStockInput"
+        );
+
+    if(stock)stock.value="0";
+
+    const low=
+        document.getElementById(
+            "productLowStockInput"
+        );
+
+    if(low)low.value="5";
+
+    const photo=
+        document.getElementById(
+            "productPhotoInput"
+        );
+
+    if(photo)photo.value="";
+
+    const preview=
+        document.getElementById(
+            "photoPreview"
+        );
+
+    if(preview)preview.style.display="none";
+
+    const status=
+        document.getElementById(
+            "uploadStatus"
+        );
+
+    if(status)status.innerText="";
+}
+
+
+/* PRODUCTS */
 
 async function loadProducts(){
 
-    const content=
     document.getElementById(
         "other-content"
-    );
+    ).innerHTML=`
 
-    content.innerHTML=`
+        <div class="admin-box">
 
-    <div class="admin-box">
+            <div class="admin-header">
 
-    <div class="form-title">
+                <div>
+                    <p>PRODUCT MANAGEMENT</p>
+                    <h2>🧴 Products</h2>
+                </div>
 
-    <p>LIARA PROFESSIONAL™</p>
+                <button
+                    class="btn"
+                    onclick="showAddProduct()">
+                    ➕ Add Product
+                </button>
 
-    <h2>Products</h2>
+            </div>
 
-    </div>
+            <div id="productsList">
+                <div class="message">
+                    Loading products...
+                </div>
+            </div>
 
-    <div id="productList">
-    <div class="message">
-    Loading products...
-    </div>
-    </div>
-
-    </div>
+        </div>
     `;
 
-
     const user=
-    await checkAdmin();
+        await checkAdmin();
 
     if(!user)return;
 
-
     const {data,error}=
-    await supabaseClient
-    .from("products")
-    .select("*")
-    .order(
-        "created_at",
-        {ascending:false}
-    );
-
+        await supabaseClient
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
 
     if(error){
 
         document.getElementById(
-            "productList"
+            "productsList"
         ).innerHTML=`
 
-        <div class="message error">
-        ${escapeHtml(error.message)}
-        </div>`;
+            <div class="message error">
+                Unable to load products.
+                <br><br>
+                ${escapeHtml(error.message)}
+            </div>
+        `;
 
         return;
     }
 
+    allProducts=data || [];
 
-    if(!data || !data.length){
+    renderProducts(allProducts);
+}
 
+
+function renderProducts(products){
+
+    const box=
         document.getElementById(
-            "productList"
-        ).innerHTML=`
+            "productsList"
+        );
 
-        <div class="message">
-        No products added yet.
-        </div>`;
+    if(!products.length){
+
+        box.innerHTML=`
+
+            <div class="message">
+
+                No products added yet.
+
+                <br><br>
+
+                Click "Add Product" to add your first product.
+
+            </div>
+        `;
 
         return;
     }
-
 
     let html=
-    `<div class="product-grid">`;
+        `<div class="product-grid">`;
 
+    products.forEach(product=>{
 
-    data.forEach(product=>{
+        const stock=
+            Number(product.stock || 0);
+
+        let stockText=
+            "Stock: "+stock;
+
+        let stockClass=
+            "stock-ok";
+
+        if(stock<=0){
+            stockText="Out of Stock";
+            stockClass="stock-out";
+        }
+        else if(
+            stock<=Number(
+                product.low_stock || 5
+            )
+        ){
+            stockText=
+                "Low Stock: "+stock;
+            stockClass="stock-low";
+        }
+
+        const image=
+            product.image_url ||
+            "";
 
         html+=`
 
         <div class="product-card">
 
-        ${
-            product.image_url
-            ?`
-            <img
-            src="${escapeHtml(product.image_url)}"
-            alt="${escapeHtml(product.name)}">
-            `
-            :`
-            <div style="
-            height:220px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:#f5f1eb;">
-            🧴
+            ${
+                image
+                ?
+                `<img
+                    class="product-card-image"
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(product.name)}">`
+                :
+                `<div
+                    class="product-card-image"
+                    style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:50px;">
+                    🧴
+                </div>`
+            }
+
+            <div class="product-card-body">
+
+                <h3>
+                    ${escapeHtml(product.name)}
+                </h3>
+
+                <div class="product-description">
+                    ${escapeHtml(
+                        product.description || ""
+                    )}
+                </div>
+
+                <div class="product-price">
+                    ${money(product.price)}
+                </div>
+
+                <div
+                    class="product-stock ${stockClass}">
+                    ${stockText}
+                </div>
+
+                <div class="product-card-actions">
+
+                    <button
+                        class="update-product-stock"
+                        onclick="editProductStock('${escapeHtml(String(product.id))}')">
+                        ✏️ Stock
+                    </button>
+
+                    <button
+                        class="delete-product"
+                        onclick="deleteProduct('${escapeHtml(String(product.id))}')">
+                        🗑️ Delete
+                    </button>
+
+                </div>
+
             </div>
-            `
-        }
-
-        <div class="product-card-content">
-
-        <h3>
-        ${escapeHtml(product.name)}
-        </h3>
-
-        <div class="product-price">
-        ${money(product.price)}
-        </div>
-
-        <div class="product-stock">
-        Stock: ${Number(product.stock||0)}
-        </div>
 
         </div>
-
-        </div>
-
         `;
     });
 
+    html+="</div>";
 
-    html+=`</div>`;
-
-    document.getElementById(
-        "productList"
-    ).innerHTML=html;
+    box.innerHTML=html;
 }
 
 
-/* =========================
-STOCK
-========================= */
+/* EDIT STOCK */
+
+async function editProductStock(id){
+
+    const product=
+        allProducts.find(
+            p=>String(p.id)===String(id)
+        );
+
+    if(!product)return;
+
+    const value=
+        prompt(
+            "New stock quantity:",
+            product.stock || 0
+        );
+
+    if(value===null)return;
+
+    const stock=
+        Number(value);
+
+    if(
+        !Number.isInteger(stock) ||
+        stock<0
+    ){
+
+        alert(
+            "Valid stock quantity pao."
+        );
+
+        return;
+    }
+
+    const {error}=
+        await supabaseClient
+        .from("products")
+        .update({
+            stock:stock
+        })
+        .eq("id",id);
+
+    if(error){
+
+        alert(
+            "Stock update failed:\n\n"+
+            error.message
+        );
+
+        return;
+    }
+
+    alert("Stock updated successfully.");
+
+    loadProducts();
+}
+
+
+/* DELETE PRODUCT */
+
+async function deleteProduct(id){
+
+    const product=
+        allProducts.find(
+            p=>String(p.id)===String(id)
+        );
+
+    if(!product)return;
+
+    const yes=
+        confirm(
+            "Delete \""+
+            product.name+
+            "\"?"
+        );
+
+    if(!yes)return;
+
+    const {error}=
+        await supabaseClient
+        .from("products")
+        .delete()
+        .eq("id",id);
+
+    if(error){
+
+        alert(
+            "Product delete failed:\n\n"+
+            error.message
+        );
+
+        return;
+    }
+
+    alert(
+        "Product deleted successfully."
+    );
+
+    loadProducts();
+}
+
+
+/* STOCK */
 
 async function loadStock(){
 
-    const content=
     document.getElementById(
         "other-content"
-    );
-
-    content.innerHTML=`
+    ).innerHTML=`
 
     <div class="admin-box">
 
-    <div class="form-title">
+        <div class="stock-header">
 
-    <p>INVENTORY</p>
+            <div>
+                <p style="
+                    color:#ad8232;
+                    font-size:13px;
+                    font-weight:bold;
+                    letter-spacing:2px;">
+                    INVENTORY
+                </p>
 
-    <h2>Stock Management</h2>
+                <h2>
+                    📦 Stock Management
+                </h2>
+            </div>
 
-    </div>
+            <button
+                class="btn"
+                onclick="loadStock()">
+                🔄 Refresh
+            </button>
 
-    <div class="stock-cards">
+        </div>
 
-    <div class="stock-card">
-    <span>Total Products</span>
-    <strong id="stockTotal">0</strong>
-    </div>
+        <div class="stock-cards">
 
-    <div class="stock-card">
-    <span>Low Stock</span>
-    <strong id="stockLow">0</strong>
-    </div>
+            <div class="stock-card">
+                <span>Total Products</span>
+                <strong id="stockTotal">
+                    0
+                </strong>
+            </div>
 
-    <div class="stock-card">
-    <span>Out of Stock</span>
-    <strong id="stockOut">0</strong>
-    </div>
+            <div class="stock-card">
+                <span>Low Stock</span>
+                <strong id="stockLow">
+                    0
+                </strong>
+            </div>
 
-    </div>
+            <div class="stock-card">
+                <span>Out of Stock</span>
+                <strong id="stockOut">
+                    0
+                </strong>
+            </div>
 
-    <div id="stockTable">
+        </div>
 
-    <div class="message">
-    Loading stock...
-    </div>
-
-    </div>
+        <div id="stockTable">
+            <div class="message">
+                Loading stock...
+            </div>
+        </div>
 
     </div>
     `;
 
-
     const user=
-    await checkAdmin();
+        await checkAdmin();
 
     if(!user)return;
 
-
     const {data,error}=
-    await supabaseClient
-    .from("products")
-    .select("*")
-    .order(
-        "created_at",
-        {ascending:false}
-    );
-
+        await supabaseClient
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
 
     if(error){
 
@@ -1972,33 +2168,37 @@ async function loadStock(){
         ).innerHTML=`
 
         <div class="message error">
-        ${escapeHtml(error.message)}
-        </div>`;
+            ${escapeHtml(error.message)}
+        </div>
+        `;
 
         return;
     }
 
+    renderStock(data || []);
+}
 
-    const products=data||[];
+
+function renderStock(products){
 
     let low=0;
     let out=0;
 
-
     products.forEach(product=>{
 
         const stock=
-        Number(product.stock||0);
+            Number(product.stock || 0);
+
+        const minimum=
+            Number(product.low_stock || 5);
 
         if(stock<=0){
             out++;
         }
-
-        else if(stock<=5){
+        else if(stock<=minimum){
             low++;
         }
     });
-
 
     document.getElementById(
         "stockTotal"
@@ -2012,7 +2212,6 @@ async function loadStock(){
         "stockOut"
     ).innerText=out;
 
-
     if(!products.length){
 
         document.getElementById(
@@ -2020,36 +2219,40 @@ async function loadStock(){
         ).innerHTML=`
 
         <div class="message">
-        No products added yet.
-        </div>`;
+            No products added yet.
+        </div>
+        `;
 
         return;
     }
-
 
     let html=`
 
     <div class="table-wrapper">
 
-    <table class="stock-table">
+    <table class="order-table">
 
     <thead>
     <tr>
-    <th>Product</th>
-    <th>Price</th>
-    <th>Stock</th>
-    <th>Status</th>
-    <th>Update</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Minimum</th>
+        <th>Status</th>
+        <th>Update</th>
     </tr>
     </thead>
 
-    <tbody>`;
-
+    <tbody>
+    `;
 
     products.forEach(product=>{
 
         const stock=
-        Number(product.stock||0);
+            Number(product.stock || 0);
+
+        const minimum=
+            Number(product.low_stock || 5);
 
         let status="In Stock";
         let cls="stock-ok";
@@ -2060,62 +2263,64 @@ async function loadStock(){
             cls="stock-out";
 
         }
-
-        else if(stock<=5){
+        else if(stock<=minimum){
 
             status="Low Stock";
             cls="stock-low";
-
         }
-
 
         html+=`
 
         <tr>
 
-        <td>
-        <strong>
-        ${escapeHtml(product.name)}
-        </strong>
-        </td>
+            <td>
+                <strong>
+                    ${escapeHtml(product.name)}
+                </strong>
+            </td>
 
-        <td>
-        ${money(product.price)}
-        </td>
+            <td>
+                ${money(product.price)}
+            </td>
 
-        <td>
+            <td>
 
-        <input
-        class="stock-input"
-        type="number"
-        min="0"
-        id="stock-${escapeHtml(product.id)}"
-        value="${stock}">
+                <input
+                    class="stock-input"
+                    id="stock-${escapeHtml(String(product.id))}"
+                    type="number"
+                    min="0"
+                    value="${stock}">
 
-        </td>
+            </td>
 
-        <td class="${cls}">
-        ${status}
-        </td>
+            <td>
+                ${minimum}
+            </td>
 
-        <td>
+            <td class="${cls}">
+                ${status}
+            </td>
 
-        <button
-        class="stock-save"
-        onclick="updateStock('${escapeHtml(product.id)}')">
-        Save
-        </button>
+            <td>
 
-        </td>
+                <button
+                    class="stock-save"
+                    onclick="updateStock('${escapeHtml(String(product.id))}')">
+                    Save
+                </button>
 
-        </tr>`;
+            </td>
+
+        </tr>
+        `;
     });
-
 
     html+=`
     </tbody>
     </table>
-    </div>`;
+    </div>
+    `;
 
     document.getElementById(
         "stockTable"
@@ -2126,31 +2331,34 @@ async function loadStock(){
 async function updateStock(id){
 
     const input=
-    document.getElementById(
-        "stock-"+id
-    );
+        document.getElementById(
+            "stock-"+id
+        );
+
+    if(!input)return;
 
     const stock=
-    Number(input.value);
+        Number(input.value);
 
-    if(stock<0){
+    if(
+        !Number.isInteger(stock) ||
+        stock<0
+    ){
 
         alert(
-            "Stock negative nahi ho sakda."
+            "Valid stock quantity pao."
         );
 
         return;
     }
 
-
     const {error}=
-    await supabaseClient
-    .from("products")
-    .update({
-        stock:stock
-    })
-    .eq("id",id);
-
+        await supabaseClient
+        .from("products")
+        .update({
+            stock:stock
+        })
+        .eq("id",id);
 
     if(error){
 
@@ -2162,33 +2370,26 @@ async function updateStock(id){
         return;
     }
 
-
-    alert(
-        "✅ Stock updated."
-    );
+    alert("Stock updated successfully.");
 
     loadStock();
 }
 
 
-/* =========================
-LOGOUT
-========================= */
+/* LOGOUT */
 
 async function logoutAdmin(){
 
     await supabaseClient
-    .auth
-    .signOut();
+        .auth
+        .signOut();
 
     window.location.href=
-    "company-login.html";
+        "company-login.html";
 }
 
 
-/* =========================
-START
-========================= */
+/* START */
 
 loadOrders();
 
