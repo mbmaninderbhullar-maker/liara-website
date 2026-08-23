@@ -8,7 +8,9 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Liara Professional™ | Beauty & Personal Care</title>
+<title>
+    Liara Professional™ | Beauty & Personal Care
+</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -70,7 +72,7 @@
 
 
 /* =====================================================
-   CEO SECTION
+   CEO / LEADERSHIP SECTION
 ===================================================== */
 
 .ceo-section {
@@ -338,7 +340,9 @@
 
         <div>
 
-            <b>01</b>
+            <b>
+                01
+            </b>
 
             <span>
                 Quality Focused
@@ -349,7 +353,9 @@
 
         <div>
 
-            <b>02</b>
+            <b>
+                02
+            </b>
 
             <span>
                 Modern Care
@@ -360,7 +366,9 @@
 
         <div>
 
-            <b>03</b>
+            <b>
+                03
+            </b>
 
             <span>
                 Everyday Beauty
@@ -498,31 +506,25 @@
 
 
             <p>
-
                 Maninder Bhullar is the Founder and Chief
                 Executive Officer of Liara Group Private Limited,
                 the company behind Liara Professional™.
-
             </p>
 
 
             <p>
-
                 With a vision to build a trusted and modern
                 personal-care company, he leads Liara with
                 a strong focus on quality, innovation,
                 customer satisfaction and continuous growth.
-
             </p>
 
 
             <p>
-
                 His vision is to develop Liara Professional™
                 into a trusted name in beauty, skincare and
                 personal care, combining thoughtful product
                 development with a commitment to quality.
-
             </p>
 
 
@@ -577,6 +579,8 @@
 
 </div>
 
+
+<!-- PRODUCTS FROM SUPABASE WILL APPEAR HERE -->
 
 <div
     class="product-grid"
@@ -824,7 +828,7 @@ async function loadHomepageProducts() {
         );
 
 
-    if (!box) return;
+    if(!box) return;
 
 
     box.innerHTML = `
@@ -853,7 +857,7 @@ async function loadHomepageProducts() {
         );
 
 
-    if (error) {
+    if(error) {
 
         console.error(
             "Product loading error:",
@@ -881,7 +885,7 @@ async function loadHomepageProducts() {
 
 
 
-    if (!data || data.length === 0) {
+    if(!data || data.length === 0) {
 
         box.innerHTML = `
 
@@ -1046,6 +1050,10 @@ function openProduct(productId) {
     );
 
 
+    /*
+       Product page
+    */
+
     window.location.href =
         "product.html";
 
@@ -1063,7 +1071,7 @@ loadHomepageProducts();
 
 
 
-<!-- ORIGINAL SCRIPT -->
+<!-- YOUR ORIGINAL SCRIPT -->
 
 <script src="script.js"></script>
 
