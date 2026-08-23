@@ -5,17 +5,20 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-<title>Liara Professional™ | Beauty & Personal Care</title>
+<title>
+    Liara Professional™ | Beauty & Personal Care
+</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
 
-/* =========================
-   PRODUCTS
-========================= */
+/* =====================================================
+   PRODUCT LOADING
+===================================================== */
 
 .product-loading {
     width: 100%;
@@ -24,6 +27,11 @@
     color: #777;
     grid-column: 1 / -1;
 }
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
 
 .dynamic-product-image {
     width: 100%;
@@ -40,6 +48,11 @@
     object-fit: cover;
     display: block;
 }
+
+
+/* =====================================================
+   PRODUCT BOTTOM
+===================================================== */
 
 .dynamic-product-bottom {
     display: flex;
@@ -68,9 +81,9 @@
 }
 
 
-/* =========================
-   CEO
-========================= */
+/* =====================================================
+   CEO SECTION
+===================================================== */
 
 .ceo-section {
     padding: 90px 8%;
@@ -80,9 +93,12 @@
 .ceo-content {
     max-width: 1200px;
     margin: auto;
+
     display: grid;
     grid-template-columns: 1fr 0.85fr;
+
     align-items: center;
+
     gap: 70px;
 }
 
@@ -92,86 +108,122 @@
 
 .ceo-label {
     display: inline-block;
+
     font-size: 13px;
     font-weight: 700;
+
     letter-spacing: 3px;
+
     color: #ad8232;
+
     margin-bottom: 15px;
 }
 
 .ceo-text h2 {
     margin: 0 0 8px;
+
     font-size: 46px;
+
     line-height: 1.1;
+
     color: #222;
 }
 
 .ceo-text h3 {
     margin: 0 0 25px;
+
     font-size: 19px;
+
     font-weight: 500;
+
     color: #ad8232;
 }
 
 .ceo-text p {
     margin-bottom: 17px;
+
     font-size: 16px;
+
     line-height: 1.8;
+
     color: #666;
 }
 
 .ceo-signature {
     margin-top: 30px;
+
     display: flex;
+
     flex-direction: column;
+
     gap: 5px;
 }
 
 .ceo-signature strong {
     font-size: 21px;
+
     color: #222;
 }
 
 .ceo-signature span {
     font-size: 13px;
+
     color: #999;
+
     letter-spacing: 1px;
 }
 
 .ceo-photo {
     width: 100%;
+
     max-width: 420px;
+
     margin-left: auto;
+
     position: relative;
 }
 
 .ceo-photo::before {
     content: "";
+
     position: absolute;
+
     width: 100%;
     height: 100%;
+
     top: 16px;
     left: 16px;
+
     border: 1px solid #c9a45d;
+
     border-radius: 18px;
+
     z-index: 0;
 }
 
 .ceo-photo img {
     position: relative;
+
     z-index: 1;
+
     width: 100%;
+
     height: 510px;
+
     object-fit: cover;
+
     display: block;
+
     border-radius: 18px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.12);
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* =====================================================
+   MOBILE CEO
+===================================================== */
 
 @media (max-width: 800px) {
 
@@ -181,6 +233,7 @@
 
     .ceo-content {
         grid-template-columns: 1fr;
+
         gap: 45px;
     }
 
@@ -190,6 +243,7 @@
 
     .ceo-photo {
         margin: auto;
+
         max-width: 360px;
     }
 
@@ -207,38 +261,58 @@
 <body>
 
 
-<!-- =========================
+<!-- =====================================================
      HEADER
-========================= -->
+===================================================== -->
 
 <header>
 
 <a href="/" class="logo">
 
-    <span>LIARA</span>
+    <span>
+        LIARA
+    </span>
 
-    <small>PROFESSIONAL™</small>
+    <small>
+        PROFESSIONAL™
+    </small>
 
 </a>
 
 
 <nav>
 
-    <a href="/">Home</a>
+    <a href="/">
+        Home
+    </a>
 
-    <a href="#about">About</a>
+    <a href="#about">
+        About
+    </a>
 
-    <a href="#leadership">Leadership</a>
+    <a href="#leadership">
+        Leadership
+    </a>
 
-    <a href="#products">Products</a>
+    <a href="#products">
+        Products
+    </a>
 
-    <a href="account.html">My Account</a>
+    <a href="account.html">
+        My Account
+    </a>
 
-    <a href="cart.html">Cart 🛒</a>
+    <a href="cart.html">
+        Cart 🛒
+    </a>
 
-    <a href="#why-us">Why Liara</a>
+    <a href="#why-us">
+        Why Liara
+    </a>
 
-    <a href="#contact">Contact</a>
+    <a href="#contact">
+        Contact
+    </a>
 
 </nav>
 
@@ -246,9 +320,9 @@
 
 
 
-<!-- =========================
+<!-- =====================================================
      HERO
-========================= -->
+===================================================== -->
 
 <section id="home" class="hero">
 
@@ -258,15 +332,25 @@
         LIARA PROFESSIONAL™
     </p>
 
+
     <h1>
+
         Beauty That
-        <span>Feels Professional.</span>
+
+        <span>
+            Feels Professional.
+        </span>
+
     </h1>
 
+
     <p class="hero-text">
+
         Premium skincare, beauty and personal care products
         created for modern everyday self-care.
+
     </p>
+
 
     <div class="buttons">
 
@@ -284,40 +368,72 @@
     <div class="mini-info">
 
         <div>
-            <b>01</b>
-            <span>Quality Focused</span>
+
+            <b>
+                01
+            </b>
+
+            <span>
+                Quality Focused
+            </span>
+
         </div>
 
-        <div>
-            <b>02</b>
-            <span>Modern Care</span>
-        </div>
 
         <div>
-            <b>03</b>
-            <span>Everyday Beauty</span>
+
+            <b>
+                02
+            </b>
+
+            <span>
+                Modern Care
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <b>
+                03
+            </b>
+
+            <span>
+                Everyday Beauty
+            </span>
+
         </div>
 
     </div>
 
 </div>
+
 
 
 <div class="hero-image">
 
     <div class="gold-circle"></div>
 
+
     <div class="bottle">
 
         <div class="bottle-cap"></div>
 
+
         <div class="bottle-label">
 
-            <strong>LIARA</strong>
+            <strong>
+                LIARA
+            </strong>
 
-            <small>PROFESSIONAL™</small>
+            <small>
+                PROFESSIONAL™
+            </small>
 
-            <em>SKINCARE</em>
+            <em>
+                SKINCARE
+            </em>
 
         </div>
 
@@ -325,21 +441,27 @@
 
 </div>
 
+
 </section>
 
 
 
-<!-- =========================
+<!-- =====================================================
      ABOUT
-========================= -->
+===================================================== -->
 
 <section id="about" class="about">
 
+
 <div class="heading">
 
-    <p>ABOUT LIARA</p>
+    <p>
+        ABOUT LIARA
+    </p>
 
-    <h2>Beauty With Purpose</h2>
+    <h2>
+        Beauty With Purpose
+    </h2>
 
 </div>
 
@@ -357,31 +479,38 @@
             Liara Professional™
         </h3>
 
+
         <p>
+
             Liara Professional is a growing beauty,
             skincare and personal care brand focused
             on quality, innovation and everyday
             self-care.
+
         </p>
 
+
         <p>
+
             We aim to create thoughtfully developed
             products combining modern cosmetic
             knowledge with carefully selected
             ingredients.
+
         </p>
 
     </div>
 
 </div>
 
+
 </section>
 
 
 
-<!-- =========================
-     CEO
-========================= -->
+<!-- =====================================================
+     CEO / LEADERSHIP
+===================================================== -->
 
 <section id="leadership" class="ceo-section">
 
@@ -443,12 +572,12 @@
     </div>
 
 
+
     <div class="ceo-photo">
 
         <img
             src="maninder-bhullar.jpeg"
             alt="Maninder Bhullar - Founder & CEO"
-            onerror="this.style.display='none';"
         >
 
     </div>
@@ -460,11 +589,12 @@
 
 
 
-<!-- =========================
+<!-- =====================================================
      PRODUCTS
-========================= -->
+===================================================== -->
 
 <section id="products" class="products">
+
 
 <div class="heading">
 
@@ -484,20 +614,24 @@
     id="dynamicProducts">
 
     <div class="product-loading">
+
         Loading products...
+
     </div>
 
 </div>
+
 
 </section>
 
 
 
-<!-- =========================
+<!-- =====================================================
      WHY LIARA
-========================= -->
+===================================================== -->
 
 <section id="why-us" class="why">
+
 
 <div class="heading">
 
@@ -526,11 +660,14 @@
         </h3>
 
         <p>
+
             We focus on quality ingredients and
             consistent product development.
+
         </p>
 
     </div>
+
 
 
     <div class="why-card">
@@ -544,11 +681,14 @@
         </h3>
 
         <p>
+
             Modern cosmetic knowledge combined
             with thoughtful formulation.
+
         </p>
 
     </div>
+
 
 
     <div class="why-card">
@@ -562,8 +702,10 @@
         </h3>
 
         <p>
+
             Products designed for simple and
             enjoyable everyday personal care.
+
         </p>
 
     </div>
@@ -571,15 +713,17 @@
 
 </div>
 
+
 </section>
 
 
 
-<!-- =========================
+<!-- =====================================================
      CONTACT
-========================= -->
+===================================================== -->
 
 <section id="contact" class="contact">
+
 
 <div class="heading">
 
@@ -595,8 +739,10 @@
 
 
 <p>
+
     Have a question about Liara Professional?
     We'd love to hear from you.
+
 </p>
 
 
@@ -608,15 +754,17 @@
 
 </a>
 
+
 </section>
 
 
 
-<!-- =========================
+<!-- =====================================================
      FOOTER
-========================= -->
+===================================================== -->
 
 <footer>
+
 
 <div class="footer-brand">
 
@@ -630,8 +778,10 @@
 
 
 <p>
+
     © 2026 Liara Group Private Limited.
     All Rights Reserved.
+
 </p>
 
 
@@ -643,22 +793,23 @@
 
 </a>
 
+
 </footer>
 
 
 
-<!-- =========================
+<!-- =====================================================
      SUPABASE
-========================= -->
+===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
-/* =========================
+/* =====================================================
    SUPABASE CONNECTION
-========================= */
+===================================================== */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -674,9 +825,9 @@ window.supabase.createClient(
 );
 
 
-/* =========================
+/* =====================================================
    ESCAPE HTML
-========================= */
+===================================================== */
 
 function escapeHtml(value) {
 
@@ -690,9 +841,9 @@ function escapeHtml(value) {
 }
 
 
-/* =========================
+/* =====================================================
    LOAD PRODUCTS
-========================= */
+===================================================== */
 
 async function loadHomepageProducts() {
 
@@ -702,13 +853,17 @@ async function loadHomepageProducts() {
         );
 
 
-    if (!box) return;
+    if (!box) {
+        return;
+    }
 
 
     box.innerHTML = `
 
         <div class="product-loading">
+
             Loading products...
+
         </div>
 
     `;
@@ -716,27 +871,23 @@ async function loadHomepageProducts() {
 
     try {
 
-        const result =
-            await supabaseClient
-                .from("products")
-                .select("*")
-                .order(
-                    "created_at",
-                    {
-                        ascending: false
-                    }
-                );
+        /*
+         * IMPORTANT:
+         * No created_at ordering here.
+         * This avoids failure if that column
+         * does not exist in products table.
+         */
 
-
-        const data =
-            result.data;
-
-        const error =
-            result.error;
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("products")
+            .select("*");
 
 
         console.log(
-            "PRODUCT DATA:",
+            "LIARA PRODUCTS:",
             data
         );
 
@@ -744,7 +895,7 @@ async function loadHomepageProducts() {
         if (error) {
 
             console.error(
-                "PRODUCT ERROR:",
+                "LIARA PRODUCT ERROR:",
                 error
             );
 
@@ -796,11 +947,13 @@ async function loadHomepageProducts() {
             const productName =
                 product.name ||
                 product.product_name ||
+                product.title ||
                 "Liara Product";
 
 
             const description =
                 product.description ||
+                product.details ||
                 "Premium beauty and personal care product.";
 
 
@@ -812,7 +965,7 @@ async function loadHomepageProducts() {
 
             const stock =
                 Number(
-                    product.stock || 0
+                    product.stock ?? product.quantity ?? 1
                 );
 
 
@@ -821,6 +974,7 @@ async function loadHomepageProducts() {
                 product.photo_url ||
                 product.image ||
                 product.photo ||
+                product.product_image ||
                 "facewash.jpg";
 
 
@@ -841,26 +995,32 @@ async function loadHomepageProducts() {
                     <img
                         src="${escapeHtml(image)}"
                         alt="${escapeHtml(productName)}"
-                        onerror="this.src='facewash.jpg'"
+                        onerror="this.onerror=null; this.src='facewash.jpg';"
                     >
 
                 </div>
 
 
                 <h3>
+
                     ${escapeHtml(productName)}
+
                 </h3>
 
 
                 <p>
+
                     ${escapeHtml(description)}
+
                 </p>
 
 
                 <div class="dynamic-product-bottom">
 
                     <strong>
+
                         ₹${price.toLocaleString("en-IN")}
+
                     </strong>
 
 
@@ -872,6 +1032,7 @@ async function loadHomepageProducts() {
                         `
 
                         <button
+                            type="button"
                             class="btn product-buy-btn"
                             onclick="openProduct('${escapeHtml(productId)}')">
 
@@ -905,11 +1066,11 @@ async function loadHomepageProducts() {
 
     }
 
-    catch (err) {
+    catch (error) {
 
         console.error(
-            "PRODUCT SCRIPT ERROR:",
-            err
+            "LIARA SCRIPT ERROR:",
+            error
         );
 
 
@@ -917,7 +1078,7 @@ async function loadHomepageProducts() {
 
             <div class="product-loading">
 
-                Unable to load products.
+                Products could not be loaded.
 
                 <br><br>
 
@@ -932,9 +1093,9 @@ async function loadHomepageProducts() {
 }
 
 
-/* =========================
+/* =====================================================
    OPEN PRODUCT
-========================= */
+===================================================== */
 
 function openProduct(productId) {
 
@@ -950,9 +1111,9 @@ function openProduct(productId) {
 }
 
 
-/* =========================
+/* =====================================================
    START
-========================= */
+===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
