@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Liara Professional™ | Company Dashboard</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
 
 body{
     margin:0;
@@ -24,9 +17,7 @@ body{
     color:#222;
 }
 
-/* =========================================================
-   SIDEBAR
-========================================================= */
+/* ================= SIDEBAR ================= */
 
 .sidebar{
     width:245px;
@@ -107,9 +98,7 @@ body{
     padding-top:18px!important;
 }
 
-/* =========================================================
-   MAIN
-========================================================= */
+/* ================= MAIN ================= */
 
 .dashboard-main{
     margin-left:245px;
@@ -170,9 +159,7 @@ body{
     cursor:pointer;
 }
 
-/* =========================================================
-   SECTION
-========================================================= */
+/* ================= SECTIONS ================= */
 
 .admin-section{
     padding:30px 3%;
@@ -214,9 +201,7 @@ body{
     font-size:27px;
 }
 
-/* =========================================================
-   BUTTONS
-========================================================= */
+/* ================= BUTTONS ================= */
 
 .btn{
     border:0;
@@ -235,25 +220,12 @@ body{
     transform:translateY(-1px);
 }
 
-.green-btn{
-    background:#287a3e;
-}
+.green-btn{background:#287a3e}
+.green-btn:hover{background:#1d6330}
 
-.green-btn:hover{
-    background:#1d6330;
-}
-
-.red-btn{
-    background:#a33;
-}
-
-.gray-btn{
-    background:#666;
-}
-
-.blue-btn{
-    background:#345f91;
-}
+.red-btn{background:#a33}
+.gray-btn{background:#666}
+.blue-btn{background:#345f91}
 
 .outline-btn{
     background:#fff;
@@ -261,9 +233,7 @@ body{
     border:1px solid #ddd;
 }
 
-/* =========================================================
-   SUMMARY CARDS
-========================================================= */
+/* ================= CARDS ================= */
 
 .summary-grid{
     display:grid;
@@ -322,9 +292,7 @@ body{
     color:#a33;
 }
 
-/* =========================================================
-   FILTERS
-========================================================= */
+/* ================= FILTER ================= */
 
 .filter-panel{
     display:flex;
@@ -367,9 +335,7 @@ body{
     min-width:250px;
 }
 
-/* =========================================================
-   TABLE
-========================================================= */
+/* ================= TABLE ================= */
 
 .table-wrapper{
     width:100%;
@@ -392,7 +358,6 @@ body{
     text-align:left;
     white-space:nowrap;
     font-size:11px;
-    letter-spacing:.3px;
 }
 
 .data-table td{
@@ -409,18 +374,10 @@ body{
     background:#fffdf9;
 }
 
-.product-name{
-    font-weight:bold;
-}
+.product-name{font-weight:bold}
+.total{color:#287a3e;font-weight:bold}
 
-.total{
-    color:#287a3e;
-    font-weight:bold;
-}
-
-/* =========================================================
-   BADGES
-========================================================= */
+/* ================= BADGES ================= */
 
 .badge{
     display:inline-block;
@@ -431,30 +388,11 @@ body{
     white-space:nowrap;
 }
 
-.badge-green{
-    background:#e8f3e9;
-    color:#287a3e;
-}
-
-.badge-gold{
-    background:#f8f0dd;
-    color:#987329;
-}
-
-.badge-red{
-    background:#f7dddd;
-    color:#a33;
-}
-
-.badge-blue{
-    background:#e7eef8;
-    color:#345f91;
-}
-
-.badge-gray{
-    background:#eee;
-    color:#666;
-}
+.badge-green{background:#e8f3e9;color:#287a3e}
+.badge-gold{background:#f8f0dd;color:#987329}
+.badge-red{background:#f7dddd;color:#a33}
+.badge-blue{background:#e7eef8;color:#345f91}
+.badge-gray{background:#eee;color:#666}
 
 .payment-badge{
     background:#f3eee5;
@@ -464,9 +402,7 @@ body{
     font-size:10px;
 }
 
-/* =========================================================
-   ACTION BUTTON
-========================================================= */
+/* ================= ACTION ================= */
 
 .table-btn{
     border:0;
@@ -477,29 +413,12 @@ body{
     font-weight:bold;
 }
 
-.view-btn{
-    background:#211d18;
-    color:#fff;
-}
+.view-btn{background:#211d18;color:#fff}
+.edit-btn{background:#e8f2e9;color:#287a3e}
+.delete-btn{background:#f7dddd;color:#a33}
+.print-btn{background:#eee;color:#444}
 
-.edit-btn{
-    background:#e8f2e9;
-    color:#287a3e;
-}
-
-.delete-btn{
-    background:#f7dddd;
-    color:#a33;
-}
-
-.print-btn{
-    background:#eee;
-    color:#444;
-}
-
-/* =========================================================
-   MESSAGE
-========================================================= */
+/* ================= MESSAGE ================= */
 
 .message{
     text-align:center;
@@ -508,36 +427,9 @@ body{
     font-weight:bold;
 }
 
-.error{
-    color:#a33;
-}
+.error{color:#a33}
 
-/* =========================================================
-   ORDER TOOLBAR
-========================================================= */
-
-.order-toolbar{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-bottom:18px;
-}
-
-/* =========================================================
-   STATUS SELECT
-========================================================= */
-
-.status-select{
-    padding:7px 8px;
-    border:1px solid #ddd;
-    border-radius:7px;
-    font-size:11px;
-    background:#fff;
-}
-
-/* =========================================================
-   STOCK
-========================================================= */
+/* ================= STOCK ================= */
 
 .stock-cards{
     display:grid;
@@ -571,24 +463,11 @@ body{
     border-radius:7px;
 }
 
-.stock-ok{
-    color:#287a3e;
-    font-weight:bold;
-}
+.stock-ok{color:#287a3e;font-weight:bold}
+.stock-low{color:#ad8232;font-weight:bold}
+.stock-out{color:#b22;font-weight:bold}
 
-.stock-low{
-    color:#ad8232;
-    font-weight:bold;
-}
-
-.stock-out{
-    color:#b22;
-    font-weight:bold;
-}
-
-/* =========================================================
-   PRODUCTS
-========================================================= */
+/* ================= PRODUCTS ================= */
 
 .product-grid{
     display:grid;
@@ -616,9 +495,7 @@ body{
     background:#f5f2ed;
 }
 
-.product-card-body{
-    padding:16px;
-}
+.product-card-body{padding:16px}
 
 .product-card h3{
     margin:0 0 7px;
@@ -659,9 +536,7 @@ body{
     font-size:11px;
 }
 
-/* =========================================================
-   FORM
-========================================================= */
+/* ================= FORMS ================= */
 
 .form-grid{
     display:grid;
@@ -669,13 +544,9 @@ body{
     gap:18px;
 }
 
-.form-group{
-    margin-bottom:15px;
-}
+.form-group{margin-bottom:15px}
 
-.form-group.full{
-    grid-column:1/-1;
-}
+.form-group.full{grid-column:1/-1}
 
 .form-group label{
     display:block;
@@ -708,9 +579,7 @@ body{
     background:#fffdf9;
 }
 
-.upload-box input{
-    margin-top:12px;
-}
+.upload-box input{margin-top:12px}
 
 .photo-preview{
     margin-top:15px;
@@ -725,9 +594,7 @@ body{
     border:1px solid #ddd;
 }
 
-/* =========================================================
-   ANALYTICS
-========================================================= */
+/* ================= ANALYTICS ================= */
 
 .analytics-grid{
     display:grid;
@@ -750,18 +617,230 @@ body{
 .stat-row{
     display:flex;
     justify-content:space-between;
+    gap:15px;
     padding:11px 0;
     border-bottom:1px solid #eee;
     font-size:13px;
 }
 
-.stat-row:last-child{
+.stat-row:last-child{border-bottom:0}
+
+/* ================= SETTINGS ================= */
+
+.settings-layout{
+    display:grid;
+    grid-template-columns:235px 1fr;
+    gap:20px;
+}
+
+.settings-nav{
+    background:#faf8f5;
+    border:1px solid #ebe6de;
+    border-radius:14px;
+    padding:10px;
+    height:max-content;
+    position:sticky;
+    top:100px;
+}
+
+.settings-nav button{
+    width:100%;
+    border:0;
+    background:transparent;
+    padding:12px 13px;
+    text-align:left;
+    border-radius:8px;
+    cursor:pointer;
+    color:#555;
+    font-size:12px;
+    margin-bottom:3px;
+}
+
+.settings-nav button:hover{
+    background:#f0ebe2;
+}
+
+.settings-nav button.active{
+    background:#ad8232;
+    color:#fff;
+}
+
+.settings-panel{
+    display:none;
+}
+
+.settings-panel.active{
+    display:block;
+}
+
+.settings-card{
+    background:#fff;
+    border:1px solid #ece8e1;
+    border-radius:14px;
+    padding:22px;
+    margin-bottom:18px;
+}
+
+.settings-card h3{
+    margin:0 0 5px;
+    font-size:18px;
+}
+
+.settings-card > p{
+    margin:0 0 20px;
+    color:#888;
+    font-size:12px;
+}
+
+.settings-form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.settings-field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.settings-field.full{
+    grid-column:1/-1;
+}
+
+.settings-field label{
+    font-size:11px;
+    color:#666;
+    font-weight:bold;
+}
+
+.settings-field input,
+.settings-field select,
+.settings-field textarea{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    outline:none;
+    font-family:inherit;
+    background:#fff;
+}
+
+.settings-field textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.switch-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    padding:14px 0;
+    border-bottom:1px solid #eee;
+}
+
+.switch-row:last-child{
     border-bottom:0;
 }
 
-/* =========================================================
-   MODAL
-========================================================= */
+.switch-info strong{
+    display:block;
+    font-size:13px;
+}
+
+.switch-info small{
+    display:block;
+    color:#888;
+    font-size:11px;
+    margin-top:4px;
+}
+
+.switch{
+    position:relative;
+    width:45px;
+    height:24px;
+    flex:0 0 auto;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#ccc;
+    border-radius:30px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.slider:before{
+    content:"";
+    position:absolute;
+    width:18px;
+    height:18px;
+    left:3px;
+    top:3px;
+    background:#fff;
+    border-radius:50%;
+    transition:.2s;
+}
+
+.switch input:checked + .slider{
+    background:#ad8232;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(21px);
+}
+
+.settings-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
+
+.settings-status{
+    padding:10px 13px;
+    border-radius:8px;
+    background:#e8f3e9;
+    color:#287a3e;
+    font-size:12px;
+    font-weight:bold;
+    display:none;
+    margin-top:12px;
+}
+
+.system-status{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px;
+    background:#f7faf7;
+    border:1px solid #dfece1;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.status-dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#287a3e;
+}
+
+.status-dot.offline{
+    background:#a33;
+}
+
+.status-dot.warning{
+    background:#ad8232;
+}
+
+/* ================= MODAL ================= */
 
 .modal{
     display:none;
@@ -791,9 +870,7 @@ body{
     margin-bottom:20px;
 }
 
-.modal-top h2{
-    margin:0;
-}
+.modal-top h2{margin:0}
 
 .close-modal{
     border:0;
@@ -847,9 +924,7 @@ body{
     margin-bottom:4px;
 }
 
-.detail-item strong{
-    font-size:13px;
-}
+.detail-item strong{font-size:13px}
 
 .detail-total{
     border-top:2px solid #211d18;
@@ -868,13 +943,9 @@ body{
     margin-top:20px;
 }
 
-/* =========================================================
-   PRINT
-========================================================= */
+/* ================= PRINT ================= */
 
-#printArea{
-    display:none;
-}
+#printArea{display:none}
 
 @media print{
 
@@ -992,13 +1063,9 @@ body{
     }
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* ================= MOBILE ================= */
 
-.sidebar-overlay{
-    display:none;
-}
+.sidebar-overlay{display:none}
 
 @media(max-width:1100px){
 
@@ -1010,6 +1077,16 @@ body{
         grid-template-columns:repeat(2,1fr);
     }
 
+    .settings-layout{
+        grid-template-columns:1fr;
+    }
+
+    .settings-nav{
+        position:static;
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:4px;
+    }
 }
 
 @media(max-width:800px){
@@ -1044,14 +1121,15 @@ body{
         grid-template-columns:1fr;
     }
 
-    .form-grid{
+    .form-grid,
+    .settings-form{
         grid-template-columns:1fr;
     }
 
-    .form-group.full{
+    .form-group.full,
+    .settings-field.full{
         grid-column:auto;
     }
-
 }
 
 @media(max-width:600px){
@@ -1087,16 +1165,20 @@ body{
         min-width:100%;
     }
 
-}
+    .settings-nav{
+        grid-template-columns:1fr;
+    }
 
+    .admin-pill{
+        display:none;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<!-- =========================================================
-     SIDEBAR
-========================================================= -->
+<!-- ================= SIDEBAR ================= -->
 
 <aside class="sidebar" id="sidebar">
 
@@ -1109,76 +1191,33 @@ body{
 
     <div class="side-menu">
 
-        <button class="active" onclick="showSection('orders',this)">
-            🛒 Orders
-        </button>
+        <button class="active" onclick="showSection('orders',this)">🛒 Orders</button>
+        <button onclick="showSection('sales',this)">💰 Sales</button>
+        <button onclick="showSection('stock',this)">📦 Stock</button>
+        <button onclick="showSection('products',this)">🧴 Products</button>
+        <button onclick="showSection('add-product',this)">➕ Add Product</button>
+        <button onclick="showSection('customers',this)">👥 Customers</button>
+        <button onclick="showSection('delivery',this)">🚚 Delivery</button>
+        <button onclick="showSection('reports',this)">📊 Reports</button>
+        <button onclick="showSection('notifications',this)">🔔 Notifications</button>
+        <button onclick="showSection('settings',this)">⚙️ Settings</button>
 
-        <button onclick="showSection('sales',this)">
-            💰 Sales
-        </button>
-
-        <button onclick="showSection('stock',this)">
-            📦 Stock
-        </button>
-
-        <button onclick="showSection('products',this)">
-            🧴 Products
-        </button>
-
-        <button onclick="showSection('add-product',this)">
-            ➕ Add Product
-        </button>
-
-        <button onclick="showSection('customers',this)">
-            👥 Customers
-        </button>
-
-        <button onclick="showSection('delivery',this)">
-            🚚 Delivery
-        </button>
-
-        <button onclick="showSection('reports',this)">
-            📊 Reports
-        </button>
-
-        <button onclick="showSection('notifications',this)">
-            🔔 Notifications
-        </button>
-
-        <button onclick="showSection('settings',this)">
-            ⚙️ Settings
-        </button>
-
-        <button class="logout-side" onclick="logoutAdmin()">
-            🚪 Logout
-        </button>
+        <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
 
     </div>
-
 </aside>
 
-<div
-    class="sidebar-overlay"
-    id="sidebarOverlay"
-    onclick="closeSidebar()">
-</div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-
-<!-- =========================================================
-     MAIN
-========================================================= -->
+<!-- ================= MAIN ================= -->
 
 <main class="dashboard-main">
 
 <header class="dashboard-header">
 
-    <div style="display:flex;align-items:center">
+    <div style="display:flex;align-items:center;gap:12px">
 
-        <button
-            class="mobile-menu-btn"
-            onclick="openSidebar()">
-            ☰
-        </button>
+        <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
 
         <div class="logo">
             LIARA
@@ -1193,24 +1232,15 @@ body{
             👤 Company Admin
         </div>
 
-        <button
-            class="btn"
-            onclick="logoutAdmin()">
-            Logout
-        </button>
+        <button class="btn" onclick="logoutAdmin()">Logout</button>
 
     </div>
 
 </header>
 
+<!-- ================= ORDERS ================= -->
 
-<!-- =========================================================
-     ORDERS
-========================================================= -->
-
-<section
-    class="admin-section"
-    id="orders-section">
+<section class="admin-section" id="orders-section">
 
 <div class="admin-container">
 
@@ -1223,14 +1253,9 @@ body{
         <h2>Orders Management</h2>
     </div>
 
-    <button
-        class="btn"
-        onclick="loadOrders()">
-        🔄 Refresh
-    </button>
+    <button class="btn" onclick="loadOrders()">🔄 Refresh</button>
 
 </div>
-
 
 <div class="summary-grid">
 
@@ -1260,29 +1285,20 @@ body{
 
 </div>
 
-
 <div class="filter-panel">
 
     <div class="filter-field">
-
         <label>SEARCH</label>
-
-        <input
-            class="search-input"
-            id="orderSearch"
-            placeholder="Customer, mobile, product, order ID..."
-            oninput="applyOrderFilters()">
-
+        <input class="search-input"
+               id="orderSearch"
+               placeholder="Customer, mobile, product, order ID..."
+               oninput="applyOrderFilters()">
     </div>
 
     <div class="filter-field">
-
         <label>STATUS</label>
 
-        <select
-            id="orderStatusFilter"
-            onchange="applyOrderFilters()">
-
+        <select id="orderStatusFilter" onchange="applyOrderFilters()">
             <option value="">All Status</option>
             <option value="pending">Pending</option>
             <option value="confirmed">Confirmed</option>
@@ -1290,81 +1306,44 @@ body{
             <option value="shipped">Shipped</option>
             <option value="delivered">Delivered</option>
             <option value="cancelled">Cancelled</option>
-
         </select>
-
     </div>
 
     <div class="filter-field">
-
         <label>FROM</label>
-
-        <input
-            type="date"
-            id="orderFrom"
-            onchange="applyOrderFilters()">
-
+        <input type="date" id="orderFrom" onchange="applyOrderFilters()">
     </div>
 
     <div class="filter-field">
-
         <label>TO</label>
-
-        <input
-            type="date"
-            id="orderTo"
-            onchange="applyOrderFilters()">
-
+        <input type="date" id="orderTo" onchange="applyOrderFilters()">
     </div>
 
-    <button
-        class="btn gray-btn"
-        onclick="clearOrderFilters()">
-        Clear Filters
-    </button>
+    <button class="btn gray-btn" onclick="clearOrderFilters()">Clear Filters</button>
 
 </div>
 
-
 <div id="orders">
-
-    <div class="message">
-        Loading customer orders...
-    </div>
-
+    <div class="message">Loading customer orders...</div>
 </div>
 
 </div>
 </div>
 </section>
 
+<!-- ================= OTHER SECTIONS ================= -->
 
-<!-- =========================================================
-     OTHER SECTIONS
-========================================================= -->
+<section class="admin-section" id="other-section" style="display:none">
 
-<section
-    class="admin-section"
-    id="other-section"
-    style="display:none">
-
-    <div
-        class="admin-container"
-        id="other-content">
-    </div>
+    <div class="admin-container" id="other-content"></div>
 
 </section>
 
 </main>
 
+<!-- ================= ORDER MODAL ================= -->
 
-<!-- =========================================================
-     ORDER MODAL
-========================================================= -->
-
-<div
-    class="modal"
-    id="orderModal">
+<div class="modal" id="orderModal">
 
     <div class="modal-box">
 
@@ -1372,11 +1351,7 @@ body{
 
             <h2>Order Details</h2>
 
-            <button
-                class="close-modal"
-                onclick="closeOrderModal()">
-                ×
-            </button>
+            <button class="close-modal" onclick="closeOrderModal()">×</button>
 
         </div>
 
@@ -1384,42 +1359,25 @@ body{
 
         <div class="modal-actions">
 
-            <button
-                class="btn gray-btn"
-                onclick="closeOrderModal()">
-                Close
-            </button>
+            <button class="btn gray-btn" onclick="closeOrderModal()">Close</button>
 
-            <button
-                class="btn"
-                onclick="printCurrentOrder()">
-                🖨️ Print A4
-            </button>
+            <button class="btn" onclick="printCurrentOrder()">🖨️ Print A4</button>
 
         </div>
 
     </div>
-
 </div>
-
-
-<!-- =========================================================
-     PRINT AREA
-========================================================= -->
 
 <div id="printArea"></div>
 
-
-<!-- =========================================================
-     SUPABASE
-========================================================= -->
+<!-- ================= SUPABASE ================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 /* =========================================================
-   SUPABASE
+   SUPABASE — EXISTING SETUP KEPT SAME
 ========================================================= */
 
 const SUPABASE_URL =
@@ -1444,9 +1402,169 @@ let allOrders = [];
 let allProducts = [];
 let currentOrder = null;
 
+/* =========================================================
+   SETTINGS STORAGE
+========================================================= */
+
+const SETTINGS_KEY = "liara_professional_admin_settings";
+
+const DEFAULT_SETTINGS = {
+
+    profile:{
+        name:"Company Admin",
+        phone:"",
+        role:"Company Administrator"
+    },
+
+    company:{
+        name:"Liara Group Private Limited",
+        brand:"Liara Professional™",
+        gst:"",
+        email:"info@liara.co.in",
+        phone:"",
+        website:"liara.co.in",
+        address:"",
+        city:"",
+        state:"Punjab",
+        pincode:""
+    },
+
+    orders:{
+        prefix:"LIARA",
+        autoStatus:"Pending",
+        allowCancel:true,
+        allowReturn:true,
+        orderNotes:"",
+        defaultPayment:"COD"
+    },
+
+    sales:{
+        currency:"INR",
+        taxEnabled:true,
+        gstRate:18,
+        discountEnabled:true,
+        shippingEnabled:true,
+        shippingCharge:0,
+        freeShippingAbove:0
+    },
+
+    notifications:{
+        newOrder:true,
+        lowStock:true,
+        cancelledOrder:true,
+        deliveredOrder:true,
+        payment:true
+    },
+
+    website:{
+        storeName:"Liara Professional™",
+        tagline:"Beauty • Skincare • Personal Care",
+        supportEmail:"info@liara.co.in",
+        supportPhone:"",
+        maintenance:false
+    },
+
+    checkout:{
+        guestCheckout:true,
+        cod:true,
+        onlinePayment:false,
+        minimumOrder:0,
+        requirePhone:true,
+        requireAddress:true
+    },
+
+    invoice:{
+        prefix:"LIARA-INV",
+        footer:"Thank you for choosing Liara Professional™.",
+        showGST:true,
+        showCompanyAddress:true,
+        showPayment:true
+    }
+
+};
+
+function getSettings(){
+
+    try{
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem(SETTINGS_KEY)
+            );
+
+        return deepMerge(
+            JSON.parse(JSON.stringify(DEFAULT_SETTINGS)),
+            saved || {}
+        );
+
+    }catch(error){
+
+        return JSON.parse(
+            JSON.stringify(DEFAULT_SETTINGS)
+        );
+
+    }
+
+}
+
+function deepMerge(target,source){
+
+    if(!source) return target;
+
+    Object.keys(source).forEach(key=>{
+
+        if(
+            source[key] &&
+            typeof source[key] === "object" &&
+            !Array.isArray(source[key]) &&
+            target[key]
+        ){
+
+            deepMerge(
+                target[key],
+                source[key]
+            );
+
+        }else{
+
+            target[key] = source[key];
+
+        }
+
+    });
+
+    return target;
+
+}
+
+function saveSettingsObject(settings){
+
+    localStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify(settings)
+    );
+
+}
+
+function resetSettings(){
+
+    const yes =
+        confirm(
+            "Reset all dashboard settings to default?"
+        );
+
+    if(!yes) return;
+
+    localStorage.removeItem(SETTINGS_KEY);
+
+    loadSettings();
+
+    alert("Settings reset successfully.");
+
+}
 
 /* =========================================================
-   BASIC HELPERS
+   HELPERS
 ========================================================= */
 
 function money(value){
@@ -1456,7 +1574,6 @@ function money(value){
         .toLocaleString("en-IN");
 
 }
-
 
 function escapeHtml(value){
 
@@ -1468,7 +1585,6 @@ function escapeHtml(value){
         .replace(/'/g,"&#039;");
 
 }
-
 
 function shortOrderId(id){
 
@@ -1482,7 +1598,6 @@ function shortOrderId(id){
 
 }
 
-
 function productName(order){
 
     return order.product_name ||
@@ -1493,7 +1608,6 @@ function productName(order){
            "Product";
 
 }
-
 
 function productPrice(order){
 
@@ -1514,7 +1628,6 @@ function productPrice(order){
 
 }
 
-
 function payment(order){
 
     return order.payment_status ||
@@ -1523,7 +1636,6 @@ function payment(order){
            "Pending";
 
 }
-
 
 /* =========================================================
    MENU
@@ -1555,51 +1667,20 @@ function showSection(section,button){
         ? "none"
         : "block";
 
-
-    if(section === "orders"){
-        loadOrders();
-    }
-
-    else if(section === "sales"){
-        loadSales();
-    }
-
-    else if(section === "stock"){
-        loadStock();
-    }
-
-    else if(section === "products"){
-        loadProducts();
-    }
-
-    else if(section === "add-product"){
-        showAddProduct();
-    }
-
-    else if(section === "customers"){
-        loadCustomers();
-    }
-
-    else if(section === "delivery"){
-        loadDelivery();
-    }
-
-    else if(section === "reports"){
-        loadReports();
-    }
-
-    else if(section === "notifications"){
-        loadNotifications();
-    }
-
-    else if(section === "settings"){
-        loadSettings();
-    }
+    if(section === "orders") loadOrders();
+    else if(section === "sales") loadSales();
+    else if(section === "stock") loadStock();
+    else if(section === "products") loadProducts();
+    else if(section === "add-product") showAddProduct();
+    else if(section === "customers") loadCustomers();
+    else if(section === "delivery") loadDelivery();
+    else if(section === "reports") loadReports();
+    else if(section === "notifications") loadNotifications();
+    else if(section === "settings") loadSettings();
 
     closeSidebar();
 
 }
-
 
 /* =========================================================
    MOBILE
@@ -1615,7 +1696,6 @@ function openSidebar(){
 
 }
 
-
 function closeSidebar(){
 
     document.getElementById("sidebar")
@@ -1625,7 +1705,6 @@ function closeSidebar(){
         .classList.remove("show");
 
 }
-
 
 /* =========================================================
    ADMIN CHECK
@@ -1638,12 +1717,7 @@ async function checkAdmin(){
         .auth
         .getUser();
 
-
-    if(
-        error ||
-        !data ||
-        !data.user
-    ){
+    if(error || !data || !data.user){
 
         window.location.href =
             "company-login.html";
@@ -1651,7 +1725,6 @@ async function checkAdmin(){
         return null;
 
     }
-
 
     if(
         !data.user.email ||
@@ -1666,11 +1739,9 @@ async function checkAdmin(){
 
     }
 
-
     return data.user;
 
 }
-
 
 /* =========================================================
    ORDERS
@@ -1687,12 +1758,10 @@ async function loadOrders(){
         </div>
     `;
 
-
     const user =
         await checkAdmin();
 
     if(!user) return;
-
 
     const {data,error} =
         await supabaseClient
@@ -1702,7 +1771,6 @@ async function loadOrders(){
             "created_at",
             {ascending:false}
         );
-
 
     if(error){
 
@@ -1718,15 +1786,12 @@ async function loadOrders(){
 
     }
 
-
     allOrders = data || [];
 
     updateOrderSummary(allOrders);
-
     renderOrders(allOrders);
 
 }
-
 
 function updateOrderSummary(orders){
 
@@ -1734,24 +1799,18 @@ function updateOrderSummary(orders){
     let active = 0;
     let delivered = 0;
 
-
     orders.forEach(order=>{
 
-        sales += Number(
-            order.total || 0
-        );
-
+        sales += Number(order.total || 0);
 
         const status =
             String(
                 order.status || "Pending"
             ).toLowerCase();
 
-
         if(status === "delivered"){
             delivered++;
         }
-
 
         if([
             "pending",
@@ -1767,32 +1826,19 @@ function updateOrderSummary(orders){
 
     });
 
-
-    document.getElementById(
-        "totalOrders"
-    ).innerText =
+    document.getElementById("totalOrders").innerText =
         orders.length;
 
-
-    document.getElementById(
-        "totalSales"
-    ).innerText =
+    document.getElementById("totalSales").innerText =
         money(sales);
 
-
-    document.getElementById(
-        "pendingOrders"
-    ).innerText =
+    document.getElementById("pendingOrders").innerText =
         active;
 
-
-    document.getElementById(
-        "deliveredOrders"
-    ).innerText =
+    document.getElementById("deliveredOrders").innerText =
         delivered;
 
 }
-
 
 /* =========================================================
    ORDER FILTER
@@ -1807,130 +1853,93 @@ function applyOrderFilters(){
         .toLowerCase()
         .trim();
 
-
     const status =
         document.getElementById(
             "orderStatusFilter"
         ).value
         .toLowerCase();
 
-
     const from =
-        document.getElementById(
-            "orderFrom"
-        ).value;
-
+        document.getElementById("orderFrom").value;
 
     const to =
-        document.getElementById(
-            "orderTo"
-        ).value;
+        document.getElementById("orderTo").value;
 
+    let filtered = [...allOrders];
 
-    let filtered =
-        [...allOrders];
+    filtered = filtered.filter(order=>{
 
+        const text =
+            [
+                order.customer_name,
+                order.name,
+                order.phone,
+                order.mobile,
+                productName(order),
+                shortOrderId(order.id)
+            ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
 
-    filtered =
-        filtered.filter(order=>{
+        if(search && !text.includes(search)){
+            return false;
+        }
 
-            const text =
-                [
-                    order.customer_name,
-                    order.name,
-                    order.phone,
-                    order.mobile,
-                    productName(order),
-                    shortOrderId(order.id)
-                ]
-                .filter(Boolean)
-                .join(" ")
-                .toLowerCase();
+        const orderStatus =
+            String(
+                order.status || "pending"
+            ).toLowerCase();
 
+        if(status && orderStatus !== status){
+            return false;
+        }
+
+        if(from && order.created_at){
 
             if(
-                search &&
-                !text.includes(search)
+                new Date(order.created_at)
+                <
+                new Date(from+"T00:00:00")
             ){
                 return false;
             }
 
+        }
 
-            const orderStatus =
-                String(
-                    order.status || "pending"
-                ).toLowerCase();
-
+        if(to && order.created_at){
 
             if(
-                status &&
-                orderStatus !== status
+                new Date(order.created_at)
+                >
+                new Date(to+"T23:59:59")
             ){
                 return false;
             }
 
+        }
 
-            if(from && order.created_at){
+        return true;
 
-                if(
-                    new Date(order.created_at)
-                    <
-                    new Date(from+"T00:00:00")
-                ){
-                    return false;
-                }
-
-            }
-
-
-            if(to && order.created_at){
-
-                if(
-                    new Date(order.created_at)
-                    >
-                    new Date(to+"T23:59:59")
-                ){
-                    return false;
-                }
-
-            }
-
-
-            return true;
-
-        });
-
+    });
 
     renderOrders(filtered);
 
 }
 
-
 function clearOrderFilters(){
 
-    document.getElementById(
-        "orderSearch"
-    ).value = "";
-
-    document.getElementById(
-        "orderStatusFilter"
-    ).value = "";
-
-    document.getElementById(
-        "orderFrom"
-    ).value = "";
-
-    document.getElementById(
-        "orderTo"
-    ).value = "";
+    document.getElementById("orderSearch").value = "";
+    document.getElementById("orderStatusFilter").value = "";
+    document.getElementById("orderFrom").value = "";
+    document.getElementById("orderTo").value = "";
 
     renderOrders(allOrders);
 
 }
 
-
 /* =========================================================
-   STATUS BADGE
+   STATUS
 ========================================================= */
 
 function statusBadge(status){
@@ -1941,26 +1950,20 @@ function statusBadge(status){
     const lower =
         s.toLowerCase();
 
-
-    let cls =
-        "badge-gold";
-
+    let cls = "badge-gold";
 
     if(lower === "delivered"){
         cls = "badge-green";
     }
-
     else if(lower === "cancelled"){
         cls = "badge-red";
     }
-
     else if(
         lower === "shipped" ||
         lower === "packed"
     ){
         cls = "badge-blue";
     }
-
 
     return `
         <span class="badge ${cls}">
@@ -1970,7 +1973,6 @@ function statusBadge(status){
 
 }
 
-
 /* =========================================================
    RENDER ORDERS
 ========================================================= */
@@ -1979,7 +1981,6 @@ function renderOrders(orders){
 
     const box =
         document.getElementById("orders");
-
 
     if(!orders.length){
 
@@ -1993,17 +1994,11 @@ function renderOrders(orders){
 
     }
 
-
     let html = `
-
     <div class="table-wrapper">
-
     <table class="data-table">
-
     <thead>
-
     <tr>
-
         <th>ORDER ID</th>
         <th>DATE</th>
         <th>CUSTOMER</th>
@@ -2014,15 +2009,10 @@ function renderOrders(orders){
         <th>PAYMENT</th>
         <th>STATUS</th>
         <th>ACTION</th>
-
     </tr>
-
     </thead>
-
     <tbody>
-
     `;
-
 
     orders.forEach(order=>{
 
@@ -2033,38 +2023,26 @@ function renderOrders(orders){
               ).toLocaleString("en-IN")
             : "-";
 
-
         const customer =
             order.customer_name ||
             order.name ||
             "-";
-
 
         const phone =
             order.phone ||
             order.mobile ||
             "-";
 
-
         const qty =
-            Number(
-                order.quantity || 1
-            );
-
+            Number(order.quantity || 1);
 
         const total =
-            Number(
-                order.total || 0
-            );
-
+            Number(order.total || 0);
 
         const status =
-            order.status ||
-            "Pending";
-
+            order.status || "Pending";
 
         html += `
-
         <tr>
 
             <td>
@@ -2075,37 +2053,23 @@ function renderOrders(orders){
                 </strong>
             </td>
 
-            <td>
-                ${escapeHtml(date)}
-            </td>
+            <td>${escapeHtml(date)}</td>
 
-            <td>
-                ${escapeHtml(customer)}
-            </td>
+            <td>${escapeHtml(customer)}</td>
 
-            <td>
-                ${escapeHtml(phone)}
-            </td>
+            <td>${escapeHtml(phone)}</td>
 
             <td class="product-name">
-                ${escapeHtml(
-                    productName(order)
-                )}
+                ${escapeHtml(productName(order))}
             </td>
 
-            <td>
-                ${qty}
-            </td>
+            <td>${qty}</td>
 
-            <td class="total">
-                ${money(total)}
-            </td>
+            <td class="total">${money(total)}</td>
 
             <td>
                 <span class="payment-badge">
-                    ${escapeHtml(
-                        payment(order)
-                    )}
+                    ${escapeHtml(payment(order))}
                 </span>
             </td>
 
@@ -2131,19 +2095,15 @@ function renderOrders(orders){
                     onclick="viewOrder(
                         '${escapeHtml(String(order.id))}'
                     )">
-
                     👁 View
-
                 </button>
 
             </td>
 
         </tr>
-
         `;
 
     });
-
 
     html += `
     </tbody>
@@ -2151,11 +2111,9 @@ function renderOrders(orders){
     </div>
     `;
 
-
     box.innerHTML = html;
 
 }
-
 
 function statusOptions(current){
 
@@ -2168,15 +2126,16 @@ function statusOptions(current){
         "Cancelled"
     ];
 
-
     return statuses.map(status=>`
 
         <option
             value="${status}"
-            ${String(current).toLowerCase()
+            ${
+                String(current).toLowerCase()
                 === status.toLowerCase()
                 ? "selected"
-                : ""}>
+                : ""
+            }>
 
             ${status}
 
@@ -2185,7 +2144,6 @@ function statusOptions(current){
     `).join("");
 
 }
-
 
 /* =========================================================
    UPDATE ORDER STATUS
@@ -2200,7 +2158,6 @@ async function updateOrderStatus(id,status){
             "?"
         );
 
-
     if(!yes){
 
         renderOrders(allOrders);
@@ -2209,7 +2166,6 @@ async function updateOrderStatus(id,status){
 
     }
 
-
     const {error} =
         await supabaseClient
         .from("orders")
@@ -2217,7 +2173,6 @@ async function updateOrderStatus(id,status){
             status:status
         })
         .eq("id",id);
-
 
     if(error){
 
@@ -2230,7 +2185,6 @@ async function updateOrderStatus(id,status){
 
     }
 
-
     const found =
         allOrders.find(
             order =>
@@ -2238,23 +2192,18 @@ async function updateOrderStatus(id,status){
             === String(id)
         );
 
-
     if(found){
         found.status = status;
     }
 
-
     updateOrderSummary(allOrders);
-
     applyOrderFilters();
-
 
     alert(
         "Order status updated successfully."
     );
 
 }
-
 
 /* =========================================================
    VIEW ORDER
@@ -2269,18 +2218,14 @@ function viewOrder(id){
             === String(id)
         );
 
-
     if(!order){
 
         alert("Order not found.");
-
         return;
 
     }
 
-
     currentOrder = order;
-
 
     const date =
         order.created_at
@@ -2289,18 +2234,15 @@ function viewOrder(id){
           ).toLocaleString("en-IN")
         : "-";
 
-
     const customer =
         order.customer_name ||
         order.name ||
         "-";
 
-
     const phone =
         order.phone ||
         order.mobile ||
         "-";
-
 
     const address =
         order.address ||
@@ -2308,35 +2250,23 @@ function viewOrder(id){
         order.delivery_address ||
         "-";
 
-
     const product =
         productName(order);
 
-
     const qty =
-        Number(
-            order.quantity || 1
-        );
-
+        Number(order.quantity || 1);
 
     const price =
         productPrice(order);
 
-
     const total =
-        Number(
-            order.total || 0
-        );
-
+        Number(order.total || 0);
 
     const pay =
         payment(order);
 
-
     const status =
-        order.status ||
-        "Pending";
-
+        order.status || "Pending";
 
     document.getElementById(
         "orderDetailContent"
@@ -2362,10 +2292,7 @@ function viewOrder(id){
 
             <br>
 
-            <span
-                style="
-                    color:#ad8232;
-                    font-weight:bold;">
+            <span style="color:#ad8232;font-weight:bold">
                 ${escapeHtml(
                     shortOrderId(order.id)
                 )}
@@ -2375,67 +2302,51 @@ function viewOrder(id){
 
     </div>
 
-
     <div class="detail-grid">
 
         <div class="detail-item">
             <span>ORDER DATE</span>
-            <strong>
-                ${escapeHtml(date)}
-            </strong>
+            <strong>${escapeHtml(date)}</strong>
         </div>
 
         <div class="detail-item">
             <span>ORDER STATUS</span>
-            <strong>
-                ${statusBadge(status)}
-            </strong>
+            <strong>${statusBadge(status)}</strong>
         </div>
 
         <div class="detail-item">
             <span>CUSTOMER NAME</span>
-            <strong>
-                ${escapeHtml(customer)}
-            </strong>
+            <strong>${escapeHtml(customer)}</strong>
         </div>
 
         <div class="detail-item">
             <span>MOBILE</span>
-            <strong>
-                ${escapeHtml(phone)}
-            </strong>
+            <strong>${escapeHtml(phone)}</strong>
         </div>
 
         <div class="detail-item">
             <span>PAYMENT</span>
-            <strong>
-                ${escapeHtml(pay)}
-            </strong>
+            <strong>${escapeHtml(pay)}</strong>
         </div>
 
         <div class="detail-item">
             <span>DELIVERY ADDRESS</span>
-            <strong>
-                ${escapeHtml(address)}
-            </strong>
+            <strong>${escapeHtml(address)}</strong>
         </div>
 
     </div>
-
 
     <div class="table-wrapper">
 
     <table class="data-table">
 
         <thead>
-
             <tr>
                 <th>PRODUCT</th>
                 <th>QTY</th>
                 <th>PRICE</th>
                 <th>TOTAL</th>
             </tr>
-
         </thead>
 
         <tbody>
@@ -2446,13 +2357,9 @@ function viewOrder(id){
                     ${escapeHtml(product)}
                 </td>
 
-                <td>
-                    ${qty}
-                </td>
+                <td>${qty}</td>
 
-                <td>
-                    ${money(price)}
-                </td>
+                <td>${money(price)}</td>
 
                 <td class="total">
                     ${money(total)}
@@ -2466,26 +2373,20 @@ function viewOrder(id){
 
     </div>
 
-
     <div class="detail-total">
 
         <span>Grand Total:</span>
 
-        <strong>
-            ${money(total)}
-        </strong>
+        <strong>${money(total)}</strong>
 
     </div>
-
     `;
-
 
     document.getElementById(
         "orderModal"
     ).style.display = "flex";
 
 }
-
 
 function closeOrderModal(){
 
@@ -2494,7 +2395,6 @@ function closeOrderModal(){
     ).style.display = "none";
 
 }
-
 
 /* =========================================================
    SALES
@@ -2511,138 +2411,77 @@ async function loadSales(){
         <div class="admin-header">
 
             <div>
-
                 <p>LIARA PROFESSIONAL™</p>
-
-                <h2>
-                    💰 Sales Management
-                </h2>
-
+                <h2>💰 Sales Management</h2>
             </div>
 
-            <button
-                class="btn"
-                onclick="loadSales()">
+            <button class="btn" onclick="loadSales()">
                 🔄 Refresh
             </button>
 
         </div>
 
-
         <div class="summary-grid">
 
             <div class="summary-card sales">
-
                 <span>Total Sales</span>
-
-                <strong id="salesTotal">
-                    ₹0
-                </strong>
-
+                <strong id="salesTotal">₹0</strong>
                 <small>Selected period</small>
-
             </div>
-
 
             <div class="summary-card">
-
                 <span>Total Orders</span>
-
-                <strong id="salesOrders">
-                    0
-                </strong>
-
+                <strong id="salesOrders">0</strong>
                 <small>Sales orders</small>
-
             </div>
-
 
             <div class="summary-card delivered">
-
                 <span>Delivered</span>
-
-                <strong id="salesDelivered">
-                    0
-                </strong>
-
+                <strong id="salesDelivered">0</strong>
                 <small>Completed</small>
-
             </div>
 
-
             <div class="summary-card cancelled">
-
                 <span>Cancelled</span>
-
-                <strong id="salesCancelled">
-                    0
-                </strong>
-
+                <strong id="salesCancelled">0</strong>
                 <small>Cancelled orders</small>
-
             </div>
 
         </div>
 
-
         <div class="filter-panel">
 
             <div class="filter-field">
-
                 <label>FROM DATE</label>
-
-                <input
-                    type="date"
-                    id="salesFrom">
-
+                <input type="date" id="salesFrom">
             </div>
-
 
             <div class="filter-field">
-
                 <label>TO DATE</label>
-
-                <input
-                    type="date"
-                    id="salesTo">
-
+                <input type="date" id="salesTo">
             </div>
 
-
-            <button
-                class="btn"
-                onclick="filterSalesByDate()">
+            <button class="btn" onclick="filterSalesByDate()">
                 🔍 Apply Filter
             </button>
 
-
-            <button
-                class="btn gray-btn"
-                onclick="clearSalesFilter()">
+            <button class="btn gray-btn" onclick="clearSalesFilter()">
                 All Sales
             </button>
 
         </div>
 
-
         <div id="salesTable">
-
-            <div class="message">
-                Loading sales...
-            </div>
-
+            <div class="message">Loading sales...</div>
         </div>
 
     </div>
-
     `;
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
-
 
     const {data,error} =
         await supabaseClient
@@ -2652,7 +2491,6 @@ async function loadSales(){
             "created_at",
             {ascending:false}
         );
-
 
     if(error){
 
@@ -2668,31 +2506,21 @@ async function loadSales(){
 
     }
 
-
     allOrders = data || [];
 
     renderSales(allOrders);
 
 }
 
-
 function filterSalesByDate(){
 
     const from =
-        document.getElementById(
-            "salesFrom"
-        ).value;
-
+        document.getElementById("salesFrom").value;
 
     const to =
-        document.getElementById(
-            "salesTo"
-        ).value;
+        document.getElementById("salesTo").value;
 
-
-    let filtered =
-        [...allOrders];
-
+    let filtered = [...allOrders];
 
     if(from){
 
@@ -2704,8 +2532,7 @@ function filterSalesByDate(){
 
                 return new Date(
                     order.created_at
-                )
-                >=
+                ) >=
                 new Date(
                     from+"T00:00:00"
                 );
@@ -2713,7 +2540,6 @@ function filterSalesByDate(){
             });
 
     }
-
 
     if(to){
 
@@ -2725,8 +2551,7 @@ function filterSalesByDate(){
 
                 return new Date(
                     order.created_at
-                )
-                <=
+                ) <=
                 new Date(
                     to+"T23:59:59"
                 );
@@ -2735,33 +2560,24 @@ function filterSalesByDate(){
 
     }
 
-
     renderSales(filtered);
 
 }
 
-
 function clearSalesFilter(){
 
-    document.getElementById(
-        "salesFrom"
-    ).value = "";
-
-    document.getElementById(
-        "salesTo"
-    ).value = "";
+    document.getElementById("salesFrom").value = "";
+    document.getElementById("salesTo").value = "";
 
     renderSales(allOrders);
 
 }
-
 
 function renderSales(orders){
 
     let total = 0;
     let delivered = 0;
     let cancelled = 0;
-
 
     orders.forEach(order=>{
 
@@ -2770,57 +2586,29 @@ function renderSales(orders){
                 order.status || "Pending"
             ).toLowerCase();
 
-
         if(status !== "cancelled"){
-
-            total += Number(
-                order.total || 0
-            );
-
+            total += Number(order.total || 0);
         }
 
-
-        if(status === "delivered"){
-            delivered++;
-        }
-
-
-        if(status === "cancelled"){
-            cancelled++;
-        }
+        if(status === "delivered") delivered++;
+        if(status === "cancelled") cancelled++;
 
     });
 
-
-    document.getElementById(
-        "salesTotal"
-    ).innerText =
+    document.getElementById("salesTotal").innerText =
         money(total);
 
-
-    document.getElementById(
-        "salesOrders"
-    ).innerText =
+    document.getElementById("salesOrders").innerText =
         orders.length;
 
-
-    document.getElementById(
-        "salesDelivered"
-    ).innerText =
+    document.getElementById("salesDelivered").innerText =
         delivered;
 
-
-    document.getElementById(
-        "salesCancelled"
-    ).innerText =
+    document.getElementById("salesCancelled").innerText =
         cancelled;
 
-
     const box =
-        document.getElementById(
-            "salesTable"
-        );
-
+        document.getElementById("salesTable");
 
     if(!orders.length){
 
@@ -2834,17 +2622,11 @@ function renderSales(orders){
 
     }
 
-
     let html = `
-
     <div class="table-wrapper">
-
     <table class="data-table">
-
     <thead>
-
     <tr>
-
         <th>DATE</th>
         <th>ORDER ID</th>
         <th>CUSTOMER</th>
@@ -2854,15 +2636,10 @@ function renderSales(orders){
         <th>PAYMENT</th>
         <th>STATUS</th>
         <th>ACTION</th>
-
     </tr>
-
     </thead>
-
     <tbody>
-
     `;
-
 
     orders.forEach(order=>{
 
@@ -2870,19 +2647,13 @@ function renderSales(orders){
             order.created_at
             ? new Date(
                 order.created_at
-              ).toLocaleDateString(
-                "en-IN"
-              )
+              ).toLocaleDateString("en-IN")
             : "-";
 
-
         html += `
-
         <tr>
 
-            <td>
-                ${escapeHtml(date)}
-            </td>
+            <td>${escapeHtml(date)}</td>
 
             <td>
                 <strong>
@@ -2901,15 +2672,11 @@ function renderSales(orders){
             </td>
 
             <td class="product-name">
-                ${escapeHtml(
-                    productName(order)
-                )}
+                ${escapeHtml(productName(order))}
             </td>
 
             <td>
-                ${Number(
-                    order.quantity || 1
-                )}
+                ${Number(order.quantity || 1)}
             </td>
 
             <td class="total">
@@ -2918,38 +2685,26 @@ function renderSales(orders){
 
             <td>
                 <span class="payment-badge">
-                    ${escapeHtml(
-                        payment(order)
-                    )}
+                    ${escapeHtml(payment(order))}
                 </span>
             </td>
 
-            <td>
-                ${statusBadge(
-                    order.status
-                )}
-            </td>
+            <td>${statusBadge(order.status)}</td>
 
             <td>
-
                 <button
                     class="table-btn view-btn"
                     onclick="viewOrder(
-                        '${escapeHtml(
-                            String(order.id)
-                        )}'
+                        '${escapeHtml(String(order.id))}'
                     )">
                     View
                 </button>
-
             </td>
 
         </tr>
-
         `;
 
     });
-
 
     html += `
     </tbody>
@@ -2957,11 +2712,9 @@ function renderSales(orders){
     </div>
     `;
 
-
     box.innerHTML = html;
 
 }
-
 
 /* =========================================================
    STOCK
@@ -2978,23 +2731,15 @@ async function loadStock(){
         <div class="admin-header">
 
             <div>
-
                 <p>INVENTORY MANAGEMENT</p>
-
-                <h2>
-                    📦 Stock Management
-                </h2>
-
+                <h2>📦 Stock Management</h2>
             </div>
 
-            <button
-                class="btn"
-                onclick="loadStock()">
+            <button class="btn" onclick="loadStock()">
                 🔄 Refresh
             </button>
 
         </div>
-
 
         <div class="stock-cards">
 
@@ -3015,25 +2760,17 @@ async function loadStock(){
 
         </div>
 
-
         <div id="stockTable">
-
-            <div class="message">
-                Loading stock...
-            </div>
-
+            <div class="message">Loading stock...</div>
         </div>
 
     </div>
-
     `;
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
-
 
     const {data,error} =
         await supabaseClient
@@ -3043,7 +2780,6 @@ async function loadStock(){
             "created_at",
             {ascending:false}
         );
-
 
     if(error){
 
@@ -3059,58 +2795,38 @@ async function loadStock(){
 
     }
 
-
     allProducts = data || [];
 
     renderStock(allProducts);
 
 }
 
-
 function renderStock(products){
 
     let low = 0;
     let out = 0;
-
 
     products.forEach(product=>{
 
         const stock =
             Number(product.stock || 0);
 
-
         const minimum =
             Number(product.low_stock || 5);
 
-
-        if(stock <= 0){
-            out++;
-        }
-
-        else if(stock <= minimum){
-            low++;
-        }
+        if(stock <= 0) out++;
+        else if(stock <= minimum) low++;
 
     });
 
-
-    document.getElementById(
-        "stockTotal"
-    ).innerText =
+    document.getElementById("stockTotal").innerText =
         products.length;
 
-
-    document.getElementById(
-        "stockLow"
-    ).innerText =
+    document.getElementById("stockLow").innerText =
         low;
 
-
-    document.getElementById(
-        "stockOut"
-    ).innerText =
+    document.getElementById("stockOut").innerText =
         out;
-
 
     if(!products.length){
 
@@ -3126,15 +2842,10 @@ function renderStock(products){
 
     }
 
-
     let html = `
-
     <div class="table-wrapper">
-
     <table class="data-table">
-
     <thead>
-
     <tr>
         <th>PRODUCT</th>
         <th>PRICE</th>
@@ -3143,27 +2854,20 @@ function renderStock(products){
         <th>STATUS</th>
         <th>UPDATE</th>
     </tr>
-
     </thead>
-
     <tbody>
-
     `;
-
 
     products.forEach(product=>{
 
         const stock =
             Number(product.stock || 0);
 
-
         const minimum =
             Number(product.low_stock || 5);
 
-
         let status = "In Stock";
         let cls = "stock-ok";
-
 
         if(stock <= 0){
 
@@ -3171,7 +2875,6 @@ function renderStock(products){
             cls = "stock-out";
 
         }
-
         else if(stock <= minimum){
 
             status = "Low Stock";
@@ -3179,9 +2882,7 @@ function renderStock(products){
 
         }
 
-
         html += `
-
         <tr>
 
             <td>
@@ -3190,26 +2891,20 @@ function renderStock(products){
                 </strong>
             </td>
 
-            <td>
-                ${money(product.price)}
-            </td>
+            <td>${money(product.price)}</td>
 
             <td>
 
                 <input
                     class="stock-input"
-                    id="stock-${escapeHtml(
-                        String(product.id)
-                    )}"
+                    id="stock-${escapeHtml(String(product.id))}"
                     type="number"
                     min="0"
                     value="${stock}">
 
             </td>
 
-            <td>
-                ${minimum}
-            </td>
+            <td>${minimum}</td>
 
             <td class="${cls}">
                 ${status}
@@ -3220,9 +2915,7 @@ function renderStock(products){
                 <button
                     class="table-btn edit-btn"
                     onclick="updateStock(
-                        '${escapeHtml(
-                            String(product.id)
-                        )}'
+                        '${escapeHtml(String(product.id))}'
                     )">
                     Save
                 </button>
@@ -3230,11 +2923,9 @@ function renderStock(products){
             </td>
 
         </tr>
-
         `;
 
     });
-
 
     html += `
     </tbody>
@@ -3242,42 +2933,31 @@ function renderStock(products){
     </div>
     `;
 
-
     document.getElementById(
         "stockTable"
     ).innerHTML = html;
 
 }
 
-
 async function updateStock(id){
 
     const input =
-        document.getElementById(
-            "stock-"+id
-        );
-
+        document.getElementById("stock-"+id);
 
     if(!input) return;
 
-
     const stock =
         Number(input.value);
-
 
     if(
         !Number.isInteger(stock) ||
         stock < 0
     ){
 
-        alert(
-            "Valid stock quantity pao."
-        );
-
+        alert("Valid stock quantity pao.");
         return;
 
     }
-
 
     const {error} =
         await supabaseClient
@@ -3286,7 +2966,6 @@ async function updateStock(id){
             stock:stock
         })
         .eq("id",id);
-
 
     if(error){
 
@@ -3299,16 +2978,11 @@ async function updateStock(id){
 
     }
 
-
-    alert(
-        "Stock updated successfully."
-    );
-
+    alert("Stock updated successfully.");
 
     loadStock();
 
 }
-
 
 /* =========================================================
    PRODUCTS
@@ -3325,42 +2999,27 @@ async function loadProducts(){
         <div class="admin-header">
 
             <div>
-
                 <p>PRODUCT MANAGEMENT</p>
-
-                <h2>
-                    🧴 Products
-                </h2>
-
+                <h2>🧴 Products</h2>
             </div>
 
-            <button
-                class="btn"
-                onclick="showAddProduct()">
+            <button class="btn" onclick="showAddProduct()">
                 ➕ Add Product
             </button>
 
         </div>
 
-
         <div id="productsList">
-
-            <div class="message">
-                Loading products...
-            </div>
-
+            <div class="message">Loading products...</div>
         </div>
 
     </div>
-
     `;
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
-
 
     const {data,error} =
         await supabaseClient
@@ -3370,7 +3029,6 @@ async function loadProducts(){
             "created_at",
             {ascending:false}
         );
-
 
     if(error){
 
@@ -3386,21 +3044,16 @@ async function loadProducts(){
 
     }
 
-
     allProducts = data || [];
 
     renderProducts(allProducts);
 
 }
 
-
 function renderProducts(products){
 
     const box =
-        document.getElementById(
-            "productsList"
-        );
-
+        document.getElementById("productsList");
 
     if(!products.length){
 
@@ -3414,53 +3067,36 @@ function renderProducts(products){
 
     }
 
-
-    let html =
-        `<div class="product-grid">`;
-
+    let html = `<div class="product-grid">`;
 
     products.forEach(product=>{
 
         const stock =
             Number(product.stock || 0);
 
-
         let stockText =
             "Stock: " + stock;
-
 
         let stockClass =
             "stock-ok";
 
-
         if(stock <= 0){
 
-            stockText =
-                "Out of Stock";
-
-            stockClass =
-                "stock-out";
+            stockText = "Out of Stock";
+            stockClass = "stock-out";
 
         }
-
         else if(
-            stock <= Number(
-                product.low_stock || 5
-            )
+            stock <= Number(product.low_stock || 5)
         ){
 
-            stockText =
-                "Low Stock: " + stock;
-
-            stockClass =
-                "stock-low";
+            stockText = "Low Stock: " + stock;
+            stockClass = "stock-low";
 
         }
-
 
         const image =
             product.image_url || "";
-
 
         html += `
 
@@ -3468,18 +3104,12 @@ function renderProducts(products){
 
             ${
                 image
-
                 ?
-
                 `<img
                     class="product-card-image"
                     src="${escapeHtml(image)}"
-                    alt="${escapeHtml(
-                        product.name
-                    )}">`
-
+                    alt="${escapeHtml(product.name)}">`
                 :
-
                 `<div
                     class="product-card-image"
                     style="
@@ -3491,27 +3121,21 @@ function renderProducts(products){
                 </div>`
             }
 
-
             <div class="product-card-body">
 
                 <h3>
-                    ${escapeHtml(
-                        product.name
-                    )}
+                    ${escapeHtml(product.name)}
                 </h3>
 
                 <div class="product-description">
-                    ${escapeHtml(
-                        product.description || ""
-                    )}
+                    ${escapeHtml(product.description || "")}
                 </div>
 
                 <div class="product-price">
                     ${money(product.price)}
                 </div>
 
-                <div
-                    class="product-stock ${stockClass}">
+                <div class="product-stock ${stockClass}">
                     ${stockText}
                 </div>
 
@@ -3520,9 +3144,7 @@ function renderProducts(products){
                     <button
                         class="edit-btn"
                         onclick="editProductStock(
-                            '${escapeHtml(
-                                String(product.id)
-                            )}'
+                            '${escapeHtml(String(product.id))}'
                         )">
                         ✏️ Stock
                     </button>
@@ -3530,9 +3152,7 @@ function renderProducts(products){
                     <button
                         class="delete-btn"
                         onclick="deleteProduct(
-                            '${escapeHtml(
-                                String(product.id)
-                            )}'
+                            '${escapeHtml(String(product.id))}'
                         )">
                         🗑 Delete
                     </button>
@@ -3542,18 +3162,15 @@ function renderProducts(products){
             </div>
 
         </div>
-
         `;
 
     });
-
 
     html += "</div>";
 
     box.innerHTML = html;
 
 }
-
 
 async function editProductStock(id){
 
@@ -3564,9 +3181,7 @@ async function editProductStock(id){
             === String(id)
         );
 
-
     if(!product) return;
-
 
     const value =
         prompt(
@@ -3574,27 +3189,20 @@ async function editProductStock(id){
             product.stock || 0
         );
 
-
     if(value === null) return;
-
 
     const stock =
         Number(value);
-
 
     if(
         !Number.isInteger(stock) ||
         stock < 0
     ){
 
-        alert(
-            "Valid stock quantity pao."
-        );
-
+        alert("Valid stock quantity pao.");
         return;
 
     }
-
 
     const {error} =
         await supabaseClient
@@ -3603,7 +3211,6 @@ async function editProductStock(id){
             stock:stock
         })
         .eq("id",id);
-
 
     if(error){
 
@@ -3616,11 +3223,9 @@ async function editProductStock(id){
 
     }
 
-
     loadProducts();
 
 }
-
 
 async function deleteProduct(id){
 
@@ -3631,9 +3236,7 @@ async function deleteProduct(id){
             === String(id)
         );
 
-
     if(!product) return;
-
 
     const yes =
         confirm(
@@ -3642,16 +3245,13 @@ async function deleteProduct(id){
             '"?'
         );
 
-
     if(!yes) return;
-
 
     const {error} =
         await supabaseClient
         .from("products")
         .delete()
         .eq("id",id);
-
 
     if(error){
 
@@ -3664,16 +3264,11 @@ async function deleteProduct(id){
 
     }
 
-
-    alert(
-        "Product deleted successfully."
-    );
-
+    alert("Product deleted successfully.");
 
     loadProducts();
 
 }
-
 
 /* =========================================================
    ADD PRODUCT
@@ -3691,9 +3286,7 @@ function showAddProduct(){
 
             <p>PRODUCT MANAGEMENT</p>
 
-            <h2>
-                ➕ Add New Product
-            </h2>
+            <h2>➕ Add New Product</h2>
 
         </div>
 
@@ -3703,9 +3296,7 @@ function showAddProduct(){
 
             <div class="form-group">
 
-                <label>
-                    Product Name
-                </label>
+                <label>Product Name</label>
 
                 <input
                     id="productNameInput"
@@ -3714,12 +3305,9 @@ function showAddProduct(){
 
             </div>
 
-
             <div class="form-group">
 
-                <label>
-                    Price (₹)
-                </label>
+                <label>Price (₹)</label>
 
                 <input
                     id="productPriceInput"
@@ -3729,12 +3317,9 @@ function showAddProduct(){
 
             </div>
 
-
             <div class="form-group">
 
-                <label>
-                    Stock
-                </label>
+                <label>Stock</label>
 
                 <input
                     id="productStockInput"
@@ -3744,12 +3329,9 @@ function showAddProduct(){
 
             </div>
 
-
             <div class="form-group">
 
-                <label>
-                    Low Stock Alert
-                </label>
+                <label>Low Stock Alert</label>
 
                 <input
                     id="productLowStockInput"
@@ -3759,12 +3341,9 @@ function showAddProduct(){
 
             </div>
 
-
             <div class="form-group full">
 
-                <label>
-                    Description
-                </label>
+                <label>Description</label>
 
                 <textarea
                     id="productDescriptionInput"
@@ -3772,18 +3351,13 @@ function showAddProduct(){
 
             </div>
 
-
             <div class="form-group full">
 
-                <label>
-                    📷 Product Photo
-                </label>
+                <label>📷 Product Photo</label>
 
                 <div class="upload-box">
 
-                    <strong>
-                        Upload Product Photo
-                    </strong>
+                    <strong>Upload Product Photo</strong>
 
                     <br>
 
@@ -3818,7 +3392,6 @@ function showAddProduct(){
 
         </div>
 
-
         <div
             style="
                 display:flex;
@@ -3840,26 +3413,21 @@ function showAddProduct(){
         </div>
 
     </div>
-
     `;
 
 }
-
 
 function previewPhoto(event){
 
     const file =
         event.target.files[0];
 
-
     if(!file) return;
-
 
     document.getElementById(
         "previewImage"
     ).src =
         URL.createObjectURL(file);
-
 
     document.getElementById(
         "photoPreview"
@@ -3868,14 +3436,12 @@ function previewPhoto(event){
 
 }
 
-
 async function saveProduct(){
 
     const name =
         document.getElementById(
             "productNameInput"
         ).value.trim();
-
 
     const price =
         Number(
@@ -3884,14 +3450,12 @@ async function saveProduct(){
             ).value
         );
 
-
     const stock =
         Number(
             document.getElementById(
                 "productStockInput"
             ).value || 0
         );
-
 
     const lowStock =
         Number(
@@ -3900,63 +3464,49 @@ async function saveProduct(){
             ).value || 5
         );
 
-
     const description =
         document.getElementById(
             "productDescriptionInput"
         ).value.trim();
-
 
     const file =
         document.getElementById(
             "productPhotoInput"
         ).files[0];
 
-
     const status =
         document.getElementById(
             "uploadStatus"
         );
 
-
     if(!name){
 
         alert("Product name pao.");
-
         return;
 
     }
-
 
     if(price < 0){
 
         alert("Valid price pao.");
-
         return;
 
     }
-
 
     if(!file){
 
-        alert(
-            "Product photo upload karo."
-        );
-
+        alert("Product photo upload karo.");
         return;
 
     }
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
 
-
     status.innerText =
         "Uploading photo...";
-
 
     try{
 
@@ -3965,7 +3515,6 @@ async function saveProduct(){
             .split(".")
             .pop()
             .toLowerCase();
-
 
         const fileName =
             Date.now() +
@@ -3976,11 +3525,9 @@ async function saveProduct(){
             "." +
             extension;
 
-
         const filePath =
             "products/" +
             fileName;
-
 
         const upload =
             await supabaseClient
@@ -3995,7 +3542,6 @@ async function saveProduct(){
                 }
             );
 
-
         if(upload.error){
 
             alert(
@@ -4007,23 +3553,17 @@ async function saveProduct(){
 
         }
 
-
         status.innerText =
             "Saving product...";
-
 
         const publicData =
             supabaseClient
             .storage
             .from(IMAGE_BUCKET)
-            .getPublicUrl(
-                filePath
-            );
-
+            .getPublicUrl(filePath);
 
         const imageUrl =
             publicData.data.publicUrl;
-
 
         const insert =
             await supabaseClient
@@ -4039,7 +3579,6 @@ async function saveProduct(){
 
             });
 
-
         if(insert.error){
 
             alert(
@@ -4051,11 +3590,9 @@ async function saveProduct(){
 
         }
 
-
         alert(
             "Product successfully add ho gaya."
         );
-
 
         clearProductForm();
 
@@ -4070,7 +3607,6 @@ async function saveProduct(){
     }
 
 }
-
 
 function clearProductForm(){
 
@@ -4087,33 +3623,26 @@ function clearProductForm(){
 
     });
 
-
     const stock =
         document.getElementById(
             "productStockInput"
         );
 
-    if(stock)
-        stock.value = "0";
-
+    if(stock) stock.value = "0";
 
     const low =
         document.getElementById(
             "productLowStockInput"
         );
 
-    if(low)
-        low.value = "5";
-
+    if(low) low.value = "5";
 
     const photo =
         document.getElementById(
             "productPhotoInput"
         );
 
-    if(photo)
-        photo.value = "";
-
+    if(photo) photo.value = "";
 
     const preview =
         document.getElementById(
@@ -4122,7 +3651,6 @@ function clearProductForm(){
 
     if(preview)
         preview.style.display = "none";
-
 
     const status =
         document.getElementById(
@@ -4133,7 +3661,6 @@ function clearProductForm(){
         status.innerText = "";
 
 }
-
 
 /* =========================================================
    CUSTOMERS
@@ -4154,33 +3681,23 @@ async function loadCustomers(){
                 <h2>👥 Customers</h2>
             </div>
 
-            <button
-                class="btn"
-                onclick="loadCustomers()">
+            <button class="btn" onclick="loadCustomers()">
                 🔄 Refresh
             </button>
 
         </div>
 
-
         <div id="customersTable">
-
-            <div class="message">
-                Loading customers...
-            </div>
-
+            <div class="message">Loading customers...</div>
         </div>
 
     </div>
-
     `;
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
-
 
     const {data,error} =
         await supabaseClient
@@ -4190,7 +3707,6 @@ async function loadCustomers(){
             "created_at",
             {ascending:false}
         );
-
 
     if(error){
 
@@ -4206,9 +3722,7 @@ async function loadCustomers(){
 
     }
 
-
     const customers = {};
-
 
     (data || []).forEach(order=>{
 
@@ -4217,33 +3731,27 @@ async function loadCustomers(){
             order.name ||
             "Unknown Customer";
 
-
         const phone =
             order.phone ||
             order.mobile ||
             "-";
-
 
         const key =
             phone !== "-"
             ? phone
             : name;
 
-
         if(!customers[key]){
 
             customers[key] = {
-
                 name:name,
                 phone:phone,
                 orders:0,
                 total:0,
                 last:order.created_at
-
             };
 
         }
-
 
         customers[key].orders++;
 
@@ -4252,10 +3760,8 @@ async function loadCustomers(){
 
     });
 
-
     const list =
         Object.values(customers);
-
 
     if(!list.length){
 
@@ -4271,15 +3777,10 @@ async function loadCustomers(){
 
     }
 
-
     let html = `
-
     <div class="table-wrapper">
-
     <table class="data-table">
-
     <thead>
-
     <tr>
         <th>CUSTOMER</th>
         <th>MOBILE</th>
@@ -4287,18 +3788,13 @@ async function loadCustomers(){
         <th>TOTAL SPENDING</th>
         <th>LAST ORDER</th>
     </tr>
-
     </thead>
-
     <tbody>
-
     `;
-
 
     list.forEach(customer=>{
 
         html += `
-
         <tr>
 
             <td>
@@ -4307,13 +3803,9 @@ async function loadCustomers(){
                 </strong>
             </td>
 
-            <td>
-                ${escapeHtml(customer.phone)}
-            </td>
+            <td>${escapeHtml(customer.phone)}</td>
 
-            <td>
-                ${customer.orders}
-            </td>
+            <td>${customer.orders}</td>
 
             <td class="total">
                 ${money(customer.total)}
@@ -4324,19 +3816,15 @@ async function loadCustomers(){
                     customer.last
                     ? new Date(
                         customer.last
-                      ).toLocaleDateString(
-                        "en-IN"
-                      )
+                      ).toLocaleDateString("en-IN")
                     : "-"
                 }
             </td>
 
         </tr>
-
         `;
 
     });
-
 
     html += `
     </tbody>
@@ -4344,13 +3832,11 @@ async function loadCustomers(){
     </div>
     `;
 
-
     document.getElementById(
         "customersTable"
     ).innerHTML = html;
 
 }
-
 
 /* =========================================================
    DELIVERY
@@ -4371,33 +3857,25 @@ async function loadDelivery(){
                 <h2>🚚 Delivery Tracking</h2>
             </div>
 
-            <button
-                class="btn"
-                onclick="loadDelivery()">
+            <button class="btn" onclick="loadDelivery()">
                 🔄 Refresh
             </button>
 
         </div>
 
-
         <div id="deliveryTable">
-
             <div class="message">
                 Loading delivery orders...
             </div>
-
         </div>
 
     </div>
-
     `;
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
-
 
     const {data,error} =
         await supabaseClient
@@ -4407,7 +3885,6 @@ async function loadDelivery(){
             "created_at",
             {ascending:false}
         );
-
 
     if(error){
 
@@ -4423,7 +3900,6 @@ async function loadDelivery(){
 
     }
 
-
     const deliveryOrders =
         (data || []).filter(order=>{
 
@@ -4436,7 +3912,6 @@ async function loadDelivery(){
                    status !== "cancelled";
 
         });
-
 
     if(!deliveryOrders.length){
 
@@ -4452,15 +3927,10 @@ async function loadDelivery(){
 
     }
 
-
     let html = `
-
     <div class="table-wrapper">
-
     <table class="data-table">
-
     <thead>
-
     <tr>
         <th>ORDER ID</th>
         <th>CUSTOMER</th>
@@ -4470,13 +3940,9 @@ async function loadDelivery(){
         <th>STATUS</th>
         <th>ACTION</th>
     </tr>
-
     </thead>
-
     <tbody>
-
     `;
-
 
     deliveryOrders.forEach(order=>{
 
@@ -4486,9 +3952,7 @@ async function loadDelivery(){
             order.delivery_address ||
             "-";
 
-
         html += `
-
         <tr>
 
             <td>
@@ -4516,37 +3980,27 @@ async function loadDelivery(){
             </td>
 
             <td class="product-name">
-                ${escapeHtml(
-                    productName(order)
-                )}
+                ${escapeHtml(productName(order))}
             </td>
 
-            <td>
-                ${escapeHtml(address)}
-            </td>
+            <td>${escapeHtml(address)}</td>
 
-            <td>
-                ${statusBadge(order.status)}
-            </td>
+            <td>${statusBadge(order.status)}</td>
 
             <td>
                 <button
                     class="table-btn view-btn"
                     onclick="viewOrder(
-                        '${escapeHtml(
-                            String(order.id)
-                        )}'
+                        '${escapeHtml(String(order.id))}'
                     )">
                     View
                 </button>
             </td>
 
         </tr>
-
         `;
 
     });
-
 
     html += `
     </tbody>
@@ -4554,13 +4008,11 @@ async function loadDelivery(){
     </div>
     `;
 
-
     document.getElementById(
         "deliveryTable"
     ).innerHTML = html;
 
 }
-
 
 /* =========================================================
    REPORTS
@@ -4581,40 +4033,28 @@ async function loadReports(){
                 <h2>📊 Reports</h2>
             </div>
 
-            <button
-                class="btn"
-                onclick="loadReports()">
+            <button class="btn" onclick="loadReports()">
                 🔄 Refresh
             </button>
 
         </div>
 
-
-        <div
-            id="reportsContent">
-
-            <div class="message">
-                Loading reports...
-            </div>
-
+        <div id="reportsContent">
+            <div class="message">Loading reports...</div>
         </div>
 
     </div>
-
     `;
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
 
-
     const {data,error} =
         await supabaseClient
         .from("orders")
         .select("*");
-
 
     if(error){
 
@@ -4630,19 +4070,15 @@ async function loadReports(){
 
     }
 
-
     const orders =
         data || [];
-
 
     let totalSales = 0;
     let delivered = 0;
     let pending = 0;
     let cancelled = 0;
 
-
     const productSales = {};
-
 
     orders.forEach(order=>{
 
@@ -4651,53 +4087,39 @@ async function loadReports(){
                 order.status || "Pending"
             ).toLowerCase();
 
-
         if(status !== "cancelled"){
-
-            totalSales +=
-                Number(order.total || 0);
-
+            totalSales += Number(order.total || 0);
         }
-
 
         if(status === "delivered"){
             delivered++;
         }
-
         else if(status === "cancelled"){
             cancelled++;
         }
-
         else{
             pending++;
         }
 
-
         const product =
             productName(order);
-
 
         if(!productSales[product]){
 
             productSales[product] = {
-
                 qty:0,
                 amount:0
-
             };
 
         }
 
-
         productSales[product].qty +=
             Number(order.quantity || 1);
-
 
         productSales[product].amount +=
             Number(order.total || 0);
 
     });
-
 
     const topProducts =
         Object.entries(productSales)
@@ -4707,9 +4129,7 @@ async function loadReports(){
         )
         .slice(0,10);
 
-
     let productRows = "";
-
 
     topProducts.forEach(item=>{
 
@@ -4727,11 +4147,9 @@ async function loadReports(){
             </span>
 
         </div>
-
         `;
 
     });
-
 
     document.getElementById(
         "reportsContent"
@@ -4761,14 +4179,11 @@ async function loadReports(){
 
     </div>
 
-
     <div class="analytics-grid">
 
         <div class="analytics-card">
 
-            <h3>
-                📦 Order Status
-            </h3>
+            <h3>📦 Order Status</h3>
 
             <div class="stat-row">
                 <span>Delivered</span>
@@ -4787,12 +4202,9 @@ async function loadReports(){
 
         </div>
 
-
         <div class="analytics-card">
 
-            <h3>
-                🏆 Top Products
-            </h3>
+            <h3>🏆 Top Products</h3>
 
             ${
                 productRows ||
@@ -4804,11 +4216,9 @@ async function loadReports(){
         </div>
 
     </div>
-
     `;
 
 }
-
 
 /* =========================================================
    NOTIFICATIONS
@@ -4829,39 +4239,28 @@ async function loadNotifications(){
                 <h2>🔔 Notifications</h2>
             </div>
 
-            <button
-                class="btn"
-                onclick="loadNotifications()">
+            <button class="btn" onclick="loadNotifications()">
                 🔄 Refresh
             </button>
 
         </div>
 
-
         <div id="notificationContent">
-
-            <div class="message">
-                Loading alerts...
-            </div>
-
+            <div class="message">Loading alerts...</div>
         </div>
 
     </div>
-
     `;
-
 
     const user =
         await checkAdmin();
 
     if(!user) return;
 
-
     const {data,error} =
         await supabaseClient
         .from("products")
         .select("*");
-
 
     if(error){
 
@@ -4877,7 +4276,6 @@ async function loadNotifications(){
 
     }
 
-
     const low =
         (data || []).filter(product=>{
 
@@ -4886,7 +4284,6 @@ async function loadNotifications(){
                 Number(product.low_stock || 5);
 
         });
-
 
     if(!low.length){
 
@@ -4898,43 +4295,32 @@ async function loadNotifications(){
             class="analytics-card"
             style="text-align:center">
 
-            <div style="font-size:45px">
-                ✅
-            </div>
+            <div style="font-size:45px">✅</div>
 
-            <h3>
-                Everything looks good
-            </h3>
+            <h3>Everything looks good</h3>
 
             <p style="color:#777">
                 No low-stock products right now.
             </p>
 
         </div>
-
         `;
 
         return;
 
     }
 
-
     let html = `
 
     <div class="analytics-card">
 
-        <h3>
-            ⚠️ Low Stock Alerts
-        </h3>
-
+        <h3>⚠️ Low Stock Alerts</h3>
     `;
-
 
     low.forEach(product=>{
 
         const stock =
             Number(product.stock || 0);
-
 
         html += `
 
@@ -4960,14 +4346,11 @@ async function loadNotifications(){
             </strong>
 
         </div>
-
         `;
 
     });
 
-
     html += "</div>";
-
 
     document.getElementById(
         "notificationContent"
@@ -4975,12 +4358,14 @@ async function loadNotifications(){
 
 }
 
-
 /* =========================================================
-   SETTINGS
+   SETTINGS MAIN
 ========================================================= */
 
 function loadSettings(){
+
+    const settings =
+        getSettings();
 
     document.getElementById(
         "other-content"
@@ -4991,64 +4376,876 @@ function loadSettings(){
         <div class="admin-header">
 
             <div>
-                <p>COMPANY CONTROL PANEL</p>
-                <h2>⚙️ Settings</h2>
+
+                <p>LIARA PROFESSIONAL™</p>
+
+                <h2>⚙️ Settings & Control Panel</h2>
+
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+
+                <button
+                    class="btn outline-btn"
+                    onclick="resetSettings()">
+                    ↩ Reset
+                </button>
+
+                <button
+                    class="btn"
+                    onclick="saveAllSettings()">
+                    💾 Save Settings
+                </button>
+
             </div>
 
         </div>
 
+        <div class="settings-layout">
 
-        <div class="analytics-grid">
+            <!-- SETTINGS NAV -->
 
-            <div class="analytics-card">
+            <div class="settings-nav">
 
-                <h3>
-                    Company
-                </h3>
+                <button
+                    class="active"
+                    onclick="openSettingsTab('profile',this)">
+                    👤 Profile
+                </button>
 
-                <div class="stat-row">
-                    <span>Company</span>
-                    <strong>
-                        Liara Group Private Limited
-                    </strong>
-                </div>
+                <button
+                    onclick="openSettingsTab('security',this)">
+                    🔐 Security
+                </button>
 
-                <div class="stat-row">
-                    <span>Brand</span>
-                    <strong>
-                        Liara Professional™
-                    </strong>
-                </div>
+                <button
+                    onclick="openSettingsTab('company',this)">
+                    🏢 Company
+                </button>
 
-                <div class="stat-row">
-                    <span>Admin Email</span>
-                    <strong>
-                        ${escapeHtml(ADMIN_EMAIL)}
-                    </strong>
-                </div>
+                <button
+                    onclick="openSettingsTab('orders',this)">
+                    📦 Orders
+                </button>
+
+                <button
+                    onclick="openSettingsTab('salesSettings',this)">
+                    💰 Sales & GST
+                </button>
+
+                <button
+                    onclick="openSettingsTab('notificationsSettings',this)">
+                    🔔 Notifications
+                </button>
+
+                <button
+                    onclick="openSettingsTab('website',this)">
+                    🎨 Website
+                </button>
+
+                <button
+                    onclick="openSettingsTab('checkout',this)">
+                    🛒 Checkout
+                </button>
+
+                <button
+                    onclick="openSettingsTab('invoice',this)">
+                    🧾 Invoice
+                </button>
+
+                <button
+                    onclick="openSettingsTab('system',this)">
+                    🗄️ System
+                </button>
 
             </div>
 
+            <!-- SETTINGS CONTENT -->
 
-            <div class="analytics-card">
+            <div>
 
-                <h3>
-                    Dashboard
-                </h3>
+                <!-- PROFILE -->
 
-                <div class="stat-row">
-                    <span>Currency</span>
-                    <strong>Indian Rupee ₹</strong>
+                <div
+                    class="settings-panel active"
+                    id="settings-profile">
+
+                    <div class="settings-card">
+
+                        <h3>👤 Profile Settings</h3>
+
+                        <p>
+                            Dashboard administrator di basic information.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+
+                                <label>ADMIN NAME</label>
+
+                                <input
+                                    id="setProfileName"
+                                    value="${escapeHtml(settings.profile.name)}">
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>ROLE</label>
+
+                                <input
+                                    id="setProfileRole"
+                                    value="${escapeHtml(settings.profile.role)}">
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>ADMIN EMAIL</label>
+
+                                <input
+                                    value="${escapeHtml(ADMIN_EMAIL)}"
+                                    readonly>
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>PHONE</label>
+
+                                <input
+                                    id="setProfilePhone"
+                                    value="${escapeHtml(settings.profile.phone)}">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="stat-row">
-                    <span>Invoice</span>
-                    <strong>A4 Print Enabled</strong>
+                <!-- SECURITY -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-security">
+
+                    <div class="settings-card">
+
+                        <h3>🔐 Security</h3>
+
+                        <p>
+                            Admin account password update.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+
+                                <label>NEW PASSWORD</label>
+
+                                <input
+                                    id="newAdminPassword"
+                                    type="password"
+                                    placeholder="Minimum 6 characters">
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>CONFIRM PASSWORD</label>
+
+                                <input
+                                    id="confirmAdminPassword"
+                                    type="password"
+                                    placeholder="Repeat password">
+
+                            </div>
+
+                        </div>
+
+                        <div class="settings-actions">
+
+                            <button
+                                class="btn"
+                                onclick="changeAdminPassword()">
+                                🔑 Change Password
+                            </button>
+
+                            <button
+                                class="btn red-btn"
+                                onclick="logoutAllSessions()">
+                                🚪 Sign Out
+                            </button>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="stat-row">
-                    <span>Database</span>
-                    <strong>Supabase</strong>
+                <!-- COMPANY -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-company">
+
+                    <div class="settings-card">
+
+                        <h3>🏢 Company Settings</h3>
+
+                        <p>
+                            Company, GST, contact and address information.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>COMPANY NAME</label>
+                                <input
+                                    id="setCompanyName"
+                                    value="${escapeHtml(settings.company.name)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>BRAND NAME</label>
+                                <input
+                                    id="setCompanyBrand"
+                                    value="${escapeHtml(settings.company.brand)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>GSTIN</label>
+                                <input
+                                    id="setCompanyGST"
+                                    value="${escapeHtml(settings.company.gst)}"
+                                    placeholder="Enter GSTIN">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>COMPANY EMAIL</label>
+                                <input
+                                    id="setCompanyEmail"
+                                    value="${escapeHtml(settings.company.email)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>PHONE</label>
+                                <input
+                                    id="setCompanyPhone"
+                                    value="${escapeHtml(settings.company.phone)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>WEBSITE</label>
+                                <input
+                                    id="setCompanyWebsite"
+                                    value="${escapeHtml(settings.company.website)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>CITY</label>
+                                <input
+                                    id="setCompanyCity"
+                                    value="${escapeHtml(settings.company.city)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>STATE</label>
+                                <input
+                                    id="setCompanyState"
+                                    value="${escapeHtml(settings.company.state)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>PINCODE</label>
+                                <input
+                                    id="setCompanyPincode"
+                                    value="${escapeHtml(settings.company.pincode)}">
+                            </div>
+
+                            <div class="settings-field full">
+                                <label>ADDRESS</label>
+                                <textarea id="setCompanyAddress">${escapeHtml(settings.company.address)}</textarea>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ORDERS -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-orders">
+
+                    <div class="settings-card">
+
+                        <h3>📦 Order Settings</h3>
+
+                        <p>
+                            Order ID, default status and order policy.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>ORDER PREFIX</label>
+                                <input
+                                    id="setOrderPrefix"
+                                    value="${escapeHtml(settings.orders.prefix)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>DEFAULT ORDER STATUS</label>
+                                <select id="setOrderStatus">
+                                    ${optionList(
+                                        [
+                                            "Pending",
+                                            "Confirmed",
+                                            "Packed",
+                                            "Shipped"
+                                        ],
+                                        settings.orders.autoStatus
+                                    )}
+                                </select>
+                            </div>
+
+                            <div class="settings-field">
+                                <label>DEFAULT PAYMENT</label>
+                                <select id="setDefaultPayment">
+                                    ${optionList(
+                                        [
+                                            "COD",
+                                            "Online Payment",
+                                            "UPI",
+                                            "Bank Transfer"
+                                        ],
+                                        settings.orders.defaultPayment
+                                    )}
+                                </select>
+                            </div>
+
+                            <div class="settings-field full">
+                                <label>ORDER NOTES</label>
+                                <textarea
+                                    id="setOrderNotes"
+                                    placeholder="Internal order notes...">${escapeHtml(settings.orders.orderNotes)}</textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Allow Order Cancellation</strong>
+                                <small>Customer cancellation option.</small>
+                            </div>
+
+                            ${toggle(
+                                "setAllowCancel",
+                                settings.orders.allowCancel
+                            )}
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Allow Returns</strong>
+                                <small>Return request option.</small>
+                            </div>
+
+                            ${toggle(
+                                "setAllowReturn",
+                                settings.orders.allowReturn
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- SALES -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-salesSettings">
+
+                    <div class="settings-card">
+
+                        <h3>💰 Sales & GST</h3>
+
+                        <p>
+                            Currency, GST, discount and shipping configuration.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>CURRENCY</label>
+                                <select id="setCurrency">
+                                    <option value="INR" ${settings.sales.currency==="INR"?"selected":""}>
+                                        INR — Indian Rupee ₹
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="settings-field">
+                                <label>GST RATE (%)</label>
+                                <input
+                                    id="setGSTRate"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value="${Number(settings.sales.gstRate)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>SHIPPING CHARGE (₹)</label>
+                                <input
+                                    id="setShippingCharge"
+                                    type="number"
+                                    min="0"
+                                    value="${Number(settings.sales.shippingCharge)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>FREE SHIPPING ABOVE (₹)</label>
+                                <input
+                                    id="setFreeShipping"
+                                    type="number"
+                                    min="0"
+                                    value="${Number(settings.sales.freeShippingAbove)}">
+                            </div>
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>GST / Tax Enabled</strong>
+                                <small>Apply GST configuration to sales.</small>
+                            </div>
+
+                            ${toggle(
+                                "setTaxEnabled",
+                                settings.sales.taxEnabled
+                            )}
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Discount Enabled</strong>
+                                <small>Allow discounts in checkout.</small>
+                            </div>
+
+                            ${toggle(
+                                "setDiscountEnabled",
+                                settings.sales.discountEnabled
+                            )}
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Shipping Enabled</strong>
+                                <small>Enable shipping charge rules.</small>
+                            </div>
+
+                            ${toggle(
+                                "setShippingEnabled",
+                                settings.sales.shippingEnabled
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- NOTIFICATIONS -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-notificationsSettings">
+
+                    <div class="settings-card">
+
+                        <h3>🔔 Notifications</h3>
+
+                        <p>
+                            Business alert preferences.
+                        </p>
+
+                        ${notificationToggle(
+                            "setNewOrder",
+                            settings.notifications.newOrder,
+                            "New Order",
+                            "Alert when a new customer order arrives."
+                        )}
+
+                        ${notificationToggle(
+                            "setLowStock",
+                            settings.notifications.lowStock,
+                            "Low Stock",
+                            "Show low stock alerts."
+                        )}
+
+                        ${notificationToggle(
+                            "setCancelledOrder",
+                            settings.notifications.cancelledOrder,
+                            "Cancelled Order",
+                            "Alert when an order is cancelled."
+                        )}
+
+                        ${notificationToggle(
+                            "setDeliveredOrder",
+                            settings.notifications.deliveredOrder,
+                            "Delivered Order",
+                            "Track delivered order alerts."
+                        )}
+
+                        ${notificationToggle(
+                            "setPaymentNotification",
+                            settings.notifications.payment,
+                            "Payment Notifications",
+                            "Show payment-related notifications."
+                        )}
+
+                    </div>
+
+                </div>
+
+                <!-- WEBSITE -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-website">
+
+                    <div class="settings-card">
+
+                        <h3>🎨 Website Settings</h3>
+
+                        <p>
+                            Store branding and customer support information.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>STORE NAME</label>
+                                <input
+                                    id="setStoreName"
+                                    value="${escapeHtml(settings.website.storeName)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>TAGLINE</label>
+                                <input
+                                    id="setStoreTagline"
+                                    value="${escapeHtml(settings.website.tagline)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>SUPPORT EMAIL</label>
+                                <input
+                                    id="setSupportEmail"
+                                    value="${escapeHtml(settings.website.supportEmail)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>SUPPORT PHONE</label>
+                                <input
+                                    id="setSupportPhone"
+                                    value="${escapeHtml(settings.website.supportPhone)}">
+                            </div>
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Maintenance Mode</strong>
+                                <small>
+                                    Website maintenance flag. Enable only when required.
+                                </small>
+                            </div>
+
+                            ${toggle(
+                                "setMaintenance",
+                                settings.website.maintenance
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CHECKOUT -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-checkout">
+
+                    <div class="settings-card">
+
+                        <h3>🛒 Cart & Checkout</h3>
+
+                        <p>
+                            Customer checkout and payment controls.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>MINIMUM ORDER VALUE (₹)</label>
+                                <input
+                                    id="setMinimumOrder"
+                                    type="number"
+                                    min="0"
+                                    value="${Number(settings.checkout.minimumOrder)}">
+                            </div>
+
+                        </div>
+
+                        ${notificationToggle(
+                            "setGuestCheckout",
+                            settings.checkout.guestCheckout,
+                            "Guest Checkout",
+                            "Customers can checkout without creating an account."
+                        )}
+
+                        ${notificationToggle(
+                            "setCOD",
+                            settings.checkout.cod,
+                            "Cash on Delivery",
+                            "Enable COD option."
+                        )}
+
+                        ${notificationToggle(
+                            "setOnlinePayment",
+                            settings.checkout.onlinePayment,
+                            "Online Payment",
+                            "Enable online payment option when configured."
+                        )}
+
+                        ${notificationToggle(
+                            "setRequirePhone",
+                            settings.checkout.requirePhone,
+                            "Phone Required",
+                            "Require customer mobile number."
+                        )}
+
+                        ${notificationToggle(
+                            "setRequireAddress",
+                            settings.checkout.requireAddress,
+                            "Address Required",
+                            "Require delivery address."
+                        )}
+
+                    </div>
+
+                </div>
+
+                <!-- INVOICE -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-invoice">
+
+                    <div class="settings-card">
+
+                        <h3>🧾 Invoice Settings</h3>
+
+                        <p>
+                            A4 invoice and order document configuration.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>INVOICE PREFIX</label>
+                                <input
+                                    id="setInvoicePrefix"
+                                    value="${escapeHtml(settings.invoice.prefix)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>FORMAT</label>
+                                <input value="A4 Print" readonly>
+                            </div>
+
+                            <div class="settings-field full">
+                                <label>INVOICE FOOTER</label>
+                                <textarea id="setInvoiceFooter">${escapeHtml(settings.invoice.footer)}</textarea>
+                            </div>
+
+                        </div>
+
+                        ${notificationToggle(
+                            "setShowGST",
+                            settings.invoice.showGST,
+                            "Show GST Details",
+                            "Display GST information on invoice."
+                        )}
+
+                        ${notificationToggle(
+                            "setShowCompanyAddress",
+                            settings.invoice.showCompanyAddress,
+                            "Show Company Address",
+                            "Display company address on invoice."
+                        )}
+
+                        ${notificationToggle(
+                            "setShowPayment",
+                            settings.invoice.showPayment,
+                            "Show Payment Details",
+                            "Display payment method/status."
+                        )}
+
+                    </div>
+
+                </div>
+
+                <!-- SYSTEM -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-system">
+
+                    <div class="settings-card">
+
+                        <h3>🗄️ System & Supabase</h3>
+
+                        <p>
+                            Existing database connection nu change nahi kita gaya.
+                        </p>
+
+                        <div class="system-status">
+
+                            <span
+                                class="status-dot"
+                                id="supabaseDot">
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Supabase Connection
+                                </strong>
+
+                                <small
+                                    id="supabaseStatus"
+                                    style="display:block;color:#777;margin-top:3px">
+                                    Checking...
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="system-status">
+
+                            <span class="status-dot"></span>
+
+                            <div>
+
+                                <strong>
+                                    Storage Bucket
+                                </strong>
+
+                                <small
+                                    style="display:block;color:#777;margin-top:3px">
+                                    ${escapeHtml(IMAGE_BUCKET)}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="system-status">
+
+                            <span class="status-dot"></span>
+
+                            <div>
+
+                                <strong>
+                                    Settings Storage
+                                </strong>
+
+                                <small
+                                    style="display:block;color:#777;margin-top:3px">
+                                    Browser Local Storage
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="settings-actions">
+
+                            <button
+                                class="btn"
+                                onclick="checkSystemStatus()">
+                                🔍 Check Connection
+                            </button>
+
+                            <button
+                                class="btn gray-btn"
+                                onclick="resetSettings()">
+                                ↩ Reset Settings
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="settings-card">
+
+                        <h3>ℹ️ Existing Database</h3>
+
+                        <p>
+                            Dashboard current tables nu use karda hai.
+                        </p>
+
+                        <div class="stat-row">
+                            <span>Orders Table</span>
+                            <strong>orders</strong>
+                        </div>
+
+                        <div class="stat-row">
+                            <span>Products Table</span>
+                            <strong>products</strong>
+                        </div>
+
+                        <div class="stat-row">
+                            <span>Storage</span>
+                            <strong>product-images</strong>
+                        </div>
+
+                        <div class="stat-row">
+                            <span>Authentication</span>
+                            <strong>Supabase Auth</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="settingsSaveStatus"
+                    class="settings-status">
+                    ✓ Settings saved successfully.
                 </div>
 
             </div>
@@ -5056,11 +5253,506 @@ function loadSettings(){
         </div>
 
     </div>
+    `;
 
+    checkSystemStatus();
+
+}
+
+/* =========================================================
+   SETTINGS UI HELPERS
+========================================================= */
+
+function toggle(id,checked){
+
+    return `
+    <label class="switch">
+
+        <input
+            type="checkbox"
+            id="${id}"
+            ${checked ? "checked" : ""}>
+
+        <span class="slider"></span>
+
+    </label>
     `;
 
 }
 
+function notificationToggle(
+    id,
+    checked,
+    title,
+    description
+){
+
+    return `
+    <div class="switch-row">
+
+        <div class="switch-info">
+
+            <strong>${escapeHtml(title)}</strong>
+
+            <small>
+                ${escapeHtml(description)}
+            </small>
+
+        </div>
+
+        ${toggle(id,checked)}
+
+    </div>
+    `;
+
+}
+
+function optionList(options,current){
+
+    return options.map(option=>`
+
+        <option
+            value="${escapeHtml(option)}"
+            ${
+                String(current).toLowerCase()
+                === String(option).toLowerCase()
+                ? "selected"
+                : ""
+            }>
+
+            ${escapeHtml(option)}
+
+        </option>
+
+    `).join("");
+
+}
+
+function openSettingsTab(tab,button){
+
+    document.querySelectorAll(
+        ".settings-panel"
+    ).forEach(panel=>{
+        panel.classList.remove("active");
+    });
+
+    document.querySelectorAll(
+        ".settings-nav button"
+    ).forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    const panel =
+        document.getElementById(
+            "settings-"+tab
+        );
+
+    if(panel){
+        panel.classList.add("active");
+    }
+
+    if(button){
+        button.classList.add("active");
+    }
+
+}
+
+/* =========================================================
+   SAVE ALL SETTINGS
+========================================================= */
+
+function saveAllSettings(){
+
+    const old =
+        getSettings();
+
+    const settings = {
+
+        profile:{
+            name:getValue("setProfileName",old.profile.name),
+            phone:getValue("setProfilePhone",old.profile.phone),
+            role:getValue("setProfileRole",old.profile.role)
+        },
+
+        company:{
+            name:getValue("setCompanyName",old.company.name),
+            brand:getValue("setCompanyBrand",old.company.brand),
+            gst:getValue("setCompanyGST",old.company.gst),
+            email:getValue("setCompanyEmail",old.company.email),
+            phone:getValue("setCompanyPhone",old.company.phone),
+            website:getValue("setCompanyWebsite",old.company.website),
+            address:getValue("setCompanyAddress",old.company.address),
+            city:getValue("setCompanyCity",old.company.city),
+            state:getValue("setCompanyState",old.company.state),
+            pincode:getValue("setCompanyPincode",old.company.pincode)
+        },
+
+        orders:{
+            prefix:getValue("setOrderPrefix",old.orders.prefix),
+            autoStatus:getValue("setOrderStatus",old.orders.autoStatus),
+            defaultPayment:getValue(
+                "setDefaultPayment",
+                old.orders.defaultPayment
+            ),
+            orderNotes:getValue(
+                "setOrderNotes",
+                old.orders.orderNotes
+            ),
+            allowCancel:getChecked(
+                "setAllowCancel",
+                old.orders.allowCancel
+            ),
+            allowReturn:getChecked(
+                "setAllowReturn",
+                old.orders.allowReturn
+            )
+        },
+
+        sales:{
+            currency:getValue(
+                "setCurrency",
+                old.sales.currency
+            ),
+            taxEnabled:getChecked(
+                "setTaxEnabled",
+                old.sales.taxEnabled
+            ),
+            gstRate:Number(
+                getValue(
+                    "setGSTRate",
+                    old.sales.gstRate
+                )
+            ),
+            discountEnabled:getChecked(
+                "setDiscountEnabled",
+                old.sales.discountEnabled
+            ),
+            shippingEnabled:getChecked(
+                "setShippingEnabled",
+                old.sales.shippingEnabled
+            ),
+            shippingCharge:Number(
+                getValue(
+                    "setShippingCharge",
+                    old.sales.shippingCharge
+                )
+            ),
+            freeShippingAbove:Number(
+                getValue(
+                    "setFreeShipping",
+                    old.sales.freeShippingAbove
+                )
+            )
+        },
+
+        notifications:{
+            newOrder:getChecked(
+                "setNewOrder",
+                old.notifications.newOrder
+            ),
+            lowStock:getChecked(
+                "setLowStock",
+                old.notifications.lowStock
+            ),
+            cancelledOrder:getChecked(
+                "setCancelledOrder",
+                old.notifications.cancelledOrder
+            ),
+            deliveredOrder:getChecked(
+                "setDeliveredOrder",
+                old.notifications.deliveredOrder
+            ),
+            payment:getChecked(
+                "setPaymentNotification",
+                old.notifications.payment
+            )
+        },
+
+        website:{
+            storeName:getValue(
+                "setStoreName",
+                old.website.storeName
+            ),
+            tagline:getValue(
+                "setStoreTagline",
+                old.website.tagline
+            ),
+            supportEmail:getValue(
+                "setSupportEmail",
+                old.website.supportEmail
+            ),
+            supportPhone:getValue(
+                "setSupportPhone",
+                old.website.supportPhone
+            ),
+            maintenance:getChecked(
+                "setMaintenance",
+                old.website.maintenance
+            )
+        },
+
+        checkout:{
+            guestCheckout:getChecked(
+                "setGuestCheckout",
+                old.checkout.guestCheckout
+            ),
+            cod:getChecked(
+                "setCOD",
+                old.checkout.cod
+            ),
+            onlinePayment:getChecked(
+                "setOnlinePayment",
+                old.checkout.onlinePayment
+            ),
+            minimumOrder:Number(
+                getValue(
+                    "setMinimumOrder",
+                    old.checkout.minimumOrder
+                )
+            ),
+            requirePhone:getChecked(
+                "setRequirePhone",
+                old.checkout.requirePhone
+            ),
+            requireAddress:getChecked(
+                "setRequireAddress",
+                old.checkout.requireAddress
+            )
+        },
+
+        invoice:{
+            prefix:getValue(
+                "setInvoicePrefix",
+                old.invoice.prefix
+            ),
+            footer:getValue(
+                "setInvoiceFooter",
+                old.invoice.footer
+            ),
+            showGST:getChecked(
+                "setShowGST",
+                old.invoice.showGST
+            ),
+            showCompanyAddress:getChecked(
+                "setShowCompanyAddress",
+                old.invoice.showCompanyAddress
+            ),
+            showPayment:getChecked(
+                "setShowPayment",
+                old.invoice.showPayment
+            )
+        }
+
+    };
+
+    saveSettingsObject(settings);
+
+    const status =
+        document.getElementById(
+            "settingsSaveStatus"
+        );
+
+    if(status){
+
+        status.style.display = "block";
+
+        setTimeout(()=>{
+            status.style.display = "none";
+        },3000);
+
+    }
+
+}
+
+function getValue(id,fallback){
+
+    const el =
+        document.getElementById(id);
+
+    if(!el) return fallback;
+
+    return el.value;
+
+}
+
+function getChecked(id,fallback){
+
+    const el =
+        document.getElementById(id);
+
+    if(!el) return fallback;
+
+    return el.checked;
+
+}
+
+/* =========================================================
+   PASSWORD CHANGE
+========================================================= */
+
+async function changeAdminPassword(){
+
+    const password =
+        document.getElementById(
+            "newAdminPassword"
+        ).value;
+
+    const confirmPassword =
+        document.getElementById(
+            "confirmAdminPassword"
+        ).value;
+
+    if(password.length < 6){
+
+        alert(
+            "Password minimum 6 characters da hona chahida."
+        );
+
+        return;
+
+    }
+
+    if(password !== confirmPassword){
+
+        alert(
+            "Passwords match nahi karde."
+        );
+
+        return;
+
+    }
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {error} =
+        await supabaseClient
+        .auth
+        .updateUser({
+            password:password
+        });
+
+    if(error){
+
+        alert(
+            "Password change failed:\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+    document.getElementById(
+        "newAdminPassword"
+    ).value = "";
+
+    document.getElementById(
+        "confirmAdminPassword"
+    ).value = "";
+
+    alert(
+        "Password successfully change ho gaya."
+    );
+
+}
+
+/* =========================================================
+   LOGOUT ALL / SIGN OUT
+========================================================= */
+
+async function logoutAllSessions(){
+
+    const yes =
+        confirm(
+            "Sign out current admin session?"
+        );
+
+    if(!yes) return;
+
+    await supabaseClient
+        .auth
+        .signOut();
+
+    window.location.href =
+        "company-login.html";
+
+}
+
+/* =========================================================
+   SYSTEM STATUS
+========================================================= */
+
+async function checkSystemStatus(){
+
+    const status =
+        document.getElementById(
+            "supabaseStatus"
+        );
+
+    const dot =
+        document.getElementById(
+            "supabaseDot"
+        );
+
+    if(!status) return;
+
+    status.innerText =
+        "Checking connection...";
+
+    if(dot){
+        dot.classList.remove(
+            "offline",
+            "warning"
+        );
+    }
+
+    try{
+
+        const {data,error} =
+            await supabaseClient
+            .auth
+            .getUser();
+
+        if(error){
+
+            status.innerText =
+                "Connection available, but admin session check returned an error.";
+
+            if(dot)
+                dot.classList.add("warning");
+
+            return;
+
+        }
+
+        if(data && data.user){
+
+            status.innerText =
+                "Connected • Admin session active.";
+
+        }
+        else{
+
+            status.innerText =
+                "Supabase connected • No active session.";
+
+        }
+
+    }
+    catch(error){
+
+        status.innerText =
+            "Unable to connect.";
+
+        if(dot)
+            dot.classList.add("offline");
+
+    }
+
+}
 
 /* =========================================================
    PRINT ORDER
@@ -5070,18 +5762,16 @@ function printCurrentOrder(){
 
     if(!currentOrder){
 
-        alert(
-            "Order select nahi hoya."
-        );
-
+        alert("Order select nahi hoya.");
         return;
 
     }
 
+    const settings =
+        getSettings();
 
     const order =
         currentOrder;
-
 
     const date =
         order.created_at
@@ -5090,18 +5780,15 @@ function printCurrentOrder(){
           ).toLocaleString("en-IN")
         : "-";
 
-
     const customer =
         order.customer_name ||
         order.name ||
         "-";
 
-
     const phone =
         order.phone ||
         order.mobile ||
         "-";
-
 
     const address =
         order.address ||
@@ -5109,35 +5796,23 @@ function printCurrentOrder(){
         order.delivery_address ||
         "-";
 
-
     const product =
         productName(order);
 
-
     const qty =
-        Number(
-            order.quantity || 1
-        );
-
+        Number(order.quantity || 1);
 
     const price =
         productPrice(order);
 
-
     const total =
-        Number(
-            order.total || 0
-        );
-
+        Number(order.total || 0);
 
     const pay =
         payment(order);
 
-
     const status =
-        order.status ||
-        "Pending";
-
+        order.status || "Pending";
 
     document.getElementById(
         "printArea"
@@ -5148,27 +5823,28 @@ function printCurrentOrder(){
         <div>
 
             <div class="print-brand">
-                LIARA GROUP
+                ${escapeHtml(settings.company.name)}
             </div>
 
             <div class="print-brand">
+
                 <small>
-                    PRIVATE LIMITED
+                    ${escapeHtml(settings.company.brand)}
                 </small>
+
             </div>
 
         </div>
 
-
         <div class="print-company">
 
             <strong>
-                LIARA PROFESSIONAL™
+                ${escapeHtml(settings.company.brand)}
             </strong>
 
             <br>
 
-            Beauty • Skincare • Personal Care
+            ${escapeHtml(settings.website.tagline)}
 
             <br>
 
@@ -5178,94 +5854,80 @@ function printCurrentOrder(){
 
     </div>
 
-
     <div class="print-title">
 
-        <h2>
-            ORDER INVOICE
-        </h2>
+        <h2>ORDER INVOICE</h2>
 
         <div style="font-size:11px;margin-top:5px">
             Thank you for choosing
-            Liara Professional™
+            ${escapeHtml(settings.company.brand)}
         </div>
 
     </div>
-
 
     <div class="print-meta">
 
         <div>
             <span>ORDER ID</span>
             <strong>
-                ${escapeHtml(
-                    shortOrderId(order.id)
-                )}
+                ${escapeHtml(shortOrderId(order.id))}
             </strong>
         </div>
 
         <div>
             <span>ORDER DATE</span>
-            <strong>
-                ${escapeHtml(date)}
-            </strong>
+            <strong>${escapeHtml(date)}</strong>
         </div>
 
         <div>
             <span>CUSTOMER</span>
-            <strong>
-                ${escapeHtml(customer)}
-            </strong>
+            <strong>${escapeHtml(customer)}</strong>
         </div>
 
         <div>
             <span>MOBILE</span>
-            <strong>
-                ${escapeHtml(phone)}
-            </strong>
+            <strong>${escapeHtml(phone)}</strong>
         </div>
 
-        <div>
-            <span>PAYMENT</span>
-            <strong>
-                ${escapeHtml(pay)}
-            </strong>
-        </div>
+        ${
+            settings.invoice.showPayment
+            ?
+            `<div>
+                <span>PAYMENT</span>
+                <strong>${escapeHtml(pay)}</strong>
+            </div>`
+            :
+            ""
+        }
 
         <div>
             <span>STATUS</span>
-            <strong>
-                ${escapeHtml(status)}
-            </strong>
+            <strong>${escapeHtml(status)}</strong>
         </div>
 
-        <div style="grid-column:1/-1">
-
-            <span>
-                DELIVERY ADDRESS
-            </span>
-
-            <strong>
-                ${escapeHtml(address)}
-            </strong>
-
-        </div>
+        ${
+            settings.invoice.showCompanyAddress
+            ?
+            `<div style="grid-column:1/-1">
+                <span>DELIVERY ADDRESS</span>
+                <strong>${escapeHtml(address)}</strong>
+            </div>`
+            :
+            ""
+        }
 
     </div>
-
 
     <table class="print-table">
 
         <thead>
 
             <tr>
-
                 <th>#</th>
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Amount</th>
-
             </tr>
 
         </thead>
@@ -5280,17 +5942,11 @@ function printCurrentOrder(){
                     ${escapeHtml(product)}
                 </td>
 
-                <td>
-                    ${qty}
-                </td>
+                <td>${qty}</td>
 
-                <td>
-                    ${money(price)}
-                </td>
+                <td>${money(price)}</td>
 
-                <td>
-                    ${money(total)}
-                </td>
+                <td>${money(total)}</td>
 
             </tr>
 
@@ -5298,43 +5954,44 @@ function printCurrentOrder(){
 
     </table>
 
+    ${
+        settings.invoice.showGST
+        ?
+        `<div style="text-align:right;margin-top:12px;font-size:11px">
+            GST configured: ${Number(settings.sales.gstRate)}%
+        </div>`
+        :
+        ""
+    }
 
     <div class="print-total">
-
-        Grand Total:
-        ${money(total)}
-
+        Grand Total: ${money(total)}
     </div>
-
 
     <div class="print-footer">
 
         <strong>
-            LIARA GROUP PRIVATE LIMITED
+            ${escapeHtml(settings.company.name)}
         </strong>
 
         <br>
 
-        LIARA PROFESSIONAL™
+        ${escapeHtml(settings.company.brand)}
 
         <br><br>
 
-        This is a computer-generated
-        order document.
+        ${escapeHtml(settings.invoice.footer)}
 
-        <br>
+        <br><br>
 
-        Thank you for your business.
+        This is a computer-generated order document.
 
     </div>
-
     `;
-
 
     window.print();
 
 }
-
 
 /* =========================================================
    LOGOUT
@@ -5346,12 +6003,27 @@ async function logoutAdmin(){
         .auth
         .signOut();
 
-
     window.location.href =
         "company-login.html";
 
 }
 
+/* =========================================================
+   CLOSE MODAL OUTSIDE CLICK
+========================================================= */
+
+document.getElementById(
+    "orderModal"
+).addEventListener(
+    "click",
+    function(event){
+
+        if(event.target === this){
+            closeOrderModal();
+        }
+
+    }
+);
 
 /* =========================================================
    START
