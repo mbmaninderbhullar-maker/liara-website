@@ -70,6 +70,36 @@
             background: #866326;
         }
 
+        .forgot-password {
+            text-align: right;
+            margin-top: -5px;
+            margin-bottom: 18px;
+        }
+
+        .forgot-password a {
+            color: #ad8232;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .back-login {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 14px;
+        }
+
+        .back-login a {
+            color: #ad8232;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         .switch {
             text-align: center;
             margin-top: 20px;
@@ -144,6 +174,10 @@
     <div class="login-box">
 
 
+        <!-- =========================
+             LOGIN / SIGNUP TITLE
+        ========================== -->
+
         <h2 id="formTitle">
             Customer Login
         </h2>
@@ -157,6 +191,10 @@
         </p>
 
 
+
+        <!-- =========================
+             SIGNUP FIELDS
+        ========================== -->
 
         <div id="signupFields"
              style="display:none;">
@@ -178,6 +216,10 @@
 
 
 
+        <!-- =========================
+             EMAIL
+        ========================== -->
+
         <input
             type="email"
             id="email"
@@ -186,13 +228,36 @@
 
 
 
+        <!-- =========================
+             PASSWORD
+        ========================== -->
+
         <input
             type="password"
             id="password"
             placeholder="Password"
-            autocomplete="new-password">
+            autocomplete="current-password">
 
 
+
+        <!-- =========================
+             FORGOT PASSWORD
+        ========================== -->
+
+        <div class="forgot-password"
+             id="forgotBox">
+
+            <a onclick="showForgotPassword()">
+                Forgot Password?
+            </a>
+
+        </div>
+
+
+
+        <!-- =========================
+             MAIN BUTTON
+        ========================== -->
 
         <button
             type="button"
@@ -206,7 +271,12 @@
 
 
 
-        <div class="switch">
+        <!-- =========================
+             LOGIN / SIGNUP SWITCH
+        ========================== -->
+
+        <div class="switch"
+             id="switchBox">
 
             <span id="switchText">
                 Don't have an account?
@@ -223,6 +293,26 @@
         </div>
 
 
+
+        <!-- =========================
+             BACK TO LOGIN
+        ========================== -->
+
+        <div class="back-login"
+             id="backLogin"
+             style="display:none;">
+
+            <a onclick="showLogin()">
+                ← Back to Login
+            </a>
+
+        </div>
+
+
+
+        <!-- =========================
+             MESSAGE
+        ========================== -->
 
         <div id="message"></div>
 
@@ -263,6 +353,11 @@
 <script>
 
 
+/* =========================
+   SUPABASE
+========================= */
+
+
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
 
@@ -280,6 +375,11 @@ const supabaseClient =
 
 let signupMode = false;
 
+
+
+/* =========================
+   TOGGLE LOGIN / SIGNUP
+========================= */
 
 
 function toggleForm() {
@@ -305,6 +405,15 @@ function toggleForm() {
     const switchLink =
         document.getElementById("switchLink");
 
+    const forgotBox =
+        document.getElementById("forgotBox");
+
+    const backLogin =
+        document.getElementById("backLogin");
+
+
+    backLogin.style.display = "none";
+
 
     if (signupMode) {
 
@@ -328,9 +437,15 @@ function toggleForm() {
         switchLink.innerText =
             "Login";
 
+        forgotBox.style.display =
+            "none";
+
 
         document.getElementById("password")
-            .setAttribute("autocomplete", "new-password");
+            .setAttribute(
+                "autocomplete",
+                "new-password"
+            );
 
 
     } else {
@@ -355,11 +470,224 @@ function toggleForm() {
         switchLink.innerText =
             "Create Account";
 
+        forgotBox.style.display =
+            "block";
+
 
         document.getElementById("password")
-            .setAttribute("autocomplete", "current-password");
+            .setAttribute(
+                "autocomplete",
+                "current-password"
+            );
 
     }
+
+}
+
+
+
+/* =========================
+   FORGOT PASSWORD SCREEN
+========================= */
+
+
+function showForgotPassword() {
+
+    document.getElementById("formTitle")
+        .innerText =
+        "Forgot Password";
+
+
+    document.getElementById("formSubtitle")
+        .innerText =
+        "Enter your email and we will send you a password reset link.";
+
+
+    document.getElementById("signupFields")
+        .style.display =
+        "none";
+
+
+    document.getElementById("password")
+        .style.display =
+        "none";
+
+
+    document.getElementById("forgotBox")
+        .style.display =
+        "none";
+
+
+    document.getElementById("switchBox")
+        .style.display =
+        "none";
+
+
+    document.getElementById("backLogin")
+        .style.display =
+        "block";
+
+
+    const button =
+        document.getElementById("mainButton");
+
+
+    button.innerText =
+        "Send Reset Link";
+
+
+    button.onclick =
+        sendResetEmail;
+
+
+    document.getElementById("email")
+        .value = "";
+
+
+    document.getElementById("email")
+        .placeholder =
+        "Enter your registered email";
+
+
+    document.getElementById("message")
+        .innerText = "";
+
+}
+
+
+
+/* =========================
+   SEND PASSWORD RESET EMAIL
+========================= */
+
+
+async function sendResetEmail() {
+
+    const email =
+        document.getElementById("email")
+        .value
+        .trim();
+
+
+    if (!email) {
+
+        showMessage(
+            "Please enter your email address."
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Sending password reset link..."
+    );
+
+
+    const { error } =
+        await supabaseClient.auth
+        .resetPasswordForEmail(
+            email,
+            {
+                redirectTo:
+                    window.location.origin +
+                    window.location.pathname +
+                    "?reset=true"
+            }
+        );
+
+
+    if (error) {
+
+        showMessage(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Password reset link has been sent to your email. Please check your inbox."
+    );
+
+}
+
+
+
+/* =========================
+   BACK TO LOGIN
+========================= */
+
+
+function showLogin() {
+
+    signupMode = false;
+
+
+    document.getElementById("formTitle")
+        .innerText =
+        "Customer Login";
+
+
+    document.getElementById("formSubtitle")
+        .innerText =
+        "Login to your Liara Professional account";
+
+
+    document.getElementById("signupFields")
+        .style.display =
+        "none";
+
+
+    document.getElementById("password")
+        .style.display =
+        "block";
+
+
+    document.getElementById("forgotBox")
+        .style.display =
+        "block";
+
+
+    document.getElementById("switchBox")
+        .style.display =
+        "block";
+
+
+    document.getElementById("backLogin")
+        .style.display =
+        "none";
+
+
+    document.getElementById("mainButton")
+        .innerText =
+        "Login";
+
+
+    document.getElementById("mainButton")
+        .onclick =
+        loginUser;
+
+
+    document.getElementById("email")
+        .placeholder =
+        "Email Address";
+
+
+    document.getElementById("password")
+        .placeholder =
+        "Password";
+
+
+    document.getElementById("password")
+        .value = "";
+
+
+    document.getElementById("message")
+        .innerText = "";
 
 }
 
@@ -456,8 +784,6 @@ async function signupUser() {
     }
 
 
-    /* CLEAR ALL FORM DATA */
-
     document.getElementById("fullName").value = "";
     document.getElementById("phone").value = "";
     document.getElementById("email").value = "";
@@ -465,7 +791,7 @@ async function signupUser() {
 
 
     showMessage(
-        "Account created successfully? Login Now! ."
+        "Account created successfully! Login now."
     );
 
 }
@@ -553,9 +879,210 @@ async function loginUser() {
 function showMessage(text) {
 
     document.getElementById("message")
-        .innerText = text;
+        .innerText =
+        text;
 
 }
+
+
+
+/* =========================
+   PASSWORD RESET CHECK
+========================= */
+
+
+async function checkPasswordReset() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const reset =
+        params.get("reset");
+
+
+    if (reset !== "true") {
+
+        return;
+
+    }
+
+
+    const {
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth
+        .getSession();
+
+
+    if (!session) {
+
+        showMessage(
+            "Password reset session expired. Please request a new reset link."
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById("formTitle")
+        .innerText =
+        "Create New Password";
+
+
+    document.getElementById("formSubtitle")
+        .innerText =
+        "Enter your new password below.";
+
+
+    document.getElementById("signupFields")
+        .style.display =
+        "none";
+
+
+    document.getElementById("email")
+        .style.display =
+        "none";
+
+
+    document.getElementById("forgotBox")
+        .style.display =
+        "none";
+
+
+    document.getElementById("switchBox")
+        .style.display =
+        "none";
+
+
+    document.getElementById("backLogin")
+        .style.display =
+        "none";
+
+
+    const password =
+        document.getElementById("password");
+
+
+    password.style.display =
+        "block";
+
+
+    password.placeholder =
+        "New Password";
+
+
+    password.value = "";
+
+
+    const button =
+        document.getElementById("mainButton");
+
+
+    button.innerText =
+        "Update Password";
+
+
+    button.onclick =
+        updatePassword;
+
+}
+
+
+
+/* =========================
+   UPDATE PASSWORD
+========================= */
+
+
+async function updatePassword() {
+
+    const password =
+        document.getElementById("password")
+        .value;
+
+
+    if (!password) {
+
+        showMessage(
+            "Please enter a new password."
+        );
+
+        return;
+
+    }
+
+
+    if (password.length < 6) {
+
+        showMessage(
+            "Password must be at least 6 characters."
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Updating password..."
+    );
+
+
+    const { error } =
+        await supabaseClient.auth
+        .updateUser({
+
+            password:
+                password
+
+        });
+
+
+    if (error) {
+
+        showMessage(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Password updated successfully! You can now login."
+    );
+
+
+    setTimeout(function() {
+
+        window.history.replaceState(
+            {},
+            document.title,
+            "login.html"
+        );
+
+
+        showLogin();
+
+    }, 1500);
+
+}
+
+
+
+/* =========================
+   RUN RESET CHECK
+========================= */
+
+
+checkPasswordReset();
 
 
 </script>
