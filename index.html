@@ -14,7 +14,7 @@
 <style>
 
 /* =====================================================
-   PRODUCT AREA
+   PRODUCT SECTION
 ===================================================== */
 
 .product-loading {
@@ -69,18 +69,77 @@
 
 
 /* =====================================================
-   MOBILE MENU
+   BRAND INTRODUCTION
 ===================================================== */
 
-.mobile-menu-btn {
-    display: none;
-    border: none;
-    background: transparent;
-    font-size: 28px;
-    cursor: pointer;
+.brand-intro {
+    padding: 85px 8%;
+    background: #fff;
+    text-align: center;
+}
+
+.brand-intro-inner {
+    max-width: 900px;
+    margin: auto;
+}
+
+.brand-intro-label {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #ad8232;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.brand-intro h2 {
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.15;
     color: #222;
-    padding: 5px;
-    line-height: 1;
+    margin-bottom: 22px;
+}
+
+.brand-intro h2 span {
+    display: block;
+    color: #ad8232;
+}
+
+.brand-intro p {
+    max-width: 720px;
+    margin: auto;
+    color: #777;
+    font-size: 16px;
+    line-height: 1.9;
+}
+
+.brand-intro-line {
+    width: 55px;
+    height: 1px;
+    background: #c9a45d;
+    margin: 35px auto;
+}
+
+.brand-intro-points {
+    display: flex;
+    justify-content: center;
+    gap: 55px;
+    flex-wrap: wrap;
+}
+
+.brand-intro-points div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.brand-intro-points strong {
+    color: #ad8232;
+    font-size: 13px;
+}
+
+.brand-intro-points span {
+    color: #555;
+    font-size: 13px;
 }
 
 
@@ -89,20 +148,19 @@
 ===================================================== */
 
 .ceo-section {
-    padding: 90px 8%;
+    padding: 80px 8%;
     background: #f8f5ef;
 }
 
 .ceo-content {
-    max-width: 1200px;
+    max-width: 1150px;
     margin: auto;
 
     display: grid;
-    grid-template-columns: 1fr 0.85fr;
+    grid-template-columns: 1fr 0.8fr;
 
     align-items: center;
-
-    gap: 70px;
+    gap: 65px;
 }
 
 .ceo-text {
@@ -112,70 +170,56 @@
 .ceo-label {
     display: inline-block;
 
-    font-size: 13px;
+    color: #ad8232;
+
+    font-size: 12px;
     font-weight: 700;
 
     letter-spacing: 3px;
 
-    color: #ad8232;
-
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .ceo-text h2 {
-    margin: 0 0 8px;
-
     font-size: 46px;
-
     line-height: 1.1;
-
-    color: #222;
+    margin-bottom: 8px;
 }
 
 .ceo-text h3 {
-    margin: 0 0 25px;
-
-    font-size: 19px;
-
+    font-size: 18px;
     font-weight: 500;
-
     color: #ad8232;
+    margin-bottom: 23px;
 }
 
 .ceo-text p {
-    margin-bottom: 17px;
-
-    font-size: 16px;
-
-    line-height: 1.8;
-
     color: #666;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 15px;
 }
 
 .ceo-signature {
-    margin-top: 30px;
+    margin-top: 25px;
 
     display: flex;
-
     flex-direction: column;
-
-    gap: 5px;
 }
 
 .ceo-signature strong {
-    font-size: 21px;
-    color: #222;
+    font-size: 20px;
 }
 
 .ceo-signature span {
-    font-size: 13px;
+    font-size: 12px;
     color: #999;
     letter-spacing: 1px;
 }
 
 .ceo-photo {
+    max-width: 400px;
     width: 100%;
-    max-width: 420px;
     margin-left: auto;
     position: relative;
 }
@@ -188,30 +232,25 @@
     width: 100%;
     height: 100%;
 
-    top: 16px;
-    left: 16px;
+    top: 14px;
+    left: 14px;
 
     border: 1px solid #c9a45d;
-
     border-radius: 18px;
-
-    z-index: 0;
 }
 
 .ceo-photo img {
     position: relative;
-
-    z-index: 1;
+    z-index: 2;
 
     width: 100%;
-
-    height: 510px;
+    height: 500px;
 
     object-fit: cover;
 
-    display: block;
-
     border-radius: 18px;
+
+    display: block;
 
     box-shadow:
         0 20px 50px rgba(0,0,0,0.12);
@@ -219,382 +258,44 @@
 
 
 /* =====================================================
-   COMPACT CONTACT
-===================================================== */
-
-.contact {
-    padding: 50px 8% !important;
-    min-height: auto !important;
-}
-
-.contact .heading {
-    margin-bottom: 12px;
-}
-
-.contact .heading p {
-    margin-bottom: 6px;
-}
-
-.contact .heading h2 {
-    margin-bottom: 10px;
-}
-
-.contact > p {
-    margin: 0 auto 18px;
-    max-width: 600px;
-    line-height: 1.6;
-}
-
-
-/* =====================================================
-   PROFESSIONAL FOOTER
-===================================================== */
-
-.professional-footer {
-    background: #171717;
-    color: #fff;
-    padding: 70px 8% 0;
-}
-
-.footer-main {
-    max-width: 1300px;
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns:
-        1.6fr
-        1fr
-        1fr
-        1.15fr
-        1.25fr;
-
-    gap: 45px;
-
-    padding-bottom: 55px;
-}
-
-.footer-column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.footer-logo {
-    font-size: 29px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    color: #fff;
-    margin-bottom: 5px;
-}
-
-.footer-logo span {
-    display: block;
-
-    font-size: 10px;
-    letter-spacing: 3px;
-
-    color: #c9a45d;
-
-    margin-top: 5px;
-}
-
-.footer-description {
-    max-width: 330px;
-
-    color: #aaa;
-
-    font-size: 14px;
-
-    line-height: 1.8;
-
-    margin: 20px 0;
-}
-
-.footer-company {
-    color: #999;
-
-    font-size: 13px;
-
-    line-height: 1.6;
-}
-
-.footer-company strong {
-    color: #c9a45d;
-}
-
-.footer-column h4 {
-    font-size: 15px;
-
-    letter-spacing: 1px;
-
-    margin: 5px 0 20px;
-
-    color: #fff;
-}
-
-.footer-column a {
-    color: #aaa;
-
-    text-decoration: none;
-
-    font-size: 13px;
-
-    margin-bottom: 12px;
-
-    transition: 0.25s;
-}
-
-.footer-column a:hover {
-    color: #c9a45d;
-    transform: translateX(3px);
-}
-
-.footer-contact p {
-    color: #aaa;
-
-    font-size: 13px;
-
-    line-height: 1.7;
-
-    margin: 0 0 12px;
-}
-
-.footer-contact-btn {
-    display: inline-block;
-
-    margin-top: 8px;
-
-    padding: 10px 18px;
-
-    border: 1px solid #c9a45d;
-
-    color: #c9a45d !important;
-
-    border-radius: 5px;
-}
-
-.footer-contact-btn:hover {
-    background: #c9a45d;
-
-    color: #171717 !important;
-
-    transform: none !important;
-}
-
-.footer-bottom {
-    max-width: 1300px;
-
-    margin: auto;
-
-    padding: 22px 0;
-
-    border-top: 1px solid rgba(255,255,255,0.1);
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 20px;
-}
-
-.footer-bottom p {
-    margin: 0;
-
-    color: #777;
-
-    font-size: 12px;
-
-    line-height: 1.7;
-}
-
-.footer-founder {
-    margin-top: 3px !important;
-}
-
-.footer-founder strong {
-    color: #aaa;
-}
-
-.admin-login-link {
-    color: #c9a45d !important;
-
-    text-decoration: none;
-
-    font-size: 12px;
-
-    white-space: nowrap;
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 1050px) {
-
-    .footer-main {
-        grid-template-columns: 1.5fr 1fr 1fr;
-    }
-
-}
-
-
-/* =====================================================
-   MOBILE
+   MOBILE BRAND + CEO
 ===================================================== */
 
 @media (max-width: 800px) {
 
-    /* HEADER */
-
-    header {
-        position: relative !important;
-
-        display: flex !important;
-
-        align-items: center !important;
-
-        justify-content: space-between !important;
-
-        padding: 16px 6% !important;
+    .brand-intro {
+        padding: 65px 6%;
     }
 
-    .logo {
-        margin: 0 !important;
+    .brand-intro-points {
+        gap: 25px;
     }
-
-    .mobile-menu-btn {
-        display: block;
-
-        margin-left: auto;
-
-        flex-shrink: 0;
-    }
-
-    nav {
-        display: none !important;
-
-        position: absolute;
-
-        top: 100%;
-        left: 0;
-        right: 0;
-
-        width: 100%;
-
-        background: #fff;
-
-        padding: 12px 6% 20px;
-
-        box-shadow:
-            0 15px 30px rgba(0,0,0,0.10);
-
-        z-index: 9999;
-
-        flex-direction: column !important;
-
-        gap: 0 !important;
-    }
-
-    nav.mobile-open {
-        display: flex !important;
-    }
-
-    nav a {
-        display: block !important;
-
-        width: 100%;
-
-        padding: 13px 5px;
-
-        border-bottom: 1px solid #eee;
-    }
-
-    nav a:last-child {
-        border-bottom: none;
-    }
-
-
-    /* CEO */
 
     .ceo-section {
-        padding: 65px 6%;
+        padding: 60px 6%;
     }
 
     .ceo-content {
         grid-template-columns: 1fr;
-
-        gap: 45px;
+        gap: 40px;
     }
 
-    .ceo-text h2 {
-        font-size: 38px;
+    .ceo-text {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .ceo-signature {
+        align-items: center;
     }
 
     .ceo-photo {
         margin: auto;
-        max-width: 360px;
+        max-width: 350px;
     }
 
     .ceo-photo img {
         height: 440px;
-    }
-
-
-    /* PRODUCTS */
-
-    .dynamic-product-image {
-        height: 250px;
-    }
-
-
-    /* CONTACT */
-
-    .contact {
-        padding: 40px 6% !important;
-    }
-
-    .contact .heading h2 {
-        font-size: 30px;
-    }
-
-    .contact > p {
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
-
-
-    /* FOOTER */
-
-    .professional-footer {
-        padding: 50px 7% 0;
-    }
-
-    .footer-main {
-        grid-template-columns: 1fr 1fr;
-
-        gap: 35px 25px;
-
-        padding-bottom: 40px;
-    }
-
-    .footer-brand-column {
-        grid-column: 1 / -1;
-    }
-
-    .footer-description {
-        max-width: 100%;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        padding: 20px 0 25px;
     }
 
 }
@@ -604,46 +305,42 @@
    SMALL MOBILE
 ===================================================== */
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
 
-    .logo span {
-        font-size: 22px;
+    .brand-intro {
+        padding: 55px 5%;
     }
 
-    .logo small {
-        font-size: 9px;
+    .brand-intro h2 {
+        font-size: 32px;
     }
 
-    .mobile-menu-btn {
-        font-size: 26px;
+    .brand-intro p {
+        font-size: 14px;
+    }
+
+    .brand-intro-points {
+        gap: 20px;
     }
 
     .ceo-text h2 {
-        font-size: 34px;
+        font-size: 36px;
     }
 
     .ceo-text h3 {
-        font-size: 17px;
+        font-size: 16px;
     }
 
-    .dynamic-product-image {
-        height: 230px;
+    .ceo-text p {
+        font-size: 14px;
     }
 
-    .contact {
-        padding: 35px 6% !important;
+    .ceo-photo {
+        max-width: 320px;
     }
 
-    .footer-main {
-        grid-template-columns: 1fr;
-    }
-
-    .footer-brand-column {
-        grid-column: auto;
-    }
-
-    .footer-bottom {
-        gap: 12px;
+    .ceo-photo img {
+        height: 400px;
     }
 
 }
@@ -664,61 +361,30 @@
 
 <a href="/" class="logo">
 
-    <span>
-        LIARA
-    </span>
+    <span>LIARA</span>
 
-    <small>
-        PROFESSIONAL™
-    </small>
+    <small>PROFESSIONAL™</small>
 
 </a>
 
 
-<button
-    type="button"
-    class="mobile-menu-btn"
-    id="mobileMenuBtn"
-    aria-label="Open Menu">
+<nav>
 
-    ☰
+    <a href="/">Home</a>
 
-</button>
+    <a href="#about">About</a>
 
+    <a href="#leadership">Leadership</a>
 
-<nav id="mainNav">
+    <a href="#products">Products</a>
 
-    <a href="/">
-        Home
-    </a>
+    <a href="account.html">My Account</a>
 
-    <a href="#about">
-        About
-    </a>
+    <a href="cart.html">Cart 🛒</a>
 
-    <a href="#leadership">
-        Leadership
-    </a>
+    <a href="#why-us">Why Liara</a>
 
-    <a href="#products">
-        Products
-    </a>
-
-    <a href="account.html">
-        My Account
-    </a>
-
-    <a href="cart.html">
-        Cart 🛒
-    </a>
-
-    <a href="#why-us">
-        Why Liara
-    </a>
-
-    <a href="#contact">
-        Contact
-    </a>
+    <a href="#contact">Contact</a>
 
 </nav>
 
@@ -739,17 +405,22 @@
     </p>
 
     <h1>
+
         Beauty That
 
         <span>
             Feels Professional.
         </span>
+
     </h1>
 
     <p class="hero-text">
+
         Premium skincare, beauty and personal care products
         created for modern everyday self-care.
+
     </p>
+
 
     <div class="buttons">
 
@@ -762,6 +433,7 @@
         </a>
 
     </div>
+
 
     <div class="mini-info">
 
@@ -795,18 +467,74 @@
 
         <div class="bottle-label">
 
-            <strong>
-                LIARA
-            </strong>
+            <strong>LIARA</strong>
 
-            <small>
-                PROFESSIONAL™
-            </small>
+            <small>PROFESSIONAL™</small>
 
-            <em>
-                SKINCARE
-            </em>
+            <em>SKINCARE</em>
 
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     BRAND INTRODUCTION
+===================================================== -->
+
+<section class="brand-intro">
+
+<div class="brand-intro-inner">
+
+    <span class="brand-intro-label">
+        LIARA GROUP PRIVATE LIMITED
+    </span>
+
+
+    <h2>
+
+        Building a Better Standard
+
+        <span>
+            in Beauty & Personal Care.
+        </span>
+
+    </h2>
+
+
+    <p>
+
+        Liara Professional™ is a growing beauty, skincare
+        and personal care brand created with a simple vision —
+        to bring quality, thoughtful product development and
+        modern self-care together.
+
+    </p>
+
+
+    <div class="brand-intro-line"></div>
+
+
+    <div class="brand-intro-points">
+
+        <div>
+            <strong>01</strong>
+            <span>Thoughtful Products</span>
+        </div>
+
+        <div>
+            <strong>02</strong>
+            <span>Quality Driven</span>
+        </div>
+
+        <div>
+            <strong>03</strong>
+            <span>Made for Modern Care</span>
         </div>
 
     </div>
@@ -835,11 +563,13 @@
 
 </div>
 
+
 <div class="about-box">
 
     <div class="about-number">
         L
     </div>
+
 
     <div>
 
@@ -847,18 +577,24 @@
             Liara Professional™
         </h3>
 
+
         <p>
+
             Liara Professional is a growing beauty,
             skincare and personal care brand focused
             on quality, innovation and everyday
             self-care.
+
         </p>
 
+
         <p>
+
             We aim to create thoughtfully developed
             products combining modern cosmetic
             knowledge with carefully selected
             ingredients.
+
         </p>
 
     </div>
@@ -877,39 +613,52 @@
 
 <div class="ceo-content">
 
+
     <div class="ceo-text">
 
         <span class="ceo-label">
             LEADERSHIP
         </span>
 
+
         <h2>
             Maninder Bhullar
         </h2>
+
 
         <h3>
             Founder & Chief Executive Officer
         </h3>
 
+
         <p>
+
             Maninder Bhullar is the Founder and Chief
             Executive Officer of Liara Group Private Limited,
             the company behind Liara Professional™.
+
         </p>
 
+
         <p>
+
             With a vision to build a trusted and modern
             personal-care company, he leads Liara with
             a strong focus on quality, innovation,
             customer satisfaction and continuous growth.
+
         </p>
 
+
         <p>
+
             His vision is to develop Liara Professional™
             into a trusted name in beauty, skincare and
             personal care, combining thoughtful product
             development with a commitment to quality.
+
         </p>
+
 
         <div class="ceo-signature">
 
@@ -935,6 +684,7 @@
 
     </div>
 
+
 </div>
 
 </section>
@@ -959,12 +709,15 @@
 
 </div>
 
+
 <div
     class="product-grid"
     id="dynamicProducts">
 
     <div class="product-loading">
+
         Loading products...
+
     </div>
 
 </div>
@@ -991,7 +744,9 @@
 
 </div>
 
+
 <div class="why-grid">
+
 
     <div class="why-card">
 
@@ -1004,8 +759,10 @@
         </h3>
 
         <p>
+
             We focus on quality ingredients and
             consistent product development.
+
         </p>
 
     </div>
@@ -1022,8 +779,10 @@
         </h3>
 
         <p>
+
             Modern cosmetic knowledge combined
             with thoughtful formulation.
+
         </p>
 
     </div>
@@ -1040,11 +799,14 @@
         </h3>
 
         <p>
+
             Products designed for simple and
             enjoyable everyday personal care.
+
         </p>
 
     </div>
+
 
 </div>
 
@@ -1070,10 +832,14 @@
 
 </div>
 
+
 <p>
+
     Have a question about Liara Professional?
     We'd love to hear from you.
+
 </p>
+
 
 <a
     href="mailto:info@liara.co.in"
@@ -1088,215 +854,62 @@
 
 
 <!-- =====================================================
-     PROFESSIONAL FOOTER
+     FOOTER
 ===================================================== -->
 
-<footer class="professional-footer">
+<footer>
 
-<div class="footer-main">
+<div class="footer-brand">
 
+    LIARA
 
-    <!-- BRAND -->
-
-    <div class="footer-column footer-brand-column">
-
-        <div class="footer-logo">
-
-            LIARA
-
-            <span>
-                PROFESSIONAL™
-            </span>
-
-        </div>
-
-        <p class="footer-description">
-
-            Liara Professional™ is a growing beauty,
-            skincare and personal care brand focused
-            on quality, thoughtful product development
-            and modern everyday self-care.
-
-        </p>
-
-        <p class="footer-company">
-
-            A brand of
-            <strong>
-                Liara Group Private Limited
-            </strong>
-
-        </p>
-
-    </div>
-
-
-    <!-- QUICK LINKS -->
-
-    <div class="footer-column">
-
-        <h4>
-            Quick Links
-        </h4>
-
-        <a href="/">
-            Home
-        </a>
-
-        <a href="#about">
-            About Us
-        </a>
-
-        <a href="#leadership">
-            Leadership
-        </a>
-
-        <a href="#products">
-            Products
-        </a>
-
-        <a href="#why-us">
-            Why Liara
-        </a>
-
-        <a href="#contact">
-            Contact
-        </a>
-
-    </div>
-
-
-    <!-- CUSTOMER CARE -->
-
-    <div class="footer-column">
-
-        <h4>
-            Customer Care
-        </h4>
-
-        <a href="account.html">
-            My Account
-        </a>
-
-        <a href="cart.html">
-            Shopping Cart
-        </a>
-
-        <a href="orders.html">
-            My Orders
-        </a>
-
-        <a href="contact.html">
-            Help & Support
-        </a>
-
-        <a href="mailto:info@liara.co.in">
-            Email Support
-        </a>
-
-    </div>
-
-
-    <!-- LEGAL -->
-
-    <div class="footer-column">
-
-        <h4>
-            Information
-        </h4>
-
-        <a href="privacy-policy.html">
-            Privacy Policy
-        </a>
-
-        <a href="terms.html">
-            Terms & Conditions
-        </a>
-
-        <a href="shipping-policy.html">
-            Shipping Policy
-        </a>
-
-        <a href="refund-policy.html">
-            Returns & Refunds
-        </a>
-
-        <a href="disclaimer.html">
-            Disclaimer
-        </a>
-
-    </div>
-
-
-    <!-- CONTACT -->
-
-    <div class="footer-column footer-contact">
-
-        <h4>
-            Get In Touch
-        </h4>
-
-        <p>
-            Liara Group Private Limited
-        </p>
-
-        <a href="mailto:info@liara.co.in">
-            info@liara.co.in
-        </a>
-
-        <p>
-            For business, product and
-            customer enquiries.
-        </p>
-
-        <a
-            href="mailto:info@liara.co.in"
-            class="footer-contact-btn">
-
-            Contact Us
-
-        </a>
-
-    </div>
-
+    <small>
+        PROFESSIONAL™
+    </small>
 
 </div>
 
 
-<!-- FOOTER BOTTOM -->
+<p>
 
-<div class="footer-bottom">
+    © 2026 Liara Group Private Limited.
+    All Rights Reserved.
 
-    <div>
-
-        <p>
-            © 2026 Liara Group Private Limited.
-            All Rights Reserved.
-        </p>
-
-        <p class="footer-founder">
-
-            Founded & led by
-            <strong>
-                Maninder Bhullar
-            </strong>
-
-            · Founder & Chief Executive Officer
-
-        </p>
-
-    </div>
+</p>
 
 
-    <a
-        href="company-login.html"
-        class="admin-login-link">
+<div class="footer-links">
 
-        Admin Login
+    <a href="privacy-policy.html">
+        Privacy Policy
+    </a>
 
+    <a href="terms.html">
+        Terms & Conditions
+    </a>
+
+    <a href="refund-policy.html">
+        Refund Policy
+    </a>
+
+    <a href="shipping-policy.html">
+        Shipping Policy
+    </a>
+
+    <a href="contact.html">
+        Contact
     </a>
 
 </div>
+
+
+<a
+    href="company-login.html"
+    class="admin-login-link">
+
+    Admin Login
+
+</a>
 
 </footer>
 
@@ -1356,14 +969,18 @@ async function loadHomepageProducts() {
             "dynamicProducts"
         );
 
+
     if (!box) {
         return;
     }
 
+
     box.innerHTML = `
 
         <div class="product-loading">
+
             Loading products...
+
         </div>
 
     `;
@@ -1432,7 +1049,6 @@ async function loadHomepageProducts() {
 
         data.forEach(function(product) {
 
-
             const productId =
                 product.id || "";
 
@@ -1497,19 +1113,25 @@ async function loadHomepageProducts() {
 
 
                 <h3>
+
                     ${escapeHtml(productName)}
+
                 </h3>
 
 
                 <p>
+
                     ${escapeHtml(description)}
+
                 </p>
 
 
                 <div class="dynamic-product-bottom">
 
                     <strong>
+
                         ₹${price.toLocaleString("en-IN")}
+
                     </strong>
 
 
@@ -1536,7 +1158,9 @@ async function loadHomepageProducts() {
                         `
 
                         <span class="out-stock">
+
                             Out of Stock
+
                         </span>
 
                         `
@@ -1600,99 +1224,14 @@ function openProduct(productId) {
 
 
 /* =====================================================
-   MOBILE MENU
+   START
 ===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
     function() {
 
-
-        /* LOAD PRODUCTS */
-
         loadHomepageProducts();
-
-
-        /* MENU */
-
-        const menuButton =
-            document.getElementById(
-                "mobileMenuBtn"
-            );
-
-
-        const nav =
-            document.getElementById(
-                "mainNav"
-            );
-
-
-        if (
-            menuButton &&
-            nav
-        ) {
-
-
-            menuButton.addEventListener(
-                "click",
-                function() {
-
-                    nav.classList.toggle(
-                        "mobile-open"
-                    );
-
-
-                    if (
-                        nav.classList.contains(
-                            "mobile-open"
-                        )
-                    ) {
-
-                        menuButton.innerHTML =
-                            "✕";
-
-                    }
-
-                    else {
-
-                        menuButton.innerHTML =
-                            "☰";
-
-                    }
-
-                }
-            );
-
-
-            /* CLOSE AFTER CLICK */
-
-            const navLinks =
-                nav.querySelectorAll(
-                    "a"
-                );
-
-
-            navLinks.forEach(
-                function(link) {
-
-                    link.addEventListener(
-                        "click",
-                        function() {
-
-                            nav.classList.remove(
-                                "mobile-open"
-                            );
-
-                            menuButton.innerHTML =
-                                "☰";
-
-                        }
-                    );
-
-                }
-            );
-
-        }
 
     }
 );
