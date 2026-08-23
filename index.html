@@ -17,10 +17,10 @@
 <style>
 
 /* =====================================================
-   DYNAMIC products
+   DYNAMIC PRODUCTS
 ===================================================== */
 
-.products-loading {
+.product-loading {
     width: 100%;
     text-align: center;
     padding: 50px 20px;
@@ -28,7 +28,7 @@
     grid-column: 1 / -1;
 }
 
-.dynamic-products-image {
+.dynamic-product-image {
     width: 100%;
     height: 280px;
     overflow: hidden;
@@ -37,14 +37,14 @@
     margin-bottom: 18px;
 }
 
-.dynamic-products-image img {
+.dynamic-product-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
-.dynamic-products-bottom {
+.dynamic-product-bottom {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -52,12 +52,12 @@
     margin-top: 18px;
 }
 
-.dynamic-products-bottom strong {
+.dynamic-product-bottom strong {
     font-size: 20px;
     color: #ad8232;
 }
 
-.products-buy-btn {
+.product-buy-btn {
     border: none;
     cursor: pointer;
     font-size: 13px;
@@ -107,8 +107,8 @@
         About
     </a>
 
-    <a href="#productss">
-        products
+    <a href="#products">
+        Products
     </a>
 
     <a href="account.html">
@@ -168,7 +168,7 @@
     <div class="buttons">
 
         <a href="#products" class="btn">
-            Explore products
+            Explore Products
         </a>
 
         <a href="#about" class="btn btn-light">
@@ -322,7 +322,7 @@
 
 
 <!-- =====================================================
-     products
+     PRODUCTS
 ===================================================== -->
 
 <section id="products" class="products">
@@ -335,19 +335,19 @@
     </p>
 
     <h2>
-        Featured products
+        Featured Products
     </h2>
 
 </div>
 
 
-<!-- products FROM SUPABASE WILL APPEAR HERE -->
+<!-- PRODUCTS FROM SUPABASE WILL APPEAR HERE -->
 
 <div
-    class="products-grid"
-    id="dynamicproducts">
+    class="product-grid"
+    id="dynamicProducts">
 
-    <div class="products-loading">
+    <div class="product-loading">
 
         Loading products...
 
@@ -396,7 +396,7 @@
         <p>
 
             We focus on quality ingredients and
-            consistent products development.
+            consistent product development.
 
         </p>
 
@@ -437,7 +437,7 @@
 
         <p>
 
-            products designed for simple and
+            Products designed for simple and
             enjoyable everyday personal care.
 
         </p>
@@ -577,15 +577,15 @@ function escapeHtml(value) {
 
 
 
-/* ======================================================
-   LOAD products
+/* =====================================================
+   LOAD PRODUCTS
 ===================================================== */
 
-async function loadHomepageproducts() {
+async function loadHomepageProducts() {
 
     const box =
         document.getElementById(
-            "dynamicproducts"
+            "dynamicProducts"
         );
 
 
@@ -594,7 +594,7 @@ async function loadHomepageproducts() {
 
     box.innerHTML = `
 
-        <div class="products-loading">
+        <div class="product-loading">
 
             Loading products...
 
@@ -621,16 +621,16 @@ async function loadHomepageproducts() {
     if(error) {
 
         console.error(
-            "products loading error:",
+            "Product loading error:",
             error
         );
 
 
         box.innerHTML = `
 
-            <div class="products-loading">
+            <div class="product-loading">
 
-                products could not be loaded.
+                Products could not be loaded.
 
                 <br><br>
 
@@ -650,7 +650,7 @@ async function loadHomepageproducts() {
 
         box.innerHTML = `
 
-            <div class="products-loading">
+            <div class="product-loading">
 
                 No products available right now.
 
@@ -668,41 +668,41 @@ async function loadHomepageproducts() {
 
 
 
-    data.forEach(function(products) {
+    data.forEach(function(product) {
 
 
-        const productsId =
-            products.id || "";
+        const productId =
+            product.id || "";
 
 
-        const productsName =
-            products.name ||
-            products.products_name ||
-            "Liara products";
+        const productName =
+            product.name ||
+            product.product_name ||
+            "Liara Product";
 
 
         const description =
-            products.description ||
-            "Premium beauty and personal care products.";
+            product.description ||
+            "Premium beauty and personal care product.";
 
 
         const price =
             Number(
-                products.price || 0
+                product.price || 0
             );
 
 
         const stock =
             Number(
-                products.stock || 0
+                product.stock || 0
             );
 
 
         const image =
-            products.image_url ||
-            products.photo_url ||
-            products.image ||
-            products.photo ||
+            product.image_url ||
+            product.photo_url ||
+            product.image ||
+            product.photo ||
             "facewash.jpg";
 
 
@@ -714,17 +714,17 @@ async function loadHomepageproducts() {
 
 
         card.className =
-            "products-card";
+            "product-card";
 
 
 
         card.innerHTML = `
 
-            <div class="dynamic-products-image">
+            <div class="dynamic-product-image">
 
                 <img
                     src="${escapeHtml(image)}"
-                    alt="${escapeHtml(productsName)}"
+                    alt="${escapeHtml(productName)}"
                     onerror="this.src='facewash.jpg'"
                 >
 
@@ -733,7 +733,7 @@ async function loadHomepageproducts() {
 
             <h3>
 
-                ${escapeHtml(productsName)}
+                ${escapeHtml(productName)}
 
             </h3>
 
@@ -745,7 +745,7 @@ async function loadHomepageproducts() {
             </p>
 
 
-            <div class="dynamic-products-bottom">
+            <div class="dynamic-product-bottom">
 
                 <strong>
 
@@ -762,10 +762,10 @@ async function loadHomepageproducts() {
                     `
 
                     <button
-                        class="btn products-buy-btn"
-                        onclick="openproducts('${escapeHtml(productsId)}')">
+                        class="btn product-buy-btn"
+                        onclick="openProduct('${escapeHtml(productId)}')">
 
-                        View products
+                        View Product
 
                     </button>
 
@@ -800,24 +800,24 @@ async function loadHomepageproducts() {
 
 
 /* =====================================================
-   OPEN products
+   OPEN PRODUCT
 ===================================================== */
 
-function openproducts(productsId) {
+function openProduct(productId) {
 
     localStorage.setItem(
-        "selectedproductsId",
-        productsId
+        "selectedProductId",
+        productId
     );
 
 
     /*
-       Je products-details.html
+       Je product-details.html
        page bani hoy ta othe jaavega.
     */
 
     window.location.href =
-        "products.html";
+        "product.html";
 
 }
 
@@ -827,7 +827,7 @@ function openproducts(productsId) {
    START
 ===================================================== */
 
-loadHomepageproducts();
+loadHomepageProducts();
 
 </script>
 
