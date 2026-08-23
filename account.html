@@ -84,6 +84,7 @@
             font-weight: bold;
             color: #ad8232;
             margin-bottom: 15px;
+            font-size: 16px;
         }
 
         .status {
@@ -99,6 +100,11 @@
         .error-message {
             color: #b33;
             padding: 20px 0;
+        }
+
+        .order-number-missing {
+            color: #b33;
+            font-size: 13px;
         }
 
         @media (max-width: 600px) {
@@ -135,7 +141,9 @@
     <a href="index.html"
        class="logo">
 
-        <span>LIARA</span>
+        <span>
+            LIARA
+        </span>
 
         <small>
             PROFESSIONAL™
@@ -262,10 +270,9 @@
 <script>
 
 
-/* =========================
+/* =====================================================
    SUPABASE
-========================= */
-
+===================================================== */
 
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
@@ -283,21 +290,37 @@ const supabaseClient =
 
 
 
-/* =========================
-   LOAD ACCOUNT
-========================= */
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
 
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+/* =====================================================
+   LOAD ACCOUNT
+===================================================== */
 
 async function loadAccount() {
-
 
     const {
         data: {
             user
         }
     } =
-    await supabaseClient.auth.getUser();
-
+    await supabaseClient
+        .auth
+        .getUser();
 
 
     if (!user) {
@@ -310,33 +333,30 @@ async function loadAccount() {
     }
 
 
-
     document.getElementById(
         "userEmail"
     ).innerText =
         user.email;
 
 
-
-    loadOrders(user.id);
+    loadOrders(
+        user.id
+    );
 
 }
 
 
 
-/* =========================
+/* =====================================================
    LOAD ORDERS
-========================= */
-
+===================================================== */
 
 async function loadOrders(userId) {
-
 
     const ordersBox =
         document.getElementById(
             "orders"
         );
-
 
 
     const {
@@ -358,11 +378,12 @@ async function loadOrders(userId) {
         );
 
 
-
     if (error) {
 
-
-        console.log(error);
+        console.log(
+            "ORDER LOAD ERROR:",
+            error
+        );
 
 
         ordersBox.innerHTML = `
@@ -373,7 +394,9 @@ async function loadOrders(userId) {
 
                 <br><br>
 
-                ${error.message}
+                ${escapeHtml(
+                    error.message
+                )}
 
             </div>
 
@@ -384,12 +407,10 @@ async function loadOrders(userId) {
     }
 
 
-
     if (
         !data ||
         data.length === 0
     ) {
-
 
         ordersBox.innerHTML = `
 
@@ -407,9 +428,7 @@ async function loadOrders(userId) {
     }
 
 
-
     let html = "";
-
 
 
     data.forEach(
@@ -432,6 +451,16 @@ async function loadOrders(userId) {
 
 
 
+            /* ==========================================
+               SHORT ORDER NUMBER
+            ========================================== */
+
+            const shortOrderNumber =
+                order.order_number ||
+                "Order ID Pending";
+
+
+
             html += `
 
                 <div class="order-card">
@@ -440,7 +469,10 @@ async function loadOrders(userId) {
                     <div class="order-id">
 
                         Order ID:
-                        ${order.id}
+
+                        ${escapeHtml(
+                            shortOrderNumber
+                        )}
 
                     </div>
 
@@ -451,7 +483,10 @@ async function loadOrders(userId) {
                             Product:
                         </strong>
 
-                        ${order.product || "Order"}
+                        ${escapeHtml(
+                            order.product ||
+                            "Order"
+                        )}
 
                     </p>
 
@@ -462,7 +497,10 @@ async function loadOrders(userId) {
                             Customer Name:
                         </strong>
 
-                        ${order.customer_name || "-"}
+                        ${escapeHtml(
+                            order.customer_name ||
+                            "-"
+                        )}
 
                     </p>
 
@@ -473,7 +511,10 @@ async function loadOrders(userId) {
                             Phone:
                         </strong>
 
-                        ${order.phone || "-"}
+                        ${escapeHtml(
+                            order.phone ||
+                            "-"
+                        )}
 
                     </p>
 
@@ -484,7 +525,9 @@ async function loadOrders(userId) {
                             Address:
                         </strong>
 
-                        ${order.address || "-"}
+                        ${escapeHtml(
+                            buildAddress(order)
+                        )}
 
                     </p>
 
@@ -495,7 +538,10 @@ async function loadOrders(userId) {
                             Quantity:
                         </strong>
 
-                        ${order.quantity || 0}
+                        ${escapeHtml(
+                            order.quantity ||
+                            0
+                        )}
 
                     </p>
 
@@ -506,7 +552,25 @@ async function loadOrders(userId) {
                             Total:
                         </strong>
 
-                        ₹${order.total || 0}
+                        ₹${Number(
+                            order.total || 0
+                        ).toLocaleString(
+                            "en-IN"
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Payment:
+                        </strong>
+
+                        ${escapeHtml(
+                            order.payment_method ||
+                            "-"
+                        )}
 
                     </p>
 
@@ -519,7 +583,10 @@ async function loadOrders(userId) {
 
                         <span class="status">
 
-                            ${order.status || "Order Received"}
+                            ${escapeHtml(
+                                order.status ||
+                                "Order Received"
+                            )}
 
                         </span>
 
@@ -532,7 +599,9 @@ async function loadOrders(userId) {
                             Order Date:
                         </strong>
 
-                        ${orderDate}
+                        ${escapeHtml(
+                            orderDate
+                        )}
 
                     </p>
 
@@ -545,7 +614,6 @@ async function loadOrders(userId) {
     );
 
 
-
     ordersBox.innerHTML =
         html;
 
@@ -553,15 +621,49 @@ async function loadOrders(userId) {
 
 
 
-/* =========================
-   LOGOUT
-========================= */
+/* =====================================================
+   BUILD ADDRESS
+===================================================== */
 
+function buildAddress(order) {
+
+    const parts = [
+
+        order.house_no,
+
+        order.street,
+
+        order.city,
+
+        order.state,
+
+        order.pincode
+
+    ];
+
+
+    return parts
+        .filter(function(value) {
+
+            return value &&
+                   String(value).trim() !== "";
+
+        })
+        .join(", ") || "-";
+
+}
+
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
 
 async function logoutUser() {
 
-
-    await supabaseClient.auth.signOut();
+    await supabaseClient
+        .auth
+        .signOut();
 
 
     window.location.href =
@@ -571,13 +673,11 @@ async function logoutUser() {
 
 
 
-/* =========================
+/* =====================================================
    START
-========================= */
-
+===================================================== */
 
 loadAccount();
-
 
 </script>
 
