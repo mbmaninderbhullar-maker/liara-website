@@ -17,10 +17,10 @@
 <style>
 
 /* =====================================================
-   DYNAMIC PRODUCTS
+   DYNAMIC productsS
 ===================================================== */
 
-.product-loading {
+.productss-loading {
     width: 100%;
     text-align: center;
     padding: 50px 20px;
@@ -28,7 +28,7 @@
     grid-column: 1 / -1;
 }
 
-.dynamic-product-image {
+.dynamic-productss-image {
     width: 100%;
     height: 280px;
     overflow: hidden;
@@ -37,14 +37,14 @@
     margin-bottom: 18px;
 }
 
-.dynamic-product-image img {
+.dynamic-productss-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
-.dynamic-product-bottom {
+.dynamic-products-bottom {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -52,12 +52,12 @@
     margin-top: 18px;
 }
 
-.dynamic-product-bottom strong {
+.dynamic-products-bottom strong {
     font-size: 20px;
     color: #ad8232;
 }
 
-.product-buy-btn {
+.products-buy-btn {
     border: none;
     cursor: pointer;
     font-size: 13px;
@@ -107,8 +107,8 @@
         About
     </a>
 
-    <a href="#products">
-        Products
+    <a href="#productss">
+        productss
     </a>
 
     <a href="account.html">
@@ -159,7 +159,7 @@
 
     <p class="hero-text">
 
-        Premium skincare, beauty and personal care products
+        Premium skincare, beauty and personal care productss
         created for modern everyday self-care.
 
     </p>
@@ -167,8 +167,8 @@
 
     <div class="buttons">
 
-        <a href="#products" class="btn">
-            Explore Products
+        <a href="#productss" class="btn">
+            Explore productss
         </a>
 
         <a href="#about" class="btn btn-light">
@@ -306,7 +306,7 @@
         <p>
 
             We aim to create thoughtfully developed
-            products combining modern cosmetic
+            productss combining modern cosmetic
             knowledge with carefully selected
             ingredients.
 
@@ -322,10 +322,10 @@
 
 
 <!-- =====================================================
-     PRODUCTS
+     productsS
 ===================================================== -->
 
-<section id="products" class="products">
+<section id="productss" class="productss">
 
 
 <div class="heading">
@@ -335,21 +335,21 @@
     </p>
 
     <h2>
-        Featured Products
+        Featured productss
     </h2>
 
 </div>
 
 
-<!-- PRODUCTS FROM SUPABASE WILL APPEAR HERE -->
+<!-- productsS FROM SUPABASE WILL APPEAR HERE -->
 
 <div
-    class="product-grid"
-    id="dynamicProducts">
+    class="products-grid"
+    id="dynamicproductss">
 
-    <div class="product-loading">
+    <div class="products-loading">
 
-        Loading products...
+        Loading productss...
 
     </div>
 
@@ -396,7 +396,7 @@
         <p>
 
             We focus on quality ingredients and
-            consistent product development.
+            consistent products development.
 
         </p>
 
@@ -437,7 +437,7 @@
 
         <p>
 
-            Products designed for simple and
+            productss designed for simple and
             enjoyable everyday personal care.
 
         </p>
@@ -578,14 +578,14 @@ function escapeHtml(value) {
 
 
 /* =====================================================
-   LOAD PRODUCTS
+   LOAD productsS
 ===================================================== */
 
-async function loadHomepageProducts() {
+async function loadHomepageproductss() {
 
     const box =
         document.getElementById(
-            "dynamicProducts"
+            "dynamicproductss"
         );
 
 
@@ -594,9 +594,9 @@ async function loadHomepageProducts() {
 
     box.innerHTML = `
 
-        <div class="product-loading">
+        <div class="products-loading">
 
-            Loading products...
+            Loading productss...
 
         </div>
 
@@ -608,7 +608,7 @@ async function loadHomepageProducts() {
         error
     } =
     await supabaseClient
-        .from("products")
+        .from("productss")
         .select("*")
         .order(
             "created_at",
@@ -621,16 +621,16 @@ async function loadHomepageProducts() {
     if(error) {
 
         console.error(
-            "Product loading error:",
+            "products loading error:",
             error
         );
 
 
         box.innerHTML = `
 
-            <div class="product-loading">
+            <div class="products-loading">
 
-                Products could not be loaded.
+                productss could not be loaded.
 
                 <br><br>
 
@@ -650,9 +650,9 @@ async function loadHomepageProducts() {
 
         box.innerHTML = `
 
-            <div class="product-loading">
+            <div class="products-loading">
 
-                No products available right now.
+                No productss available right now.
 
             </div>
 
@@ -668,41 +668,41 @@ async function loadHomepageProducts() {
 
 
 
-    data.forEach(function(product) {
+    data.forEach(function(products) {
 
 
-        const productId =
-            product.id || "";
+        const productsId =
+            products.id || "";
 
 
-        const productName =
-            product.name ||
-            product.product_name ||
-            "Liara Product";
+        const productsName =
+            products.name ||
+            products.products_name ||
+            "Liara products";
 
 
         const description =
-            product.description ||
-            "Premium beauty and personal care product.";
+            products.description ||
+            "Premium beauty and personal care products.";
 
 
         const price =
             Number(
-                product.price || 0
+                products.price || 0
             );
 
 
         const stock =
             Number(
-                product.stock || 0
+                products.stock || 0
             );
 
 
         const image =
-            product.image_url ||
-            product.photo_url ||
-            product.image ||
-            product.photo ||
+            products.image_url ||
+            products.photo_url ||
+            products.image ||
+            products.photo ||
             "facewash.jpg";
 
 
@@ -714,17 +714,17 @@ async function loadHomepageProducts() {
 
 
         card.className =
-            "product-card";
+            "products-card";
 
 
 
         card.innerHTML = `
 
-            <div class="dynamic-product-image">
+            <div class="dynamic-products-image">
 
                 <img
                     src="${escapeHtml(image)}"
-                    alt="${escapeHtml(productName)}"
+                    alt="${escapeHtml(productsName)}"
                     onerror="this.src='facewash.jpg'"
                 >
 
@@ -733,7 +733,7 @@ async function loadHomepageProducts() {
 
             <h3>
 
-                ${escapeHtml(productName)}
+                ${escapeHtml(productsName)}
 
             </h3>
 
@@ -745,7 +745,7 @@ async function loadHomepageProducts() {
             </p>
 
 
-            <div class="dynamic-product-bottom">
+            <div class="dynamic-products-bottom">
 
                 <strong>
 
@@ -762,10 +762,10 @@ async function loadHomepageProducts() {
                     `
 
                     <button
-                        class="btn product-buy-btn"
-                        onclick="openProduct('${escapeHtml(productId)}')">
+                        class="btn products-buy-btn"
+                        onclick="openproducts('${escapeHtml(productsId)}')">
 
-                        View Product
+                        View products
 
                     </button>
 
@@ -800,24 +800,24 @@ async function loadHomepageProducts() {
 
 
 /* =====================================================
-   OPEN PRODUCT
+   OPEN products
 ===================================================== */
 
-function openProduct(productId) {
+function openproducts(productsId) {
 
     localStorage.setItem(
-        "selectedProductId",
-        productId
+        "selectedproductsId",
+        productsId
     );
 
 
     /*
-       Je product-details.html
+       Je products-details.html
        page bani hoy ta othe jaavega.
     */
 
     window.location.href =
-        "product.html";
+        "products.html";
 
 }
 
@@ -827,7 +827,7 @@ function openProduct(productId) {
    START
 ===================================================== */
 
-loadHomepageProducts();
+loadHomepageproductss();
 
 </script>
 
