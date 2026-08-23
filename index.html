@@ -17,10 +17,10 @@
 <style>
 
 /* =====================================================
-   DYNAMIC productsS
+   DYNAMIC products
 ===================================================== */
 
-.productss-loading {
+.products-loading {
     width: 100%;
     text-align: center;
     padding: 50px 20px;
@@ -28,7 +28,7 @@
     grid-column: 1 / -1;
 }
 
-.dynamic-productss-image {
+.dynamic-products-image {
     width: 100%;
     height: 280px;
     overflow: hidden;
@@ -37,7 +37,7 @@
     margin-bottom: 18px;
 }
 
-.dynamic-productss-image img {
+.dynamic-products-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -108,7 +108,7 @@
     </a>
 
     <a href="#productss">
-        productss
+        products
     </a>
 
     <a href="account.html">
@@ -159,7 +159,7 @@
 
     <p class="hero-text">
 
-        Premium skincare, beauty and personal care productss
+        Premium skincare, beauty and personal care products
         created for modern everyday self-care.
 
     </p>
@@ -167,8 +167,8 @@
 
     <div class="buttons">
 
-        <a href="#productss" class="btn">
-            Explore productss
+        <a href="#products" class="btn">
+            Explore products
         </a>
 
         <a href="#about" class="btn btn-light">
@@ -306,7 +306,7 @@
         <p>
 
             We aim to create thoughtfully developed
-            productss combining modern cosmetic
+            products combining modern cosmetic
             knowledge with carefully selected
             ingredients.
 
@@ -322,10 +322,10 @@
 
 
 <!-- =====================================================
-     productsS
+     products
 ===================================================== -->
 
-<section id="productss" class="productss">
+<section id="products" class="products">
 
 
 <div class="heading">
@@ -335,21 +335,21 @@
     </p>
 
     <h2>
-        Featured productss
+        Featured products
     </h2>
 
 </div>
 
 
-<!-- productsS FROM SUPABASE WILL APPEAR HERE -->
+<!-- products FROM SUPABASE WILL APPEAR HERE -->
 
 <div
     class="products-grid"
-    id="dynamicproductss">
+    id="dynamicproducts">
 
     <div class="products-loading">
 
-        Loading productss...
+        Loading products...
 
     </div>
 
@@ -437,7 +437,7 @@
 
         <p>
 
-            productss designed for simple and
+            products designed for simple and
             enjoyable everyday personal care.
 
         </p>
@@ -577,15 +577,15 @@ function escapeHtml(value) {
 
 
 
-/* =====================================================
-   LOAD productsS
+/* ======================================================
+   LOAD products
 ===================================================== */
 
-async function loadHomepageproductss() {
+async function loadHomepageproducts() {
 
     const box =
         document.getElementById(
-            "dynamicproductss"
+            "dynamicproducts"
         );
 
 
@@ -596,7 +596,7 @@ async function loadHomepageproductss() {
 
         <div class="products-loading">
 
-            Loading productss...
+            Loading products...
 
         </div>
 
@@ -608,7 +608,7 @@ async function loadHomepageproductss() {
         error
     } =
     await supabaseClient
-        .from("productss")
+        .from("products")
         .select("*")
         .order(
             "created_at",
@@ -630,7 +630,7 @@ async function loadHomepageproductss() {
 
             <div class="products-loading">
 
-                productss could not be loaded.
+                products could not be loaded.
 
                 <br><br>
 
@@ -652,7 +652,7 @@ async function loadHomepageproductss() {
 
             <div class="products-loading">
 
-                No productss available right now.
+                No products available right now.
 
             </div>
 
@@ -827,7 +827,7 @@ function openproducts(productsId) {
    START
 ===================================================== */
 
-loadHomepageproductss();
+loadHomepageproducts();
 
 </script>
 
