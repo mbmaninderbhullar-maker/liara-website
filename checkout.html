@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -99,7 +100,7 @@
 }
 
 .form-group {
-    margin-bottom: 17px;
+    margin-bottom: 19px;
 }
 
 .form-group label {
@@ -119,11 +120,35 @@
     box-sizing: border-box;
     outline: none;
     background: white;
+    transition: .2s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     border-color: #ad8232;
+}
+
+.form-group input.field-error,
+.form-group select.field-error {
+    border-color: #d33 !important;
+    background: #fff8f8;
+}
+
+.form-group input.field-success,
+.form-group select.field-success {
+    border-color: #287a3e;
+}
+
+.field-error-message {
+    display: none;
+    color: #c62828;
+    font-size: 12px;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.field-error-message.show {
+    display: block;
 }
 
 .address-title {
@@ -205,10 +230,6 @@
 <body>
 
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header>
 
     <a href="index.html" class="logo">
@@ -256,10 +277,6 @@
 
 
 
-<!-- =====================================================
-     CHECKOUT
-===================================================== -->
-
 <section class="checkout-section">
 
 
@@ -280,9 +297,7 @@
     <div class="checkout-container">
 
 
-        <!-- =================================================
-             ORDER SUMMARY
-        ================================================== -->
+        <!-- ORDER SUMMARY -->
 
         <div class="checkout-box">
 
@@ -291,8 +306,9 @@
             </h3>
 
 
-            <div id="orderMode"
-                 class="order-mode">
+            <div
+                id="orderMode"
+                class="order-mode">
 
                 Loading...
 
@@ -324,9 +340,7 @@
 
 
 
-        <!-- =================================================
-             CUSTOMER DETAILS
-        ================================================== -->
+        <!-- CUSTOMER DETAILS -->
 
         <div class="checkout-box">
 
@@ -335,7 +349,9 @@
             </h3>
 
 
-            <form id="checkoutForm">
+            <form
+                id="checkoutForm"
+                novalidate>
 
 
                 <!-- NAME -->
@@ -349,8 +365,13 @@
                     <input
                         type="text"
                         id="name"
-                        placeholder="Enter your full name"
-                        required>
+                        placeholder="Enter your full name">
+
+                    <div
+                        id="nameError"
+                        class="field-error-message">
+
+                    </div>
 
                 </div>
 
@@ -369,8 +390,13 @@
                         id="mobile"
                         placeholder="Enter your mobile number"
                         maxlength="10"
-                        inputmode="numeric"
-                        required>
+                        inputmode="numeric">
+
+                    <div
+                        id="mobileError"
+                        class="field-error-message">
+
+                    </div>
 
                 </div>
 
@@ -399,8 +425,13 @@
                         <input
                             type="text"
                             id="house_no"
-                            placeholder="House / Flat No."
-                            required>
+                            placeholder="House / Flat No.">
+
+                        <div
+                            id="houseError"
+                            class="field-error-message">
+
+                        </div>
 
                     </div>
 
@@ -417,8 +448,13 @@
                         <input
                             type="text"
                             id="street"
-                            placeholder="Street / Area"
-                            required>
+                            placeholder="Street / Area">
+
+                        <div
+                            id="streetError"
+                            class="field-error-message">
+
+                        </div>
 
                     </div>
 
@@ -435,8 +471,13 @@
                         <input
                             type="text"
                             id="city"
-                            placeholder="City"
-                            required>
+                            placeholder="City">
+
+                        <div
+                            id="cityError"
+                            class="field-error-message">
+
+                        </div>
 
                     </div>
 
@@ -453,8 +494,13 @@
                         <input
                             type="text"
                             id="state"
-                            placeholder="State"
-                            required>
+                            placeholder="State">
+
+                        <div
+                            id="stateError"
+                            class="field-error-message">
+
+                        </div>
 
                     </div>
 
@@ -473,8 +519,13 @@
                             id="pincode"
                             placeholder="6 digit PIN Code"
                             maxlength="6"
-                            inputmode="numeric"
-                            required>
+                            inputmode="numeric">
+
+                        <div
+                            id="pincodeError"
+                            class="field-error-message">
+
+                        </div>
 
                     </div>
 
@@ -491,9 +542,7 @@
                         Payment Method
                     </label>
 
-                    <select
-                        id="payment"
-                        required>
+                    <select id="payment">
 
                         <option value="">
                             Select Payment Method
@@ -508,6 +557,12 @@
                         </option>
 
                     </select>
+
+                    <div
+                        id="paymentError"
+                        class="field-error-message">
+
+                    </div>
 
                 </div>
 
@@ -528,6 +583,7 @@
                 <div
                     id="message"
                     class="message">
+
                 </div>
 
 
@@ -540,10 +596,6 @@
 </section>
 
 
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
 
 <footer>
 
@@ -568,10 +620,6 @@
 </footer>
 
 
-
-<!-- =====================================================
-     SUPABASE
-===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -600,22 +648,13 @@ const supabaseClient =
 
 
 /* =====================================================
-   DETERMINE CHECKOUT MODE
+   CHECKOUT MODE
 ===================================================== */
 
 const checkoutMode =
     localStorage.getItem(
         "liaraCheckoutMode"
     ) || "cart";
-
-
-/*
-   BUY NOW:
-   liaraBuyNow
-
-   CART:
-   liaraCart
-*/
 
 
 let checkoutItems = [];
@@ -640,7 +679,6 @@ if (checkoutMode === "buyNow") {
     }
 
 }
-
 
 else {
 
@@ -679,7 +717,7 @@ const orderModeElement =
 
 
 /* =====================================================
-   SHOW CHECKOUT MODE
+   MODE
 ===================================================== */
 
 if (checkoutMode === "buyNow") {
@@ -708,7 +746,6 @@ let total = 0;
 if (!checkoutItems ||
     checkoutItems.length === 0) {
 
-
     orderItems.innerHTML = `
 
         <div class="empty-checkout">
@@ -731,7 +768,6 @@ if (!checkoutItems ||
 
 }
 
-
 else {
 
     orderItems.innerHTML = "";
@@ -739,7 +775,6 @@ else {
 
     checkoutItems.forEach(
         function(product) {
-
 
             const productPrice =
                 Number(
@@ -753,13 +788,9 @@ else {
                 );
 
 
-            const productTotal =
+            total +=
                 productPrice *
                 productQuantity;
-
-
-            total +=
-                productTotal;
 
 
             orderItems.innerHTML += `
@@ -772,7 +803,6 @@ else {
                         onerror="this.src='facewash.jpg'"
                     >
 
-
                     <div>
 
                         <h4>
@@ -781,7 +811,6 @@ else {
                                 "Product"
                             )}
                         </h4>
-
 
                         <p>
 
@@ -811,7 +840,149 @@ totalElement.innerText =
 
 
 /* =====================================================
-   MOBILE VALIDATION
+   ERROR FUNCTIONS
+===================================================== */
+
+function setError(
+    fieldId,
+    errorId,
+    message
+) {
+
+    const field =
+        document.getElementById(
+            fieldId
+        );
+
+
+    const error =
+        document.getElementById(
+            errorId
+        );
+
+
+    field.classList.add(
+        "field-error"
+    );
+
+
+    field.classList.remove(
+        "field-success"
+    );
+
+
+    error.innerText =
+        message;
+
+
+    error.classList.add(
+        "show"
+    );
+
+}
+
+
+
+function clearError(
+    fieldId,
+    errorId
+) {
+
+    const field =
+        document.getElementById(
+            fieldId
+        );
+
+
+    const error =
+        document.getElementById(
+            errorId
+        );
+
+
+    field.classList.remove(
+        "field-error"
+    );
+
+
+    error.innerText =
+        "";
+
+
+    error.classList.remove(
+        "show"
+    );
+
+}
+
+
+
+/* =====================================================
+   CLEAR ERRORS WHEN TYPING
+===================================================== */
+
+const fields = [
+
+    ["name","nameError"],
+
+    ["mobile","mobileError"],
+
+    ["house_no","houseError"],
+
+    ["street","streetError"],
+
+    ["city","cityError"],
+
+    ["state","stateError"],
+
+    ["pincode","pincodeError"],
+
+    ["payment","paymentError"]
+
+];
+
+
+fields.forEach(
+    function(pair) {
+
+        const field =
+            document.getElementById(
+                pair[0]
+            );
+
+
+        field.addEventListener(
+            "input",
+            function() {
+
+                clearError(
+                    pair[0],
+                    pair[1]
+                );
+
+            }
+        );
+
+
+        field.addEventListener(
+            "change",
+            function() {
+
+                clearError(
+                    pair[0],
+                    pair[1]
+                );
+
+            }
+        );
+
+    }
+);
+
+
+
+/* =====================================================
+   MOBILE ONLY NUMBERS
 ===================================================== */
 
 document.getElementById(
@@ -831,7 +1002,7 @@ document.getElementById(
 
 
 /* =====================================================
-   PINCODE VALIDATION
+   PIN ONLY NUMBERS
 ===================================================== */
 
 document.getElementById(
@@ -851,6 +1022,317 @@ document.getElementById(
 
 
 /* =====================================================
+   VALIDATE FORM
+===================================================== */
+
+function validateForm() {
+
+    let valid = true;
+
+    let firstInvalid = null;
+
+
+    /* CLEAR OLD ERRORS */
+
+    fields.forEach(
+        function(pair) {
+
+            clearError(
+                pair[0],
+                pair[1]
+            );
+
+        }
+    );
+
+
+
+    /* NAME */
+
+    const name =
+        document.getElementById(
+            "name"
+        ).value.trim();
+
+
+    if(name === "") {
+
+        setError(
+            "name",
+            "nameError",
+            "Please enter your full name."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "name"
+            );
+
+    }
+
+
+
+    /* MOBILE */
+
+    const mobile =
+        document.getElementById(
+            "mobile"
+        ).value.trim();
+
+
+    if(mobile === "") {
+
+        setError(
+            "mobile",
+            "mobileError",
+            "Please enter your mobile number."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "mobile"
+            );
+
+    }
+
+    else if(!/^[0-9]{10}$/.test(mobile)) {
+
+        setError(
+            "mobile",
+            "mobileError",
+            "Please enter a valid 10-digit mobile number."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "mobile"
+            );
+
+    }
+
+
+
+    /* HOUSE */
+
+    const house =
+        document.getElementById(
+            "house_no"
+        ).value.trim();
+
+
+    if(house === "") {
+
+        setError(
+            "house_no",
+            "houseError",
+            "Please enter your House / Flat No."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "house_no"
+            );
+
+    }
+
+
+
+    /* STREET */
+
+    const street =
+        document.getElementById(
+            "street"
+        ).value.trim();
+
+
+    if(street === "") {
+
+        setError(
+            "street",
+            "streetError",
+            "Please enter your Street / Area."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "street"
+            );
+
+    }
+
+
+
+    /* CITY */
+
+    const city =
+        document.getElementById(
+            "city"
+        ).value.trim();
+
+
+    if(city === "") {
+
+        setError(
+            "city",
+            "cityError",
+            "Please enter your city."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "city"
+            );
+
+    }
+
+
+
+    /* STATE */
+
+    const state =
+        document.getElementById(
+            "state"
+        ).value.trim();
+
+
+    if(state === "") {
+
+        setError(
+            "state",
+            "stateError",
+            "Please enter your state."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "state"
+            );
+
+    }
+
+
+
+    /* PINCODE */
+
+    const pincode =
+        document.getElementById(
+            "pincode"
+        ).value.trim();
+
+
+    if(pincode === "") {
+
+        setError(
+            "pincode",
+            "pincodeError",
+            "Please enter your PIN Code."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "pincode"
+            );
+
+    }
+
+    else if(!/^[0-9]{6}$/.test(pincode)) {
+
+        setError(
+            "pincode",
+            "pincodeError",
+            "Please enter a valid 6-digit PIN Code."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "pincode"
+            );
+
+    }
+
+
+
+    /* PAYMENT */
+
+    const payment =
+        document.getElementById(
+            "payment"
+        ).value;
+
+
+    if(payment === "") {
+
+        setError(
+            "payment",
+            "paymentError",
+            "Please select a payment method."
+        );
+
+
+        valid = false;
+
+        firstInvalid =
+            firstInvalid ||
+            document.getElementById(
+                "payment"
+            );
+
+    }
+
+
+
+    /* FOCUS FIRST ERROR */
+
+    if(firstInvalid) {
+
+        firstInvalid.focus();
+
+    }
+
+
+    return valid;
+
+}
+
+
+
+/* =====================================================
    PLACE ORDER
 ===================================================== */
 
@@ -863,18 +1345,14 @@ document.getElementById(
         event.preventDefault();
 
 
-        /* ================================
-           CHECK ORDER
-        ================================= */
+        /* CHECK ORDER */
 
-        if (!checkoutItems ||
-            checkoutItems.length === 0) {
-
+        if(!checkoutItems ||
+           checkoutItems.length === 0) {
 
             showMessage(
                 "Your order is empty."
             );
-
 
             return;
 
@@ -882,9 +1360,21 @@ document.getElementById(
 
 
 
-        /* ================================
-           CHECK LOGIN
-        ================================= */
+        /* VALIDATE */
+
+        if(!validateForm()) {
+
+            showMessage(
+                "Please fill all required fields."
+            );
+
+            return;
+
+        }
+
+
+
+        /* LOGIN */
 
         const {
             data: {
@@ -897,8 +1387,7 @@ document.getElementById(
             .getUser();
 
 
-        if (userError || !user) {
-
+        if(userError || !user) {
 
             showMessage(
                 "Please login before placing an order."
@@ -922,9 +1411,7 @@ document.getElementById(
 
 
 
-        /* ================================
-           CUSTOMER
-        ================================= */
+        /* CUSTOMER */
 
         const customerName =
             document.getElementById(
@@ -937,28 +1424,6 @@ document.getElementById(
                 "mobile"
             ).value.trim();
 
-
-
-        /* ================================
-           VALIDATE MOBILE
-        ================================= */
-
-        if (!/^[0-9]{10}$/.test(phone)) {
-
-            showMessage(
-                "Please enter a valid 10-digit mobile number."
-            );
-
-
-            return;
-
-        }
-
-
-
-        /* ================================
-           ADDRESS
-        ================================= */
 
         const houseNo =
             document.getElementById(
@@ -990,28 +1455,6 @@ document.getElementById(
             ).value.trim();
 
 
-
-        /* ================================
-           VALIDATE PIN
-        ================================= */
-
-        if (!/^[0-9]{6}$/.test(pincode)) {
-
-            showMessage(
-                "Please enter a valid 6-digit PIN code."
-            );
-
-
-            return;
-
-        }
-
-
-
-        /* ================================
-           PAYMENT
-        ================================= */
-
         const payment =
             document.getElementById(
                 "payment"
@@ -1019,9 +1462,7 @@ document.getElementById(
 
 
 
-        /* ================================
-           PRODUCT INFORMATION
-        ================================= */
+        /* PRODUCT INFO */
 
         let productNames = "";
 
@@ -1030,7 +1471,6 @@ document.getElementById(
 
         checkoutItems.forEach(
             function(product) {
-
 
                 const quantity =
                     Number(
@@ -1063,9 +1503,7 @@ document.getElementById(
 
 
 
-        /* ================================
-           BUTTON
-        ================================= */
+        /* BUTTON */
 
         const button =
             document.getElementById(
@@ -1075,15 +1513,12 @@ document.getElementById(
 
         button.disabled = true;
 
-
         button.innerText =
             "Placing Order...";
 
 
 
-        /* ================================
-           SAVE ORDER
-        ================================= */
+        /* SAVE ORDER */
 
         const {
             error
@@ -1135,11 +1570,9 @@ document.getElementById(
 
 
 
-        /* ================================
-           ERROR
-        ================================= */
+        /* ERROR */
 
-        if (error) {
+        if(error) {
 
             console.error(
                 "ORDER ERROR:",
@@ -1167,16 +1600,9 @@ document.getElementById(
 
 
 
-        /* ================================
-           SUCCESS
-        ================================= */
+        /* SUCCESS */
 
-        if (checkoutMode === "buyNow") {
-
-            /*
-               BUY NOW ORDER:
-               Remove only buy-now data.
-            */
+        if(checkoutMode === "buyNow") {
 
             localStorage.removeItem(
                 "liaraBuyNow"
@@ -1189,13 +1615,7 @@ document.getElementById(
 
         }
 
-
         else {
-
-            /*
-               CART ORDER:
-               Remove only cart data.
-            */
 
             localStorage.removeItem(
                 "liaraCart"
@@ -1210,10 +1630,6 @@ document.getElementById(
 
 
 
-        /* ================================
-           SUCCESS MESSAGE
-        ================================= */
-
         showMessage(
             "🎉 Order placed successfully!"
         );
@@ -1223,10 +1639,6 @@ document.getElementById(
             "Order Placed ✓";
 
 
-
-        /* ================================
-           ACCOUNT PAGE
-        ================================= */
 
         setTimeout(
             function() {
