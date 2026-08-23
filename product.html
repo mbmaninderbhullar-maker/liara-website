@@ -125,12 +125,17 @@ body {
     cursor: pointer;
 }
 
+.quantity-box button:hover {
+    background: #f5f1eb;
+}
+
 .quantity-box input {
     width: 60px;
     height: 40px;
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 7px;
+    font-size: 16px;
 }
 
 .action-buttons {
@@ -146,6 +151,12 @@ body {
     border-radius: 8px;
     font-weight: bold;
     font-size: 14px;
+    transition: .2s;
+}
+
+.action-buttons button:hover {
+    transform: translateY(-1px);
+    opacity: .92;
 }
 
 .add-cart {
@@ -278,9 +289,8 @@ window.supabase.createClient(
 );
 
 
-
 /* =====================================================
-   ESCAPE
+   ESCAPE HTML
 ===================================================== */
 
 function escapeHtml(value) {
@@ -295,7 +305,6 @@ function escapeHtml(value) {
 }
 
 
-
 /* =====================================================
    PRODUCT ID
 ===================================================== */
@@ -304,7 +313,6 @@ const productId =
 localStorage.getItem(
     "selectedProductId"
 );
-
 
 
 /* =====================================================
@@ -349,14 +357,13 @@ async function loadProduct() {
     await supabaseClient
         .from("products")
         .select("*")
-        .eq("id",productId)
+        .eq("id", productId)
         .single();
 
 
     if(error || !product) {
 
         console.error(error);
-
 
         container.innerHTML = `
 
@@ -410,7 +417,6 @@ async function loadProduct() {
         name + " | Liara Professional™";
 
 
-
     container.innerHTML = `
 
         <div class="product-detail">
@@ -425,7 +431,6 @@ async function loadProduct() {
                 >
 
             </div>
-
 
 
             <div class="product-info">
@@ -476,6 +481,7 @@ async function loadProduct() {
                     <div class="quantity-box">
 
                         <button
+                            type="button"
                             onclick="decreaseQuantity()">
 
                             −
@@ -494,6 +500,7 @@ async function loadProduct() {
 
 
                         <button
+                            type="button"
                             onclick="increaseQuantity(${stock})">
 
                             +
@@ -506,6 +513,7 @@ async function loadProduct() {
                     <div class="action-buttons">
 
                         <button
+                            type="button"
                             class="add-cart"
                             onclick="addToCart()">
 
@@ -515,10 +523,11 @@ async function loadProduct() {
 
 
                         <button
+                            type="button"
                             class="buy-now"
                             onclick="buyNow()">
 
-                            Buy Now
+                            ⚡ Buy Now
 
                         </button>
 
@@ -546,9 +555,7 @@ async function loadProduct() {
 
     `;
 
-
 }
-
 
 
 /* =====================================================
@@ -561,6 +568,8 @@ function increaseQuantity(maxStock) {
         document.getElementById(
             "quantity"
         );
+
+    if(!input) return;
 
 
     let quantity =
@@ -579,13 +588,14 @@ function increaseQuantity(maxStock) {
 }
 
 
-
 function decreaseQuantity() {
 
     const input =
         document.getElementById(
             "quantity"
         );
+
+    if(!input) return;
 
 
     let quantity =
@@ -604,12 +614,18 @@ function decreaseQuantity() {
 }
 
 
-
 /* =====================================================
-   GET PRODUCT
+   GET CURRENT PRODUCT
 ===================================================== */
 
 async function getCurrentProduct() {
+
+    if(!productId) {
+
+        return null;
+
+    }
+
 
     const {
         data,
@@ -618,13 +634,16 @@ async function getCurrentProduct() {
     await supabaseClient
         .from("products")
         .select("*")
-        .eq("id",productId)
+        .eq("id", productId)
         .single();
 
 
     if(error) {
 
-        console.error(error);
+        console.error(
+            "Product error:",
+            error
+        );
 
         return null;
 
@@ -634,7 +653,6 @@ async function getCurrentProduct() {
     return data;
 
 }
-
 
 
 /* =====================================================
@@ -658,20 +676,62 @@ async function addToCart() {
     }
 
 
+    const quantityInput =
+        document.getElementById(
+            "quantity"
+        );
+
+
     const quantity =
         Number(
-            document.getElementById(
-                "quantity"
-            ).value
+            quantityInput?.value || 1
         );
 
 
-    let cart =
-        JSON.parse(
-            localStorage.getItem(
-                "liaraCart"
-            ) || "[]"
+    if(quantity < 1) {
+
+        alert(
+            "Please select a valid quantity."
         );
+
+        return;
+
+    }
+
+
+    const stock =
+        Number(product.stock || 0);
+
+
+    if(stock < quantity) {
+
+        alert(
+            "Not enough stock available."
+        );
+
+        return;
+
+    }
+
+
+    let cart = [];
+
+    try {
+
+        cart =
+            JSON.parse(
+                localStorage.getItem(
+                    "liaraCart"
+                ) || "[]"
+            );
+
+    }
+
+    catch(error) {
+
+        cart = [];
+
+    }
 
 
     const existing =
@@ -685,8 +745,24 @@ async function addToCart() {
 
     if(existing) {
 
-        existing.quantity +=
+        const newQuantity =
+            Number(existing.quantity || 0) +
             quantity;
+
+
+        if(newQuantity > stock) {
+
+            alert(
+                "You cannot add more than available stock."
+            );
+
+            return;
+
+        }
+
+
+        existing.quantity =
+            newQuantity;
 
     }
 
@@ -694,7 +770,8 @@ async function addToCart() {
 
         cart.push({
 
-            id: product.id,
+            id:
+                product.id,
 
             name:
                 product.name ||
@@ -713,7 +790,8 @@ async function addToCart() {
                 product.photo ||
                 "facewash.jpg",
 
-            quantity: quantity
+            quantity:
+                quantity
 
         });
 
@@ -737,9 +815,9 @@ async function addToCart() {
 }
 
 
-
 /* =====================================================
    BUY NOW
+   DIRECT CHECKOUT
 ===================================================== */
 
 async function buyNow() {
@@ -759,17 +837,58 @@ async function buyNow() {
     }
 
 
-    const quantity =
-        Number(
-            document.getElementById(
-                "quantity"
-            ).value
+    const quantityInput =
+        document.getElementById(
+            "quantity"
         );
 
 
+    const quantity =
+        Number(
+            quantityInput?.value || 1
+        );
+
+
+    if(quantity < 1) {
+
+        alert(
+            "Please select a valid quantity."
+        );
+
+        return;
+
+    }
+
+
+    const stock =
+        Number(product.stock || 0);
+
+
+    if(stock < quantity) {
+
+        alert(
+            "Not enough stock available."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       IMPORTANT:
+
+       Buy Now DOES NOT add product
+       to liaraCart.
+
+       It creates a separate
+       liaraBuyNow order.
+    */
+
     const buyNowItem = {
 
-        id: product.id,
+        id:
+            product.id,
 
         name:
             product.name ||
@@ -788,7 +907,8 @@ async function buyNow() {
             product.photo ||
             "facewash.jpg",
 
-        quantity: quantity
+        quantity:
+            quantity
 
     };
 
@@ -801,11 +921,30 @@ async function buyNow() {
     );
 
 
+    /*
+       This flag tells checkout
+       that customer selected
+       BUY NOW.
+    */
+
+    localStorage.setItem(
+        "liaraCheckoutMode",
+        "buyNow"
+    );
+
+
+    /*
+       DIRECT CHECKOUT PAGE
+
+       IMPORTANT:
+       checkout.html should be
+       your customer order page.
+    */
+
     window.location.href =
-        "cart.html";
+        "checkout.html";
 
 }
-
 
 
 /* =====================================================
