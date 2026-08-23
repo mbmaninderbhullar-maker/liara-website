@@ -509,7 +509,7 @@ footer p {
 
 
 /* =====================================
-   MAIN PRODUCT CARD
+   PRODUCT CARD
 ===================================== */
 
 .product-detail-card,
@@ -659,7 +659,7 @@ footer p {
 
 
 /* =====================================
-   BACK / OTHER LINKS
+   LINKS
 ===================================== */
 
 .product-detail a,
@@ -671,7 +671,7 @@ footer p {
 
 
 /* =====================================
-   PRODUCT TWO COLUMN
+   TWO COLUMN PRODUCT CARD
 ===================================== */
 
 .product-detail-card,
@@ -699,126 +699,92 @@ footer p {
 
 
 /* =====================================
-   COMPACT CUSTOMER ORDERS
+   CUSTOMER ORDERS
+   COMPACT PROFESSIONAL TABLE
 ===================================== */
 
 .order-table {
     width: 100%;
     min-width: 0 !important;
     table-layout: fixed;
-    border-collapse: collapse;
     font-size: 12px;
+    border-collapse: collapse;
 }
 
 
-/* TABLE CELLS */
+/* Table cells */
 
 .order-table th,
 .order-table td {
-    padding: 5px 4px !important;
+    padding: 6px 4px !important;
     white-space: normal !important;
     word-break: break-word;
     overflow-wrap: anywhere;
     vertical-align: middle;
-    border-bottom: 1px solid #e8e1d6;
 }
 
 
-/* HEADER */
+/* Header */
 
-.order-table thead th {
-    background: #151515;
-    color: #ffffff;
-    padding: 7px 4px !important;
-    font-size: 10px;
-    line-height: 1.2;
-}
-
-
-/* ALTERNATING ROWS */
-
-.order-table tbody tr:nth-child(odd) {
-    background: #ffffff;
-}
-
-.order-table tbody tr:nth-child(even) {
-    background: #f7f1e7;
-}
-
-
-/* BODY TEXT */
-
-.order-table tbody td {
-    font-size: 10px;
+.order-table th {
+    font-size: 11px;
     line-height: 1.15;
 }
 
-.order-table th {
-    line-height: 1.2;
+
+/* Data */
+
+.order-table td {
+    line-height: 1.15;
 }
 
 
-/* ORDER ID */
+/* Order ID */
 
 .order-table .order-id {
-    font-size: 9px;
-    line-height: 1.1;
+    font-size: 10px;
 }
 
 
-/* DATE */
+/* Date */
 
 .order-table .date-time {
     white-space: normal !important;
-    font-size: 9px;
+    font-size: 10px;
     color: #555;
-    line-height: 1.15;
+    line-height: 1.1 !important;
 }
 
 
-/* STATUS */
+/* Status */
 
 .status-select {
     width: 100%;
     min-width: 0 !important;
     padding: 5px 3px !important;
-    font-size: 9px;
-    line-height: 1.1;
+    font-size: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 0 !important;
+    border-radius: 6px;
 }
 
 
-/* TRACKING */
+/* Tracking */
 
 .tracking-input {
     width: 100% !important;
     padding: 5px 4px !important;
-    font-size: 9px;
-    line-height: 1.1;
+    font-size: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    margin: 0 !important;
+    border-radius: 6px;
 }
 
 
-/* SAVE BUTTON */
+/* Save */
 
 .save-btn {
     padding: 5px 7px !important;
-    font-size: 9px;
-    line-height: 1.1;
+    font-size: 10px;
     white-space: nowrap !important;
-    margin: 0 !important;
-}
-
-
-/* ORDER HOVER */
-
-.order-table tbody tr:hover {
-    background: #eee5d5;
-    transition: .2s;
 }
 
 
@@ -879,74 +845,96 @@ footer p {
 
 
 /* =====================================
-   SALES TABLE
+   SALE + ORDER DETAIL TEXT
+   COMPACT TWO-LINE STYLE
 ===================================== */
 
-.sale-table,
-.sales-table {
-    width: 100%;
-    min-width: 0;
-    border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 12px;
+/* Main detail containers */
+
+.sale-details,
+.order-details,
+.sale-info,
+.order-info,
+.sale-detail,
+.order-detail {
+    line-height: 1.05 !important;
 }
 
 
-/* SALES HEADER */
+/* First / upper line = WHITE */
 
-.sale-table thead th,
-.sales-table thead th {
-    background: #151515;
-    color: #ffffff;
-    padding: 7px 4px !important;
-    font-size: 10px;
-    line-height: 1.2;
-    border-bottom: 1px solid #333;
+.sale-details > *:first-child,
+.order-details > *:first-child,
+.sale-info > *:first-child,
+.order-info > *:first-child,
+.sale-detail > *:first-child,
+.order-detail > *:first-child {
+    color: #ffffff !important;
+    margin-bottom: 1px !important;
+    line-height: 1.05 !important;
 }
 
 
-/* SALES ROWS */
+/* Second / lower line = lighter grey */
 
-.sale-table tbody tr:nth-child(odd),
-.sales-table tbody tr:nth-child(odd) {
-    background: #ffffff;
-}
-
-.sale-table tbody tr:nth-child(even),
-.sales-table tbody tr:nth-child(even) {
-    background: #f7f1e7;
-}
-
-
-/* SALES CELLS */
-
-.sale-table th,
-.sale-table td,
-.sales-table th,
-.sales-table td {
-    padding: 5px 4px !important;
-    line-height: 1.15;
-    vertical-align: middle;
-    border-bottom: 1px solid #e8e1d6;
-    word-break: break-word;
-    overflow-wrap: anywhere;
+.sale-details > *:nth-child(2),
+.order-details > *:nth-child(2),
+.sale-info > *:nth-child(2),
+.order-info > *:nth-child(2),
+.sale-detail > *:nth-child(2),
+.order-detail > *:nth-child(2) {
+    color: #aaa !important;
+    margin-top: 0 !important;
+    line-height: 1.05 !important;
 }
 
 
-/* SALES BODY */
+/* Any paragraph inside these sections */
 
-.sale-table tbody td,
-.sales-table tbody td {
-    font-size: 10px;
+.sale-details p,
+.order-details p,
+.sale-info p,
+.order-info p,
+.sale-detail p,
+.order-detail p {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.05 !important;
 }
 
 
-/* SALES HOVER */
+/* =====================================
+   ADMIN / DASHBOARD DETAIL ROWS
+===================================== */
 
-.sale-table tbody tr:hover,
-.sales-table tbody tr:hover {
-    background: #eee5d5;
-    transition: .2s;
+.detail-row,
+.sale-row,
+.order-row {
+    margin-bottom: 3px !important;
+    padding: 0 !important;
+    line-height: 1.05 !important;
+}
+
+
+/* First line in row */
+
+.detail-row > *:first-child,
+.sale-row > *:first-child,
+.order-row > *:first-child {
+    color: #fff !important;
+    margin-bottom: 1px !important;
+    line-height: 1.05 !important;
+}
+
+
+/* Second line in row */
+
+.detail-row > *:nth-child(2),
+.sale-row > *:nth-child(2),
+.order-row > *:nth-child(2) {
+    color: #aaa !important;
+    margin-top: 0 !important;
+    line-height: 1.05 !important;
 }
 
 
@@ -1010,7 +998,7 @@ footer p {
     }
 
 
-    /* VIEW PRODUCT */
+    /* PRODUCT */
 
     .product-detail,
     .product-page,
@@ -1046,21 +1034,13 @@ footer p {
     /* ORDERS */
 
     .order-table {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .order-table th,
     .order-table td {
-        padding: 5px 2px !important;
+        padding: 5px 3px !important;
     }
-
-    .sale-table th,
-    .sale-table td,
-    .sales-table th,
-    .sales-table td {
-        padding: 5px 2px !important;
-    }
-
 }
 
 
@@ -1105,7 +1085,7 @@ footer p {
     }
 
 
-    /* VIEW PRODUCT MOBILE */
+    /* PRODUCT MOBILE */
 
     .product-detail,
     .product-page,
@@ -1155,55 +1135,44 @@ footer p {
         padding: 4px 2px !important;
     }
 
-    .order-table thead th {
-        padding: 5px 2px !important;
-        font-size: 8px;
-    }
-
-    .order-table tbody td {
-        font-size: 9px;
-        line-height: 1.1;
-    }
-
     .status-select,
     .tracking-input {
-        font-size: 8px;
+        font-size: 9px;
         padding: 4px 2px !important;
     }
 
     .save-btn {
-        font-size: 8px;
-        padding: 4px 4px !important;
-    }
-
-
-    /* SALES MOBILE */
-
-    .sale-table,
-    .sales-table {
         font-size: 9px;
+        padding: 4px 5px !important;
     }
 
-    .sale-table th,
-    .sale-table td,
-    .sales-table th,
-    .sales-table td {
-        padding: 4px 2px !important;
-        line-height: 1.1;
+
+    /* SALE / ORDER MOBILE */
+
+    .sale-details,
+    .order-details,
+    .sale-info,
+    .order-info,
+    .sale-detail,
+    .order-detail {
+        line-height: 1 !important;
     }
 
-    .sale-table thead th,
-    .sales-table thead th {
-        font-size: 8px;
-        padding: 5px 2px !important;
+    .sale-details p,
+    .order-details p,
+    .sale-info p,
+    .order-info p,
+    .sale-detail p,
+    .order-detail p {
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
     }
 
-    .sale-table tbody td,
-    .sales-table tbody td {
-        font-size: 9px;
+    .detail-row,
+    .sale-row,
+    .order-row {
+        margin-bottom: 2px !important;
+        line-height: 1 !important;
     }
 }
-```
-
-**Hun purani CSS poori replace karke eh wali complete CSS paste kar de.**
-Is version ch **Orders + Sales dono alternating rows** ne, te spacing pehlan naalo hor compact aa.
