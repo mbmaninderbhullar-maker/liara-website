@@ -497,7 +497,6 @@ footer p {
 
 /* =====================================
    VIEW PRODUCT PAGE
-   SAME PREMIUM CARD STYLE
 ===================================== */
 
 .product-detail,
@@ -509,7 +508,9 @@ footer p {
 }
 
 
-/* MAIN PRODUCT CARD */
+/* =====================================
+   MAIN PRODUCT CARD
+===================================== */
 
 .product-detail-card,
 .product-view-card,
@@ -524,7 +525,9 @@ footer p {
 }
 
 
-/* IF PAGE USES SIMPLE PRODUCT CONTENT */
+/* =====================================
+   PRODUCT CONTENT
+===================================== */
 
 .product-detail > div,
 .product-page > div,
@@ -535,7 +538,9 @@ footer p {
 }
 
 
-/* PRODUCT IMAGE AREA */
+/* =====================================
+   PRODUCT IMAGE
+===================================== */
 
 .product-detail img,
 .product-page img,
@@ -554,7 +559,9 @@ footer p {
 }
 
 
-/* PRODUCT TITLE */
+/* =====================================
+   PRODUCT TITLE
+===================================== */
 
 .product-detail h1,
 .product-detail h2,
@@ -573,7 +580,9 @@ footer p {
 }
 
 
-/* PRODUCT DESCRIPTION */
+/* =====================================
+   PRODUCT DESCRIPTION
+===================================== */
 
 .product-detail p,
 .product-page p,
@@ -586,7 +595,9 @@ footer p {
 }
 
 
-/* PRICE */
+/* =====================================
+   PRICE
+===================================== */
 
 .product-detail .price,
 .product-page .price,
@@ -600,7 +611,9 @@ footer p {
 }
 
 
-/* PRODUCT BUTTONS */
+/* =====================================
+   PRODUCT BUTTONS
+===================================== */
 
 .product-detail button,
 .product-page button,
@@ -628,7 +641,9 @@ footer p {
 }
 
 
-/* QUANTITY */
+/* =====================================
+   QUANTITY
+===================================== */
 
 .product-detail input[type="number"],
 .product-page input[type="number"],
@@ -643,7 +658,9 @@ footer p {
 }
 
 
-/* BACK / OTHER LINKS */
+/* =====================================
+   BACK / OTHER LINKS
+===================================== */
 
 .product-detail a,
 .product-page a,
@@ -654,7 +671,7 @@ footer p {
 
 
 /* =====================================
-   PRODUCT DETAIL - CARD LIKE TWO COLUMN
+   PRODUCT TWO COLUMN
 ===================================== */
 
 .product-detail-card,
@@ -689,61 +706,125 @@ footer p {
     width: 100%;
     min-width: 0 !important;
     table-layout: fixed;
+    border-collapse: collapse;
     font-size: 12px;
 }
 
+
+/* TABLE CELLS */
+
 .order-table th,
 .order-table td {
-    padding: 8px 5px !important;
+    padding: 5px 4px !important;
     white-space: normal !important;
     word-break: break-word;
     overflow-wrap: anywhere;
+    vertical-align: middle;
+    border-bottom: 1px solid #e8e1d6;
+}
+
+
+/* HEADER */
+
+.order-table thead th {
+    background: #151515;
+    color: #ffffff;
+    padding: 7px 4px !important;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+
+/* ALTERNATING ROWS */
+
+.order-table tbody tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+.order-table tbody tr:nth-child(even) {
+    background: #f7f1e7;
+}
+
+
+/* BODY TEXT */
+
+.order-table tbody td {
+    font-size: 10px;
+    line-height: 1.15;
 }
 
 .order-table th {
-    font-size: 11px;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
-.order-table td {
-    line-height: 1.35;
-}
+
+/* ORDER ID */
 
 .order-table .order-id {
-    font-size: 10px;
+    font-size: 9px;
+    line-height: 1.1;
 }
+
+
+/* DATE */
 
 .order-table .date-time {
     white-space: normal !important;
-    font-size: 10px;
+    font-size: 9px;
     color: #555;
+    line-height: 1.15;
 }
+
+
+/* STATUS */
 
 .status-select {
     width: 100%;
     min-width: 0 !important;
-    padding: 6px 3px !important;
-    font-size: 10px;
+    padding: 5px 3px !important;
+    font-size: 9px;
+    line-height: 1.1;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 5px;
+    margin: 0 !important;
 }
+
+
+/* TRACKING */
 
 .tracking-input {
     width: 100% !important;
-    padding: 6px 4px !important;
-    font-size: 10px;
+    padding: 5px 4px !important;
+    font-size: 9px;
+    line-height: 1.1;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 5px;
+    margin: 0 !important;
 }
+
+
+/* SAVE BUTTON */
 
 .save-btn {
-    padding: 6px 8px !important;
-    font-size: 10px;
+    padding: 5px 7px !important;
+    font-size: 9px;
+    line-height: 1.1;
     white-space: nowrap !important;
+    margin: 0 !important;
 }
 
 
-/* ORDER COLUMN WIDTHS */
+/* ORDER HOVER */
+
+.order-table tbody tr:hover {
+    background: #eee5d5;
+    transition: .2s;
+}
+
+
+/* =====================================
+   ORDER COLUMN WIDTHS
+===================================== */
 
 .order-table th:nth-child(1),
 .order-table td:nth-child(1) {
@@ -794,6 +875,78 @@ footer p {
 .order-table th:nth-child(10),
 .order-table td:nth-child(10) {
     width: 8%;
+}
+
+
+/* =====================================
+   SALES TABLE
+===================================== */
+
+.sale-table,
+.sales-table {
+    width: 100%;
+    min-width: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+}
+
+
+/* SALES HEADER */
+
+.sale-table thead th,
+.sales-table thead th {
+    background: #151515;
+    color: #ffffff;
+    padding: 7px 4px !important;
+    font-size: 10px;
+    line-height: 1.2;
+    border-bottom: 1px solid #333;
+}
+
+
+/* SALES ROWS */
+
+.sale-table tbody tr:nth-child(odd),
+.sales-table tbody tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+.sale-table tbody tr:nth-child(even),
+.sales-table tbody tr:nth-child(even) {
+    background: #f7f1e7;
+}
+
+
+/* SALES CELLS */
+
+.sale-table th,
+.sale-table td,
+.sales-table th,
+.sales-table td {
+    padding: 5px 4px !important;
+    line-height: 1.15;
+    vertical-align: middle;
+    border-bottom: 1px solid #e8e1d6;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+
+/* SALES BODY */
+
+.sale-table tbody td,
+.sales-table tbody td {
+    font-size: 10px;
+}
+
+
+/* SALES HOVER */
+
+.sale-table tbody tr:hover,
+.sales-table tbody tr:hover {
+    background: #eee5d5;
+    transition: .2s;
 }
 
 
@@ -893,16 +1046,27 @@ footer p {
     /* ORDERS */
 
     .order-table {
-        font-size: 10px;
+        font-size: 9px;
     }
 
     .order-table th,
     .order-table td {
-        padding: 6px 3px !important;
+        padding: 5px 2px !important;
+    }
+
+    .sale-table th,
+    .sale-table td,
+    .sales-table th,
+    .sales-table td {
+        padding: 5px 2px !important;
     }
 
 }
 
+
+/* =====================================
+   SMALL MOBILE
+===================================== */
 
 @media (max-width: 600px) {
 
@@ -980,7 +1144,7 @@ footer p {
     }
 
 
-    /* ORDERS */
+    /* ORDERS MOBILE */
 
     .order-table {
         font-size: 9px;
@@ -988,18 +1152,58 @@ footer p {
 
     .order-table th,
     .order-table td {
+        padding: 4px 2px !important;
+    }
+
+    .order-table thead th {
         padding: 5px 2px !important;
+        font-size: 8px;
+    }
+
+    .order-table tbody td {
+        font-size: 9px;
+        line-height: 1.1;
     }
 
     .status-select,
     .tracking-input {
-        font-size: 9px;
-        padding: 5px 2px !important;
+        font-size: 8px;
+        padding: 4px 2px !important;
     }
 
     .save-btn {
-        font-size: 9px;
-        padding: 5px 5px !important;
+        font-size: 8px;
+        padding: 4px 4px !important;
     }
 
+
+    /* SALES MOBILE */
+
+    .sale-table,
+    .sales-table {
+        font-size: 9px;
+    }
+
+    .sale-table th,
+    .sale-table td,
+    .sales-table th,
+    .sales-table td {
+        padding: 4px 2px !important;
+        line-height: 1.1;
+    }
+
+    .sale-table thead th,
+    .sales-table thead th {
+        font-size: 8px;
+        padding: 5px 2px !important;
+    }
+
+    .sale-table tbody td,
+    .sales-table tbody td {
+        font-size: 9px;
+    }
 }
+```
+
+**Hun purani CSS poori replace karke eh wali complete CSS paste kar de.**
+Is version ch **Orders + Sales dono alternating rows** ne, te spacing pehlan naalo hor compact aa.
