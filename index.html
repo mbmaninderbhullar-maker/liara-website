@@ -8,9 +8,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>
-    Liara Professional™ | Beauty & Personal Care
-</title>
+<title>Liara Professional™ | Beauty & Personal Care</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -72,7 +70,7 @@
 
 
 /* =====================================================
-   CEO / LEADERSHIP SECTION
+   CEO SECTION
 ===================================================== */
 
 .ceo-section {
@@ -156,9 +154,7 @@
 .ceo-photo {
     width: 100%;
     max-width: 430px;
-
     margin-left: auto;
-
     position: relative;
 }
 
@@ -342,9 +338,7 @@
 
         <div>
 
-            <b>
-                01
-            </b>
+            <b>01</b>
 
             <span>
                 Quality Focused
@@ -355,9 +349,7 @@
 
         <div>
 
-            <b>
-                02
-            </b>
+            <b>02</b>
 
             <span>
                 Modern Care
@@ -368,9 +360,7 @@
 
         <div>
 
-            <b>
-                03
-            </b>
+            <b>03</b>
 
             <span>
                 Everyday Beauty
@@ -555,7 +545,7 @@
         <div class="ceo-photo">
 
             <img
-                src="maninder-bhullar.jpeg"
+                src="./maninder-bhullar.jpeg"
                 alt="Maninder Bhullar - Founder & CEO"
             >
 
@@ -587,8 +577,6 @@
 
 </div>
 
-
-<!-- PRODUCTS FROM SUPABASE WILL APPEAR HERE -->
 
 <div
     class="product-grid"
@@ -836,7 +824,7 @@ async function loadHomepageProducts() {
         );
 
 
-    if(!box) return;
+    if (!box) return;
 
 
     box.innerHTML = `
@@ -865,7 +853,7 @@ async function loadHomepageProducts() {
         );
 
 
-    if(error) {
+    if (error) {
 
         console.error(
             "Product loading error:",
@@ -893,7 +881,7 @@ async function loadHomepageProducts() {
 
 
 
-    if(!data || data.length === 0) {
+    if (!data || data.length === 0) {
 
         box.innerHTML = `
 
@@ -1075,7 +1063,7 @@ loadHomepageProducts();
 
 
 
-<!-- YOUR ORIGINAL SCRIPT -->
+<!-- ORIGINAL SCRIPT -->
 
 <script src="script.js"></script>
 
