@@ -78,6 +78,7 @@
         .order-card p {
             margin: 8px 0;
             color: #555;
+            line-height: 1.5;
         }
 
         .order-id {
@@ -100,11 +101,6 @@
         .error-message {
             color: #b33;
             padding: 20px 0;
-        }
-
-        .order-number-missing {
-            color: #b33;
-            font-size: 13px;
         }
 
         @media (max-width: 600px) {
@@ -135,6 +131,10 @@
 
 <body>
 
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header>
 
@@ -180,14 +180,18 @@
 
 
 
-<section class="account-section">
+<!-- =====================================================
+     ACCOUNT
+===================================================== -->
 
+<section class="account-section">
 
     <div class="account-box">
 
 
-        <div class="account-header">
+        <!-- ACCOUNT HEADER -->
 
+        <div class="account-header">
 
             <div>
 
@@ -214,10 +218,11 @@
 
             </button>
 
-
         </div>
 
 
+
+        <!-- ORDERS -->
 
         <h3 class="orders-title">
 
@@ -235,10 +240,13 @@
 
     </div>
 
-
 </section>
 
 
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
 <footer>
 
@@ -264,6 +272,10 @@
 
 
 
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
@@ -271,7 +283,7 @@
 
 
 /* =====================================================
-   SUPABASE
+   SUPABASE CONNECTION
 ===================================================== */
 
 const SUPABASE_URL =
@@ -308,314 +320,38 @@ function escapeHtml(value) {
 
 
 /* =====================================================
-   LOAD ACCOUNT
+   SHORT ORDER ID
 ===================================================== */
 
-async function loadAccount() {
+/*
+   Database di original UUID nu change nahi karde.
 
-    const {
-        data: {
-            user
-        }
-    } =
-    await supabaseClient
-        .auth
-        .getUser();
+   Example:
 
+   2305ada4-fad5-4df6-9acd-30f8601...
 
-    if (!user) {
+   Website te:
 
-        window.location.href =
-            "login.html";
+   LIARA-2305AD
+*/
 
-        return;
+function getShortOrderId(id) {
 
-    }
+    if (!id) {
 
-
-    document.getElementById(
-        "userEmail"
-    ).innerText =
-        user.email;
-
-
-    loadOrders(
-        user.id
-    );
-
-}
-
-
-
-/* =====================================================
-   LOAD ORDERS
-===================================================== */
-
-async function loadOrders(userId) {
-
-    const ordersBox =
-        document.getElementById(
-            "orders"
-        );
-
-
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("orders")
-        .select("*")
-        .eq(
-            "user_id",
-            userId
-        )
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
-        );
-
-
-    if (error) {
-
-        console.log(
-            "ORDER LOAD ERROR:",
-            error
-        );
-
-
-        ordersBox.innerHTML = `
-
-            <div class="error-message">
-
-                Unable to load orders.
-
-                <br><br>
-
-                ${escapeHtml(
-                    error.message
-                )}
-
-            </div>
-
-        `;
-
-        return;
+        return "N/A";
 
     }
 
 
-    if (
-        !data ||
-        data.length === 0
-    ) {
+    const cleanId =
+        String(id)
+            .replace(/-/g, "")
+            .toUpperCase();
 
-        ordersBox.innerHTML = `
 
-            <div class="no-orders">
-
-                You haven't placed
-                any orders yet.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    let html = "";
-
-
-    data.forEach(
-        function(order) {
-
-
-            let orderDate = "";
-
-
-            if (order.created_at) {
-
-                orderDate =
-                    new Date(
-                        order.created_at
-                    ).toLocaleString(
-                        "en-IN"
-                    );
-
-            }
-
-
-
-            /* ==========================================
-               SHORT ORDER NUMBER
-            ========================================== */
-
-            const shortOrderNumber =
-                order.order_number ||
-                "Order ID Pending";
-
-
-
-            html += `
-
-                <div class="order-card">
-
-
-                    <div class="order-id">
-
-                        Order ID:
-
-                        ${escapeHtml(
-                            shortOrderNumber
-                        )}
-
-                    </div>
-
-
-                    <p>
-
-                        <strong>
-                            Product:
-                        </strong>
-
-                        ${escapeHtml(
-                            order.product ||
-                            "Order"
-                        )}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Customer Name:
-                        </strong>
-
-                        ${escapeHtml(
-                            order.customer_name ||
-                            "-"
-                        )}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Phone:
-                        </strong>
-
-                        ${escapeHtml(
-                            order.phone ||
-                            "-"
-                        )}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Address:
-                        </strong>
-
-                        ${escapeHtml(
-                            buildAddress(order)
-                        )}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Quantity:
-                        </strong>
-
-                        ${escapeHtml(
-                            order.quantity ||
-                            0
-                        )}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Total:
-                        </strong>
-
-                        ₹${Number(
-                            order.total || 0
-                        ).toLocaleString(
-                            "en-IN"
-                        )}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Payment:
-                        </strong>
-
-                        ${escapeHtml(
-                            order.payment_method ||
-                            "-"
-                        )}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Status:
-                        </strong>
-
-                        <span class="status">
-
-                            ${escapeHtml(
-                                order.status ||
-                                "Order Received"
-                            )}
-
-                        </span>
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Order Date:
-                        </strong>
-
-                        ${escapeHtml(
-                            orderDate
-                        )}
-
-                    </p>
-
-
-                </div>
-
-            `;
-
-        }
-    );
-
-
-    ordersBox.innerHTML =
-        html;
+    return "LIARA-" +
+        cleanId.substring(0, 6);
 
 }
 
@@ -656,14 +392,417 @@ function buildAddress(order) {
 
 
 /* =====================================================
+   LOAD ACCOUNT
+===================================================== */
+
+async function loadAccount() {
+
+
+    const {
+        data: {
+            user
+        },
+        error
+    } =
+    await supabaseClient
+        .auth
+        .getUser();
+
+
+    if (error || !user) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "userEmail"
+    ).innerText =
+        user.email || "";
+
+
+    await loadOrders(
+        user.id
+    );
+
+}
+
+
+
+/* =====================================================
+   LOAD ORDERS
+===================================================== */
+
+async function loadOrders(userId) {
+
+
+    const ordersBox =
+        document.getElementById(
+            "orders"
+        );
+
+
+    ordersBox.innerHTML = `
+
+        <div class="no-orders">
+
+            Loading orders...
+
+        </div>
+
+    `;
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("orders")
+        .select("*")
+        .eq(
+            "user_id",
+            userId
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
+
+
+    /* =================================================
+       ERROR
+    ================================================== */
+
+    if (error) {
+
+        console.error(
+            "ORDER LOAD ERROR:",
+            error
+        );
+
+
+        ordersBox.innerHTML = `
+
+            <div class="error-message">
+
+                Unable to load orders.
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       NO ORDERS
+    ================================================== */
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        ordersBox.innerHTML = `
+
+            <div class="no-orders">
+
+                You haven't placed
+                any orders yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       CREATE ORDER CARDS
+    ================================================== */
+
+    let html = "";
+
+
+    data.forEach(
+        function(order) {
+
+
+            /* =========================
+               DATE
+            ========================== */
+
+            let orderDate = "-";
+
+
+            if (order.created_at) {
+
+                orderDate =
+                    new Date(
+                        order.created_at
+                    ).toLocaleString(
+                        "en-IN"
+                    );
+
+            }
+
+
+
+            /* =========================
+               SHORT ORDER ID
+            ========================== */
+
+            const shortOrderId =
+                getShortOrderId(
+                    order.id
+                );
+
+
+
+            /* =========================
+               STATUS
+            ========================== */
+
+            const orderStatus =
+                order.status ||
+                "Order Received";
+
+
+
+            /* =========================
+               HTML
+            ========================== */
+
+            html += `
+
+                <div class="order-card">
+
+
+                    <!-- ORDER ID -->
+
+                    <div class="order-id">
+
+                        Order ID:
+                        ${escapeHtml(
+                            shortOrderId
+                        )}
+
+                    </div>
+
+
+
+                    <!-- PRODUCT -->
+
+                    <p>
+
+                        <strong>
+                            Product:
+                        </strong>
+
+                        ${escapeHtml(
+                            order.product ||
+                            "Order"
+                        )}
+
+                    </p>
+
+
+
+                    <!-- CUSTOMER -->
+
+                    <p>
+
+                        <strong>
+                            Customer Name:
+                        </strong>
+
+                        ${escapeHtml(
+                            order.customer_name ||
+                            "-"
+                        )}
+
+                    </p>
+
+
+
+                    <!-- PHONE -->
+
+                    <p>
+
+                        <strong>
+                            Phone:
+                        </strong>
+
+                        ${escapeHtml(
+                            order.phone ||
+                            "-"
+                        )}
+
+                    </p>
+
+
+
+                    <!-- ADDRESS -->
+
+                    <p>
+
+                        <strong>
+                            Address:
+                        </strong>
+
+                        ${escapeHtml(
+                            buildAddress(order)
+                        )}
+
+                    </p>
+
+
+
+                    <!-- QUANTITY -->
+
+                    <p>
+
+                        <strong>
+                            Quantity:
+                        </strong>
+
+                        ${escapeHtml(
+                            order.quantity ||
+                            0
+                        )}
+
+                    </p>
+
+
+
+                    <!-- TOTAL -->
+
+                    <p>
+
+                        <strong>
+                            Total:
+                        </strong>
+
+                        ₹${Number(
+                            order.total || 0
+                        ).toLocaleString(
+                            "en-IN"
+                        )}
+
+                    </p>
+
+
+
+                    <!-- PAYMENT -->
+
+                    <p>
+
+                        <strong>
+                            Payment:
+                        </strong>
+
+                        ${escapeHtml(
+                            order.payment_method ||
+                            "-"
+                        )}
+
+                    </p>
+
+
+
+                    <!-- STATUS -->
+
+                    <p>
+
+                        <strong>
+                            Status:
+                        </strong>
+
+                        <span class="status">
+
+                            ${escapeHtml(
+                                orderStatus
+                            )}
+
+                        </span>
+
+                    </p>
+
+
+
+                    <!-- DATE -->
+
+                    <p>
+
+                        <strong>
+                            Order Date:
+                        </strong>
+
+                        ${escapeHtml(
+                            orderDate
+                        )}
+
+                    </p>
+
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    ordersBox.innerHTML =
+        html;
+
+}
+
+
+
+/* =====================================================
    LOGOUT
 ===================================================== */
 
 async function logoutUser() {
 
+
+    const {
+        error
+    } =
     await supabaseClient
         .auth
         .signOut();
+
+
+    if (error) {
+
+        console.error(
+            "LOGOUT ERROR:",
+            error
+        );
+
+    }
 
 
     window.location.href =
