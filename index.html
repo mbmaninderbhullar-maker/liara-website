@@ -1,2389 +1,1985 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Liara Professional™ — Premium beauty, skincare and personal care products.">
 
-<meta name="description"
-      content="Liara Professional™ — Premium beauty, skincare and personal care products.">
-
-<title>
-    Liara Professional™ | Beauty & Personal Care
-</title>
+<title>Liara Professional™ | Beauty & Personal Care</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
-
-/* =====================================================
-   LIARA PROFESSIONAL™
-   PREMIUM INDEX PAGE
-===================================================== */
-
-:root {
-    --gold: #b58a3c;
-    --gold-light: #d9bd7a;
-    --dark: #1e1e1e;
-    --text: #555;
-    --cream: #f8f5ee;
-    --cream-dark: #eee8db;
-    --white: #ffffff;
+:root{
+    --gold:#b58a3c;
+    --gold-light:#d9bd7a;
+    --dark:#1d1d1d;
+    --text:#666;
+    --cream:#f8f5ee;
+    --line:#e7e0d3;
+    --white:#fff;
 }
 
-/* =====================================================
-   BASIC
-===================================================== */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-html {
-    scroll-behavior: smooth;
+html{
+    scroll-behavior:smooth;
 }
 
-body {
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    color: var(--dark);
-    background: #fff;
-    line-height: 1.6;
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--dark);
+    background:#fff;
+    line-height:1.6;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
+a{
+    text-decoration:none;
+    color:inherit;
 }
 
-img {
-    max-width: 100%;
+img{
+    max-width:100%;
 }
 
-button {
-    font-family: inherit;
+button{
+    font-family:inherit;
 }
 
-/* =====================================================
-   TOP BAR
-===================================================== */
-
-.top-bar {
-    background: #1d1d1d;
-    color: #ddd;
-
-    text-align: center;
-
-    padding: 8px 15px;
-
-    font-size: 11px;
-    letter-spacing: 1.5px;
+.top-bar{
+    background:#1c1c1c;
+    color:#ccc;
+    text-align:center;
+    padding:8px 12px;
+    font-size:10px;
+    letter-spacing:1.5px;
 }
 
-/* =====================================================
-   HEADER
-===================================================== */
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-
-    width: 100%;
-
-    background: rgba(255,255,255,0.97);
-
-    border-bottom: 1px solid #eee;
-
-    box-shadow:
-        0 4px 25px rgba(0,0,0,0.04);
-
-    backdrop-filter: blur(12px);
+header{
+    position:sticky;
+    top:0;
+    z-index:9999;
+    background:rgba(255,255,255,.97);
+    border-bottom:1px solid #eee;
+    box-shadow:0 4px 25px rgba(0,0,0,.04);
+    backdrop-filter:blur(12px);
 }
 
-.header-inner {
-    max-width: 1400px;
-
-    min-height: 82px;
-
-    margin: auto;
-
-    padding: 0 6%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 30px;
+.header-inner{
+    max-width:1400px;
+    min-height:82px;
+    margin:auto;
+    padding:0 6%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
 }
 
-/* =====================================================
-   LOGO
-===================================================== */
-
-.logo {
-    flex-shrink: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    line-height: 1;
-
-    position: relative;
+.logo{
+    flex-shrink:0;
+    display:flex;
+    flex-direction:column;
+    line-height:1;
 }
 
-.logo span {
-    font-size: 28px;
-
-    font-weight: 800;
-
-    letter-spacing: 5px;
-
-    color: #202020;
+.logo span{
+    font-size:28px;
+    font-weight:800;
+    letter-spacing:5px;
 }
 
-.logo small {
-    margin-top: 6px;
-
-    text-align: center;
-
-    font-size: 8px;
-
-    font-weight: 700;
-
-    letter-spacing: 3px;
-
-    color: var(--gold);
+.logo small{
+    margin-top:6px;
+    text-align:center;
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:3px;
+    color:var(--gold);
 }
 
-/* =====================================================
-   NAV
-===================================================== */
-
-nav {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: flex-end;
-
-    gap: 22px;
-
-    flex-wrap: wrap;
+nav{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:20px;
+    flex-wrap:wrap;
 }
 
-nav a {
-    position: relative;
-
-    color: #444;
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    white-space: nowrap;
-
-    padding: 8px 0;
-
-    transition: 0.25s;
+nav a{
+    position:relative;
+    color:#444;
+    font-size:11px;
+    font-weight:600;
+    white-space:nowrap;
+    padding:8px 0;
 }
 
-nav a::after {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-    bottom: 1px;
-
-    width: 0;
-    height: 1px;
-
-    background: var(--gold);
-
-    transition: 0.25s;
+nav a:after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:1px;
+    width:0;
+    height:1px;
+    background:var(--gold);
+    transition:.25s;
 }
 
-nav a:hover {
-    color: var(--gold);
+nav a:hover{
+    color:var(--gold);
 }
 
-nav a:hover::after {
-    width: 100%;
+nav a:hover:after{
+    width:100%;
 }
 
-/* =====================================================
-   HERO
-===================================================== */
+/* HERO */
 
-.hero {
-    position: relative;
-
-    min-height: 720px;
-
-    overflow: hidden;
-
-    padding: 100px 7% 90px;
-
-    display: grid;
-
-    grid-template-columns: 1.05fr 0.95fr;
-
-    align-items: center;
-
-    gap: 50px;
-
+.hero{
+    position:relative;
+    min-height:700px;
+    overflow:hidden;
+    padding:90px 7%;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    align-items:center;
+    gap:50px;
     background:
-        radial-gradient(
-            circle at 85% 50%,
-            rgba(216,190,128,0.28),
-            transparent 32%
-        ),
-        linear-gradient(
-            125deg,
-            #fbfaf7,
-            #f4eee2
-        );
+    radial-gradient(circle at 85% 50%,rgba(216,190,128,.28),transparent 32%),
+    linear-gradient(125deg,#fbfaf7,#f4eee2);
 }
 
-.hero::before {
-    content: "LIARA";
-
-    position: absolute;
-
-    right: -100px;
-    bottom: -100px;
-
-    font-size: 220px;
-
-    font-weight: 900;
-
-    letter-spacing: 15px;
-
-    color: rgba(181,138,60,0.045);
-
-    pointer-events: none;
+.hero:before{
+    content:"LIARA";
+    position:absolute;
+    right:-100px;
+    bottom:-100px;
+    font-size:220px;
+    font-weight:900;
+    letter-spacing:15px;
+    color:rgba(181,138,60,.045);
 }
 
-.hero-content {
-    position: relative;
-    z-index: 2;
-
-    max-width: 700px;
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:700px;
 }
-
-.eyebrow {
-    color: var(--gold);
 
-    font-size: 12px;
-
-    font-weight: 700;
-
-    letter-spacing: 4px;
-
-    margin-bottom: 20px;
+.eyebrow{
+    color:var(--gold);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:4px;
+    margin-bottom:20px;
 }
-
-.hero h1 {
-    font-size: clamp(50px, 6vw, 82px);
-
-    line-height: 0.99;
 
-    letter-spacing: -2px;
-
-    margin-bottom: 28px;
+.hero h1{
+    font-size:clamp(50px,6vw,82px);
+    line-height:.99;
+    letter-spacing:-2px;
+    margin-bottom:28px;
 }
-
-.hero h1 span {
-    display: block;
 
-    color: var(--gold);
+.hero h1 span{
+    display:block;
+    color:var(--gold);
 }
-
-.hero-text {
-    max-width: 590px;
-
-    color: #666;
-
-    font-size: 17px;
 
-    line-height: 1.9;
-
-    margin-bottom: 35px;
+.hero-text{
+    max-width:590px;
+    color:#666;
+    font-size:17px;
+    line-height:1.9;
+    margin-bottom:35px;
 }
-
-.hero-buttons {
-    display: flex;
 
-    gap: 13px;
-
-    flex-wrap: wrap;
+.hero-buttons{
+    display:flex;
+    gap:13px;
+    flex-wrap:wrap;
 }
-
-.btn {
-    min-height: 46px;
-
-    padding: 13px 25px;
-
-    border: 1px solid #222;
-
-    background: #222;
-
-    color: #fff;
-
-    display: inline-flex;
 
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-    letter-spacing: .5px;
-
-    border-radius: 3px;
-
-    cursor: pointer;
-
-    transition: 0.3s;
+.btn{
+    min-height:46px;
+    padding:13px 25px;
+    border:1px solid #222;
+    background:#222;
+    color:#fff;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:700;
+    border-radius:3px;
+    cursor:pointer;
+    transition:.3s;
 }
 
-.btn:hover {
-    background: var(--gold);
-
-    border-color: var(--gold);
-
-    transform: translateY(-2px);
+.btn:hover{
+    background:var(--gold);
+    border-color:var(--gold);
+    transform:translateY(-2px);
 }
-
-.btn-outline {
-    background: transparent;
 
-    color: #222;
-
-    border-color: #cfc8ba;
+.btn-outline{
+    background:transparent;
+    color:#222;
+    border-color:#cfc8ba;
 }
-
-.btn-outline:hover {
-    color: #fff;
 
-    border-color: var(--gold);
+.hero-stats{
+    margin-top:50px;
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
 }
-
-/* =====================================================
-   HERO STATS
-===================================================== */
-
-.hero-stats {
-    margin-top: 55px;
 
-    display: flex;
-
-    gap: 42px;
-
-    flex-wrap: wrap;
+.hero-stat{
+    display:flex;
+    flex-direction:column;
 }
 
-.hero-stat {
-    display: flex;
-
-    flex-direction: column;
+.hero-stat strong{
+    font-size:18px;
+    color:var(--gold);
 }
 
-.hero-stat strong {
-    font-size: 18px;
-
-    color: var(--gold);
+.hero-stat span{
+    font-size:10px;
+    letter-spacing:1px;
+    color:#777;
+    text-transform:uppercase;
+}
+
+.hero-visual{
+    position:relative;
+    min-height:500px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hero-circle{
+    position:absolute;
+    width:410px;
+    height:410px;
+    border-radius:50%;
+    background:radial-gradient(circle,#ead6a6,#d6b66d);
+    opacity:.75;
+}
+
+.hero-ring{
+    position:absolute;
+    width:475px;
+    height:475px;
+    border-radius:50%;
+    border:1px solid rgba(181,138,60,.35);
+}
+
+.hero-bottle{
+    position:relative;
+    z-index:3;
+    width:215px;
+    height:335px;
+    border-radius:18px 18px 28px 28px;
+    background:linear-gradient(90deg,#cfcfcf,#fff 25%,#f7f7f7 70%,#c9c9c9);
+    box-shadow:0 35px 70px rgba(0,0,0,.22);
+}
+
+.hero-cap{
+    position:absolute;
+    width:130px;
+    height:50px;
+    top:-45px;
+    left:42px;
+    border-radius:8px 8px 3px 3px;
+    background:linear-gradient(90deg,#111,#333,#111);
+}
+
+.hero-label{
+    position:absolute;
+    left:18px;
+    right:18px;
+    top:100px;
+    padding:25px 10px;
+    text-align:center;
+    background:#fcfaf4;
+    border:1px solid #c9a45d;
+}
+
+.hero-label strong{
+    display:block;
+    font-size:25px;
+    letter-spacing:4px;
+}
+
+.hero-label small{
+    display:block;
+    color:var(--gold);
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:2px;
+}
+
+.hero-label em{
+    display:block;
+    margin-top:16px;
+    font-size:8px;
+    font-style:normal;
+    letter-spacing:3px;
+    color:#777;
 }
-
-.hero-stat span {
-    margin-top: 2px;
 
-    font-size: 10px;
+/* STORY */
 
-    letter-spacing: 1px;
-
-    color: #777;
-
-    text-transform: uppercase;
+.liara-story{
+    position:relative;
+    padding:100px 7%;
+    background:#1d1d1d;
+    color:#fff;
+    overflow:hidden;
 }
-
-/* =====================================================
-   HERO PRODUCT VISUAL
-===================================================== */
-
-.hero-visual {
-    position: relative;
-
-    min-height: 500px;
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
+.liara-story:after{
+    content:"LIARA";
+    position:absolute;
+    right:-30px;
+    bottom:-80px;
+    font-size:180px;
+    font-weight:900;
+    letter-spacing:12px;
+    color:rgba(255,255,255,.025);
 }
-
-.hero-circle {
-    position: absolute;
-
-    width: 410px;
-    height: 410px;
-
-    border-radius: 50%;
 
-    background:
-        radial-gradient(
-            circle,
-            #ead6a6,
-            #d6b66d
-        );
-
-    opacity: .75;
+.story-inner{
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:75px;
+    align-items:center;
+    position:relative;
+    z-index:2;
 }
-
-.hero-ring {
-    position: absolute;
 
-    width: 475px;
-    height: 475px;
-
-    border-radius: 50%;
-
-    border: 1px solid rgba(181,138,60,.35);
+.story-content{
+    max-width:650px;
 }
-
-.hero-bottle {
-    position: relative;
 
-    z-index: 3;
-
-    width: 215px;
-    height: 335px;
-
-    border-radius: 18px 18px 28px 28px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #cfcfcf,
-            #ffffff 25%,
-            #f7f7f7 70%,
-            #c9c9c9
-        );
-
-    box-shadow:
-        0 35px 70px rgba(0,0,0,.22);
+.story-label{
+    color:var(--gold-light);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:4px;
+    display:block;
+    margin-bottom:18px;
 }
-
-.hero-cap {
-    position: absolute;
 
-    width: 130px;
-    height: 50px;
-
-    top: -45px;
-    left: 42px;
-
-    border-radius: 8px 8px 3px 3px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #111,
-            #333,
-            #111
-        );
+.story-content h2{
+    font-size:clamp(38px,5vw,58px);
+    line-height:1.08;
+    margin-bottom:25px;
 }
-
-.hero-label {
-    position: absolute;
-
-    left: 18px;
-    right: 18px;
 
-    top: 100px;
-
-    padding: 25px 10px;
-
-    text-align: center;
-
-    background: #fcfaf4;
-
-    border: 1px solid #c9a45d;
+.story-content h2 span{
+    color:var(--gold-light);
+    display:block;
 }
-
-.hero-label strong {
-    display: block;
 
-    font-size: 25px;
-
-    letter-spacing: 4px;
+.story-content p{
+    color:#aaa;
+    font-size:15px;
+    line-height:1.9;
+    margin-bottom:15px;
 }
-
-.hero-label small {
-    display: block;
-
-    color: var(--gold);
-
-    font-size: 8px;
 
-    font-weight: 700;
-
-    letter-spacing: 2px;
+.story-founder{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-top:30px;
+    padding-top:25px;
+    border-top:1px solid #383838;
 }
-
-.hero-label em {
-    display: block;
-
-    margin-top: 16px;
-
-    font-size: 8px;
-
-    font-style: normal;
 
-    letter-spacing: 3px;
-
-    color: #777;
+.story-number{
+    width:48px;
+    height:48px;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--gold-light);
+    font-size:11px;
 }
-
-/* =====================================================
-   PREMIUM INTRO
-===================================================== */
-
-.brand-intro {
-    position: relative;
-
-    padding: 78px 7%;
-
-    background: #fff;
 
-    text-align: center;
+.story-founder strong,
+.story-founder span{
+    display:block;
 }
-
-.brand-intro::before,
-.brand-intro::after {
-    content: "";
-
-    position: absolute;
-
-    top: 50%;
-
-    width: 90px;
-
-    height: 1px;
 
-    background: #d9c9a6;
+.story-founder strong{
+    font-size:16px;
 }
 
-.brand-intro::before {
-    left: 7%;
+.story-founder span{
+    color:#999;
+    font-size:11px;
+    margin-top:4px;
 }
 
-.brand-intro::after {
-    right: 7%;
+.story-highlights{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
 }
 
-.brand-intro-inner {
-    max-width: 850px;
-
-    margin: auto;
+.story-card{
+    display:grid;
+    grid-template-columns:50px 1fr;
+    gap:18px;
+    padding:25px;
+    border:1px solid #373737;
+    background:rgba(255,255,255,.025);
+    transition:.3s;
 }
-
-.brand-intro-label {
-    color: var(--gold);
-
-    font-size: 11px;
-
-    font-weight: 700;
 
-    letter-spacing: 4px;
-
-    margin-bottom: 15px;
+.story-card:hover{
+    border-color:var(--gold);
+    transform:translateX(-5px);
 }
-
-.brand-intro h2 {
-    font-size: clamp(31px, 4vw, 46px);
 
-    line-height: 1.2;
-
-    margin-bottom: 20px;
+.story-card>span{
+    color:var(--gold-light);
+    font-size:11px;
+    font-weight:700;
 }
 
-.brand-intro h2 span {
-    color: var(--gold);
+.story-card h3{
+    font-size:17px;
+    margin-bottom:6px;
 }
-
-.brand-intro p {
-    max-width: 720px;
-
-    margin: auto;
 
-    color: #777;
-
-    font-size: 15px;
-
-    line-height: 1.9;
+.story-card p{
+    color:#999;
+    font-size:12px;
+    line-height:1.7;
 }
 
-/* =====================================================
-   SECTION COMMON
-===================================================== */
+/* PHILOSOPHY */
 
-.heading {
-    text-align: center;
-
-    margin-bottom: 50px;
+.brand-intro{
+    position:relative;
+    padding:80px 7%;
+    background:#fff;
+    text-align:center;
 }
-
-.heading p {
-    color: var(--gold);
-
-    font-size: 11px;
 
-    font-weight: 700;
-
-    letter-spacing: 3px;
-
-    margin-bottom: 10px;
+.brand-intro-inner{
+    max-width:850px;
+    margin:auto;
 }
 
-.heading h2 {
-    font-size: clamp(30px, 4vw, 42px);
-
-    line-height: 1.2;
+.brand-intro-label{
+    color:var(--gold);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:4px;
+    margin-bottom:15px;
 }
-
-/* =====================================================
-   ABOUT
-===================================================== */
-
-.about {
-    padding: 95px 7%;
 
-    background: var(--cream);
+.brand-intro h2{
+    font-size:clamp(31px,4vw,46px);
+    line-height:1.2;
+    margin-bottom:20px;
 }
 
-.about-box {
-    max-width: 1050px;
-
-    margin: auto;
-
-    padding: 50px;
-
-    display: grid;
-
-    grid-template-columns: 85px 1fr;
-
-    gap: 35px;
-
-    background: #fff;
-
-    border: 1px solid #e8e1d4;
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.05);
+.brand-intro h2 span{
+    color:var(--gold);
 }
-
-.about-number {
-    width: 70px;
-    height: 70px;
 
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: #222;
-
-    color: var(--gold-light);
-
-    font-size: 30px;
-
-    font-weight: 700;
+.brand-intro p{
+    max-width:720px;
+    margin:auto;
+    color:#777;
+    font-size:15px;
+    line-height:1.9;
 }
 
-.about-box h3 {
-    font-size: 25px;
+/* COMMON */
 
-    margin-bottom: 14px;
+.heading{
+    text-align:center;
+    margin-bottom:50px;
 }
-
-.about-box p {
-    color: #666;
 
-    font-size: 15px;
-
-    line-height: 1.9;
-
-    margin-bottom: 12px;
+.heading p{
+    color:var(--gold);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:3px;
+    margin-bottom:10px;
 }
-
-/* =====================================================
-   CEO
-===================================================== */
 
-.ceo-section {
-    padding: 100px 7%;
-
-    background: #f8f5ef;
+.heading h2{
+    font-size:clamp(30px,4vw,42px);
+    line-height:1.2;
 }
-
-.ceo-content {
-    max-width: 1200px;
-
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns: 1fr .78fr;
 
-    align-items: center;
+/* ABOUT */
 
-    gap: 75px;
+.about{
+    padding:95px 7%;
+    background:var(--cream);
 }
 
-.ceo-text {
-    max-width: 650px;
+.about-box{
+    max-width:1050px;
+    margin:auto;
+    padding:50px;
+    display:grid;
+    grid-template-columns:85px 1fr;
+    gap:35px;
+    background:#fff;
+    border:1px solid var(--line);
+    box-shadow:0 20px 50px rgba(0,0,0,.05);
 }
-
-.ceo-label {
-    display: inline-block;
-
-    color: var(--gold);
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    letter-spacing: 3px;
 
-    margin-bottom: 15px;
+.about-number{
+    width:70px;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#222;
+    color:var(--gold-light);
+    font-size:30px;
+    font-weight:700;
 }
 
-.ceo-text h2 {
-    font-size: clamp(38px, 5vw, 54px);
-
-    line-height: 1.05;
-
-    margin-bottom: 8px;
+.about-box h3{
+    font-size:25px;
+    margin-bottom:14px;
 }
-
-.ceo-text h3 {
-    color: var(--gold);
-
-    font-size: 18px;
-
-    font-weight: 500;
 
-    margin-bottom: 25px;
+.about-box p{
+    color:#666;
+    font-size:15px;
+    line-height:1.9;
+    margin-bottom:12px;
 }
 
-.ceo-text p {
-    color: #666;
+/* CEO */
 
-    font-size: 15px;
-
-    line-height: 1.9;
-
-    margin-bottom: 16px;
+.ceo-section{
+    padding:100px 7%;
+    background:#f8f5ef;
 }
 
-.ceo-signature {
-    margin-top: 28px;
-
-    display: flex;
-
-    flex-direction: column;
+.ceo-content{
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr .78fr;
+    align-items:center;
+    gap:75px;
 }
 
-.ceo-signature strong {
-    font-size: 20px;
+.ceo-text{
+    max-width:650px;
 }
-
-.ceo-signature span {
-    color: #999;
 
-    font-size: 11px;
-
-    letter-spacing: 1px;
+.ceo-label{
+    display:inline-block;
+    color:var(--gold);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:3px;
+    margin-bottom:15px;
 }
-
-.ceo-photo {
-    position: relative;
-
-    width: 100%;
-
-    max-width: 420px;
 
-    margin-left: auto;
+.ceo-text h2{
+    font-size:clamp(38px,5vw,54px);
+    line-height:1.05;
+    margin-bottom:8px;
 }
-
-.ceo-photo::before {
-    content: "";
-
-    position: absolute;
-
-    width: 100%;
-    height: 100%;
-
-    top: 15px;
-    left: 15px;
-
-    border: 1px solid var(--gold);
 
-    border-radius: 18px;
+.ceo-text h3{
+    color:var(--gold);
+    font-size:18px;
+    font-weight:500;
+    margin-bottom:25px;
 }
 
-.ceo-photo img {
-    position: relative;
-
-    z-index: 2;
-
-    width: 100%;
-
-    height: 510px;
-
-    object-fit: cover;
-
-    border-radius: 18px;
-
-    display: block;
-
-    box-shadow:
-        0 25px 60px rgba(0,0,0,.13);
+.ceo-text p{
+    color:#666;
+    font-size:15px;
+    line-height:1.9;
+    margin-bottom:16px;
 }
 
-/* =====================================================
-   PRODUCTS
-===================================================== */
-
-.products {
-    padding: 100px 7%;
-
-    background: #fff;
+.ceo-signature{
+    margin-top:28px;
+    display:flex;
+    flex-direction:column;
 }
-
-.product-grid {
-    max-width: 1250px;
 
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 30px;
+.ceo-signature strong{
+    font-size:20px;
 }
-
-.product-card {
-    padding: 18px;
 
-    background: #fff;
-
-    border: 1px solid #e9e4da;
-
-    border-radius: 12px;
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.045);
-
-    transition: .3s;
+.ceo-signature span{
+    color:#999;
+    font-size:11px;
+    letter-spacing:1px;
 }
-
-.product-card:hover {
-    transform: translateY(-7px);
 
-    box-shadow:
-        0 20px 45px rgba(0,0,0,.10);
+.ceo-photo{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    margin-left:auto;
 }
 
-.dynamic-product-image {
-    width: 100%;
-
-    height: 285px;
-
-    overflow: hidden;
-
-    border-radius: 10px;
-
-    background: #f5f1eb;
-
-    margin-bottom: 18px;
+.ceo-photo:before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:15px;
+    left:15px;
+    border:1px solid var(--gold);
+    border-radius:18px;
 }
 
-.dynamic-product-image img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
+.ceo-photo img{
+    position:relative;
+    z-index:2;
+    width:100%;
+    height:510px;
+    object-fit:cover;
+    border-radius:18px;
+    display:block;
+    box-shadow:0 25px 60px rgba(0,0,0,.13);
+}
 
-    display: block;
+/* PRODUCTS */
 
-    transition: .4s;
+.products{
+    padding:100px 7%;
+    background:#fff;
 }
 
-.product-card:hover
-.dynamic-product-image img {
-    transform: scale(1.04);
+.product-grid{
+    max-width:1250px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
 }
 
-.product-card h3 {
-    font-size: 19px;
-
-    margin-bottom: 7px;
+.product-card{
+    padding:18px;
+    background:#fff;
+    border:1px solid #e9e4da;
+    border-radius:12px;
+    box-shadow:0 8px 30px rgba(0,0,0,.045);
+    transition:.3s;
 }
-
-.product-card > p {
-    color: #777;
-
-    font-size: 13px;
 
-    line-height: 1.7;
-
-    min-height: 45px;
+.product-card:hover{
+    transform:translateY(-7px);
+    box-shadow:0 20px 45px rgba(0,0,0,.1);
 }
-
-.dynamic-product-bottom {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
 
-    gap: 10px;
-
-    margin-top: 18px;
+.dynamic-product-image{
+    width:100%;
+    height:285px;
+    overflow:hidden;
+    border-radius:10px;
+    background:#f5f1eb;
+    margin-bottom:18px;
 }
-
-.dynamic-product-bottom strong {
-    color: var(--gold);
 
-    font-size: 20px;
+.dynamic-product-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:.4s;
 }
 
-.product-buy-btn {
-    padding: 10px 15px;
-
-    font-size: 11px;
+.product-card:hover .dynamic-product-image img{
+    transform:scale(1.04);
 }
-
-.out-stock {
-    color: #b22;
-
-    font-size: 12px;
 
-    font-weight: 700;
+.product-card h3{
+    font-size:19px;
+    margin-bottom:7px;
 }
 
-.product-loading {
-    grid-column: 1 / -1;
-
-    text-align: center;
-
-    padding: 60px 20px;
-
-    color: #777;
+.product-card>p{
+    color:#777;
+    font-size:13px;
+    line-height:1.7;
+    min-height:45px;
 }
-
-/* =====================================================
-   WHY LIARA
-===================================================== */
-
-.why {
-    padding: 90px 7%;
 
-    background: var(--cream);
+.dynamic-product-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:18px;
 }
 
-.why-grid {
-    max-width: 1100px;
-
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 25px;
+.dynamic-product-bottom strong{
+    color:var(--gold);
+    font-size:20px;
 }
-
-.why-card {
-    padding: 38px 28px;
 
-    text-align: center;
-
-    background: #fff;
-
-    border: 1px solid #e8e0d2;
-
-    transition: .3s;
+.product-buy-btn{
+    padding:10px 15px;
+    font-size:11px;
 }
 
-.why-card:hover {
-    transform: translateY(-5px);
-
-    box-shadow:
-        0 15px 35px rgba(0,0,0,.07);
+.out-stock{
+    color:#b22;
+    font-size:12px;
+    font-weight:700;
 }
-
-.icon {
-    width: 52px;
-    height: 52px;
-
-    margin: 0 auto 20px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: #222;
 
-    color: var(--gold-light);
-
-    font-size: 11px;
-
-    font-weight: 700;
+.product-loading{
+    grid-column:1/-1;
+    text-align:center;
+    padding:60px 20px;
+    color:#777;
 }
 
-.why-card h3 {
-    font-size: 18px;
+/* WHY */
 
-    margin-bottom: 10px;
+.why{
+    padding:90px 7%;
+    background:var(--cream);
 }
 
-.why-card p {
-    color: #777;
-
-    font-size: 13px;
-
-    line-height: 1.8;
+.why-grid{
+    max-width:1100px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
 }
-
-/* =====================================================
-   QUALITY STRIP
-===================================================== */
 
-.quality-strip {
-    padding: 45px 7%;
-
-    background: #222;
-
-    color: #fff;
+.why-card{
+    padding:38px 28px;
+    text-align:center;
+    background:#fff;
+    border:1px solid #e8e0d2;
+    transition:.3s;
 }
-
-.quality-grid {
-    max-width: 1100px;
-
-    margin: auto;
-
-    display: grid;
 
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 25px;
+.why-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,.07);
 }
-
-.quality-item {
-    text-align: center;
 
-    padding: 10px;
+.icon{
+    width:52px;
+    height:52px;
+    margin:0 auto 20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#222;
+    color:var(--gold-light);
+    font-size:11px;
+    font-weight:700;
 }
-
-.quality-item strong {
-    display: block;
-
-    color: var(--gold-light);
 
-    font-size: 14px;
-
-    margin-bottom: 5px;
+.why-card h3{
+    font-size:18px;
+    margin-bottom:10px;
 }
-
-.quality-item span {
-    color: #aaa;
 
-    font-size: 11px;
-
-    letter-spacing: .5px;
+.why-card p{
+    color:#777;
+    font-size:13px;
+    line-height:1.8;
 }
-
-/* =====================================================
-   CONTACT
-===================================================== */
-
-.contact {
-    padding: 65px 7%;
 
-    background: #fff;
+/* QUALITY */
 
-    text-align: center;
+.quality-strip{
+    padding:45px 7%;
+    background:#222;
+    color:#fff;
 }
 
-.contact .heading {
-    margin-bottom: 18px;
+.quality-grid{
+    max-width:1100px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
 }
 
-.contact > p {
-    max-width: 600px;
-
-    margin: 0 auto 22px;
-
-    color: #777;
-
-    font-size: 14px;
+.quality-item{
+    text-align:center;
+    padding:10px;
 }
-
-.contact-email {
-    display: block;
-
-    color: var(--gold);
 
-    font-size: 13px;
-
-    margin-bottom: 20px;
+.quality-item strong{
+    display:block;
+    color:var(--gold-light);
+    font-size:14px;
+    margin-bottom:5px;
 }
-
-/* =====================================================
-   FOOTER
-===================================================== */
 
-footer {
-    background: #1c1c1c;
-
-    color: #ddd;
-
-    padding: 60px 7% 25px;
+.quality-item span{
+    color:#aaa;
+    font-size:11px;
 }
-
-.footer-inner {
-    max-width: 1250px;
 
-    margin: auto;
+/* PROMISE */
 
-    display: grid;
-
-    grid-template-columns:
-        1.4fr 1fr 1fr 1fr;
-
-    gap: 45px;
-
-    padding-bottom: 40px;
-
-    border-bottom: 1px solid #333;
+.liara-promise{
+    padding:95px 7%;
+    background:#f8f5ee;
 }
-
-.footer-brand {
-    display: flex;
 
-    flex-direction: column;
+.promise-grid{
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
 }
 
-.footer-logo {
-    color: #fff;
-
-    font-size: 26px;
-
-    font-weight: 800;
-
-    letter-spacing: 4px;
+.promise-card{
+    background:#fff;
+    padding:32px 25px;
+    border:1px solid #e5ded0;
+    transition:.3s;
+}
 
-    margin-bottom: 8px;
+.promise-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(0,0,0,.07);
 }
 
-.footer-logo small {
-    color: var(--gold-light);
+.promise-card strong{
+    color:var(--gold);
+    font-size:11px;
+    letter-spacing:2px;
+}
 
-    font-size: 8px;
+.promise-card h3{
+    font-size:17px;
+    margin:20px 0 10px;
+}
 
-    letter-spacing: 3px;
+.promise-card p{
+    color:#777;
+    font-size:12px;
+    line-height:1.8;
 }
 
-.footer-brand p {
-    max-width: 300px;
+/* FAQ */
 
-    color: #999;
+.faq-section{
+    padding:95px 7%;
+    background:#fff;
+}
 
-    font-size: 12px;
+.faq-container{
+    max-width:900px;
+    margin:auto;
+}
 
-    line-height: 1.8;
+.faq-item{
+    border-bottom:1px solid #e5e0d7;
+}
 
-    margin-top: 18px;
+.faq-item:first-child{
+    border-top:1px solid #e5e0d7;
 }
 
-.footer-column h4 {
-    color: #fff;
+.faq-item summary{
+    list-style:none;
+    cursor:pointer;
+    padding:23px 45px 23px 5px;
+    font-size:15px;
+    font-weight:600;
+    position:relative;
+}
 
-    font-size: 13px;
+.faq-item summary::-webkit-details-marker{
+    display:none;
+}
 
-    margin-bottom: 18px;
+.faq-item summary:after{
+    content:"+";
+    position:absolute;
+    right:5px;
+    top:17px;
+    color:var(--gold);
+    font-size:24px;
+    font-weight:300;
 }
 
-.footer-column a {
-    display: block;
+.faq-item[open] summary:after{
+    content:"−";
+}
 
-    color: #999;
+.faq-item p{
+    color:#777;
+    font-size:13px;
+    line-height:1.8;
+    padding:0 45px 23px 5px;
+}
 
-    font-size: 12px;
+/* CONTACT */
 
-    margin-bottom: 10px;
+.contact{
+    padding:75px 7%;
+    background:#faf8f3;
+    text-align:center;
+}
 
-    transition: .2s;
+.contact .heading{
+    margin-bottom:18px;
 }
 
-.footer-column a:hover {
-    color: var(--gold-light);
+.contact>p{
+    max-width:600px;
+    margin:0 auto 12px;
+    color:#777;
+    font-size:14px;
+}
 
-    padding-left: 3px;
+.contact-email{
+    display:block;
+    color:var(--gold);
+    font-size:13px;
+    margin-bottom:20px;
 }
 
-.footer-bottom {
-    max-width: 1250px;
+/* FOOTER */
 
-    margin: 22px auto 0;
+footer{
+    background:#1c1c1c;
+    color:#ddd;
+    padding:60px 7% 25px;
+}
 
-    display: flex;
+.footer-inner{
+    max-width:1250px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1fr;
+    gap:45px;
+    padding-bottom:40px;
+    border-bottom:1px solid #333;
+}
 
-    justify-content: space-between;
+.footer-brand{
+    display:flex;
+    flex-direction:column;
+}
 
-    align-items: center;
+.footer-logo{
+    color:#fff;
+    font-size:26px;
+    font-weight:800;
+    letter-spacing:4px;
+}
 
-    gap: 15px;
+.footer-logo small{
+    color:var(--gold-light);
+    font-size:8px;
+    letter-spacing:3px;
+}
 
-    flex-wrap: wrap;
+.footer-brand p{
+    max-width:300px;
+    color:#999;
+    font-size:12px;
+    line-height:1.8;
+    margin-top:18px;
 }
 
-.footer-bottom p {
-    color: #777;
+.footer-column h4{
+    color:#fff;
+    font-size:13px;
+    margin-bottom:18px;
+}
 
-    font-size: 11px;
+.footer-column a{
+    display:block;
+    color:#999;
+    font-size:12px;
+    margin-bottom:10px;
+    transition:.2s;
 }
 
-.admin-login-link {
-    color: var(--gold-light);
+.footer-column a:hover{
+    color:var(--gold-light);
+    padding-left:3px;
+}
 
-    font-size: 11px;
+.footer-bottom{
+    max-width:1250px;
+    margin:22px auto 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
 }
 
-/* =====================================================
-   MOBILE
-===================================================== */
+.footer-bottom p{
+    color:#777;
+    font-size:11px;
+}
 
-@media (max-width: 1000px) {
+.admin-login-link{
+    color:var(--gold-light);
+    font-size:11px;
+}
 
-    .header-inner {
-        flex-direction: column;
+/* MOBILE */
 
-        padding-top: 15px;
-        padding-bottom: 15px;
+@media(max-width:1000px){
 
-        gap: 14px;
+    .header-inner{
+        flex-direction:column;
+        padding-top:15px;
+        padding-bottom:15px;
     }
 
-    nav {
-        justify-content: center;
-
-        gap: 8px 16px;
+    nav{
+        justify-content:center;
+        gap:8px 16px;
     }
-
-    .hero {
-        grid-template-columns: 1fr;
 
-        text-align: center;
-
-        padding-top: 75px;
+    .hero{
+        grid-template-columns:1fr;
+        text-align:center;
+        padding-top:70px;
     }
 
-    .hero-content {
-        margin: auto;
+    .hero-content{
+        margin:auto;
     }
 
-    .hero-text {
-        margin-left: auto;
-        margin-right: auto;
+    .hero-text{
+        margin-left:auto;
+        margin-right:auto;
     }
 
-    .hero-buttons {
-        justify-content: center;
+    .hero-buttons,
+    .hero-stats{
+        justify-content:center;
     }
 
-    .hero-stats {
-        justify-content: center;
+    .story-inner,
+    .ceo-content{
+        grid-template-columns:1fr;
+        gap:50px;
     }
 
-    .ceo-content {
-        grid-template-columns: 1fr;
-
-        gap: 50px;
+    .story-content,
+    .ceo-text{
+        margin:auto;
     }
 
-    .ceo-text {
-        margin: auto;
+    .ceo-photo{
+        margin:auto;
     }
 
-    .ceo-photo {
-        margin: auto;
+    .product-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .product-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .why-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .why-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .quality-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .quality-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .promise-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .footer-inner {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .footer-inner{
+        grid-template-columns:repeat(2,1fr);
     }
 }
-
-/* =====================================================
-   SMALL MOBILE
-===================================================== */
 
-@media (max-width: 600px) {
+@media(max-width:600px){
 
-    .top-bar {
-        font-size: 9px;
-
-        letter-spacing: 1px;
-
-        padding: 7px 8px;
+    .top-bar{
+        font-size:8px;
+        letter-spacing:1px;
     }
 
-    .header-inner {
-        align-items: flex-start;
-
-        padding-left: 5%;
-        padding-right: 5%;
+    .header-inner{
+        align-items:flex-start;
+        padding-left:5%;
+        padding-right:5%;
     }
 
-    .logo {
-        align-self: flex-start;
+    .logo span{
+        font-size:23px;
     }
 
-    .logo span {
-        font-size: 23px;
-
-        letter-spacing: 4px;
+    nav{
+        width:100%;
+        justify-content:flex-start;
+        gap:5px 13px;
     }
-
-    nav {
-        width: 100%;
 
-        justify-content: flex-start;
-
-        gap: 5px 13px;
+    nav a{
+        font-size:10px;
+        padding:4px 0;
     }
-
-    nav a {
-        font-size: 10px;
 
-        padding: 4px 0;
+    .hero{
+        min-height:auto;
+        padding:60px 5% 65px;
     }
 
-    .hero {
-        min-height: auto;
-
-        padding: 60px 5% 65px;
+    .hero h1{
+        font-size:44px;
     }
 
-    .hero h1 {
-        font-size: 44px;
-
-        letter-spacing: -1.5px;
+    .hero-text{
+        font-size:14px;
     }
 
-    .hero-text {
-        font-size: 14px;
+    .hero-buttons{
+        flex-direction:column;
+        width:100%;
     }
-
-    .hero-buttons {
-        flex-direction: column;
 
-        width: 100%;
+    .hero-buttons .btn{
+        width:100%;
     }
 
-    .hero-buttons .btn {
-        width: 100%;
+    .hero-stats{
+        gap:20px;
+        margin-top:35px;
     }
 
-    .hero-stats {
-        gap: 20px;
-
-        margin-top: 35px;
+    .hero-visual{
+        min-height:310px;
+        margin-top:20px;
     }
 
-    .hero-stat strong {
-        font-size: 15px;
+    .hero-circle{
+        width:245px;
+        height:245px;
     }
 
-    .hero-stat span {
-        font-size: 8px;
+    .hero-ring{
+        width:285px;
+        height:285px;
     }
-
-    .hero-visual {
-        min-height: 310px;
 
-        margin-top: 20px;
+    .hero-bottle{
+        width:160px;
+        height:260px;
     }
 
-    .hero-circle {
-        width: 245px;
-        height: 245px;
+    .hero-cap{
+        width:98px;
+        height:38px;
+        left:31px;
+        top:-34px;
     }
 
-    .hero-ring {
-        width: 285px;
-        height: 285px;
+    .hero-label{
+        top:78px;
+        left:13px;
+        right:13px;
+        padding:17px 6px;
     }
 
-    .hero-bottle {
-        width: 160px;
-        height: 260px;
+    .hero-label strong{
+        font-size:19px;
     }
 
-    .hero-cap {
-        width: 98px;
-        height: 38px;
-
-        left: 31px;
-
-        top: -34px;
+    .liara-story{
+        padding:65px 5%;
     }
-
-    .hero-label {
-        top: 78px;
 
-        left: 13px;
-        right: 13px;
-
-        padding: 17px 6px;
+    .story-content h2{
+        font-size:38px;
     }
 
-    .hero-label strong {
-        font-size: 19px;
+    .story-content p{
+        font-size:13px;
     }
 
-    .brand-intro {
-        padding: 55px 6%;
+    .story-card{
+        padding:21px 18px;
     }
 
-    .brand-intro::before,
-    .brand-intro::after {
-        display: none;
+    .brand-intro{
+        padding:60px 6%;
     }
 
-    .brand-intro h2 {
-        font-size: 30px;
+    .brand-intro h2{
+        font-size:30px;
     }
 
-    .brand-intro p {
-        font-size: 13px;
+    .brand-intro p{
+        font-size:13px;
     }
 
-    .about {
-        padding: 65px 5%;
+    .about{
+        padding:65px 5%;
     }
-
-    .about-box {
-        grid-template-columns: 1fr;
 
-        text-align: center;
-
-        padding: 30px 22px;
+    .about-box{
+        grid-template-columns:1fr;
+        text-align:center;
+        padding:30px 22px;
+    }
 
-        gap: 20px;
+    .about-number{
+        margin:auto;
     }
 
-    .about-number {
-        margin: auto;
+    .heading{
+        margin-bottom:35px;
     }
 
-    .heading {
-        margin-bottom: 35px;
+    .heading h2{
+        font-size:29px;
     }
 
-    .heading h2 {
-        font-size: 29px;
+    .ceo-section{
+        padding:65px 5%;
     }
 
-    .ceo-section {
-        padding: 65px 5%;
+    .ceo-text h2{
+        font-size:37px;
     }
 
-    .ceo-text h2 {
-        font-size: 37px;
+    .ceo-text h3{
+        font-size:16px;
     }
 
-    .ceo-text h3 {
-        font-size: 16px;
+    .ceo-text p{
+        font-size:14px;
     }
 
-    .ceo-text p {
-        font-size: 14px;
+    .ceo-photo{
+        max-width:320px;
     }
 
-    .ceo-photo {
-        max-width: 320px;
+    .ceo-photo img{
+        height:400px;
     }
 
-    .ceo-photo img {
-        height: 400px;
+    .products{
+        padding:65px 5%;
     }
 
-    .products {
-        padding: 65px 5%;
+    .product-grid{
+        grid-template-columns:1fr;
+        gap:22px;
     }
 
-    .product-grid {
-        grid-template-columns: 1fr;
+    .dynamic-product-image{
+        height:300px;
+    }
 
-        gap: 22px;
+    .why{
+        padding:65px 5%;
     }
 
-    .dynamic-product-image {
-        height: 300px;
+    .why-grid{
+        grid-template-columns:1fr;
     }
 
-    .why {
-        padding: 65px 5%;
+    .quality-strip{
+        padding:35px 5%;
     }
 
-    .why-grid {
-        grid-template-columns: 1fr;
+    .quality-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:20px 10px;
     }
 
-    .quality-strip {
-        padding: 35px 5%;
+    .liara-promise{
+        padding:65px 5%;
     }
 
-    .quality-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .promise-grid{
+        grid-template-columns:1fr;
+    }
 
-        gap: 20px 10px;
+    .faq-section{
+        padding:65px 5%;
     }
 
-    .contact {
-        padding: 48px 6%;
+    .faq-item summary{
+        font-size:14px;
+        padding:20px 40px 20px 2px;
     }
 
-    footer {
-        padding: 45px 6% 22px;
+    .faq-item p{
+        font-size:12px;
+        padding-left:2px;
     }
 
-    .footer-inner {
-        grid-template-columns: 1fr 1fr;
+    .contact{
+        padding:55px 6%;
+    }
 
-        gap: 35px 20px;
+    footer{
+        padding:45px 6% 22px;
     }
 
-    .footer-brand {
-        grid-column: 1 / -1;
+    .footer-inner{
+        grid-template-columns:1fr 1fr;
+        gap:35px 20px;
     }
 
-    .footer-bottom {
-        flex-direction: column;
+    .footer-brand{
+        grid-column:1/-1;
+    }
 
-        text-align: center;
+    .footer-bottom{
+        flex-direction:column;
+        text-align:center;
     }
 }
 
-/* =====================================================
-   VERY SMALL MOBILE
-===================================================== */
+@media(max-width:380px){
 
-@media (max-width: 380px) {
-
-    nav {
-        gap: 4px 10px;
+    nav{
+        gap:4px 10px;
     }
 
-    nav a {
-        font-size: 9px;
+    nav a{
+        font-size:9px;
     }
 
-    .hero h1 {
-        font-size: 39px;
+    .hero h1{
+        font-size:39px;
     }
 
-    .footer-inner {
-        grid-template-columns: 1fr;
+    .footer-inner{
+        grid-template-columns:1fr;
     }
 
-    .footer-brand {
-        grid-column: auto;
+    .footer-brand{
+        grid-column:auto;
     }
 }
-
 </style>
-
 </head>
 
 <body>
 
-
-<!-- =====================================================
-     TOP BAR
-===================================================== -->
-
 <div class="top-bar">
-
     LIARA PROFESSIONAL™ &nbsp; • &nbsp;
     QUALITY • CARE • CONFIDENCE
-
 </div>
 
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header>
-
 <div class="header-inner">
 
 <a href="#home" class="logo">
-
     <span>LIARA</span>
-
     <small>PROFESSIONAL™</small>
-
 </a>
 
-
 <nav>
-
     <a href="#home">Home</a>
-
     <a href="#about">About</a>
-
     <a href="#leadership">Leadership</a>
-
     <a href="#products">Products</a>
-
     <a href="account.html">My Account</a>
-
     <a href="cart.html">Cart 🛒</a>
-
     <a href="#why-us">Why Liara</a>
-
+    <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
-
 </nav>
 
 </div>
-
 </header>
 
-
-<!-- =====================================================
-     HERO
-===================================================== -->
+<!-- HERO -->
 
 <section id="home" class="hero">
 
 <div class="hero-content">
 
-    <p class="eyebrow">
-        LIARA PROFESSIONAL™
-    </p>
+<p class="eyebrow">LIARA PROFESSIONAL™</p>
 
+<h1>
+    Beauty That
+    <span>Feels Professional.</span>
+</h1>
 
-    <h1>
-        Beauty That
-        <span>Feels Professional.</span>
-    </h1>
+<p class="hero-text">
+    Premium skincare, beauty and personal care products
+    created for modern everyday self-care — with a focus
+    on quality, thoughtful development and confidence.
+</p>
 
-
-    <p class="hero-text">
-
-        Premium skincare, beauty and personal care
-        products created for modern everyday
-        self-care — with a focus on quality,
-        thoughtful development and confidence.
-
-    </p>
-
-
-    <div class="hero-buttons">
-
-        <a href="#products" class="btn">
-            Explore Products
-        </a>
-
-        <a href="#about"
-           class="btn btn-outline">
-            Discover Liara
-        </a>
-
-    </div>
-
-
-    <div class="hero-stats">
-
-        <div class="hero-stat">
-
-            <strong>01</strong>
-
-            <span>
-                Quality Focused
-            </span>
-
-        </div>
-
-
-        <div class="hero-stat">
-
-            <strong>02</strong>
-
-            <span>
-                Modern Care
-            </span>
-
-        </div>
-
-
-        <div class="hero-stat">
-
-            <strong>03</strong>
-
-            <span>
-                Everyday Beauty
-            </span>
-
-        </div>
-
-    </div>
-
+<div class="hero-buttons">
+    <a href="#products" class="btn">Explore Products</a>
+    <a href="#about" class="btn btn-outline">Discover Liara</a>
 </div>
 
+<div class="hero-stats">
+
+<div class="hero-stat">
+<strong>01</strong>
+<span>Quality Focused</span>
+</div>
+
+<div class="hero-stat">
+<strong>02</strong>
+<span>Modern Care</span>
+</div>
+
+<div class="hero-stat">
+<strong>03</strong>
+<span>Everyday Beauty</span>
+</div>
+
+</div>
+</div>
 
 <div class="hero-visual">
 
-    <div class="hero-circle"></div>
+<div class="hero-circle"></div>
+<div class="hero-ring"></div>
 
-    <div class="hero-ring"></div>
+<div class="hero-bottle">
 
+<div class="hero-cap"></div>
 
-    <div class="hero-bottle">
+<div class="hero-label">
+<strong>LIARA</strong>
+<small>PROFESSIONAL™</small>
+<em>PREMIUM SKINCARE</em>
+</div>
 
-        <div class="hero-cap"></div>
-
-
-        <div class="hero-label">
-
-            <strong>LIARA</strong>
-
-            <small>
-                PROFESSIONAL™
-            </small>
-
-            <em>
-                PREMIUM SKINCARE
-            </em>
-
-        </div>
-
-    </div>
-
+</div>
 </div>
 
 </section>
 
+<!-- LIARA STORY -->
 
-<!-- =====================================================
-     PREMIUM BRAND INTRO
-===================================================== -->
+<section class="liara-story">
+
+<div class="story-inner">
+
+<div class="story-content">
+
+<span class="story-label">
+    THE LIARA STORY
+</span>
+
+<h2>
+    A Vision Built For
+    <span>Modern Beauty.</span>
+</h2>
+
+<p>
+    Liara Group Private Limited is the company behind
+    Liara Professional™, created with a vision to build
+    a modern and trusted beauty, skincare and
+    personal-care brand.
+</p>
+
+<p>
+    Our journey is driven by a simple belief:
+    everyday personal care should combine quality,
+    thoughtful development and a refined experience.
+</p>
+
+<div class="story-founder">
+
+<div class="story-number">01</div>
+
+<div>
+<strong>Maninder Bhullar</strong>
+<span>Founder & Chief Executive Officer</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="story-highlights">
+
+<div class="story-card">
+<span>01</span>
+<div>
+<h3>Our Vision</h3>
+<p>Building Liara into a trusted modern personal-care brand.</p>
+</div>
+</div>
+
+<div class="story-card">
+<span>02</span>
+<div>
+<h3>Our Focus</h3>
+<p>Quality, thoughtful development and customer satisfaction.</p>
+</div>
+</div>
+
+<div class="story-card">
+<span>03</span>
+<div>
+<h3>Our Journey</h3>
+<p>Growing Liara Professional™ with purpose and confidence.</p>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- PHILOSOPHY -->
 
 <section class="brand-intro">
 
 <div class="brand-intro-inner">
 
-    <div class="brand-intro-label">
-        THE LIARA PHILOSOPHY
-    </div>
-
-
-    <h2>
-        Thoughtful Beauty.
-        <span>Modern Confidence.</span>
-    </h2>
-
-
-    <p>
-
-        Liara Professional™ is built around a simple
-        idea — everyday personal care should feel
-        refined, reliable and enjoyable. We focus on
-        thoughtfully developed beauty and personal
-        care products designed for modern lifestyles.
-
-    </p>
-
+<div class="brand-intro-label">
+    THE LIARA PHILOSOPHY
 </div>
 
+<h2>
+    Thoughtful Beauty.
+    <span>Modern Confidence.</span>
+</h2>
+
+<p>
+    Liara Professional™ is built around a simple idea —
+    everyday personal care should feel refined, reliable
+    and enjoyable. We focus on thoughtfully developed
+    beauty and personal care products designed for
+    modern lifestyles.
+</p>
+
+</div>
 </section>
 
-
-<!-- =====================================================
-     ABOUT
-===================================================== -->
+<!-- ABOUT -->
 
 <section id="about" class="about">
 
 <div class="heading">
-
-    <p>ABOUT LIARA</p>
-
-    <h2>
-        Beauty With Purpose
-    </h2>
-
+<p>ABOUT LIARA</p>
+<h2>Beauty With Purpose</h2>
 </div>
-
 
 <div class="about-box">
 
-    <div class="about-number">
-        L
-    </div>
+<div class="about-number">L</div>
 
+<div>
 
-    <div>
+<h3>Liara Professional™</h3>
 
-        <h3>
-            Liara Professional™
-        </h3>
+<p>
+    Liara Professional is a growing beauty, skincare
+    and personal care brand focused on quality,
+    innovation and everyday self-care.
+</p>
 
-
-        <p>
-
-            Liara Professional is a growing beauty,
-            skincare and personal care brand focused
-            on quality, innovation and everyday
-            self-care.
-
-        </p>
-
-
-        <p>
-
-            We aim to create thoughtfully developed
-            products combining modern cosmetic
-            knowledge with carefully selected
-            ingredients and a strong commitment
-            to customer satisfaction.
-
-        </p>
-
-    </div>
+<p>
+    We aim to create thoughtfully developed products
+    combining modern cosmetic knowledge with carefully
+    selected ingredients and a strong commitment to
+    customer satisfaction.
+</p>
 
 </div>
-
+</div>
 </section>
 
+<!-- LEADERSHIP -->
 
-<!-- =====================================================
-     LEADERSHIP
-===================================================== -->
-
-<section id="leadership"
-         class="ceo-section">
+<section id="leadership" class="ceo-section">
 
 <div class="ceo-content">
 
-
 <div class="ceo-text">
 
-    <span class="ceo-label">
-        LEADERSHIP
-    </span>
+<span class="ceo-label">LEADERSHIP</span>
 
+<h2>Maninder Bhullar</h2>
 
-    <h2>
-        Maninder Bhullar
-    </h2>
+<h3>Founder & Chief Executive Officer</h3>
 
+<p>
+    Maninder Bhullar is the Founder and Chief Executive
+    Officer of Liara Group Private Limited, the company
+    behind Liara Professional™.
+</p>
 
-    <h3>
-        Founder & Chief Executive Officer
-    </h3>
+<p>
+    With a vision to build a trusted and modern
+    personal-care company, he leads Liara with a strong
+    focus on quality, innovation, customer satisfaction
+    and continuous growth.
+</p>
 
+<p>
+    His vision is to develop Liara Professional™ into a
+    trusted name in beauty, skincare and personal care,
+    combining thoughtful product development with a
+    commitment to quality.
+</p>
 
-    <p>
-
-        Maninder Bhullar is the Founder and Chief
-        Executive Officer of Liara Group Private
-        Limited, the company behind
-        Liara Professional™.
-
-    </p>
-
-
-    <p>
-
-        With a vision to build a trusted and modern
-        personal-care company, he leads Liara with
-        a strong focus on quality, innovation,
-        customer satisfaction and continuous growth.
-
-    </p>
-
-
-    <p>
-
-        His vision is to develop Liara Professional™
-        into a trusted name in beauty, skincare and
-        personal care, combining thoughtful product
-        development with a commitment to quality.
-
-    </p>
-
-
-    <div class="ceo-signature">
-
-        <strong>
-            Maninder Bhullar
-        </strong>
-
-        <span>
-            Founder & CEO
-        </span>
-
-    </div>
-
+<div class="ceo-signature">
+<strong>Maninder Bhullar</strong>
+<span>Founder & CEO</span>
 </div>
 
+</div>
 
 <div class="ceo-photo">
 
-    <img
-        src="maninder-bhullar.jpeg"
-        alt="Maninder Bhullar - Founder and CEO"
-        onerror="
-            this.style.display='none';
-            this.parentElement.classList.add('photo-missing');
-        "
-    >
+<img
+src="maninder-bhullar.jpeg"
+alt="Maninder Bhullar - Founder and CEO"
+onerror="this.style.display='none';"
+>
 
 </div>
 
 </div>
-
 </section>
 
+<!-- PRODUCTS -->
 
-<!-- =====================================================
-     PRODUCTS
-===================================================== -->
-
-<section id="products"
-         class="products">
+<section id="products" class="products">
 
 <div class="heading">
-
-    <p>
-        OUR COLLECTION
-    </p>
-
-    <h2>
-        Featured Products
-    </h2>
-
+<p>OUR COLLECTION</p>
+<h2>Featured Products</h2>
 </div>
 
+<div id="dynamicProducts" class="product-grid">
 
-<div id="dynamicProducts"
-     class="product-grid">
-
-    <div class="product-loading">
-
-        Loading products...
-
-    </div>
-
+<div class="product-loading">
+    Loading products...
 </div>
 
+</div>
 </section>
 
+<!-- WHY LIARA -->
 
-<!-- =====================================================
-     WHY LIARA
-===================================================== -->
-
-<section id="why-us"
-         class="why">
+<section id="why-us" class="why">
 
 <div class="heading">
-
-    <p>
-        WHY LIARA
-    </p>
-
-    <h2>
-        Why Choose Liara Professional?
-    </h2>
-
+<p>WHY LIARA</p>
+<h2>Why Choose Liara Professional?</h2>
 </div>
-
 
 <div class="why-grid">
 
+<div class="why-card">
+<div class="icon">01</div>
+<h3>Quality Focused</h3>
+<p>
+    We focus on quality ingredients and consistent
+    product development.
+</p>
+</div>
 
 <div class="why-card">
-
-    <div class="icon">
-        01
-    </div>
-
-    <h3>
-        Quality Focused
-    </h3>
-
-    <p>
-
-        We focus on quality ingredients and
-        consistent product development.
-
-    </p>
-
+<div class="icon">02</div>
+<h3>Modern Formulation</h3>
+<p>
+    Modern cosmetic knowledge combined with
+    thoughtful formulation.
+</p>
 </div>
-
 
 <div class="why-card">
-
-    <div class="icon">
-        02
-    </div>
-
-    <h3>
-        Modern Formulation
-    </h3>
-
-    <p>
-
-        Modern cosmetic knowledge combined
-        with thoughtful formulation.
-
-    </p>
-
-</div>
-
-
-<div class="why-card">
-
-    <div class="icon">
-        03
-    </div>
-
-    <h3>
-        Everyday Care
-    </h3>
-
-    <p>
-
-        Products designed for simple and
-        enjoyable everyday personal care.
-
-    </p>
-
+<div class="icon">03</div>
+<h3>Everyday Care</h3>
+<p>
+    Products designed for simple and enjoyable
+    everyday personal care.
+</p>
 </div>
 
 </div>
-
 </section>
 
-
-<!-- =====================================================
-     QUALITY STRIP
-===================================================== -->
+<!-- QUALITY STRIP -->
 
 <section class="quality-strip">
 
 <div class="quality-grid">
 
+<div class="quality-item">
+<strong>QUALITY</strong>
+<span>Focused Product Development</span>
+</div>
 
 <div class="quality-item">
-
-    <strong>
-        QUALITY
-    </strong>
-
-    <span>
-        Focused Product Development
-    </span>
-
+<strong>CARE</strong>
+<span>Created For Everyday Use</span>
 </div>
-
 
 <div class="quality-item">
-
-    <strong>
-        CARE
-    </strong>
-
-    <span>
-        Created For Everyday Use
-    </span>
-
+<strong>INNOVATION</strong>
+<span>Modern Cosmetic Approach</span>
 </div>
-
 
 <div class="quality-item">
-
-    <strong>
-        INNOVATION
-    </strong>
-
-    <span>
-        Modern Cosmetic Approach
-    </span>
-
+<strong>LIARA</strong>
+<span>Beauty With Purpose</span>
 </div>
 
-
-<div class="quality-item">
-
-    <strong>
-        LIARA
-    </strong>
-
-    <span>
-        Beauty With Purpose
-    </span>
-
 </div>
-
-
-</div>
-
 </section>
 
+<!-- PROMISE -->
 
-<!-- =====================================================
-     CONTACT
-===================================================== -->
-
-<section id="contact"
-         class="contact">
+<section class="liara-promise">
 
 <div class="heading">
-
-    <p>
-        GET IN TOUCH
-    </p>
-
-    <h2>
-        Let's Connect
-    </h2>
-
+<p>THE LIARA PROMISE</p>
+<h2>Made With Purpose. Built With Care.</h2>
 </div>
 
+<div class="promise-grid">
+
+<div class="promise-card">
+<strong>01</strong>
+<h3>Thoughtful Development</h3>
+<p>
+    Every product begins with a focus on purpose,
+    usability and quality.
+</p>
+</div>
+
+<div class="promise-card">
+<strong>02</strong>
+<h3>Quality Mindset</h3>
+<p>
+    We continuously focus on improving our products
+    and customer experience.
+</p>
+</div>
+
+<div class="promise-card">
+<strong>03</strong>
+<h3>Modern Beauty</h3>
+<p>
+    Personal care designed around modern everyday
+    lifestyles.
+</p>
+</div>
+
+<div class="promise-card">
+<strong>04</strong>
+<h3>Customer First</h3>
+<p>
+    We value trust, satisfaction and long-term
+    relationships with customers.
+</p>
+</div>
+
+</div>
+</section>
+
+<!-- FAQ -->
+
+<section class="faq-section" id="faq">
+
+<div class="heading">
+<p>FREQUENTLY ASKED QUESTIONS</p>
+<h2>Questions, Answered.</h2>
+</div>
+
+<div class="faq-container">
+
+<details class="faq-item">
+<summary>What is Liara Professional™?</summary>
+<p>
+    Liara Professional™ is a beauty, skincare and
+    personal-care brand operated by Liara Group
+    Private Limited.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>What products does Liara offer?</summary>
+<p>
+    Our collection is focused on beauty, skincare and
+    personal-care products designed for modern
+    everyday use.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>Where can I purchase Liara products?</summary>
+<p>
+    Products available for purchase can be viewed
+    through our Products section and online shopping
+    experience.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>How can I check my order?</summary>
+<p>
+    Customers can use the My Account section to access
+    their account and available order information.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>What is your return or refund policy?</summary>
+<p>
+    Please refer to our Refund / Return Policy for
+    the applicable terms and conditions.
+</p>
+</details>
+
+<details class="faq-item">
+<summary>How can I contact Liara?</summary>
+<p>
+    You can contact our team through
+    info@liara.co.in.
+</p>
+</details>
+
+</div>
+</section>
+
+<!-- CONTACT -->
+
+<section id="contact" class="contact">
+
+<div class="heading">
+<p>GET IN TOUCH</p>
+<h2>Let's Connect</h2>
+</div>
 
 <p>
-
     Have a question about Liara Professional?
     We'd love to hear from you.
-
 </p>
 
-
-<a class="contact-email"
-   href="mailto:info@liara.co.in">
-
+<a class="contact-email" href="mailto:info@liara.co.in">
     info@liara.co.in
-
 </a>
 
-
-<a href="mailto:info@liara.co.in"
-   class="btn">
-
+<a href="mailto:info@liara.co.in" class="btn">
     Contact Us
-
 </a>
 
 </section>
 
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
+<!-- FOOTER -->
 
 <footer>
 
 <div class="footer-inner">
 
-
 <div class="footer-brand">
 
-    <div class="footer-logo">
-
-        LIARA
-
-        <small>
-            PROFESSIONAL™
-        </small>
-
-    </div>
-
-
-    <p>
-
-        Liara Professional™ is a growing beauty,
-        skincare and personal care brand focused
-        on quality, thoughtful development and
-        modern everyday self-care.
-
-    </p>
-
+<div class="footer-logo">
+    LIARA
+    <small>PROFESSIONAL™</small>
 </div>
 
+<p>
+    Liara Professional™ is a growing beauty,
+    skincare and personal care brand focused on
+    quality, thoughtful development and modern
+    everyday self-care.
+</p>
 
-<!-- COMPANY -->
+</div>
 
 <div class="footer-column">
 
-    <h4>
-        COMPANY
-    </h4>
+<h4>COMPANY</h4>
 
-    <a href="#about">
-        About Liara
-    </a>
-
-    <a href="#leadership">
-        Leadership
-    </a>
-
-    <a href="#why-us">
-        Why Liara
-    </a>
-
-    <a href="#contact">
-        Contact Us
-    </a>
+<a href="#about">About Liara</a>
+<a href="#leadership">Leadership</a>
+<a href="#why-us">Why Liara</a>
+<a href="#contact">Contact Us</a>
 
 </div>
-
-
-<!-- SHOP -->
 
 <div class="footer-column">
 
-    <h4>
-        SHOP
-    </h4>
+<h4>SHOP</h4>
 
-    <a href="#products">
-        Products
-    </a>
-
-    <a href="account.html">
-        My Account
-    </a>
-
-    <a href="cart.html">
-        Shopping Cart
-    </a>
+<a href="#products">Products</a>
+<a href="account.html">My Account</a>
+<a href="cart.html">Shopping Cart</a>
 
 </div>
-
-
-<!-- INFORMATION -->
 
 <div class="footer-column">
 
-    <h4>
-        INFORMATION
-    </h4>
+<h4>INFORMATION</h4>
 
-    <a href="privacy-policy.html">
-        Privacy Policy
-    </a>
-
-    <a href="terms.html">
-        Terms & Conditions
-    </a>
-
-    <a href="shipping-policy.html">
-        Shipping Policy
-    </a>
-
-    <a href="refund-policy.html">
-        Refund / Return Policy
-    </a>
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms & Conditions</a>
+<a href="shipping-policy.html">Shipping Policy</a>
+<a href="refund-policy.html">Refund / Return Policy</a>
 
 </div>
 
-
 </div>
-
 
 <div class="footer-bottom">
 
-    <p>
-        © 2026 Liara Group Private Limited.
-        All Rights Reserved.
-    </p>
+<p>
+© 2026 Liara Group Private Limited.
+All Rights Reserved.
+</p>
 
-
-    <a href="company-login.html"
-       class="admin-login-link">
-
-        Admin Login
-
-    </a>
+<a href="company-login.html" class="admin-login-link">
+Admin Login
+</a>
 
 </div>
 
 </footer>
 
-
-<!-- =====================================================
-     SUPABASE
-===================================================== -->
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
-
-/* =====================================================
-   SUPABASE CONNECTION
-===================================================== */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -2391,35 +1987,24 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
-
 const supabaseClient =
 window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
 
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHtml(value) {
+function escapeHtml(value){
 
     return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
-
-/* =====================================================
-   PRODUCT IMAGE
-===================================================== */
-
-function getProductImage(product) {
+function getProductImage(product){
 
     return (
         product.image_url ||
@@ -2433,12 +2018,7 @@ function getProductImage(product) {
 
 }
 
-
-/* =====================================================
-   PRODUCT NAME
-===================================================== */
-
-function getProductName(product) {
+function getProductName(product){
 
     return (
         product.name ||
@@ -2450,12 +2030,7 @@ function getProductName(product) {
 
 }
 
-
-/* =====================================================
-   PRODUCT DESCRIPTION
-===================================================== */
-
-function getProductDescription(product) {
+function getProductDescription(product){
 
     return (
         product.description ||
@@ -2466,179 +2041,103 @@ function getProductDescription(product) {
 
 }
 
+function getProductPrice(product){
 
-/* =====================================================
-   PRODUCT PRICE
-===================================================== */
-
-function getProductPrice(product) {
-
-    const price =
-        Number(
-            product.price ??
-            product.sale_price ??
-            product.selling_price ??
-            0
-        );
-
-    return price;
+    return Number(
+        product.price ??
+        product.sale_price ??
+        product.selling_price ??
+        0
+    );
 
 }
 
+function getProductStock(product){
 
-/* =====================================================
-   PRODUCT STOCK
-===================================================== */
-
-function getProductStock(product) {
-
-    const stock =
-        Number(
-            product.stock ??
-            product.quantity ??
-            product.inventory ??
-            1
-        );
-
-    return stock;
+    return Number(
+        product.stock ??
+        product.quantity ??
+        product.inventory ??
+        1
+    );
 
 }
 
-
-/* =====================================================
-   LOAD PRODUCTS
-===================================================== */
-
-async function loadHomepageProducts() {
+async function loadHomepageProducts(){
 
     const box =
-        document.getElementById(
-            "dynamicProducts"
-        );
+    document.getElementById("dynamicProducts");
 
-
-    if (!box) {
-        return;
-    }
-
+    if(!box) return;
 
     box.innerHTML = `
-
         <div class="product-loading">
-
             Loading products...
-
         </div>
-
     `;
 
+    try{
 
-    try {
-
-        /*
-         * No created_at ordering.
-         * This keeps the page compatible
-         * even if created_at doesn't exist.
-         */
-
-        const {
-            data,
-            error
-        } =
+        const {data,error} =
         await supabaseClient
-            .from("products")
-            .select("*");
+        .from("products")
+        .select("*");
 
+        console.log("LIARA PRODUCTS:",data);
 
-        console.log(
-            "LIARA PRODUCTS:",
-            data
-        );
+        if(error){
 
-
-        if (error) {
-
-            console.error(
-                "LIARA PRODUCT ERROR:",
-                error
-            );
-
+            console.error("LIARA PRODUCT ERROR:",error);
 
             box.innerHTML = `
-
                 <div class="product-loading">
-
                     Products could not be loaded.
-
                     <br><br>
-
                     Please refresh the page.
-
                 </div>
-
             `;
 
             return;
-
         }
 
-
-        if (!data ||
-            data.length === 0) {
+        if(!data || data.length === 0){
 
             box.innerHTML = `
-
                 <div class="product-loading">
-
                     No products available right now.
-
                 </div>
-
             `;
 
             return;
-
         }
-
 
         box.innerHTML = "";
 
-
-        data.forEach(function(product) {
+        data.forEach(function(product){
 
             const productId =
-                product.id || "";
-
+            product.id || "";
 
             const productName =
-                getProductName(product);
-
+            getProductName(product);
 
             const description =
-                getProductDescription(product);
-
+            getProductDescription(product);
 
             const price =
-                getProductPrice(product);
-
+            getProductPrice(product);
 
             const stock =
-                getProductStock(product);
-
+            getProductStock(product);
 
             const image =
-                getProductImage(product);
-
+            getProductImage(product);
 
             const card =
-                document.createElement(
-                    "div"
-                );
-
+            document.createElement("div");
 
             card.className =
-                "product-card";
-
+            "product-card";
 
             card.innerHTML = `
 
@@ -2655,37 +2154,24 @@ async function loadHomepageProducts() {
 
                 </div>
 
-
                 <h3>
-
                     ${escapeHtml(productName)}
-
                 </h3>
 
-
                 <p>
-
                     ${escapeHtml(description)}
-
                 </p>
-
 
                 <div class="dynamic-product-bottom">
 
                     <strong>
-
                         ₹${price.toLocaleString("en-IN")}
-
                     </strong>
-
 
                     ${
                         stock > 0
-
                         ?
-
                         `
-
                         <button
                             type="button"
                             class="btn product-buy-btn"
@@ -2694,85 +2180,57 @@ async function loadHomepageProducts() {
                             View Product
 
                         </button>
-
                         `
-
                         :
-
                         `
-
                         <span class="out-stock">
-
                             Out of Stock
-
                         </span>
-
                         `
                     }
 
                 </div>
-
             `;
-
 
             box.appendChild(card);
 
         });
 
     }
-
-    catch (error) {
+    catch(error){
 
         console.error(
             "LIARA SCRIPT ERROR:",
             error
         );
 
-
         box.innerHTML = `
-
             <div class="product-loading">
-
                 Products could not be loaded.
-
                 <br><br>
-
                 Please refresh the page.
-
             </div>
-
         `;
 
     }
 
 }
 
-
-/* =====================================================
-   OPEN PRODUCT
-===================================================== */
-
-function openProduct(productId) {
+function openProduct(productId){
 
     localStorage.setItem(
         "selectedProductId",
         productId
     );
 
-
     window.location.href =
-        "product.html";
+    "product.html";
 
 }
 
-
-/* =====================================================
-   START
-===================================================== */
-
 document.addEventListener(
     "DOMContentLoaded",
-    function() {
+    function(){
 
         loadHomepageProducts();
 
@@ -2781,7 +2239,5 @@ document.addEventListener(
 
 </script>
 
-
 </body>
-
 </html>
