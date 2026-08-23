@@ -70,6 +70,162 @@
     font-size: 13px;
 }
 
+
+/* =====================================================
+   CEO / LEADERSHIP SECTION
+===================================================== */
+
+.ceo-section {
+    padding: 100px 8%;
+    background: #f8f5ef;
+}
+
+.ceo-content {
+    max-width: 1200px;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+
+    align-items: center;
+    gap: 80px;
+}
+
+.ceo-text {
+    max-width: 650px;
+}
+
+.ceo-label {
+    display: inline-block;
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+
+    color: #ad8232;
+
+    margin-bottom: 18px;
+}
+
+.ceo-text h2 {
+    margin: 0 0 8px;
+
+    font-size: 48px;
+    line-height: 1.1;
+
+    color: #222;
+}
+
+.ceo-text h3 {
+    margin: 0 0 28px;
+
+    font-size: 20px;
+    font-weight: 500;
+
+    color: #ad8232;
+}
+
+.ceo-text p {
+    margin-bottom: 18px;
+
+    font-size: 16px;
+    line-height: 1.8;
+
+    color: #666;
+}
+
+.ceo-signature {
+    margin-top: 35px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ceo-signature strong {
+    font-size: 21px;
+    color: #222;
+}
+
+.ceo-signature span {
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: #999;
+}
+
+.ceo-photo {
+    width: 100%;
+    max-width: 430px;
+
+    margin-left: auto;
+
+    position: relative;
+}
+
+.ceo-photo::before {
+    content: "";
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 18px;
+    left: 18px;
+
+    border: 1px solid #c9a45d;
+    border-radius: 18px;
+
+    z-index: 0;
+}
+
+.ceo-photo img {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    height: 520px;
+
+    object-fit: cover;
+
+    display: block;
+
+    border-radius: 18px;
+
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+}
+
+
+/* =====================================================
+   CEO MOBILE
+===================================================== */
+
+@media (max-width: 800px) {
+
+    .ceo-section {
+        padding: 70px 6%;
+    }
+
+    .ceo-content {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .ceo-text h2 {
+        font-size: 38px;
+    }
+
+    .ceo-photo {
+        margin: auto;
+        max-width: 360px;
+    }
+
+    .ceo-photo img {
+        height: 440px;
+    }
+
+}
+
 </style>
 
 </head>
@@ -105,6 +261,10 @@
 
     <a href="#about">
         About
+    </a>
+
+    <a href="#leadership">
+        Leadership
     </a>
 
     <a href="#products">
@@ -316,6 +476,93 @@
 
 </div>
 
+
+</section>
+
+
+
+<!-- =====================================================
+     CEO / LEADERSHIP
+===================================================== -->
+
+<section id="leadership" class="ceo-section">
+
+    <div class="ceo-content">
+
+
+        <div class="ceo-text">
+
+            <span class="ceo-label">
+                LEADERSHIP
+            </span>
+
+
+            <h2>
+                Maninder Bhullar
+            </h2>
+
+
+            <h3>
+                Founder & Chief Executive Officer
+            </h3>
+
+
+            <p>
+
+                Maninder Bhullar is the Founder and Chief
+                Executive Officer of Liara Group Private Limited,
+                the company behind Liara Professional™.
+
+            </p>
+
+
+            <p>
+
+                With a vision to build a trusted and modern
+                personal-care company, he leads Liara with
+                a strong focus on quality, innovation,
+                customer satisfaction and continuous growth.
+
+            </p>
+
+
+            <p>
+
+                His vision is to develop Liara Professional™
+                into a trusted name in beauty, skincare and
+                personal care, combining thoughtful product
+                development with a commitment to quality.
+
+            </p>
+
+
+            <div class="ceo-signature">
+
+                <strong>
+                    Maninder Bhullar
+                </strong>
+
+                <span>
+                    Founder & CEO
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="ceo-photo">
+
+            <img
+                src="maninder-bhullar.jpeg"
+                alt="Maninder Bhullar - Founder & CEO"
+            >
+
+        </div>
+
+
+    </div>
 
 </section>
 
@@ -549,7 +796,7 @@ const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+"sb_publishable_wXorRS0sOTHSsKcx_rXd8w_pfe62CIu";
 
 
 const supabaseClient =
@@ -810,11 +1057,6 @@ function openProduct(productId) {
         productId
     );
 
-
-    /*
-       Je product-details.html
-       page bani hoy ta othe jaavega.
-    */
 
     window.location.href =
         "product.html";
