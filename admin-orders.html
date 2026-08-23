@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Liara Professional™ | Company Dashboard</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
@@ -15,6 +20,8 @@ body{
     background:#faf8f5;
     color:#222;
 }
+
+/* SIDEBAR */
 
 .sidebar{
     width:235px;
@@ -72,6 +79,8 @@ body{
     padding-top:18px!important;
 }
 
+/* MAIN */
+
 .dashboard-main{
     margin-left:235px;
     width:calc(100% - 235px);
@@ -114,6 +123,8 @@ body{
     font-size:18px;
     cursor:pointer;
 }
+
+/* SECTION */
 
 .admin-section{
     padding:35px 3%;
@@ -167,6 +178,8 @@ body{
     background:#866326;
 }
 
+/* SUMMARY */
+
 .summary-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -192,14 +205,67 @@ body{
     margin-top:10px;
 }
 
-.sales strong,
-.delivered strong{
+.sales strong{
     color:#287a3e;
 }
 
 .pending strong{
     color:#ad8232;
 }
+
+.delivered strong{
+    color:#287a3e;
+}
+
+.cancelled strong{
+    color:#a33;
+}
+
+/* SALES SUMMARY */
+
+.sales-summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:30px;
+}
+
+.sales-card{
+    border:1px solid #eee;
+    border-radius:15px;
+    padding:23px;
+    background:#fff;
+}
+
+.sales-card span{
+    display:block;
+    color:#777;
+    font-size:14px;
+}
+
+.sales-card strong{
+    display:block;
+    font-size:27px;
+    margin-top:10px;
+}
+
+.sales-total strong{
+    color:#287a3e;
+}
+
+.sales-paid strong{
+    color:#287a3e;
+}
+
+.sales-pending strong{
+    color:#ad8232;
+}
+
+.sales-cancelled strong{
+    color:#a33;
+}
+
+/* TOOLS */
 
 .order-tools{
     display:flex;
@@ -218,6 +284,8 @@ body{
     border-radius:8px;
     outline:none;
 }
+
+/* TABLE */
 
 .table-wrapper{
     width:100%;
@@ -266,6 +334,28 @@ body{
     font-size:10px;
 }
 
+.status-badge{
+    padding:6px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.status-pending{
+    background:#fff4d8;
+    color:#9b751f;
+}
+
+.status-paid{
+    background:#e5f4e8;
+    color:#287a3e;
+}
+
+.status-cancelled{
+    background:#f8dfdf;
+    color:#a33;
+}
+
 .status-select{
     width:100%;
     padding:8px;
@@ -283,6 +373,8 @@ body{
     cursor:pointer;
     margin-top:6px;
 }
+
+/* MESSAGE */
 
 .message{
     text-align:center;
@@ -455,6 +547,8 @@ body{
     color:#287a3e;
 }
 
+/* STOCK */
+
 .stock-header{
     display:flex;
     justify-content:space-between;
@@ -492,16 +586,33 @@ body{
     border-radius:7px;
 }
 
-.stock-ok{color:#287a3e;font-weight:bold}
-.stock-low{color:#ad8232;font-weight:bold}
-.stock-out{color:#b22;font-weight:bold}
+.stock-ok{
+    color:#287a3e;
+    font-weight:bold;
+}
+
+.stock-low{
+    color:#ad8232;
+    font-weight:bold;
+}
+
+.stock-out{
+    color:#b22;
+    font-weight:bold;
+}
+
+/* SIDEBAR OVERLAY */
 
 .sidebar-overlay{
     display:none;
 }
 
+/* MOBILE */
+
 @media(max-width:1100px){
-    .summary-grid{
+
+    .summary-grid,
+    .sales-summary{
         grid-template-columns:repeat(2,1fr);
     }
 
@@ -511,6 +622,7 @@ body{
 }
 
 @media(max-width:800px){
+
     .sidebar{
         transform:translateX(-100%);
         transition:.25s;
@@ -544,7 +656,9 @@ body{
 }
 
 @media(max-width:600px){
+
     .summary-grid,
+    .sales-summary,
     .product-grid,
     .stock-cards{
         grid-template-columns:1fr;
@@ -565,182 +679,299 @@ body{
         grid-column:auto;
     }
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- SIDEBAR -->
+
 <aside class="sidebar" id="sidebar">
 
-    <div class="sidebar-title">
-        COMPANY PANEL
-    </div>
+<div class="sidebar-title">
+COMPANY PANEL
+</div>
 
-    <div class="side-menu">
 
-        <button class="active"
-            onclick="showSection('orders',this)">
-            🛒 Orders
-        </button>
+<div class="side-menu">
 
-        <button onclick="showSection('sales',this)">
-            💰 Sales
-        </button>
+<button
+class="active"
+onclick="showSection('orders',this)">
+🛒 Orders
+</button>
 
-        <button onclick="showSection('stock',this)">
-            📦 Stock
-        </button>
 
-        <button onclick="showSection('add-product',this)">
-            ➕ Add Product
-        </button>
+<button
+onclick="showSection('sales',this)">
+💰 Sales
+</button>
 
-        <button onclick="showSection('products',this)">
-            🧴 Products
-        </button>
 
-        <button onclick="showSection('customers',this)">
-            👥 Customers
-        </button>
+<button
+onclick="showSection('stock',this)">
+📦 Stock
+</button>
 
-        <button onclick="showSection('reports',this)">
-            📊 Reports
-        </button>
 
-        <button onclick="showSection('delivery',this)">
-            🚚 Delivery
-        </button>
+<button
+onclick="showSection('add-product',this)">
+➕ Add Product
+</button>
 
-        <button onclick="showSection('notifications',this)">
-            🔔 Notifications
-        </button>
 
-        <button onclick="showSection('settings',this)">
-            ⚙️ Settings
-        </button>
+<button
+onclick="showSection('products',this)">
+🧴 Products
+</button>
 
-        <button class="logout-side"
-            onclick="logoutAdmin()">
-            🚪 Logout
-        </button>
 
-    </div>
+<button
+onclick="showSection('customers',this)">
+👥 Customers
+</button>
+
+
+<button
+onclick="showSection('reports',this)">
+📊 Reports
+</button>
+
+
+<button
+onclick="showSection('delivery',this)">
+🚚 Delivery
+</button>
+
+
+<button
+onclick="showSection('notifications',this)">
+🔔 Notifications
+</button>
+
+
+<button
+onclick="showSection('settings',this)">
+⚙️ Settings
+</button>
+
+
+<button
+class="logout-side"
+onclick="logoutAdmin()">
+🚪 Logout
+</button>
+
+</div>
+
 </aside>
 
-<div class="sidebar-overlay"
-     id="sidebarOverlay"
-     onclick="closeSidebar()">
+
+<div
+class="sidebar-overlay"
+id="sidebarOverlay"
+onclick="closeSidebar()">
 </div>
+
+
+<!-- MAIN -->
 
 <main class="dashboard-main">
 
+
 <header class="dashboard-header">
 
-    <button class="mobile-menu-btn"
-        onclick="openSidebar()">
-        ☰
-    </button>
+<button
+class="mobile-menu-btn"
+onclick="openSidebar()">
+☰
+</button>
 
-    <div class="logo">
-        LIARA
-        <small>PROFESSIONAL™</small>
-    </div>
+
+<div class="logo">
+
+LIARA
+
+<small>
+PROFESSIONAL™
+</small>
+
+</div>
 
 </header>
 
 
 <!-- ORDERS -->
 
-<section class="admin-section"
-         id="orders-section">
+<section
+class="admin-section"
+id="orders-section">
 
 <div class="admin-container">
 
 <div class="admin-box">
 
+
 <div class="admin-header">
 
 <div>
-<p>LIARA PROFESSIONAL™</p>
-<h2>Company Orders Dashboard</h2>
+
+<p>
+LIARA PROFESSIONAL™
+</p>
+
+<h2>
+Company Orders Dashboard
+</h2>
+
 </div>
 
-<button class="btn"
-    onclick="logoutAdmin()">
-    Logout
+
+<button
+class="btn"
+onclick="logoutAdmin()">
+Logout
 </button>
 
 </div>
 
+
 <div class="summary-grid">
 
+
 <div class="summary-card">
-<span>Total Orders</span>
-<strong id="totalOrders">0</strong>
+
+<span>
+Total Orders
+</span>
+
+<strong
+id="totalOrders">
+0
+</strong>
+
 </div>
+
 
 <div class="summary-card sales">
-<span>Total Sales</span>
-<strong id="totalSales">₹0</strong>
+
+<span>
+Total Sales
+</span>
+
+<strong
+id="totalSales">
+₹0
+</strong>
+
 </div>
+
 
 <div class="summary-card pending">
-<span>Pending Orders</span>
-<strong id="pendingOrders">0</strong>
+
+<span>
+Pending Orders
+</span>
+
+<strong
+id="pendingOrders">
+0
+</strong>
+
 </div>
+
 
 <div class="summary-card delivered">
-<span>Delivered Orders</span>
-<strong id="deliveredOrders">0</strong>
-</div>
+
+<span>
+Delivered Orders
+</span>
+
+<strong
+id="deliveredOrders">
+0
+</strong>
 
 </div>
+
+
+</div>
+
 
 <div class="order-tools">
 
 <div class="search-box">
+
 <input
-    id="searchInput"
-    placeholder="Search customer, mobile, product..."
-    oninput="filterOrders()">
+id="searchInput"
+placeholder="Search customer, mobile, product..."
+oninput="filterOrders()">
+
 </div>
 
-<button class="btn"
-    onclick="loadOrders()">
-    🔄 Refresh Orders
+
+<button
+class="btn"
+onclick="loadOrders()">
+
+🔄 Refresh Orders
+
 </button>
 
 </div>
 
+
 <div id="orders">
+
 <div class="message">
+
 Loading customer orders...
-</div>
+
 </div>
 
 </div>
+
+
 </div>
+
+</div>
+
 </section>
 
 
-<!-- OTHER SECTION -->
+<!-- OTHER SECTIONS -->
 
-<section class="admin-section"
-         id="other-section"
-         style="display:none;">
+<section
+class="admin-section"
+id="other-section"
+style="display:none;">
 
 <div class="admin-container">
+
 <div id="other-content"></div>
+
 </div>
 
 </section>
+
 
 </main>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
 
 <script>
+
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -750,8 +981,8 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
 const ADMIN_EMAIL =
@@ -760,1640 +991,3340 @@ const ADMIN_EMAIL =
 const IMAGE_BUCKET =
 "product-images";
 
+
 let allOrders = [];
+
 let allProducts = [];
 
 
-/* MENU */
+/* =========================================
+   MENU
+========================================= */
 
-function showSection(section,button){
+function showSection(
+section,
+button
+){
 
-    document.querySelectorAll(
-        ".side-menu button"
-    ).forEach(btn=>{
-        btn.classList.remove("active");
-    });
+document
+.querySelectorAll(
+".side-menu button"
+)
+.forEach(btn=>{
 
-    if(button){
-        button.classList.add("active");
-    }
+btn.classList.remove(
+"active"
+);
 
-    document.getElementById(
-        "orders-section"
-    ).style.display =
-        section === "orders"
-        ? "block"
-        : "none";
+});
 
-    document.getElementById(
-        "other-section"
-    ).style.display =
-        section === "orders"
-        ? "none"
-        : "block";
 
-    if(section==="stock"){
-        loadStock();
-    }
-    else if(section==="add-product"){
-        showAddProduct();
-    }
-    else if(section==="products"){
-        loadProducts();
-    }
-    else{
-        showPlaceholder(section);
-    }
+if(button){
 
-    closeSidebar();
+button.classList.add(
+"active"
+);
+
 }
 
 
-/* PLACEHOLDER */
+document.getElementById(
+"orders-section"
+).style.display =
+section === "orders"
+? "block"
+: "none";
 
-function showPlaceholder(section){
 
-    const details={
+document.getElementById(
+"other-section"
+).style.display =
+section === "orders"
+? "none"
+: "block";
 
-        sales:[
-            "💰",
-            "Sales",
-            "Sales management will appear here."
-        ],
 
-        customers:[
-            "👥",
-            "Customers",
-            "Customer management will appear here."
-        ],
+if(section === "sales"){
 
-        reports:[
-            "📊",
-            "Reports",
-            "Business reports will appear here."
-        ],
+loadSales();
 
-        delivery:[
-            "🚚",
-            "Delivery",
-            "Delivery management will appear here."
-        ],
+}
 
-        notifications:[
-            "🔔",
-            "Notifications",
-            "Notifications will appear here."
-        ],
+else if(section === "stock"){
 
-        settings:[
-            "⚙️",
-            "Settings",
-            "Dashboard settings will appear here."
-        ]
+loadStock();
 
-    };
+}
 
-    const d=details[section];
+else if(section === "add-product"){
 
-    document.getElementById(
-        "other-content"
-    ).innerHTML=`
+showAddProduct();
 
-        <div class="admin-box"
-             style="text-align:center;padding:80px 30px">
+}
 
-            <div style="font-size:50px">
-                ${d ? d[0] : "📦"}
-            </div>
+else if(section === "products"){
 
-            <h2>
-                ${d ? d[1] : "Section"}
-            </h2>
+loadProducts();
 
-            <p style="color:#777">
-                ${d ? d[2] : ""}
-            </p>
+}
 
-        </div>
-    `;
+else{
+
+showPlaceholder(section);
+
 }
 
 
-/* MOBILE */
+closeSidebar();
+
+}
+
+
+/* =========================================
+   SALES SECTION
+========================================= */
+
+async function loadSales(){
+
+document.getElementById(
+"other-content"
+).innerHTML = `
+
+<div class="admin-box">
+
+<div class="admin-header">
+
+<div>
+
+<p>
+LIARA PROFESSIONAL™
+</p>
+
+<h2>
+💰 Sales Management
+</h2>
+
+</div>
+
+
+<button
+class="btn"
+onclick="loadSales()">
+
+🔄 Refresh Sales
+
+</button>
+
+</div>
+
+
+<div class="sales-summary">
+
+
+<div class="sales-card sales-total">
+
+<span>
+Total Sales
+</span>
+
+<strong
+id="salesTotalAmount">
+₹0
+</strong>
+
+</div>
+
+
+<div class="sales-card sales-paid">
+
+<span>
+Paid Sales
+</span>
+
+<strong
+id="salesPaidAmount">
+₹0
+</strong>
+
+</div>
+
+
+<div class="sales-card sales-pending">
+
+<span>
+Pending Payment
+</span>
+
+<strong
+id="salesPendingAmount">
+₹0
+</strong>
+
+</div>
+
+
+<div class="sales-card sales-cancelled">
+
+<span>
+Cancelled Sales
+</span>
+
+<strong
+id="salesCancelledAmount">
+₹0
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="order-tools">
+
+<div class="search-box">
+
+<input
+id="salesSearch"
+placeholder="Search customer, mobile, product..."
+oninput="filterSales()">
+
+</div>
+
+
+<button
+class="btn"
+onclick="loadSales()">
+
+🔄 Refresh
+
+</button>
+
+</div>
+
+
+<div id="salesTable">
+
+<div class="message">
+
+Loading sales...
+
+</div>
+
+</div>
+
+
+</div>
+
+`;
+
+
+const user =
+await checkAdmin();
+
+if(!user){
+
+return;
+
+}
+
+
+const {
+data,
+error
+} =
+await supabaseClient
+
+.from("orders")
+
+.select("*")
+
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+if(error){
+
+document.getElementById(
+"salesTable"
+).innerHTML = `
+
+<div class="message error">
+
+Unable to load sales.
+
+<br><br>
+
+${escapeHtml(
+error.message
+)}
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+allOrders =
+data || [];
+
+
+calculateSales(
+allOrders
+);
+
+
+renderSales(
+allOrders
+);
+
+}
+
+
+/* =========================================
+   CALCULATE SALES
+========================================= */
+
+function calculateSales(
+orders
+){
+
+let totalSales = 0;
+
+let paidSales = 0;
+
+let pendingSales = 0;
+
+let cancelledSales = 0;
+
+
+orders.forEach(
+order=>{
+
+const total =
+Number(
+order.total || 0
+);
+
+
+const status =
+String(
+order.status || "Pending"
+).toLowerCase();
+
+
+const payment =
+String(
+order.payment_status ||
+order.payment_method ||
+order.payment ||
+"Pending"
+).toLowerCase();
+
+
+if(
+status !== "cancelled"
+){
+
+totalSales += total;
+
+}
+
+
+/*
+   PAYMENT CALCULATION
+*/
+
+if(
+payment.includes("paid") ||
+payment.includes("success") ||
+payment.includes("completed") ||
+payment.includes("cod")
+){
+
+if(
+status !== "cancelled"
+){
+
+paidSales += total;
+
+}
+
+}
+
+else{
+
+if(
+status !== "cancelled"
+){
+
+pendingSales += total;
+
+}
+
+}
+
+
+/*
+   CANCELLED
+*/
+
+if(
+status === "cancelled"
+){
+
+cancelledSales += total;
+
+}
+
+});
+
+
+document.getElementById(
+"salesTotalAmount"
+).innerText =
+money(totalSales);
+
+
+document.getElementById(
+"salesPaidAmount"
+).innerText =
+money(paidSales);
+
+
+document.getElementById(
+"salesPendingAmount"
+).innerText =
+money(pendingSales);
+
+
+document.getElementById(
+"salesCancelledAmount"
+).innerText =
+money(cancelledSales);
+
+}
+
+
+/* =========================================
+   RENDER SALES
+========================================= */
+
+function renderSales(
+orders
+){
+
+const box =
+document.getElementById(
+"salesTable"
+);
+
+
+if(!orders.length){
+
+box.innerHTML = `
+
+<div class="message">
+
+No sales/orders found.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+let html = `
+
+<div class="table-wrapper">
+
+<table class="order-table">
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Customer</th>
+
+<th>Mobile</th>
+
+<th>Product</th>
+
+<th>Qty</th>
+
+<th>Price</th>
+
+<th>Total</th>
+
+<th>Payment</th>
+
+<th>Order Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+
+orders.forEach(
+order=>{
+
+const date =
+order.created_at
+?
+new Date(
+order.created_at
+).toLocaleString(
+"en-IN"
+)
+:
+"-";
+
+
+const customer =
+order.customer_name ||
+order.name ||
+"-";
+
+
+const phone =
+order.phone ||
+order.mobile ||
+"-";
+
+
+const product =
+productName(order);
+
+
+const qty =
+Number(
+order.quantity || 1
+);
+
+
+const price =
+productPrice(order);
+
+
+const total =
+Number(
+order.total || 0
+);
+
+
+const paymentStatus =
+payment(order);
+
+
+const status =
+order.status ||
+"Pending";
+
+
+let statusClass =
+"status-pending";
+
+
+if(
+String(status).toLowerCase()
+=== "cancelled"
+){
+
+statusClass =
+"status-cancelled";
+
+}
+
+else if(
+String(
+paymentStatus
+).toLowerCase()
+.includes("paid") ||
+String(
+paymentStatus
+).toLowerCase()
+.includes("success")
+){
+
+statusClass =
+"status-paid";
+
+}
+
+
+html += `
+
+<tr>
+
+
+<td>
+
+${escapeHtml(date)}
+
+</td>
+
+
+<td>
+
+<strong>
+
+${escapeHtml(
+customer
+)}
+
+</strong>
+
+</td>
+
+
+<td>
+
+${escapeHtml(
+phone
+)}
+
+</td>
+
+
+<td class="product-name">
+
+${escapeHtml(
+product
+)}
+
+</td>
+
+
+<td>
+
+${qty}
+
+</td>
+
+
+<td class="price">
+
+${money(
+price
+)}
+
+</td>
+
+
+<td class="total">
+
+${money(
+total
+)}
+
+</td>
+
+
+<td>
+
+<span class="payment-badge">
+
+${escapeHtml(
+paymentStatus
+)}
+
+</span>
+
+</td>
+
+
+<td>
+
+<span
+class="status-badge ${statusClass}">
+
+${escapeHtml(
+status
+)}
+
+</span>
+
+</td>
+
+
+</tr>
+
+`;
+
+});
+
+
+html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+
+box.innerHTML =
+html;
+
+}
+
+
+/* =========================================
+   FILTER SALES
+========================================= */
+
+function filterSales(){
+
+const search =
+document.getElementById(
+"salesSearch"
+).value
+.toLowerCase()
+.trim();
+
+
+if(!search){
+
+renderSales(
+allOrders
+);
+
+return;
+
+}
+
+
+const filtered =
+allOrders.filter(
+order=>{
+
+const text =
+
+(
+order.customer_name ||
+""
+) +
+
+" " +
+
+(
+order.name ||
+""
+) +
+
+" " +
+
+(
+order.phone ||
+""
+) +
+
+" " +
+
+(
+order.mobile ||
+""
+) +
+
+" " +
+
+productName(order);
+
+
+return text
+.toLowerCase()
+.includes(search);
+
+});
+
+
+renderSales(
+filtered
+);
+
+}
+
+
+/* =========================================
+   PLACEHOLDER
+========================================= */
+
+function showPlaceholder(
+section
+){
+
+const details = {
+
+customers:[
+"👥",
+"Customers",
+"Customer management will appear here."
+],
+
+reports:[
+"📊",
+"Reports",
+"Business reports will appear here."
+],
+
+delivery:[
+"🚚",
+"Delivery",
+"Delivery management will appear here."
+],
+
+notifications:[
+"🔔",
+"Notifications",
+"Notifications will appear here."
+],
+
+settings:[
+"⚙️",
+"Settings",
+"Dashboard settings will appear here."
+]
+
+};
+
+
+const d =
+details[section];
+
+
+document.getElementById(
+"other-content"
+).innerHTML = `
+
+<div
+class="admin-box"
+style="
+text-align:center;
+padding:80px 30px">
+
+<div
+style="font-size:50px">
+
+${d ? d[0] : "📦"}
+
+</div>
+
+
+<h2>
+
+${d ? d[1] : "Section"}
+
+</h2>
+
+
+<p
+style="color:#777">
+
+${d ? d[2] : ""}
+
+</p>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
 
 function openSidebar(){
 
-    document.getElementById(
-        "sidebar"
-    ).classList.add("open");
+document.getElementById(
+"sidebar"
+).classList.add(
+"open"
+);
 
-    document.getElementById(
-        "sidebarOverlay"
-    ).classList.add("show");
+document.getElementById(
+"sidebarOverlay"
+).classList.add(
+"show"
+);
+
 }
+
 
 function closeSidebar(){
 
-    document.getElementById(
-        "sidebar"
-    ).classList.remove("open");
+document.getElementById(
+"sidebar"
+).classList.remove(
+"open"
+);
 
-    document.getElementById(
-        "sidebarOverlay"
-    ).classList.remove("show");
+document.getElementById(
+"sidebarOverlay"
+).classList.remove(
+"show"
+);
+
 }
 
 
-/* ADMIN */
+/* =========================================
+   ADMIN CHECK
+========================================= */
 
 async function checkAdmin(){
 
-    const {data,error} =
-        await supabaseClient.auth.getUser();
+const {
+data,
+error
+} =
+await supabaseClient
+.auth
+.getUser();
 
-    if(error || !data || !data.user){
 
-        window.location.href =
-            "company-login.html";
+if(
+error ||
+!data ||
+!data.user
+){
 
-        return null;
-    }
+window.location.href =
+"company-login.html";
 
-    if(
-        !data.user.email ||
-        data.user.email.toLowerCase()
-        !== ADMIN_EMAIL.toLowerCase()
-    ){
+return null;
 
-        window.location.href =
-            "company-login.html";
-
-        return null;
-    }
-
-    return data.user;
 }
 
 
-/* MONEY */
+if(
+!data.user.email ||
+data.user.email
+.toLowerCase()
+!== ADMIN_EMAIL
+.toLowerCase()
+){
 
-function money(value){
+window.location.href =
+"company-login.html";
 
-    return "₹" +
-        Number(value || 0)
-        .toLocaleString("en-IN");
+return null;
+
 }
 
 
-/* ESCAPE */
+return data.user;
 
-function escapeHtml(value){
-
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
 }
 
 
-/* ORDERS */
+/* =========================================
+   MONEY
+========================================= */
+
+function money(
+value
+){
+
+return "₹" +
+
+Number(
+value || 0
+)
+.toLocaleString(
+"en-IN"
+);
+
+}
+
+
+/* =========================================
+   ESCAPE
+========================================= */
+
+function escapeHtml(
+value
+){
+
+return String(
+value ?? ""
+)
+
+.replace(
+/&/g,
+"&amp;"
+)
+
+.replace(
+/</g,
+"&lt;"
+)
+
+.replace(
+/>/g,
+"&gt;"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/'/g,
+"&#039;"
+);
+
+}
+
+
+/* =========================================
+   ORDERS
+========================================= */
 
 async function loadOrders(){
 
-    const box =
-        document.getElementById("orders");
+const box =
+document.getElementById(
+"orders"
+);
 
-    box.innerHTML=`
-        <div class="message">
-            Loading customer orders...
-        </div>
-    `;
 
-    const user=await checkAdmin();
+box.innerHTML = `
 
-    if(!user)return;
+<div class="message">
 
-    const {data,error} =
-        await supabaseClient
-        .from("orders")
-        .select("*")
-        .order(
-            "created_at",
-            {ascending:false}
-        );
+Loading customer orders...
 
-    if(error){
+</div>
 
-        box.innerHTML=`
-            <div class="message error">
-                Unable to load orders.
-                <br><br>
-                ${escapeHtml(error.message)}
-            </div>
-        `;
+`;
 
-        return;
-    }
 
-    allOrders=data || [];
+const user =
+await checkAdmin();
 
-    updateSummary(allOrders);
-    renderOrders(allOrders);
+if(!user){
+
+return;
+
 }
 
 
-function updateSummary(orders){
+const {
+data,
+error
+} =
+await supabaseClient
 
-    let sales=0;
-    let pending=0;
-    let delivered=0;
+.from("orders")
 
-    orders.forEach(order=>{
+.select("*")
 
-        sales += Number(
-            order.total || 0
-        );
+.order(
+"created_at",
+{
+ascending:false
+}
+);
 
-        const status=String(
-            order.status || "Pending"
-        ).toLowerCase();
 
-        if(status==="delivered"){
-            delivered++;
-        }
+if(error){
 
-        if([
-            "pending",
-            "confirmed",
-            "packed",
-            "shipped",
-            "order received"
-        ].includes(status)){
-            pending++;
-        }
-    });
+box.innerHTML = `
 
-    document.getElementById(
-        "totalOrders"
-    ).innerText=orders.length;
+<div class="message error">
 
-    document.getElementById(
-        "totalSales"
-    ).innerText=money(sales);
+Unable to load orders.
 
-    document.getElementById(
-        "pendingOrders"
-    ).innerText=pending;
+<br><br>
 
-    document.getElementById(
-        "deliveredOrders"
-    ).innerText=delivered;
+${escapeHtml(
+error.message
+)}
+
+</div>
+
+`;
+
+return;
+
 }
 
 
-function productName(order){
+allOrders =
+data || [];
 
-    return order.product_name ||
-           order.product ||
-           order.productName ||
-           order.item_name ||
-           order.item ||
-           "Product";
+
+updateSummary(
+allOrders
+);
+
+
+renderOrders(
+allOrders
+);
+
 }
 
 
-function productPrice(order){
+/* =========================================
+   ORDER SUMMARY
+========================================= */
 
-    if(order.price != null){
-        return Number(order.price);
-    }
+function updateSummary(
+orders
+){
 
-    if(order.unit_price != null){
-        return Number(order.unit_price);
-    }
+let sales = 0;
 
-    const qty=Number(
-        order.quantity || 1
-    );
+let pending = 0;
 
-    return qty
-        ? Number(order.total || 0)/qty
-        : 0;
+let delivered = 0;
+
+
+orders.forEach(
+order=>{
+
+const total =
+Number(
+order.total || 0
+);
+
+
+const status =
+String(
+order.status ||
+"Pending"
+)
+.toLowerCase();
+
+
+if(
+status !== "cancelled"
+){
+
+sales += total;
+
 }
 
 
-function payment(order){
+if(
+status === "delivered"
+){
 
-    return order.payment_status ||
-           order.payment_method ||
-           order.payment ||
-           "Pending";
+delivered++;
+
 }
 
 
-function renderOrders(orders){
+if([
+"pending",
+"confirmed",
+"packed",
+"shipped",
+"order received"
+]
+.includes(status)){
 
-    const box=
-        document.getElementById("orders");
+pending++;
 
-    if(!orders.length){
+}
 
-        box.innerHTML=`
-            <div class="message">
-                No customer orders yet.
-            </div>
-        `;
+});
 
-        return;
-    }
 
-    let html=`
+document.getElementById(
+"totalOrders"
+).innerText =
+orders.length;
 
-    <div class="table-wrapper">
 
-    <table class="order-table">
+document.getElementById(
+"totalSales"
+).innerText =
+money(sales);
 
-    <thead>
-    <tr>
-        <th>Order Date</th>
-        <th>Customer</th>
-        <th>Mobile</th>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Qty</th>
-        <th>Total</th>
-        <th>Payment</th>
-        <th>Address</th>
-        <th>Status</th>
-    </tr>
-    </thead>
 
-    <tbody>
-    `;
+document.getElementById(
+"pendingOrders"
+).innerText =
+pending;
 
-    orders.forEach(order=>{
 
-        const id=String(order.id);
+document.getElementById(
+"deliveredOrders"
+).innerText =
+delivered;
 
-        const date=order.created_at
-            ? new Date(
-                order.created_at
-              ).toLocaleString(
-                "en-IN"
-              )
-            : "-";
-
-        const customer=
-            order.customer_name ||
-            order.name || "-";
-
-        const phone=
-            order.phone ||
-            order.mobile || "-";
-
-        const address=
-            order.address ||
-            order.shipping_address || "-";
-
-        const product=
-            productName(order);
-
-        const price=
-            productPrice(order);
-
-        const qty=
-            Number(order.quantity || 1);
-
-        const total=
-            Number(order.total || 0);
-
-        const pay=
-            payment(order);
-
-        const status=
-            order.status || "Pending";
-
-        html+=`
-
-        <tr>
-
-        <td>${escapeHtml(date)}</td>
-
-        <td>
-            <strong>
-                ${escapeHtml(customer)}
-            </strong>
-        </td>
-
-        <td>${escapeHtml(phone)}</td>
-
-        <td class="product-name">
-            ${escapeHtml(product)}
-        </td>
-
-        <td class="price">
-            ${money(price)}
-        </td>
-
-        <td>${qty}</td>
-
-        <td class="total">
-            ${money(total)}
-        </td>
-
-        <td>
-            <span class="payment-badge">
-                ${escapeHtml(pay)}
-            </span>
-        </td>
-
-        <td>${escapeHtml(address)}</td>
-
-        <td>
-
-            <select
-                class="status-select"
-                id="status-${escapeHtml(id)}">
-
-                ${statusOption("Pending",status)}
-                ${statusOption("Confirmed",status)}
-                ${statusOption("Packed",status)}
-                ${statusOption("Shipped",status)}
-                ${statusOption("Delivered",status)}
-                ${statusOption("Cancelled",status)}
-
-            </select>
-
-            <button
-                class="save-btn"
-                onclick="saveOrder('${escapeHtml(id)}')">
-
-                Save
-
-            </button>
-
-        </td>
-
-        </tr>
-        `;
-    });
-
-    html+=`
-    </tbody>
-    </table>
-    </div>
-    `;
-
-    box.innerHTML=html;
 }
 
 
-function statusOption(value,current){
+/* =========================================
+   PRODUCT NAME
+========================================= */
 
-    return `
-    <option value="${value}"
-        ${current===value
-            ? "selected"
-            : ""}>
-        ${value}
-    </option>
-    `;
+function productName(
+order
+){
+
+return order.product_name ||
+order.product ||
+order.productName ||
+order.item_name ||
+order.item ||
+"Product";
+
 }
 
+
+/* =========================================
+   PRODUCT PRICE
+========================================= */
+
+function productPrice(
+order
+){
+
+if(
+order.price != null
+){
+
+return Number(
+order.price
+);
+
+}
+
+
+if(
+order.unit_price != null
+){
+
+return Number(
+order.unit_price
+);
+
+}
+
+
+const qty =
+Number(
+order.quantity || 1
+);
+
+
+return qty
+?
+Number(
+order.total || 0
+) / qty
+:
+0;
+
+}
+
+
+/* =========================================
+   PAYMENT
+========================================= */
+
+function payment(
+order
+){
+
+return order.payment_status ||
+order.payment_method ||
+order.payment ||
+"Pending";
+
+}
+
+
+/* =========================================
+   RENDER ORDERS
+========================================= */
+
+function renderOrders(
+orders
+){
+
+const box =
+document.getElementById(
+"orders"
+);
+
+
+if(!orders.length){
+
+box.innerHTML = `
+
+<div class="message">
+
+No customer orders yet.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+let html = `
+
+<div class="table-wrapper">
+
+<table class="order-table">
+
+<thead>
+
+<tr>
+
+<th>Order Date</th>
+
+<th>Customer</th>
+
+<th>Mobile</th>
+
+<th>Product</th>
+
+<th>Price</th>
+
+<th>Qty</th>
+
+<th>Total</th>
+
+<th>Payment</th>
+
+<th>Address</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+
+orders.forEach(
+order=>{
+
+const id =
+String(
+order.id
+);
+
+
+const date =
+order.created_at
+?
+new Date(
+order.created_at
+)
+.toLocaleString(
+"en-IN"
+)
+:
+"-";
+
+
+const customer =
+order.customer_name ||
+order.name ||
+"-";
+
+
+const phone =
+order.phone ||
+order.mobile ||
+"-";
+
+
+const address =
+order.address ||
+order.shipping_address ||
+"-";
+
+
+const product =
+productName(order);
+
+
+const price =
+productPrice(order);
+
+
+const qty =
+Number(
+order.quantity || 1
+);
+
+
+const total =
+Number(
+order.total || 0
+);
+
+
+const pay =
+payment(order);
+
+
+const status =
+order.status ||
+"Pending";
+
+
+html += `
+
+<tr>
+
+<td>
+
+${escapeHtml(
+date
+)}
+
+</td>
+
+
+<td>
+
+<strong>
+
+${escapeHtml(
+customer
+)}
+
+</strong>
+
+</td>
+
+
+<td>
+
+${escapeHtml(
+phone
+)}
+
+</td>
+
+
+<td class="product-name">
+
+${escapeHtml(
+product
+)}
+
+</td>
+
+
+<td class="price">
+
+${money(
+price
+)}
+
+</td>
+
+
+<td>
+
+${qty}
+
+</td>
+
+
+<td class="total">
+
+${money(
+total
+)}
+
+</td>
+
+
+<td>
+
+<span class="payment-badge">
+
+${escapeHtml(
+pay
+)}
+
+</span>
+
+</td>
+
+
+<td>
+
+${escapeHtml(
+address
+)}
+
+</td>
+
+
+<td>
+
+<select
+class="status-select"
+id="status-${escapeHtml(id)}">
+
+${statusOption(
+"Pending",
+status
+)}
+
+${statusOption(
+"Confirmed",
+status
+)}
+
+${statusOption(
+"Packed",
+status
+)}
+
+${statusOption(
+"Shipped",
+status
+)}
+
+${statusOption(
+"Delivered",
+status
+)}
+
+${statusOption(
+"Cancelled",
+status
+)}
+
+</select>
+
+
+<button
+class="save-btn"
+onclick="saveOrder('${escapeHtml(id)}')">
+
+Save
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+
+box.innerHTML =
+html;
+
+}
+
+
+/* =========================================
+   STATUS OPTION
+========================================= */
+
+function statusOption(
+value,
+current
+){
+
+return `
+
+<option
+value="${value}"
+${current === value
+? "selected"
+: ""}>
+
+${value}
+
+</option>
+
+`;
+
+}
+
+
+/* =========================================
+   FILTER ORDERS
+========================================= */
 
 function filterOrders(){
 
-    const search=
-        document.getElementById(
-            "searchInput"
-        ).value
-        .toLowerCase()
-        .trim();
+const search =
+document.getElementById(
+"searchInput"
+).value
+.toLowerCase()
+.trim();
 
-    if(!search){
 
-        renderOrders(allOrders);
-        return;
-    }
+if(!search){
 
-    const filtered=
-        allOrders.filter(order=>{
+renderOrders(
+allOrders
+);
 
-            const text=
-                (
-                    order.customer_name || ""
-                )+" "+
-                (
-                    order.name || ""
-                )+" "+
-                (
-                    order.phone || ""
-                )+" "+
-                (
-                    order.mobile || ""
-                )+" "+
-                productName(order)+" "+
-                (
-                    order.address || ""
-                );
+return;
 
-            return text
-                .toLowerCase()
-                .includes(search);
-        });
-
-    renderOrders(filtered);
 }
 
 
-async function saveOrder(id){
+const filtered =
+allOrders.filter(
+order=>{
 
-    const select=
-        document.getElementById(
-            "status-"+id
-        );
+const text =
 
-    if(!select)return;
+(
+order.customer_name ||
+""
+) +
 
-    const {error}=
-        await supabaseClient
-        .from("orders")
-        .update({
-            status:select.value
-        })
-        .eq("id",id);
+" " +
 
-    if(error){
+(
+order.name ||
+""
+) +
 
-        alert(
-            "Unable to update order:\n\n"+
-            error.message
-        );
+" " +
 
-        return;
-    }
+(
+order.phone ||
+""
+) +
 
-    const order=
-        allOrders.find(
-            x=>String(x.id)===String(id)
-        );
+" " +
 
-    if(order){
-        order.status=select.value;
-    }
+(
+order.mobile ||
+""
+) +
 
-    updateSummary(allOrders);
+" " +
 
-    alert("Order status updated.");
+productName(order) +
+
+" " +
+
+(
+order.address ||
+""
+);
+
+
+return text
+.toLowerCase()
+.includes(search);
+
+});
+
+
+renderOrders(
+filtered
+);
+
 }
 
 
-/* ADD PRODUCT */
+/* =========================================
+   SAVE ORDER
+========================================= */
+
+async function saveOrder(
+id
+){
+
+const select =
+document.getElementById(
+"status-"+id
+);
+
+
+if(!select){
+
+return;
+
+}
+
+
+const {
+error
+} =
+await supabaseClient
+
+.from("orders")
+
+.update({
+status:
+select.value
+})
+
+.eq(
+"id",
+id
+);
+
+
+if(error){
+
+alert(
+"Unable to update order:\n\n"+
+error.message
+);
+
+return;
+
+}
+
+
+const order =
+allOrders.find(
+x =>
+String(x.id)
+===
+String(id)
+);
+
+
+if(order){
+
+order.status =
+select.value;
+
+}
+
+
+updateSummary(
+allOrders
+);
+
+
+alert(
+"Order status updated."
+);
+
+}
+
+
+/* =========================================
+   ADD PRODUCT
+========================================= */
 
 function showAddProduct(){
 
-    document.getElementById(
-        "other-content"
-    ).innerHTML=`
+document.getElementById(
+"other-content"
+).innerHTML = `
 
-    <div class="admin-box">
+<div class="admin-box">
 
-        <div class="form-title">
+<div class="form-title">
 
-            <p>PRODUCT MANAGEMENT</p>
+<p>
+PRODUCT MANAGEMENT
+</p>
 
-            <h2>
-                ➕ Add New Product
-            </h2>
+<h2>
+➕ Add New Product
+</h2>
 
-        </div>
+</div>
 
-        <br>
+<br>
 
-        <div class="form-grid">
 
-            <div class="form-group">
+<div class="form-grid">
 
-                <label>
-                    Product Name
-                </label>
 
-                <input
-                    id="productNameInput"
-                    type="text"
-                    placeholder="e.g. Herbal Face Wash">
+<div class="form-group">
 
-            </div>
+<label>
+Product Name
+</label>
 
-            <div class="form-group">
+<input
+id="productNameInput"
+type="text"
+placeholder="e.g. Herbal Face Wash">
 
-                <label>
-                    Price (₹)
-                </label>
+</div>
 
-                <input
-                    id="productPriceInput"
-                    type="number"
-                    min="0"
-                    placeholder="299">
 
-            </div>
+<div class="form-group">
 
-            <div class="form-group">
+<label>
+Price (₹)
+</label>
 
-                <label>
-                    Stock
-                </label>
+<input
+id="productPriceInput"
+type="number"
+min="0"
+placeholder="299">
 
-                <input
-                    id="productStockInput"
-                    type="number"
-                    min="0"
-                    value="0">
+</div>
 
-            </div>
 
-            <div class="form-group">
+<div class="form-group">
 
-                <label>
-                    Low Stock Alert
-                </label>
+<label>
+Stock
+</label>
 
-                <input
-                    id="productLowStockInput"
-                    type="number"
-                    min="0"
-                    value="5">
+<input
+id="productStockInput"
+type="number"
+min="0"
+value="0">
 
-            </div>
+</div>
 
-            <div class="form-group full">
 
-                <label>
-                    Description
-                </label>
+<div class="form-group">
 
-                <textarea
-                    id="productDescriptionInput"
-                    placeholder="Write product description..."></textarea>
+<label>
+Low Stock Alert
+</label>
 
-            </div>
+<input
+id="productLowStockInput"
+type="number"
+min="0"
+value="5">
 
-            <div class="form-group full">
+</div>
 
-                <label>
-                    📷 Product Photo
-                </label>
 
-                <div class="upload-box">
+<div class="form-group full">
 
-                    <strong>
-                        Upload Product Photo
-                    </strong>
+<label>
+Description
+</label>
 
-                    <br>
+<textarea
+id="productDescriptionInput"
+placeholder="Write product description...">
+</textarea>
 
-                    <input
-                        id="productPhotoInput"
-                        type="file"
-                        accept="image/*"
-                        onchange="previewPhoto(event)">
+</div>
 
-                    <div
-                        class="photo-preview"
-                        id="photoPreview">
 
-                        <img
-                            id="previewImage"
-                            src=""
-                            alt="Preview">
+<div class="form-group full">
 
-                    </div>
+<label>
+📷 Product Photo
+</label>
 
-                    <div
-                        class="upload-status"
-                        id="uploadStatus">
-                    </div>
 
-                </div>
+<div class="upload-box">
 
-            </div>
+<strong>
+Upload Product Photo
+</strong>
 
-        </div>
+<br>
 
-        <div class="form-actions">
 
-            <button
-                class="btn"
-                onclick="saveProduct()">
+<input
+id="productPhotoInput"
+type="file"
+accept="image/*"
+onchange="previewPhoto(event)">
 
-                💾 Save Product
 
-            </button>
+<div
+class="photo-preview"
+id="photoPreview">
 
-            <button
-                class="clear-btn"
-                onclick="clearProductForm()">
+<img
+id="previewImage"
+src=""
+alt="Preview">
 
-                Clear
+</div>
 
-            </button>
 
-        </div>
+<div
+class="upload-status"
+id="uploadStatus">
+</div>
 
-    </div>
-    `;
+</div>
+
+</div>
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+class="btn"
+onclick="saveProduct()">
+
+💾 Save Product
+
+</button>
+
+
+<button
+class="clear-btn"
+onclick="clearProductForm()">
+
+Clear
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
 }
 
 
-/* PHOTO PREVIEW */
+/* =========================================
+   PHOTO PREVIEW
+========================================= */
 
-function previewPhoto(event){
+function previewPhoto(
+event
+){
 
-    const file=
-        event.target.files[0];
+const file =
+event.target.files[0];
 
-    if(!file)return;
 
-    const preview=
-        document.getElementById(
-            "previewImage"
-        );
+if(!file){
 
-    const box=
-        document.getElementById(
-            "photoPreview"
-        );
+return;
 
-    preview.src=
-        URL.createObjectURL(file);
-
-    box.style.display="block";
 }
 
 
-/* SAVE PRODUCT */
+const preview =
+document.getElementById(
+"previewImage"
+);
+
+
+const box =
+document.getElementById(
+"photoPreview"
+);
+
+
+preview.src =
+URL.createObjectURL(
+file
+);
+
+
+box.style.display =
+"block";
+
+}
+
+
+/* =========================================
+   SAVE PRODUCT
+========================================= */
 
 async function saveProduct(){
 
-    const name=
-        document.getElementById(
-            "productNameInput"
-        ).value.trim();
+const name =
+document.getElementById(
+"productNameInput"
+).value.trim();
 
-    const price=
-        Number(
-            document.getElementById(
-                "productPriceInput"
-            ).value
-        );
 
-    const stock=
-        Number(
-            document.getElementById(
-                "productStockInput"
-            ).value || 0
-        );
+const price =
+Number(
+document.getElementById(
+"productPriceInput"
+).value
+);
 
-    const lowStock=
-        Number(
-            document.getElementById(
-                "productLowStockInput"
-            ).value || 5
-        );
 
-    const description=
-        document.getElementById(
-            "productDescriptionInput"
-        ).value.trim();
+const stock =
+Number(
+document.getElementById(
+"productStockInput"
+).value || 0
+);
 
-    const file=
-        document.getElementById(
-            "productPhotoInput"
-        ).files[0];
 
-    const status=
-        document.getElementById(
-            "uploadStatus"
-        );
+const lowStock =
+Number(
+document.getElementById(
+"productLowStockInput"
+).value || 5
+);
 
-    if(!name){
 
-        alert("Product name pao.");
-        return;
-    }
+const description =
+document.getElementById(
+"productDescriptionInput"
+).value.trim();
 
-    if(!price || price<0){
 
-        alert("Product price pao.");
-        return;
-    }
+const file =
+document.getElementById(
+"productPhotoInput"
+).files[0];
 
-    if(!file){
 
-        alert("Product photo upload karo.");
-        return;
-    }
+const status =
+document.getElementById(
+"uploadStatus"
+);
 
-    if(stock<0){
 
-        alert("Stock negative nahi ho sakda.");
-        return;
-    }
+if(!name){
 
-    const user=
-        await checkAdmin();
+alert(
+"Product name pao."
+);
 
-    if(!user)return;
+return;
 
-    status.innerText=
-        "Uploading photo...";
-
-    try{
-
-        const extension=
-            file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
-
-        const fileName=
-            Date.now()+
-            "-" +
-            Math.random()
-            .toString(36)
-            .substring(2)+
-            "."+
-            extension;
-
-        const filePath=
-            "products/"+fileName;
-
-        const upload=
-            await supabaseClient
-            .storage
-            .from(IMAGE_BUCKET)
-            .upload(
-                filePath,
-                file,
-                {
-                    cacheControl:"3600",
-                    upsert:false
-                }
-            );
-
-        if(upload.error){
-
-            status.innerText="";
-
-            alert(
-                "Photo upload failed:\n\n"+
-                upload.error.message
-            );
-
-            return;
-        }
-
-        status.innerText=
-            "Photo uploaded. Saving product...";
-
-        const publicData=
-            supabaseClient
-            .storage
-            .from(IMAGE_BUCKET)
-            .getPublicUrl(filePath);
-
-        const imageUrl=
-            publicData.data.publicUrl;
-
-        const insert=
-            await supabaseClient
-            .from("products")
-            .insert({
-
-                name:name,
-
-                price:price,
-
-                stock:stock,
-
-                low_stock:lowStock,
-
-                description:description,
-
-                image_url:imageUrl
-
-            })
-            .select()
-            .single();
-
-        if(insert.error){
-
-            status.innerText="";
-
-            alert(
-                "Product save failed:\n\n"+
-                insert.error.message+
-                "\n\nPhoto upload ho chukki aa."
-            );
-
-            return;
-        }
-
-        status.innerText=
-            "✓ Product saved successfully.";
-
-        alert(
-            "Product successfully add ho gaya."
-        );
-
-        clearProductForm();
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        status.innerText="";
-
-        alert(
-            "Something went wrong:\n\n"+
-            error.message
-        );
-    }
 }
 
 
-/* CLEAR FORM */
+if(
+price < 0 ||
+isNaN(price)
+){
+
+alert(
+"Product price pao."
+);
+
+return;
+
+}
+
+
+if(!file){
+
+alert(
+"Product photo upload karo."
+);
+
+return;
+
+}
+
+
+if(stock < 0){
+
+alert(
+"Stock negative nahi ho sakda."
+);
+
+return;
+
+}
+
+
+const user =
+await checkAdmin();
+
+if(!user){
+
+return;
+
+}
+
+
+status.innerText =
+"Uploading photo...";
+
+
+try{
+
+const extension =
+file.name
+.split(".")
+.pop()
+.toLowerCase();
+
+
+const fileName =
+Date.now()+
+"-"+
+Math.random()
+.toString(36)
+.substring(2)+
+"."+extension;
+
+
+const filePath =
+"products/"+fileName;
+
+
+const upload =
+await supabaseClient
+.storage
+.from(IMAGE_BUCKET)
+.upload(
+filePath,
+file,
+{
+cacheControl:"3600",
+upsert:false
+}
+);
+
+
+if(upload.error){
+
+status.innerText="";
+
+alert(
+"Photo upload failed:\n\n"+
+upload.error.message
+);
+
+return;
+
+}
+
+
+status.innerText =
+"Photo uploaded. Saving product...";
+
+
+const publicData =
+supabaseClient
+.storage
+.from(IMAGE_BUCKET)
+.getPublicUrl(
+filePath
+);
+
+
+const imageUrl =
+publicData.data.publicUrl;
+
+
+const insert =
+await supabaseClient
+.from("products")
+.insert({
+
+name:name,
+
+price:price,
+
+stock:stock,
+
+low_stock:lowStock,
+
+description:description,
+
+image_url:imageUrl
+
+})
+.select()
+.single();
+
+
+if(insert.error){
+
+status.innerText="";
+
+alert(
+"Product save failed:\n\n"+
+insert.error.message
+);
+
+return;
+
+}
+
+
+status.innerText =
+"✓ Product saved successfully.";
+
+
+alert(
+"Product successfully add ho gaya."
+);
+
+
+clearProductForm();
+
+}
+catch(error){
+
+console.error(error);
+
+status.innerText="";
+
+alert(
+"Something went wrong:\n\n"+
+error.message
+);
+
+}
+
+}
+
+
+/* =========================================
+   CLEAR PRODUCT
+========================================= */
 
 function clearProductForm(){
 
-    const ids=[
-        "productNameInput",
-        "productPriceInput",
-        "productDescriptionInput"
-    ];
+const ids = [
 
-    ids.forEach(id=>{
-        const el=document.getElementById(id);
-        if(el)el.value="";
-    });
+"productNameInput",
 
-    const stock=
-        document.getElementById(
-            "productStockInput"
-        );
+"productPriceInput",
 
-    if(stock)stock.value="0";
+"productDescriptionInput"
 
-    const low=
-        document.getElementById(
-            "productLowStockInput"
-        );
+];
 
-    if(low)low.value="5";
 
-    const photo=
-        document.getElementById(
-            "productPhotoInput"
-        );
+ids.forEach(
+id=>{
 
-    if(photo)photo.value="";
+const el =
+document.getElementById(
+id
+);
 
-    const preview=
-        document.getElementById(
-            "photoPreview"
-        );
+if(el){
 
-    if(preview)preview.style.display="none";
+el.value="";
 
-    const status=
-        document.getElementById(
-            "uploadStatus"
-        );
+}
 
-    if(status)status.innerText="";
+});
+
+
+const stock =
+document.getElementById(
+"productStockInput"
+);
+
+if(stock){
+
+stock.value="0";
+
 }
 
 
-/* PRODUCTS */
+const low =
+document.getElementById(
+"productLowStockInput"
+);
+
+if(low){
+
+low.value="5";
+
+}
+
+
+const photo =
+document.getElementById(
+"productPhotoInput"
+);
+
+if(photo){
+
+photo.value="";
+
+}
+
+
+const preview =
+document.getElementById(
+"photoPreview"
+);
+
+if(preview){
+
+preview.style.display="none";
+
+}
+
+
+const status =
+document.getElementById(
+"uploadStatus"
+);
+
+if(status){
+
+status.innerText="";
+
+}
+
+}
+
+
+/* =========================================
+   PRODUCTS
+========================================= */
 
 async function loadProducts(){
 
-    document.getElementById(
-        "other-content"
-    ).innerHTML=`
+document.getElementById(
+"other-content"
+).innerHTML = `
 
-        <div class="admin-box">
+<div class="admin-box">
 
-            <div class="admin-header">
+<div class="admin-header">
 
-                <div>
-                    <p>PRODUCT MANAGEMENT</p>
-                    <h2>🧴 Products</h2>
-                </div>
+<div>
 
-                <button
-                    class="btn"
-                    onclick="showAddProduct()">
-                    ➕ Add Product
-                </button>
+<p>
+PRODUCT MANAGEMENT
+</p>
 
-            </div>
+<h2>
+🧴 Products
+</h2>
 
-            <div id="productsList">
-                <div class="message">
-                    Loading products...
-                </div>
-            </div>
+</div>
 
-        </div>
-    `;
 
-    const user=
-        await checkAdmin();
+<button
+class="btn"
+onclick="showAddProduct()">
 
-    if(!user)return;
+➕ Add Product
 
-    const {data,error}=
-        await supabaseClient
-        .from("products")
-        .select("*")
-        .order(
-            "created_at",
-            {ascending:false}
-        );
+</button>
 
-    if(error){
+</div>
 
-        document.getElementById(
-            "productsList"
-        ).innerHTML=`
 
-            <div class="message error">
-                Unable to load products.
-                <br><br>
-                ${escapeHtml(error.message)}
-            </div>
-        `;
+<div id="productsList">
 
-        return;
-    }
+<div class="message">
 
-    allProducts=data || [];
+Loading products...
 
-    renderProducts(allProducts);
+</div>
+
+</div>
+
+</div>
+
+`;
+
+
+const user =
+await checkAdmin();
+
+if(!user){
+
+return;
+
 }
 
 
-function renderProducts(products){
+const {
+data,
+error
+} =
+await supabaseClient
 
-    const box=
-        document.getElementById(
-            "productsList"
-        );
+.from("products")
+.select("*")
+.order(
+"created_at",
+{
+ascending:false
+}
+);
 
-    if(!products.length){
 
-        box.innerHTML=`
+if(error){
 
-            <div class="message">
+document.getElementById(
+"productsList"
+).innerHTML = `
 
-                No products added yet.
+<div class="message error">
 
-                <br><br>
+Unable to load products.
 
-                Click "Add Product" to add your first product.
+<br><br>
 
-            </div>
-        `;
+${escapeHtml(
+error.message
+)}
 
-        return;
-    }
+</div>
 
-    let html=
-        `<div class="product-grid">`;
+`;
 
-    products.forEach(product=>{
+return;
 
-        const stock=
-            Number(product.stock || 0);
-
-        let stockText=
-            "Stock: "+stock;
-
-        let stockClass=
-            "stock-ok";
-
-        if(stock<=0){
-            stockText="Out of Stock";
-            stockClass="stock-out";
-        }
-        else if(
-            stock<=Number(
-                product.low_stock || 5
-            )
-        ){
-            stockText=
-                "Low Stock: "+stock;
-            stockClass="stock-low";
-        }
-
-        const image=
-            product.image_url ||
-            "";
-
-        html+=`
-
-        <div class="product-card">
-
-            ${
-                image
-                ?
-                `<img
-                    class="product-card-image"
-                    src="${escapeHtml(image)}"
-                    alt="${escapeHtml(product.name)}">`
-                :
-                `<div
-                    class="product-card-image"
-                    style="
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-size:50px;">
-                    🧴
-                </div>`
-            }
-
-            <div class="product-card-body">
-
-                <h3>
-                    ${escapeHtml(product.name)}
-                </h3>
-
-                <div class="product-description">
-                    ${escapeHtml(
-                        product.description || ""
-                    )}
-                </div>
-
-                <div class="product-price">
-                    ${money(product.price)}
-                </div>
-
-                <div
-                    class="product-stock ${stockClass}">
-                    ${stockText}
-                </div>
-
-                <div class="product-card-actions">
-
-                    <button
-                        class="update-product-stock"
-                        onclick="editProductStock('${escapeHtml(String(product.id))}')">
-                        ✏️ Stock
-                    </button>
-
-                    <button
-                        class="delete-product"
-                        onclick="deleteProduct('${escapeHtml(String(product.id))}')">
-                        🗑️ Delete
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-        `;
-    });
-
-    html+="</div>";
-
-    box.innerHTML=html;
 }
 
 
-/* EDIT STOCK */
+allProducts =
+data || [];
 
-async function editProductStock(id){
 
-    const product=
-        allProducts.find(
-            p=>String(p.id)===String(id)
-        );
+renderProducts(
+allProducts
+);
 
-    if(!product)return;
-
-    const value=
-        prompt(
-            "New stock quantity:",
-            product.stock || 0
-        );
-
-    if(value===null)return;
-
-    const stock=
-        Number(value);
-
-    if(
-        !Number.isInteger(stock) ||
-        stock<0
-    ){
-
-        alert(
-            "Valid stock quantity pao."
-        );
-
-        return;
-    }
-
-    const {error}=
-        await supabaseClient
-        .from("products")
-        .update({
-            stock:stock
-        })
-        .eq("id",id);
-
-    if(error){
-
-        alert(
-            "Stock update failed:\n\n"+
-            error.message
-        );
-
-        return;
-    }
-
-    alert("Stock updated successfully.");
-
-    loadProducts();
 }
 
 
-/* DELETE PRODUCT */
+/* =========================================
+   RENDER PRODUCTS
+========================================= */
 
-async function deleteProduct(id){
+function renderProducts(
+products
+){
 
-    const product=
-        allProducts.find(
-            p=>String(p.id)===String(id)
-        );
+const box =
+document.getElementById(
+"productsList"
+);
 
-    if(!product)return;
 
-    const yes=
-        confirm(
-            "Delete \""+
-            product.name+
-            "\"?"
-        );
+if(!products.length){
 
-    if(!yes)return;
+box.innerHTML = `
 
-    const {error}=
-        await supabaseClient
-        .from("products")
-        .delete()
-        .eq("id",id);
+<div class="message">
 
-    if(error){
+No products added yet.
 
-        alert(
-            "Product delete failed:\n\n"+
-            error.message
-        );
+<br><br>
 
-        return;
-    }
+Click "Add Product" to add your first product.
 
-    alert(
-        "Product deleted successfully."
-    );
+</div>
 
-    loadProducts();
+`;
+
+return;
+
 }
 
 
-/* STOCK */
+let html =
+`<div class="product-grid">`;
+
+
+products.forEach(
+product=>{
+
+const stock =
+Number(
+product.stock || 0
+);
+
+
+let stockText =
+"Stock: "+stock;
+
+
+let stockClass =
+"stock-ok";
+
+
+if(stock <= 0){
+
+stockText =
+"Out of Stock";
+
+stockClass =
+"stock-out";
+
+}
+
+else if(
+stock <= Number(
+product.low_stock || 5
+)
+){
+
+stockText =
+"Low Stock: "+stock;
+
+stockClass =
+"stock-low";
+
+}
+
+
+const image =
+product.image_url ||
+"";
+
+
+html += `
+
+<div class="product-card">
+
+
+${
+image
+?
+
+`<img
+class="product-card-image"
+src="${escapeHtml(image)}"
+alt="${escapeHtml(product.name)}">`
+
+:
+
+`<div
+class="product-card-image"
+style="
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:50px;">
+
+🧴
+
+</div>`
+
+}
+
+
+<div class="product-card-body">
+
+
+<h3>
+
+${escapeHtml(
+product.name
+)}
+
+</h3>
+
+
+<div class="product-description">
+
+${escapeHtml(
+product.description || ""
+)}
+
+</div>
+
+
+<div class="product-price">
+
+${money(
+product.price
+)}
+
+</div>
+
+
+<div
+class="product-stock ${stockClass}">
+
+${stockText}
+
+</div>
+
+
+<div class="product-card-actions">
+
+
+<button
+class="update-product-stock"
+onclick="editProductStock('${escapeHtml(String(product.id))}')">
+
+✏️ Stock
+
+</button>
+
+
+<button
+class="delete-product"
+onclick="deleteProduct('${escapeHtml(String(product.id))}')">
+
+🗑️ Delete
+
+</button>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+html +=
+"</div>";
+
+
+box.innerHTML =
+html;
+
+}
+
+
+/* =========================================
+   EDIT STOCK
+========================================= */
+
+async function editProductStock(
+id
+){
+
+const product =
+allProducts.find(
+p =>
+String(p.id)
+===
+String(id)
+);
+
+
+if(!product){
+
+return;
+
+}
+
+
+const value =
+prompt(
+"New stock quantity:",
+product.stock || 0
+);
+
+
+if(value === null){
+
+return;
+
+}
+
+
+const stock =
+Number(value);
+
+
+if(
+!Number.isInteger(stock) ||
+stock < 0
+){
+
+alert(
+"Valid stock quantity pao."
+);
+
+return;
+
+}
+
+
+const {
+error
+} =
+await supabaseClient
+
+.from("products")
+.update({
+stock:stock
+})
+.eq(
+"id",
+id
+);
+
+
+if(error){
+
+alert(
+"Stock update failed:\n\n"+
+error.message
+);
+
+return;
+
+}
+
+
+alert(
+"Stock updated successfully."
+);
+
+
+loadProducts();
+
+}
+
+
+/* =========================================
+   DELETE PRODUCT
+========================================= */
+
+async function deleteProduct(
+id
+){
+
+const product =
+allProducts.find(
+p =>
+String(p.id)
+===
+String(id)
+);
+
+
+if(!product){
+
+return;
+
+}
+
+
+const yes =
+confirm(
+'Delete "'+
+product.name+
+'"?'
+);
+
+
+if(!yes){
+
+return;
+
+}
+
+
+const {
+error
+} =
+await supabaseClient
+
+.from("products")
+.delete()
+.eq(
+"id",
+id
+);
+
+
+if(error){
+
+alert(
+"Product delete failed:\n\n"+
+error.message
+);
+
+return;
+
+}
+
+
+alert(
+"Product deleted successfully."
+);
+
+
+loadProducts();
+
+}
+
+
+/* =========================================
+   STOCK
+========================================= */
 
 async function loadStock(){
 
-    document.getElementById(
-        "other-content"
-    ).innerHTML=`
+document.getElementById(
+"other-content"
+).innerHTML = `
 
-    <div class="admin-box">
+<div class="admin-box">
 
-        <div class="stock-header">
 
-            <div>
-                <p style="
-                    color:#ad8232;
-                    font-size:13px;
-                    font-weight:bold;
-                    letter-spacing:2px;">
-                    INVENTORY
-                </p>
+<div class="stock-header">
 
-                <h2>
-                    📦 Stock Management
-                </h2>
-            </div>
+<div>
 
-            <button
-                class="btn"
-                onclick="loadStock()">
-                🔄 Refresh
-            </button>
+<p
+style="
+color:#ad8232;
+font-size:13px;
+font-weight:bold;
+letter-spacing:2px;">
 
-        </div>
+INVENTORY
 
-        <div class="stock-cards">
+</p>
 
-            <div class="stock-card">
-                <span>Total Products</span>
-                <strong id="stockTotal">
-                    0
-                </strong>
-            </div>
 
-            <div class="stock-card">
-                <span>Low Stock</span>
-                <strong id="stockLow">
-                    0
-                </strong>
-            </div>
+<h2>
+📦 Stock Management
+</h2>
 
-            <div class="stock-card">
-                <span>Out of Stock</span>
-                <strong id="stockOut">
-                    0
-                </strong>
-            </div>
+</div>
 
-        </div>
 
-        <div id="stockTable">
-            <div class="message">
-                Loading stock...
-            </div>
-        </div>
+<button
+class="btn"
+onclick="loadStock()">
 
-    </div>
-    `;
+🔄 Refresh
 
-    const user=
-        await checkAdmin();
+</button>
 
-    if(!user)return;
+</div>
 
-    const {data,error}=
-        await supabaseClient
-        .from("products")
-        .select("*")
-        .order(
-            "created_at",
-            {ascending:false}
-        );
 
-    if(error){
+<div class="stock-cards">
 
-        document.getElementById(
-            "stockTable"
-        ).innerHTML=`
 
-        <div class="message error">
-            ${escapeHtml(error.message)}
-        </div>
-        `;
+<div class="stock-card">
 
-        return;
-    }
+<span>
+Total Products
+</span>
 
-    renderStock(data || []);
+<strong
+id="stockTotal">
+0
+</strong>
+
+</div>
+
+
+<div class="stock-card">
+
+<span>
+Low Stock
+</span>
+
+<strong
+id="stockLow">
+0
+</strong>
+
+</div>
+
+
+<div class="stock-card">
+
+<span>
+Out of Stock
+</span>
+
+<strong
+id="stockOut">
+0
+</strong>
+
+</div>
+
+
+</div>
+
+
+<div id="stockTable">
+
+<div class="message">
+
+Loading stock...
+
+</div>
+
+</div>
+
+
+</div>
+
+`;
+
+
+const user =
+await checkAdmin();
+
+if(!user){
+
+return;
+
 }
 
 
-function renderStock(products){
+const {
+data,
+error
+} =
+await supabaseClient
 
-    let low=0;
-    let out=0;
+.from("products")
+.select("*")
+.order(
+"created_at",
+{
+ascending:false
+}
+);
 
-    products.forEach(product=>{
 
-        const stock=
-            Number(product.stock || 0);
+if(error){
 
-        const minimum=
-            Number(product.low_stock || 5);
+document.getElementById(
+"stockTable"
+).innerHTML = `
 
-        if(stock<=0){
-            out++;
-        }
-        else if(stock<=minimum){
-            low++;
-        }
-    });
+<div class="message error">
 
-    document.getElementById(
-        "stockTotal"
-    ).innerText=products.length;
+${escapeHtml(
+error.message
+)}
 
-    document.getElementById(
-        "stockLow"
-    ).innerText=low;
+</div>
 
-    document.getElementById(
-        "stockOut"
-    ).innerText=out;
+`;
 
-    if(!products.length){
+return;
 
-        document.getElementById(
-            "stockTable"
-        ).innerHTML=`
-
-        <div class="message">
-            No products added yet.
-        </div>
-        `;
-
-        return;
-    }
-
-    let html=`
-
-    <div class="table-wrapper">
-
-    <table class="order-table">
-
-    <thead>
-    <tr>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Minimum</th>
-        <th>Status</th>
-        <th>Update</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    `;
-
-    products.forEach(product=>{
-
-        const stock=
-            Number(product.stock || 0);
-
-        const minimum=
-            Number(product.low_stock || 5);
-
-        let status="In Stock";
-        let cls="stock-ok";
-
-        if(stock<=0){
-
-            status="Out of Stock";
-            cls="stock-out";
-
-        }
-        else if(stock<=minimum){
-
-            status="Low Stock";
-            cls="stock-low";
-        }
-
-        html+=`
-
-        <tr>
-
-            <td>
-                <strong>
-                    ${escapeHtml(product.name)}
-                </strong>
-            </td>
-
-            <td>
-                ${money(product.price)}
-            </td>
-
-            <td>
-
-                <input
-                    class="stock-input"
-                    id="stock-${escapeHtml(String(product.id))}"
-                    type="number"
-                    min="0"
-                    value="${stock}">
-
-            </td>
-
-            <td>
-                ${minimum}
-            </td>
-
-            <td class="${cls}">
-                ${status}
-            </td>
-
-            <td>
-
-                <button
-                    class="stock-save"
-                    onclick="updateStock('${escapeHtml(String(product.id))}')">
-                    Save
-                </button>
-
-            </td>
-
-        </tr>
-        `;
-    });
-
-    html+=`
-    </tbody>
-    </table>
-    </div>
-    `;
-
-    document.getElementById(
-        "stockTable"
-    ).innerHTML=html;
 }
 
 
-async function updateStock(id){
+renderStock(
+data || []
+);
 
-    const input=
-        document.getElementById(
-            "stock-"+id
-        );
-
-    if(!input)return;
-
-    const stock=
-        Number(input.value);
-
-    if(
-        !Number.isInteger(stock) ||
-        stock<0
-    ){
-
-        alert(
-            "Valid stock quantity pao."
-        );
-
-        return;
-    }
-
-    const {error}=
-        await supabaseClient
-        .from("products")
-        .update({
-            stock:stock
-        })
-        .eq("id",id);
-
-    if(error){
-
-        alert(
-            "Stock update failed:\n\n"+
-            error.message
-        );
-
-        return;
-    }
-
-    alert("Stock updated successfully.");
-
-    loadStock();
 }
 
 
-/* LOGOUT */
+/* =========================================
+   RENDER STOCK
+========================================= */
+
+function renderStock(
+products
+){
+
+let low = 0;
+
+let out = 0;
+
+
+products.forEach(
+product=>{
+
+const stock =
+Number(
+product.stock || 0
+);
+
+
+const minimum =
+Number(
+product.low_stock || 5
+);
+
+
+if(stock <= 0){
+
+out++;
+
+}
+
+else if(
+stock <= minimum
+){
+
+low++;
+
+}
+
+});
+
+
+document.getElementById(
+"stockTotal"
+).innerText =
+products.length;
+
+
+document.getElementById(
+"stockLow"
+).innerText =
+low;
+
+
+document.getElementById(
+"stockOut"
+).innerText =
+out;
+
+
+if(!products.length){
+
+document.getElementById(
+"stockTable"
+).innerHTML = `
+
+<div class="message">
+
+No products added yet.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+let html = `
+
+<div class="table-wrapper">
+
+<table class="order-table">
+
+<thead>
+
+<tr>
+
+<th>
+Product
+</th>
+
+<th>
+Price
+</th>
+
+<th>
+Stock
+</th>
+
+<th>
+Minimum
+</th>
+
+<th>
+Status
+</th>
+
+<th>
+Update
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+
+products.forEach(
+product=>{
+
+const stock =
+Number(
+product.stock || 0
+);
+
+
+const minimum =
+Number(
+product.low_stock || 5
+);
+
+
+let status =
+"In Stock";
+
+
+let cls =
+"stock-ok";
+
+
+if(stock <= 0){
+
+status =
+"Out of Stock";
+
+cls =
+"stock-out";
+
+}
+
+else if(
+stock <= minimum
+){
+
+status =
+"Low Stock";
+
+cls =
+"stock-low";
+
+}
+
+
+html += `
+
+<tr>
+
+
+<td>
+
+<strong>
+
+${escapeHtml(
+product.name
+)}
+
+</strong>
+
+</td>
+
+
+<td>
+
+${money(
+product.price
+)}
+
+</td>
+
+
+<td>
+
+<input
+class="stock-input"
+id="stock-${escapeHtml(String(product.id))}"
+type="number"
+min="0"
+value="${stock}">
+
+</td>
+
+
+<td>
+
+${minimum}
+
+</td>
+
+
+<td class="${cls}">
+
+${status}
+
+</td>
+
+
+<td>
+
+<button
+class="stock-save"
+onclick="updateStock('${escapeHtml(String(product.id))}')">
+
+Save
+
+</button>
+
+</td>
+
+
+</tr>
+
+`;
+
+});
+
+
+html += `
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+
+document.getElementById(
+"stockTable"
+).innerHTML =
+html;
+
+}
+
+
+/* =========================================
+   UPDATE STOCK
+========================================= */
+
+async function updateStock(
+id
+){
+
+const input =
+document.getElementById(
+"stock-"+id
+);
+
+
+if(!input){
+
+return;
+
+}
+
+
+const stock =
+Number(
+input.value
+);
+
+
+if(
+!Number.isInteger(stock) ||
+stock < 0
+){
+
+alert(
+"Valid stock quantity pao."
+);
+
+return;
+
+}
+
+
+const {
+error
+} =
+await supabaseClient
+
+.from("products")
+.update({
+stock:stock
+})
+.eq(
+"id",
+id
+);
+
+
+if(error){
+
+alert(
+"Stock update failed:\n\n"+
+error.message
+);
+
+return;
+
+}
+
+
+alert(
+"Stock updated successfully."
+);
+
+
+loadStock();
+
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
 
 async function logoutAdmin(){
 
-    await supabaseClient
-        .auth
-        .signOut();
+await supabaseClient
+.auth
+.signOut();
 
-    window.location.href=
-        "company-login.html";
+
+window.location.href =
+"company-login.html";
+
 }
 
 
-/* START */
+/* =========================================
+   START
+========================================= */
 
 loadOrders();
 
 </script>
 
 </body>
+
 </html>
