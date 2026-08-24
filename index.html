@@ -16,6 +16,45 @@
   color:#171717;
   line-height:1;
 }
+.logo{
+  display:grid !important;
+  grid-template-columns:42px auto;
+  grid-template-rows:auto auto;
+  column-gap:8px;
+  align-items:center;
+}
+.logo-mark{
+  grid-row:1 / span 2;
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo-mark svg{
+  width:42px;
+  height:42px;
+  display:block;
+}
+.logo-word{
+  font-family:Georgia, "Times New Roman", serif;
+  font-size:27px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:7px;
+  color:#171717;
+}
+.logo small{
+  grid-column:2;
+  margin-top:4px;
+  text-align:left;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:6.5px;
+  font-weight:700;
+  letter-spacing:3px;
+  color:#b58a3c;
+}
+
 .logo small{
   display:block;
   font-family: Arial,Helvetica,sans-serif;
@@ -325,9 +364,44 @@ footer{background:#0d0d0d;color:#aaa;padding:55px 6% 22px}
 
 <header>
   <div class="header-inner">
-    <a href="#home" class="logo">
-      <strong>LIARA</strong>
-      <small>PROFESSIONAL™</small>
+    <a href="#home" class="logo" aria-label="Liara Professional">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 120 105">
+          <defs>
+            <linearGradient id="liaraGold2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#e4c87b"/>
+              <stop offset="48%" stop-color="#b98932"/>
+              <stop offset="100%" stop-color="#dcb961"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Elegant L monogram -->
+          <path d="M42 8h35v8H61v57h27v11H42z"
+                fill="url(#liaraGold2)"/>
+
+          <!-- Stylized feminine profile / leaf -->
+          <path d="M61 68c5-19 16-32 34-40-1 16-8 29-25 39"
+                fill="none"
+                stroke="url(#liaraGold2)"
+                stroke-width="5"
+                stroke-linecap="round"/>
+          <path d="M65 68c12-9 20-18 25-29"
+                fill="none"
+                stroke="#c59a42"
+                stroke-width="2.4"
+                stroke-linecap="round"/>
+
+          <!-- Luxury sparkle -->
+          <path d="M27 57v18M18 66h18"
+                stroke="#c59a42"
+                stroke-width="3"
+                stroke-linecap="round"/>
+          <circle cx="25" cy="84" r="4.2" fill="#c59a42"/>
+        </svg>
+      </span>
+
+      <span class="logo-word">LIARA</span>
+      <small><span></span> PROFESSIONAL <span></span></small>
     </a>
     <nav>
       <a href="#home">Home</a>
@@ -617,4 +691,3 @@ document.addEventListener("DOMContentLoaded",loadHomepageProducts);
 </script>
 </body>
 </html>
-
