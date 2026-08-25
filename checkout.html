@@ -1584,43 +1584,50 @@ async function createRazorpayOrder() {
 }
 
 
-async function verifyRazorpayPayment(
-    response
-) {
+async function verifyRazorpayPayment(response) {
+
+    let items = checkoutItems.map(function(product) {
+        return {
+            name: product.name || "Product",
+            quantity: Number(product.quantity || 1)
+        };
+    });
+
+    const orderPayload = {
+        customer_name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("mobile").value.trim(),
+        house_no: document.getElementById("house_no").value.trim(),
+        street: document.getElementById("street").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        state: document.getElementById("state").value.trim(),
+        pincode: document.getElementById("pincode").value.trim(),
+        total: Number(total || 0),
+        items: items
+    };
 
     const { data, error } =
         await supabaseClient.functions.invoke(
             "create-razorpay-order",
             {
                 body: {
-                    action: "verify",
-                    razorpay_order_id:
-                        response.razorpay_order_id,
-                    razorpay_payment_id:
-                        response.razorpay_payment_id,
-                    razorpay_signature:
-                        response.razorpay_signature
+                    action: "verify_and_save",
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    order: orderPayload
                 }
             }
         );
 
-
     if(error) {
-        throw new Error(
-            error.message ||
-            "Payment verification failed."
-        );
+        throw new Error(error.message || "Payment/order verification failed.");
     }
 
-
-    if(!data || !data.success || !data.verified) {
-        throw new Error(
-            "Payment could not be verified."
-        );
+    if(!data || !data.success || !data.verified || !data.saved) {
+        throw new Error(data?.error || "Payment was verified, but the order could not be saved.");
     }
 
-
-    return true;
+    return data;
 }
 
 
@@ -1738,19 +1745,7 @@ async function openRazorpayPayment(button) {
                 );
 
 
-                await verifyRazorpayPayment(
-                    response
-                );
-
-
-                button.innerText =
-                    "Saving Order...";
-
-
-                await saveOrderToDatabase(
-                    "Payment Received"
-                );
-
+                await verifyRazorpayPayment(response);
 
                 orderSuccess(button);
 
