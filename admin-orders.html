@@ -1192,6 +1192,16 @@ body{
 @media(max-width:700px){.staff-form{grid-template-columns:1fr}.staff-form .full{grid-column:auto}}
 
 </style>
+
+<style>
+/* Professional toast notifications */
+#proToast{position:fixed;right:24px;bottom:24px;z-index:99999;display:none;min-width:280px;max-width:420px;padding:14px 18px;border-radius:14px;background:#fff;box-shadow:0 12px 35px rgba(0,0,0,.16);border:1px solid #e8e8e8;font-family:inherit;align-items:center;gap:12px;animation:toastIn .25s ease;}
+#proToast .toast-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eaf7ee;color:#16843a;font-weight:700;font-size:18px;flex:none;}
+#proToast .toast-title{font-weight:700;font-size:14px;color:#202124;}
+#proToast .toast-text{font-size:12px;color:#6b7280;margin-top:2px;}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){#proToast{left:16px;right:16px;bottom:16px;min-width:0;max-width:none}}
+</style>
 </head>
 
 <body>
@@ -1587,7 +1597,7 @@ function resetSettings(){
 
     loadSettings();
 
-    alert("Settings reset successfully.");
+    showProSuccess("Your settings have been reset.");
 
 }
 
@@ -2251,9 +2261,7 @@ async function updateOrderStatus(id,status){
     updateOrderSummary(allOrders);
     applyOrderFilters();
 
-    alert(
-        "Order status updated successfully."
-    );
+    showProSuccess("Order status has been updated.");
 
 }
 
@@ -3030,7 +3038,7 @@ async function updateStock(id){
 
     }
 
-    alert("Stock updated successfully.");
+    showProSuccess("Stock quantity has been updated.");
 
     loadStock();
 
@@ -3522,7 +3530,7 @@ async function saveEditedProduct(id){
             return;
         }
 
-        alert("Product updated successfully.");
+        showProSuccess("Product details have been updated.");
         loadProducts();
 
     }catch(error){
@@ -3567,7 +3575,7 @@ async function deleteProduct(id){
 
     }
 
-    alert("Product deleted successfully.");
+    showProSuccess("Product has been deleted.");
 
     loadProducts();
 
@@ -3893,9 +3901,7 @@ async function saveProduct(){
 
         }
 
-        alert(
-            "Product successfully add ho gaya."
-        );
+        showProSuccess("Product has been added successfully.");
 
         clearProductForm();
 
@@ -6080,9 +6086,7 @@ async function changeAdminPassword(){
         "confirmAdminPassword"
     ).value = "";
 
-    alert(
-        "Password successfully change ho gaya."
-    );
+    showProSuccess("Your password has been changed successfully.");
 
 }
 
@@ -6460,5 +6464,22 @@ loadOrders();
 
 </script>
 
-</body>
+
+<script>
+function showProSuccess(message,title="Success") {
+    let toast=document.getElementById("proToast");
+    if(!toast){
+        toast=document.createElement("div");
+        toast.id="proToast";
+        toast.innerHTML='<div class="toast-icon">✓</div><div><div class="toast-title"></div><div class="toast-text"></div></div>';
+        document.body.appendChild(toast);
+    }
+    toast.querySelector(".toast-title").textContent=title;
+    toast.querySelector(".toast-text").textContent=message;
+    toast.style.display="flex";
+    clearTimeout(window.__proToastTimer);
+    window.__proToastTimer=setTimeout(()=>{toast.style.display="none";},3000);
+}
+</script>
+<div id="proToast" aria-live="polite"></div></body>
 </html>
