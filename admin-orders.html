@@ -1773,13 +1773,7 @@ async function checkAdmin(){
         if(!result.error) profile=result.data;
         if(!profile && email){
             const byEmail=await supabaseClient.from("staff_profiles").select("*").eq("email",email).maybeSingle();
-            if(!byEmail.error) {
-                profile=byEmail.data;
-                if(profile && !profile.user_id){
-                    await supabaseClient.from("staff_profiles").update({user_id:user.id}).eq("id",profile.id);
-                    profile.user_id=user.id;
-                }
-            }
+            if(!byEmail.error) profile=byEmail.data;
         }
     }catch(e){}
     if(!profile){
