@@ -2244,11 +2244,20 @@ function viewOrder(id){
         order.mobile ||
         "-";
 
-    const address =
-        order.address ||
-        order.shipping_address ||
-        order.delivery_address ||
-        "-";
+   const address =
+    order.address ||
+    order.shipping_address ||
+    order.delivery_address ||
+    [
+        order.house_no,
+        order.street,
+        order.city,
+        order.state,
+        order.pincode
+    ]
+    .filter(Boolean)
+    .join(", ") ||
+    "-";
 
     const product =
         productName(order);
