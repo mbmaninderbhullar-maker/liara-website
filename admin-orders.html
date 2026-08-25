@@ -1173,6 +1173,24 @@ body{
         display:none;
     }
 }
+
+
+/* ================= STAFF MANAGEMENT ================= */
+.staff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
+.staff-card{background:#fff;border:1px solid #e9e4dc;border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,.04)}
+.staff-card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.staff-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f0e4cc;color:#8d6827;font-weight:700;font-size:17px;overflow:hidden}
+.staff-avatar img{width:100%;height:100%;object-fit:cover}
+.staff-name{font-weight:700}.staff-email{font-size:12px;color:#777;word-break:break-all}
+.staff-role{display:inline-block;margin-top:5px;padding:4px 8px;border-radius:999px;background:#f5f1e9;color:#8b672a;font-size:10px;font-weight:700}
+.staff-status{font-size:11px;font-weight:700}.staff-status.active{color:#287a3e}.staff-status.inactive{color:#a23b32}
+.permission-list{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}.permission-chip{font-size:10px;padding:5px 7px;background:#f5f5f5;border-radius:6px;color:#555}
+.staff-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.staff-actions button{border:0;border-radius:7px;padding:8px 10px;cursor:pointer;font-size:11px}
+.staff-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.staff-form .full{grid-column:1/-1}
+.staff-permissions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:8px}.permission-toggle{display:flex;gap:7px;align-items:center;border:1px solid #e7e2da;border-radius:8px;padding:9px;font-size:11px;background:#faf9f7}
+.staff-note{padding:12px;border-radius:9px;background:#fff8e8;border:1px solid #ead7aa;color:#72551f;font-size:12px;line-height:1.5;margin-top:14px}
+@media(max-width:700px){.staff-form{grid-template-columns:1fr}.staff-form .full{grid-column:auto}}
+
 </style>
 </head>
 
@@ -1200,6 +1218,7 @@ body{
         <button onclick="showSection('delivery',this)">🚚 Delivery</button>
         <button onclick="showSection('reports',this)">📊 Reports</button>
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
+        <button data-permission="staff" onclick="showSection('staff',this)">👥 Staff Management</button>
         <button onclick="showSection('settings',this)">⚙️ Settings</button>
 
         <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
@@ -1229,7 +1248,7 @@ body{
     <div class="header-right">
 
         <div class="admin-pill">
-            👤 Company Admin
+            👤 <span id="headerUserName">Company Admin</span> <small id="headerUserRole" style="font-size:10px;color:#777"></small>
         </div>
 
         <button class="btn" onclick="logoutAdmin()">Logout</button>
@@ -1401,6 +1420,15 @@ const IMAGE_BUCKET =
 let allOrders = [];
 let allProducts = [];
 let currentOrder = null;
+let currentSessionUser = null;
+let currentStaffProfile = null;
+
+const MAIN_ADMIN_EMAIL = ADMIN_EMAIL;
+const STAFF_STORAGE_KEY = "liara_staff_profiles_cache";
+const STAFF_PERMISSIONS = {
+    orders:"Orders", sales:"Sales", stock:"Stock", products:"Products", addProduct:"Add Product",
+    customers:"Customers", delivery:"Delivery", reports:"Reports", notifications:"Notifications", settings:"Settings", staff:"Staff Management"
+};
 
 /* =========================================================
    SETTINGS STORAGE
@@ -1641,45 +1669,58 @@ function payment(order){
    MENU
 ========================================================= */
 
-function showSection(section,button){
+function hasPermission(permission){
+    if(!currentSessionUser) return false;
+    if(currentSessionUser.isMainAdmin) return true;
+    return !!(currentStaffProfile && currentStaffProfile.active !== false && currentStaffProfile.permissions && currentStaffProfile.permissions[permission]);
+}
 
-    document.querySelectorAll(
-        ".side-menu button"
-    ).forEach(btn=>{
-        btn.classList.remove("active");
+function enforceMenuPermissions(){
+    document.querySelectorAll("[data-permission]").forEach(btn=>{
+        const permission=btn.getAttribute("data-permission");
+        btn.style.display=hasPermission(permission)?"block":"none";
     });
+}
 
-    if(button){
-        button.classList.add("active");
+function updateHeaderIdentity(){
+    const name=document.getElementById("headerUserName");
+    const role=document.getElementById("headerUserRole");
+    if(!name) return;
+    if(currentSessionUser?.isMainAdmin){
+        name.textContent=getSettings().profile.name || "Main Admin";
+        if(role) role.textContent="• Main Admin";
+    }else if(currentStaffProfile){
+        name.textContent=currentStaffProfile.name || currentSessionUser.email;
+        if(role) role.textContent="• "+(currentStaffProfile.role || "Staff");
     }
+}
 
-    document.getElementById(
-        "orders-section"
-    ).style.display =
-        section === "orders"
-        ? "block"
-        : "none";
-
-    document.getElementById(
-        "other-section"
-    ).style.display =
-        section === "orders"
-        ? "none"
-        : "block";
-
-    if(section === "orders") loadOrders();
-    else if(section === "sales") loadSales();
-    else if(section === "stock") loadStock();
-    else if(section === "products") loadProducts();
-    else if(section === "add-product") showAddProduct();
-    else if(section === "customers") loadCustomers();
-    else if(section === "delivery") loadDelivery();
-    else if(section === "reports") loadReports();
-    else if(section === "notifications") loadNotifications();
-    else if(section === "settings") loadSettings();
-
+function showSection(section,button){
+    const permissionMap={
+        orders:"orders",sales:"sales",stock:"stock",products:"products", "add-product":"addProduct",
+        customers:"customers",delivery:"delivery",reports:"reports",notifications:"notifications",staff:"staff",settings:"settings"
+    };
+    const permission=permissionMap[section];
+    if(permission && !hasPermission(permission)){
+        alert("Tuhanu is section di permission nahi hai.");
+        return;
+    }
+    document.querySelectorAll(".side-menu button").forEach(btn=>btn.classList.remove("active"));
+    if(button) button.classList.add("active");
+    document.getElementById("orders-section").style.display=section==="orders"?"block":"none";
+    document.getElementById("other-section").style.display=section==="orders"?"none":"block";
+    if(section==="orders") loadOrders();
+    else if(section==="sales") loadSales();
+    else if(section==="stock") loadStock();
+    else if(section==="products") loadProducts();
+    else if(section==="add-product") showAddProduct();
+    else if(section==="customers") loadCustomers();
+    else if(section==="delivery") loadDelivery();
+    else if(section==="reports") loadReports();
+    else if(section==="notifications") loadNotifications();
+    else if(section==="staff") loadStaffManagement();
+    else if(section==="settings") loadSettings();
     closeSidebar();
-
 }
 
 /* =========================================================
@@ -1711,36 +1752,53 @@ function closeSidebar(){
 ========================================================= */
 
 async function checkAdmin(){
-
-    const {data,error} =
-        await supabaseClient
-        .auth
-        .getUser();
-
+    const {data,error}=await supabaseClient.auth.getUser();
     if(error || !data || !data.user){
-
-        window.location.href =
-            "company-login.html";
-
+        window.location.href="company-login.html";
         return null;
-
     }
-
-    if(
-        !data.user.email ||
-        data.user.email.toLowerCase()
-        !== ADMIN_EMAIL.toLowerCase()
-    ){
-
-        window.location.href =
-            "company-login.html";
-
+    const user=data.user;
+    currentSessionUser=user;
+    const email=(user.email||"").toLowerCase();
+    if(email===MAIN_ADMIN_EMAIL.toLowerCase()){
+        currentSessionUser.isMainAdmin=true;
+        currentStaffProfile=null;
+        enforceMenuPermissions();
+        updateHeaderIdentity();
+        return user;
+    }
+    let profile=null;
+    try{
+        const result=await supabaseClient.from("staff_profiles").select("*").eq("user_id",user.id).maybeSingle();
+        if(!result.error) profile=result.data;
+        if(!profile && email){
+            const byEmail=await supabaseClient.from("staff_profiles").select("*").eq("email",email).maybeSingle();
+            if(!byEmail.error) {
+                profile=byEmail.data;
+                if(profile && !profile.user_id){
+                    await supabaseClient.from("staff_profiles").update({user_id:user.id}).eq("id",profile.id);
+                    profile.user_id=user.id;
+                }
+            }
+        }
+    }catch(e){}
+    if(!profile){
+        try{
+            const cached=JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]");
+            profile=cached.find(x=>(x.email||"").toLowerCase()===email);
+        }catch(e){}
+    }
+    if(!profile || profile.active===false){
+        await supabaseClient.auth.signOut();
+        alert("Tuhada staff account active nahi hai.");
+        window.location.href="company-login.html";
         return null;
-
     }
-
-    return data.user;
-
+    currentStaffProfile=profile;
+    currentSessionUser.isMainAdmin=false;
+    enforceMenuPermissions();
+    updateHeaderIdentity();
+    return user;
 }
 
 /* =========================================================
@@ -4609,6 +4667,125 @@ async function loadNotifications(){
 
 }
 
+
+/* =========================================================
+   STAFF MANAGEMENT
+========================================================= */
+
+function defaultStaffPermissions(){
+    return {orders:true,sales:true,stock:true,products:true,addProduct:false,customers:true,delivery:true,reports:false,notifications:true,settings:false,staff:false};
+}
+
+function initials(name){
+    return String(name||"Staff").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "S";
+}
+
+async function loadStaffRows(){
+    try{
+        const {data,error}=await supabaseClient.from("staff_profiles").select("*").order("created_at",{ascending:false});
+        if(!error) return data||[];
+    }catch(e){}
+    try{return JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]");}catch(e){return [];}
+}
+
+async function loadStaffManagement(){
+    if(!hasPermission("staff")){ alert("Sirf Main Admin staff manage kar sakda hai."); return; }
+    document.getElementById("other-content").innerHTML=`
+    <div class="admin-box">
+      <div class="admin-header">
+        <div><p>TEAM & ACCESS</p><h2>👥 Staff Management</h2></div>
+        <button class="btn" onclick="loadStaffManagement()">🔄 Refresh</button>
+      </div>
+      <div class="settings-card">
+        <h3>➕ Add Staff Profile</h3>
+        <p>Staff da Supabase Auth account pehlan create/invite karo; ithon profile, role te permissions manage honge.</p>
+        <div class="staff-form">
+          <div class="settings-field"><label>FULL NAME</label><input id="staffName" placeholder="e.g. Aman Singh"></div>
+          <div class="settings-field"><label>EMAIL</label><input id="staffEmail" type="email" placeholder="staff@example.com"></div>
+          <div class="settings-field"><label>ROLE</label><input id="staffRole" placeholder="Sales Manager"></div>
+          <div class="settings-field"><label>PHONE</label><input id="staffPhone" placeholder="Phone number"></div>
+          <div class="settings-field full"><label>PERMISSIONS</label><div class="staff-permissions" id="staffPermissionBox"></div></div>
+        </div>
+        <button class="btn" style="margin-top:14px" onclick="createStaffProfile()">💾 Create Staff Profile</button>
+        <div class="staff-note">Security: permissions nu frontend te hide karan de naal-naal Supabase RLS policies vich vi enforce karna zaroori hai. Eh dashboard profile system us layer layi ready hai.</div>
+      </div>
+      <div class="staff-grid" id="staffList"><div class="message">Loading staff...</div></div>
+    </div>`;
+    renderStaffPermissionInputs();
+    const rows=await loadStaffRows();
+    renderStaffRows(rows);
+}
+
+function renderStaffPermissionInputs(values){
+    const box=document.getElementById("staffPermissionBox"); if(!box)return;
+    const p=Object.assign(defaultStaffPermissions(),values||{});
+    box.innerHTML=Object.entries(STAFF_PERMISSIONS).map(([key,label])=>`<label class="permission-toggle"><input type="checkbox" data-staff-permission="${key}" ${p[key]?'checked':''}> ${label}</label>`).join("");
+}
+
+function readStaffPermissions(){
+    const p={}; document.querySelectorAll("[data-staff-permission]").forEach(el=>p[el.getAttribute("data-staff-permission")]=el.checked); return p;
+}
+
+async function createStaffProfile(){
+    if(!currentSessionUser?.isMainAdmin){alert("Only Main Admin can add staff.");return;}
+    const name=document.getElementById("staffName").value.trim(), email=document.getElementById("staffEmail").value.trim().toLowerCase(), role=document.getElementById("staffRole").value.trim()||"Staff", phone=document.getElementById("staffPhone").value.trim();
+    if(!name||!email){alert("Name te email required hai.");return;}
+    const row={name,email,role,phone,active:true,permissions:readStaffPermissions(),created_at:new Date().toISOString()};
+    let saved=false;
+    try{
+        const {data,error}=await supabaseClient.from("staff_profiles").insert(row).select().single();
+        if(!error){saved=true;row.id=data?.id||row.id;}
+    }catch(e){}
+    const cache=(()=>{try{return JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]")}catch(e){return[]}})();
+    const existing=cache.findIndex(x=>(x.email||"").toLowerCase()===email);
+    if(existing>=0) cache[existing]=row; else cache.unshift(row);
+    localStorage.setItem(STAFF_STORAGE_KEY,JSON.stringify(cache));
+    alert(saved?"Staff profile create ho gaya.":"Staff profile local backup vich save ho gaya. Supabase table available hove taan sync ho jayega.");
+    loadStaffManagement();
+}
+
+async function updateStaffProfile(id,email,patch){
+    let saved=false;
+    try{
+        let q=supabaseClient.from("staff_profiles").update(patch);
+        if(id) q=q.eq("id",id); else q=q.eq("email",email);
+        const {error}=await q; if(!error)saved=true;
+    }catch(e){}
+    try{
+        const cache=JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]");
+        const i=cache.findIndex(x=>x.id===id || (x.email||"").toLowerCase()===(email||"").toLowerCase());
+        if(i>=0){cache[i]=Object.assign(cache[i],patch);localStorage.setItem(STAFF_STORAGE_KEY,JSON.stringify(cache));}
+    }catch(e){}
+    return saved;
+}
+
+async function toggleStaff(id,email,active){
+    if(!currentSessionUser?.isMainAdmin)return;
+    await updateStaffProfile(id,email,{active});
+    loadStaffManagement();
+}
+
+async function editStaffPermissions(id,email,current){
+    if(!currentSessionUser?.isMainAdmin)return;
+    const choices=Object.entries(STAFF_PERMISSIONS).map(([k,v],i)=>`${i+1}. ${v}: ${current[k]?'ON':'OFF'}`).join("\n");
+    const input=prompt("Permissions change karo. Comma-separated numbers (example: 1,2,3,5).\n\n"+choices,"1,2,3,5,6,7,9");
+    if(input===null)return;
+    const selected=new Set(input.split(",").map(x=>Number(x.trim())-1));
+    const permissions={}; Object.keys(STAFF_PERMISSIONS).forEach((k,i)=>permissions[k]=selected.has(i));
+    await updateStaffProfile(id,email,{permissions});
+    loadStaffManagement();
+}
+
+function renderStaffRows(rows){
+    const box=document.getElementById("staffList"); if(!box)return;
+    if(!rows.length){box.innerHTML='<div class="message">No staff profiles yet.</div>';return;}
+    box.innerHTML=rows.map((s,i)=>{
+        const p=s.permissions||{}; const chips=Object.entries(STAFF_PERMISSIONS).filter(([k])=>p[k]).map(([,v])=>`<span class="permission-chip">${escapeHtml(v)}</span>`).join("")||'<span class="permission-chip">No permissions</span>';
+        const avatar=s.avatar_url?`<img src="${escapeHtml(s.avatar_url)}" alt="">`:escapeHtml(initials(s.name));
+        return `<div class="staff-card"><div class="staff-card-head"><div class="staff-avatar">${avatar}</div><div><div class="staff-name">${escapeHtml(s.name||"Staff")}</div><div class="staff-email">${escapeHtml(s.email||"")}</div><span class="staff-role">${escapeHtml(s.role||"Staff")}</span></div></div><div><span class="staff-status ${s.active===false?'inactive':'active'}">● ${s.active===false?'Inactive':'Active'}</span></div><div class="permission-list">${chips}</div><div class="staff-actions"><button class="btn" onclick='editStaffPermissions(${JSON.stringify(s.id||null)},${JSON.stringify(s.email||"")},${JSON.stringify(p)})'>🔐 Permissions</button><button class="btn gray-btn" onclick='toggleStaff(${JSON.stringify(s.id||null)},${JSON.stringify(s.email||"")},${s.active===false})'>${s.active===false?'✅ Activate':'⏸ Deactivate'}</button></div></div>`;
+    }).join("");
+}
+
 /* =========================================================
    SETTINGS MAIN
 ========================================================= */
@@ -4667,6 +4844,11 @@ function loadSettings(){
                 <button
                     onclick="openSettingsTab('security',this)">
                     🔐 Security
+                </button>
+
+                <button
+                    onclick="showSection('staff',null)">
+                    👥 Staff Management
                 </button>
 
                 <button
