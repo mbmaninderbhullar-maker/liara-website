@@ -836,7 +836,109 @@ else {
 
 totalElement.innerText =
     total.toLocaleString("en-IN");
+/* =====================================================
+   RESTORE CHECKOUT AFTER GOOGLE LOGIN
+===================================================== */
 
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        const savedCustomer =
+            localStorage.getItem(
+                "liaraPendingCheckout"
+            );
+
+
+        if(!savedCustomer) {
+            return;
+        }
+
+
+        try {
+
+            const data =
+                JSON.parse(
+                    savedCustomer
+                );
+
+
+            if(data.name !== undefined) {
+
+                document.getElementById("name").value =
+                    data.name;
+
+            }
+
+
+            if(data.mobile !== undefined) {
+
+                document.getElementById("mobile").value =
+                    data.mobile;
+
+            }
+
+
+            if(data.house_no !== undefined) {
+
+                document.getElementById("house_no").value =
+                    data.house_no;
+
+            }
+
+
+            if(data.street !== undefined) {
+
+                document.getElementById("street").value =
+                    data.street;
+
+            }
+
+
+            if(data.city !== undefined) {
+
+                document.getElementById("city").value =
+                    data.city;
+
+            }
+
+
+            if(data.state !== undefined) {
+
+                document.getElementById("state").value =
+                    data.state;
+
+            }
+
+
+            if(data.pincode !== undefined) {
+
+                document.getElementById("pincode").value =
+                    data.pincode;
+
+            }
+
+
+            if(data.payment !== undefined) {
+
+                document.getElementById("payment").value =
+                    data.payment;
+
+            }
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "CHECKOUT RESTORE ERROR:",
+                error
+            );
+
+        }
+
+    }
+);
 
 
 /* =====================================================
@@ -1388,12 +1490,79 @@ await supabaseClient
     .getUser();
 
 
-if(userError || !user) {
+if(userError) {
 
-    showMessage(
-        "Please continue with Google to place your order."
+    console.error(
+        "AUTH ERROR:",
+        userError
     );
 
+    showMessage(
+        "Unable to check Google login."
+    );
+
+    return;
+
+}
+
+
+/* =====================================================
+   IF NOT LOGGED IN
+===================================================== */
+
+if(!user) {
+
+    /* SAVE CHECKOUT DETAILS */
+
+    const checkoutCustomerData = {
+
+        name:
+            document.getElementById("name").value.trim(),
+
+        mobile:
+            document.getElementById("mobile").value.trim(),
+
+        house_no:
+            document.getElementById("house_no").value.trim(),
+
+        street:
+            document.getElementById("street").value.trim(),
+
+        city:
+            document.getElementById("city").value.trim(),
+
+        state:
+            document.getElementById("state").value.trim(),
+
+        pincode:
+            document.getElementById("pincode").value.trim(),
+
+        payment:
+            document.getElementById("payment").value
+
+    };
+
+
+    localStorage.setItem(
+        "liaraPendingCheckout",
+        JSON.stringify(checkoutCustomerData)
+    );
+
+
+    /* REMEMBER CHECKOUT */
+
+    localStorage.setItem(
+        "liaraPendingGoogleOrder",
+        "true"
+    );
+
+
+    showMessage(
+        "Please continue with Google..."
+    );
+
+
+    /* GOOGLE LOGIN */
 
     const {
         error
@@ -1407,7 +1576,8 @@ if(userError || !user) {
             options: {
 
                 redirectTo:
-                    window.location.href
+                    window.location.origin +
+                    window.location.pathname
 
             }
 
@@ -1421,12 +1591,19 @@ if(userError || !user) {
             error
         );
 
+
+        localStorage.removeItem(
+            "liaraPendingGoogleOrder"
+        );
+
+
         showMessage(
             "Google login failed: " +
             error.message
         );
 
     }
+
 
     return;
 
@@ -1628,7 +1805,8 @@ if(userError || !user) {
 
 
         /* SUCCESS */
-
+localStorage.removeItem("liaraPendingCheckout");
+localStorage.removeItem("liaraPendingGoogleOrder");
         if(checkoutMode === "buyNow") {
 
             localStorage.removeItem(
