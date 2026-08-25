@@ -1474,16 +1474,7 @@ await supabaseClient
 
 if(userError) {
 
-    console.error(
-        "AUTH ERROR:",
-        userError
-    );
-
-    showMessage(
-        "Unable to check Google login."
-    );
-
-    return;
+    console.error("AUTH ERROR:", userError);
 
 }
 
