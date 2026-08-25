@@ -1192,16 +1192,6 @@ body{
 @media(max-width:700px){.staff-form{grid-template-columns:1fr}.staff-form .full{grid-column:auto}}
 
 </style>
-
-<style>
-/* Professional toast notifications */
-#proToast{position:fixed;right:24px;bottom:24px;z-index:99999;display:none;min-width:280px;max-width:420px;padding:14px 18px;border-radius:14px;background:#fff;box-shadow:0 12px 35px rgba(0,0,0,.16);border:1px solid #e8e8e8;font-family:inherit;align-items:center;gap:12px;animation:toastIn .25s ease;}
-#proToast .toast-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eaf7ee;color:#16843a;font-weight:700;font-size:18px;flex:none;}
-#proToast .toast-title{font-weight:700;font-size:14px;color:#202124;}
-#proToast .toast-text{font-size:12px;color:#6b7280;margin-top:2px;}
-@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){#proToast{left:16px;right:16px;bottom:16px;min-width:0;max-width:none}}
-</style>
 </head>
 
 <body>
@@ -1597,7 +1587,7 @@ function resetSettings(){
 
     loadSettings();
 
-    showProSuccess("Your settings have been reset.");
+    alert("Settings reset successfully.");
 
 }
 
@@ -2261,7 +2251,9 @@ async function updateOrderStatus(id,status){
     updateOrderSummary(allOrders);
     applyOrderFilters();
 
-    showProSuccess("Order status has been updated.");
+    alert(
+        "Order status updated successfully."
+    );
 
 }
 
@@ -3038,7 +3030,7 @@ async function updateStock(id){
 
     }
 
-    showProSuccess("Stock quantity has been updated.");
+    alert("Stock updated successfully.");
 
     loadStock();
 
@@ -3530,7 +3522,7 @@ async function saveEditedProduct(id){
             return;
         }
 
-        showProSuccess("Product details have been updated.");
+        alert("Product updated successfully.");
         loadProducts();
 
     }catch(error){
@@ -3575,7 +3567,7 @@ async function deleteProduct(id){
 
     }
 
-    showProSuccess("Product has been deleted.");
+    alert("Product deleted successfully.");
 
     loadProducts();
 
@@ -3901,7 +3893,9 @@ async function saveProduct(){
 
         }
 
-        showProSuccess("Product has been added successfully.");
+        alert(
+            "Product successfully add ho gaya."
+        );
 
         clearProductForm();
 
@@ -4697,18 +4691,19 @@ async function loadStaffManagement(){
         <button class="btn" onclick="loadStaffManagement()">🔄 Refresh</button>
       </div>
       <div class="settings-card">
-        <h3>➕ Add Staff Profile</h3>
-        <p>Ithon hi Staff da Supabase Auth login, profile, role te permissions create honge.</p>
+        <h3>➕ Create Staff Login</h3>
+        <p>Staff da Supabase Auth login, profile, role te permissions ithon hi create honge.</p>
         <div class="staff-form">
           <div class="settings-field"><label>FULL NAME</label><input id="staffName" placeholder="e.g. Aman Singh"></div>
           <div class="settings-field"><label>EMAIL</label><input id="staffEmail" type="email" placeholder="staff@example.com"></div>
+          <div class="settings-field"><label>PASSWORD</label><input id="staffPassword" type="password" minlength="6" autocomplete="new-password" placeholder="Minimum 6 characters"></div>
           <div class="settings-field"><label>ROLE</label><input id="staffRole" placeholder="Sales Manager"></div>
           <div class="settings-field"><label>PHONE</label><input id="staffPhone" placeholder="Phone number"></div>
-          <div class="settings-field"><label>TEMPORARY PASSWORD</label><input id="staffPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Minimum 8 characters"></div>
           <div class="settings-field full"><label>PERMISSIONS</label><div class="staff-permissions" id="staffPermissionBox"></div></div>
         </div>
         <button class="btn" style="margin-top:14px" onclick="createStaffProfile()">💾 Create Staff Login</button>
-        <div class="staff-note">Staff login securely Supabase Auth vich create hovega. Password dashboard vich plain-text store nahi hovega.</div>
+        <div id="staffCreateStatus" class="settings-status" style="display:none"></div>
+        <div class="staff-note">Security: password Supabase Auth vich securely store hovega. Main Admin hi staff accounts create/manage kar sakda hai; RLS nu database level te enforce karna zaroori hai.</div>
       </div>
       <div class="staff-grid" id="staffList"><div class="message">Loading staff...</div></div>
     </div>`;
@@ -4729,32 +4724,65 @@ function readStaffPermissions(){
 
 async function createStaffProfile(){
     if(!currentSessionUser?.isMainAdmin){alert("Only Main Admin can add staff.");return;}
+
     const name=document.getElementById("staffName").value.trim();
     const email=document.getElementById("staffEmail").value.trim().toLowerCase();
     const password=document.getElementById("staffPassword").value;
     const role=document.getElementById("staffRole").value.trim()||"Staff";
     const phone=document.getElementById("staffPhone").value.trim();
-    if(!name||!email||!password){alert("Name, email te password required hai.");return;}
-    if(password.length<8){alert("Password minimum 8 characters da hona chahida hai.");return;}
+    const permissions=readStaffPermissions();
+    const status=document.getElementById("staffCreateStatus");
+
+    if(!name||!email||!password){
+        alert("Name, email te password required hai.");
+        return;
+    }
+
+    if(password.length<6){
+        alert("Password minimum 6 characters da hona chahida.");
+        return;
+    }
+
+    if(status){
+        status.style.display="block";
+        status.style.background="#fff8e8";
+        status.style.color="#72551f";
+        status.innerText="Creating staff login...";
+    }
+
     try{
-        const {data:{session}}=await supabaseClient.auth.getSession();
-        if(!session?.access_token){alert("Session expire ho gayi. Dobara login karo.");return;}
-        const response=await fetch(SUPABASE_URL+"/functions/v1/create-staff",{
-            method:"POST",
-            headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token},
-            body:JSON.stringify({name,email,password,role,phone,permissions:readStaffPermissions()})
+        const {data,error}=await supabaseClient.functions.invoke("create-staff",{
+            body:{name,email,password,role,phone,permissions}
         });
-        const result=await response.json().catch(()=>({}));
-        if(!response.ok) throw new Error(result.error||"Staff account create nahi ho sakya.");
+
+        if(error){
+            throw new Error(error.message||"Unable to create staff login.");
+        }
+
+        if(data?.error){
+            throw new Error(data.error);
+        }
+
         document.getElementById("staffName").value="";
         document.getElementById("staffEmail").value="";
         document.getElementById("staffPassword").value="";
         document.getElementById("staffRole").value="";
         document.getElementById("staffPhone").value="";
-        showProSuccess("Staff login successfully create ho gaya.","Staff Created");
-        loadStaffManagement();
+
+        if(status){
+            status.style.background="#e8f3e9";
+            status.style.color="#287a3e";
+            status.innerText="✓ Staff login created successfully.";
+        }
+
+        await loadStaffManagement();
     }catch(error){
-        alert(error.message||"Staff account create nahi ho sakya.");
+        if(status){
+            status.style.background="#f7dddd";
+            status.style.color="#a33";
+            status.innerText="Unable to create staff login: "+(error?.message||"Unknown error");
+        }
+        console.error("createStaffProfile",error);
     }
 }
 
@@ -6100,7 +6128,9 @@ async function changeAdminPassword(){
         "confirmAdminPassword"
     ).value = "";
 
-    showProSuccess("Your password has been changed successfully.");
+    alert(
+        "Password successfully change ho gaya."
+    );
 
 }
 
@@ -6478,22 +6508,5 @@ loadOrders();
 
 </script>
 
-
-<script>
-function showProSuccess(message,title="Success") {
-    let toast=document.getElementById("proToast");
-    if(!toast){
-        toast=document.createElement("div");
-        toast.id="proToast";
-        toast.innerHTML='<div class="toast-icon">✓</div><div><div class="toast-title"></div><div class="toast-text"></div></div>';
-        document.body.appendChild(toast);
-    }
-    toast.querySelector(".toast-title").textContent=title;
-    toast.querySelector(".toast-text").textContent=message;
-    toast.style.display="flex";
-    clearTimeout(window.__proToastTimer);
-    window.__proToastTimer=setTimeout(()=>{toast.style.display="none";},3000);
-}
-</script>
-<div id="proToast" aria-live="polite"></div></body>
+</body>
 </html>
