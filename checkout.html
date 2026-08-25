@@ -512,6 +512,7 @@
 
                         <label>
                             PIN Code
+                              
                         </label>
 
                         <input
@@ -1721,7 +1722,16 @@ if(!user) {
 
                 pincode:
                     pincode,
-
+address:
+    [
+        houseNo,
+        street,
+        city,
+        state,
+        pincode
+    ]
+    .filter(Boolean)
+    .join(", "),
                 product:
                     productNames,
 
