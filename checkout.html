@@ -1427,6 +1427,15 @@ const RAZORPAY_KEY_ID =
 
 async function saveOrderToDatabase(statusText) {
 
+    const { data: authData, error: authError } =
+        await supabaseClient.auth.getUser();
+
+    if (authError || !authData?.user) {
+        throw new Error("Customer login session expired. Please log in again.");
+    }
+
+    const customerUser = authData.user;
+
     const customerName =
         document.getElementById("name").value.trim();
 
@@ -1757,8 +1766,10 @@ async function openRazorpayPayment(button) {
                 button.innerText =
                     "Place Order";
 
+                console.error("PAYMENT/ORDER ERROR DETAILS:", error);
+
                 showMessage(
-                    "Payment was received, but order verification failed. Please contact us before paying again."
+                    "Payment received, but we could not finish your order. Please do not pay again. Contact us with your payment ID."
                 );
             }
         },
