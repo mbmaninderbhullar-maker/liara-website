@@ -1373,43 +1373,37 @@ document.getElementById(
         }
 
 
-/* =====================================================
-   LOGIN
-===================================================== */
 
-const {
-    data: {
-        user
-    },
-    error: userError
-} =
-await supabaseClient
-    .auth
-    .getUser();
+        /* LOGIN */
 
-
-if(userError || !user) {
-
-    showMessage(
-        "Please login before placing an order."
-    );
+        const {
+            data: {
+                user
+            },
+            error: userError
+        } =
+        await supabaseClient
+            .auth
+            .getUser();
 
 
-    setTimeout(
-        function() {
+        if(userError || !user) {
 
-            window.location.href =
-                "login.html";
-
-        },
-        1200
-    );
+            showMessage(
+                "Please login before placing an order."
+            );
 
 
-    return;
+            setTimeout(
+                function() {
 
-}
-        
+                    window.location.href =
+                        "login.html";
+
+                },
+                1200
+            );
+
 
             return;
 
