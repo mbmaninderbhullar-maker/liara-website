@@ -2244,20 +2244,11 @@ function viewOrder(id){
         order.mobile ||
         "-";
 
-   const address =
-    order.address ||
-    order.shipping_address ||
-    order.delivery_address ||
-    [
-        order.house_no,
-        order.street,
-        order.city,
-        order.state,
-        order.pincode
-    ]
-    .filter(Boolean)
-    .join(", ") ||
-    "-";
+    const address =
+        order.address ||
+        order.shipping_address ||
+        order.delivery_address ||
+        "-";
 
     const product =
         productName(order);
@@ -3152,10 +3143,18 @@ function renderProducts(products){
 
                     <button
                         class="edit-btn"
+                        onclick="editProduct(
+                            '${escapeHtml(String(product.id))}'
+                        )">
+                        ✏️ Edit
+                    </button>
+
+                    <button
+                        class="edit-btn"
                         onclick="editProductStock(
                             '${escapeHtml(String(product.id))}'
                         )">
-                        ✏️ Stock
+                        📦 Stock
                     </button>
 
                     <button
@@ -3234,6 +3233,249 @@ async function editProductStock(id){
 
     loadProducts();
 
+}
+
+async function editProduct(id){
+
+    const product =
+        allProducts.find(
+            p =>
+            String(p.id)
+            === String(id)
+        );
+
+    if(!product){
+        alert("Product not found.");
+        return;
+    }
+
+    document.getElementById("other-content").innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="form-title">
+            <p>PRODUCT MANAGEMENT</p>
+            <h2>✏️ Edit Product</h2>
+        </div>
+
+        <br>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Product Name</label>
+                <input
+                    id="editProductNameInput"
+                    type="text"
+                    value="${escapeHtml(product.name || "")}"
+                    placeholder="Product name">
+            </div>
+
+            <div class="form-group">
+                <label>Price (₹)</label>
+                <input
+                    id="editProductPriceInput"
+                    type="number"
+                    min="0"
+                    value="${Number(product.price || 0)}">
+            </div>
+
+            <div class="form-group">
+                <label>Stock</label>
+                <input
+                    id="editProductStockInput"
+                    type="number"
+                    min="0"
+                    value="${Number(product.stock || 0)}">
+            </div>
+
+            <div class="form-group">
+                <label>Low Stock Alert</label>
+                <input
+                    id="editProductLowStockInput"
+                    type="number"
+                    min="0"
+                    value="${Number(product.low_stock || 5)}">
+            </div>
+
+            <div class="form-group full">
+                <label>Description</label>
+                <textarea
+                    id="editProductDescriptionInput"
+                    placeholder="Write product description...">${escapeHtml(product.description || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>📷 Product Photo</label>
+                <div class="upload-box">
+                    <strong>Replace Product Photo (Optional)</strong>
+                    <br>
+                    <input
+                        id="editProductPhotoInput"
+                        type="file"
+                        accept="image/*"
+                        onchange="previewEditPhoto(event)">
+
+                    <div
+                        id="editPhotoPreview"
+                        style="margin-top:15px;">
+                        ${product.image_url ? `<img src="${escapeHtml(product.image_url)}" alt="Current Product" style="width:170px;height:170px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">` : ""}
+                    </div>
+
+                    <div
+                        id="editUploadStatus"
+                        style="margin-top:10px;color:#287a3e;font-size:12px;">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+            <button
+                class="btn green-btn"
+                onclick="saveEditedProduct('${escapeHtml(String(product.id))}')">
+                💾 Save Changes
+            </button>
+
+            <button
+                class="btn gray-btn"
+                onclick="loadProducts()">
+                Cancel
+            </button>
+        </div>
+
+    </div>
+    `;
+}
+
+function previewEditPhoto(event){
+
+    const file = event.target.files[0];
+    if(!file) return;
+
+    const preview = document.getElementById("editPhotoPreview");
+    if(!preview) return;
+
+    preview.innerHTML = `
+        <img
+            src="${URL.createObjectURL(file)}"
+            alt="New Product Photo"
+            style="width:170px;height:170px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">
+    `;
+}
+
+async function saveEditedProduct(id){
+
+    const name = document.getElementById("editProductNameInput").value.trim();
+    const price = Number(document.getElementById("editProductPriceInput").value);
+    const stock = Number(document.getElementById("editProductStockInput").value || 0);
+    const lowStock = Number(document.getElementById("editProductLowStockInput").value || 5);
+    const description = document.getElementById("editProductDescriptionInput").value.trim();
+    const file = document.getElementById("editProductPhotoInput").files[0];
+    const status = document.getElementById("editUploadStatus");
+
+    if(!name){
+        alert("Product name pao.");
+        return;
+    }
+
+    if(!Number.isFinite(price) || price < 0){
+        alert("Valid price pao.");
+        return;
+    }
+
+    if(!Number.isInteger(stock) || stock < 0){
+        alert("Valid stock quantity pao.");
+        return;
+    }
+
+    if(!Number.isInteger(lowStock) || lowStock < 0){
+        alert("Valid low stock value pao.");
+        return;
+    }
+
+    const user = await checkAdmin();
+    if(!user) return;
+
+    const oldProduct = allProducts.find(
+        p => String(p.id) === String(id)
+    );
+
+    if(!oldProduct){
+        alert("Product not found.");
+        return;
+    }
+
+    try{
+
+        let imageUrl = oldProduct.image_url || null;
+
+        if(file){
+
+            status.innerText = "Uploading new photo...";
+
+            const extension =
+                file.name.split(".").pop().toLowerCase();
+
+            const fileName =
+                Date.now() +
+                "-" +
+                Math.random().toString(36).substring(2) +
+                "." + extension;
+
+            const filePath = "products/" + fileName;
+
+            const upload =
+                await supabaseClient
+                .storage
+                .from(IMAGE_BUCKET)
+                .upload(filePath, file, {
+                    cacheControl:"3600",
+                    upsert:false
+                });
+
+            if(upload.error){
+                alert("Photo upload failed:\n\n" + upload.error.message);
+                return;
+            }
+
+            imageUrl =
+                supabaseClient
+                .storage
+                .from(IMAGE_BUCKET)
+                .getPublicUrl(filePath)
+                .data.publicUrl;
+        }
+
+        status.innerText = "Saving changes...";
+
+        const updateData = {
+            name:name,
+            price:price,
+            stock:stock,
+            low_stock:lowStock,
+            description:description,
+            image_url:imageUrl
+        };
+
+        const {error} =
+            await supabaseClient
+            .from("products")
+            .update(updateData)
+            .eq("id",id);
+
+        if(error){
+            alert("Product update failed:\n\n" + error.message);
+            return;
+        }
+
+        alert("Product updated successfully.");
+        loadProducts();
+
+    }catch(error){
+        alert("Something went wrong:\n\n" + error.message);
+    }
 }
 
 async function deleteProduct(id){
