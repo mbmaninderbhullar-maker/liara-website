@@ -4698,16 +4698,17 @@ async function loadStaffManagement(){
       </div>
       <div class="settings-card">
         <h3>➕ Add Staff Profile</h3>
-        <p>Staff da Supabase Auth account pehlan create/invite karo; ithon profile, role te permissions manage honge.</p>
+        <p>Ithon hi Staff da Supabase Auth login, profile, role te permissions create honge.</p>
         <div class="staff-form">
           <div class="settings-field"><label>FULL NAME</label><input id="staffName" placeholder="e.g. Aman Singh"></div>
           <div class="settings-field"><label>EMAIL</label><input id="staffEmail" type="email" placeholder="staff@example.com"></div>
           <div class="settings-field"><label>ROLE</label><input id="staffRole" placeholder="Sales Manager"></div>
           <div class="settings-field"><label>PHONE</label><input id="staffPhone" placeholder="Phone number"></div>
+          <div class="settings-field"><label>TEMPORARY PASSWORD</label><input id="staffPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Minimum 8 characters"></div>
           <div class="settings-field full"><label>PERMISSIONS</label><div class="staff-permissions" id="staffPermissionBox"></div></div>
         </div>
-        <button class="btn" style="margin-top:14px" onclick="createStaffProfile()">💾 Create Staff Profile</button>
-        <div class="staff-note">Security: permissions nu frontend te hide karan de naal-naal Supabase RLS policies vich vi enforce karna zaroori hai. Eh dashboard profile system us layer layi ready hai.</div>
+        <button class="btn" style="margin-top:14px" onclick="createStaffProfile()">💾 Create Staff Login</button>
+        <div class="staff-note">Staff login securely Supabase Auth vich create hovega. Password dashboard vich plain-text store nahi hovega.</div>
       </div>
       <div class="staff-grid" id="staffList"><div class="message">Loading staff...</div></div>
     </div>`;
@@ -4728,20 +4729,33 @@ function readStaffPermissions(){
 
 async function createStaffProfile(){
     if(!currentSessionUser?.isMainAdmin){alert("Only Main Admin can add staff.");return;}
-    const name=document.getElementById("staffName").value.trim(), email=document.getElementById("staffEmail").value.trim().toLowerCase(), role=document.getElementById("staffRole").value.trim()||"Staff", phone=document.getElementById("staffPhone").value.trim();
-    if(!name||!email){alert("Name te email required hai.");return;}
-    const row={name,email,role,phone,active:true,permissions:readStaffPermissions(),created_at:new Date().toISOString()};
-    let saved=false;
+    const name=document.getElementById("staffName").value.trim();
+    const email=document.getElementById("staffEmail").value.trim().toLowerCase();
+    const password=document.getElementById("staffPassword").value;
+    const role=document.getElementById("staffRole").value.trim()||"Staff";
+    const phone=document.getElementById("staffPhone").value.trim();
+    if(!name||!email||!password){alert("Name, email te password required hai.");return;}
+    if(password.length<8){alert("Password minimum 8 characters da hona chahida hai.");return;}
     try{
-        const {data,error}=await supabaseClient.from("staff_profiles").insert(row).select().single();
-        if(!error){saved=true;row.id=data?.id||row.id;}
-    }catch(e){}
-    const cache=(()=>{try{return JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]")}catch(e){return[]}})();
-    const existing=cache.findIndex(x=>(x.email||"").toLowerCase()===email);
-    if(existing>=0) cache[existing]=row; else cache.unshift(row);
-    localStorage.setItem(STAFF_STORAGE_KEY,JSON.stringify(cache));
-    alert(saved?"Staff profile create ho gaya.":"Staff profile local backup vich save ho gaya. Supabase table available hove taan sync ho jayega.");
-    loadStaffManagement();
+        const {data:{session}}=await supabaseClient.auth.getSession();
+        if(!session?.access_token){alert("Session expire ho gayi. Dobara login karo.");return;}
+        const response=await fetch(SUPABASE_URL+"/functions/v1/create-staff",{
+            method:"POST",
+            headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token},
+            body:JSON.stringify({name,email,password,role,phone,permissions:readStaffPermissions()})
+        });
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok) throw new Error(result.error||"Staff account create nahi ho sakya.");
+        document.getElementById("staffName").value="";
+        document.getElementById("staffEmail").value="";
+        document.getElementById("staffPassword").value="";
+        document.getElementById("staffRole").value="";
+        document.getElementById("staffPhone").value="";
+        showProSuccess("Staff login successfully create ho gaya.","Staff Created");
+        loadStaffManagement();
+    }catch(error){
+        alert(error.message||"Staff account create nahi ho sakya.");
+    }
 }
 
 async function updateStaffProfile(id,email,patch){
