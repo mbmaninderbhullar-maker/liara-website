@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +15,10 @@
 
 <style>
 
+/* =====================================================
+   PRODUCT PAGE
+===================================================== */
+
 * {
     box-sizing: border-box;
 }
@@ -24,11 +29,21 @@ body {
     color: #222;
 }
 
+
+/* =====================================================
+   MAIN
+===================================================== */
+
 .product-page {
-    max-width: 1200px;
+    max-width: 1250px;
     margin: 0 auto;
-    padding: 60px 25px;
+    padding: 60px 25px 90px;
 }
+
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
 
 .back-link {
     display: inline-block;
@@ -36,56 +51,81 @@ body {
     color: #ad8232;
     text-decoration: none;
     font-weight: bold;
+    font-size: 15px;
 }
 
+.back-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   PRODUCT DETAIL
+===================================================== */
+
 .product-detail {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    box-shadow: 0 10px 35px rgba(0,0,0,.07);
+    gap: 55px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.07);
 }
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
 
 .product-photo {
     width: 100%;
-    height: 520px;
+    height: 560px;
     background: #f5f1eb;
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
+    position: relative;
 }
 
 .product-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
+
+
+/* =====================================================
+   PRODUCT INFO
+===================================================== */
 
 .product-info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: 10px;
 }
 
 .product-label {
     color: #ad8232;
     font-size: 13px;
     font-weight: bold;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    letter-spacing: 2.5px;
+    margin-bottom: 12px;
 }
 
 .product-info h1 {
-    font-size: 40px;
+    font-size: 42px;
+    line-height: 1.2;
     margin: 0 0 15px;
+    color: #222;
 }
 
 .product-price {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
     color: #ad8232;
-    margin: 10px 0 20px;
+    margin: 5px 0 22px;
 }
 
 .product-description {
@@ -95,9 +135,71 @@ body {
     margin-bottom: 25px;
 }
 
+
+/* =====================================================
+   KEY INGREDIENTS
+===================================================== */
+
+.ingredients-section {
+    margin: 5px 0 28px;
+    padding: 25px;
+    background: #faf8f5;
+    border: 1px solid #eee5d7;
+    border-radius: 16px;
+}
+
+.ingredients-title {
+    margin: 0 0 18px;
+    font-size: 22px;
+    color: #222;
+    font-weight: 700;
+}
+
+.ingredients-title span {
+    color: #ad8232;
+}
+
+.ingredients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.ingredient-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px 16px;
+    border: 1px solid #eee;
+}
+
+.ingredient-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ad8232;
+    margin-bottom: 5px;
+}
+
+.ingredient-benefit {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+}
+
+.no-ingredients {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   STOCK
+===================================================== */
+
 .stock-text {
     font-weight: bold;
     margin-bottom: 20px;
+    font-size: 15px;
 }
 
 .in-stock {
@@ -108,6 +210,11 @@ body {
     color: #b22;
 }
 
+
+/* =====================================================
+   QUANTITY
+===================================================== */
+
 .quantity-box {
     display: flex;
     align-items: center;
@@ -116,27 +223,35 @@ body {
 }
 
 .quantity-box button {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border: 1px solid #ddd;
-    background: white;
-    border-radius: 7px;
-    font-size: 20px;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 21px;
     cursor: pointer;
+    transition: .2s;
 }
 
 .quantity-box button:hover {
     background: #f5f1eb;
+    border-color: #ad8232;
 }
 
 .quantity-box input {
-    width: 60px;
-    height: 40px;
+    width: 65px;
+    height: 42px;
     text-align: center;
     border: 1px solid #ddd;
-    border-radius: 7px;
+    border-radius: 8px;
     font-size: 16px;
+    background: #fff;
 }
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
 
 .action-buttons {
     display: flex;
@@ -147,16 +262,16 @@ body {
 .action-buttons button {
     border: none;
     cursor: pointer;
-    padding: 14px 25px;
-    border-radius: 8px;
+    padding: 15px 27px;
+    border-radius: 9px;
     font-weight: bold;
     font-size: 14px;
     transition: .2s;
 }
 
 .action-buttons button:hover {
-    transform: translateY(-1px);
-    opacity: .92;
+    transform: translateY(-2px);
+    opacity: .93;
 }
 
 .add-cart {
@@ -169,9 +284,14 @@ body {
     color: white;
 }
 
+
+/* =====================================================
+   LOADING / ERROR
+===================================================== */
+
 .message {
     text-align: center;
-    padding: 80px 20px;
+    padding: 100px 20px;
     color: #777;
 }
 
@@ -179,19 +299,70 @@ body {
     color: #a33;
 }
 
-@media(max-width:800px) {
+.message a {
+    color: #ad8232;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 900px) {
 
     .product-detail {
         grid-template-columns: 1fr;
-        padding: 20px;
+        padding: 25px;
+        gap: 35px;
     }
 
     .product-photo {
-        height: 400px;
+        height: 450px;
     }
 
     .product-info h1 {
-        font-size: 30px;
+        font-size: 34px;
+    }
+
+}
+
+
+@media(max-width: 600px) {
+
+    .product-page {
+        padding: 35px 15px 60px;
+    }
+
+    .product-detail {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .product-photo {
+        height: 360px;
+        border-radius: 15px;
+    }
+
+    .product-info h1 {
+        font-size: 29px;
+    }
+
+    .product-price {
+        font-size: 26px;
+    }
+
+    .ingredients-section {
+        padding: 18px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons button {
+        width: 100%;
     }
 
 }
@@ -203,6 +374,10 @@ body {
 
 <body>
 
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header>
 
@@ -217,6 +392,7 @@ body {
     </small>
 
 </a>
+
 
 <nav>
 
@@ -242,7 +418,12 @@ body {
 
 
 
+<!-- =====================================================
+     MAIN PRODUCT PAGE
+===================================================== -->
+
 <main class="product-page">
+
 
 <a
     href="index.html#products"
@@ -263,9 +444,14 @@ body {
 
 </div>
 
+
 </main>
 
 
+
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -273,7 +459,7 @@ body {
 <script>
 
 /* =====================================================
-   SUPABASE
+   SUPABASE CONNECTION
 ===================================================== */
 
 const SUPABASE_URL =
@@ -316,6 +502,238 @@ localStorage.getItem(
 
 
 /* =====================================================
+   INGREDIENT PARSER
+===================================================== */
+
+function parseIngredients(value) {
+
+    if(!value) {
+
+        return [];
+
+    }
+
+
+    /*
+       Try JSON first.
+    */
+
+    try {
+
+        const parsed =
+            JSON.parse(value);
+
+        if(Array.isArray(parsed)) {
+
+            return parsed;
+
+        }
+
+    }
+
+    catch(error) {
+
+        /*
+           Normal text format will
+           continue below.
+        */
+
+    }
+
+
+    /*
+       Normal text format:
+
+       Niacinamide — Brightening
+       Aloe Vera — Hydration
+       Vitamin E — Moisturising
+    */
+
+    const lines =
+        String(value)
+        .split(/\r?\n/)
+        .map(function(line) {
+
+            return line.trim();
+
+        })
+        .filter(Boolean);
+
+
+    return lines.map(function(line) {
+
+        let parts;
+
+
+        if(line.includes("—")) {
+
+            parts =
+                line.split("—");
+
+        }
+
+        else if(line.includes("|")) {
+
+            parts =
+                line.split("|");
+
+        }
+
+        else if(line.includes(":")) {
+
+            parts =
+                line.split(":");
+
+        }
+
+        else {
+
+            return {
+
+                name: line,
+                benefit: ""
+
+            };
+
+        }
+
+
+        return {
+
+            name:
+                parts.shift().trim(),
+
+            benefit:
+                parts.join("—").trim()
+
+        };
+
+    });
+
+}
+
+
+/* =====================================================
+   RENDER INGREDIENTS
+===================================================== */
+
+function renderIngredients(value) {
+
+    const ingredients =
+        parseIngredients(value);
+
+
+    if(!ingredients.length) {
+
+        return `
+
+            <div class="ingredients-section">
+
+                <h2 class="ingredients-title">
+
+                    <span>🌿</span>
+                    Key Ingredients
+
+                </h2>
+
+                <div class="no-ingredients">
+
+                    Key ingredients information
+                    will be updated soon.
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    let html = "";
+
+
+    ingredients.forEach(function(item) {
+
+        const name =
+            item.name ||
+            item.ingredient ||
+            "Key Ingredient";
+
+
+        const benefit =
+            item.benefit ||
+            item.description ||
+            item.benefits ||
+            "";
+
+
+        html += `
+
+            <div class="ingredient-item">
+
+                <div class="ingredient-name">
+
+                    🌿
+                    ${escapeHtml(name)}
+
+                </div>
+
+
+                ${
+                    benefit
+
+                    ?
+
+                    `
+
+                    <div class="ingredient-benefit">
+
+                        ${escapeHtml(benefit)}
+
+                    </div>
+
+                    `
+
+                    :
+
+                    ""
+
+                }
+
+            </div>
+
+        `;
+
+    });
+
+
+    return `
+
+        <div class="ingredients-section">
+
+            <h2 class="ingredients-title">
+
+                <span>🌿</span>
+                Key Ingredients
+
+            </h2>
+
+
+            <div class="ingredients-list">
+
+                ${html}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
    LOAD PRODUCT
 ===================================================== */
 
@@ -338,7 +756,9 @@ async function loadProduct() {
                 <br><br>
 
                 <a href="index.html#products">
+
                     Go Back to Products
+
                 </a>
 
             </div>
@@ -363,7 +783,11 @@ async function loadProduct() {
 
     if(error || !product) {
 
-        console.error(error);
+        console.error(
+            "Product loading error:",
+            error
+        );
+
 
         container.innerHTML = `
 
@@ -374,7 +798,9 @@ async function loadProduct() {
                 <br><br>
 
                 <a href="index.html#products">
+
                     Go Back to Products
+
                 </a>
 
             </div>
@@ -385,6 +811,10 @@ async function loadProduct() {
 
     }
 
+
+    /* =================================================
+       PRODUCT DATA
+    ================================================= */
 
     const name =
         product.name ||
@@ -398,11 +828,15 @@ async function loadProduct() {
 
 
     const price =
-        Number(product.price || 0);
+        Number(
+            product.price || 0
+        );
 
 
     const stock =
-        Number(product.stock || 0);
+        Number(
+            product.stock || 0
+        );
 
 
     const image =
@@ -413,14 +847,30 @@ async function loadProduct() {
         "facewash.jpg";
 
 
-    document.title =
-        name + " | Liara Professional™";
+    /*
+       KEY INGREDIENTS
+    */
 
+    const keyIngredients =
+        product.key_ingredients ||
+        "";
+
+
+    document.title =
+        name +
+        " | Liara Professional™";
+
+
+    /* =================================================
+       DISPLAY PRODUCT
+    ================================================= */
 
     container.innerHTML = `
 
         <div class="product-detail">
 
+
+            <!-- PRODUCT IMAGE -->
 
             <div class="product-photo">
 
@@ -433,13 +883,18 @@ async function loadProduct() {
             </div>
 
 
+
+            <!-- PRODUCT INFORMATION -->
+
             <div class="product-info">
+
 
                 <div class="product-label">
 
                     LIARA PROFESSIONAL™
 
                 </div>
+
 
 
                 <h1>
@@ -449,6 +904,7 @@ async function loadProduct() {
                 </h1>
 
 
+
                 <div class="product-price">
 
                     ₹${price.toLocaleString("en-IN")}
@@ -456,11 +912,19 @@ async function loadProduct() {
                 </div>
 
 
+
                 <div class="product-description">
 
                     ${escapeHtml(description)}
 
                 </div>
+
+
+
+                <!-- KEY INGREDIENTS -->
+
+                ${renderIngredients(keyIngredients)}
+
 
 
                 ${
@@ -477,6 +941,9 @@ async function loadProduct() {
 
                     </div>
 
+
+
+                    <!-- QUANTITY -->
 
                     <div class="quantity-box">
 
@@ -509,6 +976,9 @@ async function loadProduct() {
 
                     </div>
 
+
+
+                    <!-- ACTION BUTTONS -->
 
                     <div class="action-buttons">
 
@@ -559,7 +1029,7 @@ async function loadProduct() {
 
 
 /* =====================================================
-   QUANTITY
+   QUANTITY +
 ===================================================== */
 
 function increaseQuantity(maxStock) {
@@ -569,11 +1039,18 @@ function increaseQuantity(maxStock) {
             "quantity"
         );
 
-    if(!input) return;
+
+    if(!input) {
+
+        return;
+
+    }
 
 
     let quantity =
-        Number(input.value);
+        Number(
+            input.value
+        );
 
 
     if(quantity < maxStock) {
@@ -588,6 +1065,10 @@ function increaseQuantity(maxStock) {
 }
 
 
+/* =====================================================
+   QUANTITY -
+===================================================== */
+
 function decreaseQuantity() {
 
     const input =
@@ -595,11 +1076,18 @@ function decreaseQuantity() {
             "quantity"
         );
 
-    if(!input) return;
+
+    if(!input) {
+
+        return;
+
+    }
 
 
     let quantity =
-        Number(input.value);
+        Number(
+            input.value
+        );
 
 
     if(quantity > 1) {
@@ -700,7 +1188,9 @@ async function addToCart() {
 
 
     const stock =
-        Number(product.stock || 0);
+        Number(
+            product.stock || 0
+        );
 
 
     if(stock < quantity) {
@@ -715,6 +1205,7 @@ async function addToCart() {
 
 
     let cart = [];
+
 
     try {
 
@@ -746,7 +1237,9 @@ async function addToCart() {
     if(existing) {
 
         const newQuantity =
-            Number(existing.quantity || 0) +
+            Number(
+                existing.quantity || 0
+            ) +
             quantity;
 
 
@@ -817,7 +1310,6 @@ async function addToCart() {
 
 /* =====================================================
    BUY NOW
-   DIRECT CHECKOUT
 ===================================================== */
 
 async function buyNow() {
@@ -861,7 +1353,9 @@ async function buyNow() {
 
 
     const stock =
-        Number(product.stock || 0);
+        Number(
+            product.stock || 0
+        );
 
 
     if(stock < quantity) {
@@ -874,16 +1368,6 @@ async function buyNow() {
 
     }
 
-
-    /*
-       IMPORTANT:
-
-       Buy Now DOES NOT add product
-       to liaraCart.
-
-       It creates a separate
-       liaraBuyNow order.
-    */
 
     const buyNowItem = {
 
@@ -921,25 +1405,11 @@ async function buyNow() {
     );
 
 
-    /*
-       This flag tells checkout
-       that customer selected
-       BUY NOW.
-    */
-
     localStorage.setItem(
         "liaraCheckoutMode",
         "buyNow"
     );
 
-
-    /*
-       DIRECT CHECKOUT PAGE
-
-       IMPORTANT:
-       checkout.html should be
-       your customer order page.
-    */
 
     window.location.href =
         "checkout.html";
@@ -958,3 +1428,4 @@ loadProduct();
 </body>
 
 </html>
+```
