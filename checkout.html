@@ -1373,37 +1373,64 @@ document.getElementById(
         }
 
 
+/* =====================================================
+   GOOGLE LOGIN
+===================================================== */
 
-        /* LOGIN */
-
-        const {
-            data: {
-                user
-            },
-            error: userError
-        } =
-        await supabaseClient
-            .auth
-            .getUser();
-
-
-        if(userError || !user) {
-
-            showMessage(
-                "Please login before placing an order."
-            );
+const {
+    data: {
+        user
+    },
+    error: userError
+} =
+await supabaseClient
+    .auth
+    .getUser();
 
 
-            setTimeout(
-                function() {
+if(userError || !user) {
 
-                    window.location.href =
-                        "login.html";
+    showMessage(
+        "Please continue with Google to place your order."
+    );
 
-                },
-                1200
-            );
 
+    const {
+        error
+    } =
+    await supabaseClient
+        .auth
+        .signInWithOAuth({
+
+            provider: "google",
+
+            options: {
+
+                redirectTo:
+                    window.location.href
+
+            }
+
+        });
+
+
+    if(error) {
+
+        console.error(
+            "GOOGLE LOGIN ERROR:",
+            error
+        );
+
+        showMessage(
+            "Google login failed: " +
+            error.message
+        );
+
+    }
+
+    return;
+
+}
 
             return;
 
