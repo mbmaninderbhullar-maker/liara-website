@@ -740,19 +740,17 @@ else {
    SHOW ORDER
 ===================================================== */
 
+/* =====================================================
+   SHOW ORDER
+===================================================== */
+
 let total = 0;
 
-
-if (!checkoutItems ||
-    checkoutItems.length === 0) {
+if (!checkoutItems || checkoutItems.length === 0) {
 
     orderItems.innerHTML = `
-
         <div class="empty-checkout">
-
-            <p>
-                Your order is empty.
-            </p>
+            <p>Your order is empty.</p>
 
             <a
                 href="index.html#products"
@@ -761,76 +759,60 @@ if (!checkoutItems ||
                 ← Continue Shopping
 
             </a>
-
         </div>
-
     `;
 
-}
+} else {
 
-else {
+    let orderHTML = "";
 
-    orderItems.innerHTML = "";
+    checkoutItems.forEach(function(product) {
 
+        const productPrice =
+            Number(product.price) || 0;
 
-    checkoutItems.forEach(
-        function(product) {
+        const productQuantity =
+            Number(product.quantity) || 1;
 
-            const productPrice =
-                Number(
-                    product.price || 0
-                );
-
-
-            const productQuantity =
-                Number(
-                    product.quantity || 1
-                );
+        total +=
+            productPrice * productQuantity;
 
 
-            total +=
-                productPrice *
-                productQuantity;
+        orderHTML += `
+            <div class="order-item">
 
+                <img
+                    src="${escapeHtml(
+                        product.image || "facewash.jpg"
+                    )}"
+                    alt="${escapeHtml(
+                        product.name || "Product"
+                    )}"
+                    onerror="this.src='facewash.jpg'"
+                >
 
-            orderItems.innerHTML += `
+                <div>
 
-                <div class="order-item">
+                    <h4>
+                        ${escapeHtml(
+                            product.name || "Product"
+                        )}
+                    </h4>
 
-                    <img
-                        src="${escapeHtml(product.image || "facewash.jpg")}"
-                        alt="${escapeHtml(product.name || "Product")}"
-                        onerror="this.src='facewash.jpg'"
-                    >
-
-                    <div>
-
-                        <h4>
-                            ${escapeHtml(
-                                product.name ||
-                                "Product"
-                            )}
-                        </h4>
-
-                        <p>
-
-                            ₹${productPrice.toLocaleString("en-IN")}
-
-                            ×
-
-                            ${productQuantity}
-
-                        </p>
-
-                    </div>
+                    <p>
+                        ₹${productPrice.toLocaleString("en-IN")}
+                        ×
+                        ${productQuantity}
+                    </p>
 
                 </div>
 
-            `;
+            </div>
+        `;
 
-        }
-    );
+    });
 
+    orderItems.innerHTML = orderHTML;
 }
 
 
