@@ -508,38 +508,24 @@ function removeProduct(index) {
 
 function buyThisProduct(index) {
 
-    let product = cart[index];
-
-
-    let buyNowCart = [
-
-        {
-
-            name: product.name,
-
-            price: product.price,
-
-            image: product.image,
-
-            quantity: product.quantity
-
-        }
-
-    ];
-
+    const product = cart[index];
 
     localStorage.setItem(
-
-        "liaraCart",
-
-        JSON.stringify(buyNowCart)
-
+        "liaraBuyNow",
+        JSON.stringify({
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: product.quantity
+        })
     );
 
+    localStorage.setItem(
+        "liaraCheckoutMode",
+        "buyNow"
+    );
 
-    window.location.href =
-        "checkout.html";
-
+    window.location.href = "checkout.html";
 }
 
 
