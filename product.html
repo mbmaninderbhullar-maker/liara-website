@@ -307,6 +307,83 @@ body {
 
 
 /* =====================================================
+   PURCHASE / DETAILS LAYOUT
+===================================================== */
+
+.purchase-area {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+}
+
+.product-info {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.product-detail .ingredients-section,
+.product-detail .product-detail-section {
+    grid-column: 1 / -1;
+}
+
+.purchase-area .stock-text {
+    margin: 0 0 14px;
+}
+
+.purchase-area .quantity-box {
+    margin: 0 0 14px;
+}
+
+.purchase-area .action-buttons {
+    width: 100%;
+}
+
+.purchase-area .action-buttons button {
+    flex: 1;
+}
+
+
+/* =====================================================
+   MOBILE PURCHASE ORDER
+===================================================== */
+
+@media(max-width: 900px) {
+
+    .product-info {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .purchase-area {
+        grid-column: auto;
+        grid-row: auto;
+        order: 3;
+    }
+
+    .product-detail .ingredients-section,
+    .product-detail .product-detail-section {
+        grid-column: auto;
+    }
+
+    .purchase-area .buy-now {
+        order: 1;
+    }
+
+    .purchase-area .add-cart {
+        order: 2;
+    }
+
+    .purchase-area .action-buttons {
+        flex-direction: column;
+    }
+
+    .purchase-area .action-buttons button {
+        width: 100%;
+    }
+}
+
+
+/* =====================================================
    RESPONSIVE
 ===================================================== */
 
@@ -1042,81 +1119,49 @@ async function loadProduct() {
 
             <div class="product-info">
 
-
                 <div class="product-label">
-
                     LIARA PROFESSIONAL™
-
                 </div>
-
-
 
                 <h1>
-
                     ${escapeHtml(name)}
-
                 </h1>
 
-
-
                 <div class="product-price">
-
                     ₹${price.toLocaleString("en-IN")}
-
                 </div>
-
-
 
                 <div class="product-description">
-
                     ${escapeHtml(description)}
-
                 </div>
 
+            </div>
 
 
-                <!-- KEY INGREDIENTS -->
+            <!-- PURCHASE AREA
+                 Desktop: under product photo
+                 Mobile: above detail sections
+            -->
 
-                ${renderIngredients(keyIngredients)}
-
-                <!-- HOW TO USE -->
-
-                ${renderTextSection("How to Use", "🧴", howToUse)}
-
-                <!-- BENEFITS -->
-
-                ${renderTextSection("Benefits", "✨", benefits)}
-
-
+            <div class="purchase-area">
 
                 ${
                     stock > 0
-
                     ?
-
                     `
 
                     <div class="stock-text in-stock">
-
                         ✓ In Stock
                         (${stock} available)
-
                     </div>
-
-
-
-                    <!-- QUANTITY -->
 
                     <div class="quantity-box">
 
                         <button
                             type="button"
                             onclick="decreaseQuantity()">
-
                             −
-
                         </button>
-
 
                         <input
                             type="number"
@@ -1127,20 +1172,13 @@ async function loadProduct() {
                             readonly
                         >
 
-
                         <button
                             type="button"
                             onclick="increaseQuantity(${stock})">
-
                             +
-
                         </button>
 
                     </div>
-
-
-
-                    <!-- ACTION BUTTONS -->
 
                     <div class="action-buttons">
 
@@ -1148,40 +1186,54 @@ async function loadProduct() {
                             type="button"
                             class="add-cart"
                             onclick="addToCart()">
-
                             🛒 Add to Cart
-
                         </button>
-
 
                         <button
                             type="button"
                             class="buy-now"
                             onclick="buyNow()">
-
                             ⚡ Buy Now
-
                         </button>
 
                     </div>
 
                     `
-
                     :
-
                     `
 
                     <div class="stock-text out-stock">
-
                         ✕ Out of Stock
-
                     </div>
 
                     `
-
                 }
 
             </div>
+
+
+            <!-- KEY INGREDIENTS -->
+
+            ${renderIngredients(keyIngredients)}
+
+
+            <!-- HOW TO USE -->
+
+            ${renderTextSection(
+                "How to Use",
+                "🧴",
+                howToUse
+            )}
+
+
+            <!-- BENEFITS -->
+
+            ${renderTextSection(
+                "Benefits",
+                "✨",
+                benefits
+            )}
+
 
         </div>
 
