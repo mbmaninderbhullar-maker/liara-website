@@ -1249,6 +1249,37 @@ body{
 #other-content .data-table th,#other-content .data-table td{padding:5px!important;white-space:nowrap!important}
 @media(max-width:900px){.settings-layout{grid-template-columns:1fr!important;gap:4px!important}.settings-nav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:2px!important}}
 </style>
+<style>
+/* ===== FINAL SETTINGS / STAFF COMPACT FIX ===== */
+.settings-layout{
+    grid-template-columns:170px minmax(0,1fr)!important;
+    gap:3px!important;
+}
+.settings-nav{
+    padding:3px!important;
+}
+.settings-nav button{
+    width:100%!important;
+    padding:7px 8px!important;
+    margin:1px 0!important;
+    font-size:11px!important;
+}
+.settings-panel{
+    display:none;
+    margin:0!important;
+}
+.settings-panel.active{
+    display:block!important;
+}
+.settings-layout>div:last-child{
+    min-width:0!important;
+    margin:0!important;
+    padding:0!important;
+}
+#settings-staff{
+    margin:0!important;
+}
+</style>
 </head>
 
 <body>
@@ -5746,7 +5777,7 @@ function loadSettings(){
                 </button>
 
 <button type="button" id="staffManagementNavBtn"
-        onclick="openSettingsTab('staff',this); loadStaffAccounts();">
+        onclick="showStaffManagement(this);">
   👥 Staff Management
 </button>
 
@@ -6713,6 +6744,29 @@ function optionList(options,current){
 
     `).join("");
 
+}
+
+function showStaffManagement(button){
+    const staffPanel = document.getElementById("settings-staff");
+    if(!staffPanel) return;
+
+    document.querySelectorAll(".settings-panel").forEach(panel=>{
+        panel.classList.remove("active");
+        panel.style.display = "none";
+    });
+
+    document.querySelectorAll(".settings-nav button").forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    staffPanel.classList.add("active");
+    staffPanel.style.display = "block";
+
+    if(button) button.classList.add("active");
+
+    if(typeof loadStaffAccounts === "function"){
+        loadStaffAccounts();
+    }
 }
 
 function openSettingsTab(tab,button){
