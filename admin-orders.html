@@ -242,6 +242,51 @@ body{
     margin-bottom:25px;
 }
 
+/* Compact top cards on Orders page */
+#orders-section .summary-grid{
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:18px;
+}
+#orders-section .summary-card{
+    padding:12px 14px;
+    border-radius:10px;
+}
+#orders-section .summary-card span{
+    font-size:12px;
+}
+#orders-section .summary-card strong{
+    font-size:20px;
+    margin-top:4px;
+}
+#orders-section .summary-card small{
+    font-size:10px;
+}
+@media(max-width:800px){
+    #orders-section .summary-grid{grid-template-columns:repeat(3,1fr);gap:7px;}
+    #orders-section .summary-card{padding:10px;}
+}
+@media(max-width:520px){
+    #orders-section .summary-grid{grid-template-columns:1fr;}
+}
+
+/* Compact Sales cards */
+.sales-summary-grid{
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-bottom:14px;
+}
+.sales-summary-grid .summary-card{
+    padding:10px 12px;
+    border-radius:10px;
+}
+.sales-summary-grid .summary-card span{font-size:11px;}
+.sales-summary-grid .summary-card strong{font-size:20px;margin-top:4px;}
+.sales-summary-grid .summary-card small{font-size:10px;margin-top:3px;}
+@media(max-width:800px){.sales-summary-grid{grid-template-columns:repeat(4,1fr);gap:6px;}}
+@media(max-width:600px){.sales-summary-grid{grid-template-columns:repeat(2,1fr);}}
+
+
 .summary-card{
     border:1px solid #eee9e1;
     border-radius:14px;
@@ -1260,7 +1305,7 @@ body{
         <button onclick="showSection('reports',this)">📊 Reports</button>
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
         <button type="button" onclick="showSection('parties',this)">👥 Parties</button>
-            <button type="button" onclick="window.open('https://mail.zoho.in/','_blank')">📧 Email</button>
+            <button type="button" onclick="showSection('email',this)">📧 Email</button>
             <button onclick="showSection('settings',this)">⚙️ Settings</button>
 
         <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
@@ -1293,7 +1338,6 @@ body{
             👤 Company Admin
         </div>
 
-        <button class="btn" onclick="logoutAdmin()">Logout</button>
 
     </div>
 
@@ -1324,12 +1368,6 @@ body{
         <span>Total Orders</span>
         <strong id="totalOrders">0</strong>
         <small>All customer orders</small>
-    </div>
-
-    <div class="summary-card sales">
-        <span>Total Order Value</span>
-        <strong id="totalSales">₹0</strong>
-        <small>Order value</small>
     </div>
 
     <div class="summary-card pending">
@@ -2515,7 +2553,7 @@ async function loadSales(){
 
         </div>
 
-        <div class="summary-grid">
+        <div class="summary-grid sales-summary-grid">
 
             <div class="summary-card sales">
                 <span>Total Sales</span>
