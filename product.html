@@ -4,57 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-<head>
-<!DOCTYPE html>
-<html lang="en">
-<style>
-/* Desktop screen size fix */
-@media (min-width: 1200px) {
-  .container,
-  .products-container,
-  .product-container,
-  .products-grid {
-    width: 100%;
-    max-width: 1250px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  body {
-    overflow-x: hidden;
-  }
-}
-
-/* Very large screens */
-@media (min-width: 1600px) {
-  .container,
-  .products-container,
-  .product-container,
-  .products-grid {
-    max-width: 1300px;
-  }
-}
-
-/* Laptop */
-@media (min-width: 768px) and (max-width: 1199px) {
-  .container,
-  .products-container,
-  .product-container,
-  .products-grid {
-    width: 94%;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  body {
-    overflow-x: hidden;
-  }
-}
-</style>
-<head>
-
-<meta charset="UTF-8">
 
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
@@ -64,7 +13,6 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-
 /* =====================================================
    PRODUCT PAGE
 ===================================================== */
@@ -85,9 +33,10 @@ body {
 ===================================================== */
 
 .product-page {
-    max-width: 1250px;
+    width: 92%;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 60px 25px 90px;
+    padding: 45px 0 70px;
 }
 
 
@@ -115,12 +64,12 @@ body {
 
 .product-detail {
     background: #fff;
-    border-radius: 24px;
-    padding: 40px;
+    border-radius: 20px;
+    padding: 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 55px;
-    box-shadow: 0 12px 40px rgba(0,0,0,.07);
+    gap: 35px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.07);
 }
 
 
@@ -130,7 +79,7 @@ body {
 
 .product-photo {
     width: 100%;
-    height: 560px;
+    height: 450px;
     background: #f5f1eb;
     border-radius: 20px;
     overflow: hidden;
@@ -165,7 +114,7 @@ body {
 }
 
 .product-info h1 {
-    font-size: 42px;
+    font-size: 36px;
     line-height: 1.2;
     margin: 0 0 15px;
     color: #222;
@@ -355,6 +304,50 @@ body {
     text-decoration: none;
 }
 
+
+
+/* =====================================================
+   LAPTOP / DESKTOP SIZE
+===================================================== */
+
+@media (min-width: 901px) and (max-width: 1400px) {
+
+    .product-page {
+        width: 90%;
+        max-width: 1080px;
+        padding: 40px 0 65px;
+    }
+
+    .product-detail {
+        padding: 28px;
+        gap: 30px;
+    }
+
+    .product-photo {
+        height: 450px;
+    }
+
+    .product-info h1 {
+        font-size: 34px;
+    }
+
+    .product-price {
+        font-size: 27px;
+    }
+}
+
+/* VERY LARGE DESKTOP */
+
+@media (min-width: 1401px) {
+
+    .product-page {
+        max-width: 1150px;
+    }
+
+    .product-photo {
+        height: 500px;
+    }
+}
 
 /* =====================================================
    RESPONSIVE
