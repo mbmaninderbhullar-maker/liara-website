@@ -1175,6 +1175,44 @@ body{
 }
 
 
+
+/* ================= LIARA EMAIL PORTAL ================= */
+.liara-email-box{overflow:hidden}
+.liara-email-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid #eee}
+.email-kicker{font-size:10px;letter-spacing:2px;font-weight:800;color:#ad8232;margin-bottom:7px}
+.liara-email-head h2{margin:0;font-size:28px}.liara-email-head p{color:#888;font-size:12px}
+.email-head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.liara-email-layout{display:grid;grid-template-columns:210px 1fr;min-height:560px}
+.liara-email-sidebar{padding:18px 12px 18px 0;border-right:1px solid #eee}
+.liara-email-folder{width:100%;border:0;background:transparent;text-align:left;padding:12px;border-radius:9px;margin-bottom:4px;cursor:pointer;color:#555}
+.liara-email-folder.active,.liara-email-folder:hover{background:#f5f0e7;color:#211d18}
+.liara-email-folder b{float:right;background:#211d18;color:#fff;border-radius:12px;padding:2px 7px;font-size:9px}
+.liara-email-account{margin-top:25px;padding:13px;border:1px solid #e5dfd3;background:#faf8f4;border-radius:11px}
+.liara-email-account small,.liara-email-account span{display:block;color:#888;font-size:9px}
+.liara-email-account strong{display:block;margin:7px 0;font-size:12px}
+.liara-email-main{padding:18px 0 18px 18px}
+.liara-email-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.liara-email-search{flex:1;border:1px solid #ddd;border-radius:9px;padding:0 11px;color:#999}
+.liara-email-search input{border:0;outline:0;padding:11px;width:90%;background:transparent}
+.liara-email-status{font-size:10px;color:#287a3e}
+.liara-mail-row{display:flex;align-items:center;gap:12px;padding:14px 7px;border-bottom:1px solid #eee}
+.liara-mail-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#211d18;color:#d7ae67;font-weight:bold}
+.liara-mail-row>div:nth-child(2){flex:1;min-width:0}
+.liara-mail-row strong,.liara-mail-row b,.liara-mail-row small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.liara-mail-row strong{font-size:12px}.liara-mail-row b{font-size:12px;margin-top:3px}.liara-mail-row small{font-size:10px;color:#999;margin-top:3px}
+.liara-mail-row time{font-size:10px;color:#888}
+.liara-email-empty{text-align:center;padding:80px 20px;color:#888;font-size:42px}
+.liara-email-empty h3{font-size:18px;color:#333}.liara-email-empty p{font-size:11px}
+.liara-compose-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;display:flex;align-items:flex-end;justify-content:center;padding:20px}
+.liara-compose{width:min(680px,100%);background:#fff;border-radius:14px;padding:18px;box-shadow:0 20px 70px rgba(0,0,0,.25)}
+.liara-compose-title{display:flex;justify-content:space-between;margin:-18px -18px 15px;padding:14px 18px;background:#211d18;color:#fff;border-radius:14px 14px 0 0}
+.liara-compose-title button{border:0;background:none;color:#fff;font-size:22px}
+.liara-compose label{display:block;font-size:9px;font-weight:bold;color:#777;margin:9px 0 4px}
+.liara-compose input,.liara-compose textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:7px;font-family:inherit}
+.liara-compose textarea{height:180px;resize:vertical}
+.liara-compose-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+@media(max-width:800px){.liara-email-layout{grid-template-columns:1fr}.liara-email-sidebar{border-right:0;border-bottom:1px solid #eee;display:flex;overflow:auto;gap:5px}.liara-email-folder{min-width:120px}.liara-email-account{display:none}.liara-email-main{padding:15px 0}.liara-email-head{flex-direction:column}}
+
 /* ================= PREMIUM PARTY ACCOUNTS ================= */
 .party-shell{overflow:hidden}
 .party-page-head,.party-account-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:24px}
@@ -1329,6 +1367,7 @@ body{
         <button onclick="showSection('delivery',this)">🚚 Delivery</button>
         <button onclick="showSection('reports',this)">📊 Reports</button>
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
+        <button type="button" onclick="showSection('email',this)">✉️ Email</button>
         <button type="button" onclick="showSection('parties',this)">👥 Parties</button>
             <button onclick="showSection('settings',this)">⚙️ Settings</button>
 
@@ -1368,76 +1407,6 @@ body{
 
 </header>
 
-
-<!-- ================= EMAIL ================= -->
-<section class="admin-section" id="email-section" style="display:none">
-<div class="admin-container">
-<div class="admin-box email-app">
-
-    <div class="email-head">
-        <div>
-            <div class="email-kicker">LIARA PROFESSIONAL™ • BUSINESS MAIL</div>
-            <h2>✉️ Email</h2>
-            <p>Professional business email workspace for <strong>info@liara.co.in</strong></p>
-        </div>
-        <div class="email-head-actions">
-            <button class="btn" onclick="openEmailCompose()">＋ Compose</button>
-            <button class="btn outline-btn" onclick="loadEmail()">↻ Refresh</button>
-        </div>
-    </div>
-
-    <div class="email-layout">
-        <aside class="email-folders">
-            <button class="email-folder active" onclick="emailFolder('inbox',this)">📥 Inbox <b id="emailInboxCount">0</b></button>
-            <button class="email-folder" onclick="emailFolder('starred',this)">⭐ Starred</button>
-            <button class="email-folder" onclick="emailFolder('sent',this)">📤 Sent</button>
-            <button class="email-folder" onclick="emailFolder('drafts',this)">📝 Drafts</button>
-            <button class="email-folder" onclick="emailFolder('trash',this)">🗑️ Trash</button>
-
-            <div class="email-account-card">
-                <span>BUSINESS ACCOUNT</span>
-                <strong>info@liara.co.in</strong>
-                <small>Liara Professional™</small>
-                <button onclick="openEmailSettings()">⚙️ Email Settings</button>
-            </div>
-        </aside>
-
-        <div class="email-main">
-            <div class="email-toolbar">
-                <div class="email-search"><span>⌕</span><input id="emailSearch" oninput="filterEmailList()" placeholder="Search mail..."></div>
-                <span class="email-live-dot">● Account configured</span>
-            </div>
-
-            <div id="emailList" class="email-list"></div>
-        </div>
-    </div>
-
-    <div id="emailComposeModal" class="email-modal" style="display:none">
-        <div class="email-compose">
-            <div class="email-compose-head">
-                <strong>New Message</strong>
-                <button onclick="closeEmailCompose()">×</button>
-            </div>
-            <div class="email-compose-body">
-                <label>FROM</label>
-                <input value="info@liara.co.in" readonly>
-                <label>TO</label>
-                <input id="emailTo" type="email" placeholder="customer@example.com">
-                <label>SUBJECT</label>
-                <input id="emailSubject" placeholder="Subject">
-                <label>MESSAGE</label>
-                <textarea id="emailBody" placeholder="Write your message..."></textarea>
-            </div>
-            <div class="email-compose-actions">
-                <button class="btn gray-btn" onclick="closeEmailCompose()">Cancel</button>
-                <button class="btn" onclick="sendLiaraEmail()">Send ✈️</button>
-            </div>
-        </div>
-    </div>
-
-</div>
-</div>
-</section>
 
 <!-- ================= ORDERS ================= -->
 
@@ -1979,6 +1948,126 @@ function openEmailSettings(){
     alert("Business email: info@liara.co.in\n\nFor real Inbox/Send/Receive inside this portal, connect the mailbox provider or an email API. The portal UI is ready.");
 }
 
+
+
+/* =========================================================
+   LIARA BUSINESS EMAIL — ADMIN PORTAL
+========================================================= */
+const LIARA_BUSINESS_EMAIL = "info@liara.co.in";
+
+function loadEmail(){
+    const box=document.getElementById("other-content");
+    if(!box) return;
+
+    box.innerHTML=`
+    <div class="admin-box liara-email-box">
+        <div class="liara-email-head">
+            <div>
+                <div class="email-kicker">LIARA PROFESSIONAL™ • BUSINESS MAIL</div>
+                <h2>✉️ Email</h2>
+                <p>Business email workspace — <strong>info@liara.co.in</strong></p>
+            </div>
+            <div class="email-head-actions">
+                <button class="btn" onclick="openLiaraCompose()">＋ Compose</button>
+                <button class="btn outline-btn" onclick="loadEmail()">↻ Refresh</button>
+            </div>
+        </div>
+
+        <div class="liara-email-layout">
+            <div class="liara-email-sidebar">
+                <button class="liara-email-folder active" onclick="selectLiaraFolder('Inbox',this)">📥 Inbox <b id="liaraInboxCount">0</b></button>
+                <button class="liara-email-folder" onclick="selectLiaraFolder('Starred',this)">⭐ Starred</button>
+                <button class="liara-email-folder" onclick="selectLiaraFolder('Sent',this)">📤 Sent</button>
+                <button class="liara-email-folder" onclick="selectLiaraFolder('Drafts',this)">📝 Drafts</button>
+                <button class="liara-email-folder" onclick="selectLiaraFolder('Trash',this)">🗑️ Trash</button>
+
+                <div class="liara-email-account">
+                    <small>BUSINESS ACCOUNT</small>
+                    <strong>info@liara.co.in</strong>
+                    <span>Liara Professional™</span>
+                </div>
+            </div>
+
+            <div class="liara-email-main">
+                <div class="liara-email-toolbar">
+                    <div class="liara-email-search">⌕ <input id="liaraEmailSearch" oninput="renderLiaraEmails()" placeholder="Search mail..."></div>
+                    <span class="liara-email-status">● Ready</span>
+                </div>
+                <div id="liaraEmailList"></div>
+            </div>
+        </div>
+
+        <div id="liaraCompose" class="liara-compose-overlay" style="display:none">
+            <div class="liara-compose">
+                <div class="liara-compose-title"><strong>New Message</strong><button onclick="closeLiaraCompose()">×</button></div>
+                <label>FROM</label><input value="info@liara.co.in" readonly>
+                <label>TO</label><input id="liaraTo" type="email" placeholder="customer@example.com">
+                <label>SUBJECT</label><input id="liaraSubject" placeholder="Subject">
+                <label>MESSAGE</label><textarea id="liaraBody" placeholder="Write your message..."></textarea>
+                <div class="liara-compose-actions">
+                    <button class="btn gray-btn" onclick="closeLiaraCompose()">Cancel</button>
+                    <button class="btn" onclick="sendLiaraCompose()">Send ✈️</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    window.liaraEmailFolder="Inbox";
+    renderLiaraEmails();
+}
+
+function selectLiaraFolder(folder,button){
+    window.liaraEmailFolder=folder;
+    document.querySelectorAll(".liara-email-folder").forEach(x=>x.classList.remove("active"));
+    button?.classList.add("active");
+    renderLiaraEmails();
+}
+
+function renderLiaraEmails(){
+    const box=document.getElementById("liaraEmailList");
+    if(!box)return;
+    const q=(document.getElementById("liaraEmailSearch")?.value||"").toLowerCase();
+
+    let mails=[];
+    if(window.liaraEmailFolder==="Inbox"){
+        mails=[{from:"Liara Professional™",subject:"Business email is ready",body:"info@liara.co.in is ready to use from the admin portal.",time:"Now"}];
+    }
+
+    mails=mails.filter(m=>(m.from+" "+m.subject+" "+m.body).toLowerCase().includes(q));
+    const count=document.getElementById("liaraInboxCount");
+    if(count) count.textContent=mails.length;
+
+    if(!mails.length){
+        box.innerHTML=`<div class="liara-email-empty">✉️<h3>No emails</h3><p>Your ${window.liaraEmailFolder||"Inbox"} is empty.</p></div>`;
+        return;
+    }
+
+    box.innerHTML=mails.map(m=>`
+        <div class="liara-mail-row">
+            <div class="liara-mail-avatar">${escapeHtml(m.from.charAt(0))}</div>
+            <div><strong>${escapeHtml(m.from)}</strong><b>${escapeHtml(m.subject)}</b><small>${escapeHtml(m.body)}</small></div>
+            <time>${escapeHtml(m.time)}</time>
+        </div>`).join("");
+}
+
+function openLiaraCompose(){
+    const modal=document.getElementById("liaraCompose");
+    if(modal) modal.style.display="flex";
+}
+function closeLiaraCompose(){
+    const modal=document.getElementById("liaraCompose");
+    if(modal) modal.style.display="none";
+}
+function sendLiaraCompose(){
+    const to=document.getElementById("liaraTo")?.value.trim();
+    const subject=document.getElementById("liaraSubject")?.value.trim();
+    const body=document.getElementById("liaraBody")?.value.trim();
+    if(!to || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(to)){alert("Valid email address pao.");return;}
+    if(!subject){alert("Subject pao.");return;}
+    if(!body){alert("Message likho.");return;}
+    window.location.href="mailto:"+encodeURIComponent(to)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+    closeLiaraCompose();
+}
 
 /* =========================================================
    MENU
