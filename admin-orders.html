@@ -1397,28 +1397,18 @@ body{
 <section class="admin-section" id="other-section" style="display:none">
 <!-- ================= EMAIL ================= -->
 <div id="emailPanel" style="display:none">
-<div class="admin-box email-app">
-<div class="admin-header"><div><p>LIARA PROFESSIONAL™</p><h2>📧 Email — info@liara.co.in</h2><small style="color:#777">Zoho Mail</small></div>
-<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn outline-btn" type="button" onclick="loadZohoMail()">↻ Refresh</button><button class="btn" type="button" onclick="openComposeMail()">✉️ Compose</button></div></div>
-<div class="email-layout">
-<aside class="email-nav">
-<button class="email-nav-btn active" onclick="emailFolder('INBOX',this)">📥 Inbox</button>
-<button class="email-nav-btn" onclick="emailFolder('SENT',this)">📤 Sent</button>
-<button class="email-nav-btn" onclick="emailFolder('DRAFTS',this)">📝 Drafts</button>
-<button class="email-nav-btn" onclick="emailFolder('TRASH',this)">🗑️ Trash</button>
-<button class="email-nav-btn" onclick="emailFolder('SPAM',this)">⚠️ Spam</button>
-</aside>
-<section class="email-main"><div class="email-toolbar"><input id="emailSearch" class="search-input" placeholder="Search email..." oninput="filterEmailList()"><span id="emailStatus" style="font-size:12px;color:#777"></span></div><div id="emailList"><div class="message">Connect Zoho Mail to load your inbox.</div></div></section>
-<section class="email-reader" id="emailReader"><div class="message">Select an email to read it.</div></section>
-</div></div>
-<div id="composeMailBox" class="admin-box" style="display:none;margin-top:14px"><div class="admin-header"><div><p>NEW MESSAGE</p><h2>✉️ Compose Email</h2></div><button class="btn gray-btn" type="button" onclick="closeComposeMail()">Close</button></div>
-<div class="settings-form">
-<div class="settings-field"><label>TO</label><input id="mailTo" type="email" placeholder="customer@example.com"></div>
-<div class="settings-field"><label>CC</label><input id="mailCc" type="text" placeholder="Optional"></div>
-<div class="settings-field"><label>BCC</label><input id="mailBcc" type="text" placeholder="Optional"></div>
-<div class="settings-field"><label>SUBJECT</label><input id="mailSubject" type="text" placeholder="Subject"></div>
-<div class="settings-field" style="grid-column:1/-1"><label>MESSAGE</label><textarea id="mailContent" rows="10" placeholder="Write your message..."></textarea></div>
-</div><div class="settings-actions"><button class="btn" type="button" onclick="sendZohoMail()">📤 Send Email</button><span id="sendMailStatus" class="settings-status"></span></div></div>
+<div class="admin-box">
+<div class="admin-header">
+  <div><p>LIARA PROFESSIONAL™</p><h2>📧 Email — info@liara.co.in</h2><small style="color:#777">Zoho Mail</small></div>
+</div>
+<div style="text-align:center;padding:45px 20px">
+  <div style="font-size:52px;margin-bottom:12px">📧</div>
+  <h2 style="margin:0 0 8px">Open Zoho Mail</h2>
+  <p style="color:#777;margin:0 0 22px">Manage inbox, send emails and read messages from your Zoho account.</p>
+  <button class="btn" type="button" onclick="window.open('https://mail.zoho.in/','_blank','noopener,noreferrer')">📧 Open Zoho Mail</button>
+</div>
+</div>
+</div>
 </div>
 
     <div class="admin-container" id="other-content"></div>
@@ -1769,7 +1759,6 @@ function showSection(section,button){
     else if(section === "notifications") loadNotifications();
     else if(section === "parties") loadParties();
     else if(section === "settings") loadSettings();
-    else if(section === "email") loadZohoMail();
 
     closeSidebar();
 
