@@ -1,4 +1,10 @@
 
+<style>
+#staffManagementNavBtn{
+  display:block!important;width:calc(100% - 16px)!important;
+  margin:4px 8px!important;cursor:pointer!important;
+}
+</style>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1235,138 +1241,26 @@ body{
 .email-layout{display:grid;grid-template-columns:170px minmax(300px,1fr) minmax(320px,1.15fr);gap:12px;margin-top:14px}.email-nav{display:flex;flex-direction:column;gap:6px}.email-nav-btn{border:1px solid #e5e5e5;background:#fff;border-radius:8px;padding:11px 12px;text-align:left;cursor:pointer;font-weight:600}.email-nav-btn.active,.email-nav-btn:hover{background:#111;color:#fff}.email-main,.email-reader{border:1px solid #e7e7e7;border-radius:10px;overflow:hidden;background:#fff;min-height:430px}.email-toolbar{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid #eee}.email-list-row{padding:12px;border-bottom:1px solid #eee;cursor:pointer}.email-list-row:hover{background:#fafafa}.email-list-row.unread{font-weight:700}.email-subject{display:block;margin-bottom:4px}.email-meta{font-size:12px;color:#777}.email-preview{font-size:12px;color:#666;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.email-reader{padding:18px}.email-reader h3{margin:0 0 8px}.email-reader .reader-meta{font-size:12px;color:#777;margin-bottom:16px}.email-body{line-height:1.6;overflow:auto}@media(max-width:1000px){.email-layout{grid-template-columns:140px 1fr}.email-reader{grid-column:1/-1}}@media(max-width:650px){.email-layout{grid-template-columns:1fr}.email-nav{display:grid;grid-template-columns:repeat(3,1fr)}}
 </style>
 
-<style>
-/* FINAL COMPACT LAYOUT */
-.settings-layout{grid-template-columns:170px minmax(0,1fr)!important;gap:3px!important;align-items:start!important}
-.settings-nav{padding:3px!important;margin:0!important}
-.settings-nav button{padding:7px 8px!important;margin:0 0 1px 0!important;font-size:11px!important;line-height:1.05!important}
-#other-content{margin:0!important;padding:0!important}
-#other-content>.admin-box{margin:0!important;padding:12px!important}
-#other-content .admin-header{margin:0 0 7px!important}
-#other-content .summary-grid{gap:4px!important;margin-bottom:6px!important}
-#other-content .summary-card{padding:7px 9px!important}
-#other-content .filter-panel{gap:4px!important;padding:6px!important;margin-bottom:6px!important}
-#other-content .data-table th,#other-content .data-table td{padding:5px!important;white-space:nowrap!important}
-@media(max-width:900px){.settings-layout{grid-template-columns:1fr!important;gap:4px!important}.settings-nav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:2px!important}}
-</style>
-<style>
-/* ===== FINAL SETTINGS / STAFF COMPACT FIX ===== */
+<style id="staff-management-final-layout-fix">
 .settings-layout{
-    grid-template-columns:170px minmax(0,1fr)!important;
-    gap:3px!important;
+    grid-template-columns:180px minmax(0,1fr) !important;
+    gap:4px !important;
 }
 .settings-nav{
-    padding:3px!important;
+    margin:0 !important;
+    padding:3px !important;
 }
 .settings-nav button{
-    width:100%!important;
-    padding:7px 8px!important;
-    margin:1px 0!important;
-    font-size:11px!important;
-}
-.settings-panel{
-    display:none;
-    margin:0!important;
+    margin:1px 0 !important;
+    padding:7px 8px !important;
 }
 .settings-panel.active{
-    display:block!important;
-}
-.settings-layout>div:last-child{
-    min-width:0!important;
-    margin:0!important;
-    padding:0!important;
-}
-#settings-staff{
-    margin:0!important;
-}
-</style>
-
-<style id="liara-staff-compact-fix">
-.settings-layout{grid-template-columns:180px minmax(0,1fr)!important;gap:3px!important}
-.settings-nav{padding:4px!important;border-radius:9px!important}
-.settings-nav button{padding:7px 8px!important;margin:1px 0!important;font-size:11px!important;line-height:1.1!important}
-.settings-layout>div:last-child{min-width:0!important;margin:0!important}
-.staff-standalone-box{margin:0!important;padding:18px!important}
-.staff-standalone-box .settings-card{margin-bottom:10px!important;padding:16px!important}
-@media(max-width:900px){.settings-layout{grid-template-columns:1fr!important;gap:4px!important}.settings-nav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:2px!important}}
-.staff-standalone-box{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;}
-#other-content{display:block!important;visibility:visible!important;}
-</style>
-<style>
-.settings-layout{gap:4px!important;grid-template-columns:180px minmax(0,1fr)!important;}
-.settings-nav{padding:3px!important;}
-.settings-nav button{padding:7px 8px!important;margin:1px 0!important;font-size:11px!important;}
-.staff-rights-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:8px;}
-.staff-rights-grid label{display:flex;align-items:center;gap:6px;padding:8px 9px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;font-size:12px;cursor:pointer;}
-.staff-rights-grid input{accent-color:#ad8232;}
-@media(max-width:800px){.settings-layout{grid-template-columns:1fr!important}.staff-rights-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
-</style>
-
-<style>
-/* Staff Management: force visibility only when selected */
-#settings-staff.active{display:block!important;visibility:visible!important;opacity:1!important;}
-.staff-rights-grid{display:grid!important;grid-template-columns:repeat(2,minmax(180px,1fr));gap:8px;margin-top:8px;}
-.staff-rights-grid label{display:flex;align-items:center;gap:7px;padding:9px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;font-size:12px;}
-.staff-rights-grid input{width:16px;height:16px;}
-</style>
-<style>
-/* ===== STAFF MANAGEMENT - SETTINGS TAB FIX ===== */
-#settings-staff.active {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-#staffManagementNavBtn.active {
-    display: block !important;
-}
-</style>
-
-<style id="final-staff-settings-fix">
-.settings-layout{
-  display:grid !important;
-  grid-template-columns:180px minmax(0,1fr) !important;
-  gap:4px !important;
-  align-items:start !important;
-}
-.settings-nav{
-  margin:0 !important;
-  padding:4px !important;
-}
-.settings-nav button{
-  margin:0 0 2px 0 !important;
-  padding:7px 8px !important;
-}
-.settings-panel-host{
-  min-width:0 !important;
-  margin:0 !important;
-  padding:0 !important;
-}
-.settings-panel{display:none;}
-.settings-panel.active{
-  display:block !important;
-  visibility:visible !important;
-  opacity:1 !important;
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
 }
 #settings-staff.active{
-  display:block !important;
-}
-.staff-rights-grid{
-  display:grid !important;
-  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  gap:8px !important;
-  margin:8px 0 14px !important;
-}
-.staff-rights-grid label{
-  display:flex !important;
-  align-items:center !important;
-  gap:7px !important;
-  padding:9px 10px !important;
-  border:1px solid #e5e7eb !important;
-  border-radius:8px !important;
-}
-@media(max-width:800px){
-  .settings-layout{grid-template-columns:1fr !important;}
-  .staff-rights-grid{grid-template-columns:1fr !important;}
+    display:block !important;
 }
 </style>
 
@@ -1907,7 +1801,6 @@ function showSection(section,button){
     else if(section === "notifications") loadNotifications();
     else if(section === "parties") loadParties();
     else if(section === "settings") loadSettings();
-    else if(section === "staff") { loadSettings(); }
 
     closeSidebar();
 
@@ -5813,132 +5706,958 @@ async function loadNotifications(){
 
 function loadSettings(){
 
-    const root = document.getElementById("other-content");
-    if(!root) return;
+    const settings =
+        getSettings();
 
-    // Do not rebuild Settings every time. This was causing the Staff panel
-    // and its selected tab state to disappear.
-    if(root.dataset.settingsReady === "1"){
-        const first = root.querySelector(".settings-nav button");
-        if(first && !root.querySelector(".settings-panel.active")){
-            openSettingsTab("profile", first);
-        }
-        return;
-    }
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
 
-    root.dataset.settingsReady = "1";
+    <div class="admin-box">
 
-    root.innerHTML = `
-      <div class="settings-layout">
-        <div class="settings-nav">
-          <button class="active" onclick="openSettingsTab('profile',this)">👤 Profile</button>
-          <button onclick="openSettingsTab('security',this)">🔐 Security</button>
-          <button id="staffManagementNavBtn" onclick="openSettingsTab('staff',this); return false;">👥 Staff Management</button>
-          <button onclick="openSettingsTab('company',this)">🏢 Company</button>
-          <button onclick="openSettingsTab('orders',this)">📦 Orders</button>
-          <button onclick="openSettingsTab('salesSettings',this)">💰 Sales & GST</button>
-          <button onclick="openSettingsTab('notificationsSettings',this)">🔔 Notifications</button>
-          <button onclick="openSettingsTab('website',this)">🎨 Website</button>
-          <button onclick="openSettingsTab('checkout',this)">🛒 Checkout</button>
-          <button onclick="openSettingsTab('invoice',this)">🧾 Invoice</button>
-          <button onclick="openSettingsTab('system',this)">🗄️ System</button>
+        <div class="admin-header">
+
+            <div>
+
+                <p>LIARA PROFESSIONAL™</p>
+
+                <h2>⚙️ Settings & Control Panel</h2>
+
+            </div>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+
+                <button
+                    class="btn outline-btn"
+                    onclick="resetSettings()">
+                    ↩ Reset
+                </button>
+
+                <button
+                    class="btn"
+                    onclick="saveAllSettings()">
+                    💾 Save Settings
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="settings-panel-host">
+        <div class="settings-layout">
 
-          <div class="settings-panel active" id="settings-profile">
-            <div class="settings-card">
-              <h3>👤 Profile</h3>
-              <p>Manage your admin profile settings.</p>
+            <!-- SETTINGS NAV -->
+
+            <div class="settings-nav">
+
+                <button
+                    class="active"
+                    onclick="openSettingsTab('profile',this)">
+                    👤 Profile
+                </button>
+
+                <button
+                    onclick="openSettingsTab('security',this)">
+                    🔐 Security
+                </button>
+<button
+                    onclick="openSettingsTab('staff',this); return false;">
+                    👥 Staff Management
+                </button>
+
+                <button
+                    onclick="openSettingsTab('company',this)">
+                    🏢 Company
+                </button>
+
+                <button
+                    onclick="openSettingsTab('orders',this)">
+                    📦 Orders
+                </button>
+
+                <button
+                    onclick="openSettingsTab('salesSettings',this)">
+                    💰 Sales & GST
+                </button>
+
+                <button
+                    onclick="openSettingsTab('notificationsSettings',this)">
+                    🔔 Notifications
+                </button>
+
+                <button
+                    onclick="openSettingsTab('website',this)">
+                    🎨 Website
+                </button>
+
+                <button
+                    onclick="openSettingsTab('checkout',this)">
+                    🛒 Checkout
+                </button>
+
+                <button
+                    onclick="openSettingsTab('invoice',this)">
+                    🧾 Invoice
+                </button>
+
+                <button
+                    onclick="openSettingsTab('system',this)">
+                    🗄️ System
+                </button>
+
             </div>
-          </div>
 
-          <div class="settings-panel" id="settings-security">
-            <div class="settings-card">
-              <h3>🔐 Security</h3>
-              <p>Security settings.</p>
+            <!-- SETTINGS CONTENT -->
+
+            <div>
+
+                <!-- PROFILE -->
+
+                <div
+                    class="settings-panel active"
+                    id="settings-profile">
+
+                    <div class="settings-card">
+
+                        <h3>👤 Profile Settings</h3>
+
+                        <p>
+                            Dashboard administrator di basic information.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+
+                                <label>ADMIN NAME</label>
+
+                                <input
+                                    id="setProfileName"
+                                    value="${escapeHtml(settings.profile.name)}">
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>ROLE</label>
+
+                                <input
+                                    id="setProfileRole"
+                                    value="${escapeHtml(settings.profile.role)}">
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>ADMIN EMAIL</label>
+
+                                <input
+                                    value="${escapeHtml(ADMIN_EMAIL)}"
+                                    readonly>
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>PHONE</label>
+
+                                <input
+                                    id="setProfilePhone"
+                                    value="${escapeHtml(settings.profile.phone)}">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- STAFF MANAGEMENT -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-staff">
+
+                    <div class="settings-card">
+                        <h3>👥 Staff Management</h3>
+                        <p>Create staff logins and manage existing staff passwords.</p>
+
+                        <div class="settings-form">
+                            <div class="settings-field">
+                                <label>STAFF NAME</label>
+                                <input id="staffName" placeholder="Staff name">
+                            </div>
+                            <div class="settings-field">
+                                <label>STAFF EMAIL</label>
+                                <input id="staffEmail" type="email" placeholder="staff@example.com">
+                            </div>
+                            <div class="settings-field">
+                                <label>SECURE STAFF PASSWORD</label>
+                                <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">
+                                    <input id="staffPassword" type="password" minlength="8" placeholder="Generate secure password" style="flex:1;min-width:180px;">
+                                    <button class="btn outline-btn" type="button" onclick="generateStaffPassword()">🔐 Generate</button>
+                                    <button class="btn outline-btn" type="button" onclick="toggleStaffPassword()">👁 Show</button>
+                                    <button class="btn outline-btn" type="button" onclick="copyStaffPassword()">📋 Copy</button>
+                                </div>
+                                <small id="staffPasswordHint" style="display:block;margin-top:6px;color:#6b7280;">Use a unique password for this staff member.</small>
+                            </div>
+                            <div class="settings-field">
+                                <label>ROLE</label>
+                                <select id="staffRole">
+                                    <option value="Staff">Staff</option>
+                                    <option value="Manager">Manager</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-actions">
+                            <button class="btn" type="button" onclick="createStaffLogin()">Create Staff Login</button>
+                            <button class="btn outline-btn" type="button" onclick="loadStaffAccounts()">Refresh Staff</button>
+                        </div>
+                        <div id="staffCreateStatus" class="settings-status"></div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Staff Accounts</h3>
+                        <p>Existing staff accounts from the staff_profiles table.</p>
+                        <div id="staffAccountsList">
+                            <div class="message">Open Staff Management to load staff accounts.</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SECURITY -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-security">
+
+                    <div class="settings-card">
+
+                        <h3>🔐 Security</h3>
+
+                        <p>
+                            Admin account password update.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+
+                                <label>NEW PASSWORD</label>
+
+                                <input
+                                    id="newAdminPassword"
+                                    type="password"
+                                    placeholder="Minimum 6 characters">
+
+                            </div>
+
+                            <div class="settings-field">
+
+                                <label>CONFIRM PASSWORD</label>
+
+                                <input
+                                    id="confirmAdminPassword"
+                                    type="password"
+                                    placeholder="Repeat password">
+
+                            </div>
+
+                        </div>
+
+                        <div class="settings-actions">
+
+                            <button
+                                class="btn"
+                                onclick="changeAdminPassword()">
+                                🔑 Change Password
+                            </button>
+
+                            <button
+                                class="btn red-btn"
+                                onclick="logoutAllSessions()">
+                                🚪 Sign Out
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- COMPANY -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-company">
+
+                    <div class="settings-card">
+
+                        <h3>🏢 Company Settings</h3>
+
+                        <p>
+                            Company, GST, contact and address information.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>COMPANY NAME</label>
+                                <input
+                                    id="setCompanyName"
+                                    value="${escapeHtml(settings.company.name)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>BRAND NAME</label>
+                                <input
+                                    id="setCompanyBrand"
+                                    value="${escapeHtml(settings.company.brand)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>GSTIN</label>
+                                <input
+                                    id="setCompanyGST"
+                                    value="${escapeHtml(settings.company.gst)}"
+                                    placeholder="Enter GSTIN">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>COMPANY EMAIL</label>
+                                <input
+                                    id="setCompanyEmail"
+                                    value="${escapeHtml(settings.company.email)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>PHONE</label>
+                                <input
+                                    id="setCompanyPhone"
+                                    value="${escapeHtml(settings.company.phone)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>WEBSITE</label>
+                                <input
+                                    id="setCompanyWebsite"
+                                    value="${escapeHtml(settings.company.website)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>CITY</label>
+                                <input
+                                    id="setCompanyCity"
+                                    value="${escapeHtml(settings.company.city)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>STATE</label>
+                                <input
+                                    id="setCompanyState"
+                                    value="${escapeHtml(settings.company.state)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>PINCODE</label>
+                                <input
+                                    id="setCompanyPincode"
+                                    value="${escapeHtml(settings.company.pincode)}">
+                            </div>
+
+                            <div class="settings-field full">
+                                <label>ADDRESS</label>
+                                <textarea id="setCompanyAddress">${escapeHtml(settings.company.address)}</textarea>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ORDERS -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-orders">
+
+                    <div class="settings-card">
+
+                        <h3>📦 Order Settings</h3>
+
+                        <p>
+                            Order ID, default status and order policy.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>ORDER PREFIX</label>
+                                <input
+                                    id="setOrderPrefix"
+                                    value="${escapeHtml(settings.orders.prefix)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>DEFAULT ORDER STATUS</label>
+                                <select id="setOrderStatus">
+                                    ${optionList(
+                                        [
+                                            "Pending",
+                                            "Confirmed",
+                                            "Packed",
+                                            "Shipped"
+                                        ],
+                                        settings.orders.autoStatus
+                                    )}
+                                </select>
+                            </div>
+
+                            <div class="settings-field">
+                                <label>DEFAULT PAYMENT</label>
+                                <select id="setDefaultPayment">
+                                    ${optionList(
+                                        [
+                                            "COD",
+                                            "Online Payment",
+                                            "UPI",
+                                            "Bank Transfer"
+                                        ],
+                                        settings.orders.defaultPayment
+                                    )}
+                                </select>
+                            </div>
+
+                            <div class="settings-field full">
+                                <label>ORDER NOTES</label>
+                                <textarea
+                                    id="setOrderNotes"
+                                    placeholder="Internal order notes...">${escapeHtml(settings.orders.orderNotes)}</textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Allow Order Cancellation</strong>
+                                <small>Customer cancellation option.</small>
+                            </div>
+
+                            ${toggle(
+                                "setAllowCancel",
+                                settings.orders.allowCancel
+                            )}
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Allow Returns</strong>
+                                <small>Return request option.</small>
+                            </div>
+
+                            ${toggle(
+                                "setAllowReturn",
+                                settings.orders.allowReturn
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- SALES -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-salesSettings">
+
+                    <div class="settings-card">
+
+                        <h3>💰 Sales & GST</h3>
+
+                        <p>
+                            Currency, GST, discount and shipping configuration.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>CURRENCY</label>
+                                <select id="setCurrency">
+                                    <option value="INR" ${settings.sales.currency==="INR"?"selected":""}>
+                                        INR — Indian Rupee ₹
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="settings-field">
+                                <label>GST RATE (%)</label>
+                                <input
+                                    id="setGSTRate"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value="${Number(settings.sales.gstRate)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>SHIPPING CHARGE (₹)</label>
+                                <input
+                                    id="setShippingCharge"
+                                    type="number"
+                                    min="0"
+                                    value="${Number(settings.sales.shippingCharge)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>FREE SHIPPING ABOVE (₹)</label>
+                                <input
+                                    id="setFreeShipping"
+                                    type="number"
+                                    min="0"
+                                    value="${Number(settings.sales.freeShippingAbove)}">
+                            </div>
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>GST / Tax Enabled</strong>
+                                <small>Apply GST configuration to sales.</small>
+                            </div>
+
+                            ${toggle(
+                                "setTaxEnabled",
+                                settings.sales.taxEnabled
+                            )}
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Discount Enabled</strong>
+                                <small>Allow discounts in checkout.</small>
+                            </div>
+
+                            ${toggle(
+                                "setDiscountEnabled",
+                                settings.sales.discountEnabled
+                            )}
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Shipping Enabled</strong>
+                                <small>Enable shipping charge rules.</small>
+                            </div>
+
+                            ${toggle(
+                                "setShippingEnabled",
+                                settings.sales.shippingEnabled
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- NOTIFICATIONS -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-notificationsSettings">
+
+                    <div class="settings-card">
+
+                        <h3>🔔 Notifications</h3>
+
+                        <p>
+                            Business alert preferences.
+                        </p>
+
+                        ${notificationToggle(
+                            "setNewOrder",
+                            settings.notifications.newOrder,
+                            "New Order",
+                            "Alert when a new customer order arrives."
+                        )}
+
+                        ${notificationToggle(
+                            "setLowStock",
+                            settings.notifications.lowStock,
+                            "Low Stock",
+                            "Show low stock alerts."
+                        )}
+
+                        ${notificationToggle(
+                            "setCancelledOrder",
+                            settings.notifications.cancelledOrder,
+                            "Cancelled Order",
+                            "Alert when an order is cancelled."
+                        )}
+
+                        ${notificationToggle(
+                            "setDeliveredOrder",
+                            settings.notifications.deliveredOrder,
+                            "Delivered Order",
+                            "Track delivered order alerts."
+                        )}
+
+                        ${notificationToggle(
+                            "setPaymentNotification",
+                            settings.notifications.payment,
+                            "Payment Notifications",
+                            "Show payment-related notifications."
+                        )}
+
+                    </div>
+
+                </div>
+
+                <!-- WEBSITE -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-website">
+
+                    <div class="settings-card">
+
+                        <h3>🎨 Website Settings</h3>
+
+                        <p>
+                            Store branding and customer support information.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>STORE NAME</label>
+                                <input
+                                    id="setStoreName"
+                                    value="${escapeHtml(settings.website.storeName)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>TAGLINE</label>
+                                <input
+                                    id="setStoreTagline"
+                                    value="${escapeHtml(settings.website.tagline)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>SUPPORT EMAIL</label>
+                                <input
+                                    id="setSupportEmail"
+                                    value="${escapeHtml(settings.website.supportEmail)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>SUPPORT PHONE</label>
+                                <input
+                                    id="setSupportPhone"
+                                    value="${escapeHtml(settings.website.supportPhone)}">
+                            </div>
+
+                        </div>
+
+                        <div class="switch-row">
+
+                            <div class="switch-info">
+                                <strong>Maintenance Mode</strong>
+                                <small>
+                                    Website maintenance flag. Enable only when required.
+                                </small>
+                            </div>
+
+                            ${toggle(
+                                "setMaintenance",
+                                settings.website.maintenance
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CHECKOUT -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-checkout">
+
+                    <div class="settings-card">
+
+                        <h3>🛒 Cart & Checkout</h3>
+
+                        <p>
+                            Customer checkout and payment controls.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>MINIMUM ORDER VALUE (₹)</label>
+                                <input
+                                    id="setMinimumOrder"
+                                    type="number"
+                                    min="0"
+                                    value="${Number(settings.checkout.minimumOrder)}">
+                            </div>
+
+                        </div>
+
+                        ${notificationToggle(
+                            "setGuestCheckout",
+                            settings.checkout.guestCheckout,
+                            "Guest Checkout",
+                            "Customers can checkout without creating an account."
+                        )}
+
+                        ${notificationToggle(
+                            "setCOD",
+                            settings.checkout.cod,
+                            "Cash on Delivery",
+                            "Enable COD option."
+                        )}
+
+                        ${notificationToggle(
+                            "setOnlinePayment",
+                            settings.checkout.onlinePayment,
+                            "Online Payment",
+                            "Enable online payment option when configured."
+                        )}
+
+                        ${notificationToggle(
+                            "setRequirePhone",
+                            settings.checkout.requirePhone,
+                            "Phone Required",
+                            "Require customer mobile number."
+                        )}
+
+                        ${notificationToggle(
+                            "setRequireAddress",
+                            settings.checkout.requireAddress,
+                            "Address Required",
+                            "Require delivery address."
+                        )}
+
+                    </div>
+
+                </div>
+
+                <!-- INVOICE -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-invoice">
+
+                    <div class="settings-card">
+
+                        <h3>🧾 Invoice Settings</h3>
+
+                        <p>
+                            A4 invoice and order document configuration.
+                        </p>
+
+                        <div class="settings-form">
+
+                            <div class="settings-field">
+                                <label>INVOICE PREFIX</label>
+                                <input
+                                    id="setInvoicePrefix"
+                                    value="${escapeHtml(settings.invoice.prefix)}">
+                            </div>
+
+                            <div class="settings-field">
+                                <label>FORMAT</label>
+                                <input value="A4 Print" readonly>
+                            </div>
+
+                            <div class="settings-field full">
+                                <label>INVOICE FOOTER</label>
+                                <textarea id="setInvoiceFooter">${escapeHtml(settings.invoice.footer)}</textarea>
+                            </div>
+
+                        </div>
+
+                        ${notificationToggle(
+                            "setShowGST",
+                            settings.invoice.showGST,
+                            "Show GST Details",
+                            "Display GST information on invoice."
+                        )}
+
+                        ${notificationToggle(
+                            "setShowCompanyAddress",
+                            settings.invoice.showCompanyAddress,
+                            "Show Company Address",
+                            "Display company address on invoice."
+                        )}
+
+                        ${notificationToggle(
+                            "setShowPayment",
+                            settings.invoice.showPayment,
+                            "Show Payment Details",
+                            "Display payment method/status."
+                        )}
+
+                    </div>
+
+                </div>
+
+                <!-- SYSTEM -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-system">
+
+                    <div class="settings-card">
+
+                        <h3>🗄️ System & Supabase</h3>
+
+                        <p>
+                            Existing database connection nu change nahi kita gaya.
+                        </p>
+
+                        <div class="system-status">
+
+                            <span
+                                class="status-dot"
+                                id="supabaseDot">
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Supabase Connection
+                                </strong>
+
+                                <small
+                                    id="supabaseStatus"
+                                    style="display:block;color:#777;margin-top:3px">
+                                    Checking...
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="system-status">
+
+                            <span class="status-dot"></span>
+
+                            <div>
+
+                                <strong>
+                                    Storage Bucket
+                                </strong>
+
+                                <small
+                                    style="display:block;color:#777;margin-top:3px">
+                                    ${escapeHtml(IMAGE_BUCKET)}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="system-status">
+
+                            <span class="status-dot"></span>
+
+                            <div>
+
+                                <strong>
+                                    Settings Storage
+                                </strong>
+
+                                <small
+                                    style="display:block;color:#777;margin-top:3px">
+                                    Browser Local Storage
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="settings-actions">
+
+                            <button
+                                class="btn"
+                                onclick="checkSystemStatus()">
+                                🔍 Check Connection
+                            </button>
+
+                            <button
+                                class="btn gray-btn"
+                                onclick="resetSettings()">
+                                ↩ Reset Settings
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="settings-card">
+
+                        <h3>ℹ️ Existing Database</h3>
+
+                        <p>
+                            Dashboard current tables nu use karda hai.
+                        </p>
+
+                        <div class="stat-row">
+                            <span>Orders Table</span>
+                            <strong>orders</strong>
+                        </div>
+
+                        <div class="stat-row">
+                            <span>Products Table</span>
+                            <strong>products</strong>
+                        </div>
+
+                        <div class="stat-row">
+                            <span>Storage</span>
+                            <strong>product-images</strong>
+                        </div>
+
+                        <div class="stat-row">
+                            <span>Authentication</span>
+                            <strong>Supabase Auth</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div
+                    id="settingsSaveStatus"
+                    class="settings-status">
+                    ✓ Settings saved successfully.
+                </div>
+
             </div>
-          </div>
-
-          <div class="settings-panel" id="settings-staff">
-            <div class="settings-card">
-              <h3>👥 Staff Management</h3>
-              <p>Create staff logins and choose exactly what they can access.</p>
-
-              <div class="settings-grid">
-                <div>
-                  <label>Staff Name</label>
-                  <input id="staffName" type="text" placeholder="Staff name">
-                </div>
-                <div>
-                  <label>Email</label>
-                  <input id="staffEmail" type="email" placeholder="staff@example.com">
-                </div>
-                <div>
-                  <label>Password</label>
-                  <input id="staffPassword" type="text" placeholder="Password">
-                </div>
-                <div>
-                  <label>Role</label>
-                  <select id="staffRole">
-                    <option value="Staff">Staff</option>
-                    <option value="Manager">Manager</option>
-                  </select>
-                </div>
-              </div>
-
-              <h4 style="margin:16px 0 8px;">Permissions</h4>
-              <div class="staff-rights-grid">
-                <label><input type="checkbox" value="orders"> 📦 Orders</label>
-                <label><input type="checkbox" value="sales"> 💰 Sales</label>
-                <label><input type="checkbox" value="customers"> 👥 Customers</label>
-                <label><input type="checkbox" value="delivery"> 🚚 Delivery</label>
-                <label><input type="checkbox" value="reports"> 📊 Reports</label>
-                <label><input type="checkbox" value="notifications"> 🔔 Notifications</label>
-                <label><input type="checkbox" value="products"> 📦 Products / Stock</label>
-                <label><input type="checkbox" value="invoices"> 🧾 Invoices</label>
-              </div>
-
-              <button class="primary-btn" type="button" onclick="createStaffLogin()">Create Staff Login</button>
-              <div id="staffCreateStatus" class="settings-status"></div>
-            </div>
-
-            <div class="settings-card">
-              <h3>Staff Accounts</h3>
-              <p>Existing staff accounts.</p>
-              <div id="staffAccountsList">
-                <div class="message">Open Staff Management to load staff accounts.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-panel" id="settings-company"><div class="settings-card"><h3>🏢 Company</h3></div></div>
-          <div class="settings-panel" id="settings-orders"><div class="settings-card"><h3>📦 Orders</h3></div></div>
-          <div class="settings-panel" id="settings-salesSettings"><div class="settings-card"><h3>💰 Sales & GST</h3></div></div>
-          <div class="settings-panel" id="settings-notificationsSettings"><div class="settings-card"><h3>🔔 Notifications</h3></div></div>
-          <div class="settings-panel" id="settings-website"><div class="settings-card"><h3>🎨 Website</h3></div></div>
-          <div class="settings-panel" id="settings-checkout"><div class="settings-card"><h3>🛒 Checkout</h3></div></div>
-          <div class="settings-panel" id="settings-invoice"><div class="settings-card"><h3>🧾 Invoice</h3></div></div>
-          <div class="settings-panel" id="settings-system"><div class="settings-card"><h3>🗄️ System</h3></div></div>
 
         </div>
-      </div>`;
 
-    // Keep the existing settings values/functions available if the original
-    // page defines them.
-    if(typeof getSettings === "function"){
-        try{
-            const s = getSettings();
-            if(s && s.profile){
-                const p = s.profile;
-                document.querySelector("#settings-profile .settings-card p").textContent =
-                    p.name ? "Signed in as " + p.name : "Manage your admin profile settings.";
-            }
-        }catch(e){}
-    }
+    </div>
+    `;
 
-    const first = root.querySelector(".settings-nav button");
-    if(first) openSettingsTab("profile", first);
+    checkSystemStatus();
+
 }
 
 /* =========================================================
@@ -6010,17 +6729,16 @@ function optionList(options,current){
 
 }
 
-function openSettingsTab(tab,button){
-
+function openSettingsTab(tab, button){
     const root = document.getElementById("other-content");
     if(!root) return;
 
-    root.querySelectorAll(".settings-panel").forEach(panel=>{
+    root.querySelectorAll(".settings-panel").forEach(function(panel){
         panel.classList.remove("active");
         panel.style.display = "none";
     });
 
-    root.querySelectorAll(".settings-nav button").forEach(btn=>{
+    root.querySelectorAll(".settings-nav button").forEach(function(btn){
         btn.classList.remove("active");
     });
 
@@ -6035,7 +6753,7 @@ function openSettingsTab(tab,button){
     if(button) button.classList.add("active");
 
     if(tab === "staff" && typeof loadStaffAccounts === "function"){
-        loadStaffAccounts();
+        try { loadStaffAccounts(); } catch(e) { console.error(e); }
     }
 }
 
@@ -6286,8 +7004,6 @@ async function createStaffLogin(){
     const email=document.getElementById("staffEmail")?.value.trim().toLowerCase();
     const password=document.getElementById("staffPassword")?.value || "";
     const role=document.getElementById("staffRole")?.value || "Staff";
-    const permissions={};
-    document.querySelectorAll(".staff-permission").forEach(cb=>{ permissions[cb.value]=cb.checked; });
 
     if(!name || !email || !password){ staffStatus("Name, email and password are required."); return; }
     if(password.length < 8){ staffStatus("Password must be at least 8 characters."); return; }
@@ -6297,7 +7013,7 @@ async function createStaffLogin(){
 
     staffStatus("Creating staff login...", true);
     const {data,error}=await supabaseClient.functions.invoke("create-staff",{
-        body:{name,email,password,role,phone:"",permissions}
+        body:{name,email,password,role,phone:"",permissions:{}}
     });
 
     if(error){
@@ -6852,7 +7568,72 @@ async function copyStaffPassword(){
 </script>
 
 
+<script>
+function showStaffManagement(){
+  const box=document.getElementById("other-content");
+  if(!box) return;
 
+  box.innerHTML=`
+  <div class="admin-box" style="padding:20px;">
+    <div class="admin-header" style="margin-bottom:18px;">
+      <div>
+        <p>STAFF & ACCESS</p>
+        <h2>👥 Staff Management</h2>
+        <small>Create and manage professional staff login accounts.</small>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>STAFF NAME</label>
+        <input id="staffName" type="text" placeholder="e.g. Aman Singh">
+      </div>
+
+      <div class="form-group">
+        <label>STAFF EMAIL</label>
+        <input id="staffEmail" type="email" placeholder="staff@company.com">
+      </div>
+
+      <div class="form-group">
+        <label>SECURE PASSWORD</label>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          <input id="staffPassword" type="password" minlength="8"
+                 placeholder="Generate secure password" style="flex:1;min-width:190px;">
+          <button type="button" class="btn outline-btn" onclick="generateStaffPassword()">🔐 Generate</button>
+          <button type="button" class="btn outline-btn" onclick="toggleStaffPassword()">👁 Show</button>
+          <button type="button" class="btn outline-btn" onclick="copyStaffPassword()">📋 Copy</button>
+        </div>
+        <small id="staffPasswordHint" style="display:block;margin-top:6px;color:#6b7280;">
+          Minimum 8 characters.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>ROLE</label>
+        <select id="staffRole">
+          <option value="Staff">Staff</option>
+          <option value="Manager">Manager</option>
+          <option value="Sales">Sales</option>
+          <option value="Stock">Stock</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;">
+      <button type="button" class="btn" onclick="createStaffLogin()">➕ Create Staff Login</button>
+    </div>
+    <div id="staffCreateStatus" class="message" style="display:none;margin-top:12px;"></div>
+
+    <div class="admin-box" style="margin-top:18px;padding:0;">
+      <div class="admin-header"><h3>Existing Staff Accounts</h3></div>
+      <div id="staffAccountsList" style="padding:14px;">
+        <div class="message">No staff accounts loaded yet.</div>
+      </div>
+    </div>
+  </div>`;
+  if(typeof loadStaffAccounts==="function") loadStaffAccounts();
+}
+</script>
 
 </body>
 </html>
