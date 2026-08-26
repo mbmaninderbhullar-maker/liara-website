@@ -2722,125 +2722,135 @@ function renderSales(orders){
 
 async function loadStock(){
 
-    document.getElementById(
-        "other-content"
-    ).innerHTML = `
+    document.getElementById("other-content").innerHTML = `
 
     <div class="admin-box">
 
         <div class="admin-header">
-
             <div>
                 <p>INVENTORY MANAGEMENT</p>
                 <h2>📦 Stock Management</h2>
             </div>
 
-            <button class="btn" onclick="loadStock()">
-                🔄 Refresh
-            </button>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn" onclick="showOfflineStockForm()">
+                    ➕ Give Offline Stock
+                </button>
 
+                <button class="btn" onclick="loadStock()">
+                    🔄 Refresh
+                </button>
+            </div>
         </div>
 
         <div class="stock-cards">
 
             <div class="stock-card">
-                <span>Total Products</span>
-                <strong id="stockTotal">0</strong>
+                <span>Total Stock</span>
+                <strong id="stockTotalQty">0</strong>
             </div>
 
             <div class="stock-card">
-                <span>Low Stock</span>
-                <strong id="stockLow">0</strong>
+                <span>Online Sold</span>
+                <strong id="stockOnlineSold">0</strong>
             </div>
 
             <div class="stock-card">
-                <span>Out of Stock</span>
-                <strong id="stockOut">0</strong>
+                <span>Offline Given</span>
+                <strong id="stockOfflineGiven">0</strong>
+            </div>
+
+            <div class="stock-card">
+                <span>Remaining</span>
+                <strong id="stockRemaining">0</strong>
             </div>
 
         </div>
+
+        <div id="offlineStockForm"></div>
 
         <div id="stockTable">
             <div class="message">Loading stock...</div>
         </div>
 
+        <div style="margin-top:25px;">
+            <h3>🧾 Offline Stock History</h3>
+            <div id="offlineStockHistory">
+                <div class="message">Loading history...</div>
+            </div>
+        </div>
+
     </div>
     `;
 
-    const user =
-        await checkAdmin();
-
+    const user = await checkAdmin();
     if(!user) return;
 
     const {data,error} =
         await supabaseClient
         .from("products")
         .select("*")
-        .order(
-            "created_at",
-            {ascending:false}
-        );
+        .order("created_at",{ascending:false});
 
     if(error){
-
-        document.getElementById(
-            "stockTable"
-        ).innerHTML = `
-            <div class="message error">
-                ${escapeHtml(error.message)}
-            </div>
-        `;
-
+        document.getElementById("stockTable").innerHTML =
+            `<div class="message error">${escapeHtml(error.message)}</div>`;
         return;
-
     }
 
     allProducts = data || [];
-
-    renderStock(allProducts);
-
+    await renderStock(allProducts);
+    await loadOfflineStockHistory();
 }
 
-function renderStock(products){
 
-    let low = 0;
-    let out = 0;
+async function renderStock(products){
+
+    const productIds = products.map(p=>p.id);
+
+    let transactions = [];
+
+    if(productIds.length){
+
+        const {data,error} =
+            await supabaseClient
+            .from("stock_transactions")
+            .select("*")
+            .in("product_id",productIds);
+
+        if(!error) transactions = data || [];
+    }
+
+    let totalStock = 0;
+    let onlineSold = 0;
+    let offlineGiven = 0;
 
     products.forEach(product=>{
 
-        const stock =
+        const current =
             Number(product.stock || 0);
 
-        const minimum =
-            Number(product.low_stock || 5);
+        totalStock += current;
 
-        if(stock <= 0) out++;
-        else if(stock <= minimum) low++;
+        const tx =
+            transactions.filter(t =>
+                Number(t.product_id) === Number(product.id)
+            );
 
+        offlineGiven += tx
+            .filter(t=>t.transaction_type === "offline_out")
+            .reduce((sum,t)=>sum + Number(t.quantity || 0),0);
+
+        onlineSold += tx
+            .filter(t=>t.transaction_type === "sale")
+            .reduce((sum,t)=>sum + Number(t.quantity || 0),0);
     });
 
-    document.getElementById("stockTotal").innerText =
-        products.length;
+    document.getElementById("stockTotalQty").innerText = totalStock;
+    document.getElementById("stockOnlineSold").innerText = onlineSold;
+    document.getElementById("stockOfflineGiven").innerText = offlineGiven;
+    document.getElementById("stockRemaining").innerText = totalStock;
 
-    document.getElementById("stockLow").innerText =
-        low;
-
-    document.getElementById("stockOut").innerText =
-        out;
-
-    if(!products.length){
-
-        document.getElementById(
-            "stockTable"
-        ).innerHTML = `
-            <div class="message">
-                No products added yet.
-            </div>
-        `;
-
-        return;
-
-    }
 
     let html = `
     <div class="table-wrapper">
@@ -2848,9 +2858,10 @@ function renderStock(products){
     <thead>
     <tr>
         <th>PRODUCT</th>
-        <th>PRICE</th>
-        <th>CURRENT STOCK</th>
-        <th>MINIMUM</th>
+        <th>TOTAL / CURRENT</th>
+        <th>ONLINE SOLD</th>
+        <th>OFFLINE GIVEN</th>
+        <th>REMAINING</th>
         <th>STATUS</th>
         <th>UPDATE</th>
     </tr>
@@ -2860,71 +2871,66 @@ function renderStock(products){
 
     products.forEach(product=>{
 
-        const stock =
-            Number(product.stock || 0);
+        const stock = Number(product.stock || 0);
+        const minimum = Number(product.low_stock || 5);
 
-        const minimum =
-            Number(product.low_stock || 5);
+        const tx =
+            transactions.filter(t =>
+                Number(t.product_id) === Number(product.id)
+            );
+
+        const offline =
+            tx.filter(t=>t.transaction_type === "offline_out")
+              .reduce((sum,t)=>sum + Number(t.quantity || 0),0);
+
+        const online =
+            tx.filter(t=>t.transaction_type === "sale")
+              .reduce((sum,t)=>sum + Number(t.quantity || 0),0);
 
         let status = "In Stock";
         let cls = "stock-ok";
 
         if(stock <= 0){
-
             status = "Out of Stock";
             cls = "stock-out";
-
-        }
-        else if(stock <= minimum){
-
+        }else if(stock <= minimum){
             status = "Low Stock";
             cls = "stock-low";
-
         }
 
         html += `
         <tr>
 
             <td>
-                <strong>
-                    ${escapeHtml(product.name)}
-                </strong>
+                <strong>${escapeHtml(product.name)}</strong>
             </td>
-
-            <td>${money(product.price)}</td>
 
             <td>
-
-                <input
-                    class="stock-input"
-                    id="stock-${escapeHtml(String(product.id))}"
-                    type="number"
-                    min="0"
-                    value="${stock}">
-
+                ${stock}
             </td>
 
-            <td>${minimum}</td>
+            <td>${online}</td>
+
+            <td>${offline}</td>
+
+            <td>
+                <strong>${stock}</strong>
+            </td>
 
             <td class="${cls}">
                 ${status}
             </td>
 
             <td>
-
                 <button
                     class="table-btn edit-btn"
-                    onclick="updateStock(
-                        '${escapeHtml(String(product.id))}'
-                    )">
-                    Save
+                    onclick="updateStock('${escapeHtml(String(product.id))}')">
+                    Update
                 </button>
-
             </td>
 
         </tr>
         `;
-
     });
 
     html += `
@@ -2933,38 +2939,309 @@ function renderStock(products){
     </div>
     `;
 
-    document.getElementById(
-        "stockTable"
-    ).innerHTML = html;
-
+    document.getElementById("stockTable").innerHTML = html;
 }
+
+
+function showOfflineStockForm(){
+
+    const box =
+        document.getElementById("offlineStockForm");
+
+    const options =
+        (allProducts || [])
+        .map(p =>
+            `<option value="${p.id}">
+                ${escapeHtml(p.name)}
+            </option>`
+        )
+        .join("");
+
+    box.innerHTML = `
+
+    <div class="admin-box"
+         style="margin:20px 0;border:1px solid #ddd;">
+
+        <h3>📦 Give Stock Offline</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Product</label>
+
+                <select id="offlineProductInput">
+                    ${options}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Quantity</label>
+
+                <input
+                    id="offlineQuantityInput"
+                    type="number"
+                    min="1"
+                    placeholder="e.g. 20">
+            </div>
+
+            <div class="form-group">
+                <label>Party / Customer Name</label>
+
+                <input
+                    id="offlinePartyInput"
+                    type="text"
+                    placeholder="e.g. ABC Medical Store">
+            </div>
+
+            <div class="form-group full">
+                <label>Note</label>
+
+                <textarea
+                    id="offlineNoteInput"
+                    placeholder="Optional note..."></textarea>
+            </div>
+
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:10px;">
+
+            <button
+                class="btn"
+                onclick="saveOfflineStock()">
+                💾 Save Offline Stock
+            </button>
+
+            <button
+                class="btn gray-btn"
+                onclick="document.getElementById('offlineStockForm').innerHTML=''">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+    `;
+}
+
+
+async function saveOfflineStock(){
+
+    const productId =
+        document.getElementById("offlineProductInput").value;
+
+    const quantity =
+        Number(document.getElementById("offlineQuantityInput").value);
+
+    const party =
+        document.getElementById("offlinePartyInput").value.trim();
+
+    const note =
+        document.getElementById("offlineNoteInput").value.trim();
+
+    const product =
+        (allProducts || []).find(
+            p=>String(p.id) === String(productId)
+        );
+
+    if(!product){
+        alert("Product select karo.");
+        return;
+    }
+
+    if(!Number.isInteger(quantity) || quantity <= 0){
+        alert("Valid quantity pao.");
+        return;
+    }
+
+    const currentStock =
+        Number(product.stock || 0);
+
+    if(quantity > currentStock){
+        alert(
+            "Stock available nahi hai.\n\n" +
+            "Available: " + currentStock +
+            "\nRequested: " + quantity
+        );
+        return;
+    }
+
+    const {error:txError} =
+        await supabaseClient
+        .from("stock_transactions")
+        .insert({
+            product_id: product.id,
+            transaction_type: "offline_out",
+            quantity: quantity,
+            party_name: party || null,
+            note: note || null
+        });
+
+    if(txError){
+        alert(
+            "Offline stock record failed:\n\n" +
+            txError.message
+        );
+        return;
+    }
+
+    const newStock =
+        currentStock - quantity;
+
+    const {error:updateError} =
+        await supabaseClient
+        .from("products")
+        .update({stock:newStock})
+        .eq("id",product.id);
+
+    if(updateError){
+
+        alert(
+            "Stock update failed:\n\n" +
+            updateError.message
+        );
+
+        return;
+    }
+
+    alert("Offline stock saved successfully.");
+
+    loadStock();
+}
+
+
+async function loadOfflineStockHistory(){
+
+    const box =
+        document.getElementById("offlineStockHistory");
+
+    if(!box) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("stock_transactions")
+        .select("*")
+        .eq("transaction_type","offline_out")
+        .order("created_at",{ascending:false});
+
+    if(error){
+
+        box.innerHTML =
+            `<div class="message error">
+                ${escapeHtml(error.message)}
+            </div>`;
+
+        return;
+    }
+
+    if(!data || !data.length){
+
+        box.innerHTML =
+            `<div class="message">
+                No offline stock records yet.
+            </div>`;
+
+        return;
+    }
+
+    const productMap =
+        Object.fromEntries(
+            (allProducts || []).map(p=>[
+                String(p.id),
+                p.name
+            ])
+        );
+
+    let html = `
+    <div class="table-wrapper">
+    <table class="data-table">
+    <thead>
+    <tr>
+        <th>DATE</th>
+        <th>PRODUCT</th>
+        <th>QTY</th>
+        <th>PARTY / CUSTOMER</th>
+        <th>NOTE</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    data.forEach(row=>{
+
+        const date =
+            new Date(row.created_at)
+            .toLocaleString("en-IN");
+
+        html += `
+        <tr>
+
+            <td>${escapeHtml(date)}</td>
+
+            <td>
+                ${escapeHtml(
+                    productMap[String(row.product_id)] ||
+                    "Product"
+                )}
+            </td>
+
+            <td>
+                <strong>${Number(row.quantity || 0)}</strong>
+            </td>
+
+            <td>
+                ${escapeHtml(row.party_name || "-")}
+            </td>
+
+            <td>
+                ${escapeHtml(row.note || "-")}
+            </td>
+
+        </tr>
+        `;
+    });
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    `;
+
+    box.innerHTML = html;
+}
+
 
 async function updateStock(id){
 
-    const input =
-        document.getElementById("stock-"+id);
+    const product =
+        (allProducts || []).find(
+            p=>String(p.id) === String(id)
+        );
 
-    if(!input) return;
+    if(!product) return;
 
-    const stock =
-        Number(input.value);
+    const value =
+        prompt(
+            "Current stock quantity:",
+            Number(product.stock || 0)
+        );
 
-    if(
-        !Number.isInteger(stock) ||
-        stock < 0
-    ){
+    if(value === null) return;
+
+    const stock = Number(value);
+
+    if(!Number.isInteger(stock) || stock < 0){
 
         alert("Valid stock quantity pao.");
         return;
-
     }
+
+    const difference =
+        stock - Number(product.stock || 0);
 
     const {error} =
         await supabaseClient
         .from("products")
-        .update({
-            stock:stock
-        })
+        .update({stock:stock})
         .eq("id",id);
 
     if(error){
@@ -2975,13 +3252,32 @@ async function updateStock(id){
         );
 
         return;
-
     }
 
-    alert("Stock updated successfully.");
+    if(difference > 0){
+
+        await supabaseClient
+        .from("stock_transactions")
+        .insert({
+            product_id: product.id,
+            transaction_type: "purchase",
+            quantity: difference,
+            note: "Stock added manually"
+        });
+
+    }else if(difference < 0){
+
+        await supabaseClient
+        .from("stock_transactions")
+        .insert({
+            product_id: product.id,
+            transaction_type: "adjustment",
+            quantity: Math.abs(difference),
+            note: "Stock adjusted manually"
+        });
+    }
 
     loadStock();
-
 }
 
 /* =========================================================
