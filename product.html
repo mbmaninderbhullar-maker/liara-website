@@ -319,6 +319,7 @@ body {
 .product-info {
     grid-column: 2;
     grid-row: 1;
+    align-self: start;
 }
 
 .product-detail .ingredients-section,
@@ -867,6 +868,55 @@ body {
 
     .product-info h1{
         font-size:27px !important;
+    }
+}
+
+
+/* =====================================================
+   PURCHASE SECTION BESIDE PRODUCT PHOTO
+   Price → Description → Stock → Quantity → Buttons
+===================================================== */
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info .purchase-area {
+    width: 100%;
+    margin-top: 22px;
+}
+
+.product-info .purchase-area .stock-text {
+    margin: 0 0 12px;
+}
+
+.product-info .purchase-area .quantity-box {
+    margin: 0 0 14px;
+}
+
+.product-info .purchase-area .action-buttons {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.product-info .purchase-area .action-buttons button {
+    flex: 1;
+}
+
+/* Mobile: same clean order, one column */
+@media (max-width: 900px) {
+    .product-info .purchase-area {
+        margin-top: 18px;
+    }
+
+    .product-info .purchase-area .action-buttons {
+        flex-direction: column;
+    }
+
+    .product-info .purchase-area .action-buttons button {
+        width: 100%;
     }
 }
 
@@ -1443,10 +1493,7 @@ async function loadProduct() {
                     ${escapeHtml(description)}
                 </div>
 
-            </div>
-
-
-            <!-- PURCHASE AREA
+<!-- PURCHASE AREA
                  Desktop: under product photo
                  Mobile: above detail sections
             -->
@@ -1516,6 +1563,10 @@ async function loadProduct() {
 
                     `
                 }
+
+            </div>
+
+
 
             </div>
 
