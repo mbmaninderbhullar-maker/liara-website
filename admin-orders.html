@@ -1942,49 +1942,21 @@ async function checkAdmin(){
 ========================================================= */
 
 async function loadOrders(){
-
-    const box =
-        document.getElementById("orders");
-
-    box.innerHTML = `
-        <div class="message">
-            Loading customer orders...
-        </div>
-    `;
-
-    const user =
-        await checkAdmin();
-
-    if(!user) return;
-
-    const {data,error} =
-        await supabaseClient
-        .from("orders")
-        .select("*")
-        .order(
-            "created_at",
-            {ascending:false}
-        );
-
-    if(error){
-
-        box.innerHTML = `
-            <div class="message error">
-                Unable to load orders.
-                <br><br>
-                ${escapeHtml(error.message)}
-            </div>
-        `;
-
-        return;
-
+    const box=document.getElementById("orders");
+    if(!box) return;
+    box.innerHTML='<div class="message">Loading customer orders...</div>';
+    try{
+        const user=await checkAdmin();
+        if(!user) return;
+        const result=await supabaseClient.from("orders").select("*").order("created_at",{ascending:false});
+        if(result.error) throw result.error;
+        allOrders=result.data||[];
+        updateOrderSummary(allOrders);
+        renderOrders(allOrders);
+    }catch(err){
+        console.error("Orders load error:",err);
+        box.innerHTML=`<div class="message error">Unable to load orders.<br><br>${escapeHtml(err?.message||String(err))}<br><br><button class="btn" onclick="loadOrders()">Retry</button></div>`;
     }
-
-    allOrders = data || [];
-
-    updateOrderSummary(allOrders);
-    renderOrders(allOrders);
-
 }
 
 function updateOrderSummary(orders){
@@ -3667,6 +3639,83 @@ async function renderParties(){
     });
     html+=`</div>`;
     box.innerHTML=html;
+}
+
+
+async function showPartySaleForm(id){
+    const box=document.getElementById("partyForm");
+    if(!box) return;
+
+    const {data:party,error:partyError}=await supabaseClient
+        .from("parties").select("*").eq("id",id).single();
+
+    if(partyError){ alert(partyError.message); return; }
+
+    const {data:products,error}=await supabaseClient
+        .from("products").select("id,name,stock").order("name",{ascending:true});
+
+    if(error){ alert(error.message); return; }
+
+    box.innerHTML=`
+      <div class="admin-box party-sale-form" style="margin:16px 0;border:1px solid #e5e7eb;">
+        <div class="admin-header">
+          <div>
+            <p>PARTY ACCOUNT</p>
+            <h3>📦 Give Stock — ${escapeHtml(party.name||"Party")}</h3>
+          </div>
+          <button class="btn gray-btn" onclick="document.getElementById('partyForm').innerHTML=''">Close</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Product</label>
+            <select id="partySaleProduct">
+              ${(products||[]).map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name)} — Stock: ${Number(x.stock||0)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quantity</label>
+            <input id="partySaleQty" type="number" min="1" value="1">
+          </div>
+          <div class="form-group">
+            <label>Rate</label>
+            <input id="partySaleRate" type="number" min="0" step="0.01" value="0">
+          </div>
+          <div class="form-group">
+            <label>Total</label>
+            <input id="partySaleAmount" type="number" min="0" step="0.01" value="0">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <button class="btn" onclick="savePartySale('${escapeHtml(String(id))}')">💾 Save Stock</button>
+          <button class="btn gray-btn" onclick="document.getElementById('partyForm').innerHTML=''">Cancel</button>
+        </div>
+      </div>`;
+}
+async function savePartySale(partyId){
+    const productId=document.getElementById("partySaleProduct")?.value;
+    const qty=Number(document.getElementById("partySaleQty")?.value||0);
+    const rate=Number(document.getElementById("partySaleRate")?.value||0);
+    const amount=Number(document.getElementById("partySaleAmount")?.value || qty*rate);
+    if(!productId || qty<=0){ alert("Product and valid quantity are required."); return; }
+
+    const {data:product,error:pe}=await supabaseClient.from("products")
+        .select("id,name,stock").eq("id",productId).single();
+    if(pe){ alert(pe.message); return; }
+    if(Number(product.stock||0)<qty){ alert("Not enough stock available."); return; }
+
+    const {error:te}=await supabaseClient.from("party_transactions").insert({
+        party_id:partyId, product_id:productId, transaction_type:"sale",
+        quantity:qty, amount:amount, note:"Stock given to party"
+    });
+    if(te){ alert(te.message); return; }
+
+    const {error:ue}=await supabaseClient.from("products")
+        .update({stock:Number(product.stock||0)-qty}).eq("id",productId);
+    if(ue){ alert("Sale saved but stock update failed: "+ue.message); return; }
+
+    document.getElementById("partyForm").innerHTML="";
+    await renderParties();
+    alert("Stock given successfully.");
 }
 
 async function viewParty(id){
