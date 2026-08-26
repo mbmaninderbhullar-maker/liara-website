@@ -1280,6 +1280,16 @@ body{
     margin:0!important;
 }
 </style>
+
+<style id="liara-staff-compact-fix">
+.settings-layout{grid-template-columns:180px minmax(0,1fr)!important;gap:3px!important}
+.settings-nav{padding:4px!important;border-radius:9px!important}
+.settings-nav button{padding:7px 8px!important;margin:1px 0!important;font-size:11px!important;line-height:1.1!important}
+.settings-layout>div:last-child{min-width:0!important;margin:0!important}
+.staff-standalone-box{margin:0!important;padding:18px!important}
+.staff-standalone-box .settings-card{margin-bottom:10px!important;padding:16px!important}
+@media(max-width:900px){.settings-layout{grid-template-columns:1fr!important;gap:4px!important}.settings-nav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:2px!important}}
+</style>
 </head>
 
 <body>
@@ -5777,7 +5787,7 @@ function loadSettings(){
                 </button>
 
 <button type="button" id="staffManagementNavBtn"
-        onclick="showStaffManagement(this);">
+        onclick="showStaffManagement();">
   👥 Staff Management
 </button>
 
@@ -6746,27 +6756,72 @@ function optionList(options,current){
 
 }
 
-function showStaffManagement(button){
-    const staffPanel = document.getElementById("settings-staff");
-    if(!staffPanel) return;
+function showStaffManagement(){
+    const box = document.getElementById("other-content");
+    if(!box) return;
 
-    document.querySelectorAll(".settings-panel").forEach(panel=>{
-        panel.classList.remove("active");
-        panel.style.display = "none";
-    });
+    box.innerHTML = `
+      <div class="admin-box staff-standalone-box">
+        <div class="admin-header">
+          <div>
+            <p>LIARA PROFESSIONAL™</p>
+            <h2>👥 Staff Management</h2>
+          </div>
+          <button class="btn outline-btn" type="button" onclick="loadSettings()">← Back to Settings</button>
+        </div>
 
-    document.querySelectorAll(".settings-nav button").forEach(btn=>{
-        btn.classList.remove("active");
-    });
+        <div class="settings-card">
+          <h3>Create Staff Login</h3>
+          <p>Create staff logins and manage existing staff passwords.</p>
+          <div class="settings-form">
+            <div class="settings-field">
+              <label>STAFF NAME</label>
+              <input id="staffName" placeholder="Staff name">
+            </div>
+            <div class="settings-field">
+              <label>STAFF EMAIL</label>
+              <input id="staffEmail" type="email" placeholder="staff@example.com">
+            </div>
+            <div class="settings-field full">
+              <label>SECURE STAFF PASSWORD</label>
+              <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">
+                <input id="staffPassword" type="password" minlength="8" placeholder="Generate secure password" style="flex:1;min-width:180px;">
+                <button class="btn outline-btn" type="button" onclick="generateStaffPassword()">🔐 Generate</button>
+                <button class="btn outline-btn" type="button" onclick="toggleStaffPassword()">👁 Show</button>
+                <button class="btn outline-btn" type="button" onclick="copyStaffPassword()">📋 Copy</button>
+              </div>
+              <small id="staffPasswordHint" style="display:block;margin-top:6px;color:#6b7280;">Use a unique password for this staff member.</small>
+            </div>
+            <div class="settings-field">
+              <label>ROLE</label>
+              <select id="staffRole">
+                <option value="Staff">Staff</option>
+                <option value="Manager">Manager</option>
+              </select>
+            </div>
+          </div>
+          <div class="settings-actions">
+            <button class="btn" type="button" onclick="createStaffLogin()">Create Staff Login</button>
+            <button class="btn outline-btn" type="button" onclick="loadStaffAccounts()">Refresh Staff</button>
+          </div>
+          <div id="staffCreateStatus" class="settings-status"></div>
+        </div>
 
-    staffPanel.classList.add("active");
-    staffPanel.style.display = "block";
+        <div class="settings-card">
+          <h3>Staff Accounts</h3>
+          <p>Existing staff accounts from the staff_profiles table.</p>
+          <div id="staffAccountsList">
+            <div class="message">Loading staff accounts...</div>
+          </div>
+        </div>
+      </div>`;
 
-    if(button) button.classList.add("active");
+    // Make sure the staff button is visually active if the Settings nav still exists.
+    document.querySelectorAll(".settings-nav button").forEach(btn=>btn.classList.remove("active"));
+    const staffBtn=document.getElementById("staffManagementNavBtn");
+    if(staffBtn) staffBtn.classList.add("active");
 
-    if(typeof loadStaffAccounts === "function"){
-        loadStaffAccounts();
-    }
+    if(typeof loadStaffAccounts === "function") loadStaffAccounts();
 }
 
 function openSettingsTab(tab,button){
