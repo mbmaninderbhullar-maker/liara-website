@@ -1289,6 +1289,8 @@ body{
 .staff-standalone-box{margin:0!important;padding:18px!important}
 .staff-standalone-box .settings-card{margin-bottom:10px!important;padding:16px!important}
 @media(max-width:900px){.settings-layout{grid-template-columns:1fr!important;gap:4px!important}.settings-nav{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:2px!important}}
+.staff-standalone-box{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;}
+#other-content{display:block!important;visibility:visible!important;}
 </style>
 </head>
 
@@ -1827,6 +1829,7 @@ function showSection(section,button){
     else if(section === "notifications") loadNotifications();
     else if(section === "parties") loadParties();
     else if(section === "settings") loadSettings();
+    else if(section === "staff") showStaffManagement();
 
     closeSidebar();
 
@@ -5787,7 +5790,7 @@ function loadSettings(){
                 </button>
 
 <button type="button" id="staffManagementNavBtn"
-        onclick="showStaffManagement();">
+        onclick="showSection('staff',this);">
   👥 Staff Management
 </button>
 
@@ -6757,8 +6760,13 @@ function optionList(options,current){
 }
 
 function showStaffManagement(){
+    const otherSection = document.getElementById("other-section");
+    const emailPanel = document.getElementById("emailPanel");
     const box = document.getElementById("other-content");
     if(!box) return;
+
+    if(otherSection) otherSection.style.display = "block";
+    if(emailPanel) emailPanel.style.display = "none";
 
     box.innerHTML = `
       <div class="admin-box staff-standalone-box">
