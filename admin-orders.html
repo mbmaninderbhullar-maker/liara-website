@@ -3645,7 +3645,7 @@ async function saveParty(){
 }
 
 
-async async function renderParties(){
+async function renderParties(){
     const box=document.getElementById("partiesList");
     const {data:parties,error:partyError}=await supabaseClient.from("parties").select("*").order("name",{ascending:true});
     if(partyError){box.innerHTML=`<div class="message error">${escapeHtml(partyError.message)}</div>`;return;}
