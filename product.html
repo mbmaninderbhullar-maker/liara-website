@@ -437,6 +437,54 @@ body {
     }
 }
 
+
+/* =====================================================
+   PRODUCT DETAIL SECTIONS
+===================================================== */
+
+.product-detail-section {
+    margin: 5px 0 24px;
+    padding: 22px;
+    background: #faf8f5;
+    border: 1px solid #eee5d7;
+    border-radius: 16px;
+}
+
+.product-detail-title {
+    margin: 0 0 14px;
+    font-size: 21px;
+    color: #222;
+    font-weight: 700;
+}
+
+.product-detail-title span {
+    margin-right: 6px;
+}
+
+.product-detail-content {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.75;
+}
+
+.detail-line {
+    margin-bottom: 7px;
+}
+
+.detail-line:last-child {
+    margin-bottom: 0;
+}
+
+@media(max-width:600px) {
+    .product-detail-section {
+        padding: 18px;
+    }
+
+    .product-detail-title {
+        font-size: 19px;
+    }
+}
+
 </style>
 
 </head>
@@ -803,6 +851,34 @@ function renderIngredients(value) {
 }
 
 
+
+/* =====================================================
+   RENDER PRODUCT DETAILS
+===================================================== */
+
+function renderTextSection(title, icon, value) {
+    const text = String(value || "").trim();
+    if (!text) return "";
+
+    const items = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+
+    const content = items.map(item =>
+        `<div class="detail-line">${escapeHtml(item)}</div>`
+    ).join("");
+
+    return `
+        <div class="product-detail-section">
+            <h2 class="product-detail-title">
+                <span>${icon}</span>
+                ${title}
+            </h2>
+            <div class="product-detail-content">
+                ${content}
+            </div>
+        </div>
+    `;
+}
+
 /* =====================================================
    LOAD PRODUCT
 ===================================================== */
@@ -925,6 +1001,14 @@ async function loadProduct() {
         product.key_ingredients ||
         "";
 
+    const howToUse =
+        product.how_to_use ||
+        "";
+
+    const benefits =
+        product.benefits ||
+        "";
+
 
     document.title =
         name +
@@ -994,6 +1078,14 @@ async function loadProduct() {
                 <!-- KEY INGREDIENTS -->
 
                 ${renderIngredients(keyIngredients)}
+
+                <!-- HOW TO USE -->
+
+                ${renderTextSection("How to Use", "🧴", howToUse)}
+
+                <!-- BENEFITS -->
+
+                ${renderTextSection("Benefits", "✨", benefits)}
 
 
 
