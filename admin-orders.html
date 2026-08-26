@@ -1206,6 +1206,30 @@ body{
         margin:15px 0;
     }
 }
+
+/* Compact party account summary */
+.party-compact-summary {
+    display:grid !important;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:8px !important;
+    margin:12px 0 !important;
+}
+.party-compact-summary .stock-card {
+    padding:9px 10px !important;
+    min-height:58px !important;
+    border-radius:8px !important;
+}
+.party-compact-summary .stock-card span {
+    font-size:11px !important;
+}
+.party-compact-summary .stock-card strong {
+    font-size:17px !important;
+}
+@media(max-width:700px){
+    .party-compact-summary {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
 </style>
 </head>
 
@@ -3462,7 +3486,7 @@ async function saveParty(){
         document.getElementById("partyNoteInput").value.trim();
 
     if(!name){
-        alert("Party name pao.");
+        alert("Please enter the party name.");
         return;
     }
 
@@ -3748,7 +3772,7 @@ async function viewParty(id){
 
         </div>
 
-        <div class="stock-cards">
+        <div class="stock-cards party-compact-summary">
 
             <div class="stock-card">
                 <span>Total Pieces</span>
@@ -3776,8 +3800,8 @@ async function viewParty(id){
             <strong>Account Summary</strong>
             <div style="margin-top:7px;color:#666;">
                 ${balance > 0
-                    ? "🔴 Party ton ₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2})+" lene baki ne."
-                    : "🟢 Account settled / koi baki nahi."}
+                    ? "🔴 Balance due: ₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2})+" "
+                    : "🟢 Account settled — no balance due."}
             </div>
         </div>
 
@@ -3809,7 +3833,7 @@ async function viewParty(id){
 
         <div class="no-print"
              style="margin-top:20px;color:#777;">
-            Tip: Print Account naal complete party statement paper te save/print kar sakde ho.
+            Tip: Use Print Account to print or save the complete party statement.
         </div>
 
     </div>
@@ -3825,14 +3849,14 @@ function printPartyAccount(){
 async function addPartyPayment(id){
 
     const amountRaw =
-        prompt("Payment received ₹:", "");
+        prompt("Payment received: ₹:", "");
 
     if(amountRaw === null) return;
 
     const amount = Number(amountRaw);
 
     if(!Number.isFinite(amount) || amount <= 0){
-        alert("Valid payment amount pao.");
+        alert("Please enter a valid payment amount.");
         return;
     }
 
@@ -3852,14 +3876,14 @@ async function addPartyPayment(id){
 
     if(error){
         alert(
-            "Payment save failed:\n\n" +
+            "Payment could not be saved:\n\n" +
             error.message
         );
         return;
     }
 
     alert(
-        "Payment received ₹" +
+        "Payment received: ₹" +
         amount.toLocaleString("en-IN") +
         " successfully."
     );
