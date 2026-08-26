@@ -4,6 +4,57 @@
 <head>
 
 <meta charset="UTF-8">
+<head>
+<!DOCTYPE html>
+<html lang="en">
+<style>
+/* Desktop screen size fix */
+@media (min-width: 1200px) {
+  .container,
+  .products-container,
+  .product-container,
+  .products-grid {
+    width: 100%;
+    max-width: 1250px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Very large screens */
+@media (min-width: 1600px) {
+  .container,
+  .products-container,
+  .product-container,
+  .products-grid {
+    max-width: 1300px;
+  }
+}
+
+/* Laptop */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .container,
+  .products-container,
+  .product-container,
+  .products-grid {
+    width: 94%;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}
+</style>
+<head>
+
+<meta charset="UTF-8">
 
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
