@@ -1173,24 +1173,6 @@ body{
         display:none;
     }
 }
-
-
-/* ================= STAFF MANAGEMENT ================= */
-.staff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
-.staff-card{background:#fff;border:1px solid #e9e4dc;border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,.04)}
-.staff-card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.staff-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f0e4cc;color:#8d6827;font-weight:700;font-size:17px;overflow:hidden}
-.staff-avatar img{width:100%;height:100%;object-fit:cover}
-.staff-name{font-weight:700}.staff-email{font-size:12px;color:#777;word-break:break-all}
-.staff-role{display:inline-block;margin-top:5px;padding:4px 8px;border-radius:999px;background:#f5f1e9;color:#8b672a;font-size:10px;font-weight:700}
-.staff-status{font-size:11px;font-weight:700}.staff-status.active{color:#287a3e}.staff-status.inactive{color:#a23b32}
-.permission-list{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}.permission-chip{font-size:10px;padding:5px 7px;background:#f5f5f5;border-radius:6px;color:#555}
-.staff-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.staff-actions button{border:0;border-radius:7px;padding:8px 10px;cursor:pointer;font-size:11px}
-.staff-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.staff-form .full{grid-column:1/-1}
-.staff-permissions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:8px}.permission-toggle{display:flex;gap:7px;align-items:center;border:1px solid #e7e2da;border-radius:8px;padding:9px;font-size:11px;background:#faf9f7}
-.staff-note{padding:12px;border-radius:9px;background:#fff8e8;border:1px solid #ead7aa;color:#72551f;font-size:12px;line-height:1.5;margin-top:14px}
-@media(max-width:700px){.staff-form{grid-template-columns:1fr}.staff-form .full{grid-column:auto}}
-
 </style>
 </head>
 
@@ -1218,7 +1200,6 @@ body{
         <button onclick="showSection('delivery',this)">🚚 Delivery</button>
         <button onclick="showSection('reports',this)">📊 Reports</button>
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
-        <button data-permission="staff" onclick="showSection('staff',this)">👥 Staff Management</button>
         <button onclick="showSection('settings',this)">⚙️ Settings</button>
 
         <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
@@ -1248,7 +1229,7 @@ body{
     <div class="header-right">
 
         <div class="admin-pill">
-            👤 <span id="headerUserName">Company Admin</span> <small id="headerUserRole" style="font-size:10px;color:#777"></small>
+            👤 Company Admin
         </div>
 
         <button class="btn" onclick="logoutAdmin()">Logout</button>
@@ -1420,15 +1401,6 @@ const IMAGE_BUCKET =
 let allOrders = [];
 let allProducts = [];
 let currentOrder = null;
-let currentSessionUser = null;
-let currentStaffProfile = null;
-
-const MAIN_ADMIN_EMAIL = ADMIN_EMAIL;
-const STAFF_STORAGE_KEY = "liara_staff_profiles_cache";
-const STAFF_PERMISSIONS = {
-    orders:"Orders", sales:"Sales", stock:"Stock", products:"Products", addProduct:"Add Product",
-    customers:"Customers", delivery:"Delivery", reports:"Reports", notifications:"Notifications", settings:"Settings", staff:"Staff Management"
-};
 
 /* =========================================================
    SETTINGS STORAGE
@@ -1669,58 +1641,45 @@ function payment(order){
    MENU
 ========================================================= */
 
-function hasPermission(permission){
-    if(!currentSessionUser) return false;
-    if(currentSessionUser.isMainAdmin) return true;
-    return !!(currentStaffProfile && currentStaffProfile.active !== false && currentStaffProfile.permissions && currentStaffProfile.permissions[permission]);
-}
-
-function enforceMenuPermissions(){
-    document.querySelectorAll("[data-permission]").forEach(btn=>{
-        const permission=btn.getAttribute("data-permission");
-        btn.style.display=hasPermission(permission)?"block":"none";
-    });
-}
-
-function updateHeaderIdentity(){
-    const name=document.getElementById("headerUserName");
-    const role=document.getElementById("headerUserRole");
-    if(!name) return;
-    if(currentSessionUser?.isMainAdmin){
-        name.textContent=getSettings().profile.name || "Main Admin";
-        if(role) role.textContent="• Main Admin";
-    }else if(currentStaffProfile){
-        name.textContent=currentStaffProfile.name || currentSessionUser.email;
-        if(role) role.textContent="• "+(currentStaffProfile.role || "Staff");
-    }
-}
-
 function showSection(section,button){
-    const permissionMap={
-        orders:"orders",sales:"sales",stock:"stock",products:"products", "add-product":"addProduct",
-        customers:"customers",delivery:"delivery",reports:"reports",notifications:"notifications",staff:"staff",settings:"settings"
-    };
-    const permission=permissionMap[section];
-    if(permission && !hasPermission(permission)){
-        alert("Tuhanu is section di permission nahi hai.");
-        return;
+
+    document.querySelectorAll(
+        ".side-menu button"
+    ).forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    if(button){
+        button.classList.add("active");
     }
-    document.querySelectorAll(".side-menu button").forEach(btn=>btn.classList.remove("active"));
-    if(button) button.classList.add("active");
-    document.getElementById("orders-section").style.display=section==="orders"?"block":"none";
-    document.getElementById("other-section").style.display=section==="orders"?"none":"block";
-    if(section==="orders") loadOrders();
-    else if(section==="sales") loadSales();
-    else if(section==="stock") loadStock();
-    else if(section==="products") loadProducts();
-    else if(section==="add-product") showAddProduct();
-    else if(section==="customers") loadCustomers();
-    else if(section==="delivery") loadDelivery();
-    else if(section==="reports") loadReports();
-    else if(section==="notifications") loadNotifications();
-    else if(section==="staff") loadStaffManagement();
-    else if(section==="settings") loadSettings();
+
+    document.getElementById(
+        "orders-section"
+    ).style.display =
+        section === "orders"
+        ? "block"
+        : "none";
+
+    document.getElementById(
+        "other-section"
+    ).style.display =
+        section === "orders"
+        ? "none"
+        : "block";
+
+    if(section === "orders") loadOrders();
+    else if(section === "sales") loadSales();
+    else if(section === "stock") loadStock();
+    else if(section === "products") loadProducts();
+    else if(section === "add-product") showAddProduct();
+    else if(section === "customers") loadCustomers();
+    else if(section === "delivery") loadDelivery();
+    else if(section === "reports") loadReports();
+    else if(section === "notifications") loadNotifications();
+    else if(section === "settings") loadSettings();
+
     closeSidebar();
+
 }
 
 /* =========================================================
@@ -1752,47 +1711,36 @@ function closeSidebar(){
 ========================================================= */
 
 async function checkAdmin(){
-    const {data,error}=await supabaseClient.auth.getUser();
+
+    const {data,error} =
+        await supabaseClient
+        .auth
+        .getUser();
+
     if(error || !data || !data.user){
-        window.location.href="company-login.html";
+
+        window.location.href =
+            "company-login.html";
+
         return null;
+
     }
-    const user=data.user;
-    currentSessionUser=user;
-    const email=(user.email||"").toLowerCase();
-    if(email===MAIN_ADMIN_EMAIL.toLowerCase()){
-        currentSessionUser.isMainAdmin=true;
-        currentStaffProfile=null;
-        enforceMenuPermissions();
-        updateHeaderIdentity();
-        return user;
-    }
-    let profile=null;
-    try{
-        const result=await supabaseClient.from("staff_profiles").select("*").eq("user_id",user.id).maybeSingle();
-        if(!result.error) profile=result.data;
-        if(!profile && email){
-            const byEmail=await supabaseClient.from("staff_profiles").select("*").eq("email",email).maybeSingle();
-            if(!byEmail.error) profile=byEmail.data;
-        }
-    }catch(e){}
-    if(!profile){
-        try{
-            const cached=JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]");
-            profile=cached.find(x=>(x.email||"").toLowerCase()===email);
-        }catch(e){}
-    }
-    if(!profile || profile.active===false){
-        await supabaseClient.auth.signOut();
-        alert("Tuhada staff account active nahi hai.");
-        window.location.href="company-login.html";
+
+    if(
+        !data.user.email ||
+        data.user.email.toLowerCase()
+        !== ADMIN_EMAIL.toLowerCase()
+    ){
+
+        window.location.href =
+            "company-login.html";
+
         return null;
+
     }
-    currentStaffProfile=profile;
-    currentSessionUser.isMainAdmin=false;
-    enforceMenuPermissions();
-    updateHeaderIdentity();
-    return user;
+
+    return data.user;
+
 }
 
 /* =========================================================
@@ -3358,6 +3306,29 @@ async function editProduct(id){
             </div>
 
             <div class="form-group full">
+                <label>🌿 Key Ingredients</label>
+                <textarea
+                    id="editProductKeyIngredientsInput"
+                    placeholder="Example:
+Niacinamide — Supports the skin barrier
+Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredients || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>🧴 How to Use</label>
+                <textarea
+                    id="editProductHowToUseInput"
+                    placeholder="Write simple usage instructions...">${escapeHtml(product.how_to_use || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>✨ Benefits</label>
+                <textarea
+                    id="editProductBenefitsInput"
+                    placeholder="Write the main product benefits...">${escapeHtml(product.benefits || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
                 <label>📷 Product Photo</label>
                 <div class="upload-box">
                     <strong>Replace Product Photo (Optional)</strong>
@@ -3424,6 +3395,9 @@ async function saveEditedProduct(id){
     const stock = Number(document.getElementById("editProductStockInput").value || 0);
     const lowStock = Number(document.getElementById("editProductLowStockInput").value || 5);
     const description = document.getElementById("editProductDescriptionInput").value.trim();
+    const keyIngredients = document.getElementById("editProductKeyIngredientsInput").value.trim();
+    const howToUse = document.getElementById("editProductHowToUseInput").value.trim();
+    const benefits = document.getElementById("editProductBenefitsInput").value.trim();
     const file = document.getElementById("editProductPhotoInput").files[0];
     const status = document.getElementById("editUploadStatus");
 
@@ -3508,6 +3482,9 @@ async function saveEditedProduct(id){
             stock:stock,
             low_stock:lowStock,
             description:description,
+            key_ingredients:keyIngredients,
+            how_to_use:howToUse,
+            benefits:benefits,
             image_url:imageUrl
         };
 
@@ -3656,6 +3633,38 @@ function showAddProduct(){
 
             <div class="form-group full">
 
+                <label>🌿 Key Ingredients</label>
+
+                <textarea
+                    id="productKeyIngredientsInput"
+                    placeholder="Example:
+Niacinamide — Supports the skin barrier
+Hyaluronic Acid — Helps maintain hydration"></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>🧴 How to Use</label>
+
+                <textarea
+                    id="productHowToUseInput"
+                    placeholder="Write simple usage instructions..."></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>✨ Benefits</label>
+
+                <textarea
+                    id="productBenefitsInput"
+                    placeholder="Write the main product benefits..."></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
                 <label>📷 Product Photo</label>
 
                 <div class="upload-box">
@@ -3772,6 +3781,21 @@ async function saveProduct(){
             "productDescriptionInput"
         ).value.trim();
 
+    const keyIngredients =
+        document.getElementById(
+            "productKeyIngredientsInput"
+        ).value.trim();
+
+    const howToUse =
+        document.getElementById(
+            "productHowToUseInput"
+        ).value.trim();
+
+    const benefits =
+        document.getElementById(
+            "productBenefitsInput"
+        ).value.trim();
+
     const file =
         document.getElementById(
             "productPhotoInput"
@@ -3878,6 +3902,9 @@ async function saveProduct(){
                 stock:stock,
                 low_stock:lowStock,
                 description:description,
+                key_ingredients:keyIngredients,
+                how_to_use:howToUse,
+                benefits:benefits,
                 image_url:imageUrl
 
             });
@@ -4661,173 +4688,6 @@ async function loadNotifications(){
 
 }
 
-
-/* =========================================================
-   STAFF MANAGEMENT
-========================================================= */
-
-function defaultStaffPermissions(){
-    return {orders:true,sales:true,stock:true,products:true,addProduct:false,customers:true,delivery:true,reports:false,notifications:true,settings:false,staff:false};
-}
-
-function initials(name){
-    return String(name||"Staff").split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "S";
-}
-
-async function loadStaffRows(){
-    try{
-        const {data,error}=await supabaseClient.from("staff_profiles").select("*").order("created_at",{ascending:false});
-        if(!error) return data||[];
-    }catch(e){}
-    try{return JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]");}catch(e){return [];}
-}
-
-async function loadStaffManagement(){
-    if(!hasPermission("staff")){ alert("Sirf Main Admin staff manage kar sakda hai."); return; }
-    document.getElementById("other-content").innerHTML=`
-    <div class="admin-box">
-      <div class="admin-header">
-        <div><p>TEAM & ACCESS</p><h2>👥 Staff Management</h2></div>
-        <button class="btn" onclick="loadStaffManagement()">🔄 Refresh</button>
-      </div>
-      <div class="settings-card">
-        <h3>➕ Create Staff Login</h3>
-        <p>Staff da Supabase Auth login, profile, role te permissions ithon hi create honge.</p>
-        <div class="staff-form">
-          <div class="settings-field"><label>FULL NAME</label><input id="staffName" placeholder="e.g. Aman Singh"></div>
-          <div class="settings-field"><label>EMAIL</label><input id="staffEmail" type="email" placeholder="staff@example.com"></div>
-          <div class="settings-field"><label>PASSWORD</label><input id="staffPassword" type="password" minlength="6" autocomplete="new-password" placeholder="Minimum 6 characters"></div>
-          <div class="settings-field"><label>ROLE</label><input id="staffRole" placeholder="Sales Manager"></div>
-          <div class="settings-field"><label>PHONE</label><input id="staffPhone" placeholder="Phone number"></div>
-          <div class="settings-field full"><label>PERMISSIONS</label><div class="staff-permissions" id="staffPermissionBox"></div></div>
-        </div>
-        <button class="btn" style="margin-top:14px" onclick="createStaffProfile()">💾 Create Staff Login</button>
-        <div id="staffCreateStatus" class="settings-status" style="display:none"></div>
-        <div class="staff-note">Security: password Supabase Auth vich securely store hovega. Main Admin hi staff accounts create/manage kar sakda hai; RLS nu database level te enforce karna zaroori hai.</div>
-      </div>
-      <div class="staff-grid" id="staffList"><div class="message">Loading staff...</div></div>
-    </div>`;
-    renderStaffPermissionInputs();
-    const rows=await loadStaffRows();
-    renderStaffRows(rows);
-}
-
-function renderStaffPermissionInputs(values){
-    const box=document.getElementById("staffPermissionBox"); if(!box)return;
-    const p=Object.assign(defaultStaffPermissions(),values||{});
-    box.innerHTML=Object.entries(STAFF_PERMISSIONS).map(([key,label])=>`<label class="permission-toggle"><input type="checkbox" data-staff-permission="${key}" ${p[key]?'checked':''}> ${label}</label>`).join("");
-}
-
-function readStaffPermissions(){
-    const p={}; document.querySelectorAll("[data-staff-permission]").forEach(el=>p[el.getAttribute("data-staff-permission")]=el.checked); return p;
-}
-
-async function createStaffProfile(){
-    if(!currentSessionUser?.isMainAdmin){alert("Only Main Admin can add staff.");return;}
-
-    const name=document.getElementById("staffName").value.trim();
-    const email=document.getElementById("staffEmail").value.trim().toLowerCase();
-    const password=document.getElementById("staffPassword").value;
-    const role=document.getElementById("staffRole").value.trim()||"Staff";
-    const phone=document.getElementById("staffPhone").value.trim();
-    const permissions=readStaffPermissions();
-    const status=document.getElementById("staffCreateStatus");
-
-    if(!name||!email||!password){
-        alert("Name, email te password required hai.");
-        return;
-    }
-
-    if(password.length<6){
-        alert("Password minimum 6 characters da hona chahida.");
-        return;
-    }
-
-    if(status){
-        status.style.display="block";
-        status.style.background="#fff8e8";
-        status.style.color="#72551f";
-        status.innerText="Creating staff login...";
-    }
-
-    try{
-        const {data,error}=await supabaseClient.functions.invoke("create-staff",{
-            body:{name,email,password,role,phone,permissions}
-        });
-
-        if(error){
-            throw new Error(error.message||"Unable to create staff login.");
-        }
-
-        if(data?.error){
-            throw new Error(data.error);
-        }
-
-        document.getElementById("staffName").value="";
-        document.getElementById("staffEmail").value="";
-        document.getElementById("staffPassword").value="";
-        document.getElementById("staffRole").value="";
-        document.getElementById("staffPhone").value="";
-
-        if(status){
-            status.style.background="#e8f3e9";
-            status.style.color="#287a3e";
-            status.innerText="✓ Staff login created successfully.";
-        }
-
-        await loadStaffManagement();
-    }catch(error){
-        if(status){
-            status.style.background="#f7dddd";
-            status.style.color="#a33";
-            status.innerText="Unable to create staff login: "+(error?.message||"Unknown error");
-        }
-        console.error("createStaffProfile",error);
-    }
-}
-
-async function updateStaffProfile(id,email,patch){
-    let saved=false;
-    try{
-        let q=supabaseClient.from("staff_profiles").update(patch);
-        if(id) q=q.eq("id",id); else q=q.eq("email",email);
-        const {error}=await q; if(!error)saved=true;
-    }catch(e){}
-    try{
-        const cache=JSON.parse(localStorage.getItem(STAFF_STORAGE_KEY)||"[]");
-        const i=cache.findIndex(x=>x.id===id || (x.email||"").toLowerCase()===(email||"").toLowerCase());
-        if(i>=0){cache[i]=Object.assign(cache[i],patch);localStorage.setItem(STAFF_STORAGE_KEY,JSON.stringify(cache));}
-    }catch(e){}
-    return saved;
-}
-
-async function toggleStaff(id,email,active){
-    if(!currentSessionUser?.isMainAdmin)return;
-    await updateStaffProfile(id,email,{active});
-    loadStaffManagement();
-}
-
-async function editStaffPermissions(id,email,current){
-    if(!currentSessionUser?.isMainAdmin)return;
-    const choices=Object.entries(STAFF_PERMISSIONS).map(([k,v],i)=>`${i+1}. ${v}: ${current[k]?'ON':'OFF'}`).join("\n");
-    const input=prompt("Permissions change karo. Comma-separated numbers (example: 1,2,3,5).\n\n"+choices,"1,2,3,5,6,7,9");
-    if(input===null)return;
-    const selected=new Set(input.split(",").map(x=>Number(x.trim())-1));
-    const permissions={}; Object.keys(STAFF_PERMISSIONS).forEach((k,i)=>permissions[k]=selected.has(i));
-    await updateStaffProfile(id,email,{permissions});
-    loadStaffManagement();
-}
-
-function renderStaffRows(rows){
-    const box=document.getElementById("staffList"); if(!box)return;
-    if(!rows.length){box.innerHTML='<div class="message">No staff profiles yet.</div>';return;}
-    box.innerHTML=rows.map((s,i)=>{
-        const p=s.permissions||{}; const chips=Object.entries(STAFF_PERMISSIONS).filter(([k])=>p[k]).map(([,v])=>`<span class="permission-chip">${escapeHtml(v)}</span>`).join("")||'<span class="permission-chip">No permissions</span>';
-        const avatar=s.avatar_url?`<img src="${escapeHtml(s.avatar_url)}" alt="">`:escapeHtml(initials(s.name));
-        return `<div class="staff-card"><div class="staff-card-head"><div class="staff-avatar">${avatar}</div><div><div class="staff-name">${escapeHtml(s.name||"Staff")}</div><div class="staff-email">${escapeHtml(s.email||"")}</div><span class="staff-role">${escapeHtml(s.role||"Staff")}</span></div></div><div><span class="staff-status ${s.active===false?'inactive':'active'}">● ${s.active===false?'Inactive':'Active'}</span></div><div class="permission-list">${chips}</div><div class="staff-actions"><button class="btn" onclick='editStaffPermissions(${JSON.stringify(s.id||null)},${JSON.stringify(s.email||"")},${JSON.stringify(p)})'>🔐 Permissions</button><button class="btn gray-btn" onclick='toggleStaff(${JSON.stringify(s.id||null)},${JSON.stringify(s.email||"")},${s.active===false})'>${s.active===false?'✅ Activate':'⏸ Deactivate'}</button></div></div>`;
-    }).join("");
-}
-
 /* =========================================================
    SETTINGS MAIN
 ========================================================= */
@@ -4889,7 +4749,7 @@ function loadSettings(){
                 </button>
 
                 <button
-                    onclick="showSection('staff',null)">
+                    onclick="openSettingsTab('staff',this); loadStaffAccounts()">
                     👥 Staff Management
                 </button>
 
@@ -4997,6 +4857,55 @@ function loadSettings(){
 
                         </div>
 
+                    </div>
+
+                </div>
+
+                <!-- STAFF MANAGEMENT -->
+
+                <div
+                    class="settings-panel"
+                    id="settings-staff">
+
+                    <div class="settings-card">
+                        <h3>👥 Staff Management</h3>
+                        <p>Create staff logins and manage existing staff passwords.</p>
+
+                        <div class="settings-form">
+                            <div class="settings-field">
+                                <label>STAFF NAME</label>
+                                <input id="staffName" placeholder="Staff name">
+                            </div>
+                            <div class="settings-field">
+                                <label>STAFF EMAIL</label>
+                                <input id="staffEmail" type="email" placeholder="staff@example.com">
+                            </div>
+                            <div class="settings-field">
+                                <label>INITIAL PASSWORD</label>
+                                <input id="staffPassword" type="password" minlength="8" placeholder="Minimum 8 characters">
+                            </div>
+                            <div class="settings-field">
+                                <label>ROLE</label>
+                                <select id="staffRole">
+                                    <option value="Staff">Staff</option>
+                                    <option value="Manager">Manager</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-actions">
+                            <button class="btn" type="button" onclick="createStaffLogin()">Create Staff Login</button>
+                            <button class="btn outline-btn" type="button" onclick="loadStaffAccounts()">Refresh Staff</button>
+                        </div>
+                        <div id="staffCreateStatus" class="settings-status"></div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Staff Accounts</h3>
+                        <p>Existing staff accounts from the staff_profiles table.</p>
+                        <div id="staffAccountsList">
+                            <div class="message">Open Staff Management to load staff accounts.</div>
+                        </div>
                     </div>
 
                 </div>
@@ -6059,6 +5968,100 @@ function getChecked(id,fallback){
 
     return el.checked;
 
+}
+
+/* =========================================================
+   STAFF MANAGEMENT
+========================================================= */
+
+function staffStatus(message, ok=false){
+    const el=document.getElementById("staffCreateStatus");
+    if(!el) return;
+    el.style.display="block";
+    el.style.background=ok ? "#e8f3e9" : "#f7dddd";
+    el.style.color=ok ? "#287a3e" : "#a33";
+    el.textContent=message;
+}
+
+async function createStaffLogin(){
+    const name=document.getElementById("staffName")?.value.trim();
+    const email=document.getElementById("staffEmail")?.value.trim().toLowerCase();
+    const password=document.getElementById("staffPassword")?.value || "";
+    const role=document.getElementById("staffRole")?.value || "Staff";
+
+    if(!name || !email || !password){ staffStatus("Name, email and password are required."); return; }
+    if(password.length < 8){ staffStatus("Password must be at least 8 characters."); return; }
+
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(!session){ staffStatus("Your admin session has expired. Please sign in again."); return; }
+
+    staffStatus("Creating staff login...", true);
+    const {data,error}=await supabaseClient.functions.invoke("create-staff",{
+        body:{name,email,password,role,phone:"",permissions:{}}
+    });
+
+    if(error){
+        staffStatus(data?.error || error.message || "Unable to create staff login.");
+        return;
+    }
+    if(data?.error){ staffStatus(data.error); return; }
+
+    document.getElementById("staffName").value="";
+    document.getElementById("staffEmail").value="";
+    document.getElementById("staffPassword").value="";
+    staffStatus("Staff login created successfully.", true);
+    await loadStaffAccounts();
+}
+
+async function loadStaffAccounts(){
+    const box=document.getElementById("staffAccountsList");
+    if(!box) return;
+    box.innerHTML='<div class="message">Loading staff accounts...</div>';
+
+    const {data,error}=await supabaseClient
+        .from("staff_profiles")
+        .select("id,name,email,role,active,created_at")
+        .order("created_at",{ascending:false});
+
+    if(error){
+        box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>';
+        return;
+    }
+    if(!data?.length){
+        box.innerHTML='<div class="message">No staff accounts created yet.</div>';
+        return;
+    }
+
+    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:700px">
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+        <tbody>${data.map(s=>`<tr>
+            <td><strong>${escapeHtml(s.name || "")}</strong></td>
+            <td>${escapeHtml(s.email || "")}</td>
+            <td>${escapeHtml(s.role || "Staff")}</td>
+            <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
+            <td>${s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}</td>
+            <td><button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">Change Password</button></td>
+        </tr>`).join('')}</tbody></table></div>`;
+}
+
+async function changeStaffPassword(email){
+    const password=prompt("New password for " + email + " (minimum 8 characters):");
+    if(password===null) return;
+    if(password.length < 8){ alert("Password must be at least 8 characters."); return; }
+
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(!session){ alert("Your admin session has expired. Please sign in again."); return; }
+
+    const {data,error}=await supabaseClient.functions.invoke("reset-staff-password",{
+        body:{email,password}
+    });
+
+    if(error){
+        alert(data?.error || error.message || "Unable to change staff password.");
+        return;
+    }
+    if(data?.error){ alert(data.error); return; }
+    alert("Staff password changed successfully.");
 }
 
 /* =========================================================
