@@ -1992,17 +1992,14 @@ function updateOrderSummary(orders){
 
     });
 
-    document.getElementById("totalOrders").innerText =
-        orders.length;
-
-    document.getElementById("totalSales").innerText =
-        money(sales);
-
-    document.getElementById("pendingOrders").innerText =
-        active;
-
-    document.getElementById("deliveredOrders").innerText =
-        delivered;
+    const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = value;
+    };
+    setText("totalOrders", orders.length);
+    setText("totalSales", money(sales));
+    setText("pendingOrders", active);
+    setText("deliveredOrders", delivered);
 
 }
 
@@ -2761,17 +2758,14 @@ function renderSales(orders){
 
     });
 
-    document.getElementById("salesTotal").innerText =
-        money(total);
-
-    document.getElementById("salesOrders").innerText =
-        orders.length;
-
-    document.getElementById("salesDelivered").innerText =
-        delivered;
-
-    document.getElementById("salesCancelled").innerText =
-        cancelled;
+    const setSalesText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = value;
+    };
+    setSalesText("salesTotal", money(total));
+    setSalesText("salesOrders", orders.length);
+    setSalesText("salesDelivered", delivered);
+    setSalesText("salesCancelled", cancelled);
 
     const box =
         document.getElementById("salesTable");
@@ -3032,10 +3026,14 @@ async function renderStockLedger(products){
         remainingTotal += remaining;
     });
 
-    document.getElementById("stockReceivedTotal").innerText = receivedTotal;
-    document.getElementById("stockOnlineTotal").innerText = onlineTotal;
-    document.getElementById("stockOfflineTotal").innerText = offlineTotal;
-    document.getElementById("stockRemainingTotal").innerText = remainingTotal;
+    const setStockText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = value;
+    };
+    setStockText("stockReceivedTotal", receivedTotal);
+    setStockText("stockOnlineTotal", onlineTotal);
+    setStockText("stockOfflineTotal", offlineTotal);
+    setStockText("stockRemainingTotal", remainingTotal);
 
 
     let html = `
