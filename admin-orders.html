@@ -1260,7 +1260,7 @@ body{
         <button onclick="showSection('reports',this)">📊 Reports</button>
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
         <button type="button" onclick="showSection('parties',this)">👥 Parties</button>
-            <button type="button" onclick="window.open('https://mail.zoho.in/','_blank')">📧 Email</button>
+            <button type="button" onclick="showSection('email',this)">📧 Email</button>
             <button onclick="showSection('settings',this)">⚙️ Settings</button>
 
         <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
@@ -1399,18 +1399,19 @@ body{
 <div id="emailPanel" style="display:none">
 <div class="admin-box email-app">
 <div class="admin-header"><div><p>LIARA PROFESSIONAL™</p><h2>📧 Email — info@liara.co.in</h2><small style="color:#777">Zoho Mail</small></div>
-<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn outline-btn" type="button" onclick="loadZohoMail()">↻ Refresh</button><button class="btn" type="button" onclick="openComposeMail()">✉️ Compose</button></div></div>
+<div style="display:flex;gap:8px"><button class="btn gray-btn" type="button" onclick="loadZohoMail()">🔄 Refresh</button><button class="btn" type="button" onclick="openComposeMail()">✉️ Compose</button></div></div>
 <div class="email-layout">
 <aside class="email-nav">
-<button class="email-nav-btn active" onclick="emailFolder('INBOX',this)">📥 Inbox</button>
-<button class="email-nav-btn" onclick="emailFolder('SENT',this)">📤 Sent</button>
-<button class="email-nav-btn" onclick="emailFolder('DRAFTS',this)">📝 Drafts</button>
-<button class="email-nav-btn" onclick="emailFolder('TRASH',this)">🗑️ Trash</button>
-<button class="email-nav-btn" onclick="emailFolder('SPAM',this)">⚠️ Spam</button>
+<button class="email-nav-btn active" type="button" onclick="emailFolder('INBOX',this)">📥 Inbox</button>
+<button class="email-nav-btn" type="button" onclick="emailFolder('SENT',this)">📤 Sent</button>
+<button class="email-nav-btn" type="button" onclick="emailFolder('DRAFTS',this)">📝 Drafts</button>
+<button class="email-nav-btn" type="button" onclick="emailFolder('TRASH',this)">🗑️ Trash</button>
+<button class="email-nav-btn" type="button" onclick="emailFolder('SPAM',this)">⚠️ Spam</button>
 </aside>
-<section class="email-main"><div class="email-toolbar"><input id="emailSearch" class="search-input" placeholder="Search email..." oninput="filterEmailList()"><span id="emailStatus" style="font-size:12px;color:#777"></span></div><div id="emailList"><div class="message">Connect Zoho Mail to load your inbox.</div></div></section>
+<section class="email-main"><div class="email-toolbar"><input id="emailSearch" class="search-input" placeholder="Search email..." oninput="filterEmailList()"><span id="emailStatus" style="font-size:12px;color:#777"></span></div><div id="emailList"><div class="message">Click Refresh to load your inbox.</div></div></section>
 <section class="email-reader" id="emailReader"><div class="message">Select an email to read it.</div></section>
-</div></div>
+</div></div></div>
+
 <div id="composeMailBox" class="admin-box" style="display:none;margin-top:14px"><div class="admin-header"><div><p>NEW MESSAGE</p><h2>✉️ Compose Email</h2></div><button class="btn gray-btn" type="button" onclick="closeComposeMail()">Close</button></div>
 <div class="settings-form">
 <div class="settings-field"><label>TO</label><input id="mailTo" type="email" placeholder="customer@example.com"></div>
@@ -1769,7 +1770,6 @@ function showSection(section,button){
     else if(section === "notifications") loadNotifications();
     else if(section === "parties") loadParties();
     else if(section === "settings") loadSettings();
-    else if(section === "email") loadZohoMail();
 
     closeSidebar();
 
