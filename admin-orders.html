@@ -5923,7 +5923,15 @@ function loadSettings(){
                             </div>
                             <div class="settings-field">
                                 <label>INITIAL PASSWORD</label>
-                                <input id="staffPassword" type="password" minlength="8" placeholder="Minimum 8 characters">
+                                <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">
+<input id="staffPassword" type="password" minlength="8" placeholder="Minimum 8 characters">
+<button type="button" class="btn outline-btn" onclick="generateStaffPassword()">🔐 Generate</button>
+<button type="button" class="btn outline-btn" onclick="toggleStaffPassword()">👁 Show</button>
+<button type="button" class="btn outline-btn" onclick="copyStaffPassword()">📋 Copy</button>
+</div>
+<div id="staffPasswordStatus" style="font-size:11px;margin-top:5px;color:#7b8494;">
+Use a unique password for each staff account.
+</div>
                             </div>
                             <div class="settings-field">
                                 <label>ROLE</label>
@@ -7607,6 +7615,49 @@ async function sendZohoMail(){
 
 <div id="liara-professional-footer" style="text-align:center;padding:18px 10px;color:#8a93a3;font-size:11px;">
   LIARA PROFESSIONAL™ &nbsp;•&nbsp; Secure Business Dashboard
+</div>
+
+
+<script>
+function generateStaffPassword(){
+  const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+  let pwd="";
+  const arr=new Uint32Array(16);
+  crypto.getRandomValues(arr);
+  for(let i=0;i<arr.length;i++) pwd+=chars[arr[i]%chars.length];
+  const el=document.getElementById("staffPassword");
+  if(el){ el.value=pwd; el.type="text"; }
+  const status=document.getElementById("staffPasswordStatus");
+  if(status){ status.textContent="Secure password generated"; status.style.color="#287a3e"; }
+}
+function toggleStaffPassword(){
+  const el=document.getElementById("staffPassword");
+  if(!el) return;
+  el.type=el.type==="password" ? "text" : "password";
+}
+async function copyStaffPassword(){
+  const el=document.getElementById("staffPassword");
+  if(!el || !el.value) return;
+  await navigator.clipboard.writeText(el.value);
+  const status=document.getElementById("staffPasswordStatus");
+  if(status){ status.textContent="Password copied"; status.style.color="#287a3e"; }
+}
+</script>
+
+
+<div class="admin-box" style="margin-top:14px;">
+  <div class="admin-header">
+    <div>
+      <p>STAFF SECURITY & ACCESS</p>
+      <h3>🔐 Professional Staff Access</h3>
+    </div>
+  </div>
+  <div style="padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;">
+    <div><strong>Unique Login</strong><br><small>Each staff member gets their own email login.</small></div>
+    <div><strong>Generated Password</strong><br><small>Create a strong random password instantly.</small></div>
+    <div><strong>Role Based Access</strong><br><small>Staff access can stay separate from admin controls.</small></div>
+    <div><strong>Secure Credentials</strong><br><small>Never share the main admin password with staff.</small></div>
+  </div>
 </div>
 
 </body>
