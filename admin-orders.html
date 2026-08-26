@@ -1179,6 +1179,33 @@ body{
 @media(max-width:800px){
     .stock-cards{grid-template-columns:1fr 1fr !important}
 }
+
+@media print {
+    body * { visibility: hidden !important; }
+    #partyPrintArea, #partyPrintArea * { visibility: visible !important; }
+    #partyPrintArea {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        background: white !important;
+        padding: 20px !important;
+    }
+    .no-print { display:none !important; }
+    .print-table { width:100%; border-collapse:collapse; margin-top:18px; }
+    .print-table th, .print-table td {
+        border:1px solid #999;
+        padding:8px;
+        text-align:left;
+        font-size:12px;
+    }
+    .print-summary {
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:10px;
+        margin:15px 0;
+    }
+}
 </style>
 </head>
 
@@ -3608,6 +3635,30 @@ async function viewParty(id){
 
     const transactions = rows || [];
 
+    const productIds =
+        [...new Set(
+            transactions
+            .filter(t=>t.product_id)
+            .map(t=>t.product_id)
+        )];
+
+    let products = [];
+
+    if(productIds.length){
+        const result =
+            await supabaseClient
+            .from("products")
+            .select("id,name")
+            .in("id",productIds);
+
+        if(!result.error) products = result.data || [];
+    }
+
+    const productMap =
+        Object.fromEntries(
+            products.map(p=>[String(p.id),p.name])
+        );
+
     const bill =
         transactions
         .filter(t=>t.transaction_type==="sale")
@@ -3620,30 +3671,40 @@ async function viewParty(id){
 
     const balance = bill-paid;
 
-    const totalPieces =
+    const pieces =
         transactions
         .filter(t=>t.transaction_type==="sale")
         .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-    const saleCount =
-        transactions
-        .filter(t=>t.transaction_type==="sale")
-        .length;
 
     let history = transactions.map(t=>{
 
         const type =
             t.transaction_type==="sale"
-            ? "🧾 Sale"
+            ? "🧾 SALE"
             : t.transaction_type==="payment"
-            ? "💵 Payment"
-            : "Adjustment";
+            ? "💵 PAYMENT"
+            : "⚙️ ADJUSTMENT";
+
+        const product =
+            t.product_id
+            ? (productMap[String(t.product_id)] || "Product")
+            : "-";
+
+        const qty =
+            t.transaction_type==="sale"
+            ? Number(t.quantity||0)
+            : "-";
+
+        const amount =
+            Number(t.amount||0);
 
         return `
         <tr>
-            <td>${new Date(t.created_at).toLocaleString("en-IN")}</td>
-            <td>${type}</td>
-            <td>${money(t.amount)}</td>
+            <td>${escapeHtml(new Date(t.created_at).toLocaleString("en-IN"))}</td>
+            <td><strong>${type}</strong></td>
+            <td>${escapeHtml(product)}</td>
+            <td>${qty}</td>
+            <td>₹${amount.toLocaleString("en-IN",{minimumFractionDigits:2})}</td>
             <td>${escapeHtml(t.note || "-")}</td>
         </tr>
         `;
@@ -3652,23 +3713,21 @@ async function viewParty(id){
 
     document.getElementById("other-content").innerHTML = `
 
-    <div class="admin-box">
+    <div class="admin-box" id="partyPrintArea">
 
         <div class="admin-header">
 
             <div>
                 <p>PARTY ACCOUNT</p>
                 <h2>👤 ${escapeHtml(party.name)}</h2>
+
                 <div style="color:#777;margin-top:5px;">
                     📞 ${escapeHtml(party.phone || "No mobile number")}
+                    ${party.address ? " · 📍 "+escapeHtml(party.address) : ""}
                 </div>
             </div>
 
-            <div style="display:flex;gap:10px;">
-                <button class="btn"
-                        onclick="showPartySaleForm('${escapeHtml(String(id))}')">
-                    📦 Give Stock
-                </button>
+            <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;">
 
                 <button class="btn"
                         onclick="addPartyPayment('${escapeHtml(String(id))}')">
@@ -3676,9 +3735,15 @@ async function viewParty(id){
                 </button>
 
                 <button class="btn"
+                        onclick="printPartyAccount()">
+                    🖨️ Print Account
+                </button>
+
+                <button class="btn"
                         onclick="loadParties()">
                     ← Back
                 </button>
+
             </div>
 
         </div>
@@ -3686,163 +3751,65 @@ async function viewParty(id){
         <div class="stock-cards">
 
             <div class="stock-card">
+                <span>Total Pieces</span>
+                <strong>${pieces}</strong>
+            </div>
+
+            <div class="stock-card">
                 <span>Total Bill</span>
-                <strong>${money(bill)}</strong>
+                <strong>₹${bill.toLocaleString("en-IN",{minimumFractionDigits:2})}</strong>
             </div>
 
             <div class="stock-card">
                 <span>Total Paid / Received</span>
-                <strong>${money(paid)}</strong>
+                <strong>₹${paid.toLocaleString("en-IN",{minimumFractionDigits:2})}</strong>
             </div>
 
             <div class="stock-card">
                 <span>Balance Due</span>
-                <strong class="${balance > 0 ? "stock-low" : "stock-ok"}">
-                    ${money(balance)}
-                </strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Total Pieces Given</span>
-                <strong>${totalPieces}</strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Total Sales</span>
-                <strong>${saleCount}</strong>
+                <strong>${balance > 0 ? "₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2}) : "₹0.00"}</strong>
             </div>
 
         </div>
 
-        <h3>🧾 Account History</h3>
+        <div style="margin:20px 0;padding:14px;border:1px solid #ddd;border-radius:10px;">
+            <strong>Account Summary</strong>
+            <div style="margin-top:7px;color:#666;">
+                ${balance > 0
+                    ? "🔴 Party ton ₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2})+" lene baki ne."
+                    : "🟢 Account settled / koi baki nahi."}
+            </div>
+        </div>
+
+        <h3>🧾 Complete Account History</h3>
 
         <div class="table-wrapper">
-        <table class="data-table">
+        <table class="data-table print-table">
         <thead>
         <tr>
             <th>DATE</th>
             <th>TYPE</th>
+            <th>PRODUCT</th>
+            <th>QTY</th>
             <th>AMOUNT</th>
             <th>NOTE</th>
         </tr>
         </thead>
+
         <tbody>
             ${history || `
                 <tr>
-                    <td colspan="4">No transactions yet.</td>
+                    <td colspan="6">No transactions yet.</td>
                 </tr>
             `}
         </tbody>
+
         </table>
         </div>
 
-    </div>
-    `;
-}
-
-
-
-async function showPartySaleForm(partyId){
-
-    const {data:party,error:partyError} =
-        await supabaseClient
-        .from("parties")
-        .select("*")
-        .eq("id",partyId)
-        .single();
-
-    if(partyError){
-        alert("Party load failed:\n\n"+partyError.message);
-        return;
-    }
-
-    const {data:products,error:productError} =
-        await supabaseClient
-        .from("products")
-        .select("*")
-        .order("name",{ascending:true});
-
-    if(productError){
-        alert("Products load failed:\n\n"+productError.message);
-        return;
-    }
-
-    allProducts = products || [];
-
-    const options =
-        allProducts.map(p=>`
-            <option value="${p.id}">
-                ${escapeHtml(p.name)} — Stock: ${Number(p.stock || 0)}
-            </option>
-        `).join("");
-
-    document.getElementById("other-content").innerHTML = `
-
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>OFFLINE SALE</p>
-                <h2>📦 Give Stock — ${escapeHtml(party.name)}</h2>
-                <div style="color:#777;margin-top:5px;">
-                    📞 ${escapeHtml(party.phone || "No mobile number")}
-                </div>
-            </div>
-
-            <button class="btn" onclick="viewParty('${escapeHtml(String(partyId))}')">
-                ← Back
-            </button>
-        </div>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label>Product</label>
-                <select id="partySaleProduct">${options}</select>
-            </div>
-
-            <div class="form-group">
-                <label>Quantity</label>
-                <input id="partySaleQty"
-                       type="number" min="1"
-                       placeholder="e.g. 5">
-            </div>
-
-            <div class="form-group">
-                <label>Total Bill ₹</label>
-                <input id="partySaleAmount"
-                       type="number" min="0" step="0.01"
-                       placeholder="e.g. 2500">
-            </div>
-
-            <div class="form-group">
-                <label>Payment Received Now ₹</label>
-                <input id="partySalePaid"
-                       type="number" min="0" step="0.01"
-                       value="0">
-            </div>
-
-            <div class="form-group full">
-                <label>Note</label>
-                <textarea id="partySaleNote"
-                          placeholder="Optional"></textarea>
-            </div>
-
-        </div>
-
-        <div style="margin-top:15px;padding:12px;border-radius:10px;background:#f7f7f7;">
-            <strong>💡 Same party nu dubara maal dena hove:</strong>
-            bas eh form dubara fill karo. Purani sale delete/overwrite nahi hovegi.
-            New sale party de total bill ch add ho jayegi.
-        </div>
-
-        <div style="display:flex;gap:10px;margin-top:15px;">
-            <button class="btn" onclick="savePartySale('${escapeHtml(String(partyId))}')">
-                💾 Save Sale
-            </button>
-            <button class="btn gray-btn" onclick="viewParty('${escapeHtml(String(partyId))}')">
-                Cancel
-            </button>
+        <div class="no-print"
+             style="margin-top:20px;color:#777;">
+            Tip: Print Account naal complete party statement paper te save/print kar sakde ho.
         </div>
 
     </div>
@@ -3850,272 +3817,8 @@ async function showPartySaleForm(partyId){
 }
 
 
-async function showStockPartyForm(){
-
-    const {data:parties,error} =
-        await supabaseClient
-        .from("parties")
-        .select("*")
-        .order("name",{ascending:true});
-
-    if(error){
-        alert("Parties load failed:\n\n"+error.message);
-        return;
-    }
-
-    if(!parties || !parties.length){
-        alert("Pehla Parties section vich party add karo.");
-        return;
-    }
-
-    const options =
-        parties.map(p=>`
-            <option value="${p.id}">
-                ${escapeHtml(p.name)} ${p.phone ? "— "+escapeHtml(p.phone) : ""}
-            </option>
-        `).join("");
-
-    document.getElementById("other-content").innerHTML = `
-
-    <div class="admin-box">
-
-        <div class="admin-header">
-            <div>
-                <p>OFFLINE BUSINESS</p>
-                <h2>📤 Give Stock to Party</h2>
-            </div>
-
-            <button class="btn" onclick="loadStock()">← Back to Stock</button>
-        </div>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label>Party</label>
-                <select id="stockPartySelect">${options}</select>
-            </div>
-
-            <div class="form-group">
-                <label>Product</label>
-                <select id="stockPartyProduct">
-                    ${allProducts.map(p=>`
-                        <option value="${p.id}">
-                            ${escapeHtml(p.name)} — Stock: ${Number(p.stock || 0)}
-                        </option>
-                    `).join("")}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Quantity</label>
-                <input id="stockPartyQty" type="number" min="1" placeholder="e.g. 5">
-            </div>
-
-            <div class="form-group">
-                <label>Total Bill ₹</label>
-                <input id="stockPartyBill" type="number" min="0" step="0.01" placeholder="e.g. 2500">
-            </div>
-
-            <div class="form-group">
-                <label>Paid Now ₹</label>
-                <input id="stockPartyPaid" type="number" min="0" step="0.01" value="0">
-            </div>
-
-            <div class="form-group full">
-                <label>Note</label>
-                <textarea id="stockPartyNote" placeholder="Optional"></textarea>
-            </div>
-
-        </div>
-
-        <button class="btn" style="margin-top:15px;"
-                onclick="saveStockPartySale()">
-            💾 Save Offline Sale
-        </button>
-
-    </div>
-    `;
-}
-
-
-async function savePartySale(partyId){
-
-    const productId =
-        document.getElementById("partySaleProduct").value;
-
-    const qty =
-        Number(document.getElementById("partySaleQty").value);
-
-    const amount =
-        Number(document.getElementById("partySaleAmount").value);
-
-    const paid =
-        Number(document.getElementById("partySalePaid").value || 0);
-
-    const note =
-        document.getElementById("partySaleNote").value.trim();
-
-    await processPartySale({
-        partyId,
-        productId,
-        qty,
-        amount,
-        paid,
-        note
-    });
-}
-
-
-async function saveStockPartySale(){
-
-    const partyId =
-        document.getElementById("stockPartySelect").value;
-
-    const productId =
-        document.getElementById("stockPartyProduct").value;
-
-    const qty =
-        Number(document.getElementById("stockPartyQty").value);
-
-    const amount =
-        Number(document.getElementById("stockPartyBill").value);
-
-    const paid =
-        Number(document.getElementById("stockPartyPaid").value || 0);
-
-    const note =
-        document.getElementById("stockPartyNote").value.trim();
-
-    await processPartySale({
-        partyId,
-        productId,
-        qty,
-        amount,
-        paid,
-        note
-    });
-}
-
-
-async function processPartySale({partyId,productId,qty,amount,paid,note}){
-
-    if(!partyId){
-        alert("Party select karo.");
-        return;
-    }
-
-    if(!Number.isInteger(qty) || qty<=0){
-        alert("Valid quantity pao.");
-        return;
-    }
-
-    if(!Number.isFinite(amount) || amount<0){
-        alert("Valid bill amount pao.");
-        return;
-    }
-
-    if(!Number.isFinite(paid) || paid<0 || paid>amount){
-        alert("Paid amount bill ton zyada nahi ho sakda.");
-        return;
-    }
-
-    const product =
-        (allProducts || []).find(
-            p=>String(p.id)===String(productId)
-        );
-
-    if(!product){
-        alert("Product select karo.");
-        return;
-    }
-
-    const currentStock = Number(product.stock || 0);
-
-    if(qty > currentStock){
-        alert(
-            "Stock available nahi hai.\n\n" +
-            "Available: " + currentStock +
-            "\nRequested: " + qty
-        );
-        return;
-    }
-
-    // Save stock movement.
-    const {error:stockError} =
-        await supabaseClient
-        .from("stock_transactions")
-        .insert({
-            product_id:product.id,
-            transaction_type:"offline_out",
-            quantity:qty,
-            note:note || "Offline party sale"
-        });
-
-    if(stockError){
-        alert("Stock record failed:\n\n"+stockError.message);
-        return;
-    }
-
-    // Save party sale.
-    const {error:saleError} =
-        await supabaseClient
-        .from("party_transactions")
-        .insert({
-            party_id:partyId,
-            product_id:product.id,
-            transaction_type:"sale",
-            quantity:qty,
-            amount:amount,
-            note:note || "Offline sale"
-        });
-
-    if(saleError){
-        alert("Party sale record failed:\n\n"+saleError.message);
-        return;
-    }
-
-    // Save payment received with this sale.
-    if(paid > 0){
-
-        const {error:paymentError} =
-            await supabaseClient
-            .from("party_transactions")
-            .insert({
-                party_id:partyId,
-                product_id:product.id,
-                transaction_type:"payment",
-                amount:paid,
-                note:"Payment received with sale"
-            });
-
-        if(paymentError){
-            alert("Payment record failed:\n\n"+paymentError.message);
-            return;
-        }
-    }
-
-    const newStock = currentStock - qty;
-
-    const {error:updateError} =
-        await supabaseClient
-        .from("products")
-        .update({stock:newStock})
-        .eq("id",product.id);
-
-    if(updateError){
-        alert("Stock update failed:\n\n"+updateError.message);
-        return;
-    }
-
-    alert(
-        "Sale saved successfully.\n\n" +
-        "Bill: ₹"+amount.toLocaleString("en-IN")+
-        "\nPaid: ₹"+paid.toLocaleString("en-IN")+
-        "\nBaki: ₹"+(amount-paid).toLocaleString("en-IN")+
-        "\nRemaining stock: "+newStock
-    );
-
-    viewParty(partyId);
+function printPartyAccount(){
+    window.print();
 }
 
 
