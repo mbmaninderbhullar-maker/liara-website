@@ -1,10 +1,4 @@
 
-<style>
-#staffManagementNavBtn{
-  display:block!important;width:calc(100% - 16px)!important;
-  margin:4px 8px!important;cursor:pointer!important;
-}
-</style>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1241,128 +1235,75 @@ body{
 .email-layout{display:grid;grid-template-columns:170px minmax(300px,1fr) minmax(320px,1.15fr);gap:12px;margin-top:14px}.email-nav{display:flex;flex-direction:column;gap:6px}.email-nav-btn{border:1px solid #e5e5e5;background:#fff;border-radius:8px;padding:11px 12px;text-align:left;cursor:pointer;font-weight:600}.email-nav-btn.active,.email-nav-btn:hover{background:#111;color:#fff}.email-main,.email-reader{border:1px solid #e7e7e7;border-radius:10px;overflow:hidden;background:#fff;min-height:430px}.email-toolbar{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid #eee}.email-list-row{padding:12px;border-bottom:1px solid #eee;cursor:pointer}.email-list-row:hover{background:#fafafa}.email-list-row.unread{font-weight:700}.email-subject{display:block;margin-bottom:4px}.email-meta{font-size:12px;color:#777}.email-preview{font-size:12px;color:#666;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.email-reader{padding:18px}.email-reader h3{margin:0 0 8px}.email-reader .reader-meta{font-size:12px;color:#777;margin-bottom:16px}.email-body{line-height:1.6;overflow:auto}@media(max-width:1000px){.email-layout{grid-template-columns:140px 1fr}.email-reader{grid-column:1/-1}}@media(max-width:650px){.email-layout{grid-template-columns:1fr}.email-nav{display:grid;grid-template-columns:repeat(3,1fr)}}
 </style>
 <style>
-
-/* ===== LIARA ORDERS - COMPACT PROFESSIONAL LAYOUT ===== */
-#orders-section .admin-section,
-#orders-section .admin-container {
-    width: 100%;
+/* ===== ULTRA COMPACT SIDE / ORDERS LAYOUT ===== */
+.settings-layout{
+    grid-template-columns: 190px minmax(0,1fr) !important;
+    gap: 6px !important;
 }
-
-#orders-section .admin-section {
-    padding: 18px 2%;
+.settings-nav{
+    padding: 4px !important;
+    border-radius: 10px !important;
 }
-
-#orders-section .admin-box {
-    padding: 18px;
-    border-radius: 14px;
+.settings-nav button{
+    padding: 7px 8px !important;
+    margin-bottom: 1px !important;
+    line-height: 1.05 !important;
+    font-size: 11px !important;
 }
-
-#orders-section .admin-header {
-    margin-bottom: 14px;
+.settings-panel{
+    margin: 0 !important;
 }
-
-#orders-section .admin-header h2 {
-    font-size: 24px;
+#other-content{
+    margin: 0 !important;
+    padding: 0 !important;
 }
-
-#orders-section .summary-grid {
-    gap: 8px;
-    margin-bottom: 14px;
+#other-content .admin-box{
+    margin: 0 !important;
+    padding: 12px !important;
 }
-
-#orders-section .summary-card {
-    padding: 13px 14px;
-    border-radius: 10px;
+#other-content .admin-header{
+    margin-bottom: 8px !important;
 }
-
-#orders-section .summary-card strong {
-    font-size: 23px;
-    margin-top: 5px;
+#other-content .admin-header h2{
+    font-size: 20px !important;
+    margin: 0 !important;
 }
-
-#orders-section .summary-card small {
-    margin-top: 3px;
+#other-content .summary-grid{
+    gap: 5px !important;
+    margin-bottom: 7px !important;
 }
-
-#orders-section .filter-panel {
-    gap: 8px;
-    padding: 12px;
-    margin-bottom: 12px;
-    border-radius: 10px;
+#other-content .summary-card{
+    padding: 8px 10px !important;
+    border-radius: 8px !important;
 }
-
-#orders-section .filter-field input,
-#orders-section .filter-field select,
-#orders-section .search-input {
-    padding: 8px 10px;
-    min-height: 36px;
+#other-content .summary-card strong{
+    font-size: 19px !important;
+    margin-top: 2px !important;
 }
-
-#orders-section .search-input {
-    min-width: 230px;
+#other-content .filter-panel{
+    gap: 5px !important;
+    padding: 7px !important;
+    margin-bottom: 7px !important;
 }
-
-#orders-section .table-wrapper {
-    border-radius: 9px;
+#other-content .data-table{
+    font-size: 10px !important;
 }
-
-#orders-section .data-table {
-    min-width: 100%;
-    font-size: 11px;
+#other-content .data-table th,
+#other-content .data-table td{
+    padding: 5px 5px !important;
+    white-space: nowrap !important;
 }
-
-#orders-section .data-table th {
-    padding: 8px 7px;
-    font-size: 10px;
-}
-
-#orders-section .data-table td {
-    padding: 7px 7px;
-    line-height: 1.2;
-}
-
-#orders-section .badge,
-#orders-section .payment-badge {
-    padding: 4px 7px;
-    font-size: 9px;
-}
-
-#orders-section .table-btn {
-    padding: 6px 8px;
-    font-size: 10px;
-}
-
-#orders-section .status-select {
-    padding: 3px 5px;
-    font-size: 10px;
-}
-
-/* Keep the order columns tight and prevent unnecessary wrapping */
-#orders-section .data-table th,
-#orders-section .data-table td {
-    white-space: nowrap;
-}
-
-@media (max-width: 1100px) {
-    #orders-section .summary-grid {
-        gap: 7px;
+@media(max-width:900px){
+    .settings-layout{
+        grid-template-columns: 1fr !important;
+        gap: 5px !important;
+    }
+    .settings-nav{
+        display:grid !important;
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:2px !important;
     }
 }
-
-@media (max-width: 600px) {
-    #orders-section .admin-section {
-        padding: 14px 8px;
-    }
-
-    #orders-section .admin-box {
-        padding: 12px;
-    }
-
-    #orders-section .summary-grid {
-        gap: 6px;
-    }
-}
-
 </style>
 </head>
 
@@ -5860,16 +5801,10 @@ function loadSettings(){
                     🔐 Security
                 </button>
 
-<button type="button" id="staffManagementNavBtn" class="side-menu-btn"
-        onclick="showStaffManagement();">
+<button type="button" id="staffManagementNavBtn"
+        onclick="openSettingsTab('staff',this); loadStaffAccounts();">
   👥 Staff Management
 </button>
-
-
-                <button
-                    onclick="openSettingsTab('staff',this); loadStaffAccounts()">
-                    👥 Staff Management
-                </button>
 
                 <button
                     onclick="openSettingsTab('company',this)">
