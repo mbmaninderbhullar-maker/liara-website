@@ -1368,6 +1368,77 @@ body{
 
 </header>
 
+
+<!-- ================= EMAIL ================= -->
+<section class="admin-section" id="email-section" style="display:none">
+<div class="admin-container">
+<div class="admin-box email-app">
+
+    <div class="email-head">
+        <div>
+            <div class="email-kicker">LIARA PROFESSIONAL™ • BUSINESS MAIL</div>
+            <h2>✉️ Email</h2>
+            <p>Professional business email workspace for <strong>info@liara.co.in</strong></p>
+        </div>
+        <div class="email-head-actions">
+            <button class="btn" onclick="openEmailCompose()">＋ Compose</button>
+            <button class="btn outline-btn" onclick="loadEmail()">↻ Refresh</button>
+        </div>
+    </div>
+
+    <div class="email-layout">
+        <aside class="email-folders">
+            <button class="email-folder active" onclick="emailFolder('inbox',this)">📥 Inbox <b id="emailInboxCount">0</b></button>
+            <button class="email-folder" onclick="emailFolder('starred',this)">⭐ Starred</button>
+            <button class="email-folder" onclick="emailFolder('sent',this)">📤 Sent</button>
+            <button class="email-folder" onclick="emailFolder('drafts',this)">📝 Drafts</button>
+            <button class="email-folder" onclick="emailFolder('trash',this)">🗑️ Trash</button>
+
+            <div class="email-account-card">
+                <span>BUSINESS ACCOUNT</span>
+                <strong>info@liara.co.in</strong>
+                <small>Liara Professional™</small>
+                <button onclick="openEmailSettings()">⚙️ Email Settings</button>
+            </div>
+        </aside>
+
+        <div class="email-main">
+            <div class="email-toolbar">
+                <div class="email-search"><span>⌕</span><input id="emailSearch" oninput="filterEmailList()" placeholder="Search mail..."></div>
+                <span class="email-live-dot">● Account configured</span>
+            </div>
+
+            <div id="emailList" class="email-list"></div>
+        </div>
+    </div>
+
+    <div id="emailComposeModal" class="email-modal" style="display:none">
+        <div class="email-compose">
+            <div class="email-compose-head">
+                <strong>New Message</strong>
+                <button onclick="closeEmailCompose()">×</button>
+            </div>
+            <div class="email-compose-body">
+                <label>FROM</label>
+                <input value="info@liara.co.in" readonly>
+                <label>TO</label>
+                <input id="emailTo" type="email" placeholder="customer@example.com">
+                <label>SUBJECT</label>
+                <input id="emailSubject" placeholder="Subject">
+                <label>MESSAGE</label>
+                <textarea id="emailBody" placeholder="Write your message..."></textarea>
+            </div>
+            <div class="email-compose-actions">
+                <button class="btn gray-btn" onclick="closeEmailCompose()">Cancel</button>
+                <button class="btn" onclick="sendLiaraEmail()">Send ✈️</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+</section>
+
 <!-- ================= ORDERS ================= -->
 
 <section class="admin-section" id="orders-section">
@@ -1767,6 +1838,148 @@ function payment(order){
 
 }
 
+
+/* =========================================================
+   LIARA BUSINESS EMAIL WORKSPACE
+========================================================= */
+
+const LIARA_EMAIL = "info@liara.co.in";
+let currentEmailFolder = "inbox";
+
+const LIARA_EMAIL_DEMO = [
+    {
+        id:"welcome",
+        folder:"inbox",
+        from:"Liara Professional™",
+        to:LIARA_EMAIL,
+        subject:"Business email is ready",
+        body:"Your Liara Professional™ admin email workspace is configured for info@liara.co.in.",
+        time:"Now",
+        unread:true,
+        starred:true
+    }
+];
+
+function loadEmail(){
+    const section=document.getElementById("email-section");
+    if(section) section.style.display="block";
+    renderEmailList();
+}
+
+function emailFolder(folder,button){
+    currentEmailFolder=folder;
+    document.querySelectorAll(".email-folder").forEach(b=>b.classList.remove("active"));
+    if(button) button.classList.add("active");
+    renderEmailList();
+}
+
+function renderEmailList(){
+    const box=document.getElementById("emailList");
+    if(!box) return;
+
+    const q=(document.getElementById("emailSearch")?.value||"").toLowerCase().trim();
+    let rows=LIARA_EMAIL_DEMO.filter(m=>m.folder===currentEmailFolder);
+
+    if(currentEmailFolder==="starred") rows=LIARA_EMAIL_DEMO.filter(m=>m.starred);
+    if(currentEmailFolder==="drafts") rows=[];
+    if(currentEmailFolder==="trash") rows=[];
+
+    rows=rows.filter(m=>(m.from+" "+m.to+" "+m.subject+" "+m.body).toLowerCase().includes(q));
+
+    const count=document.getElementById("emailInboxCount");
+    if(count) count.textContent=LIARA_EMAIL_DEMO.filter(m=>m.folder==="inbox"&&m.unread).length;
+
+    if(!rows.length){
+        box.innerHTML=`<div class="email-empty"><div>✉️</div><h3>${currentEmailFolder==="inbox"?"Inbox is empty":"No emails here"}</h3><p>Compose a new message to send from ${LIARA_EMAIL}.</p><button class="btn" onclick="openEmailCompose()">＋ Compose</button></div>`;
+        return;
+    }
+
+    box.innerHTML=rows.map(m=>`
+        <div class="email-row ${m.unread?"unread":""}" onclick="openEmailMessage('${m.id}')">
+            <button class="email-star" onclick="event.stopPropagation();toggleEmailStar('${m.id}')">${m.starred?"★":"☆"}</button>
+            <div class="email-avatar">${escapeHtml((m.from||"L").charAt(0).toUpperCase())}</div>
+            <div class="email-row-content">
+                <strong>${escapeHtml(m.from)}</strong>
+                <span>${escapeHtml(m.subject)}</span>
+                <small>${escapeHtml(m.body)}</small>
+            </div>
+            <time>${escapeHtml(m.time)}</time>
+        </div>`).join("");
+}
+
+function filterEmailList(){ renderEmailList(); }
+
+function openEmailMessage(id){
+    const m=LIARA_EMAIL_DEMO.find(x=>x.id===id);
+    if(!m)return;
+    m.unread=false;
+    renderEmailList();
+
+    const box=document.getElementById("emailList");
+    box.innerHTML=`
+        <div class="email-message">
+            <button class="btn gray-btn" onclick="renderEmailList()">← Back</button>
+            <div class="email-message-head">
+                <div class="email-avatar">${escapeHtml((m.from||"L").charAt(0).toUpperCase())}</div>
+                <div><h3>${escapeHtml(m.subject)}</h3><span>${escapeHtml(m.from)} → ${escapeHtml(m.to)}</span></div>
+            </div>
+            <div class="email-message-body">${escapeHtml(m.body).replace(/\n/g,"<br>")}</div>
+            <div class="email-message-footer">Sent to ${escapeHtml(m.to)}</div>
+        </div>`;
+}
+
+function toggleEmailStar(id){
+    const m=LIARA_EMAIL_DEMO.find(x=>x.id===id);
+    if(m)m.starred=!m.starred;
+    renderEmailList();
+}
+
+function openEmailCompose(to="",subject="",body=""){
+    document.getElementById("emailComposeModal").style.display="flex";
+    document.getElementById("emailTo").value=to;
+    document.getElementById("emailSubject").value=subject;
+    document.getElementById("emailBody").value=body;
+    setTimeout(()=>document.getElementById("emailTo")?.focus(),50);
+}
+
+function closeEmailCompose(){
+    document.getElementById("emailComposeModal").style.display="none";
+}
+
+function sendLiaraEmail(){
+    const to=document.getElementById("emailTo").value.trim();
+    const subject=document.getElementById("emailSubject").value.trim();
+    const body=document.getElementById("emailBody").value;
+
+    if(!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)){
+        alert("Valid customer email address pao.");
+        return;
+    }
+    if(!subject){ alert("Subject pao."); return; }
+    if(!body.trim()){ alert("Message likho."); return; }
+
+    /*
+      This opens the configured business mail client with:
+      FROM: info@liara.co.in
+      The browser cannot securely send real SMTP mail by itself.
+      For true in-dashboard sending, connect an email provider/API
+      (Resend, Brevo, Mailgun, etc.) and call it from a Supabase Edge Function.
+    */
+    const url="mailto:"+encodeURIComponent(to)
+        +"?subject="+encodeURIComponent(subject)
+        +"&body="+encodeURIComponent(body);
+
+    window.location.href=url;
+
+    alert("Email draft opened for "+to+".\n\nActual sending will happen through your connected mail provider.");
+    closeEmailCompose();
+}
+
+function openEmailSettings(){
+    alert("Business email: info@liara.co.in\n\nFor real Inbox/Send/Receive inside this portal, connect the mailbox provider or an email API. The portal UI is ready.");
+}
+
+
 /* =========================================================
    MENU
 ========================================================= */
@@ -1793,9 +2006,14 @@ function showSection(section,button){
     document.getElementById(
         "other-section"
     ).style.display =
-        section === "orders"
+        section === "orders" || section === "email"
         ? "none"
         : "block";
+
+    const emailSection=document.getElementById("email-section");
+    if(emailSection){
+        emailSection.style.display = section === "email" ? "block" : "none";
+    }
 
     if(section === "orders") loadOrders();
     else if(section === "sales") loadSales();
@@ -1806,6 +2024,7 @@ function showSection(section,button){
     else if(section === "delivery") loadDelivery();
     else if(section === "reports") loadReports();
     else if(section === "notifications") loadNotifications();
+    else if(section === "email") loadEmail();
     else if(section === "parties") loadParties();
     else if(section === "settings") loadSettings();
 
