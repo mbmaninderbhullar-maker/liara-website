@@ -1301,6 +1301,14 @@ body{
 .staff-rights-grid input{accent-color:#ad8232;}
 @media(max-width:800px){.settings-layout{grid-template-columns:1fr!important}.staff-rights-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 </style>
+
+<style>
+/* Staff Management: force visibility only when selected */
+#settings-staff.active{display:block!important;visibility:visible!important;opacity:1!important;}
+.staff-rights-grid{display:grid!important;grid-template-columns:repeat(2,minmax(180px,1fr));gap:8px;margin-top:8px;}
+.staff-rights-grid label{display:flex;align-items:center;gap:7px;padding:9px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;font-size:12px;}
+.staff-rights-grid input{width:16px;height:16px;}
+</style>
 </head>
 
 <body>
@@ -1838,7 +1846,7 @@ function showSection(section,button){
     else if(section === "notifications") loadNotifications();
     else if(section === "parties") loadParties();
     else if(section === "settings") loadSettings();
-    else if(section === "staff") showStaffManagement();
+    else if(section === "staff") { loadSettings(); setTimeout(()=>openStaffPanel(document.getElementById('staffManagementNavBtn')),0); }
 
     closeSidebar();
 
@@ -5799,7 +5807,7 @@ function loadSettings(){
                 </button>
 
 <button type="button" id="staffManagementNavBtn"
-        onclick="openSettingsTab('staff',this);">
+        onclick="openStaffPanel(this); return false;">
   👥 Staff Management
 </button>
 
@@ -6780,6 +6788,27 @@ function optionList(options,current){
 
     `).join("");
 
+}
+
+function openStaffPanel(button){
+    const panel=document.getElementById('settings-staff');
+    if(!panel) return;
+
+    // Hide every Settings panel, then force Staff Management visible.
+    document.querySelectorAll('.settings-panel').forEach(p=>{
+        p.classList.remove('active');
+        p.style.display='none';
+    });
+    document.querySelectorAll('.settings-nav button').forEach(b=>b.classList.remove('active'));
+
+    panel.classList.add('active');
+    panel.style.display='block';
+    panel.style.visibility='visible';
+    panel.style.opacity='1';
+
+    if(button) button.classList.add('active');
+
+    if(typeof loadStaffAccounts==='function') loadStaffAccounts();
 }
 
 function openSettingsTab(tab,button){
