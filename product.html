@@ -307,49 +307,6 @@ body {
 
 
 /* =====================================================
-   LAPTOP / DESKTOP SIZE
-===================================================== */
-
-@media (min-width: 901px) and (max-width: 1400px) {
-
-    .product-page {
-        width: 90%;
-        max-width: 1080px;
-        padding: 40px 0 65px;
-    }
-
-    .product-detail {
-        padding: 28px;
-        gap: 30px;
-    }
-
-    .product-photo {
-        height: 450px;
-    }
-
-    .product-info h1 {
-        font-size: 34px;
-    }
-
-    .product-price {
-        font-size: 27px;
-    }
-}
-
-/* VERY LARGE DESKTOP */
-
-@media (min-width: 1401px) {
-
-    .product-page {
-        max-width: 1150px;
-    }
-
-    .product-photo {
-        height: 500px;
-    }
-}
-
-/* =====================================================
    RESPONSIVE
 ===================================================== */
 
@@ -408,6 +365,76 @@ body {
         width: 100%;
     }
 
+}
+
+
+/* =====================================================
+   PRODUCT PAGE - LAPTOP SIZE FIX
+   Only affects product.html
+===================================================== */
+
+@media (min-width: 901px) {
+
+    .product-page {
+        width: min(92vw, 1080px) !important;
+        max-width: 1080px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 35px 0 60px !important;
+    }
+
+    .product-detail {
+        width: 100% !important;
+        max-width: 1080px !important;
+        padding: 26px !important;
+        gap: 28px !important;
+        border-radius: 18px !important;
+    }
+
+    .product-photo {
+        height: 430px !important;
+        max-height: 430px !important;
+    }
+
+    .product-info h1 {
+        font-size: 34px !important;
+        line-height: 1.18 !important;
+    }
+
+    .product-price {
+        font-size: 27px !important;
+    }
+}
+
+@media (min-width: 1400px) {
+
+    .product-page {
+        width: min(90vw, 1120px) !important;
+        max-width: 1120px !important;
+    }
+
+    .product-detail {
+        max-width: 1120px !important;
+    }
+
+    .product-photo {
+        height: 450px !important;
+        max-height: 450px !important;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .product-page {
+        width: 92% !important;
+        max-width: none !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .product-detail {
+        width: 100% !important;
+    }
 }
 
 </style>
