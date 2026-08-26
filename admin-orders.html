@@ -1339,6 +1339,74 @@ button,a,input,select,textarea,.btn,.side-menu button,.admin-box,.party-card,.su
 #sidebarOverlay{pointer-events:none}
 #sidebarOverlay.show{pointer-events:auto}
 
+
+/* ===== LIARA PROFESSIONAL POLISH ===== */
+:root{
+  --lp-bg:#f5f7fb;
+  --lp-card:#ffffff;
+  --lp-text:#172033;
+  --lp-muted:#6b7280;
+  --lp-border:#e7eaf0;
+  --lp-shadow:0 10px 30px rgba(15,23,42,.06);
+}
+body{background:var(--lp-bg)!important;color:var(--lp-text);}
+.admin-box,.settings-card,.party-card,.summary-card,.stock-card{
+  background:var(--lp-card)!important;
+  border:1px solid var(--lp-border)!important;
+  border-radius:16px!important;
+  box-shadow:var(--lp-shadow)!important;
+}
+.admin-header{padding:16px 18px!important;border-bottom:1px solid var(--lp-border);}
+.admin-header h2,.admin-header h3{letter-spacing:-.2px;}
+.btn{
+  border-radius:9px!important;
+  font-weight:600!important;
+  min-height:36px;
+  transition:.18s ease;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(15,23,42,.10);}
+input,select,textarea{
+  border:1px solid #dfe3ea!important;
+  border-radius:9px!important;
+  min-height:38px;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none!important;
+  border-color:#9aa7bd!important;
+  box-shadow:0 0 0 3px rgba(100,116,139,.10)!important;
+}
+table{border-collapse:separate!important;border-spacing:0 5px!important;}
+tbody tr{background:#fff;}
+tbody tr:nth-child(even){background:#f8fafc;}
+tbody td{border-top:1px solid var(--lp-border);border-bottom:1px solid var(--lp-border);}
+tbody td:first-child{border-left:1px solid var(--lp-border);border-radius:9px 0 0 9px;}
+tbody td:last-child{border-right:1px solid var(--lp-border);border-radius:0 9px 9px 0;}
+.message{border-radius:12px!important;}
+/* Compact top summary */
+.summary-card,.stock-card{padding:11px 13px!important;}
+.summary-card h3,.stock-card h3{font-size:20px!important;margin:2px 0!important;}
+.summary-card p,.stock-card p{font-size:11px!important;}
+/* Professional sidebar */
+.side-menu button{
+  border-radius:10px!important;
+  margin:3px 8px!important;
+  width:calc(100% - 16px)!important;
+}
+.side-menu button.active{font-weight:700!important;}
+/* Staff management */
+.staff-create-card{
+  background:linear-gradient(180deg,#fff,#fafbfc)!important;
+}
+.staff-role-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 9px;border-radius:999px;
+  font-size:11px;font-weight:700;background:#eef2f7;color:#334155;
+}
+@media(max-width:700px){
+  .admin-box,.settings-card,.party-card{border-radius:12px!important;}
+  .admin-header{padding:13px!important;}
+}
+
 </style>
 </head>
 
@@ -1399,6 +1467,7 @@ button,a,input,select,textarea,.btn,.side-menu button,.admin-box,.party-card,.su
         <div class="admin-pill">
             👤 Company Admin
         </div>
+        <span id="roleBadge" class="admin-pill" style="margin-left:6px;">Role: Admin</span>
 
 
     </div>
@@ -1906,35 +1975,35 @@ function closeSidebar(){
 
 async function checkAdmin(){
 
-    const {data,error} =
-        await supabaseClient
-        .auth
-        .getUser();
+    const {data,error} = await supabaseClient.auth.getUser();
 
     if(error || !data || !data.user){
-
-        window.location.href =
-            "company-login.html";
-
+        window.location.href = "company-login.html";
         return null;
-
     }
 
-    if(
-        !data.user.email ||
-        data.user.email.toLowerCase()
-        !== ADMIN_EMAIL.toLowerCase()
-    ){
+    const user = data.user;
+    const email = String(user.email || "").toLowerCase();
 
-        window.location.href =
-            "company-login.html";
-
-        return null;
-
+    if(email === String(ADMIN_EMAIL || "").toLowerCase()){
+        user.app_role = "Admin";
+        return user;
     }
 
-    return data.user;
+    const {data:profile,error:profileError} = await supabaseClient
+        .from("staff_profiles")
+        .select("id,name,email,role,active")
+        .eq("email", email)
+        .maybeSingle();
 
+    if(!profileError && profile && profile.active !== false){
+        user.app_role = profile.role || "Staff";
+        user.staff_profile = profile;
+        return user;
+    }
+
+    window.location.href = "company-login.html";
+    return null;
 }
 
 /* =========================================================
@@ -1948,6 +2017,7 @@ async function loadOrders(){
     try{
         const user=await checkAdmin();
         if(!user) return;
+        window.currentDashboardUser=user;
         const result=await supabaseClient.from("orders").select("*").order("created_at",{ascending:false});
         if(result.error) throw result.error;
         allOrders=result.data||[];
@@ -6945,6 +7015,27 @@ function getChecked(id,fallback){
    STAFF MANAGEMENT
 ========================================================= */
 
+function updateRoleBadge(){
+    const el=document.getElementById("roleBadge");
+    const u=window.currentDashboardUser;
+    if(el && u) el.textContent="Role: "+(u.app_role||"Staff");
+}
+
+function isCompanyAdmin(){
+    return window.currentDashboardUser?.app_role === "Admin";
+}
+
+function applyRoleAccess(){
+    const user=window.currentDashboardUser;
+    if(!user || user.app_role==="Admin") return;
+    document.querySelectorAll('[onclick*="openSettingsTab"]').forEach(btn=>{
+        const text=(btn.textContent||"").toLowerCase();
+        if(text.includes("staff") || text.includes("security") || text.includes("company") || text.includes("system")){
+            btn.style.display="none";
+        }
+    });
+}
+
 function staffStatus(message, ok=false){
     const el=document.getElementById("staffCreateStatus");
     if(!el) return;
@@ -6955,6 +7046,7 @@ function staffStatus(message, ok=false){
 }
 
 async function createStaffLogin(){
+    if(!isCompanyAdmin()){ staffStatus('Only the company admin can create staff accounts.'); return; }
     const name=document.getElementById("staffName")?.value.trim();
     const email=document.getElementById("staffEmail")?.value.trim().toLowerCase();
     const password=document.getElementById("staffPassword")?.value || "";
@@ -7479,6 +7571,7 @@ document.getElementById(
 ========================================================= */
 
 loadOrders();
+setTimeout(()=>{ updateRoleBadge(); applyRoleAccess(); }, 300);
 
 
 /* ================= ZOHO MAIL ================= */
@@ -7510,6 +7603,11 @@ async function sendZohoMail(){
 }
 
 </script>
+
+
+<div id="liara-professional-footer" style="text-align:center;padding:18px 10px;color:#8a93a3;font-size:11px;">
+  LIARA PROFESSIONAL™ &nbsp;•&nbsp; Secure Business Dashboard
+</div>
 
 </body>
 </html>
