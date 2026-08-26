@@ -1174,6 +1174,78 @@ body{
     }
 }
 
+
+/* ================= PREMIUM PARTY ACCOUNTS ================= */
+.party-shell{overflow:hidden}
+.party-page-head,.party-account-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:24px}
+.party-kicker{font-size:10px;letter-spacing:2px;font-weight:800;color:#ad8232;margin-bottom:7px}
+.party-page-head h2,.party-account-top h2{margin:0;font-size:28px}
+.party-page-head p{margin:7px 0 0;color:#888;font-size:12px}
+.party-head-actions,.party-account-actions{display:flex;gap:8px;flex-wrap:wrap}
+.party-dashboard-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.party-stat{background:linear-gradient(145deg,#fff,#fbf8f2);border:1px solid #ece5d9;border-radius:14px;padding:17px}
+.party-stat span,.party-stat small{display:block;color:#777;font-size:11px}
+.party-stat strong{display:block;font-size:22px;margin:7px 0}
+.party-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:13px;background:#faf8f4;border:1px solid #ece8e1;border-radius:12px;margin-bottom:18px}
+.party-search-wrap{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #ddd;border-radius:9px;padding:0 11px;flex:1;min-width:240px}
+.party-search-wrap span{font-size:20px;color:#999}
+.party-search{width:100%;border:0!important;outline:0;padding:11px 0!important;min-width:0!important}
+.party-toolbar select{padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff}
+.party-table-wrap{width:100%;overflow:auto;border:1px solid #ebe7df;border-radius:13px}
+.party-table{width:100%;min-width:1050px;border-collapse:collapse;font-size:12px}
+.party-table th{background:#f5f0e7;color:#574d40;padding:13px 11px;text-align:left;font-size:10px;letter-spacing:.4px;white-space:nowrap}
+.party-table td{padding:12px 11px;border-bottom:1px solid #eee;vertical-align:middle}
+.party-table tr:last-child td{border-bottom:0}
+.party-table tbody tr:hover{background:#fffdf9}
+.party-name-cell{display:flex;align-items:center;gap:10px;min-width:190px}
+.party-avatar{width:35px;height:35px;border-radius:50%;background:#211d18;color:#d7ae67;display:grid;place-items:center;font-weight:bold}
+.party-name-cell strong{display:block}
+.party-name-cell small{display:block;color:#999;margin-top:3px}
+.ledger-debit{color:#a33;font-weight:700}
+.ledger-credit{color:#287a3e;font-weight:700}
+.balance-due{color:#a33}.balance-advance{color:#287a3e}.balance-zero{color:#777}
+.party-status{display:inline-block;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800}
+.party-status.due{background:#fae8e5;color:#a33}.party-status.advance{background:#e7f3e9;color:#287a3e}.party-status.settled{background:#eee;color:#666}
+.party-actions{display:flex;gap:5px;flex-wrap:wrap}
+.party-empty{text-align:center;padding:70px 20px}.party-empty>div{font-size:48px}.party-empty h3{margin:10px 0 5px}.party-empty p{color:#888;font-size:12px}
+.party-form-card,.party-txn-form{margin:15px 0 20px;padding:20px;border:1px solid #e5dfd3;border-radius:15px;background:#fffdf9}
+.party-form-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}
+.party-form-title span{font-size:9px;color:#ad8232;font-weight:800;letter-spacing:1.5px}
+.party-form-title h3{margin:4px 0 0;font-size:17px}
+.party-close{border:0;background:#eee;border-radius:50%;width:32px;height:32px;font-size:20px;cursor:pointer}
+.party-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.party-form-grid>div.full{grid-column:1/-1}
+.party-form-grid label{display:block;font-size:10px;font-weight:800;color:#666;margin-bottom:6px}
+.party-form-grid input,.party-form-grid textarea,.party-form-grid select{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;background:#fff;outline:0;font-family:inherit}
+.party-form-grid textarea{min-height:80px;resize:vertical}.field-help{font-size:10px;color:#999}
+.party-form-actions{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap}
+.party-account-page{background:#fff}
+.party-contact-line{margin-top:7px;color:#777;font-size:11px}
+.party-ledger-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.party-ledger-summary>div{border:1px solid #eae5dc;border-radius:12px;padding:14px;background:#fcfaf6}
+.party-ledger-summary span,.party-ledger-summary small{display:block;color:#777;font-size:10px}.party-ledger-summary strong{display:block;font-size:21px;margin:7px 0}
+.party-ledger-summary .due-card{background:#fff5f2;border-color:#f0d5ce}.party-ledger-summary .advance-card{background:#f2faf3;border-color:#d4e9d8}.party-ledger-summary .settled-card{background:#f6f6f6}
+.party-account-banner{display:flex;justify-content:space-between;align-items:center;border-radius:11px;padding:13px 16px;margin-bottom:22px}
+.party-account-banner strong{font-size:17px}.party-account-banner small{display:block;font-size:10px;margin-top:3px;color:#777}
+.banner-due{background:#fff2ef;border:1px solid #f0d2cb}.banner-due>strong{color:#a33}
+.banner-advance{background:#eef9f0;border:1px solid #d1e7d5}.banner-advance>strong{color:#287a3e}
+.banner-settled{background:#f4f4f4;border:1px solid #ddd}
+.party-ledger-heading{display:flex;justify-content:space-between;align-items:center;margin:18px 0 12px}
+.party-ledger-heading span{font-size:9px;color:#ad8232;font-weight:800;letter-spacing:1.5px}
+.party-ledger-heading h3{margin:4px 0 0}
+.party-statement-footer{display:flex;justify-content:flex-end;gap:30px;padding:17px 0;border-top:2px solid #211d18;margin-top:15px}
+.party-statement-footer span{display:block;color:#777;font-size:10px}.party-statement-footer strong{display:block;margin-top:4px}
+.ledger-table{min-width:1100px}
+@media(max-width:900px){.party-dashboard-cards,.party-ledger-summary{grid-template-columns:1fr 1fr}.party-page-head,.party-account-top{flex-direction:column}.party-form-grid{grid-template-columns:1fr}.party-form-grid>div.full{grid-column:auto}}
+@media(max-width:600px){.party-dashboard-cards,.party-ledger-summary{grid-template-columns:1fr}.party-statement-footer{display:grid;grid-template-columns:1fr 1fr}.party-head-actions,.party-account-actions{width:100%}.party-head-actions .btn,.party-account-actions .btn{flex:1}}
+@media print{
+    .party-shell,.party-account-page{box-shadow:none!important;border:0!important}
+    .party-account-page{padding:8mm!important}
+    .party-table{min-width:0!important;font-size:9px!important}
+    .party-table th,.party-table td{padding:6px!important}
+    .no-print{display:none!important}
+}
+
 /* ================= PARTIES ================= */
 .party-balance-due{color:#ad8232;font-weight:bold}
 @media(max-width:800px){
@@ -3377,559 +3449,456 @@ async function updateStock(id){
 }
 
 /* =========================================================
-   PARTIES / OFFLINE ACCOUNTS
+   PARTIES / PROFESSIONAL PARTY ACCOUNTS
+   Bank-style ledger + party master + payments + statements
 ========================================================= */
 
+let activePartyAccountId = null;
+let partyCache = [];
+let partyTransactionCache = [];
+
+function partyMoney(value){
+    const n = Number(value || 0);
+    return "₹" + n.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function partyDate(value){
+    if(!value) return "—";
+    return new Date(value).toLocaleDateString("en-IN",{
+        day:"2-digit",month:"2-digit",year:"numeric"
+    });
+}
+
+function partyDateTime(value){
+    if(!value) return "—";
+    return new Date(value).toLocaleString("en-IN",{
+        day:"2-digit",month:"2-digit",year:"numeric",
+        hour:"2-digit",minute:"2-digit"
+    });
+}
+
+function partyTxnType(t){
+    return String(t?.transaction_type || "").toLowerCase();
+}
+
+function partyDebit(t){
+    const type = partyTxnType(t);
+    return type==="sale" || type==="debit" || type==="opening" ? Number(t.amount||0) : 0;
+}
+
+function partyCredit(t){
+    const type = partyTxnType(t);
+    return type==="payment" || type==="credit" || type==="return" ? Number(t.amount||0) : 0;
+}
+
+function partyBalance(rows){
+    return (rows||[]).reduce((s,t)=>s + partyDebit(t) - partyCredit(t),0);
+}
+
+function partyStatus(balance){
+    if(balance > 0.009) return `<span class="party-status due">RECEIVABLE</span>`;
+    if(balance < -0.009) return `<span class="party-status advance">ADVANCE</span>`;
+    return `<span class="party-status settled">SETTLED</span>`;
+}
+
 async function loadParties(){
-
     document.getElementById("other-content").innerHTML = `
-
-    <div class="admin-box">
-
-        <div class="admin-header">
+    <div class="admin-box party-shell">
+        <div class="party-page-head">
             <div>
-                <p>OFFLINE BUSINESS</p>
-                <h2>👥 Parties</h2>
+                <div class="party-kicker">LIARA PROFESSIONAL™ • ACCOUNTS</div>
+                <h2>👥 Party Accounts</h2>
+                <p>Manage parties, credit sales, payments and complete account statements.</p>
             </div>
-
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="btn" onclick="showAddPartyForm()">
-                    ➕ Add Party
-                </button>
-
-                <button class="btn" onclick="loadParties()">
-                    🔄 Refresh
-                </button>
+            <div class="party-head-actions">
+                <button class="btn" onclick="showAddPartyForm()">＋ New Party</button>
+                <button class="btn outline-btn" onclick="loadParties()">↻ Refresh</button>
             </div>
+        </div>
+
+        <div class="party-dashboard-cards" id="partyDashboardCards">
+            <div class="party-stat"><span>Total Parties</span><strong>0</strong><small>Active accounts</small></div>
+            <div class="party-stat"><span>Total Receivable</span><strong>₹0.00</strong><small>Amount to receive</small></div>
+            <div class="party-stat"><span>Total Advance</span><strong>₹0.00</strong><small>Customer credit</small></div>
+            <div class="party-stat"><span>Total Transactions</span><strong>0</strong><small>Ledger entries</small></div>
+        </div>
+
+        <div class="party-toolbar">
+            <div class="party-search-wrap">
+                <span>⌕</span>
+                <input id="partySearchInput" class="party-search"
+                       placeholder="Search party name, mobile or address..."
+                       oninput="filterPartyTable()">
+            </div>
+            <select id="partyBalanceFilter" onchange="filterPartyTable()">
+                <option value="all">All Accounts</option>
+                <option value="due">Receivable</option>
+                <option value="advance">Advance</option>
+                <option value="settled">Settled</option>
+            </select>
+            <button class="btn outline-btn" onclick="showAddPartyForm()">＋ Add Party</button>
         </div>
 
         <div id="partyForm"></div>
-        <div id="partiesList">
-            <div class="message">Loading parties...</div>
-        </div>
-
-    </div>
-    `;
-
+        <div id="partiesList"><div class="message">Loading party accounts...</div></div>
+    </div>`;
     await renderParties();
 }
 
-
-function showAddPartyForm(){
+function showAddPartyForm(editId=""){
+    const party = partyCache.find(p=>String(p.id)===String(editId)) || {};
+    const editing = !!editId;
 
     document.getElementById("partyForm").innerHTML = `
-
-    <div class="admin-box"
-         style="margin:20px 0;border:1px solid #ddd;">
-
-        <h3>➕ Add New Party</h3>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label>Party Name</label>
-                <input id="partyNameInput"
-                       type="text"
-                       placeholder="e.g. ABC Medical Store">
+    <div class="party-form-card">
+        <div class="party-form-title">
+            <div>
+                <span>${editing ? "EDIT PARTY" : "PARTY MASTER"}</span>
+                <h3>${editing ? "✏️ Update Party Account" : "＋ Create New Party Account"}</h3>
             </div>
-
-            <div class="form-group">
-                <label>Mobile Number</label>
-                <input id="partyPhoneInput"
-                       type="tel"
-                       placeholder="e.g. 9876543210">
-            </div>
-
-            <div class="form-group">
-                <label>Address</label>
-                <input id="partyAddressInput"
-                       type="text"
-                       placeholder="Optional">
-            </div>
-
-            <div class="form-group full">
-                <label>Note</label>
-                <textarea id="partyNoteInput"
-                          placeholder="Optional note"></textarea>
-            </div>
-
+            <button class="party-close" onclick="document.getElementById('partyForm').innerHTML=''">×</button>
         </div>
 
-        <div style="display:flex;gap:10px;margin-top:10px;">
-            <button class="btn" onclick="saveParty()">
-                💾 Save Party
-            </button>
-
-            <button class="btn gray-btn"
-                    onclick="document.getElementById('partyForm').innerHTML=''">
-                Cancel
-            </button>
+        <div class="party-form-grid">
+            <div>
+                <label>PARTY / BUSINESS NAME *</label>
+                <input id="partyNameInput" value="${escapeHtml(party.name||"")}" placeholder="e.g. ABC Distributors">
+            </div>
+            <div>
+                <label>MOBILE NUMBER</label>
+                <input id="partyPhoneInput" type="tel" value="${escapeHtml(party.phone||"")}" placeholder="9876543210">
+            </div>
+            <div>
+                <label>GSTIN</label>
+                <input id="partyGstinInput" value="${escapeHtml(party.gstin||"")}" placeholder="Optional">
+            </div>
+            <div>
+                <label>OPENING BALANCE (₹)</label>
+                <input id="partyOpeningInput" type="number" step="0.01" min="0"
+                       value="${Number(party.opening_balance||0)}"
+                       ${editing ? "disabled" : ""}>
+                <small class="field-help">Opening amount due from this party.</small>
+            </div>
+            <div class="full">
+                <label>ADDRESS</label>
+                <input id="partyAddressInput" value="${escapeHtml(party.address||"")}" placeholder="Full address">
+            </div>
+            <div class="full">
+                <label>NOTE</label>
+                <textarea id="partyNoteInput" placeholder="Optional account note">${escapeHtml(party.note||"")}</textarea>
+            </div>
         </div>
 
-    </div>
-    `;
+        <div class="party-form-actions">
+            <button class="btn green-btn" onclick="saveParty('${escapeHtml(String(editId))}')">💾 ${editing ? "Save Changes" : "Create Account"}</button>
+            <button class="btn gray-btn" onclick="document.getElementById('partyForm').innerHTML=''">Cancel</button>
+        </div>
+    </div>`;
 }
 
+async function saveParty(editId=""){
+    const name = document.getElementById("partyNameInput").value.trim();
+    const phone = document.getElementById("partyPhoneInput").value.trim();
+    const address = document.getElementById("partyAddressInput").value.trim();
+    const note = document.getElementById("partyNoteInput").value.trim();
+    const gstin = document.getElementById("partyGstinInput").value.trim();
+    const opening = Number(document.getElementById("partyOpeningInput").value || 0);
 
-async function saveParty(){
+    if(!name){ alert("Party name pao."); return; }
+    if(opening < 0 || !Number.isFinite(opening)){ alert("Valid opening balance pao."); return; }
 
-    const name =
-        document.getElementById("partyNameInput").value.trim();
+    if(editId){
+        const {error} = await supabaseClient.from("parties").update({
+            name,phone:phone||null,address:address||null,note:note||null,gstin:gstin||null
+        }).eq("id",editId);
+        if(error){ alert("Party update failed:\n\n"+error.message); return; }
+        alert("Party account updated.");
+    }else{
+        const {data,error} = await supabaseClient.from("parties").insert({
+            name,phone:phone||null,address:address||null,note:note||null,gstin:gstin||null,
+            opening_balance:opening
+        }).select("id").single();
 
-    const phone =
-        document.getElementById("partyPhoneInput").value.trim();
-
-    const address =
-        document.getElementById("partyAddressInput").value.trim();
-
-    const note =
-        document.getElementById("partyNoteInput").value.trim();
-
-    if(!name){
-        alert("Please enter the party name.");
-        return;
+        if(error){
+            /* Fallback for older parties tables without the optional columns. */
+            const fallback = await supabaseClient.from("parties").insert({
+                name,phone:phone||null,address:address||null,note:note||null
+            }).select("id").single();
+            if(fallback.error){ alert("Party save failed:\n\n"+error.message); return; }
+            if(opening > 0){
+                await supabaseClient.from("party_transactions").insert({
+                    party_id:fallback.data.id,transaction_type:"opening",
+                    quantity:null,amount:opening,note:"Opening balance"
+                });
+            }
+        }else if(opening > 0){
+            const tx = await supabaseClient.from("party_transactions").insert({
+                party_id:data.id,transaction_type:"opening",
+                quantity:null,amount:opening,note:"Opening balance"
+            });
+            if(tx.error){ alert("Party created, but opening balance could not be recorded:\n\n"+tx.error.message); }
+        }
+        alert("Party account created.");
     }
-
-    const {error} =
-        await supabaseClient
-        .from("parties")
-        .insert({
-            name:name,
-            phone:phone || null,
-            address:address || null,
-            note:note || null
-        });
-
-    if(error){
-        alert("Party save failed:\n\n" + error.message);
-        return;
-    }
-
-    alert("Party saved successfully.");
-    loadParties();
+    document.getElementById("partyForm").innerHTML="";
+    await renderParties();
 }
-
 
 async function renderParties(){
+    const box = document.getElementById("partiesList");
+    const {data:parties,error} = await supabaseClient.from("parties").select("*").order("name",{ascending:true});
 
-    const box =
-        document.getElementById("partiesList");
+    if(error){ box.innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`; return; }
+    partyCache = parties || [];
 
-    const {data:parties,error} =
-        await supabaseClient
-        .from("parties")
-        .select("*")
-        .order("name",{ascending:true});
+    const {data:tx,error:txError} = await supabaseClient
+        .from("party_transactions").select("*").order("created_at",{ascending:true});
 
-    if(error){
-        box.innerHTML =
-            `<div class="message error">${escapeHtml(error.message)}</div>`;
-        return;
-    }
+    if(txError){ box.innerHTML=`<div class="message error">${escapeHtml(txError.message)}</div>`; return; }
+    partyTransactionCache = tx || [];
 
-    if(!parties || !parties.length){
-        box.innerHTML =
-            `<div class="message">No parties added yet.</div>`;
-        return;
-    }
-
-    const {data:tx,error:txError} =
-        await supabaseClient
-        .from("party_transactions")
-        .select("*")
-        .order("created_at",{ascending:false});
-
-    if(txError){
-        box.innerHTML =
-            `<div class="message error">${escapeHtml(txError.message)}</div>`;
-        return;
-    }
-
-    const transactions = tx || [];
-
-    let html = `
-    <div class="table-wrapper">
-    <table class="data-table">
-    <thead>
-    <tr>
-        <th>PARTY</th>
-        <th>MOBILE</th>
-        <th>TOTAL BILL</th>
-        <th>PAID</th>
-        <th>BAKI</th>
-        <th>ACTION</th>
-    </tr>
-    </thead>
-    <tbody>
-    `;
-
-    parties.forEach(party=>{
-
-        const rows =
-            transactions.filter(
-                t=>String(t.party_id) === String(party.id)
-            );
-
-        const bill =
-            rows
-            .filter(t=>t.transaction_type==="sale")
-            .reduce((sum,t)=>sum + Number(t.amount || 0),0);
-
-        const paid =
-            rows
-            .filter(t=>t.transaction_type==="payment")
-            .reduce((sum,t)=>sum + Number(t.amount || 0),0);
-
-        const balance =
-            bill - paid;
-
-        html += `
-        <tr>
-
-            <td>
-                <strong>${escapeHtml(party.name)}</strong>
-            </td>
-
-            <td>${escapeHtml(party.phone || "-")}</td>
-
-            <td>${money(bill)}</td>
-
-            <td>${money(paid)}</td>
-
-            <td class="${balance > 0 ? "stock-low" : "stock-ok"}">
-                <strong>${money(balance)}</strong>
-            </td>
-
-            <td>
-                <button class="table-btn view-btn"
-                        onclick="viewParty('${escapeHtml(String(party.id))}')">
-                    View
-                </button>
-
-                <button class="table-btn edit-btn"
-                        onclick="showPartySaleForm('${escapeHtml(String(party.id))}')">
-                    📦 Give Stock
-                </button>
-
-                <button class="table-btn edit-btn"
-                        onclick="addPartyPayment('${escapeHtml(String(party.id))}')">
-                    + Payment
-                </button>
-            </td>
-
-        </tr>
-        `;
+    let receivable=0, advance=0;
+    partyCache.forEach(p=>{
+        const rows=partyTransactionCache.filter(t=>String(t.party_id)===String(p.id));
+        const b=partyBalance(rows);
+        if(b>0) receivable+=b;
+        if(b<0) advance+=Math.abs(b);
     });
 
-    html += `
-    </tbody>
-    </table>
-    </div>
-    `;
+    const cards=document.getElementById("partyDashboardCards");
+    if(cards){
+        cards.innerHTML=`
+        <div class="party-stat"><span>Total Parties</span><strong>${partyCache.length}</strong><small>Active accounts</small></div>
+        <div class="party-stat"><span>Total Receivable</span><strong>${partyMoney(receivable)}</strong><small>Amount to receive</small></div>
+        <div class="party-stat"><span>Total Advance</span><strong>${partyMoney(advance)}</strong><small>Party credit</small></div>
+        <div class="party-stat"><span>Total Transactions</span><strong>${partyTransactionCache.length}</strong><small>Ledger entries</small></div>`;
+    }
 
-    box.innerHTML = html;
+    if(!partyCache.length){
+        box.innerHTML=`<div class="party-empty"><div>👥</div><h3>No Party Accounts Yet</h3><p>Create your first party account to start maintaining a ledger.</p><button class="btn" onclick="showAddPartyForm()">＋ Create Party</button></div>`;
+        return;
+    }
+
+    let html=`
+    <div class="party-table-wrap">
+    <table class="party-table">
+    <thead><tr>
+        <th>PARTY ACCOUNT</th><th>MOBILE</th><th>LAST ACTIVITY</th>
+        <th>DEBIT</th><th>CREDIT</th><th>BALANCE</th><th>STATUS</th><th>ACTION</th>
+    </tr></thead><tbody>`;
+
+    partyCache.forEach(p=>{
+        const rows=partyTransactionCache.filter(t=>String(t.party_id)===String(p.id));
+        const debit=rows.reduce((s,t)=>s+partyDebit(t),0);
+        const credit=rows.reduce((s,t)=>s+partyCredit(t),0);
+        const balance=debit-credit;
+        const last=rows.length ? rows[rows.length-1].created_at : p.created_at;
+
+        html+=`
+        <tr data-party-row data-name="${escapeHtml((p.name||"").toLowerCase())}"
+            data-phone="${escapeHtml((p.phone||"").toLowerCase())}"
+            data-address="${escapeHtml((p.address||"").toLowerCase())}"
+            data-status="${balance>0.009?"due":balance<-0.009?"advance":"settled"}">
+            <td>
+                <div class="party-name-cell"><div class="party-avatar">${escapeHtml((p.name||"?").charAt(0).toUpperCase())}</div>
+                <div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.gstin||"Party Account")}</small></div></div>
+            </td>
+            <td>${escapeHtml(p.phone||"—")}</td>
+            <td>${partyDate(last)}</td>
+            <td class="ledger-debit">${partyMoney(debit)}</td>
+            <td class="ledger-credit">${partyMoney(credit)}</td>
+            <td><strong class="${balance>0?".balance-due":balance<0?".balance-advance":".balance-zero"}">${partyMoney(Math.abs(balance))} ${balance>0?"Dr":balance<0?"Cr":""}</strong></td>
+            <td>${partyStatus(balance)}</td>
+            <td>
+                <div class="party-actions">
+                    <button class="table-btn view-btn" onclick="viewParty('${escapeHtml(String(p.id))}')">Open</button>
+                    <button class="table-btn edit-btn" onclick="addPartyPayment('${escapeHtml(String(p.id))}')">＋ Pay</button>
+                    <button class="table-btn print-btn" onclick="viewParty('${escapeHtml(String(p.id))}',true)">Statement</button>
+                    <button class="table-btn" onclick="showAddPartyForm('${escapeHtml(String(p.id))}')">✏️</button>
+                </div>
+            </td>
+        </tr>`;
+    });
+
+    html+=`</tbody></table></div>`;
+    box.innerHTML=html;
 }
 
+function filterPartyTable(){
+    const q=(document.getElementById("partySearchInput")?.value||"").toLowerCase().trim();
+    const status=document.getElementById("partyBalanceFilter")?.value||"all";
+    document.querySelectorAll("[data-party-row]").forEach(row=>{
+        const text=(row.dataset.name+" "+row.dataset.phone+" "+row.dataset.address);
+        row.style.display=(text.includes(q)&&(status==="all"||row.dataset.status===status))?"":"none";
+    });
+}
 
-async function viewParty(id){
+async function viewParty(id,autoPrint=false){
+    activePartyAccountId=id;
 
-    const {data:party,error:partyError} =
-        await supabaseClient
-        .from("parties")
-        .select("*")
-        .eq("id",id)
-        .single();
+    const {data:party,error:partyError}=await supabaseClient.from("parties").select("*").eq("id",id).single();
+    if(partyError){ alert(partyError.message); return; }
 
-    if(partyError){
-        alert(partyError.message);
-        return;
-    }
+    const {data:rows,error}=await supabaseClient.from("party_transactions")
+        .select("*").eq("party_id",id).order("created_at",{ascending:true});
+    if(error){ alert(error.message); return; }
 
-    const {data:rows,error} =
-        await supabaseClient
-        .from("party_transactions")
-        .select("*")
-        .eq("party_id",id)
-        .order("created_at",{ascending:false});
+    const transactions=rows||[];
+    const debit=transactions.reduce((s,t)=>s+partyDebit(t),0);
+    const credit=transactions.reduce((s,t)=>s+partyCredit(t),0);
+    const balance=debit-credit;
+    const sales=transactions.filter(t=>partyTxnType(t)==="sale");
+    const payments=transactions.filter(t=>partyTxnType(t)==="payment");
+    const returns=transactions.filter(t=>partyTxnType(t)==="return");
+    const pieces=sales.reduce((s,t)=>s+Number(t.quantity||0),0);
 
-    if(error){
-        alert(error.message);
-        return;
-    }
-
-    const transactions = rows || [];
-
-    const productIds =
-        [...new Set(
-            transactions
-            .filter(t=>t.product_id)
-            .map(t=>t.product_id)
-        )];
-
-    let products = [];
-
+    let productMap={};
+    const productIds=[...new Set(transactions.filter(t=>t.product_id).map(t=>t.product_id))];
     if(productIds.length){
-        const result =
-            await supabaseClient
-            .from("products")
-            .select("id,name")
-            .in("id",productIds);
-
-        if(!result.error) products = result.data || [];
+        const r=await supabaseClient.from("products").select("id,name").in("id",productIds);
+        if(!r.error) productMap=Object.fromEntries((r.data||[]).map(p=>[String(p.id),p.name]));
     }
 
-    const productMap =
-        Object.fromEntries(
-            products.map(p=>[String(p.id),p.name])
-        );
-
-    const bill =
-        transactions
-        .filter(t=>t.transaction_type==="sale")
-        .reduce((s,t)=>s+Number(t.amount||0),0);
-
-    const paid =
-        transactions
-        .filter(t=>t.transaction_type==="payment")
-        .reduce((s,t)=>s+Number(t.amount||0),0);
-
-    const balance = bill-paid;
-
-    const pieces =
-        transactions
-        .filter(t=>t.transaction_type==="sale")
-        .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-    let history = transactions.map(t=>{
-
-        const type =
-            t.transaction_type==="sale"
-            ? "🧾 SALE"
-            : t.transaction_type==="payment"
-            ? "💵 PAYMENT"
-            : "⚙️ ADJUSTMENT";
-
-        const product =
-            t.product_id
-            ? (productMap[String(t.product_id)] || "Product")
-            : "-";
-
-        const qty =
-            t.transaction_type==="sale"
-            ? Number(t.quantity||0)
-            : "-";
-
-        const amount =
-            Number(t.amount||0);
-
-        return `
-        <tr>
-            <td>${escapeHtml(new Date(t.created_at).toLocaleString("en-IN"))}</td>
-            <td><strong>${type}</strong></td>
-            <td>${escapeHtml(product)}</td>
-            <td>${qty}</td>
-            <td>₹${amount.toLocaleString("en-IN",{minimumFractionDigits:2})}</td>
-            <td>${escapeHtml(t.note || "-")}</td>
-        </tr>
-        `;
-
+    let running=0;
+    const history=transactions.map((t,i)=>{
+        const d=partyDebit(t), c=partyCredit(t); running+=d-c;
+        const type=partyTxnType(t);
+        const label=type==="sale"?"SALE":type==="payment"?"PAYMENT":type==="return"?"RETURN":type==="opening"?"OPENING":"ADJUSTMENT";
+        const product=t.product_id?(productMap[String(t.product_id)]||"Product"):"—";
+        return `<tr>
+            <td>${i+1}</td><td>${partyDate(t.created_at)}</td><td><strong>${label}</strong></td>
+            <td>${escapeHtml(product)}</td><td>${Number(t.quantity||0)||"—"}</td>
+            <td class="ledger-debit">${d?partyMoney(d):"—"}</td>
+            <td class="ledger-credit">${c?partyMoney(c):"—"}</td>
+            <td><strong>${partyMoney(Math.abs(running))} ${running>0?"Dr":running<0?"Cr":""}</strong></td>
+            <td>${escapeHtml(t.note||"—")}</td>
+        </tr>`;
     }).join("");
 
-    document.getElementById("other-content").innerHTML = `
-
-    <div class="admin-box" id="partyPrintArea">
-
-        <div class="admin-header">
-
+    document.getElementById("other-content").innerHTML=`
+    <div class="admin-box party-account-page" id="partyPrintArea">
+        <div class="party-account-top">
             <div>
-                <p>PARTY ACCOUNT</p>
+                <div class="party-kicker">LIARA PROFESSIONAL™ • PARTY LEDGER</div>
                 <h2>👤 ${escapeHtml(party.name)}</h2>
-
-                <div style="color:#777;margin-top:5px;">
-                    📞 ${escapeHtml(party.phone || "No mobile number")}
-                    ${party.address ? " · 📍 "+escapeHtml(party.address) : ""}
+                <div class="party-contact-line">
+                    ${party.phone?"📞 "+escapeHtml(party.phone):""}
+                    ${party.address?" · 📍 "+escapeHtml(party.address):""}
+                    ${party.gstin?" · GSTIN: "+escapeHtml(party.gstin):""}
                 </div>
             </div>
-
-            <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;">
-
-                <button class="btn"
-                        onclick="addPartyPayment('${escapeHtml(String(id))}')">
-                    💵 Add Payment
-                </button>
-
-                <button class="btn"
-                        onclick="printPartyAccount()">
-                    🖨️ Print Account
-                </button>
-
-                <button class="btn"
-                        onclick="loadParties()">
-                    ← Back
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="stock-cards party-compact-summary">
-
-            <div class="stock-card">
-                <span>Total Pieces</span>
-                <strong>${pieces}</strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Total Bill</span>
-                <strong>₹${bill.toLocaleString("en-IN",{minimumFractionDigits:2})}</strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Total Paid / Received</span>
-                <strong>₹${paid.toLocaleString("en-IN",{minimumFractionDigits:2})}</strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Balance Due</span>
-                <strong>${balance > 0 ? "₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2}) : "₹0.00"}</strong>
-            </div>
-
-        </div>
-
-        <div style="margin:20px 0;padding:14px;border:1px solid #ddd;border-radius:10px;">
-            <strong>Account Summary</strong>
-            <div style="margin-top:7px;color:#666;">
-                ${balance > 0
-                    ? "🔴 Balance due: ₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2})+" "
-                    : "🟢 Account settled — no balance due."}
+            <div class="party-account-actions no-print">
+                <button class="btn green-btn" onclick="showPartyTransactionForm('${escapeHtml(String(id))}','sale')">＋ Debit / Sale</button>
+                <button class="btn" onclick="addPartyPayment('${escapeHtml(String(id))}')">💵 Receive</button>
+                <button class="btn outline-btn" onclick="showPartyTransactionForm('${escapeHtml(String(id))}','return')">↩ Return</button>
+                <button class="btn outline-btn" onclick="printPartyAccount()">🖨 Print</button>
+                <button class="btn gray-btn" onclick="loadParties()">← Back</button>
             </div>
         </div>
 
-        <h3>🧾 Complete Account History</h3>
-
-        <div class="table-wrapper">
-        <table class="data-table print-table">
-        <thead>
-        <tr>
-            <th>DATE</th>
-            <th>TYPE</th>
-            <th>PRODUCT</th>
-            <th>QTY</th>
-            <th>AMOUNT</th>
-            <th>NOTE</th>
-        </tr>
-        </thead>
-
-        <tbody>
-            ${history || `
-                <tr>
-                    <td colspan="6">No transactions yet.</td>
-                </tr>
-            `}
-        </tbody>
-
-        </table>
+        <div class="party-ledger-summary">
+            <div><span>Opening / Debit</span><strong>${partyMoney(debit)}</strong><small>Total debits</small></div>
+            <div><span>Received / Credit</span><strong class="ledger-credit">${partyMoney(credit)}</strong><small>Total credits</small></div>
+            <div><span>Items / Pieces</span><strong>${pieces}</strong><small>Sale quantities</small></div>
+            <div class="${balance>0?"due-card":balance<0?"advance-card":"settled-card"}">
+                <span>Closing Balance</span><strong>${partyMoney(Math.abs(balance))}</strong><small>${balance>0?"Dr • Receivable":balance<0?"Cr • Advance":"Settled"}</small>
+            </div>
         </div>
 
-        <div class="no-print"
-             style="margin-top:20px;color:#777;">
-            Tip: Use Print Account to print or save the complete party statement.
+        <div class="party-account-banner ${balance>0?"banner-due":balance<0?"banner-advance":"banner-settled"}">
+            <div><strong>${balance>0?"Amount Receivable":balance<0?"Advance / Credit Balance":"Account Settled"}</strong><small>Current account position</small></div>
+            <strong>${partyMoney(Math.abs(balance))} ${balance>0?"DR":balance<0?"CR":""}</strong>
         </div>
 
-    </div>
-    `;
+        <div id="partyTxnForm"></div>
+
+        <div class="party-ledger-heading">
+            <div><span>ACCOUNT LEDGER</span><h3>Passbook / Statement</h3></div>
+            <div class="no-print"><button class="btn outline-btn" onclick="loadParties()">All Parties</button></div>
+        </div>
+
+        <div class="party-table-wrap">
+        <table class="party-table ledger-table">
+        <thead><tr><th>#</th><th>DATE</th><th>PARTICULAR</th><th>PRODUCT</th><th>QTY</th><th>DEBIT</th><th>CREDIT</th><th>BALANCE</th><th>NOTE</th></tr></thead>
+        <tbody>${history||`<tr><td colspan="9" class="message">No transactions yet.</td></tr>`}</tbody>
+        </table></div>
+
+        <div class="party-statement-footer">
+            <div><span>Total Debit</span><strong>${partyMoney(debit)}</strong></div>
+            <div><span>Total Credit</span><strong>${partyMoney(credit)}</strong></div>
+            <div><span>Closing</span><strong>${partyMoney(Math.abs(balance))} ${balance>0?"Dr":balance<0?"Cr":""}</strong></div>
+        </div>
+    </div>`;
+
+    if(autoPrint) setTimeout(printPartyAccount,250);
 }
 
-
-function printPartyAccount(){
-    window.print();
+function showPartyTransactionForm(id,type="sale"){
+    const title=type==="return"?"Record Return / Credit":"Record Debit / Sale";
+    document.getElementById("partyTxnForm").innerHTML=`
+    <div class="party-txn-form">
+        <div class="party-form-title"><div><span>LEDGER ENTRY</span><h3>＋ ${title}</h3></div>
+        <button class="party-close" onclick="document.getElementById('partyTxnForm').innerHTML=''">×</button></div>
+        <div class="party-form-grid">
+            <div><label>AMOUNT (₹) *</label><input id="partyTxnAmount" type="number" step="0.01" min="0.01" placeholder="0.00"></div>
+            <div><label>QUANTITY</label><input id="partyTxnQty" type="number" min="0" step="1" placeholder="Optional"></div>
+            <div><label>PRODUCT</label><select id="partyTxnProduct"><option value="">— Select Product —</option>
+                ${(allProducts||[]).map(p=>`<option value="${p.id}">${escapeHtml(p.name)}</option>`).join("")}
+            </select></div>
+            <div><label>REFERENCE / BILL NO.</label><input id="partyTxnRef" placeholder="Optional"></div>
+            <div class="full"><label>NOTE</label><input id="partyTxnNote" placeholder="Optional note"></div>
+        </div>
+        <div class="party-form-actions">
+            <button class="btn green-btn" onclick="savePartyTransaction('${escapeHtml(String(id))}','${escapeHtml(type)}')">💾 Save Entry</button>
+            <button class="btn gray-btn" onclick="document.getElementById('partyTxnForm').innerHTML=''">Cancel</button>
+        </div>
+    </div>`;
 }
 
+async function savePartyTransaction(id,type){
+    const amount=Number(document.getElementById("partyTxnAmount").value);
+    const quantity=Number(document.getElementById("partyTxnQty").value||0);
+    const productId=document.getElementById("partyTxnProduct").value||null;
+    const ref=document.getElementById("partyTxnRef").value.trim();
+    const note=document.getElementById("partyTxnNote").value.trim();
 
-async function addPartyPayment(id){
-
-    const amountRaw =
-        prompt("Payment received: ₹:", "");
-
-    if(amountRaw === null) return;
-
-    const amount = Number(amountRaw);
-
-    if(!Number.isFinite(amount) || amount <= 0){
-        alert("Please enter a valid payment amount.");
-        return;
-    }
-
-    const note =
-        prompt("Payment note (optional):","") || null;
-
-    const {error} =
-        await supabaseClient
-        .from("party_transactions")
-        .insert({
-            party_id:id,
-            transaction_type:"payment",
-            quantity:null,
-            amount:amount,
-            note:note
-        });
-
-    if(error){
-        alert(
-            "Payment could not be saved:\n\n" +
-            error.message
-        );
-        return;
-    }
-
-    alert(
-        "Payment received: ₹" +
-        amount.toLocaleString("en-IN") +
-        " successfully."
-    );
-
+    if(!Number.isFinite(amount)||amount<=0){alert("Valid amount pao.");return;}
+    const {error}=await supabaseClient.from("party_transactions").insert({
+        party_id:id,product_id:productId,transaction_type:type,
+        quantity:quantity||null,amount,note:[ref, note].filter(Boolean).join(" • ")||null
+    });
+    if(error){alert("Ledger entry failed:\n\n"+error.message);return;}
     await viewParty(id);
 }
 
+async function addPartyPayment(id){
+    const amountRaw=prompt("Payment received: ₹","0");
+    if(amountRaw===null)return;
+    const amount=Number(amountRaw);
+    if(!Number.isFinite(amount)||amount<=0){alert("Valid payment amount pao.");return;}
+    const note=prompt("Payment reference / note (optional):","")||null;
 
-async function addPartySale(partyId, productId, quantity, amount, note){
-
-    if(!partyId || !productId) return;
-
-    const qty = Number(quantity);
-    const total = Number(amount);
-
-    if(!Number.isInteger(qty) || qty <= 0){
-        alert("Valid quantity pao.");
-        return;
-    }
-
-    if(!Number.isFinite(total) || total < 0){
-        alert("Valid sale amount pao.");
-        return;
-    }
-
-    const {error} =
-        await supabaseClient
-        .from("party_transactions")
-        .insert({
-            party_id:partyId,
-            product_id:productId,
-            transaction_type:"sale",
-            quantity:qty,
-            amount:total,
-            note:note || null
-        });
-
-    if(error){
-        alert("Party sale save failed:\n\n" + error.message);
-        return;
-    }
-
-    alert("Party sale added.");
-    viewParty(partyId);
+    const {error}=await supabaseClient.from("party_transactions").insert({
+        party_id:id,transaction_type:"payment",quantity:null,amount,note
+    });
+    if(error){alert("Payment could not be saved:\n\n"+error.message);return;}
+    await viewParty(id);
 }
 
+async function addPartySale(partyId,productId,quantity,amount,note){
+    const qty=Number(quantity), total=Number(amount);
+    if(!partyId||!Number.isInteger(qty)||qty<=0||!Number.isFinite(total)||total<0){
+        alert("Valid sale details pao.");return;
+    }
+    const {error}=await supabaseClient.from("party_transactions").insert({
+        party_id:partyId,product_id:productId,transaction_type:"sale",
+        quantity:qty,amount:total,note:note||null
+    });
+    if(error){alert("Party sale save failed:\n\n"+error.message);return;}
+    await viewParty(partyId);
+}
+
+function printPartyAccount(){ window.print(); }
 
 /* =========================================================
    PRODUCTS
