@@ -1260,7 +1260,7 @@ body{
         <button onclick="showSection('reports',this)">📊 Reports</button>
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
         <button type="button" onclick="showSection('parties',this)">👥 Parties</button>
-            <button type="button" onclick="showSection('email',this)">📧 Email</button>
+            <button type="button" onclick="window.open('https://mail.zoho.in/','_blank')">📧 Email</button>
             <button onclick="showSection('settings',this)">⚙️ Settings</button>
 
         <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
@@ -1399,19 +1399,18 @@ body{
 <div id="emailPanel" style="display:none">
 <div class="admin-box email-app">
 <div class="admin-header"><div><p>LIARA PROFESSIONAL™</p><h2>📧 Email — info@liara.co.in</h2><small style="color:#777">Zoho Mail</small></div>
-<div style="display:flex;gap:8px"><button class="btn gray-btn" type="button" onclick="loadZohoMail()">🔄 Refresh</button><button class="btn" type="button" onclick="openComposeMail()">✉️ Compose</button></div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn outline-btn" type="button" onclick="loadZohoMail()">↻ Refresh</button><button class="btn" type="button" onclick="openComposeMail()">✉️ Compose</button></div></div>
 <div class="email-layout">
 <aside class="email-nav">
-<button class="email-nav-btn active" type="button" onclick="emailFolder('INBOX',this)">📥 Inbox</button>
-<button class="email-nav-btn" type="button" onclick="emailFolder('SENT',this)">📤 Sent</button>
-<button class="email-nav-btn" type="button" onclick="emailFolder('DRAFTS',this)">📝 Drafts</button>
-<button class="email-nav-btn" type="button" onclick="emailFolder('TRASH',this)">🗑️ Trash</button>
-<button class="email-nav-btn" type="button" onclick="emailFolder('SPAM',this)">⚠️ Spam</button>
+<button class="email-nav-btn active" onclick="emailFolder('INBOX',this)">📥 Inbox</button>
+<button class="email-nav-btn" onclick="emailFolder('SENT',this)">📤 Sent</button>
+<button class="email-nav-btn" onclick="emailFolder('DRAFTS',this)">📝 Drafts</button>
+<button class="email-nav-btn" onclick="emailFolder('TRASH',this)">🗑️ Trash</button>
+<button class="email-nav-btn" onclick="emailFolder('SPAM',this)">⚠️ Spam</button>
 </aside>
-<section class="email-main"><div class="email-toolbar"><input id="emailSearch" class="search-input" placeholder="Search email..." oninput="filterEmailList()"><span id="emailStatus" style="font-size:12px;color:#777"></span></div><div id="emailList"><div class="message">Click Refresh to load your inbox.</div></div></section>
+<section class="email-main"><div class="email-toolbar"><input id="emailSearch" class="search-input" placeholder="Search email..." oninput="filterEmailList()"><span id="emailStatus" style="font-size:12px;color:#777"></span></div><div id="emailList"><div class="message">Connect Zoho Mail to load your inbox.</div></div></section>
 <section class="email-reader" id="emailReader"><div class="message">Select an email to read it.</div></section>
-</div></div></div>
-
+</div></div>
 <div id="composeMailBox" class="admin-box" style="display:none;margin-top:14px"><div class="admin-header"><div><p>NEW MESSAGE</p><h2>✉️ Compose Email</h2></div><button class="btn gray-btn" type="button" onclick="closeComposeMail()">Close</button></div>
 <div class="settings-form">
 <div class="settings-field"><label>TO</label><input id="mailTo" type="email" placeholder="customer@example.com"></div>
@@ -1419,6 +1418,7 @@ body{
 <div class="settings-field"><label>BCC</label><input id="mailBcc" type="text" placeholder="Optional"></div>
 <div class="settings-field"><label>SUBJECT</label><input id="mailSubject" type="text" placeholder="Subject"></div>
 <div class="settings-field" style="grid-column:1/-1"><label>MESSAGE</label><textarea id="mailContent" rows="10" placeholder="Write your message..."></textarea></div>
+<div class="settings-field" style="grid-column:1/-1"><label>ATTACHMENT</label><input id="mailAttachments" type="file" multiple><small style="color:#777">You can attach files with your email.</small></div>
 </div><div class="settings-actions"><button class="btn" type="button" onclick="sendZohoMail()">📤 Send Email</button><span id="sendMailStatus" class="settings-status"></span></div></div>
 </div>
 
@@ -1770,6 +1770,7 @@ function showSection(section,button){
     else if(section === "notifications") loadNotifications();
     else if(section === "parties") loadParties();
     else if(section === "settings") loadSettings();
+    else if(section === "email") loadZohoMail();
 
     closeSidebar();
 
@@ -7501,7 +7502,23 @@ function renderEmailList(){const list=document.getElementById("emailList");if(!l
 async function openZohoEmail(i){const m=zohoEmails[i];if(!m)return;document.getElementById("emailReader").innerHTML='<h3>'+escapeHtml(m.subject||"(No subject)")+'</h3><div class="reader-meta">From: '+escapeHtml(m.fromAddress||m.sender||"Unknown")+'<br>To: '+escapeHtml(m.toAddress||"info@liara.co.in")+'</div><div class="email-body">'+(m.content||escapeHtml(m.summary||""))+'</div>';}
 function openComposeMail(){document.getElementById("composeMailBox").style.display="block";document.getElementById("mailTo").focus();}
 function closeComposeMail(){document.getElementById("composeMailBox").style.display="none";}
-async function sendZohoMail(){const to=document.getElementById("mailTo").value.trim(),subject=document.getElementById("mailSubject").value.trim(),content=document.getElementById("mailContent").value,status=document.getElementById("sendMailStatus");if(!to||!subject||!content){status.textContent="To, subject and message are required.";return;}status.textContent="Sending...";try{await zohoRequest("send",{toAddress:to,ccAddress:document.getElementById("mailCc").value.trim(),bccAddress:document.getElementById("mailBcc").value.trim(),subject,content});status.textContent="Email sent successfully.";setTimeout(closeComposeMail,700);}catch(e){status.textContent=e.message;}}
+async function sendZohoMail(){
+ const to=document.getElementById("mailTo").value.trim(),subject=document.getElementById("mailSubject").value.trim(),content=document.getElementById("mailContent").value,status=document.getElementById("sendMailStatus"),files=[...(document.getElementById("mailAttachments")?.files||[])];
+ if(!to||!subject||!content){status.textContent="To, subject and message are required.";return;}
+ status.textContent=files.length?"Uploading attachment(s) and sending...":"Sending...";
+ try{
+  const attachments=[];
+  for(const file of files){
+   if(file.size>10*1024*1024) throw new Error(file.name+" is larger than 10 MB.");
+   const dataUrl=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});
+   attachments.push({name:file.name,type:file.type||"application/octet-stream",data:String(dataUrl).split(",")[1]});
+  }
+  await zohoRequest("send",{toAddress:to,ccAddress:document.getElementById("mailCc").value.trim(),bccAddress:document.getElementById("mailBcc").value.trim(),subject,content,attachments});
+  status.textContent="Email sent successfully.";
+  document.getElementById("mailAttachments").value="";
+  setTimeout(closeComposeMail,700);
+ }catch(e){status.textContent=e.message;}
+}
 
 </script>
 
