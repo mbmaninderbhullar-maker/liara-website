@@ -5901,10 +5901,33 @@ function loadSettings(){
                             </div>
                             <div class="settings-field">
                                 <label>ROLE</label>
-                                <select id="staffRole">
-                                    <option value="Staff">Staff</option>
+                                <select id="staffRole" onchange="applyLegacyRolePermissions()">
+                                    <option value="Super Admin">Super Admin</option>
+                                    <option value="Admin">Admin</option>
                                     <option value="Manager">Manager</option>
+                                    <option value="Sales Manager">Sales Manager</option>
+                                    <option value="Sales Staff">Sales Staff</option>
+                                    <option value="Order Manager">Order Manager</option>
+                                    <option value="Order Staff">Order Staff</option>
+                                    <option value="Accounts Manager">Accounts Manager</option>
+                                    <option value="Accounts Staff">Accounts Staff</option>
+                                    <option value="Inventory Manager">Inventory Manager</option>
+                                    <option value="Inventory Staff">Inventory Staff</option>
+                                    <option value="Customer Manager">Customer Manager</option>
+                                    <option value="Customer Support">Customer Support</option>
+                                    <option value="Delivery Manager">Delivery Manager</option>
+                                    <option value="Delivery Staff">Delivery Staff</option>
+                                    <option value="Purchase Manager">Purchase Manager</option>
+                                    <option value="Purchase Staff">Purchase Staff</option>
+                                    <option value="Report Manager">Report Manager</option>
+                                    <option value="Viewer">Viewer</option>
+                                    <option value="Custom Role">Custom Role</option>
                                 </select>
+                            </div>
+                            <div class="settings-field" style="grid-column:1/-1;">
+                                <label>ACCESS PERMISSIONS</label>
+                                <div id="legacyStaffPermissions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-top:8px;"></div>
+                                <small style="display:block;margin-top:7px;color:#6b7280;">Role sets the default access. You can customize permissions before creating the staff account.</small>
                             </div>
                         </div>
 
@@ -7050,12 +7073,26 @@ function staffStatus(message, ok=false){
     el.style.color=ok ? "#287a3e" : "#a33"; el.textContent=message;
 }
 
+function applyLegacyRolePermissions(){
+    const role=document.getElementById("staffRole")?.value || "Staff";
+    const wrap=document.getElementById("legacyStaffPermissions");
+    if(!wrap) return;
+    const perms=staffPermissionsDefaults(role);
+    const labels={dashboard:"Dashboard",orders:"Orders",sales:"Sales",customers:"Customers",products:"Products",inventory:"Inventory",purchases:"Purchases",payments:"Payments",invoices:"Invoices",reports:"Reports",staff:"Staff Management",settings:"Settings",export:"Export Data",print:"Print",delete:"Delete Data"};
+    wrap.innerHTML=Object.keys(labels).map(k=>`<label style="display:flex;gap:7px;align-items:center;padding:8px;border:1px solid #e5e7eb;border-radius:8px;"><input type="checkbox" data-legacy-perm="${k}" ${perms[k]?'checked':''}> ${labels[k]}</label>`).join("");
+}
+function readLegacyStaffPermissions(){
+    const wrap=document.getElementById("legacyStaffPermissions");
+    if(!wrap) return {};
+    const out={}; wrap.querySelectorAll("input[data-legacy-perm]").forEach(x=>out[x.dataset.legacyPerm]=x.checked); return out;
+}
+
 async function createStaffLogin(){
     const name=staffField("StaffName")?.value.trim();
     const email=staffField("StaffEmail")?.value.trim().toLowerCase();
     const password=staffField("StaffPassword")?.value || "";
     const role=staffField("StaffRole")?.value || "Sales Staff";
-    const permissions=readStaffPermissions();
+    const permissions=Object.keys(readStaffPermissions()).length ? readStaffPermissions() : readLegacyStaffPermissions();
     if(!name || !email || !password){ staffStatus("Name, email and password are required."); return; }
     if(password.length<8){ staffStatus("Password must be at least 8 characters."); return; }
     const {data:{session}}=await supabaseClient.auth.getSession();
@@ -7639,5 +7676,6 @@ function toggleStaffPasswordForNew(){const e=document.getElementById("smStaffPas
 async function copyStaffPasswordForNew(){const e=document.getElementById("smStaffPassword");if(!e||!e.value){generateStaffPasswordForNew();return;}try{await navigator.clipboard.writeText(e.value);}catch(x){e.select();document.execCommand("copy");}const h=document.getElementById("smStaffPasswordHint");if(h)h.textContent="Password copied.";}
 </script>
 
+<script>document.addEventListener("DOMContentLoaded",()=>{ if(document.getElementById("staffRole")) applyLegacyRolePermissions(); });</script>
 </body>
 </html>
