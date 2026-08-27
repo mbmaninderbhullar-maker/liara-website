@@ -7784,6 +7784,135 @@ async function renderParties(){
     box.innerHTML=html;
     filterPartyTable();
 }
+
+
+/* PARTY ACTION FIX: stock + payment buttons */
+async function showPartySaleForm(partyId){
+    const {data:party,error:partyError}=await supabaseClient
+        .from("parties").select("*").eq("id",partyId).single();
+    if(partyError){ alert("Party load failed:\n\n"+partyError.message); return; }
+
+    let products=allProducts||[];
+    if(!products.length){
+        const result=await supabaseClient.from("products").select("id,name,stock,price").order("name",{ascending:true});
+        if(result.error){ alert("Products load failed:\n\n"+result.error.message); return; }
+        products=result.data||[];
+    }
+    if(!products.length){ alert("Pehla Products section vich product add karo."); return; }
+
+    const options=products.map(product=>`
+        <option value="${escapeHtml(String(product.id))}">
+            ${escapeHtml(product.name||"Product")} — Stock: ${Number(product.stock||0)}
+        </option>`).join("");
+
+    document.getElementById("other-content").innerHTML=`
+      <div class="admin-box">
+        <div class="admin-header">
+          <div><p>OFFLINE SALE</p><h2>📦 Give Stock — ${escapeHtml(party.name||"")}</h2>
+          <div style="color:#777;margin-top:5px;">📞 ${escapeHtml(party.phone||"No mobile number")}</div></div>
+          <button class="btn" onclick="viewParty('${escapeHtml(String(partyId))}')">← Back</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-group"><label>Product</label><select id="partySaleProduct">${options}</select></div>
+          <div class="form-group"><label>Quantity</label><input id="partySaleQty" type="number" min="1" placeholder="e.g. 5"></div>
+          <div class="form-group"><label>Total Bill ₹</label><input id="partySaleAmount" type="number" min="0" step="0.01" placeholder="e.g. 2500"></div>
+          <div class="form-group"><label>Payment Received Now ₹</label><input id="partySalePaid" type="number" min="0" step="0.01" value="0"></div>
+          <div class="form-group full"><label>Note</label><textarea id="partySaleNote" placeholder="Optional"></textarea></div>
+        </div>
+        <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn" onclick="savePartySale('${escapeHtml(String(partyId))}')">💾 Save Sale</button>
+          <button class="btn gray-btn" onclick="viewParty('${escapeHtml(String(partyId))}')">Cancel</button>
+        </div>
+      </div>`;
+}
+
+async function savePartySale(partyId){
+    const productId=document.getElementById("partySaleProduct")?.value;
+    const qty=Number(document.getElementById("partySaleQty")?.value);
+    const amount=Number(document.getElementById("partySaleAmount")?.value);
+    const paid=Number(document.getElementById("partySalePaid")?.value||0);
+    const note=(document.getElementById("partySaleNote")?.value||"").trim();
+    if(!productId){alert("Product select karo.");return;}
+    if(!Number.isInteger(qty)||qty<=0){alert("Valid quantity pao.");return;}
+    if(!Number.isFinite(amount)||amount<0){alert("Valid bill amount pao.");return;}
+    if(!Number.isFinite(paid)||paid<0||paid>amount){alert("Payment bill ton zyada nahi ho sakdi.");return;}
+
+    const product=(allProducts||[]).find(x=>String(x.id)===String(productId));
+    let currentStock=product?Number(product.stock||0):null;
+    if(currentStock===null){
+        const r=await supabaseClient.from("products").select("id,name,stock").eq("id",productId).single();
+        if(r.error){alert(r.error.message);return;} currentStock=Number(r.data.stock||0);
+    }
+    if(qty>currentStock){alert("Not enough stock. Available stock: "+currentStock);return;}
+
+    const {error:saleError}=await supabaseClient.from("party_transactions").insert({
+        party_id:partyId,product_id:productId,transaction_type:"sale",quantity:qty,amount:amount,note:note||"Offline sale"
+    });
+    if(saleError){alert("Party sale record failed:\n\n"+saleError.message);return;}
+
+    if(paid>0){
+        const {error:payError}=await supabaseClient.from("party_transactions").insert({
+            party_id:partyId,product_id:productId,transaction_type:"payment",quantity:null,amount:paid,note:"Payment received with sale"
+        });
+        if(payError){alert("Payment record failed:\n\n"+payError.message);return;}
+    }
+
+    const {error:stockError}=await supabaseClient.from("products").update({stock:currentStock-qty}).eq("id",productId);
+    if(stockError){alert("Stock update failed:\n\n"+stockError.message);return;}
+
+    alert("Sale saved successfully.\n\nBill: ₹"+amount.toLocaleString("en-IN")+"\nPaid: ₹"+paid.toLocaleString("en-IN")+"\nBaki: ₹"+(amount-paid).toLocaleString("en-IN")+"\nRemaining stock: "+(currentStock-qty));
+    await viewParty(partyId);
+}
+
+async function showStockPartyForm(partyId){
+    if(partyId){ return showPartySaleForm(partyId); }
+    const {data:parties,error}=await supabaseClient.from("parties").select("*").order("name",{ascending:true});
+    if(error){alert("Parties load failed:\n\n"+error.message);return;}
+    if(!parties?.length){alert("Pehla Parties section vich party add karo.");return;}
+    let products=allProducts||[];
+    if(!products.length){
+        const r=await supabaseClient.from("products").select("id,name,stock,price").order("name",{ascending:true});
+        if(r.error){alert("Products load failed:\n\n"+r.error.message);return;} products=r.data||[];
+    }
+    document.getElementById("other-content").innerHTML=`
+      <div class="admin-box"><div class="admin-header"><div><p>OFFLINE BUSINESS</p><h2>📤 Give Stock to Party</h2></div><button class="btn" onclick="loadStock()">← Back to Stock</button></div>
+      <div class="form-grid">
+        <div class="form-group"><label>Party</label><select id="stockPartySelect">${parties.map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name||"")} ${x.phone?"— "+escapeHtml(x.phone):""}</option>`).join("")}</select></div>
+        <div class="form-group"><label>Product</label><select id="stockPartyProduct">${products.map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name||"")} — Stock: ${Number(x.stock||0)}</option>`).join("")}</select></div>
+        <div class="form-group"><label>Quantity</label><input id="stockPartyQty" type="number" min="1" placeholder="e.g. 5"></div>
+        <div class="form-group"><label>Total Bill ₹</label><input id="stockPartyBill" type="number" min="0" step="0.01" placeholder="e.g. 2500"></div>
+        <div class="form-group"><label>Paid Now ₹</label><input id="stockPartyPaid" type="number" min="0" step="0.01" value="0"></div>
+        <div class="form-group full"><label>Note</label><textarea id="stockPartyNote" placeholder="Optional"></textarea></div>
+      </div><button class="btn" style="margin-top:15px" onclick="saveStockPartySale()">💾 Save Offline Sale</button></div>`;
+}
+
+async function saveStockPartySale(){
+    const partyId=document.getElementById("stockPartySelect")?.value;
+    const productId=document.getElementById("stockPartyProduct")?.value;
+    const qty=Number(document.getElementById("stockPartyQty")?.value);
+    const bill=Number(document.getElementById("stockPartyBill")?.value);
+    const paid=Number(document.getElementById("stockPartyPaid")?.value||0);
+    const note=(document.getElementById("stockPartyNote")?.value||"").trim();
+    if(!partyId||!productId||!Number.isInteger(qty)||qty<=0||!Number.isFinite(bill)||bill<0||paid<0||paid>bill){alert("Please enter valid party, product, quantity and payment details.");return;}
+    await savePartySaleFromStock(partyId,productId,qty,bill,paid,note);
+}
+
+async function savePartySaleFromStock(partyId,productId,qty,bill,paid,note){
+    const r=await supabaseClient.from("products").select("id,name,stock").eq("id",productId).single();
+    if(r.error){alert(r.error.message);return;}
+    const stock=Number(r.data.stock||0);
+    if(qty>stock){alert("Not enough stock. Available stock: "+stock);return;}
+    const {error}=await supabaseClient.from("party_transactions").insert({party_id:partyId,product_id:productId,transaction_type:"sale",quantity:qty,amount:bill,note:note||"Offline sale"});
+    if(error){alert("Party sale save failed:\n\n"+error.message);return;}
+    if(paid>0){const q=await supabaseClient.from("party_transactions").insert({party_id:partyId,product_id:productId,transaction_type:"payment",amount:paid,note:"Payment received with sale"});if(q.error){alert("Payment save failed:\n\n"+q.error.message);return;}}
+    const u=await supabaseClient.from("products").update({stock:stock-qty}).eq("id",productId);
+    if(u.error){alert("Stock update failed:\n\n"+u.error.message);return;}
+    alert("Offline sale saved successfully.\nRemaining stock: "+(stock-qty));
+    loadStock();
+}
+
+function showPartyPaymentForm(id){ return addPartyPayment(id); }
+
 </script>
 
 </body>
