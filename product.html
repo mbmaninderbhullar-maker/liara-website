@@ -127,6 +127,18 @@ body {
     margin: 5px 0 22px;
 }
 
+/* =====================================================
+   PRODUCT SIZE
+===================================================== */
+
+.product-size {
+    font-size: 15px;
+    font-weight: 600;
+    color: #777;
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
 .product-description {
     color: #666;
     line-height: 1.8;
@@ -305,7 +317,6 @@ body {
 }
 
 
-
 /* =====================================================
    PURCHASE / DETAILS LAYOUT
 ===================================================== */
@@ -431,6 +442,10 @@ body {
         font-size: 26px;
     }
 
+    .product-size {
+        font-size: 14px;
+    }
+
     .ingredients-section {
         padding: 18px;
     }
@@ -448,7 +463,6 @@ body {
 
 /* =====================================================
    PRODUCT PAGE - LAPTOP SIZE FIX
-   Only affects product.html
 ===================================================== */
 
 @media (min-width: 901px) {
@@ -585,7 +599,9 @@ body {
     box-shadow:0 18px 45px rgba(50,35,15,.08) !important;
 }
 
+
 /* Main product image */
+
 .product-photo{
     grid-column:span 3 !important;
     grid-row:1 !important;
@@ -599,7 +615,9 @@ body {
     object-fit:cover !important;
 }
 
+
 /* Product information */
+
 .product-info{
     grid-column:span 3 !important;
     grid-row:1 !important;
@@ -627,14 +645,9 @@ body {
     margin:4px 0 16px !important;
 }
 
-.product-description{
-    font-size:15px !important;
-    line-height:1.65 !important;
-    color:#666 !important;
-    margin-bottom:18px !important;
-}
 
-/* Purchase block stays with product information */
+/* Purchase block */
+
 .purchase-area{
     grid-column:span 3 !important;
     grid-row:2 !important;
@@ -706,7 +719,9 @@ body {
     border:1px solid #d9c39a !important;
 }
 
+
 /* Three information cards */
+
 .product-detail .ingredients-section,
 .product-detail .product-detail-section{
     grid-column:span 2 !important;
@@ -774,15 +789,11 @@ body {
     gap:8px !important;
 }
 
-.product-detail-section:nth-of-type(1){
-    /* keeps normal card styling */
-}
-
-/* Desktop: benefits cards are visually balanced */
 .product-detail .ingredients-section,
 .product-detail .product-detail-section{
     min-height:145px !important;
 }
+
 
 /* =====================================================
    MOBILE
@@ -862,6 +873,7 @@ body {
 }
 
 @media(max-width:480px){
+
     .product-photo{
         height:300px !important;
     }
@@ -869,12 +881,12 @@ body {
     .product-info h1{
         font-size:27px !important;
     }
+
 }
 
 
 /* =====================================================
-   PURCHASE SECTION BESIDE PRODUCT PHOTO
-   Price → Description → Stock → Quantity → Buttons
+   PURCHASE SECTION
 ===================================================== */
 
 .product-info {
@@ -905,8 +917,11 @@ body {
     flex: 1;
 }
 
-/* Mobile: same clean order, one column */
+
+/* Mobile */
+
 @media (max-width: 900px) {
+
     .product-info .purchase-area {
         margin-top: 18px;
     }
@@ -918,6 +933,7 @@ body {
     .product-info .purchase-area .action-buttons button {
         width: 100%;
     }
+
 }
 
 </style>
@@ -977,7 +993,6 @@ body {
 
 <main class="product-page">
 
-
 <a
     href="index.html#products"
     class="back-link">
@@ -1006,7 +1021,7 @@ body {
      SUPABASE
 ===================================================== -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
 
 
 <script>
@@ -1067,10 +1082,6 @@ function parseIngredients(value) {
     }
 
 
-    /*
-       Try JSON first.
-    */
-
     try {
 
         const parsed =
@@ -1086,21 +1097,8 @@ function parseIngredients(value) {
 
     catch(error) {
 
-        /*
-           Normal text format will
-           continue below.
-        */
-
     }
 
-
-    /*
-       Normal text format:
-
-       Niacinamide — Brightening
-       Aloe Vera — Hydration
-       Vitamin E — Moisturising
-    */
 
     const lines =
         String(value)
@@ -1286,33 +1284,62 @@ function renderIngredients(value) {
 }
 
 
-
 /* =====================================================
    RENDER PRODUCT DETAILS
 ===================================================== */
 
 function renderTextSection(title, icon, value) {
-    const text = String(value || "").trim();
-    if (!text) return "";
 
-    const items = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    const text =
+        String(value || "").trim();
 
-    const content = items.map(item =>
-        `<div class="detail-line">${escapeHtml(item)}</div>`
-    ).join("");
+    if(!text) {
+
+        return "";
+
+    }
+
+
+    const items =
+        text
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
+
+
+    const content =
+        items
+        .map(item =>
+            `<div class="detail-line">${escapeHtml(item)}</div>`
+        )
+        .join("");
+
 
     return `
+
         <div class="product-detail-section">
+
             <h2 class="product-detail-title">
+
                 <span>${icon}</span>
+
                 ${title}
+
             </h2>
+
+
             <div class="product-detail-content">
+
                 ${content}
+
             </div>
+
         </div>
+
     `;
+
 }
+
 
 /* =====================================================
    LOAD PRODUCT
@@ -1428,17 +1455,39 @@ async function loadProduct() {
         "facewash.jpg";
 
 
-    /*
+    /* =================================================
+       SIZE + UNIT
+    ================================================= */
+
+    const size =
+        product.size;
+
+    const unit =
+        product.unit ||
+        "";
+
+    const sizeText =
+        size !== null &&
+        size !== undefined &&
+        size !== "" &&
+        unit
+            ? `${size} ${unit}`
+            : "";
+
+
+    /* =================================================
        KEY INGREDIENTS
-    */
+    ================================================= */
 
     const keyIngredients =
         product.key_ingredients ||
         "";
 
+
     const howToUse =
         product.how_to_use ||
         "";
+
 
     const benefits =
         product.benefits ||
@@ -1478,102 +1527,143 @@ async function loadProduct() {
             <div class="product-info">
 
                 <div class="product-label">
+
                     LIARA PROFESSIONAL™
+
                 </div>
+
 
                 <h1>
+
                     ${escapeHtml(name)}
+
                 </h1>
 
+
                 <div class="product-price">
+
                     ₹${price.toLocaleString("en-IN")}
+
+                    ${
+                        sizeText
+                        ?
+                        `<span class="product-size">
+                            · ${escapeHtml(sizeText)}
+                        </span>`
+                        :
+                        ""
+                    }
+
                 </div>
+
 
                 <div class="product-description">
+
                     ${escapeHtml(description)}
+
                 </div>
 
-<!-- PURCHASE AREA
-                 Desktop: under product photo
-                 Mobile: above detail sections
-            -->
 
-            <div class="purchase-area">
 
-                ${
-                    stock > 0
-                    ?
-                    `
+                <!-- PURCHASE AREA -->
 
-                    <div class="stock-text in-stock">
-                        ✓ In Stock
-                        (${stock} available)
-                    </div>
+                <div class="purchase-area">
 
-                    <div class="quantity-box">
+                    ${
+                        stock > 0
 
-                        <button
-                            type="button"
-                            onclick="decreaseQuantity()">
-                            −
-                        </button>
+                        ?
 
-                        <input
-                            type="number"
-                            id="quantity"
-                            value="1"
-                            min="1"
-                            max="${stock}"
-                            readonly
-                        >
+                        `
 
-                        <button
-                            type="button"
-                            onclick="increaseQuantity(${stock})">
-                            +
-                        </button>
+                        <div class="stock-text in-stock">
 
-                    </div>
+                            ✓ In Stock
+                            (${stock} available)
 
-                    <div class="action-buttons">
+                        </div>
 
-                        <button
-                            type="button"
-                            class="add-cart"
-                            onclick="addToCart()">
-                            🛒 Add to Cart
-                        </button>
 
-                        <button
-                            type="button"
-                            class="buy-now"
-                            onclick="buyNow()">
-                            ⚡ Buy Now
-                        </button>
+                        <div class="quantity-box">
 
-                    </div>
+                            <button
+                                type="button"
+                                onclick="decreaseQuantity()">
 
-                    `
-                    :
-                    `
+                                −
 
-                    <div class="stock-text out-stock">
-                        ✕ Out of Stock
-                    </div>
+                            </button>
 
-                    `
-                }
+
+                            <input
+                                type="number"
+                                id="quantity"
+                                value="1"
+                                min="1"
+                                max="${stock}"
+                                readonly
+                            >
+
+
+                            <button
+                                type="button"
+                                onclick="increaseQuantity(${stock})">
+
+                                +
+
+                            </button>
+
+                        </div>
+
+
+                        <div class="action-buttons">
+
+                            <button
+                                type="button"
+                                class="add-cart"
+                                onclick="addToCart()">
+
+                                🛒 Add to Cart
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="buy-now"
+                                onclick="buyNow()">
+
+                                ⚡ Buy Now
+
+                            </button>
+
+                        </div>
+
+                        `
+
+                        :
+
+                        `
+
+                        <div class="stock-text out-stock">
+
+                            ✕ Out of Stock
+
+                        </div>
+
+                        `
+                    }
+
+                </div>
 
             </div>
 
-
-
-            </div>
 
 
             <!-- KEY INGREDIENTS -->
 
             ${renderIngredients(keyIngredients)}
+
 
 
             <!-- HOW TO USE -->
@@ -1583,6 +1673,7 @@ async function loadProduct() {
                 "🧴",
                 howToUse
             )}
+
 
 
             <!-- BENEFITS -->
@@ -2001,4 +2092,3 @@ loadProduct();
 </body>
 
 </html>
-```
