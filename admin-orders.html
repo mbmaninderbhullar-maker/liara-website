@@ -6998,85 +6998,128 @@ function staffStatus(message, ok=false){
     el.textContent=message;
 }
 
+function staffField(id){
+    return document.getElementById("sm"+id) || document.getElementById(id);
+}
+function staffBox(){
+    return document.getElementById("smStaffAccountsList") || document.getElementById("staffAccountsList");
+}
+function staffPermissionsDefaults(role){
+    const all=["dashboard","orders","sales","customers","products","inventory","purchases","payments","invoices","reports","staff","settings","export","print","delete"];
+    const map={
+        "Super Admin":all,
+        "Admin":["dashboard","orders","sales","customers","products","inventory","purchases","payments","invoices","reports","staff","settings","export","print","delete"],
+        "Manager":["dashboard","orders","sales","customers","products","inventory","purchases","payments","invoices","reports","export","print"],
+        "Sales Manager":["dashboard","orders","sales","customers","reports","export","print"],
+        "Sales Staff":["dashboard","orders","sales","customers","print"],
+        "Order Manager":["dashboard","orders","customers","print","export"],
+        "Order Staff":["dashboard","orders","customers","print"],
+        "Accounts Manager":["dashboard","sales","payments","invoices","reports","export","print"],
+        "Accounts Staff":["dashboard","payments","invoices","print"],
+        "Inventory Manager":["dashboard","products","inventory","purchases","reports","export","print"],
+        "Inventory Staff":["dashboard","products","inventory","print"],
+        "Customer Manager":["dashboard","customers","orders","sales","reports","export"],
+        "Customer Support":["dashboard","customers","orders"],
+        "Delivery Manager":["dashboard","orders","customers","reports","print"],
+        "Delivery Staff":["dashboard","orders","customers"],
+        "Purchase Manager":["dashboard","products","inventory","purchases","reports","export"],
+        "Purchase Staff":["dashboard","inventory","purchases"],
+        "Report Manager":["dashboard","sales","orders","customers","inventory","reports","export","print"],
+        "Viewer":["dashboard","orders","sales","customers","products","inventory","reports"],
+        "Custom Role":[]
+    };
+    const selected=new Set(map[role]||map["Custom Role"]);
+    return Object.fromEntries(all.map(k=>[k,selected.has(k)]));
+}
+function readStaffPermissions(){
+    const wrap=document.getElementById("smPermissions");
+    const out={};
+    if(wrap) wrap.querySelectorAll("input[data-perm]").forEach(x=>out[x.dataset.perm]=x.checked);
+    return out;
+}
+function applyRolePermissions(){
+    const role=staffField("StaffRole")?.value || "Staff";
+    const perms=staffPermissionsDefaults(role);
+    const wrap=document.getElementById("smPermissions");
+    if(wrap) wrap.querySelectorAll("input[data-perm]").forEach(x=>x.checked=!!perms[x.dataset.perm]);
+}
+function staffStatus(message, ok=false){
+    const el=document.getElementById("smStaffCreateStatus") || document.getElementById("staffCreateStatus");
+    if(!el) return;
+    el.style.display="block"; el.style.background=ok ? "#e8f3e9" : "#f7dddd";
+    el.style.color=ok ? "#287a3e" : "#a33"; el.textContent=message;
+}
+
 async function createStaffLogin(){
-    const name=document.getElementById("staffName")?.value.trim();
-    const email=document.getElementById("staffEmail")?.value.trim().toLowerCase();
-    const password=document.getElementById("staffPassword")?.value || "";
-    const role=document.getElementById("staffRole")?.value || "Staff";
-
+    const name=staffField("StaffName")?.value.trim();
+    const email=staffField("StaffEmail")?.value.trim().toLowerCase();
+    const password=staffField("StaffPassword")?.value || "";
+    const role=staffField("StaffRole")?.value || "Sales Staff";
+    const permissions=readStaffPermissions();
     if(!name || !email || !password){ staffStatus("Name, email and password are required."); return; }
-    if(password.length < 8){ staffStatus("Password must be at least 8 characters."); return; }
-
+    if(password.length<8){ staffStatus("Password must be at least 8 characters."); return; }
     const {data:{session}}=await supabaseClient.auth.getSession();
     if(!session){ staffStatus("Your admin session has expired. Please sign in again."); return; }
-
-    staffStatus("Creating staff login...", true);
-    const {data,error}=await supabaseClient.functions.invoke("create-staff",{
-        body:{name,email,password,role,phone:"",permissions:{}}
-    });
-
-    if(error){
-        staffStatus(data?.error || error.message || "Unable to create staff login.");
-        return;
-    }
+    staffStatus("Creating staff login...",true);
+    const {data,error}=await supabaseClient.functions.invoke("create-staff",{body:{name,email,password,role,phone:"",permissions}});
+    if(error){ staffStatus(data?.error||error.message||"Unable to create staff login."); return; }
     if(data?.error){ staffStatus(data.error); return; }
-
-    document.getElementById("staffName").value="";
-    document.getElementById("staffEmail").value="";
-    document.getElementById("staffPassword").value="";
-    staffStatus("Staff login created successfully.", true);
-    await loadStaffAccounts();
+    ["StaffName","StaffEmail","StaffPassword"].forEach(id=>{const el=staffField(id);if(el)el.value="";});
+    staffStatus("Staff login created successfully.",true); await loadStaffAccounts();
 }
 
 async function loadStaffAccounts(){
-    const box=document.getElementById("staffAccountsList");
-    if(!box) return;
+    const box=staffBox(); if(!box)return;
     box.innerHTML='<div class="message">Loading staff accounts...</div>';
+    const {data,error}=await supabaseClient.from("staff_profiles").select("id,name,email,role,active,created_at,permissions").order("created_at",{ascending:false});
+    if(error){ box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>'; return; }
+    if(!data?.length){ box.innerHTML='<div class="message">No staff accounts created yet.</div>'; return; }
+    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:980px">
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody>${data.map(s=>{
+        const safe=encodeURIComponent(JSON.stringify(s));
+        return `<tr><td><strong>${escapeHtml(s.name||"")}</strong></td><td>${escapeHtml(s.email||"")}</td><td>${escapeHtml(s.role||"Staff")}</td>
+        <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
+        <td>${s.created_at?new Date(s.created_at).toLocaleDateString('en-IN'):'—'}</td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap"><button class="table-btn edit-btn" type="button" onclick="editStaffAccount(decodeURIComponent('${safe}'))">Edit</button>
+        <button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">Password</button>
+        <button class="table-btn" type="button" onclick="toggleStaffActive('${String(s.id).replace(/'/g,"\\'")}',${s.active!==false})">${s.active===false?'Activate':'Disable'}</button>
+        <button class="table-btn" type="button" onclick="deleteStaffProfile('${String(s.id).replace(/'/g,"\\'")}','${String(s.name||'').replace(/'/g,"\\'")}')">Delete</button></td></tr>`;
+      }).join('')}</tbody></table></div>`;
+}
 
-    const {data,error}=await supabaseClient
-        .from("staff_profiles")
-        .select("id,name,email,role,active,created_at")
-        .order("created_at",{ascending:false});
-
-    if(error){
-        box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>';
-        return;
-    }
-    if(!data?.length){
-        box.innerHTML='<div class="message">No staff accounts created yet.</div>';
-        return;
-    }
-
-    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:700px">
-        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
-        <tbody>${data.map(s=>`<tr>
-            <td><strong>${escapeHtml(s.name || "")}</strong></td>
-            <td>${escapeHtml(s.email || "")}</td>
-            <td>${escapeHtml(s.role || "Staff")}</td>
-            <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
-            <td>${s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}</td>
-            <td><button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">Change Password</button></td>
-        </tr>`).join('')}</tbody></table></div>`;
+function editStaffAccount(encoded){
+    let s; try{s=JSON.parse(encoded);}catch(e){return;}
+    const role=prompt("Role for "+(s.name||"staff")+"\\n\\nChoose one:\\n"+STAFF_ROLES.join(" | "),s.role||"Staff");
+    if(role===null)return;
+    if(!STAFF_ROLES.includes(role)){alert("Invalid role selected.");return;}
+    const permissions=staffPermissionsDefaults(role);
+    updateStaffProfile(s.id,{role,permissions});
+}
+async function updateStaffProfile(id,patch){
+    const {error}=await supabaseClient.from("staff_profiles").update(patch).eq("id",id);
+    if(error){alert("Staff update failed:\n\n"+error.message);return;}
+    alert("Staff updated successfully."); await loadStaffAccounts();
+}
+async function toggleStaffActive(id,isActive){
+    const {error}=await supabaseClient.from("staff_profiles").update({active:!isActive}).eq("id",id);
+    if(error){alert("Status update failed:\n\n"+error.message);return;} await loadStaffAccounts();
+}
+async function deleteStaffProfile(id,name){
+    if(!confirm('Delete staff profile "'+name+'"?'))return;
+    const {error}=await supabaseClient.from("staff_profiles").delete().eq("id",id);
+    if(error){alert("Staff delete failed:\n\n"+error.message);return;}
+    alert("Staff profile deleted."); await loadStaffAccounts();
 }
 
 async function changeStaffPassword(email){
-    const password=prompt("New password for " + email + " (minimum 8 characters):");
-    if(password===null) return;
-    if(password.length < 8){ alert("Password must be at least 8 characters."); return; }
-
+    const password=prompt("New password for "+email+" (minimum 8 characters):");
+    if(password===null)return; if(password.length<8){alert("Password must be at least 8 characters.");return;}
     const {data:{session}}=await supabaseClient.auth.getSession();
-    if(!session){ alert("Your admin session has expired. Please sign in again."); return; }
-
-    const {data,error}=await supabaseClient.functions.invoke("reset-staff-password",{
-        body:{email,password}
-    });
-
-    if(error){
-        alert(data?.error || error.message || "Unable to change staff password.");
-        return;
-    }
-    if(data?.error){ alert(data.error); return; }
-    alert("Staff password changed successfully.");
+    if(!session){alert("Your admin session has expired. Please sign in again.");return;}
+    const {data,error}=await supabaseClient.functions.invoke("reset-staff-password",{body:{email,password}});
+    if(error){alert(data?.error||error.message||"Unable to change staff password.");return;}
+    if(data?.error){alert(data.error);return;} alert("Staff password changed successfully.");
 }
 
 /* =========================================================
@@ -7568,70 +7611,32 @@ async function copyStaffPassword(){
 
 
 <script>
+const STAFF_ROLES=["Super Admin","Admin","Manager","Sales Manager","Sales Staff","Order Manager","Order Staff","Accounts Manager","Accounts Staff","Inventory Manager","Inventory Staff","Customer Manager","Customer Support","Delivery Manager","Delivery Staff","Purchase Manager","Purchase Staff","Report Manager","Viewer","Custom Role"];
 function showStaffManagement(){
-  const box=document.getElementById("other-content");
-  if(!box) return;
-
-  box.innerHTML=`
-  <div class="admin-box" style="padding:20px;">
-    <div class="admin-header" style="margin-bottom:18px;">
-      <div>
-        <p>STAFF & ACCESS</p>
-        <h2>👥 Staff Management</h2>
-        <small>Create and manage professional staff login accounts.</small>
-      </div>
-    </div>
-
+  const box=document.getElementById("other-content"); if(!box)return;
+  const perms=[
+    ["dashboard","Dashboard"],["orders","Orders"],["sales","Sales"],["customers","Customers"],["products","Products"],["inventory","Inventory"],
+    ["purchases","Purchases"],["payments","Payments"],["invoices","Invoices"],["reports","Reports"],["staff","Staff Management"],["settings","Settings"],
+    ["export","Export Data"],["print","Print"],["delete","Delete Data"]
+  ];
+  box.innerHTML=`<div class="admin-box" style="padding:20px;">
+    <div class="admin-header" style="margin-bottom:18px"><div><p>STAFF & ACCESS</p><h2>👥 Staff Management</h2><small>Create staff, assign roles and control access.</small></div></div>
     <div class="form-grid">
-      <div class="form-group">
-        <label>STAFF NAME</label>
-        <input id="staffName" type="text" placeholder="e.g. Aman Singh">
-      </div>
-
-      <div class="form-group">
-        <label>STAFF EMAIL</label>
-        <input id="staffEmail" type="email" placeholder="staff@company.com">
-      </div>
-
-      <div class="form-group">
-        <label>SECURE PASSWORD</label>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;">
-          <input id="staffPassword" type="password" minlength="8"
-                 placeholder="Generate secure password" style="flex:1;min-width:190px;">
-          <button type="button" class="btn outline-btn" onclick="generateStaffPassword()">🔐 Generate</button>
-          <button type="button" class="btn outline-btn" onclick="toggleStaffPassword()">👁 Show</button>
-          <button type="button" class="btn outline-btn" onclick="copyStaffPassword()">📋 Copy</button>
-        </div>
-        <small id="staffPasswordHint" style="display:block;margin-top:6px;color:#6b7280;">
-          Minimum 8 characters.
-        </small>
-      </div>
-
-      <div class="form-group">
-        <label>ROLE</label>
-        <select id="staffRole">
-          <option value="Staff">Staff</option>
-          <option value="Manager">Manager</option>
-          <option value="Sales">Sales</option>
-          <option value="Stock">Stock</option>
-        </select>
-      </div>
+      <div class="form-group"><label>STAFF NAME</label><input id="smStaffName" type="text" placeholder="e.g. Aman Singh"></div>
+      <div class="form-group"><label>STAFF EMAIL</label><input id="smStaffEmail" type="email" placeholder="staff@company.com"></div>
+      <div class="form-group"><label>SECURE PASSWORD</label><div style="display:flex;gap:7px;flex-wrap:wrap"><input id="smStaffPassword" type="password" minlength="8" placeholder="Generate secure password" style="flex:1;min-width:190px"><button type="button" class="btn outline-btn" onclick="generateStaffPasswordForNew()">🔐 Generate</button><button type="button" class="btn outline-btn" onclick="toggleStaffPasswordForNew()">👁 Show</button><button type="button" class="btn outline-btn" onclick="copyStaffPasswordForNew()">📋 Copy</button></div><small id="smStaffPasswordHint" style="display:block;margin-top:6px;color:#6b7280">Minimum 8 characters.</small></div>
+      <div class="form-group"><label>ROLE</label><select id="smStaffRole" onchange="applyRolePermissions()">${STAFF_ROLES.map(r=>`<option value="${r}">${r}</option>`).join("")}</select></div>
     </div>
-
-    <div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;">
-      <button type="button" class="btn" onclick="createStaffLogin()">➕ Create Staff Login</button>
-    </div>
-    <div id="staffCreateStatus" class="message" style="display:none;margin-top:12px;"></div>
-
-    <div class="admin-box" style="margin-top:18px;padding:0;">
-      <div class="admin-header"><h3>Existing Staff Accounts</h3></div>
-      <div id="staffAccountsList" style="padding:14px;">
-        <div class="message">No staff accounts loaded yet.</div>
-      </div>
-    </div>
+    <div class="admin-box" style="margin-top:15px;padding:15px"><h3 style="margin-top:0">🔐 Permissions</h3><small>Select exactly what this staff member can access.</small><div id="smPermissions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin-top:12px">${perms.map(([k,l])=>`<label style="display:flex;gap:8px;align-items:center;padding:9px;border:1px solid #e5e7eb;border-radius:9px"><input type="checkbox" data-perm="${k}"> ${l}</label>`).join("")}</div></div>
+    <div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap"><button type="button" class="btn" onclick="createStaffLogin()">➕ Create Staff Login</button><button type="button" class="btn outline-btn" onclick="applyRolePermissions()">↻ Reset Permissions</button><button type="button" class="btn outline-btn" onclick="loadStaffAccounts()">Refresh</button></div>
+    <div id="smStaffCreateStatus" class="message" style="display:none;margin-top:12px"></div>
+    <div class="admin-box" style="margin-top:18px;padding:0"><div class="admin-header"><h3>Existing Staff Accounts</h3></div><div id="smStaffAccountsList" style="padding:14px"><div class="message">Loading...</div></div></div>
   </div>`;
-  if(typeof loadStaffAccounts==="function") loadStaffAccounts();
+  applyRolePermissions(); loadStaffAccounts();
 }
+function generateStaffPasswordForNew(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";const a=new Uint32Array(16);crypto.getRandomValues(a);const p=Array.from(a,x=>chars[x%chars.length]).join("");const e=document.getElementById("smStaffPassword");if(e){e.value=p;e.type="text";}const h=document.getElementById("smStaffPasswordHint");if(h)h.textContent="Secure password generated.";}
+function toggleStaffPasswordForNew(){const e=document.getElementById("smStaffPassword");if(e)e.type=e.type==="password"?"text":"password";}
+async function copyStaffPasswordForNew(){const e=document.getElementById("smStaffPassword");if(!e||!e.value){generateStaffPasswordForNew();return;}try{await navigator.clipboard.writeText(e.value);}catch(x){e.select();document.execCommand("copy");}const h=document.getElementById("smStaffPasswordHint");if(h)h.textContent="Password copied.";}
 </script>
 
 </body>
