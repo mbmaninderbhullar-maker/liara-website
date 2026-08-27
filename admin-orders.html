@@ -1240,28 +1240,70 @@ body{
 
 .email-layout{display:grid;grid-template-columns:170px minmax(300px,1fr) minmax(320px,1.15fr);gap:12px;margin-top:14px}.email-nav{display:flex;flex-direction:column;gap:6px}.email-nav-btn{border:1px solid #e5e5e5;background:#fff;border-radius:8px;padding:11px 12px;text-align:left;cursor:pointer;font-weight:600}.email-nav-btn.active,.email-nav-btn:hover{background:#111;color:#fff}.email-main,.email-reader{border:1px solid #e7e7e7;border-radius:10px;overflow:hidden;background:#fff;min-height:430px}.email-toolbar{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid #eee}.email-list-row{padding:12px;border-bottom:1px solid #eee;cursor:pointer}.email-list-row:hover{background:#fafafa}.email-list-row.unread{font-weight:700}.email-subject{display:block;margin-bottom:4px}.email-meta{font-size:12px;color:#777}.email-preview{font-size:12px;color:#666;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.email-reader{padding:18px}.email-reader h3{margin:0 0 8px}.email-reader .reader-meta{font-size:12px;color:#777;margin-bottom:16px}.email-body{line-height:1.6;overflow:auto}@media(max-width:1000px){.email-layout{grid-template-columns:140px 1fr}.email-reader{grid-column:1/-1}}@media(max-width:650px){.email-layout{grid-template-columns:1fr}.email-nav{display:grid;grid-template-columns:repeat(3,1fr)}}
 </style>
-<style id="liara-final-ui-fix">
-/* compact sidebar */
-.sidebar,aside.sidebar,.sidebar-menu,.side-nav,nav.sidebar-nav,
-.sidebar ul,.sidebar-menu ul,.side-nav ul{gap:0!important;margin:0!important;padding:0!important}
-.sidebar li,.sidebar-menu li,.side-nav li,.sidebar .menu-item,.sidebar .nav-item{margin:0!important;padding:0!important}
-.sidebar a,.sidebar button,.sidebar .menu-item>a,.sidebar .nav-item>a,.sidebar-menu a,.sidebar-menu button,.side-nav a,.side-nav button{
- margin:0!important;min-height:40px!important;height:40px!important;padding:0 12px!important;
- display:flex!important;align-items:center!important;gap:7px!important;box-sizing:border-box!important
+
+<style id="staff-management-final-layout-fix">
+.settings-layout{
+    grid-template-columns:180px minmax(0,1fr) !important;
+    gap:4px !important;
 }
-/* settings */
-.settings-layout{grid-template-columns:180px minmax(0,1fr)!important;gap:0!important}
-.settings-nav{margin:0!important;padding:0!important}.settings-nav button{margin:0!important}
-.settings-panel.active,#settings-staff.active{display:block!important;visibility:visible!important;opacity:1!important}
-/* table */
-.data-table{width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;border-spacing:0!important}
-.data-table th,.data-table td{padding:8px 7px!important;border-right:1px solid #e5e0d8!important;border-bottom:1px solid #eeeae4!important;box-sizing:border-box!important}
-.data-table th:last-child,.data-table td:last-child{border-right:0!important}
-.data-table thead th{font-size:12px!important;font-weight:700!important;white-space:nowrap!important}
-/* party */
-.party-section,#partySection,.parties-section{margin:0!important;padding:0!important}
-.party-section .grid,#partySection .grid,.parties-section .grid{gap:8px!important}
+.settings-nav{
+    margin:0 !important;
+    padding:3px !important;
+}
+.settings-nav button{
+    margin:1px 0 !important;
+    padding:7px 8px !important;
+}
+.settings-panel.active{
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+}
+#settings-staff.active{
+    display:block !important;
+}
 </style>
+
+
+<style id="party-redesign-additive">
+/* PARTY REDESIGN - additive only; original party code preserved */
+.party-redesign{padding:20px}
+.party-redesign .party-page-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px}
+.party-redesign .party-page-head p{margin:0 0 4px;font-size:11px;letter-spacing:.12em;font-weight:700;color:#888}
+.party-redesign .party-page-head h2{margin:0;font-size:25px}
+.party-redesign .party-page-head span{display:block;color:#777;font-size:13px;margin-top:5px}
+.party-redesign .party-head-actions,.party-redesign .party-form-actions{display:flex;gap:8px;flex-wrap:wrap}
+.party-redesign .party-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}
+.party-redesign .party-stat{border:1px solid #e7e7e7;border-radius:11px;padding:13px 15px;background:#fff}
+.party-redesign .party-stat span{display:block;font-size:11px;color:#777;margin-bottom:5px}
+.party-redesign .party-stat strong{font-size:19px}
+.party-redesign .party-stat.due strong,.party-redesign .party-due{color:#b06b00}
+.party-redesign .party-settled{color:#237a45}
+.party-redesign .party-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 12px}
+.party-redesign .party-search-wrap{display:flex;align-items:center;gap:8px;border:1px solid #ddd;border-radius:9px;padding:0 11px;max-width:430px;width:100%;background:#fff}
+.party-redesign .party-search-wrap input{border:0!important;outline:0!important;width:100%;padding:11px 4px!important;background:transparent!important}
+.party-redesign .party-filters{display:flex;gap:6px}
+.party-redesign .party-filter{border:1px solid #ddd;background:#fff;border-radius:8px;padding:8px 13px;cursor:pointer}
+.party-redesign .party-filter.active{background:#111;color:#fff;border-color:#111}
+.party-redesign .party-table-wrap{overflow:auto;border:1px solid #e6e6e6;border-radius:10px}
+.party-redesign .party-table{margin:0;min-width:900px}
+.party-redesign .party-table td{vertical-align:middle}
+.party-redesign .party-name-cell{display:flex;align-items:center;gap:10px;min-width:180px}
+.party-redesign .party-name-cell small{display:block;color:#888;font-size:11px;margin-top:3px;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.party-redesign .party-avatar{width:34px;height:34px;border-radius:50%;background:#f0f0f0;display:grid;place-items:center;font-weight:700;flex:none}
+.party-redesign .party-status{font-size:11px;font-weight:700;white-space:nowrap}
+.party-redesign .party-status.due{color:#b06b00}
+.party-redesign .party-status.settled{color:#237a45}
+.party-redesign .party-empty{text-align:center;border:1px dashed #d7d7d7;border-radius:12px;padding:45px 20px;color:#777}
+.party-redesign .party-form-card{margin:0 0 18px;border:1px solid #e2e2e2;border-radius:11px;padding:17px;background:#fafafa}
+.party-redesign .party-form-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px}
+.party-redesign .party-form-head h3{margin:0}
+.party-redesign .party-close{border:0;background:transparent;font-size:25px;line-height:1;cursor:pointer;color:#777}
+.party-redesign .party-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(max-width:800px){.party-redesign .party-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.party-redesign .party-page-head,.party-redesign .party-toolbar{align-items:stretch;flex-direction:column}.party-redesign .party-search-wrap{max-width:none}.party-redesign .party-filters{width:100%}.party-redesign .party-filter{flex:1}.party-redesign .party-form-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.party-redesign{padding:13px}.party-redesign .party-summary-grid{gap:7px}.party-redesign .party-stat{padding:10px}.party-redesign .party-stat strong{font-size:16px}}
+</style>
+
 </head>
 
 <body>
@@ -5758,7 +5800,7 @@ function loadSettings(){
                     🔐 Security
                 </button>
 <button
-                    onclick="openSettingsTab(\'staff\',this); return false;">
+                    onclick="openSettingsTab('staff',this); return false;">
                     👥 Staff Management
                 </button>
 
@@ -5901,33 +5943,10 @@ function loadSettings(){
                             </div>
                             <div class="settings-field">
                                 <label>ROLE</label>
-                                <select id="staffRole" onchange="applyLegacyRolePermissions()">
-                                    <option value="Super Admin">Super Admin</option>
-                                    <option value="Admin">Admin</option>
+                                <select id="staffRole">
+                                    <option value="Staff">Staff</option>
                                     <option value="Manager">Manager</option>
-                                    <option value="Sales Manager">Sales Manager</option>
-                                    <option value="Sales Staff">Sales Staff</option>
-                                    <option value="Order Manager">Order Manager</option>
-                                    <option value="Order Staff">Order Staff</option>
-                                    <option value="Accounts Manager">Accounts Manager</option>
-                                    <option value="Accounts Staff">Accounts Staff</option>
-                                    <option value="Inventory Manager">Inventory Manager</option>
-                                    <option value="Inventory Staff">Inventory Staff</option>
-                                    <option value="Customer Manager">Customer Manager</option>
-                                    <option value="Customer Support">Customer Support</option>
-                                    <option value="Delivery Manager">Delivery Manager</option>
-                                    <option value="Delivery Staff">Delivery Staff</option>
-                                    <option value="Purchase Manager">Purchase Manager</option>
-                                    <option value="Purchase Staff">Purchase Staff</option>
-                                    <option value="Report Manager">Report Manager</option>
-                                    <option value="Viewer">Viewer</option>
-                                    <option value="Custom Role">Custom Role</option>
                                 </select>
-                            </div>
-                            <div class="settings-field" style="grid-column:1/-1;">
-                                <label>ACCESS PERMISSIONS</label>
-                                <div id="legacyStaffPermissions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-top:8px;"></div>
-                                <small style="display:block;margin-top:7px;color:#6b7280;">Role sets the default access. You can customize permissions before creating the staff account.</small>
                             </div>
                         </div>
 
@@ -6750,33 +6769,32 @@ function optionList(options,current){
 
 }
 
-function openSettingsTab(tab,button){
+function openSettingsTab(tab, button){
+    const root = document.getElementById("other-content");
+    if(!root) return;
 
-    document.querySelectorAll(
-        ".settings-panel"
-    ).forEach(panel=>{
+    root.querySelectorAll(".settings-panel").forEach(function(panel){
         panel.classList.remove("active");
+        panel.style.display = "none";
     });
 
-    document.querySelectorAll(
-        ".settings-nav button"
-    ).forEach(btn=>{
+    root.querySelectorAll(".settings-nav button").forEach(function(btn){
         btn.classList.remove("active");
     });
 
-    const panel =
-        document.getElementById(
-            "settings-"+tab
-        );
+    const panel = root.querySelector("#settings-" + tab);
+    if(!panel) return;
 
-    if(panel){
-        panel.classList.add("active");
+    panel.classList.add("active");
+    panel.style.display = "block";
+    panel.style.visibility = "visible";
+    panel.style.opacity = "1";
+
+    if(button) button.classList.add("active");
+
+    if(tab === "staff" && typeof loadStaffAccounts === "function"){
+        try { loadStaffAccounts(); } catch(e) { console.error(e); }
     }
-
-    if(button){
-        button.classList.add("active");
-    }
-
 }
 
 /* =========================================================
@@ -7021,142 +7039,85 @@ function staffStatus(message, ok=false){
     el.textContent=message;
 }
 
-function staffField(id){
-    return document.getElementById("sm"+id) || document.getElementById(id);
-}
-function staffBox(){
-    return document.getElementById("smStaffAccountsList") || document.getElementById("staffAccountsList");
-}
-function staffPermissionsDefaults(role){
-    const all=["dashboard","orders","sales","customers","products","inventory","purchases","payments","invoices","reports","staff","settings","export","print","delete"];
-    const map={
-        "Super Admin":all,
-        "Admin":["dashboard","orders","sales","customers","products","inventory","purchases","payments","invoices","reports","staff","settings","export","print","delete"],
-        "Manager":["dashboard","orders","sales","customers","products","inventory","purchases","payments","invoices","reports","export","print"],
-        "Sales Manager":["dashboard","orders","sales","customers","reports","export","print"],
-        "Sales Staff":["dashboard","orders","sales","customers","print"],
-        "Order Manager":["dashboard","orders","customers","print","export"],
-        "Order Staff":["dashboard","orders","customers","print"],
-        "Accounts Manager":["dashboard","sales","payments","invoices","reports","export","print"],
-        "Accounts Staff":["dashboard","payments","invoices","print"],
-        "Inventory Manager":["dashboard","products","inventory","purchases","reports","export","print"],
-        "Inventory Staff":["dashboard","products","inventory","print"],
-        "Customer Manager":["dashboard","customers","orders","sales","reports","export"],
-        "Customer Support":["dashboard","customers","orders"],
-        "Delivery Manager":["dashboard","orders","customers","reports","print"],
-        "Delivery Staff":["dashboard","orders","customers"],
-        "Purchase Manager":["dashboard","products","inventory","purchases","reports","export"],
-        "Purchase Staff":["dashboard","inventory","purchases"],
-        "Report Manager":["dashboard","sales","orders","customers","inventory","reports","export","print"],
-        "Viewer":["dashboard","orders","sales","customers","products","inventory","reports"],
-        "Custom Role":[]
-    };
-    const selected=new Set(map[role]||map["Custom Role"]);
-    return Object.fromEntries(all.map(k=>[k,selected.has(k)]));
-}
-function readStaffPermissions(){
-    const wrap=document.getElementById("smPermissions");
-    const out={};
-    if(wrap) wrap.querySelectorAll("input[data-perm]").forEach(x=>out[x.dataset.perm]=x.checked);
-    return out;
-}
-function applyRolePermissions(){
-    const role=staffField("StaffRole")?.value || "Staff";
-    const perms=staffPermissionsDefaults(role);
-    const wrap=document.getElementById("smPermissions");
-    if(wrap) wrap.querySelectorAll("input[data-perm]").forEach(x=>x.checked=!!perms[x.dataset.perm]);
-}
-function staffStatus(message, ok=false){
-    const el=document.getElementById("smStaffCreateStatus") || document.getElementById("staffCreateStatus");
-    if(!el) return;
-    el.style.display="block"; el.style.background=ok ? "#e8f3e9" : "#f7dddd";
-    el.style.color=ok ? "#287a3e" : "#a33"; el.textContent=message;
-}
-
-function applyLegacyRolePermissions(){
-    const role=document.getElementById("staffRole")?.value || "Staff";
-    const wrap=document.getElementById("legacyStaffPermissions");
-    if(!wrap) return;
-    const perms=staffPermissionsDefaults(role);
-    const labels={dashboard:"Dashboard",orders:"Orders",sales:"Sales",customers:"Customers",products:"Products",inventory:"Inventory",purchases:"Purchases",payments:"Payments",invoices:"Invoices",reports:"Reports",staff:"Staff Management",settings:"Settings",export:"Export Data",print:"Print",delete:"Delete Data"};
-    wrap.innerHTML=Object.keys(labels).map(k=>`<label style="display:flex;gap:7px;align-items:center;padding:8px;border:1px solid #e5e7eb;border-radius:8px;"><input type="checkbox" data-legacy-perm="${k}" ${perms[k]?'checked':''}> ${labels[k]}</label>`).join("");
-}
-function readLegacyStaffPermissions(){
-    const wrap=document.getElementById("legacyStaffPermissions");
-    if(!wrap) return {};
-    const out={}; wrap.querySelectorAll("input[data-legacy-perm]").forEach(x=>out[x.dataset.legacyPerm]=x.checked); return out;
-}
-
 async function createStaffLogin(){
-    const name=staffField("StaffName")?.value.trim();
-    const email=staffField("StaffEmail")?.value.trim().toLowerCase();
-    const password=staffField("StaffPassword")?.value || "";
-    const role=staffField("StaffRole")?.value || "Sales Staff";
-    const permissions=Object.keys(readStaffPermissions()).length ? readStaffPermissions() : readLegacyStaffPermissions();
+    const name=document.getElementById("staffName")?.value.trim();
+    const email=document.getElementById("staffEmail")?.value.trim().toLowerCase();
+    const password=document.getElementById("staffPassword")?.value || "";
+    const role=document.getElementById("staffRole")?.value || "Staff";
+
     if(!name || !email || !password){ staffStatus("Name, email and password are required."); return; }
-    if(password.length<8){ staffStatus("Password must be at least 8 characters."); return; }
+    if(password.length < 8){ staffStatus("Password must be at least 8 characters."); return; }
+
     const {data:{session}}=await supabaseClient.auth.getSession();
     if(!session){ staffStatus("Your admin session has expired. Please sign in again."); return; }
-    staffStatus("Creating staff login...",true);
-    const {data,error}=await supabaseClient.functions.invoke("create-staff",{body:{name,email,password,role,phone:"",permissions}});
-    if(error){ staffStatus(data?.error||error.message||"Unable to create staff login."); return; }
+
+    staffStatus("Creating staff login...", true);
+    const {data,error}=await supabaseClient.functions.invoke("create-staff",{
+        body:{name,email,password,role,phone:"",permissions:{}}
+    });
+
+    if(error){
+        staffStatus(data?.error || error.message || "Unable to create staff login.");
+        return;
+    }
     if(data?.error){ staffStatus(data.error); return; }
-    ["StaffName","StaffEmail","StaffPassword"].forEach(id=>{const el=staffField(id);if(el)el.value="";});
-    staffStatus("Staff login created successfully.",true); await loadStaffAccounts();
+
+    document.getElementById("staffName").value="";
+    document.getElementById("staffEmail").value="";
+    document.getElementById("staffPassword").value="";
+    staffStatus("Staff login created successfully.", true);
+    await loadStaffAccounts();
 }
 
 async function loadStaffAccounts(){
-    const box=staffBox(); if(!box)return;
+    const box=document.getElementById("staffAccountsList");
+    if(!box) return;
     box.innerHTML='<div class="message">Loading staff accounts...</div>';
-    const {data,error}=await supabaseClient.from("staff_profiles").select("id,name,email,role,active,created_at,permissions").order("created_at",{ascending:false});
-    if(error){ box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>'; return; }
-    if(!data?.length){ box.innerHTML='<div class="message">No staff accounts created yet.</div>'; return; }
-    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:980px">
-      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
-      <tbody>${data.map(s=>{
-        const safe=encodeURIComponent(JSON.stringify(s));
-        return `<tr><td><strong>${escapeHtml(s.name||"")}</strong></td><td>${escapeHtml(s.email||"")}</td><td>${escapeHtml(s.role||"Staff")}</td>
-        <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
-        <td>${s.created_at?new Date(s.created_at).toLocaleDateString('en-IN'):'—'}</td>
-        <td style="display:flex;gap:6px;flex-wrap:wrap"><button class="table-btn edit-btn" type="button" onclick="editStaffAccount(decodeURIComponent('${safe}'))">Edit</button>
-        <button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">Password</button>
-        <button class="table-btn" type="button" onclick="toggleStaffActive('${String(s.id).replace(/'/g,"\\'")}',${s.active!==false})">${s.active===false?'Activate':'Disable'}</button>
-        <button class="table-btn" type="button" onclick="deleteStaffProfile('${String(s.id).replace(/'/g,"\\'")}','${String(s.name||'').replace(/'/g,"\\'")}')">Delete</button></td></tr>`;
-      }).join('')}</tbody></table></div>`;
-}
 
-function editStaffAccount(encoded){
-    let s; try{s=JSON.parse(encoded);}catch(e){return;}
-    const role=prompt("Role for "+(s.name||"staff")+"\\n\\nChoose one:\\n"+STAFF_ROLES.join(" | "),s.role||"Staff");
-    if(role===null)return;
-    if(!STAFF_ROLES.includes(role)){alert("Invalid role selected.");return;}
-    const permissions=staffPermissionsDefaults(role);
-    updateStaffProfile(s.id,{role,permissions});
-}
-async function updateStaffProfile(id,patch){
-    const {error}=await supabaseClient.from("staff_profiles").update(patch).eq("id",id);
-    if(error){alert("Staff update failed:\n\n"+error.message);return;}
-    alert("Staff updated successfully."); await loadStaffAccounts();
-}
-async function toggleStaffActive(id,isActive){
-    const {error}=await supabaseClient.from("staff_profiles").update({active:!isActive}).eq("id",id);
-    if(error){alert("Status update failed:\n\n"+error.message);return;} await loadStaffAccounts();
-}
-async function deleteStaffProfile(id,name){
-    if(!confirm('Delete staff profile "'+name+'"?'))return;
-    const {error}=await supabaseClient.from("staff_profiles").delete().eq("id",id);
-    if(error){alert("Staff delete failed:\n\n"+error.message);return;}
-    alert("Staff profile deleted."); await loadStaffAccounts();
+    const {data,error}=await supabaseClient
+        .from("staff_profiles")
+        .select("id,name,email,role,active,created_at")
+        .order("created_at",{ascending:false});
+
+    if(error){
+        box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>';
+        return;
+    }
+    if(!data?.length){
+        box.innerHTML='<div class="message">No staff accounts created yet.</div>';
+        return;
+    }
+
+    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:700px">
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+        <tbody>${data.map(s=>`<tr>
+            <td><strong>${escapeHtml(s.name || "")}</strong></td>
+            <td>${escapeHtml(s.email || "")}</td>
+            <td>${escapeHtml(s.role || "Staff")}</td>
+            <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
+            <td>${s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}</td>
+            <td><button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">Change Password</button></td>
+        </tr>`).join('')}</tbody></table></div>`;
 }
 
 async function changeStaffPassword(email){
-    const password=prompt("New password for "+email+" (minimum 8 characters):");
-    if(password===null)return; if(password.length<8){alert("Password must be at least 8 characters.");return;}
+    const password=prompt("New password for " + email + " (minimum 8 characters):");
+    if(password===null) return;
+    if(password.length < 8){ alert("Password must be at least 8 characters."); return; }
+
     const {data:{session}}=await supabaseClient.auth.getSession();
-    if(!session){alert("Your admin session has expired. Please sign in again.");return;}
-    const {data,error}=await supabaseClient.functions.invoke("reset-staff-password",{body:{email,password}});
-    if(error){alert(data?.error||error.message||"Unable to change staff password.");return;}
-    if(data?.error){alert(data.error);return;} alert("Staff password changed successfully.");
+    if(!session){ alert("Your admin session has expired. Please sign in again."); return; }
+
+    const {data,error}=await supabaseClient.functions.invoke("reset-staff-password",{
+        body:{email,password}
+    });
+
+    if(error){
+        alert(data?.error || error.message || "Unable to change staff password.");
+        return;
+    }
+    if(data?.error){ alert(data.error); return; }
+    alert("Staff password changed successfully.");
 }
 
 /* =========================================================
@@ -7648,34 +7609,182 @@ async function copyStaffPassword(){
 
 
 <script>
-const STAFF_ROLES=["Super Admin","Admin","Manager","Sales Manager","Sales Staff","Order Manager","Order Staff","Accounts Manager","Accounts Staff","Inventory Manager","Inventory Staff","Customer Manager","Customer Support","Delivery Manager","Delivery Staff","Purchase Manager","Purchase Staff","Report Manager","Viewer","Custom Role"];
 function showStaffManagement(){
-  const box=document.getElementById("other-content"); if(!box)return;
-  const perms=[
-    ["dashboard","Dashboard"],["orders","Orders"],["sales","Sales"],["customers","Customers"],["products","Products"],["inventory","Inventory"],
-    ["purchases","Purchases"],["payments","Payments"],["invoices","Invoices"],["reports","Reports"],["staff","Staff Management"],["settings","Settings"],
-    ["export","Export Data"],["print","Print"],["delete","Delete Data"]
-  ];
-  box.innerHTML=`<div class="admin-box" style="padding:20px;">
-    <div class="admin-header" style="margin-bottom:18px"><div><p>STAFF & ACCESS</p><h2>👥 Staff Management</h2><small>Create staff, assign roles and control access.</small></div></div>
-    <div class="form-grid">
-      <div class="form-group"><label>STAFF NAME</label><input id="smStaffName" type="text" placeholder="e.g. Aman Singh"></div>
-      <div class="form-group"><label>STAFF EMAIL</label><input id="smStaffEmail" type="email" placeholder="staff@company.com"></div>
-      <div class="form-group"><label>SECURE PASSWORD</label><div style="display:flex;gap:7px;flex-wrap:wrap"><input id="smStaffPassword" type="password" minlength="8" placeholder="Generate secure password" style="flex:1;min-width:190px"><button type="button" class="btn outline-btn" onclick="generateStaffPasswordForNew()">🔐 Generate</button><button type="button" class="btn outline-btn" onclick="toggleStaffPasswordForNew()">👁 Show</button><button type="button" class="btn outline-btn" onclick="copyStaffPasswordForNew()">📋 Copy</button></div><small id="smStaffPasswordHint" style="display:block;margin-top:6px;color:#6b7280">Minimum 8 characters.</small></div>
-      <div class="form-group"><label>ROLE</label><select id="smStaffRole" onchange="applyRolePermissions()">${STAFF_ROLES.map(r=>`<option value="${r}">${r}</option>`).join("")}</select></div>
+  const box=document.getElementById("other-content");
+  if(!box) return;
+
+  box.innerHTML=`
+  <div class="admin-box" style="padding:20px;">
+    <div class="admin-header" style="margin-bottom:18px;">
+      <div>
+        <p>STAFF & ACCESS</p>
+        <h2>👥 Staff Management</h2>
+        <small>Create and manage professional staff login accounts.</small>
+      </div>
     </div>
-    <div class="admin-box" style="margin-top:15px;padding:15px"><h3 style="margin-top:0">🔐 Permissions</h3><small>Select exactly what this staff member can access.</small><div id="smPermissions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin-top:12px">${perms.map(([k,l])=>`<label style="display:flex;gap:8px;align-items:center;padding:9px;border:1px solid #e5e7eb;border-radius:9px"><input type="checkbox" data-perm="${k}"> ${l}</label>`).join("")}</div></div>
-    <div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap"><button type="button" class="btn" onclick="createStaffLogin()">➕ Create Staff Login</button><button type="button" class="btn outline-btn" onclick="applyRolePermissions()">↻ Reset Permissions</button><button type="button" class="btn outline-btn" onclick="loadStaffAccounts()">Refresh</button></div>
-    <div id="smStaffCreateStatus" class="message" style="display:none;margin-top:12px"></div>
-    <div class="admin-box" style="margin-top:18px;padding:0"><div class="admin-header"><h3>Existing Staff Accounts</h3></div><div id="smStaffAccountsList" style="padding:14px"><div class="message">Loading...</div></div></div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>STAFF NAME</label>
+        <input id="staffName" type="text" placeholder="e.g. Aman Singh">
+      </div>
+
+      <div class="form-group">
+        <label>STAFF EMAIL</label>
+        <input id="staffEmail" type="email" placeholder="staff@company.com">
+      </div>
+
+      <div class="form-group">
+        <label>SECURE PASSWORD</label>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          <input id="staffPassword" type="password" minlength="8"
+                 placeholder="Generate secure password" style="flex:1;min-width:190px;">
+          <button type="button" class="btn outline-btn" onclick="generateStaffPassword()">🔐 Generate</button>
+          <button type="button" class="btn outline-btn" onclick="toggleStaffPassword()">👁 Show</button>
+          <button type="button" class="btn outline-btn" onclick="copyStaffPassword()">📋 Copy</button>
+        </div>
+        <small id="staffPasswordHint" style="display:block;margin-top:6px;color:#6b7280;">
+          Minimum 8 characters.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>ROLE</label>
+        <select id="staffRole">
+          <option value="Staff">Staff</option>
+          <option value="Manager">Manager</option>
+          <option value="Sales">Sales</option>
+          <option value="Stock">Stock</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;">
+      <button type="button" class="btn" onclick="createStaffLogin()">➕ Create Staff Login</button>
+    </div>
+    <div id="staffCreateStatus" class="message" style="display:none;margin-top:12px;"></div>
+
+    <div class="admin-box" style="margin-top:18px;padding:0;">
+      <div class="admin-header"><h3>Existing Staff Accounts</h3></div>
+      <div id="staffAccountsList" style="padding:14px;">
+        <div class="message">No staff accounts loaded yet.</div>
+      </div>
+    </div>
   </div>`;
-  applyRolePermissions(); loadStaffAccounts();
+  if(typeof loadStaffAccounts==="function") loadStaffAccounts();
 }
-function generateStaffPasswordForNew(){const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";const a=new Uint32Array(16);crypto.getRandomValues(a);const p=Array.from(a,x=>chars[x%chars.length]).join("");const e=document.getElementById("smStaffPassword");if(e){e.value=p;e.type="text";}const h=document.getElementById("smStaffPasswordHint");if(h)h.textContent="Secure password generated.";}
-function toggleStaffPasswordForNew(){const e=document.getElementById("smStaffPassword");if(e)e.type=e.type==="password"?"text":"password";}
-async function copyStaffPasswordForNew(){const e=document.getElementById("smStaffPassword");if(!e||!e.value){generateStaffPasswordForNew();return;}try{await navigator.clipboard.writeText(e.value);}catch(x){e.select();document.execCommand("copy");}const h=document.getElementById("smStaffPasswordHint");if(h)h.textContent="Password copied.";}
 </script>
 
-<script>document.addEventListener("DOMContentLoaded",()=>{ if(document.getElementById("staffRole")) applyLegacyRolePermissions(); });</script>
+
+<script id="party-redesign-additive-js">
+/* PARTY REDESIGN - original functions are preserved above; these wrappers override only party UI. */
+window.partyCurrentFilter = "all";
+
+async function loadParties(){
+    const content=document.getElementById("other-content");
+    if(!content)return;
+    content.innerHTML=`
+    <div class="admin-box party-redesign">
+      <div class="party-page-head">
+        <div><p>PARTY MANAGEMENT</p><h2>👥 Parties</h2><span>Manage party accounts, stock given and outstanding payments.</span></div>
+        <div class="party-head-actions">
+          <button class="btn" onclick="showAddPartyForm()">＋ Add Party</button>
+          <button class="btn gray-btn" onclick="loadParties()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="party-summary-grid">
+        <div class="party-stat"><span>Total Parties</span><strong id="partyStatCount">0</strong></div>
+        <div class="party-stat"><span>Total Billing</span><strong id="partyStatBill">₹0.00</strong></div>
+        <div class="party-stat"><span>Received</span><strong id="partyStatPaid">₹0.00</strong></div>
+        <div class="party-stat due"><span>Outstanding</span><strong id="partyStatDue">₹0.00</strong></div>
+      </div>
+      <div id="partyForm"></div>
+      <div class="party-toolbar">
+        <div class="party-search-wrap"><span>⌕</span><input id="partySearchInput" type="search" placeholder="Search party name or mobile..." oninput="filterPartyTable()"></div>
+        <div class="party-filters">
+          <button class="party-filter active" onclick="setPartyFilter('all',this)">All</button>
+          <button class="party-filter" onclick="setPartyFilter('due',this)">Due</button>
+          <button class="party-filter" onclick="setPartyFilter('settled',this)">Settled</button>
+        </div>
+      </div>
+      <div id="partiesList"><div class="message">Loading parties...</div></div>
+    </div>`;
+    window.partyCurrentFilter="all";
+    await renderParties();
+}
+
+function showAddPartyForm(){
+    const form=document.getElementById("partyForm");
+    if(!form)return;
+    form.innerHTML=`
+    <div class="party-form-card">
+      <div class="party-form-head"><div><p>NEW PARTY</p><h3>➕ Add Party Account</h3></div><button type="button" class="party-close" onclick="document.getElementById('partyForm').innerHTML=''">×</button></div>
+      <div class="party-form-grid">
+        <div class="form-group"><label>Party Name *</label><input id="partyNameInput" type="text" placeholder="e.g. ABC Medical Store"></div>
+        <div class="form-group"><label>Mobile Number</label><input id="partyPhoneInput" type="tel" placeholder="e.g. 9876543210"></div>
+        <div class="form-group"><label>Address</label><input id="partyAddressInput" type="text" placeholder="Shop / city / address"></div>
+        <div class="form-group"><label>Note</label><input id="partyNoteInput" type="text" placeholder="Optional note"></div>
+      </div>
+      <div class="party-form-actions"><button class="btn" onclick="saveParty()">💾 Save Party</button><button class="btn gray-btn" onclick="document.getElementById('partyForm').innerHTML=''">Cancel</button></div>
+    </div>`;
+}
+
+function setPartyFilter(filter,button){
+    window.partyCurrentFilter=filter;
+    document.querySelectorAll(".party-redesign .party-filter").forEach(b=>b.classList.remove("active"));
+    if(button)button.classList.add("active");
+    filterPartyTable();
+}
+
+function filterPartyTable(){
+    const q=(document.getElementById("partySearchInput")?.value||"").trim().toLowerCase();
+    const f=window.partyCurrentFilter||"all";
+    document.querySelectorAll("#partiesList .party-row").forEach(row=>{
+        row.style.display=(!q||row.dataset.search.includes(q))&&(f==="all"||row.dataset.status===f)?"":"none";
+    });
+}
+
+async function renderParties(){
+    const box=document.getElementById("partiesList");
+    if(!box)return;
+    const {data:parties,error}=await supabaseClient.from("parties").select("*").order("name",{ascending:true});
+    if(error){box.innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`;return;}
+    const {data:tx,error:txError}=await supabaseClient.from("party_transactions").select("*").order("created_at",{ascending:false});
+    if(txError){box.innerHTML=`<div class="message error">${escapeHtml(txError.message)}</div>`;return;}
+    const list=parties||[], transactions=tx||[];
+    let totalBill=0,totalPaid=0,totalDue=0;
+    const rows=list.map(p=>{
+        const t=transactions.filter(x=>String(x.party_id)===String(p.id));
+        const bill=t.filter(x=>x.transaction_type==="sale").reduce((s,x)=>s+Number(x.amount||0),0);
+        const paid=t.filter(x=>x.transaction_type==="payment").reduce((s,x)=>s+Number(x.amount||0),0);
+        const due=Math.max(0,bill-paid);
+        totalBill+=bill;totalPaid+=paid;totalDue+=due;
+        return {p,bill,paid,due};
+    });
+    const fmt=n=>"₹"+Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+    document.getElementById("partyStatCount").textContent=list.length;
+    document.getElementById("partyStatBill").textContent=fmt(totalBill);
+    document.getElementById("partyStatPaid").textContent=fmt(totalPaid);
+    document.getElementById("partyStatDue").textContent=fmt(totalDue);
+    if(!rows.length){box.innerHTML=`<div class="party-empty"><div>👥</div><h3>No parties yet</h3><p>Add your first party account to start tracking billing and payments.</p><button class="btn" onclick="showAddPartyForm()">＋ Add Party</button></div>`;return;}
+    let html=`<div class="party-table-wrap"><table class="data-table party-table"><thead><tr><th>Party</th><th>Mobile</th><th>Billing</th><th>Received</th><th>Outstanding</th><th>Status</th><th>Actions</th></tr></thead><tbody>`;
+    rows.forEach(({p,bill,paid,due})=>{
+        const name=escapeHtml(p.name||"Unnamed Party"),phone=escapeHtml(p.phone||"—"),address=escapeHtml(p.address||"");
+        const search=(String(p.name||"")+" "+String(p.phone||"")).toLowerCase();
+        const status=due>0?"due":"settled";
+        html+=`<tr class="party-row" data-search="${escapeHtml(search)}" data-status="${status}">
+          <td><div class="party-name-cell"><div class="party-avatar">${escapeHtml((p.name||"?").trim().charAt(0).toUpperCase())}</div><div><strong>${name}</strong><small>${address||"No address"}</small></div></div></td>
+          <td>${phone}</td><td>${fmt(bill)}</td><td>${fmt(paid)}</td>
+          <td class="${due>0?"party-due":"party-settled"}">${fmt(due)}</td>
+          <td><span class="party-status ${status}">${due>0?"Payment Due":"Settled"}</span></td>
+          <td><div style="display:flex;gap:5px;flex-wrap:wrap"><button class="btn" onclick="viewParty('${p.id}')">View</button><button class="btn gray-btn" onclick="showStockPartyForm('${p.id}')">＋ Stock</button><button class="btn" onclick="showPartyPaymentForm('${p.id}')">₹ Pay</button></div></td>
+        </tr>`;
+    });
+    html+=`</tbody></table></div>`;
+    box.innerHTML=html;
+    filterPartyTable();
+}
+</script>
+
 </body>
 </html>
