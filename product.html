@@ -973,6 +973,17 @@ body {
     .size-option{flex:1 1 70px;}
 }
 
+
+/* PRODUCT SIZE / VARIANT SELECTOR */
+.size-selection{margin:18px 0 20px;padding:15px 16px;background:#fbf9f6;border:1px solid #eee5d7;border-radius:14px;}
+.size-selection-label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:10px;}
+.size-options{display:flex;flex-wrap:wrap;gap:8px;}
+.size-option{min-width:78px;padding:10px 12px;border:1px solid #ddd3c4;border-radius:10px;background:#fff;color:#333;font-weight:700;cursor:pointer;transition:.2s;}
+.size-option small{display:block;margin-top:3px;color:#ad8232;font-size:12px;}
+.size-option.active{border-color:#ad8232;background:#fff8eb;color:#ad8232;box-shadow:0 3px 10px rgba(173,130,50,.12);}
+.selected-size-text{margin-top:9px;font-size:12px;color:#777;}
+@media(max-width:600px){.size-options{gap:7px}.size-option{flex:1;min-width:70px}.size-selection{padding:13px}}
+
 </style>
 
 
@@ -1472,67 +1483,70 @@ function parseSizeOptions(product) {
 
 function normalizeSizeOptions(list) {
     return list.map((item, index) => {
-        if (typeof item === "number") return { value: String(item), label: String(item) };
+        if (typeof item === "number") return { value:String(item), label:String(item), price:null, stock:null, unit:"" };
         if (typeof item === "string") {
-            const raw = item.trim();
-            const match = raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)$/i);
-            if (match) {
-                const n = match[1];
-                const u = normalizeUnit(match[2]);
-                return { value: n + u, label: n + " " + u };
-            }
-            return { value: raw, label: raw };
+            const raw=item.trim();
+            const match=raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)$/i);
+            if(match){ const n=match[1], u=normalizeUnit(match[2]); return {value:n+u,label:n+" "+u,price:null,stock:null,unit:u}; }
+            return {value:raw,label:raw,price:null,stock:null,unit:""};
         }
-        const size = item?.size ?? item?.value ?? item?.quantity ?? item?.weight ?? item?.volume ?? "";
-        const unit = normalizeUnit(item?.unit ?? item?.size_unit ?? item?.volume_unit ?? item?.weight_unit ?? "");
-        const label = String(size).trim() + (unit ? " " + unit : "");
-        return { value: label || ("Option " + (index + 1)), label: label || ("Option " + (index + 1)) };
-    }).filter(x => x.label);
+        const size=String(item?.label ?? item?.size ?? item?.value ?? item?.quantity ?? item?.weight ?? item?.volume ?? "").trim();
+        const unit=normalizeUnit(item?.unit ?? item?.size_unit ?? item?.volume_unit ?? item?.weight_unit ?? "");
+        const label=size+(unit?" "+unit:"");
+        return { value:label || ("Option "+(index+1)), label:label || ("Option "+(index+1)), price:item?.price != null ? Number(item.price) : null, stock:item?.stock != null ? Number(item.stock) : null, unit:unit };
+    }).filter(x=>x.label);
 }
 
 function normalizeUnit(unit) {
-    const u = String(unit || "").trim().toLowerCase();
-    if (["g","gram","grams"].includes(u)) return "g";
-    if (["kg","kilogram","kilograms"].includes(u)) return "kg";
-    if (["ml","millilitre","milliliter","millilitres","milliliters"].includes(u)) return "ml";
-    if (["l","ltr","litre","liter","litres","liters"].includes(u)) return "L";
-    return String(unit || "").trim();
+    const u=String(unit||"").trim().toLowerCase();
+    if(["g","gram","grams"].includes(u)) return "g";
+    if(["kg","kilogram","kilograms"].includes(u)) return "kg";
+    if(["ml","millilitre","milliliter","millilitres","milliliters"].includes(u)) return "ml";
+    if(["l","ltr","litre","liter","litres","liters"].includes(u)) return "L";
+    return String(unit||"").trim();
 }
 
+let currentSizeOptions=[];
+let selectedProductVariant=null;
+
 function getSelectedSize() {
-    const el = document.getElementById("productSize");
+    const el=document.getElementById("productSize");
     return el ? el.value : "";
 }
 
+function applyProductVariant(option) {
+    selectedProductVariant=option || null;
+    const priceEl=document.querySelector(".product-price");
+    if(priceEl && option && option.price != null) priceEl.textContent="₹"+Number(option.price).toLocaleString("en-IN");
+    const stockEl=document.querySelector(".purchase-area .stock-text");
+    const qty=document.getElementById("quantity");
+    const stock=option && option.stock != null ? Number(option.stock) : null;
+    if(stockEl && stock !== null){
+        stockEl.className="stock-text "+(stock>0?"in-stock":"out-stock");
+        stockEl.textContent=stock>0?"✓ In Stock":"✕ Out of Stock";
+    }
+    if(qty && stock !== null){ qty.max=Math.max(1,stock); if(Number(qty.value)>stock) qty.value=Math.max(1,stock); }
+}
+
 function selectProductSize(value, button) {
-    document.querySelectorAll(".size-option").forEach(btn => btn.classList.remove("active"));
-    if (button) button.classList.add("active");
-    const input = document.getElementById("productSize");
-    if (input) input.value = value;
-    const text = document.getElementById("selectedSizeText");
-    if (text) text.textContent = value ? "Selected size: " + value : "";
+    document.querySelectorAll(".size-option").forEach(btn=>btn.classList.remove("active"));
+    if(button) button.classList.add("active");
+    const input=document.getElementById("productSize");
+    if(input) input.value=value;
+    const option=currentSizeOptions.find(x=>String(x.value)===String(value));
+    const text=document.getElementById("selectedSizeText");
+    if(text) text.textContent=option ? "Selected: "+option.label : "";
+    applyProductVariant(option);
 }
 
 function renderSizeOptions(product) {
-    const options = parseSizeOptions(product);
-    if (!options.length) return "";
-
-    const first = options[0].value;
-    const buttons = options.map((option, index) => `
-        <button type="button" class="size-option ${index === 0 ? "active" : ""}"
-                onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
-            ${escapeHtml(option.label)}
-        </button>
-    `).join("");
-
-    return `
-        <div class="size-selection">
-            <label class="size-selection-label">Size / Quantity</label>
-            <div class="size-options">${buttons}</div>
-            <input type="hidden" id="productSize" value="${escapeHtml(first)}">
-            <div class="selected-size-text" id="selectedSizeText">Selected size: ${escapeHtml(options[0].label)}</div>
-        </div>
-    `;
+    const options=parseSizeOptions(product);
+    currentSizeOptions=options;
+    if(!options.length) return "";
+    const first=options[0];
+    const buttons=options.map((option,index)=>`<button type="button" class="size-option ${index===0?"active":""}" onclick="selectProductSize(${JSON.stringify(option.value)}, this)">${escapeHtml(option.label)}${option.price!=null?`<small>₹${Number(option.price).toLocaleString("en-IN")}</small>`:""}</button>`).join("");
+    setTimeout(()=>applyProductVariant(first),0);
+    return `<div class="size-selection"><label class="size-selection-label">Choose Size</label><div class="size-options">${buttons}</div><input type="hidden" id="productSize" value="${escapeHtml(first.value)}"><div class="selected-size-text" id="selectedSizeText">Selected: ${escapeHtml(first.label)}</div></div>`;
 }
 
 /* =====================================================
@@ -1636,9 +1650,9 @@ async function loadProduct() {
 
 
     const stock =
-        Number(
-            product.stock || 0
-        );
+        selectedProductVariant && selectedProductVariant.stock != null
+        ? Number(selectedProductVariant.stock)
+        : Number(product.stock || 0);
 
 
     const image =
@@ -1690,21 +1704,7 @@ async function loadProduct() {
                     onerror="this.src='facewash.jpg'"
                 >
 
-                <div class="liara-unit-side" aria-label="Select product unit">
-                    <div class="liara-unit-side-title">UNIT</div>
-                    <button type="button" class="liara-unit-btn active"
-                            data-unit="g"
-                            onclick="selectLiaraUnit('g', this)">g</button>
-                    <button type="button" class="liara-unit-btn"
-                            data-unit="ml"
-                            onclick="selectLiaraUnit('ml', this)">ml</button>
-                    <button type="button" class="liara-unit-btn"
-                            data-unit="L"
-                            onclick="selectLiaraUnit('L', this)">L</button>
-                </div>
-
             </div>
-
 
 
             <!-- PRODUCT INFORMATION -->
@@ -1996,9 +1996,9 @@ async function addToCart() {
 
 
     const stock =
-        Number(
-            product.stock || 0
-        );
+        selectedProductVariant && selectedProductVariant.stock != null
+        ? Number(selectedProductVariant.stock)
+        : Number(product.stock || 0);
 
 
     if(stock < quantity) {
@@ -2082,9 +2082,9 @@ async function addToCart() {
                 "Liara Product",
 
             price:
-                Number(
-                    product.price || 0
-                ),
+                selectedProductVariant && selectedProductVariant.price != null
+                ? Number(selectedProductVariant.price)
+                : Number(product.price || 0),
 
             image:
                 product.image_url ||
@@ -2097,7 +2097,10 @@ async function addToCart() {
                 quantity,
 
             size:
-                getSelectedSize()
+                getSelectedSize(),
+
+            unit:
+                selectedProductVariant?.unit || ""
 
         });
 
@@ -2208,7 +2211,10 @@ async function buyNow() {
             quantity,
 
         size:
-            getSelectedSize()
+            getSelectedSize(),
+
+        unit:
+            selectedProductVariant?.unit || ""
 
     };
 
