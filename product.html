@@ -920,6 +920,59 @@ body {
     }
 }
 
+
+
+/* =====================================================
+   PRODUCT SIZE / UNIT OPTIONS
+===================================================== */
+.size-selection {
+    margin: 0 0 14px;
+}
+.size-selection-label {
+    display:block;
+    margin:0 0 8px;
+    font-size:14px;
+    font-weight:700;
+    color:#333;
+}
+.size-options {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+.size-option {
+    min-width:72px;
+    padding:10px 13px;
+    border:1px solid #ddd5c9;
+    border-radius:10px;
+    background:#fff;
+    color:#555;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    transition:.2s;
+}
+.size-option:hover,
+.size-option.active {
+    border-color:#b88427;
+    background:#b88427;
+    color:#fff;
+}
+.size-option:disabled {
+    opacity:.45;
+    cursor:not-allowed;
+    background:#f5f3ef;
+}
+.selected-size-text {
+    margin:8px 0 0;
+    font-size:13px;
+    color:#777;
+}
+@media(max-width:600px){
+    .size-options{gap:7px;}
+    .size-option{flex:1 1 70px;}
+}
+
 </style>
 
 </head>
@@ -1315,6 +1368,101 @@ function renderTextSection(title, icon, value) {
 }
 
 /* =====================================================
+   PRODUCT SIZE / UNIT HELPERS
+===================================================== */
+function parseSizeOptions(product) {
+    const candidates = [
+        product.size_options,
+        product.sizes,
+        product.product_sizes,
+        product.variants
+    ];
+
+    for (const value of candidates) {
+        if (Array.isArray(value) && value.length) return normalizeSizeOptions(value);
+        if (typeof value === "string" && value.trim()) {
+            try {
+                const parsed = JSON.parse(value);
+                if (Array.isArray(parsed) && parsed.length) return normalizeSizeOptions(parsed);
+            } catch(e) {}
+            const parts = value.split(/[,\n|]+/).map(v => v.trim()).filter(Boolean);
+            if (parts.length) return normalizeSizeOptions(parts);
+        }
+    }
+
+    const singleSize = product.size || product.volume || product.weight || product.quantity_size || "";
+    const singleUnit = product.unit || product.size_unit || product.volume_unit || product.weight_unit || "";
+    if (singleSize) return normalizeSizeOptions([{ size: singleSize, unit: singleUnit }]);
+
+    return [];
+}
+
+function normalizeSizeOptions(list) {
+    return list.map((item, index) => {
+        if (typeof item === "number") return { value: String(item), label: String(item) };
+        if (typeof item === "string") {
+            const raw = item.trim();
+            const match = raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)$/i);
+            if (match) {
+                const n = match[1];
+                const u = normalizeUnit(match[2]);
+                return { value: n + u, label: n + " " + u };
+            }
+            return { value: raw, label: raw };
+        }
+        const size = item?.size ?? item?.value ?? item?.quantity ?? item?.weight ?? item?.volume ?? "";
+        const unit = normalizeUnit(item?.unit ?? item?.size_unit ?? item?.volume_unit ?? item?.weight_unit ?? "");
+        const label = String(size).trim() + (unit ? " " + unit : "");
+        return { value: label || ("Option " + (index + 1)), label: label || ("Option " + (index + 1)) };
+    }).filter(x => x.label);
+}
+
+function normalizeUnit(unit) {
+    const u = String(unit || "").trim().toLowerCase();
+    if (["g","gram","grams"].includes(u)) return "g";
+    if (["kg","kilogram","kilograms"].includes(u)) return "kg";
+    if (["ml","millilitre","milliliter","millilitres","milliliters"].includes(u)) return "ml";
+    if (["l","ltr","litre","liter","litres","liters"].includes(u)) return "L";
+    return String(unit || "").trim();
+}
+
+function getSelectedSize() {
+    const el = document.getElementById("productSize");
+    return el ? el.value : "";
+}
+
+function selectProductSize(value, button) {
+    document.querySelectorAll(".size-option").forEach(btn => btn.classList.remove("active"));
+    if (button) button.classList.add("active");
+    const input = document.getElementById("productSize");
+    if (input) input.value = value;
+    const text = document.getElementById("selectedSizeText");
+    if (text) text.textContent = value ? "Selected size: " + value : "";
+}
+
+function renderSizeOptions(product) {
+    const options = parseSizeOptions(product);
+    if (!options.length) return "";
+
+    const first = options[0].value;
+    const buttons = options.map((option, index) => `
+        <button type="button" class="size-option ${index === 0 ? "active" : ""}"
+                onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
+            ${escapeHtml(option.label)}
+        </button>
+    `).join("");
+
+    return `
+        <div class="size-selection">
+            <label class="size-selection-label">Size / Quantity</label>
+            <div class="size-options">${buttons}</div>
+            <input type="hidden" id="productSize" value="${escapeHtml(first)}">
+            <div class="selected-size-text" id="selectedSizeText">Selected size: ${escapeHtml(options[0].label)}</div>
+        </div>
+    `;
+}
+
+/* =====================================================
    LOAD PRODUCT
 ===================================================== */
 
@@ -1492,6 +1640,8 @@ async function loadProduct() {
                 <div class="product-description">
                     ${escapeHtml(description)}
                 </div>
+
+                ${renderSizeOptions(product)}
 
 <!-- PURCHASE AREA
                  Desktop: under product photo
@@ -1797,11 +1947,13 @@ async function addToCart() {
     }
 
 
+    const selectedSize = getSelectedSize();
+
     const existing =
         cart.find(function(item) {
 
-            return String(item.id) ===
-                   String(product.id);
+            return String(item.id) === String(product.id) &&
+                   String(item.size || "") === String(selectedSize || "");
 
         });
 
@@ -1856,7 +2008,10 @@ async function addToCart() {
                 "facewash.jpg",
 
             quantity:
-                quantity
+                quantity,
+
+            size:
+                getSelectedSize()
 
         });
 
@@ -1964,7 +2119,10 @@ async function buyNow() {
             "facewash.jpg",
 
         quantity:
-            quantity
+            quantity,
+
+        size:
+            getSelectedSize()
 
     };
 
