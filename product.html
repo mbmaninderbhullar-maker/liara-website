@@ -1049,46 +1049,258 @@ body {
 </style>
 
 
-<style id="liara-clean-final">
-.product-detail{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-rows:auto!important;gap:28px!important;padding:28px!important;align-items:start!important}
-.product-photo{grid-column:1!important;grid-row:1!important;height:440px!important}
-.product-info{grid-column:2!important;grid-row:1!important;padding-top:2px!important}
-.product-info h1{font-size:31px!important;line-height:1.15!important;margin-bottom:8px!important}
-.product-price{font-size:29px!important;margin:5px 0 11px!important}
-.product-description{font-size:14px!important;line-height:1.5!important;margin-bottom:11px!important}
-.liara-review-summary{display:flex!important;align-items:center!important;gap:7px!important;font-size:12px!important;margin:0 0 7px!important}
-.liara-review-summary .liara-stars{color:#b47d20!important;letter-spacing:1px!important}
-.liara-review-summary a{color:#a77420!important;text-decoration:none!important;font-weight:700!important}
-.liara-size-price-box{margin:9px 0 12px!important;padding:10px!important;border:1px solid #eadfce!important;border-radius:12px!important;background:#fffdfa!important}
-.liara-size-price-box .size-selection-label{font-size:12px!important;font-weight:900!important;margin-bottom:7px!important}
-.liara-size-price-box .size-options{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important}
-.liara-size-price-box .size-option{min-height:54px!important;padding:6px 2px!important;border:1px solid #dfd2bf!important;border-radius:8px!important;background:#fff!important;cursor:pointer!important;font-weight:800!important}
-.liara-size-price-box .size-option span{display:block!important;font-size:10px!important}
-.liara-size-price-box .size-option small{display:block!important;margin-top:3px!important;font-size:10px!important;color:#a77420!important}
-.liara-size-price-box .size-option.active{border-color:#b47d20!important;background:#fff8ea!important;box-shadow:0 0 0 1px #b47d20 inset!important}
-.liara-size-price-box .size-option:disabled{opacity:.5!important;cursor:not-allowed!important}
-.liara-size-price-box .selected-size-text{font-size:9px!important;color:#777!important;margin-top:5px!important}
-.purchase-area{grid-column:2!important;grid-row:1!important;align-self:start!important;margin-top:290px!important}
-.purchase-area .stock-text{margin-bottom:7px!important}
-.purchase-area .quantity-box{margin-bottom:9px!important}
-.purchase-area .quantity-box button,.purchase-area .quantity-box input{height:38px!important;width:38px!important}
-.purchase-area .action-buttons{gap:8px!important}
-.purchase-area .action-buttons button{min-height:43px!important;padding:10px 14px!important;border-radius:9px!important}
-.product-detail .ingredients-section,.product-detail .product-detail-section{grid-column:1/-1!important;grid-row:auto!important}
-#reviews{margin-top:0!important}
+<style id="liara-size-price-css">
+.liara-size-buttons{display:flex!important;flex-direction:column!important;gap:7px!important}
+.liara-size-buttons .size-option{width:100%!important;min-height:38px!important;padding:7px 4px!important;border:1px solid #d9c39a!important;background:#fff!important;color:#8f6823!important;border-radius:8px!important;font-size:13px!important;font-weight:800!important;cursor:pointer!important}
+.liara-size-buttons .size-option small{display:block!important;margin-top:2px!important;font-size:10px!important;font-weight:700!important}
+.liara-size-buttons .size-option.active,
+.liara-size-price-box .size-option.active{background:#fff9ee!important;color:#9a7028!important;border-color:#b88427!important;box-shadow:0 0 0 1px #b88427 inset!important}
+.liara-size-price-box .size-option{width:100%;min-height:58px;padding:8px 6px;border:1px solid #ded4c5;border-radius:10px;background:#fff;color:#444;cursor:pointer;font-weight:800}
+.liara-size-price-box .size-option span{display:block}
+.liara-size-price-box .size-option small{display:block;margin-top:4px;font-size:12px;color:#9a7028}
+.liara-size-price-box .size-option.price-not-set{opacity:.55;cursor:not-allowed;background:#f7f5f1}
+.liara-size-price-box .size-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.liara-size-price-box .size-selection-label{display:block;margin-bottom:9px;font-size:13px;font-weight:800;color:#333}
+.liara-size-price-box .selected-size-text{margin-top:8px;font-size:12px;color:#666}
+.liara-size-price-note{margin-top:7px;font-size:12px;color:#777}
 @media(max-width:900px){
-.product-detail{grid-template-columns:1fr 1fr!important;gap:14px!important;padding:18px!important}
-.product-photo{height:330px!important}
-.product-info h1{font-size:23px!important}.product-price{font-size:23px!important}.product-description{font-size:11px!important}
-.purchase-area{margin-top:230px!important}
-.purchase-area .action-buttons button{font-size:10px!important;padding:8px!important}
+  .liara-size-buttons{flex-direction:row!important;flex-wrap:wrap!important}
+  .liara-size-buttons .size-option{width:auto!important;min-width:58px!important}
 }
-@media(max-width:520px){
-.product-detail{grid-template-columns:1fr!important}
-.product-photo{grid-column:1!important;grid-row:1!important;height:330px!important}
-.product-info{grid-column:1!important;grid-row:2!important}
-.purchase-area{grid-column:1!important;grid-row:3!important;margin-top:0!important}
+</style>
+
+
+<!--
+UNIT PRICE DATA:
+Use a JSON array in unit_prices, size_prices, or price_options, e.g.
+[
+  {"size":"50","unit":"g","price":299},
+  {"size":"100","unit":"g","price":499},
+  {"size":"250","unit":"g","price":899},
+  {"size":"500","unit":"g","price":1499},
+  {"size":"1","unit":"kg","price":2499}
+]
+-->
+
+
+<style id="liara-review-css">
+.liara-review-summary{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin:-6px 0 12px;
+    font-size:14px;
+    color:#666;
 }
+.liara-stars{
+    letter-spacing:2px;
+    color:#c08a28;
+    font-size:18px;
+    line-height:1;
+}
+.liara-review-count{
+    font-weight:600;
+    color:#666;
+}
+.liara-review-summary .review-link{
+    color:#9b7028;
+    text-decoration:none;
+    font-weight:700;
+    cursor:pointer;
+}
+.liara-size-price-box{
+    margin:8px 0 18px;
+    padding:14px;
+    border:1px solid #eadcc8;
+    border-radius:14px;
+    background:#fcfaf7;
+}
+.liara-size-price-title{
+    display:block;
+    margin-bottom:9px;
+    font-size:13px;
+    font-weight:800;
+    color:#333;
+    letter-spacing:.3px;
+}
+.liara-size-price-options{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+}
+.liara-size-price-option{
+    min-height:58px;
+    padding:8px 6px;
+    border:1px solid #ded4c5;
+    border-radius:10px;
+    background:#fff;
+    color:#444;
+    cursor:pointer;
+    font-weight:800;
+    transition:.2s;
+}
+.liara-size-price-option span{
+    display:block;
+}
+.liara-size-price-option .variant-price{
+    margin-top:4px;
+    font-size:12px;
+    color:#9a7028;
+}
+.liara-size-price-option.active{
+    border-color:#b88427;
+    background:#fff9ee;
+    box-shadow:0 0 0 1px #b88427 inset;
+    color:#9a7028;
+}
+.liara-size-price-note{
+    margin-top:8px;
+    font-size:12px;
+    color:#777;
+}
+@media(max-width:600px){
+    .liara-size-price-options{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+</style>
+
+
+<style id="liara-compact-product-ui">
+:root{
+  --liara-gold:#bd8422;
+  --liara-gold-dark:#9d6d1b;
+  --liara-border:#eadfce;
+  --liara-bg:#f8f5ef;
+  --liara-text:#151515;
+}
+body{background:var(--liara-bg)!important}
+.product-page,
+.product-container,
+.product-detail-page{
+  max-width:1280px!important;
+  margin:0 auto!important;
+}
+.product-card,
+.product-detail-card,
+.product-main-card{
+  border-radius:22px!important;
+}
+.product-info h1,
+.product-title,
+h1{
+  letter-spacing:-.4px;
+}
+.product-price{
+  font-size:32px!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  color:var(--liara-gold)!important;
+  margin:10px 0 14px!important;
+}
+.liara-review-summary{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  margin:0 0 8px!important;
+  font-size:13px!important;
+}
+.liara-stars{
+  color:var(--liara-gold)!important;
+  font-size:17px!important;
+  letter-spacing:1px!important;
+}
+.liara-review-summary .review-link{
+  color:var(--liara-gold-dark)!important;
+}
+.liara-size-price-box{
+  margin:12px 0 16px!important;
+  padding:14px!important;
+  border:1px solid var(--liara-border)!important;
+  border-radius:14px!important;
+  background:#fffdfa!important;
+}
+.liara-size-price-box .size-options{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.liara-size-price-box .size-option{
+  min-height:62px!important;
+  padding:8px 5px!important;
+  border:1px solid #e4d8c7!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  color:#333!important;
+  cursor:pointer!important;
+  font-weight:800!important;
+}
+.liara-size-price-box .size-option span{
+  display:block!important;
+  font-size:13px!important;
+}
+.liara-size-price-box .size-option small{
+  display:block!important;
+  margin-top:4px!important;
+  font-size:12px!important;
+  color:var(--liara-gold-dark)!important;
+}
+.liara-size-price-box .size-option.active{
+  border-color:var(--liara-gold)!important;
+  box-shadow:0 0 0 1px var(--liara-gold) inset!important;
+  background:#fff9ed!important;
+  color:var(--liara-gold-dark)!important;
+}
+.liara-size-price-box .size-option.price-not-set{
+  opacity:.55!important;
+}
+.liara-size-price-note,.selected-size-text{
+  font-size:11px!important;
+  margin-top:7px!important;
+  color:#777!important;
+}
+.size-selection-label{
+  display:block!important;
+  margin-bottom:9px!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  letter-spacing:.2px!important;
+}
+.product-actions,
+.purchase-actions{
+  display:flex!important;
+  gap:10px!important;
+}
+.product-actions button,
+.purchase-actions button{
+  min-height:50px!important;
+  border-radius:11px!important;
+  font-weight:800!important;
+}
+.product-actions .buy-now,
+.purchase-actions .buy-now{
+  background:var(--liara-gold)!important;
+}
+.product-detail-section,
+#reviews{
+  border:1px solid var(--liara-border)!important;
+  border-radius:18px!important;
+  background:#fffdfa!important;
+}
+@media(max-width:900px){
+  .liara-size-price-box .size-options{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:600px){
+  .liara-size-price-box .size-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+</style>
+
+
+<style id="liara-purchase-order">
+.product-info .liara-size-price-box,
+.product-details .liara-size-price-box,
+.product-content .liara-size-price-box{order:20!important}
+.product-info .purchase-area,
+.product-info .product-actions,
+.product-info .purchase-actions{order:30!important}
 </style>
 
 </head>
@@ -1166,6 +1378,16 @@ body {
 
 </div>
 
+
+
+<section id="reviews" class="product-detail-section" style="margin-top:22px;">
+    <h2 class="product-detail-title"><span>⭐</span> Customer Reviews</h2>
+    <div class="product-detail-content">
+        <div class="detail-line" id="liaraReviewMessage">
+            Customer reviews will appear here from your connected review data.
+        </div>
+    </div>
+</section>
 
 </main>
 
@@ -1542,6 +1764,81 @@ function normalizeUnit(unit) {
     return String(unit || "").trim();
 }
 
+function parsePriceNumber(value) {
+    const n = Number(String(value ?? "").replace(/[₹,\s]/g, ""));
+    return Number.isFinite(n) ? n : 0;
+}
+
+function parseUnitPriceOptions(product) {
+    const candidates = [
+        product.unit_prices,
+        product.size_prices,
+        product.price_options,
+        product.size_options,
+        product.sizes,
+        product.product_sizes,
+        product.variants
+    ];
+
+    for (const value of candidates) {
+        if (Array.isArray(value) && value.length) {
+            const result = normalizeUnitPriceOptions(value);
+            if (result.length) return result;
+        }
+
+        if (typeof value === "string" && value.trim()) {
+            try {
+                const parsed = JSON.parse(value);
+                if (Array.isArray(parsed) && parsed.length) {
+                    const result = normalizeUnitPriceOptions(parsed);
+                    if (result.length) return result;
+                }
+            } catch(e) {}
+
+            const parts = value.split(/\r?\n|[|]+/).map(v => v.trim()).filter(Boolean);
+            const result = normalizeUnitPriceOptions(parts);
+            if (result.length) return result;
+        }
+    }
+    return [];
+}
+
+function normalizeUnitPriceOptions(list) {
+    return list.map(item => {
+        if (typeof item === "string") {
+            const raw = item.trim();
+            const match = raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)\s*(?:[:=\-–—]\s*)₹?\s*([0-9]+(?:\.[0-9]+)?)$/i);
+            if (!match) return null;
+            const size = match[1];
+            const unit = normalizeUnit(match[2]);
+            const price = parsePriceNumber(match[3]);
+            return { value: size + " " + unit, label: size + " " + unit, price };
+        }
+
+        if (!item || typeof item !== "object") return null;
+        const size = item.size ?? item.value ?? item.quantity ?? item.weight ?? item.volume ?? "";
+        const unit = normalizeUnit(item.unit ?? item.size_unit ?? item.volume_unit ?? item.weight_unit ?? "");
+        const price = parsePriceNumber(item.price ?? item.rate ?? item.amount ?? item.sale_price);
+        if (size === "" || price <= 0) return null;
+        const label = String(size).trim() + (unit ? " " + unit : "");
+        return { value: label, label, price };
+    }).filter(Boolean);
+}
+
+function getSelectedVariant() {
+    const value = document.getElementById("productSize")?.value || "";
+    const options = window.liaraUnitPriceOptions || [];
+    return options.find(o => String(o.value) === String(value)) || null;
+}
+
+function updateDisplayedPrice() {
+    const priceEl = document.getElementById("productPrice");
+    const variant = getSelectedVariant();
+    if (priceEl && variant) {
+        priceEl.textContent = "₹" + variant.price.toLocaleString("en-IN");
+    }
+}
+
 function getSelectedSize() {
     const el = document.getElementById("productSize");
     return el ? el.value : "";
@@ -1554,92 +1851,91 @@ function selectProductSize(value, button) {
     if (input) input.value = value;
     const text = document.getElementById("selectedSizeText");
     if (text) text.textContent = value ? "Selected size: " + value : "";
-}
-
-function parseVariantPrices(product) {
-    const sources = [product.unit_prices, product.size_prices, product.price_options, product.variants];
-
-    for (const source of sources) {
-        let data = source;
-        if (typeof data === "string" && data.trim()) {
-            try { data = JSON.parse(data); }
-            catch(e) { data = data.split(/\r?\n|[|]+/).map(x => x.trim()).filter(Boolean); }
-        }
-        if (!Array.isArray(data) || !data.length) continue;
-
-        const result = data.map(item => {
-            if (typeof item === "string") {
-                const m = item.match(/^(.+?)\s*(?:[:=]|-)\s*₹?\s*([0-9]+(?:\.[0-9]+)?)$/);
-                return m ? {value:m[1].trim(), label:m[1].trim(), price:Number(m[2])} : null;
-            }
-            if (!item || typeof item !== "object") return null;
-            const size = item.size ?? item.quantity ?? item.weight ?? item.volume ?? item.value ?? "";
-            const unit = normalizeUnit(item.unit ?? item.size_unit ?? item.weight_unit ?? item.volume_unit ?? "");
-            const rate = Number(String(item.price ?? item.rate ?? item.amount ?? item.sale_price ?? "").replace(/[₹,\s]/g,""));
-            if (!size || !Number.isFinite(rate) || rate <= 0) return null;
-            const label = `${size}${unit ? " " + unit : ""}`.trim();
-            return {value:label, label, price:rate};
-        }).filter(Boolean);
-
-        if (result.length) return result;
-    }
-    return [];
-}
-
-function getSelectedVariant() {
-    const value = document.getElementById("productSize")?.value || "";
-    return (window.liaraVariants || []).find(v => String(v.value) === String(value)) || null;
-}
-
-function selectProductSize(value, button) {
-    document.querySelectorAll(".size-option").forEach(btn => btn.classList.remove("active"));
-    if (button) button.classList.add("active");
-
-    const input = document.getElementById("productSize");
-    if (input) input.value = value;
-
-    const variant = getSelectedVariant();
-    const priceEl = document.getElementById("productPrice");
-    if (variant && priceEl) priceEl.textContent = "₹" + Number(variant.price).toLocaleString("en-IN");
-
-    const text = document.getElementById("selectedSizeText");
-    if (text && variant) text.textContent = "Selected size: " + variant.label;
+    updateDisplayedPrice();
 }
 
 function renderSizeOptions(product) {
-    let options = parseVariantPrices(product);
+    let options = parseUnitPriceOptions(product);
 
+    /*
+      Supported database formats:
+      unit_prices / size_prices / price_options:
+      [
+        {"size":"50","unit":"ml","price":99},
+        {"size":"100","unit":"ml","price":149},
+        {"size":"250","unit":"ml","price":199},
+        {"size":"500","unit":"ml","price":349},
+        {"size":"1","unit":"L","price":599}
+      ]
+    */
+
+    // Backward compatibility: if only size options exist, show them.
     if (!options.length) {
-        const old = parseSizeOptions(product);
-        if (old.length) {
-            options = old.map((o, i) => ({
-                value:o.value,
-                label:o.label,
-                price:i === 0 ? Number(product.price || 0) : 0
+        const oldOptions = parseSizeOptions(product);
+        if (oldOptions.length) {
+            options = oldOptions.map((o, i) => ({
+                value: o.value,
+                label: o.label,
+                price: i === 0 ? parsePriceNumber(product.price) : 0
             }));
         }
     }
 
-    if (!options.length) return "";
-    window.liaraVariants = options;
+    /*
+      Final fallback keeps the section visible even when no size data
+      has been entered yet. The base product price is attached to the
+      existing product size when available; other prices are marked
+      "Set price" so customers cannot accidentally purchase them.
+    */
+    if (!options.length) {
+        const basePrice = parsePriceNumber(product.price);
+        const baseSize = product.size || product.volume || product.weight || "";
+        const baseUnit = normalizeUnit(
+            product.unit || product.size_unit || product.volume_unit || product.weight_unit || ""
+        );
 
-    const first = options.find(v => v.price > 0) || options[0];
+        if (baseSize) {
+            options = [{
+                value: String(baseSize).trim() + (baseUnit ? " " + baseUnit : ""),
+                label: String(baseSize).trim() + (baseUnit ? " " + baseUnit : ""),
+                price: basePrice
+            }];
+        } else {
+            options = [
+                {value:"50 ml",  label:"50 ml",  price:0},
+                {value:"100 ml", label:"100 ml", price:0},
+                {value:"250 ml", label:"250 ml", price:basePrice},
+                {value:"500 ml", label:"500 ml", price:0},
+                {value:"1 L",    label:"1 L",    price:0}
+            ];
+        }
+    }
+
+    window.liaraUnitPriceOptions = options;
+
+    const firstPriced = options.find(o => Number(o.price) > 0) || options[0];
+    const buttons = options.map((option, index) => {
+        const hasPrice = Number(option.price) > 0;
+        return `
+            <button type="button"
+                    class="size-option ${option.value === firstPriced.value ? "active" : ""} ${hasPrice ? "" : "price-not-set"}"
+                    ${hasPrice ? `onclick="selectProductSize(${JSON.stringify(option.value)}, this)"` : "disabled"}
+                    title="${hasPrice ? "Select " + escapeHtml(option.label) : "Price not configured for this size"}">
+                <span>${escapeHtml(option.label)}</span>
+                <small>${hasPrice ? "₹" + Number(option.price).toLocaleString("en-IN") : "Set price"}</small>
+            </button>
+        `;
+    }).join("");
 
     return `
         <div class="liara-size-price-box">
-            <div class="size-selection-label">CHOOSE SIZE</div>
-            <div class="size-options">
-                ${options.map(v => `
-                    <button type="button"
-                            class="size-option ${v.value === first.value ? "active" : ""}"
-                            ${v.price > 0 ? `onclick="selectProductSize(${JSON.stringify(v.value)}, this)"` : "disabled"}>
-                        <span>${escapeHtml(v.label)}</span>
-                        <small>${v.price > 0 ? "₹" + Number(v.price).toLocaleString("en-IN") : "Price not set"}</small>
-                    </button>
-                `).join("")}
+            <label class="size-selection-label">CHOOSE SIZE</label>
+            <div class="size-options">${buttons}</div>
+            <input type="hidden" id="productSize" value="${escapeHtml(firstPriced.value)}">
+            <div class="selected-size-text" id="selectedSizeText">
+                Selected size: ${escapeHtml(firstPriced.label)}
             </div>
-            <input type="hidden" id="productSize" value="${escapeHtml(first.value)}">
-            <div class="selected-size-text" id="selectedSizeText">Selected size: ${escapeHtml(first.label)}</div>
+            <div class="liara-size-price-note">ⓘ Price changes with selected size</div>
         </div>
     `;
 }
@@ -1648,18 +1944,66 @@ function renderSizeOptions(product) {
    LOAD PRODUCT
 ===================================================== */
 
-function renderProductReviewSummary(product) {
-    const rating = Number(product.rating ?? product.average_rating ?? 0);
-    const count = Number(product.review_count ?? product.reviews_count ?? 0);
+function getProductRating(product) {
+    const rating = Number(
+        product.rating ??
+        product.average_rating ??
+        product.review_rating ??
+        0
+    );
+    return Number.isFinite(rating) && rating > 0 ? Math.min(5, rating) : 0;
+}
+
+function getProductReviewCount(product) {
+    const count = Number(
+        product.review_count ??
+        product.reviews_count ??
+        product.total_reviews ??
+        0
+    );
+    return Number.isFinite(count) && count >= 0 ? count : 0;
+}
+
+function renderReviewSummary(product) {
+    // Uses only review data present on the product record; no fake reviews are generated.
+
+    const rating = getProductRating(product);
+    const count = getProductReviewCount(product);
+
     const stars = document.getElementById("liaraStars");
     const countEl = document.getElementById("liaraReviewCount");
+
     if (!stars || !countEl) return;
 
     if (rating > 0) {
-        const full = Math.min(5, Math.floor(rating));
-        stars.textContent = "★".repeat(full) + "☆".repeat(5-full);
-        countEl.textContent = count ? `${rating.toFixed(1)} (${count.toLocaleString("en-IN")})` : rating.toFixed(1);
+        const full = Math.floor(rating);
+        const half = rating - full >= 0.5;
+        let starText = "★".repeat(full);
+        if (half && full < 5) starText += "★";
+        starText += "☆".repeat(Math.max(0, 5 - starText.length));
+        stars.textContent = starText;
+        countEl.textContent = count
+            ? `${rating.toFixed(1)} (${count.toLocaleString("en-IN")} ${count === 1 ? "review" : "reviews"})`
+            : `${rating.toFixed(1)}`;
+    } else {
+        stars.textContent = "☆☆☆☆☆";
+        countEl.textContent = "No reviews yet";
     }
+}
+
+function renderSideSizePriceOptions(product) {
+    const target = document.getElementById("liaraSizeButtons");
+    const options = window.liaraUnitPriceOptions || [];
+    if (!target || !options.length) return;
+
+    target.innerHTML = options.map((option, index) => `
+        <button type="button"
+                class="size-option ${index === 0 ? "active" : ""}"
+                onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
+            ${escapeHtml(option.label)}
+            <small>₹${option.price.toLocaleString("en-IN")}</small>
+        </button>
+    `).join("");
 }
 
 async function loadProduct() {
@@ -1788,6 +2132,8 @@ async function loadProduct() {
         product.benefits ||
         "";
 
+    renderReviewSummary(product);
+
 
     document.title =
         name +
@@ -1813,19 +2159,6 @@ async function loadProduct() {
                     onerror="this.src='facewash.jpg'"
                 >
 
-                <div class="liara-unit-side" aria-label="Select product unit">
-                    <div class="liara-unit-side-title">UNIT</div>
-                    <button type="button" class="liara-unit-btn active"
-                            data-unit="g"
-                            onclick="selectLiaraUnit('g', this)">g</button>
-                    <button type="button" class="liara-unit-btn"
-                            data-unit="ml"
-                            onclick="selectLiaraUnit('ml', this)">ml</button>
-                    <button type="button" class="liara-unit-btn"
-                            data-unit="L"
-                            onclick="selectLiaraUnit('L', this)">L</button>
-                </div>
-
             </div>
 
 
@@ -1842,10 +2175,10 @@ async function loadProduct() {
                     ${escapeHtml(name)}
                 </h1>
 
-                <div class="liara-review-summary">
-                    <span class="liara-stars" id="liaraStars">☆☆☆☆☆</span>
-                    <span id="liaraReviewCount">No reviews yet</span>
-                    <a href="#reviews">Write a review</a>
+                <div class="liara-review-summary" id="liaraReviewSummary">
+                    <span class="liara-stars" id="liaraStars">★★★★★</span>
+                    <span class="liara-review-count" id="liaraReviewCount">No reviews yet</span>
+                    <a href="#reviews" class="review-link">Write a review</a>
                 </div>
 
                 <div class="product-price" id="productPrice">₹${price.toLocaleString("en-IN")}</div>
@@ -1960,6 +2293,8 @@ async function loadProduct() {
 
     `;
 
+    updateDisplayedPrice();
+    renderReviewSummary(product);
 }
 
 
@@ -2370,37 +2705,14 @@ loadProduct();
 
 
 <script id="liara-unit-visible-js">
-let liaraSelectedUnit = localStorage.getItem("liaraSelectedUnit") || "g";
-
-function selectLiaraUnit(unit, button){
-    liaraSelectedUnit = unit;
-    localStorage.setItem("liaraSelectedUnit", unit);
-
-    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
-        btn.classList.toggle("active", btn.dataset.unit === unit);
-    });
-
-    const sizeInput = document.getElementById("productSize");
-    if(sizeInput){
-        const raw = String(sizeInput.value || "").trim();
-        const numberOnly = raw.match(/^[0-9]+(?:\.[0-9]+)?/);
-        if(numberOnly){
-            sizeInput.value = numberOnly[0] + " " + unit;
-        }
-    }
-
-    const selectedText = document.getElementById("selectedSizeText");
-    if(selectedText && sizeInput && sizeInput.value){
-        selectedText.textContent = "Selected size: " + sizeInput.value;
-    }
-}
-
+/* Selected size controls the product price. */
 document.addEventListener("DOMContentLoaded", function(){
-    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
-        btn.classList.toggle("active", btn.dataset.unit === liaraSelectedUnit);
-    });
+    setTimeout(updateDisplayedPrice, 0);
 });
 </script>
+
+
+
 
 </body>
 
