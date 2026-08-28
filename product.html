@@ -1163,6 +1163,146 @@ Use a JSON array in unit_prices, size_prices, or price_options, e.g.
 }
 </style>
 
+
+<style id="liara-compact-product-ui">
+:root{
+  --liara-gold:#bd8422;
+  --liara-gold-dark:#9d6d1b;
+  --liara-border:#eadfce;
+  --liara-bg:#f8f5ef;
+  --liara-text:#151515;
+}
+body{background:var(--liara-bg)!important}
+.product-page,
+.product-container,
+.product-detail-page{
+  max-width:1280px!important;
+  margin:0 auto!important;
+}
+.product-card,
+.product-detail-card,
+.product-main-card{
+  border-radius:22px!important;
+}
+.product-info h1,
+.product-title,
+h1{
+  letter-spacing:-.4px;
+}
+.product-price{
+  font-size:32px!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  color:var(--liara-gold)!important;
+  margin:10px 0 14px!important;
+}
+.liara-review-summary{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  margin:0 0 8px!important;
+  font-size:13px!important;
+}
+.liara-stars{
+  color:var(--liara-gold)!important;
+  font-size:17px!important;
+  letter-spacing:1px!important;
+}
+.liara-review-summary .review-link{
+  color:var(--liara-gold-dark)!important;
+}
+.liara-size-price-box{
+  margin:12px 0 16px!important;
+  padding:14px!important;
+  border:1px solid var(--liara-border)!important;
+  border-radius:14px!important;
+  background:#fffdfa!important;
+}
+.liara-size-price-box .size-options{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.liara-size-price-box .size-option{
+  min-height:62px!important;
+  padding:8px 5px!important;
+  border:1px solid #e4d8c7!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  color:#333!important;
+  cursor:pointer!important;
+  font-weight:800!important;
+}
+.liara-size-price-box .size-option span{
+  display:block!important;
+  font-size:13px!important;
+}
+.liara-size-price-box .size-option small{
+  display:block!important;
+  margin-top:4px!important;
+  font-size:12px!important;
+  color:var(--liara-gold-dark)!important;
+}
+.liara-size-price-box .size-option.active{
+  border-color:var(--liara-gold)!important;
+  box-shadow:0 0 0 1px var(--liara-gold) inset!important;
+  background:#fff9ed!important;
+  color:var(--liara-gold-dark)!important;
+}
+.liara-size-price-box .size-option.price-not-set{
+  opacity:.55!important;
+}
+.liara-size-price-note,.selected-size-text{
+  font-size:11px!important;
+  margin-top:7px!important;
+  color:#777!important;
+}
+.size-selection-label{
+  display:block!important;
+  margin-bottom:9px!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  letter-spacing:.2px!important;
+}
+.product-actions,
+.purchase-actions{
+  display:flex!important;
+  gap:10px!important;
+}
+.product-actions button,
+.purchase-actions button{
+  min-height:50px!important;
+  border-radius:11px!important;
+  font-weight:800!important;
+}
+.product-actions .buy-now,
+.purchase-actions .buy-now{
+  background:var(--liara-gold)!important;
+}
+.product-detail-section,
+#reviews{
+  border:1px solid var(--liara-border)!important;
+  border-radius:18px!important;
+  background:#fffdfa!important;
+}
+@media(max-width:900px){
+  .liara-size-price-box .size-options{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:600px){
+  .liara-size-price-box .size-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+</style>
+
+
+<style id="liara-purchase-order">
+.product-info .liara-size-price-box,
+.product-details .liara-size-price-box,
+.product-content .liara-size-price-box{order:20!important}
+.product-info .purchase-area,
+.product-info .product-actions,
+.product-info .purchase-actions{order:30!important}
+</style>
+
 </head>
 
 
@@ -1244,7 +1384,7 @@ Use a JSON array in unit_prices, size_prices, or price_options, e.g.
     <h2 class="product-detail-title"><span>⭐</span> Customer Reviews</h2>
     <div class="product-detail-content">
         <div class="detail-line" id="liaraReviewMessage">
-            Reviews will appear here when customer review data is connected.
+            Customer reviews will appear here from your connected review data.
         </div>
     </div>
 </section>
@@ -1825,6 +1965,8 @@ function getProductReviewCount(product) {
 }
 
 function renderReviewSummary(product) {
+    // Uses only review data present on the product record; no fake reviews are generated.
+
     const rating = getProductRating(product);
     const count = getProductReviewCount(product);
 
