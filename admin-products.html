@@ -369,15 +369,66 @@ footer p {
 }
 
 
-/* PRODUCT VARIANTS */
-.variant-manager{margin-top:20px;padding:16px;border:1px solid #eee;border-radius:12px;background:#faf8f5}
-.variant-manager h4{margin:0 0 12px}
-.variant-row{display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:8px;margin-bottom:8px}
-.variant-row input,.variant-row select{width:100%;padding:10px;border:1px solid #ddd;border-radius:7px}
-.variant-remove{background:#a33;color:#fff;padding:9px 12px}
-.add-variant-btn{background:#ad8232;color:#fff;margin-top:4px}
-.variant-list{margin-top:10px;font-size:13px;color:#666}
-@media(max-width:600px){.variant-row{grid-template-columns:1fr 1fr}.variant-remove{grid-column:1/-1}}
+/* =====================================================
+   PRODUCT VARIANTS
+===================================================== */
+
+.variant-manager {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #faf8f5;
+}
+
+.variant-manager h4 {
+    margin: 0 0 12px;
+}
+
+.variant-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr auto;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.variant-row input,
+.variant-row select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+}
+
+.variant-remove {
+    background: #a33;
+    color: #fff;
+    padding: 9px 12px;
+}
+
+.add-variant-btn {
+    background: #ad8232;
+    color: #fff;
+    margin-top: 4px;
+}
+
+.variant-list {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+}
+
+@media(max-width:600px) {
+
+    .variant-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .variant-remove {
+        grid-column: 1/-1;
+    }
+
+}
 
 </style>
 
@@ -678,13 +729,35 @@ Inactive
 </div>
 
 
+<!-- =================================================
+     PRODUCT SIZES / VARIANTS
+================================================= -->
 
 <div class="variant-manager">
-    <h4>Product Sizes / Variants</h4>
-    <div id="variantRows"></div>
-    <button type="button" class="add-variant-btn" onclick="addVariantRow()">＋ Add Size</button>
-    <div class="variant-list">Example: 100 ml, 250 ml, 500 ml, 1 L, 100 g, 250 g.</div>
+
+<h4>
+Product Sizes / Variants
+</h4>
+
+<div id="variantRows"></div>
+
+<button
+type="button"
+class="add-variant-btn"
+onclick="addVariantRow()">
+
+＋ Add Size
+
+</button>
+
+<div class="variant-list">
+
+Example: 100 ml, 250 ml, 500 ml, 1 L, 100 g, 250 g.
+
 </div>
+
+</div>
+
 
 <button
 type="submit"
@@ -1223,7 +1296,11 @@ document.getElementById(
 document.getElementById(
 "productForm"
 ).reset();
-    renderVariants([]);
+
+
+/* CLEAR OLD VARIANTS */
+
+renderVariants([]);
 
 
 document.getElementById(
@@ -1325,6 +1402,16 @@ product.active
 "false";
 
 
+/* =========================================
+   LOAD EXISTING VARIANTS
+   THIS IS THE IMPORTANT ADDITION
+========================================= */
+
+renderVariants(
+product.variants || []
+);
+
+
 document.getElementById(
 "productModal"
 ).style.display =
@@ -1333,58 +1420,265 @@ document.getElementById(
 }
 
 
-
 /* =========================================
    PRODUCT VARIANTS
 ========================================= */
 
-function normalizeVariants(value){
-    if(!Array.isArray(value)) return [];
-    return value.map(v => ({
-        label: String(v.label || v.size || "").trim(),
-        unit: String(v.unit || "ml").trim(),
-        price: Number(v.price || 0),
-        stock: Number(v.stock || 0)
-    })).filter(v => v.label);
+function normalizeVariants(value) {
+
+if (!Array.isArray(value)) {
+return [];
 }
 
-function addVariantRow(variant = {}){
-    const box = document.getElementById("variantRows");
-    if(!box) return;
-    const row = document.createElement("div");
-    row.className = "variant-row";
-    row.innerHTML = `
-        <input class="variant-size" type="number" min="0" step="0.01"
-               placeholder="Size" value="${escapeHtml(variant.label || "")}">
-        <select class="variant-unit">
-            ${["ml","L","g","kg"].map(u => `<option value="${u}" ${u === (variant.unit || "ml") ? "selected" : ""}>${u}</option>`).join("")}
-        </select>
-        <input class="variant-price" type="number" min="0" step="0.01"
-               placeholder="Price ₹" value="${Number(variant.price || 0) || ""}">
-        <input class="variant-stock" type="number" min="0"
-               placeholder="Stock" value="${Number(variant.stock || 0) || ""}">
-        <button type="button" class="variant-remove" onclick="this.parentElement.remove()">Remove</button>
-    `;
-    box.appendChild(row);
+
+return value.map(
+function(v) {
+
+return {
+
+label:
+String(
+v.label ||
+v.size ||
+""
+).trim(),
+
+unit:
+String(
+v.unit ||
+"ml"
+).trim(),
+
+price:
+Number(
+v.price || 0
+),
+
+stock:
+Number(
+v.stock || 0
+)
+
+};
+
+}
+).filter(
+function(v) {
+
+return v.label;
+
+}
+);
+
 }
 
-function getVariants(){
-    return [...document.querySelectorAll("#variantRows .variant-row")]
-      .map(row => ({
-          label: row.querySelector(".variant-size").value.trim(),
-          unit: row.querySelector(".variant-unit").value,
-          price: Number(row.querySelector(".variant-price").value || 0),
-          stock: Number(row.querySelector(".variant-stock").value || 0)
-      }))
-      .filter(v => v.label);
+
+function addVariantRow(
+variant = {}
+) {
+
+const box =
+document.getElementById(
+"variantRows"
+);
+
+if (!box) {
+return;
 }
 
-function renderVariants(variants){
-    const box=document.getElementById("variantRows");
-    if(!box) return;
-    box.innerHTML="";
-    normalizeVariants(variants).forEach(v => addVariantRow(v));
+
+const row =
+document.createElement(
+"div"
+);
+
+row.className =
+"variant-row";
+
+
+row.innerHTML = `
+
+<input
+class="variant-size"
+type="number"
+min="0"
+step="0.01"
+placeholder="Size"
+value="${escapeHtml(
+variant.label || ""
+)}">
+
+
+<select
+class="variant-unit">
+
+${
+
+["ml","L","g","kg"]
+
+.map(
+function(u) {
+
+return `
+
+<option
+value="${u}"
+${
+u ===
+(
+variant.unit ||
+"ml"
+)
+?
+"selected"
+:
+""
+}>
+
+${u}
+
+</option>
+
+`;
+
 }
+)
+.join("")
+
+}
+
+</select>
+
+
+<input
+class="variant-price"
+type="number"
+min="0"
+step="0.01"
+placeholder="Price ₹"
+value="${
+Number(
+variant.price || 0
+) || ""
+}">
+
+
+<input
+class="variant-stock"
+type="number"
+min="0"
+placeholder="Stock"
+value="${
+Number(
+variant.stock || 0
+) || ""
+}">
+
+
+<button
+type="button"
+class="variant-remove"
+onclick="this.parentElement.remove()">
+
+Remove
+
+</button>
+
+`;
+
+
+box.appendChild(
+row
+);
+
+}
+
+
+function getVariants() {
+
+return [
+
+...document.querySelectorAll(
+"#variantRows .variant-row"
+)
+
+]
+
+.map(
+function(row) {
+
+return {
+
+label:
+row.querySelector(
+".variant-size"
+).value.trim(),
+
+unit:
+row.querySelector(
+".variant-unit"
+).value,
+
+price:
+Number(
+row.querySelector(
+".variant-price"
+).value || 0
+),
+
+stock:
+Number(
+row.querySelector(
+".variant-stock"
+).value || 0
+)
+
+};
+
+}
+)
+
+.filter(
+function(v) {
+
+return v.label;
+
+}
+);
+
+}
+
+
+function renderVariants(
+variants
+) {
+
+const box =
+document.getElementById(
+"variantRows"
+);
+
+if (!box) {
+return;
+}
+
+
+box.innerHTML =
+"";
+
+
+normalizeVariants(
+variants
+).forEach(
+function(v) {
+
+addVariantRow(v);
+
+}
+);
+
+}
+
 
 /* =========================================
    SAVE PRODUCT
@@ -1467,11 +1761,14 @@ button.innerText =
 
 const productData = {
 
-name: name,
+name:
+name,
 
-price: price,
+price:
+price,
 
-stock: stock,
+stock:
+stock,
 
 image_url:
 image || null,
@@ -1479,8 +1776,13 @@ image || null,
 description:
 description || null,
 
-active: active,
-    variants: getVariants()
+active:
+active,
+
+/* SAVE ALL SIZES */
+
+variants:
+getVariants()
 
 };
 
@@ -1544,6 +1846,7 @@ id
 
 
 closeModal();
+
 
 await loadProducts();
 
@@ -1672,6 +1975,7 @@ async function logoutAdmin() {
 await supabaseClient
 .auth
 .signOut();
+
 
 window.location.href =
 "company-login.html";
