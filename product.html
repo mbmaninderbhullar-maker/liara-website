@@ -1053,7 +1053,16 @@ body {
 .liara-size-buttons{display:flex!important;flex-direction:column!important;gap:7px!important}
 .liara-size-buttons .size-option{width:100%!important;min-height:38px!important;padding:7px 4px!important;border:1px solid #d9c39a!important;background:#fff!important;color:#8f6823!important;border-radius:8px!important;font-size:13px!important;font-weight:800!important;cursor:pointer!important}
 .liara-size-buttons .size-option small{display:block!important;margin-top:2px!important;font-size:10px!important;font-weight:700!important}
-.liara-size-buttons .size-option.active{background:#b88427!important;color:#fff!important;border-color:#b88427!important}
+.liara-size-buttons .size-option.active,
+.liara-size-price-box .size-option.active{background:#fff9ee!important;color:#9a7028!important;border-color:#b88427!important;box-shadow:0 0 0 1px #b88427 inset!important}
+.liara-size-price-box .size-option{width:100%;min-height:58px;padding:8px 6px;border:1px solid #ded4c5;border-radius:10px;background:#fff;color:#444;cursor:pointer;font-weight:800}
+.liara-size-price-box .size-option span{display:block}
+.liara-size-price-box .size-option small{display:block;margin-top:4px;font-size:12px;color:#9a7028}
+.liara-size-price-box .size-option.price-not-set{opacity:.55;cursor:not-allowed;background:#f7f5f1}
+.liara-size-price-box .size-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.liara-size-price-box .size-selection-label{display:block;margin-bottom:9px;font-size:13px;font-weight:800;color:#333}
+.liara-size-price-box .selected-size-text{margin-top:8px;font-size:12px;color:#666}
+.liara-size-price-note{margin-top:7px;font-size:12px;color:#777}
 @media(max-width:900px){
   .liara-size-buttons{flex-direction:row!important;flex-wrap:wrap!important}
   .liara-size-buttons .size-option{width:auto!important;min-width:58px!important}
@@ -1706,48 +1715,87 @@ function selectProductSize(value, button) {
 }
 
 function renderSizeOptions(product) {
-    const options = parseUnitPriceOptions(product);
+    let options = parseUnitPriceOptions(product);
 
-    if (options.length) {
-        window.liaraUnitPriceOptions = options;
+    /*
+      Supported database formats:
+      unit_prices / size_prices / price_options:
+      [
+        {"size":"50","unit":"ml","price":99},
+        {"size":"100","unit":"ml","price":149},
+        {"size":"250","unit":"ml","price":199},
+        {"size":"500","unit":"ml","price":349},
+        {"size":"1","unit":"L","price":599}
+      ]
+    */
 
-        const first = options[0].value;
-        const buttons = options.map((option, index) => `
-            <button type="button"
-                    class="size-option ${index === 0 ? "active" : ""}"
-                    onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
-                ${escapeHtml(option.label)}
-                <small>₹${option.price.toLocaleString("en-IN")}</small>
-            </button>
-        `).join("");
-
-        return `
-            <div class="size-selection">
-                <label class="size-selection-label">Choose Size / Quantity</label>
-                <div class="size-options">${buttons}</div>
-                <input type="hidden" id="productSize" value="${escapeHtml(first)}">
-                <div class="selected-size-text" id="selectedSizeText">Selected size: ${escapeHtml(options[0].label)}</div>
-            </div>
-        `;
+    // Backward compatibility: if only size options exist, show them.
+    if (!options.length) {
+        const oldOptions = parseSizeOptions(product);
+        if (oldOptions.length) {
+            options = oldOptions.map((o, i) => ({
+                value: o.value,
+                label: o.label,
+                price: i === 0 ? parsePriceNumber(product.price) : 0
+            }));
+        }
     }
 
-    const optionsOld = parseSizeOptions(product);
-    if (!optionsOld.length) return "";
+    /*
+      Final fallback keeps the section visible even when no size data
+      has been entered yet. The base product price is attached to the
+      existing product size when available; other prices are marked
+      "Set price" so customers cannot accidentally purchase them.
+    */
+    if (!options.length) {
+        const basePrice = parsePriceNumber(product.price);
+        const baseSize = product.size || product.volume || product.weight || "";
+        const baseUnit = normalizeUnit(
+            product.unit || product.size_unit || product.volume_unit || product.weight_unit || ""
+        );
 
-    const firstOld = optionsOld[0].value;
-    const buttonsOld = optionsOld.map((option, index) => `
-        <button type="button" class="size-option ${index === 0 ? "active" : ""}"
-                onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
-            ${escapeHtml(option.label)}
-        </button>
-    `).join("");
+        if (baseSize) {
+            options = [{
+                value: String(baseSize).trim() + (baseUnit ? " " + baseUnit : ""),
+                label: String(baseSize).trim() + (baseUnit ? " " + baseUnit : ""),
+                price: basePrice
+            }];
+        } else {
+            options = [
+                {value:"50 ml",  label:"50 ml",  price:0},
+                {value:"100 ml", label:"100 ml", price:0},
+                {value:"250 ml", label:"250 ml", price:basePrice},
+                {value:"500 ml", label:"500 ml", price:0},
+                {value:"1 L",    label:"1 L",    price:0}
+            ];
+        }
+    }
+
+    window.liaraUnitPriceOptions = options;
+
+    const firstPriced = options.find(o => Number(o.price) > 0) || options[0];
+    const buttons = options.map((option, index) => {
+        const hasPrice = Number(option.price) > 0;
+        return `
+            <button type="button"
+                    class="size-option ${option.value === firstPriced.value ? "active" : ""} ${hasPrice ? "" : "price-not-set"}"
+                    ${hasPrice ? `onclick="selectProductSize(${JSON.stringify(option.value)}, this)"` : "disabled"}
+                    title="${hasPrice ? "Select " + escapeHtml(option.label) : "Price not configured for this size"}">
+                <span>${escapeHtml(option.label)}</span>
+                <small>${hasPrice ? "₹" + Number(option.price).toLocaleString("en-IN") : "Set price"}</small>
+            </button>
+        `;
+    }).join("");
 
     return `
-        <div class="size-selection">
-            <label class="size-selection-label">Size / Quantity</label>
-            <div class="size-options">${buttonsOld}</div>
-            <input type="hidden" id="productSize" value="${escapeHtml(firstOld)}">
-            <div class="selected-size-text" id="selectedSizeText">Selected size: ${escapeHtml(optionsOld[0].label)}</div>
+        <div class="liara-size-price-box">
+            <label class="size-selection-label">CHOOSE SIZE</label>
+            <div class="size-options">${buttons}</div>
+            <input type="hidden" id="productSize" value="${escapeHtml(firstPriced.value)}">
+            <div class="selected-size-text" id="selectedSizeText">
+                Selected size: ${escapeHtml(firstPriced.label)}
+            </div>
+            <div class="liara-size-price-note">ⓘ Price changes with selected size</div>
         </div>
     `;
 }
@@ -1969,10 +2017,6 @@ async function loadProduct() {
                     onerror="this.src='facewash.jpg'"
                 >
 
-                <div class="liara-unit-side" aria-label="Select product size">
-                    <div class="liara-unit-side-title">SIZE</div>
-                    <div id="liaraSizeButtons" class="liara-size-buttons"></div>
-                </div>
             </div>
 
 
@@ -2108,7 +2152,6 @@ async function loadProduct() {
     `;
 
     updateDisplayedPrice();
-    renderSideSizePriceOptions(product);
     renderReviewSummary(product);
 }
 
@@ -2527,24 +2570,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="liara-size-side-sync">
-document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(function(){
-        const source = document.querySelector(".size-options");
-        const target = document.getElementById("liaraSizeButtons");
-        if (!source || !target) return;
 
-        target.innerHTML = source.innerHTML;
-        target.querySelectorAll(".size-option").forEach(function(btn){
-            btn.addEventListener("click", function(){
-                const matching = Array.from(document.querySelectorAll(".size-options .size-option"))
-                    .find(b => b.textContent.trim() === btn.textContent.trim());
-                if (matching) matching.click();
-            });
-        });
-    }, 150);
-});
-</script>
 
 </body>
 
