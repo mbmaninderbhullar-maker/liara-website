@@ -1304,344 +1304,233 @@ h1{
 </style>
 
 
-<style id="liara-final-professional-layout">
-/* Final compact professional product layout */
-@media (min-width:901px){
-  .product-page{width:min(94vw,1080px)!important;max-width:1080px!important;padding:28px 0 55px!important;}
-  .product-detail{grid-template-columns:1fr 1fr!important;gap:22px!important;padding:20px!important;border-radius:20px!important;}
-  .product-photo{grid-column:1!important;grid-row:1!important;height:390px!important;border-radius:17px!important;}
-  .product-info{grid-column:2!important;grid-row:1!important;padding:4px 4px 0!important;}
-  .product-info h1{font-size:29px!important;margin-bottom:10px!important;}
-  .product-price{font-size:25px!important;margin:6px 0 10px!important;}
-  .product-description{font-size:14px!important;line-height:1.5!important;margin-bottom:10px!important;}
-  .liara-review-summary{margin:0 0 7px!important;}
-  .liara-size-price-box{margin:8px 0 10px!important;padding:10px!important;}
-  .liara-size-price-box .size-options{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;}
-  .liara-size-price-box .size-option{min-height:52px!important;padding:6px 4px!important;font-size:12px!important;}
-  .liara-size-price-box .size-option small{font-size:11px!important;margin-top:2px!important;}
-  .product-info .purchase-area{margin-top:10px!important;}
-  .purchase-area .stock-text{font-size:13px!important;margin-bottom:8px!important;}
-  .purchase-area .quantity-box{margin-bottom:9px!important;}
-  .purchase-area .quantity-box button{width:36px!important;height:36px!important;}
-  .purchase-area .quantity-box input{width:42px!important;height:36px!important;}
-  .purchase-area .action-buttons button{min-height:42px!important;padding:10px 12px!important;font-size:13px!important;}
-  .product-detail .ingredients-section,.product-detail .product-detail-section{grid-column:span 2!important;grid-row:auto!important;min-height:0!important;padding:15px!important;}
-}
-@media (max-width:900px){
-  .product-photo{overflow:visible!important;}
-}
-</style>
 
-
-<style id="liara-professional-final">
+<style id="liara-safe-final-layout">
 /* =====================================================
-   LIARA PROFESSIONAL FINAL POLISH
-   Visual-only override: existing HTML + JS functionality
-   remains untouched.
+   LIARA FINAL CLEAN LAYOUT
+   Visual-only adjustment. Existing HTML + JavaScript kept.
 ===================================================== */
-:root{
-  --lp-gold:#b7832b;
-  --lp-gold-dark:#91651e;
-  --lp-cream:#faf7f2;
-  --lp-card:#ffffff;
-  --lp-line:#e9dfd1;
-  --lp-muted:#6f6a63;
-  --lp-shadow:0 14px 40px rgba(42,31,17,.075);
+
+@media (min-width: 901px) {
+    .product-page {
+        width: min(94vw, 1040px) !important;
+        max-width: 1040px !important;
+        padding: 24px 0 55px !important;
+    }
+
+    .product-detail {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 22px !important;
+        padding: 20px !important;
+        border-radius: 22px !important;
+    }
+
+    /* Keep the image and all purchase content in the same two-column row. */
+    .product-photo {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        height: 405px !important;
+        min-height: 405px !important;
+        border-radius: 18px !important;
+    }
+
+    .product-info {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        min-width: 0 !important;
+        padding: 5px 2px 0 !important;
+    }
+
+    .product-label {
+        font-size: 11px !important;
+        letter-spacing: 2.7px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .product-info h1 {
+        font-size: 30px !important;
+        line-height: 1.12 !important;
+        margin: 0 0 8px !important;
+    }
+
+    .liara-review-summary {
+        margin: 0 0 8px !important;
+        gap: 7px !important;
+        font-size: 12px !important;
+    }
+
+    .liara-stars {
+        font-size: 15px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .product-price {
+        font-size: 26px !important;
+        margin: 4px 0 8px !important;
+    }
+
+    .product-description {
+        font-size: 13.5px !important;
+        line-height: 1.45 !important;
+        margin-bottom: 10px !important;
+    }
+
+    .product-info .liara-size-price-box {
+        margin: 6px 0 10px !important;
+        padding: 11px !important;
+        border-radius: 12px !important;
+    }
+
+    .liara-size-price-box .size-selection-label {
+        margin-bottom: 7px !important;
+        font-size: 12px !important;
+    }
+
+    .liara-size-price-box .size-options {
+        gap: 5px !important;
+    }
+
+    .liara-size-price-box .size-option {
+        min-height: 53px !important;
+        padding: 6px 3px !important;
+        border-radius: 8px !important;
+        font-size: 12px !important;
+    }
+
+    .liara-size-price-box .size-option span {
+        font-size: 12px !important;
+    }
+
+    .liara-size-price-box .size-option small {
+        margin-top: 2px !important;
+        font-size: 10px !important;
+    }
+
+    .liara-size-price-box .selected-size-text,
+    .liara-size-price-note {
+        font-size: 10.5px !important;
+        margin-top: 5px !important;
+    }
+
+    /* This is nested inside .product-info, so it must NOT be treated as a
+       second grid row. This removes the large empty vertical area. */
+    .product-info .purchase-area {
+        grid-column: auto !important;
+        grid-row: auto !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin-top: 9px !important;
+    }
+
+    .product-info .purchase-area .stock-text {
+        font-size: 13px !important;
+        margin: 0 0 8px !important;
+    }
+
+    .product-info .purchase-area .quantity-box {
+        height: 38px !important;
+        margin: 0 0 9px !important;
+        border-radius: 9px !important;
+    }
+
+    .product-info .purchase-area .quantity-box button,
+    .product-info .purchase-area .quantity-box input {
+        height: 38px !important;
+    }
+
+    .product-info .purchase-area .quantity-box button {
+        width: 39px !important;
+    }
+
+    .product-info .purchase-area .quantity-box input {
+        width: 43px !important;
+    }
+
+    .product-info .purchase-area .action-buttons {
+        gap: 8px !important;
+    }
+
+    .product-info .purchase-area .action-buttons button {
+        min-height: 44px !important;
+        padding: 10px 12px !important;
+        border-radius: 9px !important;
+        font-size: 13px !important;
+    }
+
+    /* Information cards sit directly below the main two-column area. */
+    .product-detail > .ingredients-section,
+    .product-detail > .product-detail-section {
+        grid-column: span 2 !important;
+        grid-row: auto !important;
+        min-height: 125px !important;
+        padding: 17px !important;
+    }
 }
 
-body{background:var(--lp-cream)!important;}
+@media (max-width: 900px) {
+    .product-page {
+        width: 94% !important;
+        max-width: none !important;
+        padding: 18px 0 42px !important;
+    }
 
-.product-page{
-  width:min(94vw,1080px)!important;
-  max-width:1080px!important;
-  margin:0 auto!important;
-  padding:24px 0 55px!important;
+    .product-detail {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        padding: 14px !important;
+    }
+
+    .product-photo {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        height: 330px !important;
+        min-height: 0 !important;
+    }
+
+    .product-info {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        padding: 0 3px !important;
+    }
+
+    .product-info h1 {
+        font-size: 28px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .product-price {
+        font-size: 25px !important;
+        margin: 5px 0 8px !important;
+    }
+
+    .product-description {
+        font-size: 14px !important;
+        margin-bottom: 9px !important;
+    }
+
+    .product-info .purchase-area {
+        grid-column: auto !important;
+        grid-row: auto !important;
+        padding: 0 !important;
+        margin-top: 12px !important;
+    }
+
+    .product-detail > .ingredients-section,
+    .product-detail > .product-detail-section {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        min-height: 0 !important;
+    }
 }
 
-.back-link{
-  margin:0 0 18px!important;
-  font-size:13px!important;
-  font-weight:700!important;
-  color:var(--lp-gold-dark)!important;
-}
+@media (max-width: 480px) {
+    .product-photo {
+        height: 290px !important;
+    }
 
-.product-detail{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
-  gap:22px 28px!important;
-  padding:22px!important;
-  border:1px solid rgba(218,204,184,.55)!important;
-  border-radius:22px!important;
-  background:var(--lp-card)!important;
-  box-shadow:var(--lp-shadow)!important;
-}
-
-.product-photo{
-  grid-column:1!important;
-  grid-row:1!important;
-  width:100%!important;
-  height:390px!important;
-  min-height:0!important;
-  border-radius:18px!important;
-  background:#f5f0e8!important;
-  overflow:hidden!important;
-  box-shadow:inset 0 0 0 1px rgba(183,131,43,.09)!important;
-}
-
-.product-photo img{
-  width:100%!important;
-  height:100%!important;
-  object-fit:cover!important;
-}
-
-.product-info{
-  grid-column:2!important;
-  grid-row:1!important;
-  min-width:0!important;
-  padding:5px 2px 0!important;
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:flex-start!important;
-}
-
-.product-label{
-  margin:0 0 8px!important;
-  font-size:10px!important;
-  letter-spacing:2.4px!important;
-  line-height:1.3!important;
-  color:var(--lp-gold)!important;
-}
-
-.product-info h1{
-  margin:0 0 9px!important;
-  font-size:28px!important;
-  line-height:1.14!important;
-  letter-spacing:-.55px!important;
-  color:#191816!important;
-}
-
-.liara-review-summary{
-  margin:0 0 8px!important;
-  gap:7px!important;
-  font-size:12px!important;
-}
-
-.liara-stars{font-size:15px!important;letter-spacing:1px!important;}
-
-.product-price{
-  margin:3px 0 10px!important;
-  font-size:25px!important;
-  line-height:1.1!important;
-  font-weight:900!important;
-  color:var(--lp-gold)!important;
-}
-
-.product-description{
-  margin:0 0 11px!important;
-  font-size:13px!important;
-  line-height:1.55!important;
-  color:var(--lp-muted)!important;
-}
-
-.liara-size-price-box{
-  margin:0 0 11px!important;
-  padding:11px!important;
-  border:1px solid var(--lp-line)!important;
-  border-radius:13px!important;
-  background:#fcfaf7!important;
-}
-
-.size-selection-label{
-  margin:0 0 7px!important;
-  font-size:11px!important;
-  letter-spacing:.7px!important;
-  color:#34312d!important;
-}
-
-.liara-size-price-box .size-options{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:6px!important;
-}
-
-.liara-size-price-box .size-option{
-  min-width:0!important;
-  min-height:50px!important;
-  padding:6px 4px!important;
-  border:1px solid #e1d6c6!important;
-  border-radius:9px!important;
-  background:#fff!important;
-  color:#403c37!important;
-  font-size:12px!important;
-  line-height:1.15!important;
-}
-
-.liara-size-price-box .size-option span{font-size:12px!important;}
-.liara-size-price-box .size-option small{margin-top:3px!important;font-size:10px!important;color:var(--lp-gold-dark)!important;}
-.liara-size-price-box .size-option.active{
-  border-color:var(--lp-gold)!important;
-  background:#fff9ee!important;
-  color:var(--lp-gold-dark)!important;
-  box-shadow:0 0 0 1px var(--lp-gold) inset!important;
-}
-
-.selected-size-text,.liara-size-price-note,.liara-size-price-note{
-  margin-top:5px!important;
-  font-size:10px!important;
-}
-
-.product-info .purchase-area{
-  width:100%!important;
-  margin-top:0!important;
-  padding:0!important;
-  order:30!important;
-}
-
-.purchase-area .stock-text{
-  margin:0 0 8px!important;
-  font-size:12px!important;
-}
-
-.purchase-area .quantity-box{
-  margin:0 0 9px!important;
-  height:36px!important;
-  border-radius:9px!important;
-}
-
-.purchase-area .quantity-box button{
-  width:36px!important;
-  height:36px!important;
-  font-size:18px!important;
-}
-
-.purchase-area .quantity-box input{
-  width:42px!important;
-  height:36px!important;
-  font-size:13px!important;
-}
-
-.purchase-area .action-buttons{
-  display:grid!important;
-  grid-template-columns:1fr 1fr!important;
-  gap:8px!important;
-}
-
-.purchase-area .action-buttons button{
-  width:100%!important;
-  min-height:42px!important;
-  padding:10px 10px!important;
-  border-radius:9px!important;
-  font-size:12px!important;
-}
-
-.purchase-area .buy-now{
-  background:var(--lp-gold)!important;
-  box-shadow:0 6px 14px rgba(183,131,43,.17)!important;
-}
-
-.purchase-area .add-cart{
-  background:#fff!important;
-  color:var(--lp-gold-dark)!important;
-  border:1px solid #d9c39a!important;
-}
-
-.product-detail .ingredients-section,
-.product-detail .product-detail-section{
-  grid-column:1 / -1!important;
-  grid-row:auto!important;
-  width:100%!important;
-  min-height:0!important;
-  margin:0!important;
-  padding:16px!important;
-  border:1px solid var(--lp-line)!important;
-  border-radius:15px!important;
-  background:#fcfaf7!important;
-}
-
-.product-detail .ingredients-section{grid-row:2!important;}
-.product-detail > .product-detail-section{grid-row:2!important;}
-
-.ingredients-title,.product-detail-title{
-  margin:0 0 10px!important;
-  font-size:16px!important;
-  line-height:1.2!important;
-  color:#24211e!important;
-}
-
-.ingredients-title span,.product-detail-title span{font-size:17px!important;}
-
-.ingredients-list{gap:6px!important;}
-
-.ingredient-item,.product-detail-content{
-  padding:9px 11px!important;
-  border:1px solid #eee6da!important;
-  border-radius:9px!important;
-  background:#fff!important;
-}
-
-.ingredient-name{font-size:12px!important;margin-bottom:3px!important;}
-.ingredient-benefit,.detail-line{
-  font-size:11px!important;
-  line-height:1.45!important;
-}
-
-.product-detail-content{gap:5px!important;}
-
-#reviews{
-  margin-top:18px!important;
-  padding:16px!important;
-  border:1px solid var(--lp-line)!important;
-  border-radius:15px!important;
-  background:#fff!important;
-  box-shadow:0 8px 24px rgba(42,31,17,.045)!important;
-}
-
-#reviews .product-detail-content{background:#fcfaf7!important;}
-
-@media (min-width:901px){
-  .product-detail .ingredients-section,
-  .product-detail > .product-detail-section:not(#reviews){
-    display:block!important;
-  }
-  .product-detail > .ingredients-section,
-  .product-detail > .product-detail-section{
-    grid-column:span 1!important;
-  }
-  .product-detail > .ingredients-section{grid-row:2!important;}
-  .product-detail > .product-detail-section{grid-row:2!important;}
-  .product-detail > .ingredients-section + .product-detail-section{grid-column:span 1!important;}
-}
-
-@media (max-width:900px){
-  .product-page{width:92%!important;padding:18px 0 42px!important;}
-  .product-detail{
-    grid-template-columns:1fr!important;
-    gap:16px!important;
-    padding:14px!important;
-    border-radius:18px!important;
-  }
-  .product-photo{grid-column:1!important;grid-row:auto!important;height:330px!important;border-radius:15px!important;}
-  .product-info{grid-column:1!important;grid-row:auto!important;padding:1px 3px 0!important;}
-  .product-info h1{font-size:26px!important;}
-  .product-price{font-size:23px!important;}
-  .liara-size-price-box .size-options{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
-  .purchase-area .action-buttons{grid-template-columns:1fr!important;}
-  .purchase-area .action-buttons button{min-height:44px!important;}
-}
-
-@media (max-width:600px){
-  .product-page{width:94%!important;padding-top:14px!important;}
-  .product-detail{padding:11px!important;gap:13px!important;}
-  .product-photo{height:285px!important;}
-  .product-info h1{font-size:24px!important;}
-  .product-price{font-size:22px!important;}
-  .liara-size-price-box{padding:9px!important;}
-  .liara-size-price-box .size-options{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-}
-
-@media (max-width:420px){
-  .product-photo{height:255px!important;}
-  .product-info h1{font-size:22px!important;}
+    .product-info h1 {
+        font-size: 26px !important;
+    }
 }
 </style>
 
