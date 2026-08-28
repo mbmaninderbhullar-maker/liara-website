@@ -975,6 +975,62 @@ body {
 
 </style>
 
+
+<style id="liara-size-side-css">
+/* =====================================================
+   LIARA SIZE OPTIONS — BESIDE PRODUCT PHOTO
+===================================================== */
+.liara-size-panel{
+    position:absolute;
+    left:14px;
+    right:14px;
+    bottom:14px;
+    z-index:5;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(8px);
+    border:1px solid #eee5d7;
+    border-radius:14px;
+    padding:12px;
+    box-shadow:0 8px 24px rgba(40,30,15,.12);
+}
+.liara-size-title{
+    font-size:13px;
+    font-weight:700;
+    color:#222;
+    margin:0 0 9px;
+}
+.liara-size-options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+.liara-size-option{
+    border:1px solid #d9c39a;
+    background:#fff;
+    color:#8f6823;
+    border-radius:8px;
+    padding:7px 11px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+.liara-size-option.active{
+    background:#b88427;
+    color:#fff;
+    border-color:#b88427;
+}
+.product-photo{
+    position:relative !important;
+}
+@media(max-width:900px){
+    .liara-size-panel{
+        left:10px;
+        right:10px;
+        bottom:10px;
+    }
+}
+</style>
+
 </head>
 
 
@@ -2153,6 +2209,64 @@ async function buyNow() {
 
 loadProduct();
 
+</script>
+
+
+<script id="liara-size-side-js">
+(function(){
+    let selectedLiaraSize = localStorage.getItem("liaraSelectedSize") || "50 g";
+
+    function initLiaraSizeOptions(){
+        document.querySelectorAll(".liara-size-option").forEach(function(btn){
+            btn.classList.toggle("active", btn.dataset.size === selectedLiaraSize);
+            btn.addEventListener("click", function(){
+                selectedLiaraSize = btn.dataset.size;
+                localStorage.setItem("liaraSelectedSize", selectedLiaraSize);
+                document.querySelectorAll(".liara-size-option").forEach(function(b){
+                    b.classList.toggle("active", b.dataset.size === selectedLiaraSize);
+                });
+            });
+        });
+    }
+
+    const oldLoadProduct = window.loadProduct;
+    if(typeof oldLoadProduct === "function"){
+        window.loadProduct = async function(){
+            await oldLoadProduct();
+            initLiaraSizeOptions();
+        };
+    } else {
+        document.addEventListener("DOMContentLoaded", initLiaraSizeOptions);
+    }
+
+    // Patch cart/buy-now objects after their existing functions run.
+    const oldSetItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function(key, value){
+        if(key === "liaraCart"){
+            try{
+                const cart = JSON.parse(value);
+                if(Array.isArray(cart)){
+                    cart.forEach(function(item){
+                        if(String(item.id) === String(localStorage.getItem("selectedProductId"))){
+                            item.size = selectedLiaraSize;
+                        }
+                    });
+                    value = JSON.stringify(cart);
+                }
+            }catch(e){}
+        }
+        if(key === "liaraBuyNow"){
+            try{
+                const item = JSON.parse(value);
+                if(item && item.id){
+                    item.size = selectedLiaraSize;
+                    value = JSON.stringify(item);
+                }
+            }catch(e){}
+        }
+        return oldSetItem.call(this, key, value);
+    };
+})();
 </script>
 
 </body>
