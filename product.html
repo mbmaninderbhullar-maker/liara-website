@@ -976,57 +976,74 @@ body {
 </style>
 
 
-<style id="liara-size-side-css">
+<style id="liara-unit-visible-css">
 /* =====================================================
-   LIARA SIZE OPTIONS — BESIDE PRODUCT PHOTO
+   LIARA UNIT SELECTOR — VISIBLE BESIDE PRODUCT PHOTO
 ===================================================== */
-.liara-size-panel{
-    position:absolute;
-    left:14px;
-    right:14px;
-    bottom:14px;
-    z-index:5;
-    background:rgba(255,255,255,.96);
-    backdrop-filter:blur(8px);
-    border:1px solid #eee5d7;
-    border-radius:14px;
-    padding:12px;
-    box-shadow:0 8px 24px rgba(40,30,15,.12);
-}
-.liara-size-title{
-    font-size:13px;
-    font-weight:700;
-    color:#222;
-    margin:0 0 9px;
-}
-.liara-size-options{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-}
-.liara-size-option{
-    border:1px solid #d9c39a;
-    background:#fff;
-    color:#8f6823;
-    border-radius:8px;
-    padding:7px 11px;
-    font-size:13px;
-    font-weight:700;
-    cursor:pointer;
-}
-.liara-size-option.active{
-    background:#b88427;
-    color:#fff;
-    border-color:#b88427;
-}
 .product-photo{
     position:relative !important;
+    overflow:visible !important;
+}
+.liara-unit-side{
+    position:absolute !important;
+    top:50% !important;
+    right:-92px !important;
+    transform:translateY(-50%) !important;
+    z-index:999 !important;
+    width:78px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:7px !important;
+    padding:10px 8px !important;
+    background:#fff !important;
+    border:1px solid #e2d7c7 !important;
+    border-radius:13px !important;
+    box-shadow:0 8px 24px rgba(40,30,15,.14) !important;
+}
+.liara-unit-side-title{
+    display:block !important;
+    text-align:center !important;
+    font-size:11px !important;
+    font-weight:800 !important;
+    color:#555 !important;
+    margin:0 0 2px !important;
+}
+.liara-unit-btn{
+    display:block !important;
+    width:100% !important;
+    min-height:38px !important;
+    padding:7px 5px !important;
+    border:1px solid #d9c39a !important;
+    background:#fff !important;
+    color:#8f6823 !important;
+    border-radius:8px !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+    cursor:pointer !important;
+}
+.liara-unit-btn.active{
+    background:#b88427 !important;
+    color:#fff !important;
+    border-color:#b88427 !important;
 }
 @media(max-width:900px){
-    .liara-size-panel{
-        left:10px;
-        right:10px;
-        bottom:10px;
+    .liara-unit-side{
+        right:10px !important;
+        top:auto !important;
+        bottom:10px !important;
+        transform:none !important;
+        width:auto !important;
+        flex-direction:row !important;
+        align-items:center !important;
+        padding:7px !important;
+    }
+    .liara-unit-side-title{
+        margin:0 2px 0 0 !important;
+    }
+    .liara-unit-btn{
+        width:auto !important;
+        min-width:44px !important;
     }
 }
 </style>
@@ -1673,6 +1690,19 @@ async function loadProduct() {
                     onerror="this.src='facewash.jpg'"
                 >
 
+                <div class="liara-unit-side" aria-label="Select product unit">
+                    <div class="liara-unit-side-title">UNIT</div>
+                    <button type="button" class="liara-unit-btn active"
+                            data-unit="g"
+                            onclick="selectLiaraUnit('g', this)">g</button>
+                    <button type="button" class="liara-unit-btn"
+                            data-unit="ml"
+                            onclick="selectLiaraUnit('ml', this)">ml</button>
+                    <button type="button" class="liara-unit-btn"
+                            data-unit="L"
+                            onclick="selectLiaraUnit('L', this)">L</button>
+                </div>
+
             </div>
 
 
@@ -2212,61 +2242,37 @@ loadProduct();
 </script>
 
 
-<script id="liara-size-side-js">
-(function(){
-    let selectedLiaraSize = localStorage.getItem("liaraSelectedSize") || "50 g";
+<script id="liara-unit-visible-js">
+let liaraSelectedUnit = localStorage.getItem("liaraSelectedUnit") || "g";
 
-    function initLiaraSizeOptions(){
-        document.querySelectorAll(".liara-size-option").forEach(function(btn){
-            btn.classList.toggle("active", btn.dataset.size === selectedLiaraSize);
-            btn.addEventListener("click", function(){
-                selectedLiaraSize = btn.dataset.size;
-                localStorage.setItem("liaraSelectedSize", selectedLiaraSize);
-                document.querySelectorAll(".liara-size-option").forEach(function(b){
-                    b.classList.toggle("active", b.dataset.size === selectedLiaraSize);
-                });
-            });
-        });
+function selectLiaraUnit(unit, button){
+    liaraSelectedUnit = unit;
+    localStorage.setItem("liaraSelectedUnit", unit);
+
+    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
+        btn.classList.toggle("active", btn.dataset.unit === unit);
+    });
+
+    const sizeInput = document.getElementById("productSize");
+    if(sizeInput){
+        const raw = String(sizeInput.value || "").trim();
+        const numberOnly = raw.match(/^[0-9]+(?:\.[0-9]+)?/);
+        if(numberOnly){
+            sizeInput.value = numberOnly[0] + " " + unit;
+        }
     }
 
-    const oldLoadProduct = window.loadProduct;
-    if(typeof oldLoadProduct === "function"){
-        window.loadProduct = async function(){
-            await oldLoadProduct();
-            initLiaraSizeOptions();
-        };
-    } else {
-        document.addEventListener("DOMContentLoaded", initLiaraSizeOptions);
+    const selectedText = document.getElementById("selectedSizeText");
+    if(selectedText && sizeInput && sizeInput.value){
+        selectedText.textContent = "Selected size: " + sizeInput.value;
     }
+}
 
-    // Patch cart/buy-now objects after their existing functions run.
-    const oldSetItem = Storage.prototype.setItem;
-    Storage.prototype.setItem = function(key, value){
-        if(key === "liaraCart"){
-            try{
-                const cart = JSON.parse(value);
-                if(Array.isArray(cart)){
-                    cart.forEach(function(item){
-                        if(String(item.id) === String(localStorage.getItem("selectedProductId"))){
-                            item.size = selectedLiaraSize;
-                        }
-                    });
-                    value = JSON.stringify(cart);
-                }
-            }catch(e){}
-        }
-        if(key === "liaraBuyNow"){
-            try{
-                const item = JSON.parse(value);
-                if(item && item.id){
-                    item.size = selectedLiaraSize;
-                    value = JSON.stringify(item);
-                }
-            }catch(e){}
-        }
-        return oldSetItem.call(this, key, value);
-    };
-})();
+document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
+        btn.classList.toggle("active", btn.dataset.unit === liaraSelectedUnit);
+    });
+});
 </script>
 
 </body>
