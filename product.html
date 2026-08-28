@@ -973,17 +973,6 @@ body {
     .size-option{flex:1 1 70px;}
 }
 
-
-/* PRODUCT SIZE / VARIANT SELECTOR */
-.size-selection{margin:18px 0 20px;padding:15px 16px;background:#fbf9f6;border:1px solid #eee5d7;border-radius:14px;}
-.size-selection-label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:10px;}
-.size-options{display:flex;flex-wrap:wrap;gap:8px;}
-.size-option{min-width:78px;padding:10px 12px;border:1px solid #ddd3c4;border-radius:10px;background:#fff;color:#333;font-weight:700;cursor:pointer;transition:.2s;}
-.size-option small{display:block;margin-top:3px;color:#ad8232;font-size:12px;}
-.size-option.active{border-color:#ad8232;background:#fff8eb;color:#ad8232;box-shadow:0 3px 10px rgba(173,130,50,.12);}
-.selected-size-text{margin-top:9px;font-size:12px;color:#777;}
-@media(max-width:600px){.size-options{gap:7px}.size-option{flex:1;min-width:70px}.size-selection{padding:13px}}
-
 </style>
 
 
@@ -1058,6 +1047,31 @@ body {
     }
 }
 </style>
+
+
+<style id="liara-size-price-css">
+.liara-size-buttons{display:flex!important;flex-direction:column!important;gap:7px!important}
+.liara-size-buttons .size-option{width:100%!important;min-height:38px!important;padding:7px 4px!important;border:1px solid #d9c39a!important;background:#fff!important;color:#8f6823!important;border-radius:8px!important;font-size:13px!important;font-weight:800!important;cursor:pointer!important}
+.liara-size-buttons .size-option small{display:block!important;margin-top:2px!important;font-size:10px!important;font-weight:700!important}
+.liara-size-buttons .size-option.active{background:#b88427!important;color:#fff!important;border-color:#b88427!important}
+@media(max-width:900px){
+  .liara-size-buttons{flex-direction:row!important;flex-wrap:wrap!important}
+  .liara-size-buttons .size-option{width:auto!important;min-width:58px!important}
+}
+</style>
+
+
+<!--
+UNIT PRICE DATA:
+Use a JSON array in unit_prices, size_prices, or price_options, e.g.
+[
+  {"size":"50","unit":"g","price":299},
+  {"size":"100","unit":"g","price":499},
+  {"size":"250","unit":"g","price":899},
+  {"size":"500","unit":"g","price":1499},
+  {"size":"1","unit":"kg","price":2499}
+]
+-->
 
 </head>
 
@@ -1483,70 +1497,168 @@ function parseSizeOptions(product) {
 
 function normalizeSizeOptions(list) {
     return list.map((item, index) => {
-        if (typeof item === "number") return { value:String(item), label:String(item), price:null, stock:null, unit:"" };
+        if (typeof item === "number") return { value: String(item), label: String(item) };
         if (typeof item === "string") {
-            const raw=item.trim();
-            const match=raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)$/i);
-            if(match){ const n=match[1], u=normalizeUnit(match[2]); return {value:n+u,label:n+" "+u,price:null,stock:null,unit:u}; }
-            return {value:raw,label:raw,price:null,stock:null,unit:""};
+            const raw = item.trim();
+            const match = raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)$/i);
+            if (match) {
+                const n = match[1];
+                const u = normalizeUnit(match[2]);
+                return { value: n + u, label: n + " " + u };
+            }
+            return { value: raw, label: raw };
         }
-        const size=String(item?.label ?? item?.size ?? item?.value ?? item?.quantity ?? item?.weight ?? item?.volume ?? "").trim();
-        const unit=normalizeUnit(item?.unit ?? item?.size_unit ?? item?.volume_unit ?? item?.weight_unit ?? "");
-        const label=size+(unit?" "+unit:"");
-        return { value:label || ("Option "+(index+1)), label:label || ("Option "+(index+1)), price:item?.price != null ? Number(item.price) : null, stock:item?.stock != null ? Number(item.stock) : null, unit:unit };
-    }).filter(x=>x.label);
+        const size = item?.size ?? item?.value ?? item?.quantity ?? item?.weight ?? item?.volume ?? "";
+        const unit = normalizeUnit(item?.unit ?? item?.size_unit ?? item?.volume_unit ?? item?.weight_unit ?? "");
+        const label = String(size).trim() + (unit ? " " + unit : "");
+        return { value: label || ("Option " + (index + 1)), label: label || ("Option " + (index + 1)) };
+    }).filter(x => x.label);
 }
 
 function normalizeUnit(unit) {
-    const u=String(unit||"").trim().toLowerCase();
-    if(["g","gram","grams"].includes(u)) return "g";
-    if(["kg","kilogram","kilograms"].includes(u)) return "kg";
-    if(["ml","millilitre","milliliter","millilitres","milliliters"].includes(u)) return "ml";
-    if(["l","ltr","litre","liter","litres","liters"].includes(u)) return "L";
-    return String(unit||"").trim();
+    const u = String(unit || "").trim().toLowerCase();
+    if (["g","gram","grams"].includes(u)) return "g";
+    if (["kg","kilogram","kilograms"].includes(u)) return "kg";
+    if (["ml","millilitre","milliliter","millilitres","milliliters"].includes(u)) return "ml";
+    if (["l","ltr","litre","liter","litres","liters"].includes(u)) return "L";
+    return String(unit || "").trim();
 }
 
-let currentSizeOptions=[];
-let selectedProductVariant=null;
+function parsePriceNumber(value) {
+    const n = Number(String(value ?? "").replace(/[₹,\s]/g, ""));
+    return Number.isFinite(n) ? n : 0;
+}
+
+function parseUnitPriceOptions(product) {
+    const candidates = [
+        product.unit_prices,
+        product.size_prices,
+        product.price_options,
+        product.size_options,
+        product.sizes,
+        product.product_sizes,
+        product.variants
+    ];
+
+    for (const value of candidates) {
+        if (Array.isArray(value) && value.length) {
+            const result = normalizeUnitPriceOptions(value);
+            if (result.length) return result;
+        }
+
+        if (typeof value === "string" && value.trim()) {
+            try {
+                const parsed = JSON.parse(value);
+                if (Array.isArray(parsed) && parsed.length) {
+                    const result = normalizeUnitPriceOptions(parsed);
+                    if (result.length) return result;
+                }
+            } catch(e) {}
+
+            const parts = value.split(/\r?\n|[|]+/).map(v => v.trim()).filter(Boolean);
+            const result = normalizeUnitPriceOptions(parts);
+            if (result.length) return result;
+        }
+    }
+    return [];
+}
+
+function normalizeUnitPriceOptions(list) {
+    return list.map(item => {
+        if (typeof item === "string") {
+            const raw = item.trim();
+            const match = raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)\s*(?:[:=\-–—]\s*)₹?\s*([0-9]+(?:\.[0-9]+)?)$/i);
+            if (!match) return null;
+            const size = match[1];
+            const unit = normalizeUnit(match[2]);
+            const price = parsePriceNumber(match[3]);
+            return { value: size + " " + unit, label: size + " " + unit, price };
+        }
+
+        if (!item || typeof item !== "object") return null;
+        const size = item.size ?? item.value ?? item.quantity ?? item.weight ?? item.volume ?? "";
+        const unit = normalizeUnit(item.unit ?? item.size_unit ?? item.volume_unit ?? item.weight_unit ?? "");
+        const price = parsePriceNumber(item.price ?? item.rate ?? item.amount ?? item.sale_price);
+        if (size === "" || price <= 0) return null;
+        const label = String(size).trim() + (unit ? " " + unit : "");
+        return { value: label, label, price };
+    }).filter(Boolean);
+}
+
+function getSelectedVariant() {
+    const value = document.getElementById("productSize")?.value || "";
+    const options = window.liaraUnitPriceOptions || [];
+    return options.find(o => String(o.value) === String(value)) || null;
+}
+
+function updateDisplayedPrice() {
+    const priceEl = document.getElementById("productPrice");
+    const variant = getSelectedVariant();
+    if (priceEl && variant) {
+        priceEl.textContent = "₹" + variant.price.toLocaleString("en-IN");
+    }
+}
 
 function getSelectedSize() {
-    const el=document.getElementById("productSize");
+    const el = document.getElementById("productSize");
     return el ? el.value : "";
 }
 
-function applyProductVariant(option) {
-    selectedProductVariant=option || null;
-    const priceEl=document.querySelector(".product-price");
-    if(priceEl && option && option.price != null) priceEl.textContent="₹"+Number(option.price).toLocaleString("en-IN");
-    const stockEl=document.querySelector(".purchase-area .stock-text");
-    const qty=document.getElementById("quantity");
-    const stock=option && option.stock != null ? Number(option.stock) : null;
-    if(stockEl && stock !== null){
-        stockEl.className="stock-text "+(stock>0?"in-stock":"out-stock");
-        stockEl.textContent=stock>0?"✓ In Stock":"✕ Out of Stock";
-    }
-    if(qty && stock !== null){ qty.max=Math.max(1,stock); if(Number(qty.value)>stock) qty.value=Math.max(1,stock); }
-}
-
 function selectProductSize(value, button) {
-    document.querySelectorAll(".size-option").forEach(btn=>btn.classList.remove("active"));
-    if(button) button.classList.add("active");
-    const input=document.getElementById("productSize");
-    if(input) input.value=value;
-    const option=currentSizeOptions.find(x=>String(x.value)===String(value));
-    const text=document.getElementById("selectedSizeText");
-    if(text) text.textContent=option ? "Selected: "+option.label : "";
-    applyProductVariant(option);
+    document.querySelectorAll(".size-option").forEach(btn => btn.classList.remove("active"));
+    if (button) button.classList.add("active");
+    const input = document.getElementById("productSize");
+    if (input) input.value = value;
+    const text = document.getElementById("selectedSizeText");
+    if (text) text.textContent = value ? "Selected size: " + value : "";
+    updateDisplayedPrice();
 }
 
 function renderSizeOptions(product) {
-    const options=parseSizeOptions(product);
-    currentSizeOptions=options;
-    if(!options.length) return "";
-    const first=options[0];
-    const buttons=options.map((option,index)=>`<button type="button" class="size-option ${index===0?"active":""}" onclick="selectProductSize(${JSON.stringify(option.value)}, this)">${escapeHtml(option.label)}${option.price!=null?`<small>₹${Number(option.price).toLocaleString("en-IN")}</small>`:""}</button>`).join("");
-    setTimeout(()=>applyProductVariant(first),0);
-    return `<div class="size-selection"><label class="size-selection-label">Choose Size</label><div class="size-options">${buttons}</div><input type="hidden" id="productSize" value="${escapeHtml(first.value)}"><div class="selected-size-text" id="selectedSizeText">Selected: ${escapeHtml(first.label)}</div></div>`;
+    const options = parseUnitPriceOptions(product);
+
+    if (options.length) {
+        window.liaraUnitPriceOptions = options;
+
+        const first = options[0].value;
+        const buttons = options.map((option, index) => `
+            <button type="button"
+                    class="size-option ${index === 0 ? "active" : ""}"
+                    onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
+                ${escapeHtml(option.label)}
+                <small>₹${option.price.toLocaleString("en-IN")}</small>
+            </button>
+        `).join("");
+
+        return `
+            <div class="size-selection">
+                <label class="size-selection-label">Size / Quantity</label>
+                <div class="size-options">${buttons}</div>
+                <input type="hidden" id="productSize" value="${escapeHtml(first)}">
+                <div class="selected-size-text" id="selectedSizeText">Selected size: ${escapeHtml(options[0].label)}</div>
+            </div>
+        `;
+    }
+
+    const optionsOld = parseSizeOptions(product);
+    if (!optionsOld.length) return "";
+
+    const firstOld = optionsOld[0].value;
+    const buttonsOld = optionsOld.map((option, index) => `
+        <button type="button" class="size-option ${index === 0 ? "active" : ""}"
+                onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
+            ${escapeHtml(option.label)}
+        </button>
+    `).join("");
+
+    return `
+        <div class="size-selection">
+            <label class="size-selection-label">Size / Quantity</label>
+            <div class="size-options">${buttonsOld}</div>
+            <input type="hidden" id="productSize" value="${escapeHtml(firstOld)}">
+            <div class="selected-size-text" id="selectedSizeText">Selected size: ${escapeHtml(optionsOld[0].label)}</div>
+        </div>
+    `;
 }
 
 /* =====================================================
@@ -1650,9 +1762,9 @@ async function loadProduct() {
 
 
     const stock =
-        selectedProductVariant && selectedProductVariant.stock != null
-        ? Number(selectedProductVariant.stock)
-        : Number(product.stock || 0);
+        Number(
+            product.stock || 0
+        );
 
 
     const image =
@@ -1704,7 +1816,12 @@ async function loadProduct() {
                     onerror="this.src='facewash.jpg'"
                 >
 
+                <div class="liara-unit-side" aria-label="Select product size">
+                    <div class="liara-unit-side-title">SIZE</div>
+                    <div id="liaraSizeButtons" class="liara-size-buttons"></div>
+                </div>
             </div>
+
 
 
             <!-- PRODUCT INFORMATION -->
@@ -1719,9 +1836,7 @@ async function loadProduct() {
                     ${escapeHtml(name)}
                 </h1>
 
-                <div class="product-price">
-                    ₹${price.toLocaleString("en-IN")}
-                </div>
+                <div class="product-price" id="productPrice">₹${price.toLocaleString("en-IN")}</div>
 
                 <div class="product-description">
                     ${escapeHtml(description)}
@@ -1996,9 +2111,9 @@ async function addToCart() {
 
 
     const stock =
-        selectedProductVariant && selectedProductVariant.stock != null
-        ? Number(selectedProductVariant.stock)
-        : Number(product.stock || 0);
+        Number(
+            product.stock || 0
+        );
 
 
     if(stock < quantity) {
@@ -2082,9 +2197,9 @@ async function addToCart() {
                 "Liara Product",
 
             price:
-                selectedProductVariant && selectedProductVariant.price != null
-                ? Number(selectedProductVariant.price)
-                : Number(product.price || 0),
+                Number(
+                    getSelectedVariant()?.price ?? product.price ?? 0
+                ),
 
             image:
                 product.image_url ||
@@ -2097,10 +2212,7 @@ async function addToCart() {
                 quantity,
 
             size:
-                getSelectedSize(),
-
-            unit:
-                selectedProductVariant?.unit || ""
+                getSelectedSize()
 
         });
 
@@ -2211,10 +2323,7 @@ async function buyNow() {
             quantity,
 
         size:
-            getSelectedSize(),
-
-        unit:
-            selectedProductVariant?.unit || ""
+            getSelectedSize()
 
     };
 
@@ -2249,35 +2358,29 @@ loadProduct();
 
 
 <script id="liara-unit-visible-js">
-let liaraSelectedUnit = localStorage.getItem("liaraSelectedUnit") || "g";
-
-function selectLiaraUnit(unit, button){
-    liaraSelectedUnit = unit;
-    localStorage.setItem("liaraSelectedUnit", unit);
-
-    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
-        btn.classList.toggle("active", btn.dataset.unit === unit);
-    });
-
-    const sizeInput = document.getElementById("productSize");
-    if(sizeInput){
-        const raw = String(sizeInput.value || "").trim();
-        const numberOnly = raw.match(/^[0-9]+(?:\.[0-9]+)?/);
-        if(numberOnly){
-            sizeInput.value = numberOnly[0] + " " + unit;
-        }
-    }
-
-    const selectedText = document.getElementById("selectedSizeText");
-    if(selectedText && sizeInput && sizeInput.value){
-        selectedText.textContent = "Selected size: " + sizeInput.value;
-    }
-}
-
+/* Selected size controls the product price. */
 document.addEventListener("DOMContentLoaded", function(){
-    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
-        btn.classList.toggle("active", btn.dataset.unit === liaraSelectedUnit);
-    });
+    setTimeout(updateDisplayedPrice, 0);
+});
+</script>
+
+
+<script id="liara-size-side-sync">
+document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(function(){
+        const source = document.querySelector(".size-options");
+        const target = document.getElementById("liaraSizeButtons");
+        if (!source || !target) return;
+
+        target.innerHTML = source.innerHTML;
+        target.querySelectorAll(".size-option").forEach(function(btn){
+            btn.addEventListener("click", function(){
+                const matching = Array.from(document.querySelectorAll(".size-options .size-option"))
+                    .find(b => b.textContent.trim() === btn.textContent.trim());
+                if (matching) matching.click();
+            });
+        });
+    }, 150);
 });
 </script>
 
