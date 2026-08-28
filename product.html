@@ -2942,7 +2942,55 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
 
+<style>
+.liara-size-price-box .size-options{
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    gap:4px !important;
+}
 
+.liara-size-price-box .size-option{
+    flex:1 !important;
+    min-width:0 !important;
+    width:auto !important;
+    height:36px !important;
+    min-height:36px !important;
+    padding:3px 2px !important;
+    font-size:9px !important;
+    border-radius:7px !important;
+}
+
+.liara-size-price-box .size-option span{
+    font-size:9px !important;
+    white-space:nowrap !important;
+}
+
+.liara-size-price-box .size-option small{
+    font-size:7px !important;
+    margin-top:1px !important;
+    white-space:nowrap !important;
+}
+
+@media(max-width:480px){
+    .liara-size-price-box .size-options{
+        gap:2px !important;
+    }
+
+    .liara-size-price-box .size-option{
+        height:32px !important;
+        min-height:32px !important;
+        padding:2px 0 !important;
+    }
+
+    .liara-size-price-box .size-option span{
+        font-size:8px !important;
+    }
+
+    .liara-size-price-box .size-option small{
+        font-size:6px !important;
+    }
+}
+</style>
 
 
 </body>
