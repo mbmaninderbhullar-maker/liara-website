@@ -1485,7 +1485,7 @@ async function saveOrderToDatabase(statusText) {
         productNames.replace(/,\s*$/, "");
 
 
-    const { error } =
+    const { data: savedOrder, error } =
         await supabaseClient
             .from("orders")
             .insert([{
@@ -1539,12 +1539,16 @@ async function saveOrderToDatabase(statusText) {
                 status:
                     statusText
 
-            }]);
+            }])
+            .select("id")
+            .single();
 
 
     if(error) {
         throw error;
     }
+
+    return savedOrder.id;
 }
 
 
@@ -1628,6 +1632,66 @@ async function verifyRazorpayPayment(response) {
     }
 
     return data;
+}
+
+
+async function createShiprocketShipment(orderId) {
+
+    if (!orderId) {
+        throw new Error("Order ID is missing for Shiprocket shipment.");
+    }
+
+    const { data, error } =
+        await supabaseClient.functions.invoke(
+            "shiprocket-create-shipment",
+            {
+                body: {
+                    order_id: orderId
+                }
+            }
+        );
+
+    if (error) {
+        throw new Error(
+            error.message ||
+            "Shiprocket shipment could not be created."
+        );
+    }
+
+    if (!data || !data.success) {
+        throw new Error(
+            data?.error ||
+            "Shiprocket shipment could not be created."
+        );
+    }
+
+    return data;
+}
+
+
+async function getLatestCustomerOrder() {
+
+    const { data: authData, error: authError } =
+        await supabaseClient.auth.getUser();
+
+    if (authError || !authData?.user) {
+        throw new Error("Customer login session expired. Please log in again.");
+    }
+
+    const { data, error } =
+        await supabaseClient
+            .from("orders")
+            .select("id")
+            .eq("user_id", authData.user.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+    if (error || !data?.id) {
+        throw new Error("Order was saved, but its ID could not be found.");
+    }
+
+    return data.id;
 }
 
 
@@ -1746,6 +1810,17 @@ async function openRazorpayPayment(button) {
 
 
                 await verifyRazorpayPayment(response);
+
+                showMessage(
+                    "Payment verified. Creating delivery shipment..."
+                );
+
+                const savedOrderId =
+                    await getLatestCustomerOrder();
+
+                await createShiprocketShipment(
+                    savedOrderId
+                );
 
                 orderSuccess(button);
 
@@ -2003,8 +2078,17 @@ document.getElementById(
                 button.innerText =
                     "Placing Order...";
 
-                await saveOrderToDatabase(
-                    "Order Received"
+                const savedOrderId =
+                    await saveOrderToDatabase(
+                        "Order Received"
+                    );
+
+                showMessage(
+                    "Order received. Creating delivery shipment..."
+                );
+
+                await createShiprocketShipment(
+                    savedOrderId
                 );
 
                 orderSuccess(button);
