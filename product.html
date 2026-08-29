@@ -2791,6 +2791,13 @@ async function loadLiaraReviews(){
     const list = document.getElementById("liaraReviewMessage");
     const countEl = document.getElementById("liaraReviewLiveCount");
     const bigStars = document.getElementById("liaraReviewBigStars");
+
+    // The product image/title area is rendered dynamically, so its review
+    // summary does not exist when renderReviewSummary(product) first runs.
+    // Update that top summary here, after the product has been rendered.
+    const topStars = document.getElementById("liaraStars");
+    const topCount = document.getElementById("liaraReviewCount");
+
     if(!list || !productId) return;
 
     const {data, error} = await supabaseClient
@@ -2811,13 +2818,24 @@ async function loadLiaraReviews(){
         ? reviews.reduce((sum, r) => sum + Number(r.rating || 0), 0) / count
         : 0;
 
+    const reviewText = count
+        ? average.toFixed(1) + " (" + count + (count === 1 ? " review)" : " reviews)")
+        : "No reviews yet";
+    const starText = count ? renderLiaraReviewStars(average) : "☆☆☆☆☆";
+
     if(countEl){
-        countEl.textContent = count
-            ? average.toFixed(1) + " (" + count + (count === 1 ? " review)" : " reviews)")
-            : "No reviews yet";
+        countEl.textContent = reviewText;
     }
     if(bigStars){
-        bigStars.textContent = count ? renderLiaraReviewStars(average) : "☆☆☆☆☆";
+        bigStars.textContent = starText;
+    }
+
+    // Keep the review rating beside the product photo/title in sync too.
+    if(topCount){
+        topCount.textContent = reviewText;
+    }
+    if(topStars){
+        topStars.textContent = starText;
     }
 
     if(!count){
