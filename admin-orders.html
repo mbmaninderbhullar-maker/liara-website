@@ -1334,6 +1334,14 @@ body{
 
 <style>
 #stock .admin-header{padding:6px 8px!important;margin-bottom:6px!important}#stock .admin-header h1,#stock .admin-header h2{font-size:15px!important;line-height:1.15!important;margin:0!important}#stock .admin-header p,#stock .admin-header small{font-size:8px!important;margin:0 0 2px!important}#stock .summary-grid,#stock .stats-grid{gap:5px!important;margin-bottom:6px!important}#stock .summary-card,#stock .stat-card{padding:5px 7px!important;min-height:0!important}#stock .summary-card span,#stock .stat-card span,#stock .summary-card small,#stock .stat-card small{font-size:7px!important}#stock .summary-card strong,#stock .summary-card .value,#stock .stat-card strong,#stock .stat-card .value{font-size:14px!important;line-height:1.05!important}#stock .admin-header .btn{font-size:9px!important;padding:5px 7px!important}
+
+/* SIZE / ML + PRICE MANAGER - additive only */
+.variant-row{display:grid;grid-template-columns:1.2fr .9fr 1fr 1fr auto;gap:10px;align-items:end;padding:12px;margin-bottom:10px;border:1px solid #e8e2d8;border-radius:10px;background:#faf8f5}
+.variant-row .variant-field{display:flex;flex-direction:column;gap:5px}
+.variant-row label{font-size:10px;font-weight:700;color:#777}
+.variant-row input,.variant-row select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;outline:none;font-family:inherit}
+.variant-remove{background:#a33!important;color:#fff!important;border:0;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+@media(max-width:700px){.variant-row{grid-template-columns:1fr 1fr}.variant-row .variant-remove{grid-column:1/-1}}
 </style>
 </head>
 
@@ -4473,6 +4481,9 @@ Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredien
 
     </div>
     `;
+
+    // SIZE / ML + PRICE: load existing variants (additive only)
+    renderProductVariants(product.variants || []);
 }
 
 function previewEditPhoto(event){
@@ -4536,6 +4547,9 @@ async function saveEditedProduct(id){
         return;
     }
 
+    const variants = collectProductVariants();
+    if(variants === null) return;
+
     try{
 
         let imageUrl = oldProduct.image_url || null;
@@ -4588,7 +4602,8 @@ async function saveEditedProduct(id){
             key_ingredients:keyIngredients,
             how_to_use:howToUse,
             benefits:benefits,
-            image_url:imageUrl
+            image_url:imageUrl,
+            variants:variants
         };
 
         const {error} =
@@ -4608,6 +4623,87 @@ async function saveEditedProduct(id){
     }catch(error){
         alert("Something went wrong:\n\n" + error.message);
     }
+}
+
+
+/* =========================================================
+   SIZE / ML + PRICE MANAGER
+   Additive only - existing code preserved
+========================================================= */
+function renderProductVariants(variants){
+    const list = document.getElementById("variantList");
+    if(!list) return;
+    let data = variants;
+    if(typeof data === "string"){
+        try{ data = JSON.parse(data); }catch(e){ data = []; }
+    }
+    if(!Array.isArray(data)) data = [];
+    list.innerHTML = "";
+    if(data.length){
+        data.forEach(v => addVariantRow(v));
+    }else{
+        addVariantRow();
+    }
+}
+
+function addVariantRow(variant){
+    const list = document.getElementById("variantList");
+    if(!list) return;
+    variant = variant || {};
+    const row = document.createElement("div");
+    row.className = "variant-row";
+    row.innerHTML = `
+        <div class="variant-field">
+            <label>SIZE / ML</label>
+            <input type="number" min="0" step="any" class="variant-size" value="${escapeHtml(String(variant.size ?? ""))}" placeholder="e.g. 100">
+        </div>
+        <div class="variant-field">
+            <label>UNIT</label>
+            <select class="variant-unit">
+                <option value="ML">ML</option>
+                <option value="G">G</option>
+                <option value="L">L</option>
+                <option value="KG">KG</option>
+            </select>
+        </div>
+        <div class="variant-field">
+            <label>PRICE (₹)</label>
+            <input type="number" min="0" step="0.01" class="variant-price" value="${escapeHtml(String(variant.price ?? ""))}" placeholder="e.g. 499">
+        </div>
+        <div class="variant-field">
+            <label>STOCK</label>
+            <input type="number" min="0" step="1" class="variant-stock" value="${escapeHtml(String(variant.stock ?? ""))}" placeholder="e.g. 20">
+        </div>
+        <button type="button" class="variant-remove" onclick="this.closest('.variant-row').remove()">✕ Remove</button>
+    `;
+    list.appendChild(row);
+    const unit = row.querySelector(".variant-unit");
+    if(variant.unit) unit.value = String(variant.unit).toUpperCase();
+}
+
+function collectProductVariants(){
+    const list = document.getElementById("variantList");
+    if(!list) return [];
+    const rows = [...list.querySelectorAll(".variant-row")];
+    const variants = [];
+    for(const row of rows){
+        const sizeEl = row.querySelector(".variant-size");
+        const unitEl = row.querySelector(".variant-unit");
+        const priceEl = row.querySelector(".variant-price");
+        const stockEl = row.querySelector(".variant-stock");
+        const sizeText = (sizeEl?.value || "").trim();
+        const priceText = (priceEl?.value || "").trim();
+        const stockText = (stockEl?.value || "").trim();
+        if(!sizeText && !priceText && !stockText) continue;
+        const size = Number(sizeText);
+        const price = Number(priceText);
+        const stock = stockText === "" ? 0 : Number(stockText);
+        if(!Number.isFinite(size) || size <= 0){ alert("Har Size / ML valid pao."); return null; }
+        if(!Number.isFinite(price) || price < 0){ alert("Har Size da valid price pao."); return null; }
+        if(!Number.isInteger(stock) || stock < 0){ alert("Har Size da valid stock pao."); return null; }
+        variants.push({size:size,unit:(unitEl?.value || "ML").toUpperCase(),price:price,stock:stock});
+    }
+    return variants;
 }
 
 async function deleteProduct(id){
