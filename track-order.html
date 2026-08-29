@@ -415,24 +415,39 @@ async function trackOrder(){
 
     try{
 
-        const response = await fetch(
-            TRACK_FUNCTION,
-            {
-                method:"POST",
+        /* Try the entered value first. If the older order system
+           stored only the suffix (for example D0D2DF), try that too. */
+        const candidates = [value];
+        const upperValue = value.toUpperCase();
+        if (upperValue.startsWith("LIARA-") && upperValue.length > 6) {
+            candidates.push(upperValue.slice(6));
+        }
 
-                headers:{
-                    "Content-Type":"application/json",
-                    "apikey":SUPABASE_ANON_KEY
-                },
+        let response = null;
+        let data = null;
 
-                body:JSON.stringify({
-                    tracking_number:value
-                })
+        for (const candidate of candidates) {
+            response = await fetch(
+                TRACK_FUNCTION,
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json",
+                        "apikey":SUPABASE_ANON_KEY
+                    },
+                    body:JSON.stringify({
+                        tracking_number:candidate
+                    })
+                }
+            );
+
+            data = await response.json().catch(() => ({}));
+
+            if (response.ok || data?.success ||
+                !String(data?.error || "").toLowerCase().includes("order not found")) {
+                break;
             }
-        );
-
-        const data =
-            await response.json();
+        }
 
         if(!response.ok){
 
