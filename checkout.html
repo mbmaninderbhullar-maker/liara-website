@@ -1427,11 +1427,13 @@ const RAZORPAY_KEY_ID =
 
 async function saveOrderToDatabase(statusText) {
 
-    const { data: authData, error: authError } =
+    const {data:authData,error:authError} =
         await supabaseClient.auth.getUser();
 
-    if (authError || !authData?.user) {
-        throw new Error("Customer login session expired. Please log in again.");
+    if(authError || !authData?.user){
+        throw new Error(
+            "Customer login session expired. Please log in again."
+        );
     }
 
     const customerUser = authData.user;
@@ -1461,94 +1463,133 @@ async function saveOrderToDatabase(statusText) {
         document.getElementById("payment").value;
 
 
+    /* =====================================================
+       GENERATE UNIQUE LIARA ORDER NUMBER
+    ===================================================== */
+
+    const now = new Date();
+
+    const datePart =
+        String(now.getDate()).padStart(2,"0") +
+        String(now.getMonth() + 1).padStart(2,"0") +
+        String(now.getFullYear()).slice(-2);
+
+    const randomPart =
+        Math.floor(1000 + Math.random() * 9000);
+
+    const orderNumber =
+        "LIARA-" + datePart + "-" + randomPart;
+
+
+    /* =====================================================
+       PRODUCTS
+    ===================================================== */
+
     let productNames = "";
     let totalQuantity = 0;
 
-
-    checkoutItems.forEach(function(product) {
+    checkoutItems.forEach(function(product){
 
         const quantity =
             Number(product.quantity || 1);
 
         productNames +=
-            (product.name || "Product") +
+            (typeof getProductDisplayName === "function"
+                ? getProductDisplayName(product)
+                : (product.name || "Product")) +
             " × " +
             quantity +
             ", ";
 
         totalQuantity += quantity;
-
     });
 
-
     productNames =
-        productNames.replace(/,\s*$/, "");
+        productNames.replace(/,\s*$/,"");
 
 
-    const { data: savedOrder, error } =
+    /* =====================================================
+       SAVE ORDER
+    ===================================================== */
+
+    const {error} =
         await supabaseClient
-            .from("orders")
-            .insert([{
+        .from("orders")
+        .insert([{
 
-                user_id: customerUser.id,
+            user_id:
+                customerUser.id,
 
-                customer_name:
-                    customerName,
+            order_number:
+                orderNumber,
 
-                phone:
-                    phone,
+            customer_name:
+                customerName,
 
-                house_no:
+            phone:
+                phone,
+
+            house_no:
+                houseNo,
+
+            street:
+                street,
+
+            city:
+                city,
+
+            state:
+                state,
+
+            pincode:
+                pincode,
+
+            address:
+                [
                     houseNo,
-
-                street:
                     street,
-
-                city:
                     city,
-
-                state:
                     state,
+                    pincode
+                ]
+                .filter(Boolean)
+                .join(", "),
 
-                pincode:
-                    pincode,
+            product:
+                productNames,
 
-                address:
-                    [
-                        houseNo,
-                        street,
-                        city,
-                        state,
-                        pincode
-                    ]
-                    .filter(Boolean)
-                    .join(", "),
+            quantity:
+                totalQuantity,
 
-                product:
-                    productNames,
+            total:
+                total,
 
-                quantity:
-                    totalQuantity,
+            payment_method:
+                payment,
 
-                total:
-                    total,
+            status:
+                statusText,
 
-                payment_method:
-                    payment,
+            shipping_status:
+                "Order Received"
 
-                status:
-                    statusText
-
-            }])
-            .select("id")
-            .single();
+        }]);
 
 
-    if(error) {
+    if(error){
         throw error;
     }
 
-    return savedOrder.id;
+    /* =====================================================
+       KEEP ORDER NUMBER FOR SUCCESS / TRACKING
+    ===================================================== */
+
+    localStorage.setItem(
+        "liaraLastOrderNumber",
+        orderNumber
+    );
+
+    return orderNumber;
 }
 
 
