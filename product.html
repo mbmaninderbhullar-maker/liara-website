@@ -1617,6 +1617,8 @@ h1{
         <div class="detail-line" id="liaraReviewMessage">
             Customer reviews will appear here from your connected review data.
         </div>
+        <button type="button" id="liaraCreateReviewBtn" class="liara-create-review-btn">Write a Review</button>
+        <div id="liaraReviewsList" class="liara-reviews-list"></div>
     </div>
 </section>
 
@@ -2409,7 +2411,7 @@ async function loadProduct() {
                 <div class="liara-review-summary" id="liaraReviewSummary">
                     <span class="liara-stars" id="liaraStars">★★★★★</span>
                     <span class="liara-review-count" id="liaraReviewCount">No reviews yet</span>
-                    <a href="#reviews" class="review-link">Write a review</a>
+                    <a href="#reviews" class="review-link" id="liaraWriteReviewBtn" role="button">Write a review</a>
                 </div>
 
                 <div class="product-price" id="productPrice">₹${price.toLocaleString("en-IN")}</div>
@@ -2992,6 +2994,101 @@ document.addEventListener("DOMContentLoaded", function(){
 }
 </style>
 
+
+<style id="liara-review-form-css">
+.liara-create-review-btn{margin-top:14px;padding:11px 18px;border:0;border-radius:9px;background:#222;color:#fff;font-weight:700;cursor:pointer;}
+.liara-create-review-btn:hover{opacity:.9;}
+.liara-reviews-list{margin-top:16px;display:grid;gap:10px;}
+.liara-review-card{border:1px solid #eadcc8;border-radius:12px;padding:12px;background:#fff;}
+.liara-review-card .review-stars{letter-spacing:2px;font-size:16px;}
+.liara-review-meta{font-size:12px;color:#777;margin-top:4px;}
+.liara-review-text{margin-top:8px;color:#333;line-height:1.5;}
+.liara-review-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:99999;}
+.liara-review-modal.open{display:flex;}
+.liara-review-box{width:min(430px,100%);background:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.liara-review-box h3{margin:0 0 15px;}
+.liara-review-stars{display:flex;gap:6px;margin:8px 0 15px;}
+.liara-review-stars button{border:0;background:none;font-size:28px;cursor:pointer;padding:0;color:#bbb;}
+.liara-review-stars button.active{color:#c08a28;}
+.liara-review-box textarea{width:100%;min-height:110px;resize:vertical;border:1px solid #ddd;border-radius:10px;padding:10px;font:inherit;box-sizing:border-box;}
+.liara-review-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;}
+.liara-review-actions button{padding:10px 15px;border-radius:9px;border:1px solid #ddd;cursor:pointer;}
+.liara-review-actions .submit-review{background:#222;color:#fff;border-color:#222;font-weight:700;}
+.liara-review-status{font-size:13px;margin-top:10px;color:#b00020;}
+</style>
+
+<div id="liaraReviewModal" class="liara-review-modal" aria-hidden="true">
+  <div class="liara-review-box" role="dialog" aria-modal="true" aria-labelledby="liaraReviewTitle">
+    <h3 id="liaraReviewTitle">Write a Review</h3>
+    <div>Select your rating</div>
+    <div class="liara-review-stars" id="liaraReviewStars">
+      <button type="button" data-rating="1">★</button><button type="button" data-rating="2">★</button><button type="button" data-rating="3">★</button><button type="button" data-rating="4">★</button><button type="button" data-rating="5">★</button>
+    </div>
+    <textarea id="liaraReviewText" maxlength="1000" placeholder="Share your experience..."></textarea>
+    <div id="liaraReviewStatus" class="liara-review-status"></div>
+    <div class="liara-review-actions">
+      <button type="button" id="liaraReviewCancel">Cancel</button>
+      <button type="button" id="liaraReviewSubmit" class="submit-review">Submit Review</button>
+    </div>
+  </div>
+</div>
+
+<script id="liara-review-form-js">
+(function(){
+  let selectedRating=0;
+  const modal=document.getElementById('liaraReviewModal');
+  const openBtn=document.getElementById('liaraCreateReviewBtn');
+  const topBtn=document.getElementById('liaraWriteReviewBtn');
+  const cancelBtn=document.getElementById('liaraReviewCancel');
+  const submitBtn=document.getElementById('liaraReviewSubmit');
+  const textEl=document.getElementById('liaraReviewText');
+  const statusEl=document.getElementById('liaraReviewStatus');
+  const stars=[...document.querySelectorAll('#liaraReviewStars button')];
+  const list=document.getElementById('liaraReviewsList');
+
+  function setRating(n){selectedRating=n;stars.forEach(b=>b.classList.toggle('active',Number(b.dataset.rating)<=n));}
+  function open(){
+    if(!modal)return;
+    selectedRating=0; setRating(0); textEl.value=''; statusEl.textContent='';
+    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+  }
+  function close(){if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+  function renderReviews(rows){
+    if(!list)return;
+    if(!rows.length){list.innerHTML='';return;}
+    list.innerHTML=rows.map(r=>{
+      const stars='★'.repeat(Math.max(0,Math.min(5,Number(r.rating)||0)))+'☆'.repeat(5-Math.max(0,Math.min(5,Number(r.rating)||0)));
+      const d=r.created_at?new Date(r.created_at).toLocaleDateString('en-IN'):'';
+      return `<div class="liara-review-card"><div class="review-stars">${stars}</div><div class="liara-review-meta">Verified customer · ${esc(d)}</div>${r.review_text?`<div class="liara-review-text">${esc(r.review_text)}</div>`:''}</div>`;
+    }).join('');
+  }
+  async function loadReviews(){
+    if(!productId||!list)return;
+    const {data,error}=await supabaseClient.from('product_reviews').select('rating,review_text,created_at').eq('product_id',productId).order('created_at',{ascending:false}).limit(20);
+    if(!error) renderReviews(data||[]);
+  }
+  async function submit(){
+    statusEl.textContent='';
+    if(!selectedRating){statusEl.textContent='Please select a rating.';return;}
+    const {data:{user}}=await supabaseClient.auth.getUser();
+    if(!user){statusEl.textContent='Please log in to your account before submitting a review.';return;}
+    submitBtn.disabled=true; submitBtn.textContent='Submitting...';
+    const {error}=await supabaseClient.from('product_reviews').insert({product_id:Number(productId),user_id:user.id,rating:selectedRating,review_text:textEl.value.trim()||null});
+    submitBtn.disabled=false; submitBtn.textContent='Submit Review';
+    if(error){console.error(error);statusEl.textContent='Could not submit review. Please try again.';return;}
+    close(); await loadReviews();
+    if(document.getElementById('liaraReviewMessage')) document.getElementById('liaraReviewMessage').textContent='Thank you for your review!';
+  }
+  openBtn?.addEventListener('click',open);
+  topBtn?.addEventListener('click',function(e){e.preventDefault();open();});
+  cancelBtn?.addEventListener('click',close);
+  modal?.addEventListener('click',e=>{if(e.target===modal)close();});
+  stars.forEach(b=>b.addEventListener('click',()=>setRating(Number(b.dataset.rating))));
+  submitBtn?.addEventListener('click',submit);
+  loadReviews();
+})();
+</script>
 
 </body>
 
