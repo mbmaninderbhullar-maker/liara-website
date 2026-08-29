@@ -2373,9 +2373,12 @@ function normalizeUnitPriceOptions(list) {
         const size = item.size ?? item.value ?? item.quantity ?? item.weight ?? item.volume ?? "";
         const unit = normalizeUnit(item.unit ?? item.size_unit ?? item.volume_unit ?? item.weight_unit ?? "");
         const price = parsePriceNumber(item.price ?? item.rate ?? item.amount ?? item.sale_price);
+        const stockRaw = item.stock ?? item.inventory ?? item.available_stock ?? item.stock_quantity ?? item.quantity_available;
+        const hasStock = stockRaw !== undefined && stockRaw !== null && String(stockRaw).trim() !== "";
+        const stock = hasStock ? Math.max(0, Number(stockRaw) || 0) : null;
         if (size === "" || price <= 0) return null;
         const label = String(size).trim() + (unit ? " " + unit : "");
-        return { value: label, label, price };
+        return { value: label, label, price, stock };
     }).filter(Boolean);
 }
 
@@ -2383,6 +2386,14 @@ function getSelectedVariant() {
     const value = document.getElementById("productSize")?.value || "";
     const options = window.liaraUnitPriceOptions || [];
     return options.find(o => String(o.value) === String(value)) || null;
+}
+
+function getSelectedStock(product) {
+    const variant = getSelectedVariant();
+    if (variant && variant.stock !== null && variant.stock !== undefined) {
+        return Math.max(0, Number(variant.stock) || 0);
+    }
+    return Math.max(0, Number(product?.stock || 0));
 }
 
 function updateDisplayedPrice() {
@@ -2406,6 +2417,7 @@ function selectProductSize(value, button) {
     const text = document.getElementById("selectedSizeText");
     if (text) text.textContent = value ? "Selected size: " + value : "";
     updateDisplayedPrice();
+    if (window.liaraCurrentProduct) updatePurchaseArea(window.liaraCurrentProduct);
 }
 
 function renderSizeOptions(product) {
@@ -2467,16 +2479,21 @@ function renderSizeOptions(product) {
 
     window.liaraUnitPriceOptions = options;
 
-    const firstPriced = options.find(o => Number(o.price) > 0) || options[0];
+    const firstAvailable = options.find(o => Number(o.price) > 0 && (o.stock === null || o.stock === undefined || Number(o.stock) > 0));
+    const firstPriced = firstAvailable || options.find(o => Number(o.price) > 0) || options[0];
     const buttons = options.map((option, index) => {
         const hasPrice = Number(option.price) > 0;
+        const hasStockData = option.stock !== null && option.stock !== undefined;
+        const inStock = !hasStockData || Number(option.stock) > 0;
+        const selectable = hasPrice && inStock;
+        const disabledReason = !hasPrice ? "Price not configured for this size" : "Out of stock";
         return `
             <button type="button"
-                    class="size-option ${option.value === firstPriced.value ? "active" : ""} ${hasPrice ? "" : "price-not-set"}"
-                    ${hasPrice ? `onclick="selectProductSize(${JSON.stringify(option.value)}, this)"` : "disabled"}
-                    title="${hasPrice ? "Select " + escapeHtml(option.label) : "Price not configured for this size"}">
+                    class="size-option ${option.value === firstPriced.value ? "active" : ""} ${selectable ? "" : "price-not-set"}"
+                    ${selectable ? `onclick="selectProductSize(${JSON.stringify(option.value)}, this)"` : "disabled"}
+                    title="${selectable ? "Select " + escapeHtml(option.label) : disabledReason}">
                 <span>${escapeHtml(option.label)}</span>
-                <small>${hasPrice ? "₹" + Number(option.price).toLocaleString("en-IN") : "Set price"}</small>
+                <small>${hasPrice ? "₹" + Number(option.price).toLocaleString("en-IN") : "Set price"}${hasStockData && !inStock ? " · Out" : ""}</small>
             </button>
         `;
     }).join("");
@@ -2656,10 +2673,8 @@ async function loadProduct() {
         );
 
 
-    const stock =
-        Number(
-            product.stock || 0
-        );
+    const stock = getSelectedStock(product);
+    const selectedVariant = getSelectedVariant();
 
 
     const image =
@@ -2692,6 +2707,8 @@ async function loadProduct() {
     document.title =
         name +
         " | Liara Professional™";
+
+    window.liaraCurrentProduct = product;
 
 
     /* =================================================
@@ -2858,6 +2875,7 @@ async function loadProduct() {
     loadLiaraRelatedProducts();
     updateDisplayedPrice();
     renderReviewSummary(product);
+    updatePurchaseArea(product);
     loadLiaraReviews();
 }
 
@@ -3269,6 +3287,28 @@ async function getCurrentProduct() {
 }
 
 
+function updatePurchaseArea(product) {
+    const area = document.querySelector(".product-info .purchase-area");
+    if (!area || !product) return;
+
+    const stock = getSelectedStock(product);
+    if (stock > 0) {
+        area.innerHTML = `
+            <div class="stock-text in-stock">✓ In Stock <span style="font-weight:600;color:#666;">(${stock} available)</span></div>
+            <div class="quantity-box">
+                <button type="button" onclick="decreaseQuantity()">−</button>
+                <input type="number" id="quantity" value="1" min="1" max="${stock}" readonly>
+                <button type="button" onclick="increaseQuantity(${stock})">+</button>
+            </div>
+            <div class="action-buttons">
+                <button type="button" class="add-cart" onclick="addToCart()">🛒 Add to Cart</button>
+                <button type="button" class="buy-now" onclick="buyNow()">⚡ Buy Now</button>
+            </div>`;
+    } else {
+        area.innerHTML = `<div class="stock-text out-stock">✕ Out of Stock</div>`;
+    }
+}
+
 /* =====================================================
    ADD TO CART
 ===================================================== */
@@ -3313,10 +3353,8 @@ async function addToCart() {
     }
 
 
-    const stock =
-        Number(
-            product.stock || 0
-        );
+    const stock = getSelectedStock(product);
+    const selectedVariant = getSelectedVariant();
 
 
     if(stock < quantity) {
@@ -3483,10 +3521,8 @@ async function buyNow() {
     }
 
 
-    const stock =
-        Number(
-            product.stock || 0
-        );
+    const stock = getSelectedStock(product);
+    const selectedVariant = getSelectedVariant();
 
 
     if(stock < quantity) {
@@ -3512,7 +3548,7 @@ async function buyNow() {
 
         price:
             Number(
-                product.price || 0
+                selectedVariant?.price ?? product.price ?? 0
             ),
 
         image:
