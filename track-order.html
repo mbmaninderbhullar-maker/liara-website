@@ -1,16 +1,793 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liara Professional™ | Track Order</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7f3eb;color:#111}header{background:#fff;border-bottom:1px solid #e8e1d5;padding:22px 6%;display:flex;align-items:center;justify-content:space-between}.logo{font-family:Georgia,"Times New Roman",serif;font-size:27px;font-weight:700;letter-spacing:6px}nav a{margin-left:20px;text-decoration:none;color:#444;font-size:11px;font-weight:bold}nav a:hover{color:#b58a3c}main{min-height:calc(100vh - 100px);display:flex;align-items:center;justify-content:center;padding:60px 20px}.card{width:100%;max-width:620px;background:#fff;border:1px solid #e8e1d5;padding:45px;box-shadow:0 20px 55px rgba(0,0,0,.08)}.kicker{color:#b58a3c;font-size:10px;font-weight:bold;letter-spacing:3px;margin-bottom:10px}h1{margin:0 0 12px;font-size:38px}p{color:#777;font-size:13px;line-height:1.8}label{display:block;margin:25px 0 8px;font-size:11px;font-weight:bold}input{width:100%;height:48px;padding:0 14px;border:1px solid #d8d0c2;font-size:14px;outline:none}input:focus{border-color:#b58a3c}button{width:100%;height:48px;margin-top:12px;border:1px solid #191919;background:#191919;color:#fff;font-size:11px;font-weight:bold;cursor:pointer}button:hover{background:#b58a3c;border-color:#b58a3c}#result{display:none;margin-top:25px;padding:18px;background:#f7f3eb;border:1px solid #e8e1d5;font-size:12px;line-height:1.7}.back{display:inline-block;margin-top:22px;color:#b58a3c;text-decoration:none;font-size:11px;font-weight:bold}@media(max-width:600px){header{padding:18px 5%;flex-direction:column;gap:14px;align-items:flex-start}nav{width:100%;overflow:auto;white-space:nowrap}nav a{margin-left:0;margin-right:16px}.card{padding:30px 22px}h1{font-size:32px}}
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f7f3eb;
+    color:#111;
+}
+
+header{
+    background:#fff;
+    border-bottom:1px solid #e8e1d5;
+    padding:22px 6%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:27px;
+    font-weight:700;
+    letter-spacing:6px;
+}
+
+nav a{
+    margin-left:20px;
+    text-decoration:none;
+    color:#444;
+    font-size:11px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#b58a3c;
+}
+
+main{
+    min-height:calc(100vh - 100px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:60px 20px;
+}
+
+.card{
+    width:100%;
+    max-width:620px;
+    background:#fff;
+    border:1px solid #e8e1d5;
+    padding:45px;
+    box-shadow:0 20px 55px rgba(0,0,0,.08);
+}
+
+.kicker{
+    color:#b58a3c;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:3px;
+    margin-bottom:10px;
+}
+
+h1{
+    margin:0 0 12px;
+    font-size:38px;
+}
+
+p{
+    color:#777;
+    font-size:13px;
+    line-height:1.8;
+}
+
+label{
+    display:block;
+    margin:25px 0 8px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    height:48px;
+    padding:0 14px;
+    border:1px solid #d8d0c2;
+    font-size:14px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#b58a3c;
+}
+
+button{
+    width:100%;
+    height:48px;
+    margin-top:12px;
+    border:1px solid #191919;
+    background:#191919;
+    color:#fff;
+    font-size:11px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#b58a3c;
+    border-color:#b58a3c;
+}
+
+button:disabled{
+    opacity:.65;
+    cursor:wait;
+}
+
+/* =========================
+   RESULT
+========================= */
+
+#result{
+    display:none;
+    margin-top:25px;
+    padding:20px;
+    background:#f7f3eb;
+    border:1px solid #e8e1d5;
+    font-size:12px;
+    line-height:1.7;
+}
+
+.result-title{
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:2px;
+    color:#b58a3c;
+    margin-bottom:14px;
+}
+
+.status-box{
+    background:#fff;
+    border:1px solid #e8e1d5;
+    padding:18px;
+    margin-bottom:15px;
+}
+
+.status-label{
+    font-size:9px;
+    letter-spacing:2px;
+    color:#888;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.status-value{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:12px;
+}
+
+.info-item{
+    background:#fff;
+    border:1px solid #e8e1d5;
+    padding:12px;
+}
+
+.info-label{
+    display:block;
+    font-size:8px;
+    color:#999;
+    letter-spacing:1.5px;
+    font-weight:bold;
+    margin-bottom:4px;
+}
+
+.info-value{
+    font-size:12px;
+    font-weight:bold;
+    word-break:break-word;
+}
+
+.track-link{
+    display:block;
+    margin-top:15px;
+    text-align:center;
+    padding:13px;
+    background:#191919;
+    color:#fff;
+    text-decoration:none;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.track-link:hover{
+    background:#b58a3c;
+}
+
+.activity{
+    margin-top:18px;
+}
+
+.activity-title{
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:2px;
+    margin-bottom:10px;
+}
+
+.activity-item{
+    border-left:2px solid #b58a3c;
+    padding:8px 0 8px 12px;
+    margin-left:3px;
+}
+
+.activity-status{
+    font-weight:bold;
+}
+
+.activity-meta{
+    color:#888;
+    font-size:10px;
+}
+
+.error-box{
+    color:#9b2c2c;
+    background:#fff5f5;
+    border:1px solid #e5caca;
+    padding:14px;
+}
+
+.loading{
+    text-align:center;
+    color:#777;
+}
+
+.back{
+    display:inline-block;
+    margin-top:22px;
+    color:#b58a3c;
+    text-decoration:none;
+    font-size:11px;
+    font-weight:bold;
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:18px 5%;
+        flex-direction:column;
+        gap:14px;
+        align-items:flex-start;
+    }
+
+    nav{
+        width:100%;
+        overflow:auto;
+        white-space:nowrap;
+    }
+
+    nav a{
+        margin-left:0;
+        margin-right:16px;
+    }
+
+    .card{
+        padding:30px 22px;
+    }
+
+    h1{
+        font-size:32px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+}
 </style>
+
 </head>
+
 <body>
-<header><a href="index.html" style="text-decoration:none;color:inherit"><div class="logo">LIARA</div></a><nav><a href="index.html">HOME</a><a href="index.html#products">SHOP</a><a href="account.html">MY ACCOUNT</a></nav></header>
-<main><section class="card"><div class="kicker">LIARA PROFESSIONAL™</div><h1>Track Your Order</h1><p>Enter your Order ID or AWB number below to check your shipment status.</p><label for="trackingNumber">ORDER ID / AWB NUMBER</label><input id="trackingNumber" type="text" placeholder="Enter Order ID or AWB" autocomplete="off"><button type="button" onclick="trackOrder()">TRACK ORDER</button><div id="result"></div><a class="back" href="index.html">← Back to Shopping</a></section></main>
-<script>function trackOrder(){const value=document.getElementById("trackingNumber").value.trim();const result=document.getElementById("result");if(!value){result.style.display="block";result.innerHTML="Please enter your Order ID or AWB number.";return}result.style.display="block";result.innerHTML="Tracking request received for <strong>"+escapeHtml(value)+"</strong>.<br><br>Live Shiprocket tracking will be connected here."}function escapeHtml(value){return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}</script>
+
+<header>
+    <a href="index.html" style="text-decoration:none;color:inherit">
+        <div class="logo">LIARA</div>
+    </a>
+
+```
+<nav>
+    <a href="index.html">HOME</a>
+    <a href="index.html#products">SHOP</a>
+    <a href="account.html">MY ACCOUNT</a>
+</nav>
+```
+
+</header>
+
+<main>
+
+<section class="card">
+
+```
+<div class="kicker">LIARA PROFESSIONAL™</div>
+
+<h1>Track Your Order</h1>
+
+<p>
+    Enter your Order ID or AWB number below to check your latest
+    Shiprocket shipment status.
+</p>
+
+<label for="trackingNumber">
+    ORDER ID / AWB NUMBER
+</label>
+
+<input
+    id="trackingNumber"
+    type="text"
+    placeholder="Enter Order ID or AWB"
+    autocomplete="off"
+    onkeydown="if(event.key==='Enter') trackOrder()"
+>
+
+<button
+    id="trackButton"
+    type="button"
+    onclick="trackOrder()"
+>
+    TRACK ORDER
+</button>
+
+<div id="result"></div>
+
+<a class="back" href="index.html">
+    ← Back to Shopping
+</a>
+```
+
+</section>
+
+</main>
+
+<script>
+/* =========================================================
+   SUPABASE CONFIG
+========================================================= */
+
+const SUPABASE_URL =
+    "https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "PASTE_YOUR_EXISTING_SUPABASE_ANON_KEY_HERE";
+
+const TRACK_FUNCTION =
+    SUPABASE_URL + "/functions/v1/shiprocket-track-order";
+
+
+/* =========================================================
+   MAIN TRACKING FUNCTION
+========================================================= */
+
+async function trackOrder(){
+
+    const input =
+        document.getElementById("trackingNumber");
+
+    const button =
+        document.getElementById("trackButton");
+
+    const result =
+        document.getElementById("result");
+
+    const value =
+        input.value.trim();
+
+    if(!value){
+
+        result.style.display = "block";
+
+        result.innerHTML = `
+            <div class="error-box">
+                Please enter your Order ID or AWB number.
+            </div>
+        `;
+
+        input.focus();
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "CHECKING...";
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+        <div class="loading">
+            Checking Shiprocket tracking status...
+        </div>
+    `;
+
+    try{
+
+        const response = await fetch(
+            TRACK_FUNCTION,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json",
+                    "apikey":SUPABASE_ANON_KEY
+                },
+
+                body:JSON.stringify({
+                    tracking_number:value
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error ||
+                "Unable to retrieve tracking information."
+            );
+        }
+
+        showTrackingResult(data);
+
+    }catch(error){
+
+        console.error("Tracking error:",error);
+
+        result.innerHTML = `
+            <div class="error-box">
+                <strong>Tracking unavailable</strong><br><br>
+                ${escapeHtml(
+                    error.message ||
+                    "Something went wrong while checking your shipment."
+                )}
+            </div>
+        `;
+
+    }finally{
+
+        button.disabled = false;
+        button.textContent = "TRACK ORDER";
+    }
+}
+
+
+/* =========================================================
+   DISPLAY TRACKING RESULT
+========================================================= */
+
+function showTrackingResult(data){
+
+    const result =
+        document.getElementById("result");
+
+    const order =
+        data.order || {};
+
+    const status =
+        order.status ||
+        "Processing";
+
+    const awb =
+        order.awb ||
+        "Not generated yet";
+
+    const courier =
+        order.courier ||
+        "Not assigned yet";
+
+    const trackingUrl =
+        order.tracking_url ||
+        "";
+
+    const latest =
+        order.latest_activity ||
+        null;
+
+
+    let html = `
+        <div class="result-title">
+            SHIPMENT TRACKING
+        </div>
+
+        <div class="status-box">
+
+            <div class="status-label">
+                CURRENT STATUS
+            </div>
+
+            <div class="status-value">
+                ${escapeHtml(formatStatus(status))}
+            </div>
+
+            <div style="color:#777;font-size:11px">
+                ${getStatusMessage(status)}
+            </div>
+
+        </div>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="info-label">
+                    ORDER ID
+                </span>
+
+                <span class="info-value">
+                    ${escapeHtml(
+                        order.order_number || "—"
+                    )}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">
+                    AWB NUMBER
+                </span>
+
+                <span class="info-value">
+                    ${escapeHtml(awb)}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">
+                    COURIER
+                </span>
+
+                <span class="info-value">
+                    ${escapeHtml(courier)}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">
+                    SOURCE
+                </span>
+
+                <span class="info-value">
+                    ${escapeHtml(
+                        data.source === "shiprocket"
+                        ? "SHIPROCKET"
+                        : "LIARA"
+                    )}
+                </span>
+            </div>
+
+        </div>
+    `;
+
+
+    /* =====================================================
+       LATEST ACTIVITY
+    ===================================================== */
+
+    if(latest){
+
+        const activityStatus =
+            latest.status ||
+            latest.activity ||
+            latest.shipment_status ||
+            "Shipment update";
+
+        const location =
+            latest.location ||
+            latest.city ||
+            "";
+
+        const date =
+            latest.date ||
+            latest.activity_date ||
+            latest.updated_at ||
+            "";
+
+        html += `
+            <div class="activity">
+
+                <div class="activity-title">
+                    LATEST SHIPMENT UPDATE
+                </div>
+
+                <div class="activity-item">
+
+                    <div class="activity-status">
+                        ${escapeHtml(
+                            activityStatus
+                        )}
+                    </div>
+
+                    ${
+                        location
+                        ? `<div class="activity-meta">
+                            ${escapeHtml(location)}
+                           </div>`
+                        : ""
+                    }
+
+                    ${
+                        date
+                        ? `<div class="activity-meta">
+                            ${escapeHtml(formatDate(date))}
+                           </div>`
+                        : ""
+                    }
+
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    /* =====================================================
+       SHIPROCKET TRACKING LINK
+    ===================================================== */
+
+    if(trackingUrl){
+
+        html += `
+            <a
+                class="track-link"
+                href="${escapeAttribute(trackingUrl)}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                VIEW SHIPROCKET TRACKING
+            </a>
+        `;
+    }
+
+
+    /* =====================================================
+       SHIPMENT NOT CREATED YET
+    ===================================================== */
+
+    if(
+        !order.awb &&
+        data.message
+    ){
+
+        html += `
+            <div style="
+                margin-top:15px;
+                color:#777;
+                font-size:11px;
+            ">
+                ${escapeHtml(data.message)}
+            </div>
+        `;
+    }
+
+
+    result.innerHTML = html;
+}
+
+
+/* =========================================================
+   STATUS FORMAT
+========================================================= */
+
+function formatStatus(status){
+
+    return String(status)
+        .replace(/_/g," ")
+        .replace(/\b\w/g,function(char){
+            return char.toUpperCase();
+        });
+}
+
+
+function getStatusMessage(status){
+
+    const value =
+        String(status).toLowerCase();
+
+    if(
+        value.includes("delivered")
+    ){
+        return "Your order has been delivered.";
+    }
+
+    if(
+        value.includes("out for delivery")
+    ){
+        return "Your order is out for delivery.";
+    }
+
+    if(
+        value.includes("transit") ||
+        value.includes("shipped")
+    ){
+        return "Your shipment is on the way.";
+    }
+
+    if(
+        value.includes("cancel")
+    ){
+        return "This shipment has been cancelled.";
+    }
+
+    if(
+        value.includes("pickup")
+    ){
+        return "The courier pickup process has started.";
+    }
+
+    return "Your order is being processed.";
+}
+
+
+/* =========================================================
+   DATE FORMAT
+========================================================= */
+
+function formatDate(value){
+
+    try{
+
+        const date =
+            new Date(value);
+
+        if(
+            Number.isNaN(
+                date.getTime()
+            )
+        ){
+            return value;
+        }
+
+        return date.toLocaleString(
+            "en-IN",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric",
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+    }catch(e){
+
+        return value;
+    }
+}
+
+
+/* =========================================================
+   SECURITY HELPERS
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+function escapeAttribute(value){
+
+    return escapeHtml(value);
+}
+</script>
+
 </body>
 </html>
