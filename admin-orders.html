@@ -4397,98 +4397,84 @@ async function editProduct(id){
             <p>PRODUCT MANAGEMENT</p>
             <h2>📏 Size / ML & Price</h2>
         </div>
+<div class="form-group full">
+    <div class="admin-box" id="sizePriceManager">
 
-        <div id="variantList"></div>
+        <div
+            class="size-price-row"
+            style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;"
+        >
+            <input
+                type="text"
+                class="size-input"
+                placeholder="Size / ML"
+                style="flex:1;min-width:120px;padding:10px;border:1px solid #ddd;border-radius:8px;"
+            >
+
+            <input
+                type="number"
+                class="price-input"
+                placeholder="Price"
+                style="flex:1;min-width:120px;padding:10px;border:1px solid #ddd;border-radius:8px;"
+            >
+
+            <button
+                type="button"
+                class="btn"
+                onclick="addVariantRow()">
+                ＋ Add Size
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function addVariantRow() {
+
+    const manager = document.getElementById("sizePriceManager");
+
+    if (!manager) {
+        alert("Size manager not found");
+        return;
+    }
+
+    const row = document.createElement("div");
+
+    row.className = "size-price-row";
+
+    row.style.cssText = `
+        display:flex;
+        gap:10px;
+        align-items:center;
+        flex-wrap:wrap;
+        margin-top:10px;
+    `;
+
+    row.innerHTML = `
+        <input
+            type="text"
+            class="size-input"
+            placeholder="Size / ML"
+            style="flex:1;min-width:120px;padding:10px;border:1px solid #ddd;border-radius:8px;"
+        >
+
+        <input
+            type="number"
+            class="price-input"
+            placeholder="Price"
+            style="flex:1;min-width:120px;padding:10px;border:1px solid #ddd;border-radius:8px;"
+        >
 
         <button
             type="button"
             class="btn"
-            onclick="addVariantRow()">
-            ＋ Add Size
+            onclick="this.parentElement.remove()">
+            ✕
         </button>
-
-    </div>
-</div>
-                <label>🌿 Key Ingredients</label>
-                <textarea
-                    id="editProductKeyIngredientsInput"
-                    placeholder="Example:
-Niacinamide — Supports the skin barrier
-Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredients || "")}</textarea>
-            </div>
-
-            <div class="form-group full">
-                <label>🧴 How to Use</label>
-                <textarea
-                    id="editProductHowToUseInput"
-                    placeholder="Write simple usage instructions...">${escapeHtml(product.how_to_use || "")}</textarea>
-            </div>
-
-            <div class="form-group full">
-                <label>✨ Benefits</label>
-                <textarea
-                    id="editProductBenefitsInput"
-                    placeholder="Write the main product benefits...">${escapeHtml(product.benefits || "")}</textarea>
-            </div>
-
-            <div class="form-group full">
-                <label>📷 Product Photo</label>
-                <div class="upload-box">
-                    <strong>Replace Product Photo (Optional)</strong>
-                    <br>
-                    <input
-                        id="editProductPhotoInput"
-                        type="file"
-                        accept="image/*"
-                        onchange="previewEditPhoto(event)">
-
-                    <div
-                        id="editPhotoPreview"
-                        style="margin-top:15px;">
-                        ${product.image_url ? `<img src="${escapeHtml(product.image_url)}" alt="Current Product" style="width:170px;height:170px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">` : ""}
-                    </div>
-
-                    <div
-                        id="editUploadStatus"
-                        style="margin-top:10px;color:#287a3e;font-size:12px;">
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
-            <button
-                class="btn green-btn"
-                onclick="saveEditedProduct('${escapeHtml(String(product.id))}')">
-                💾 Save Changes
-            </button>
-
-            <button
-                class="btn gray-btn"
-                onclick="loadProducts()">
-                Cancel
-            </button>
-        </div>
-
-    </div>
     `;
-}
 
-function previewEditPhoto(event){
-
-    const file = event.target.files[0];
-    if(!file) return;
-
-    const preview = document.getElementById("editPhotoPreview");
-    if(!preview) return;
-
-    preview.innerHTML = `
-        <img
-            src="${URL.createObjectURL(file)}"
-            alt="New Product Photo"
-            style="width:170px;height:170px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">
-    `;
+    manager.appendChild(row);
 }
 
 async function saveEditedProduct(id){
