@@ -2767,13 +2767,47 @@ function setLiaraReviewRating(rating){
     });
 }
 
-function openLiaraReviewForm(){
+async function openLiaraReviewForm(){
     const form = document.getElementById("liaraReviewForm");
     if(!form) return;
+
+    const msg = document.getElementById("liaraReviewFormMessage");
+    const textEl = document.getElementById("liaraReviewText");
+
+    const {data:{user}} = await supabaseClient.auth.getUser();
+
+    if(!user){
+        if(msg) msg.textContent = "Please log in to write a review.";
+        form.hidden = false;
+        form.scrollIntoView({behavior:"smooth", block:"nearest"});
+        return;
+    }
+
+    const {data:myReview, error} = await supabaseClient
+        .from("product_reviews")
+        .select("rating, review_text")
+        .eq("product_id", productId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
     form.hidden = false;
     form.scrollIntoView({behavior:"smooth", block:"nearest"});
-    const msg = document.getElementById("liaraReviewFormMessage");
-    if(msg) msg.textContent = "";
+
+    if(error){
+        console.error("My review lookup error:", error);
+        if(msg) msg.textContent = "";
+        return;
+    }
+
+    if(myReview){
+        setLiaraReviewRating(myReview.rating);
+        if(textEl) textEl.value = myReview.review_text || "";
+        if(msg) msg.textContent = "You already reviewed this product. You can update your review.";
+    }else{
+        setLiaraReviewRating(0);
+        if(textEl) textEl.value = "";
+        if(msg) msg.textContent = "";
+    }
 }
 
 function closeLiaraReviewForm(){
@@ -2792,9 +2826,6 @@ async function loadLiaraReviews(){
     const countEl = document.getElementById("liaraReviewLiveCount");
     const bigStars = document.getElementById("liaraReviewBigStars");
 
-    // The product image/title area is rendered dynamically, so its review
-    // summary does not exist when renderReviewSummary(product) first runs.
-    // Update that top summary here, after the product has been rendered.
     const topStars = document.getElementById("liaraStars");
     const topCount = document.getElementById("liaraReviewCount");
 
@@ -2802,7 +2833,7 @@ async function loadLiaraReviews(){
 
     const {data, error} = await supabaseClient
         .from("product_reviews")
-        .select("rating, review_text, created_at")
+        .select("rating, review_text, created_at, customer_name, user_id")
         .eq("product_id", productId)
         .order("created_at", {ascending:false});
 
@@ -2823,20 +2854,10 @@ async function loadLiaraReviews(){
         : "No reviews yet";
     const starText = count ? renderLiaraReviewStars(average) : "☆☆☆☆☆";
 
-    if(countEl){
-        countEl.textContent = reviewText;
-    }
-    if(bigStars){
-        bigStars.textContent = starText;
-    }
-
-    // Keep the review rating beside the product photo/title in sync too.
-    if(topCount){
-        topCount.textContent = reviewText;
-    }
-    if(topStars){
-        topStars.textContent = starText;
-    }
+    if(countEl) countEl.textContent = reviewText;
+    if(bigStars) bigStars.textContent = starText;
+    if(topCount) topCount.textContent = reviewText;
+    if(topStars) topStars.textContent = starText;
 
     if(!count){
         list.innerHTML = '<div class="detail-line">Be the first to review this product.</div>';
@@ -2847,10 +2868,14 @@ async function loadLiaraReviews(){
         const date = review.created_at
             ? new Date(review.created_at).toLocaleDateString("en-IN")
             : "";
+        const customerName = String(review.customer_name || "Customer").trim() || "Customer";
+
         return `
             <div class="liara-review-card">
                 <div class="liara-review-card-stars">${renderLiaraReviewStars(review.rating)}</div>
-                <div class="liara-review-card-meta">${escapeHtml(date)}</div>
+                <div class="liara-review-card-meta">
+                    <strong>${escapeHtml(customerName)}</strong>${date ? " • " + escapeHtml(date) : ""}
+                </div>
                 <div class="liara-review-card-text">${escapeHtml(review.review_text || "")}</div>
             </div>
         `;
@@ -2888,22 +2913,65 @@ async function submitLiaraReview(){
     if(submitBtn) submitBtn.disabled = true;
     if(message) message.textContent = "Submitting review...";
 
-    const {error} = await supabaseClient
+    // One customer can have only one review for each product.
+    // If a review already exists, update it instead of creating a duplicate.
+    const {data: existingReview, error: existingError} = await supabaseClient
         .from("product_reviews")
-        .insert([{
-            product_id: Number(productId),
-            user_id: user.id,
-            rating: liaraSelectedReviewRating,
-            review_text: reviewText
-        }]);
+        .select("id")
+        .eq("product_id", Number(productId))
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if(existingError){
+        console.error("Review lookup error:", existingError);
+        if(submitBtn) submitBtn.disabled = false;
+        if(message) message.textContent = "Review could not be checked. Please try again.";
+        return;
+    }
+
+    const customerName =
+        String(
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            user.email?.split("@")[0] ||
+            "Customer"
+        ).trim() || "Customer";
+
+    let saveError = null;
+
+    if(existingReview?.id){
+        const result = await supabaseClient
+            .from("product_reviews")
+            .update({
+                rating: liaraSelectedReviewRating,
+                review_text: reviewText,
+                customer_name: customerName
+            })
+            .eq("id", existingReview.id)
+            .eq("user_id", user.id);
+
+        saveError = result.error;
+    } else {
+        const result = await supabaseClient
+            .from("product_reviews")
+            .insert([{
+                product_id: Number(productId),
+                user_id: user.id,
+                customer_name: customerName,
+                rating: liaraSelectedReviewRating,
+                review_text: reviewText
+            }]);
+
+        saveError = result.error;
+    }
 
     if(submitBtn) submitBtn.disabled = false;
 
-    if(error){
-        console.error("Review submit error:", error);
+    if(saveError){
+        console.error("Review submit/update error:", saveError);
         if(message){
             message.textContent =
-                error.code === "23505"
+                saveError.code === "23505"
                     ? "You have already submitted a review for this product."
                     : "Review could not be submitted. Please try again.";
         }
@@ -2912,14 +2980,17 @@ async function submitLiaraReview(){
 
     if(textEl) textEl.value = "";
     setLiaraReviewRating(0);
-    if(message) message.textContent = "Review submitted successfully.";
+    if(message) {
+        message.textContent = existingReview?.id
+            ? "Review updated successfully."
+            : "Review submitted successfully.";
+    }
     await loadLiaraReviews();
 
     setTimeout(function(){
         closeLiaraReviewForm();
     }, 700);
 }
-
 /* =====================================================
    GET CURRENT PRODUCT
 ===================================================== */
