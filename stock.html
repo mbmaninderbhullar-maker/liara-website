@@ -1,11 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Liara Professional™ | Stock</title>
+<title>Liara Professional™ | Stock Management</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -18,14 +18,14 @@
 body{
     margin:0;
     font-family:Arial,Helvetica,sans-serif;
-    background:#f5f6f8;
-    color:#222;
+    background:#f4f6f8;
+    color:#171717;
 }
 
 .header{
     background:#111827;
     color:#fff;
-    padding:16px;
+    padding:18px 16px;
 }
 
 .header-inner{
@@ -37,170 +37,214 @@ body{
     gap:15px;
 }
 
-.header h1{
-    margin:0;
+.logo-title{
     font-size:21px;
-    font-weight:400;
+    font-weight:500;
+    letter-spacing:.2px;
 }
 
-.header p{
-    margin:4px 0 0;
-    opacity:.72;
-    font-size:12px;
+.logo-sub{
+    margin-top:4px;
+    font-size:11px;
+    color:#aeb5c1;
 }
 
 .back-btn{
-    background:#fff;
-    color:#111827;
     text-decoration:none;
-    padding:8px 12px;
-    border-radius:7px;
+    color:#111827;
+    background:#fff;
+    padding:9px 13px;
+    border-radius:8px;
     font-size:12px;
 }
 
 .container{
     max-width:1200px;
-    margin:18px auto;
+    margin:20px auto;
     padding:0 15px;
 }
+
+/* CARDS */
 
 .cards{
     display:grid;
     grid-template-columns:repeat(5,1fr);
-    gap:10px;
-    margin-bottom:15px;
+    gap:11px;
+    margin-bottom:16px;
 }
 
 .card{
     background:#fff;
-    border-radius:10px;
-    padding:14px;
-    box-shadow:0 2px 12px rgba(0,0,0,.05);
+    border:1px solid #e9ebef;
+    border-radius:12px;
+    padding:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.04);
 }
 
 .card-title{
-    color:#777;
-    font-size:11px;
-    margin-bottom:6px;
+    font-size:10px;
+    color:#7b8088;
+    margin-bottom:7px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
 }
 
 .card-number{
-    font-size:21px;
+    font-size:22px;
+    font-weight:500;
 }
+
+/* TOOLBAR */
 
 .toolbar{
     background:#fff;
+    border:1px solid #e9ebef;
+    border-radius:12px;
     padding:11px;
-    border-radius:10px;
     display:flex;
     gap:8px;
     flex-wrap:wrap;
-    margin-bottom:15px;
-    box-shadow:0 2px 12px rgba(0,0,0,.05);
+    margin-bottom:16px;
+    box-shadow:0 3px 15px rgba(0,0,0,.04);
 }
 
 .search{
     flex:1;
-    min-width:180px;
+    min-width:200px;
 }
 
 input,
 select{
-    padding:9px 10px;
-    border:1px solid #ddd;
-    border-radius:7px;
-    font-size:12px;
+    border:1px solid #dfe2e7;
+    background:#fff;
+    border-radius:8px;
+    padding:9px 11px;
     outline:none;
+    font-size:12px;
+}
+
+input:focus,
+select:focus{
+    border-color:#111827;
 }
 
 button{
     border:0;
-    border-radius:7px;
-    padding:9px 12px;
+    border-radius:8px;
+    padding:9px 13px;
     cursor:pointer;
     font-size:12px;
 }
 
-.refresh{
+.dark-btn{
     background:#111827;
     color:#fff;
 }
 
-.add{
-    background:#111827;
-    color:#fff;
+.light-btn{
+    background:#eef0f3;
+    color:#222;
 }
+
+/* TABLE */
 
 .table-box{
     background:#fff;
-    border-radius:10px;
+    border:1px solid #e9ebef;
+    border-radius:12px;
     overflow:hidden;
-    box-shadow:0 2px 12px rgba(0,0,0,.05);
+    box-shadow:0 3px 15px rgba(0,0,0,.04);
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    table-layout:fixed;
-}
-
-th,
-td{
-    padding:9px 5px;
-    border-bottom:1px solid #eee;
-    text-align:left;
-    font-size:10px;
-    word-break:break-word;
 }
 
 th{
     background:#fafafa;
-    color:#666;
-    font-size:9px;
+    color:#70757d;
+    text-align:left;
+    padding:12px 9px;
+    font-size:10px;
+    font-weight:500;
+    border-bottom:1px solid #e9ebef;
+}
+
+td{
+    padding:12px 9px;
+    border-bottom:1px solid #f0f1f3;
+    font-size:11px;
+    vertical-align:middle;
+}
+
+tr:last-child td{
+    border-bottom:0;
 }
 
 .product-name{
     font-weight:500;
 }
 
-.stock-number{
-    font-size:12px;
+.variant-box{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    background:#f1f3f5;
+    border-radius:7px;
+    padding:5px 7px;
+    font-weight:500;
+}
+
+.stock-main{
+    font-size:14px;
+    font-weight:500;
+}
+
+.stock-unit{
+    color:#777;
+    font-size:9px;
+    margin-left:3px;
+}
+
+.muted{
+    color:#777;
 }
 
 .status{
     display:inline-block;
-    padding:4px 6px;
-    border-radius:15px;
-    font-size:8px;
+    padding:5px 8px;
+    border-radius:20px;
+    font-size:9px;
 }
 
-.available{
+.status-good{
     background:#dcfce7;
     color:#166534;
 }
 
-.low{
+.status-low{
     background:#fef3c7;
     color:#92400e;
 }
 
-.out{
+.status-out{
     background:#fee2e2;
     color:#991b1b;
 }
 
-.update{
+.update-btn{
     background:#111827;
     color:#fff;
-    padding:6px 7px;
-    font-size:9px;
+    padding:7px 10px;
+    font-size:10px;
 }
 
 .loading,
 .empty,
 .error{
     text-align:center;
-    padding:32px;
+    padding:35px;
     color:#777;
 }
 
@@ -208,35 +252,50 @@ th{
     color:#991b1b;
 }
 
+/* MODAL */
+
 .modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.65);
+    background:rgba(0,0,0,.58);
     display:none;
     align-items:center;
     justify-content:center;
     z-index:9999;
+    padding:15px;
 }
 
 .modal-box{
     background:#fff;
-    width:min(430px,92%);
+    width:420px;
+    max-width:100%;
     max-height:90vh;
     overflow:auto;
-    border-radius:12px;
+    border-radius:14px;
     padding:20px;
+    box-shadow:0 15px 50px rgba(0,0,0,.2);
 }
 
-.modal-box h2{
-    margin:0 0 14px;
+.modal-title{
     font-size:19px;
-    font-weight:400;
+    font-weight:500;
+    margin-bottom:15px;
+}
+
+.modal-info{
+    background:#f5f6f8;
+    padding:11px;
+    border-radius:9px;
+    font-size:11px;
+    line-height:1.7;
+    margin-bottom:15px;
 }
 
 .modal-box label{
     display:block;
+    font-size:11px;
     margin:12px 0 6px;
-    font-size:12px;
+    color:#555;
 }
 
 .modal-box input,
@@ -244,39 +303,39 @@ th{
     width:100%;
 }
 
-.product-info{
-    background:#f5f6f8;
-    padding:10px;
-    border-radius:8px;
-    font-size:12px;
-    line-height:1.6;
-}
-
-.note{
-    color:#777;
-    font-size:10px;
-    margin-top:4px;
+.form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
 }
 
 .modal-actions{
     display:flex;
     gap:8px;
-    margin-top:17px;
+    margin-top:18px;
 }
 
 .modal-actions button{
     flex:1;
 }
 
-.save{
+.save-btn{
     background:#111827;
     color:#fff;
 }
 
-.cancel{
-    background:#ddd;
+.cancel-btn{
+    background:#e5e7eb;
     color:#222;
 }
+
+.help-text{
+    font-size:9px;
+    color:#888;
+    margin-top:4px;
+}
+
+/* TOAST */
 
 .toast{
     position:fixed;
@@ -284,63 +343,77 @@ th{
     bottom:15px;
     background:#111827;
     color:#fff;
-    padding:10px 14px;
-    border-radius:8px;
+    padding:11px 15px;
+    border-radius:9px;
+    font-size:11px;
     display:none;
     z-index:10000;
-    font-size:12px;
 }
 
-@media(max-width:950px){
+/* MOBILE */
+
+@media(max-width:900px){
 
     .cards{
         grid-template-columns:repeat(3,1fr);
     }
 
+    .table-box{
+        overflow-x:auto;
+    }
+
+    table{
+        min-width:900px;
+    }
+
 }
 
-@media(max-width:650px){
+@media(max-width:600px){
 
     .container{
-        padding:0 7px;
+        padding:0 9px;
     }
 
     .cards{
         grid-template-columns:1fr 1fr;
-        gap:7px;
+        gap:8px;
     }
 
     .card{
-        padding:11px;
+        padding:12px;
     }
 
     .card-number{
-        font-size:18px;
+        font-size:19px;
     }
 
     .search{
         min-width:100%;
     }
 
-    th,
-    td{
-        padding:7px 3px;
-        font-size:8px;
+}
+
+@media(max-width:430px){
+
+    .header{
+        padding:15px 10px;
     }
 
-    th{
-        font-size:7px;
+    .logo-title{
+        font-size:18px;
     }
 
-    .update{
-        padding:5px 5px;
-        font-size:8px;
+    .back-btn{
+        padding:8px 10px;
+    }
+
+    .form-row{
+        grid-template-columns:1fr;
     }
 
 }
 
 </style>
-
 </head>
 
 <body>
@@ -351,15 +424,13 @@ th{
     <div class="header-inner">
 
         <div>
-
-            <h1>
+            <div class="logo-title">
                 Stock Management
-            </h1>
+            </div>
 
-            <p>
-                Liara Professional™ — Separate Product Variants
-            </p>
-
+            <div class="logo-sub">
+                Liara Professional™ • Warehouse & Website Stock
+            </div>
         </div>
 
         <a
@@ -377,10 +448,11 @@ th{
 <div class="container">
 
 
+    <!-- SUMMARY -->
+
     <div class="cards">
 
         <div class="card">
-
             <div class="card-title">
                 Variants
             </div>
@@ -391,12 +463,10 @@ th{
             >
                 0
             </div>
-
         </div>
 
 
         <div class="card">
-
             <div class="card-title">
                 Warehouse
             </div>
@@ -407,44 +477,38 @@ th{
             >
                 0
             </div>
-
         </div>
 
 
         <div class="card">
-
             <div class="card-title">
-                Online Given
+                Website Given
             </div>
 
             <div
                 class="card-number"
-                id="totalOnline"
+                id="totalOnlineGiven"
             >
                 0
             </div>
-
         </div>
 
 
         <div class="card">
-
             <div class="card-title">
-                Offline Given
+                Website Sold
             </div>
 
             <div
                 class="card-number"
-                id="totalOffline"
+                id="totalOnlineSold"
             >
                 0
             </div>
-
         </div>
 
 
         <div class="card">
-
             <div class="card-title">
                 Pending
             </div>
@@ -455,11 +519,12 @@ th{
             >
                 0
             </div>
-
         </div>
 
     </div>
 
+
+    <!-- TOOLBAR -->
 
     <div class="toolbar">
 
@@ -468,29 +533,17 @@ th{
             class="search"
             type="text"
             placeholder="Search product..."
-            oninput="renderProducts()"
+            oninput="render()"
         >
 
 
         <select
             id="unitFilter"
-            onchange="renderProducts()"
+            onchange="render()"
         >
 
             <option value="all">
                 All Units
-            </option>
-
-            <option value="pcs">
-                PCS
-            </option>
-
-            <option value="ml">
-                ML
-            </option>
-
-            <option value="ltr">
-                Litre
             </option>
 
             <option value="g">
@@ -501,11 +554,23 @@ th{
                 KG
             </option>
 
+            <option value="ml">
+                ML
+            </option>
+
+            <option value="ltr">
+                Litre
+            </option>
+
+            <option value="pcs">
+                PCS
+            </option>
+
         </select>
 
 
         <button
-            class="add"
+            class="dark-btn"
             onclick="openAddModal()"
         >
             + Add Variant
@@ -513,7 +578,7 @@ th{
 
 
         <button
-            class="refresh"
+            class="light-btn"
             onclick="loadData()"
         >
             Refresh
@@ -521,6 +586,8 @@ th{
 
     </div>
 
+
+    <!-- TABLE -->
 
     <div class="table-box">
 
@@ -536,15 +603,13 @@ th{
 
                     <th>Size</th>
 
-                    <th>Unit</th>
-
                     <th>Warehouse</th>
 
-                    <th>Online Given</th>
+                    <th>Website Given</th>
 
-                    <th>Online Sold</th>
+                    <th>Website Sold</th>
 
-                    <th>Online Balance</th>
+                    <th>Website Balance</th>
 
                     <th>Offline</th>
 
@@ -564,7 +629,7 @@ th{
                 <tr>
 
                     <td
-                        colspan="12"
+                        colspan="11"
                         class="loading"
                     >
                         Loading stock...
@@ -581,6 +646,8 @@ th{
 </div>
 
 
+<!-- MODAL -->
+
 <div
     class="modal"
     id="stockModal"
@@ -588,15 +655,20 @@ th{
 
     <div class="modal-box">
 
-        <h2 id="modalTitle">
-            Update Variant
-        </h2>
+        <div
+            class="modal-title"
+            id="modalTitle"
+        >
+            Add Stock Variant
+        </div>
 
 
         <div
-            id="modalProduct"
-            class="product-info"
-        ></div>
+            class="modal-info"
+            id="modalInfo"
+        >
+            Product variant information
+        </div>
 
 
         <label>
@@ -608,115 +680,133 @@ th{
         ></select>
 
 
-        <label>
-            Size
-        </label>
+        <div class="form-row">
 
-        <input
-            id="stockSize"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="Example: 100"
-        >
+            <div>
 
+                <label>
+                    Size
+                </label>
 
-        <label>
-            Unit
-        </label>
+                <input
+                    id="sizeInput"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="100"
+                >
 
-        <select id="stockUnit">
+                <div class="help-text">
+                    Example: 100
+                </div>
 
-            <option value="pcs">
-                Pieces
-            </option>
-
-            <option value="ml">
-                ML
-            </option>
-
-            <option value="ltr">
-                Litre
-            </option>
-
-            <option value="g">
-                Gram
-            </option>
-
-            <option value="kg">
-                KG
-            </option>
-
-        </select>
+            </div>
 
 
-        <label>
-            Warehouse Stock
-        </label>
+            <div>
 
-        <input
-            id="stockQuantity"
-            type="number"
-            min="0"
-            step="1"
-            placeholder="Example: 10"
-        >
+                <label>
+                    Size Unit
+                </label>
 
+                <select
+                    id="unitInput"
+                >
 
-        <label>
-            Online Website — Given
-        </label>
+                    <option value="g">
+                        Gram (g)
+                    </option>
 
-        <input
-            id="onlineGiven"
-            type="number"
-            min="0"
-            step="1"
-            placeholder="Example: 5"
-        >
+                    <option value="kg">
+                        KG
+                    </option>
 
-        <div class="note">
-            Website nu ditta hoya stock.
+                    <option value="ml">
+                        ML
+                    </option>
+
+                    <option value="ltr">
+                        Litre
+                    </option>
+
+                    <option value="pcs">
+                        PCS
+                    </option>
+
+                </select>
+
+            </div>
+
         </div>
 
 
         <label>
-            Online Website — Sold
+            Warehouse Stock — PCS
         </label>
 
         <input
-            id="onlineSold"
+            id="warehouseInput"
             type="number"
             min="0"
             step="1"
-            placeholder="Example: 2"
+            placeholder="20"
+        >
+
+        <div class="help-text">
+            Example: Product size 100g, warehouse quantity 20 PCS.
+        </div>
+
+
+        <label>
+            Website Stock Given — PCS
+        </label>
+
+        <input
+            id="onlineGivenInput"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="0"
         >
 
 
         <label>
-            Offline Given
+            Website Sold — PCS
         </label>
 
         <input
-            id="offlineGiven"
+            id="onlineSoldInput"
             type="number"
             min="0"
             step="1"
-            placeholder="Example: 3"
+            placeholder="0"
+        >
+
+
+        <label>
+            Offline Given — PCS
+        </label>
+
+        <input
+            id="offlineInput"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="0"
         >
 
 
         <div class="modal-actions">
 
             <button
-                class="save"
+                class="save-btn"
                 onclick="saveVariant()"
             >
                 Save
             </button>
 
             <button
-                class="cancel"
+                class="cancel-btn"
                 onclick="closeModal()"
             >
                 Cancel
@@ -766,24 +856,24 @@ const VARIANT_TABLE =
 
 
 /* =========================================================
-   VARIABLES
+   DATA
 ========================================================= */
 
-let allProducts = [];
+let products = [];
 
-let allVariants = [];
+let variants = [];
 
-let selectedVariant = null;
+let editingVariant = null;
 
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-function num(value){
+function number(value){
 
     const n =
-        Number(value ?? 0);
+        Number(value);
 
     return Number.isFinite(n)
         ? n
@@ -792,7 +882,7 @@ function num(value){
 }
 
 
-function escapeHtml(value){
+function safe(value){
 
     return String(value ?? "")
         .replace(/&/g,"&amp;")
@@ -804,7 +894,7 @@ function escapeHtml(value){
 }
 
 
-function productName(product){
+function getName(product){
 
     return (
         product.name ||
@@ -815,49 +905,50 @@ function productName(product){
 }
 
 
-function onlineBalance(variant){
+function websiteBalance(variant){
 
     return Math.max(
         0,
-        num(variant.online_given)
+        number(variant.online_given)
         -
-        num(variant.online_sold)
+        number(variant.online_sold)
     );
 
 }
 
 
-function pending(variant){
+function pendingStock(variant){
 
     return Math.max(
         0,
-        num(variant.warehouse_stock)
+        number(variant.warehouse_stock)
         -
-        num(variant.online_given)
+        number(variant.online_given)
         -
-        num(variant.offline_given)
+        number(variant.offline_given)
     );
 
 }
 
 
-function showToast(message){
+function toast(message){
 
-    const toast =
+    const el =
         document.getElementById(
             "toast"
         );
 
-    toast.textContent =
+    el.textContent =
         message;
 
-    toast.style.display =
+    el.style.display =
         "block";
+
 
     setTimeout(
         function(){
 
-            toast.style.display =
+            el.style.display =
                 "none";
 
         },
@@ -868,7 +959,7 @@ function showToast(message){
 
 
 /* =========================================================
-   LOAD PRODUCTS + VARIANTS
+   LOAD
 ========================================================= */
 
 async function loadData(){
@@ -878,12 +969,13 @@ async function loadData(){
             "stockBody"
         );
 
+
     body.innerHTML = `
 
         <tr>
 
             <td
-                colspan="12"
+                colspan="11"
                 class="loading"
             >
                 Loading stock...
@@ -896,11 +988,9 @@ async function loadData(){
 
     try{
 
-        const productsResult =
+        const p =
             await supabaseClient
-                .from(
-                    PRODUCT_TABLE
-                )
+                .from(PRODUCT_TABLE)
                 .select("*")
                 .order(
                     "id",
@@ -910,20 +1000,16 @@ async function loadData(){
                 );
 
 
-        if(
-            productsResult.error
-        ){
+        if(p.error){
 
-            throw productsResult.error;
+            throw p.error;
 
         }
 
 
-        const variantsResult =
+        const v =
             await supabaseClient
-                .from(
-                    VARIANT_TABLE
-                )
+                .from(VARIANT_TABLE)
                 .select("*")
                 .order(
                     "id",
@@ -933,31 +1019,27 @@ async function loadData(){
                 );
 
 
-        if(
-            variantsResult.error
-        ){
+        if(v.error){
 
-            throw variantsResult.error;
+            throw v.error;
 
         }
 
 
-        allProducts =
-            productsResult.data || [];
+        products =
+            p.data || [];
 
 
-        allVariants =
-            variantsResult.data || [];
+        variants =
+            v.data || [];
 
 
-        renderProducts();
+        render();
 
+    }
+    catch(error){
 
-    }catch(error){
-
-        console.error(
-            error
-        );
+        console.error(error);
 
 
         body.innerHTML = `
@@ -965,15 +1047,13 @@ async function loadData(){
             <tr>
 
                 <td
-                    colspan="12"
+                    colspan="11"
                     class="error"
                 >
-
-                    ${escapeHtml(
+                    ${safe(
                         error.message ||
                         "Unable to load stock."
                     )}
-
                 </td>
 
             </tr>
@@ -989,7 +1069,7 @@ async function loadData(){
    RENDER
 ========================================================= */
 
-function renderProducts(){
+function render(){
 
     const body =
         document.getElementById(
@@ -1005,7 +1085,7 @@ function renderProducts(){
         .trim();
 
 
-    const unitFilter =
+    const filter =
         document.getElementById(
             "unitFilter"
         ).value;
@@ -1016,20 +1096,20 @@ function renderProducts(){
 
     let warehouseTotal = 0;
 
-    let onlineTotal = 0;
+    let onlineGivenTotal = 0;
 
-    let offlineTotal = 0;
+    let onlineSoldTotal = 0;
 
     let pendingTotal = 0;
 
     let shown = 0;
 
 
-    allVariants.forEach(
+    variants.forEach(
         function(variant){
 
             const product =
-                allProducts.find(
+                products.find(
                     function(p){
 
                         return String(
@@ -1050,13 +1130,11 @@ function renderProducts(){
 
 
             const name =
-                productName(
-                    product
-                );
+                getName(product);
 
 
             const size =
-                num(
+                number(
                     variant.size
                 );
 
@@ -1069,37 +1147,37 @@ function renderProducts(){
 
 
             const warehouse =
-                num(
+                number(
                     variant.warehouse_stock
                 );
 
 
             const onlineGiven =
-                num(
+                number(
                     variant.online_given
                 );
 
 
             const onlineSold =
-                num(
+                number(
                     variant.online_sold
                 );
 
 
-            const online =
-                onlineBalance(
+            const website =
+                websiteBalance(
                     variant
                 );
 
 
             const offline =
-                num(
+                number(
                     variant.offline_given
                 );
 
 
-            const pendingStock =
-                pending(
+            const pending =
+                pendingStock(
                     variant
                 );
 
@@ -1108,16 +1186,16 @@ function renderProducts(){
                 warehouse;
 
 
-            onlineTotal +=
+            onlineGivenTotal +=
                 onlineGiven;
 
 
-            offlineTotal +=
-                offline;
+            onlineSoldTotal +=
+                onlineSold;
 
 
             pendingTotal +=
-                pendingStock;
+                pending;
 
 
             if(
@@ -1133,8 +1211,8 @@ function renderProducts(){
 
 
             if(
-                unitFilter !== "all" &&
-                unit !== unitFilter
+                filter !== "all" &&
+                unit !== filter
             ){
 
                 return;
@@ -1145,31 +1223,30 @@ function renderProducts(){
             shown++;
 
 
-            let status =
-                "available";
-
+            let statusClass =
+                "status-good";
 
             let statusText =
-                "Available";
+                "Healthy";
 
 
             if(
-                pendingStock <= 0
+                warehouse <= 0
             ){
 
-                status =
-                    "out";
+                statusClass =
+                    "status-out";
 
                 statusText =
-                    "No Pending";
+                    "Out";
 
             }
             else if(
-                pendingStock <= 5
+                pending <= 5
             ){
 
-                status =
-                    "low";
+                statusClass =
+                    "status-low";
 
                 statusText =
                     "Low";
@@ -1191,62 +1268,84 @@ function renderProducts(){
 
 
                 <td>
-
                     <div class="product-name">
-
-                        ${escapeHtml(
-                            name
-                        )}
-
+                        ${safe(name)}
                     </div>
+                </td>
+
+
+                <td>
+
+                    <span class="variant-box">
+
+                        ${size}
+
+                        <span class="muted">
+                            ${safe(unit)}
+                        </span>
+
+                    </span>
 
                 </td>
 
 
                 <td>
-                    ${size}
-                </td>
 
+                    <span class="stock-main">
+                        ${warehouse}
+                    </span>
 
-                <td>
-                    ${escapeHtml(unit)}
-                </td>
+                    <span class="stock-unit">
+                        PCS
+                    </span>
 
-
-                <td class="stock-number">
-                    ${warehouse}
                 </td>
 
 
                 <td>
                     ${onlineGiven}
+                    <span class="stock-unit">
+                        PCS
+                    </span>
                 </td>
 
 
                 <td>
                     ${onlineSold}
+                    <span class="stock-unit">
+                        PCS
+                    </span>
                 </td>
 
 
                 <td>
-                    ${online}
+                    ${website}
+                    <span class="stock-unit">
+                        PCS
+                    </span>
                 </td>
 
 
                 <td>
                     ${offline}
+                    <span class="stock-unit">
+                        PCS
+                    </span>
                 </td>
 
 
                 <td>
-                    ${pendingStock}
+                    ${pending}
+                    <span class="stock-unit">
+                        PCS
+                    </span>
                 </td>
 
 
                 <td>
 
                     <span
-                        class="status ${status}"
+                        class="status ${statusClass}"
                     >
                         ${statusText}
                     </span>
@@ -1257,8 +1356,8 @@ function renderProducts(){
                 <td>
 
                     <button
-                        class="update"
-                        onclick="openEditModal(${variant.id})"
+                        class="update-btn"
+                        onclick="openEdit(${variant.id})"
                     >
                         Update
                     </button>
@@ -1279,7 +1378,7 @@ function renderProducts(){
     document.getElementById(
         "totalVariants"
     ).textContent =
-        allVariants.length;
+        variants.length;
 
 
     document.getElementById(
@@ -1289,15 +1388,15 @@ function renderProducts(){
 
 
     document.getElementById(
-        "totalOnline"
+        "totalOnlineGiven"
     ).textContent =
-        onlineTotal;
+        onlineGivenTotal;
 
 
     document.getElementById(
-        "totalOffline"
+        "totalOnlineSold"
     ).textContent =
-        offlineTotal;
+        onlineSoldTotal;
 
 
     document.getElementById(
@@ -1315,7 +1414,7 @@ function renderProducts(){
             <tr>
 
                 <td
-                    colspan="12"
+                    colspan="11"
                     class="empty"
                 >
                     No variants found.
@@ -1331,10 +1430,10 @@ function renderProducts(){
 
 
 /* =========================================================
-   PRODUCT DROPDOWN
+   PRODUCT SELECT
 ========================================================= */
 
-function fillProductSelect(){
+function fillProducts(){
 
     const select =
         document.getElementById(
@@ -1345,7 +1444,7 @@ function fillProductSelect(){
     select.innerHTML = "";
 
 
-    allProducts.forEach(
+    products.forEach(
         function(product){
 
             const option =
@@ -1359,9 +1458,7 @@ function fillProductSelect(){
 
 
             option.textContent =
-                productName(
-                    product
-                );
+                getName(product);
 
 
             select.appendChild(
@@ -1375,16 +1472,16 @@ function fillProductSelect(){
 
 
 /* =========================================================
-   ADD VARIANT
+   ADD
 ========================================================= */
 
 function openAddModal(){
 
-    selectedVariant =
+    editingVariant =
         null;
 
 
-    fillProductSelect();
+    fillProducts();
 
 
     document.getElementById(
@@ -1394,43 +1491,43 @@ function openAddModal(){
 
 
     document.getElementById(
-        "modalProduct"
-    ).innerHTML =
-        "Create a completely separate size/variant entry.";
+        "modalInfo"
+    ).textContent =
+        "Create a separate stock record for each size. Example: 100g and 125g will stay completely separate.";
 
 
     document.getElementById(
-        "stockSize"
+        "sizeInput"
     ).value =
         "";
 
 
     document.getElementById(
-        "stockUnit"
+        "unitInput"
     ).value =
         "g";
 
 
     document.getElementById(
-        "stockQuantity"
+        "warehouseInput"
     ).value =
         "0";
 
 
     document.getElementById(
-        "onlineGiven"
+        "onlineGivenInput"
     ).value =
         "0";
 
 
     document.getElementById(
-        "onlineSold"
+        "onlineSoldInput"
     ).value =
         "0";
 
 
     document.getElementById(
-        "offlineGiven"
+        "offlineInput"
     ).value =
         "0";
 
@@ -1444,35 +1541,31 @@ function openAddModal(){
 
 
 /* =========================================================
-   EDIT VARIANT
+   EDIT
 ========================================================= */
 
-function openEditModal(variantId){
+function openEdit(id){
 
-    selectedVariant =
-        allVariants.find(
+    editingVariant =
+        variants.find(
             function(v){
 
                 return String(
                     v.id
-                ) === String(
-                    variantId
-                );
+                ) === String(id);
 
             }
         );
 
 
-    if(
-        !selectedVariant
-    ){
+    if(!editingVariant){
 
         return;
 
     }
 
 
-    fillProductSelect();
+    fillProducts();
 
 
     document.getElementById(
@@ -1481,20 +1574,14 @@ function openEditModal(variantId){
         "Update Stock Variant";
 
 
-    document.getElementById(
-        "productSelect"
-    ).value =
-        selectedVariant.product_id;
-
-
     const product =
-        allProducts.find(
+        products.find(
             function(p){
 
                 return String(
                     p.id
                 ) === String(
-                    selectedVariant.product_id
+                    editingVariant.product_id
                 );
 
             }
@@ -1502,13 +1589,13 @@ function openEditModal(variantId){
 
 
     document.getElementById(
-        "modalProduct"
+        "modalInfo"
     ).innerHTML = `
 
         <strong>
-            ${escapeHtml(
+            ${safe(
                 product
-                ? productName(product)
+                ? getName(product)
                 : "Product"
             )}
         </strong>
@@ -1516,54 +1603,64 @@ function openEditModal(variantId){
         <br>
 
         Variant:
-        ${num(selectedVariant.size)}
-        ${escapeHtml(
-            selectedVariant.unit || "pcs"
-        )}
+        <strong>
+            ${number(
+                editingVariant.size
+            )}
+            ${safe(
+                editingVariant.unit ||
+                "pcs"
+            )}
+        </strong>
 
         <br>
 
-        Variant ID:
-        ${selectedVariant.id}
+        This update affects only this variant.
 
     `;
 
 
     document.getElementById(
-        "stockSize"
+        "productSelect"
     ).value =
-        selectedVariant.size;
+        editingVariant.product_id;
 
 
     document.getElementById(
-        "stockUnit"
+        "sizeInput"
     ).value =
-        selectedVariant.unit ||
-        "pcs";
+        editingVariant.size;
 
 
     document.getElementById(
-        "stockQuantity"
+        "unitInput"
     ).value =
-        selectedVariant.warehouse_stock;
+        editingVariant.unit ||
+        "g";
 
 
     document.getElementById(
-        "onlineGiven"
+        "warehouseInput"
     ).value =
-        selectedVariant.online_given;
+        editingVariant.warehouse_stock;
 
 
     document.getElementById(
-        "onlineSold"
+        "onlineGivenInput"
     ).value =
-        selectedVariant.online_sold;
+        editingVariant.online_given;
 
 
     document.getElementById(
-        "offlineGiven"
+        "onlineSoldInput"
     ).value =
-        selectedVariant.offline_given;
+        editingVariant.online_sold;
+
+
+    document.getElementById(
+        "offlineInput"
+    ).value =
+        editingVariant.offline_given;
 
 
     document.getElementById(
@@ -1586,14 +1683,14 @@ function closeModal(){
         "none";
 
 
-    selectedVariant =
+    editingVariant =
         null;
 
 }
 
 
 /* =========================================================
-   SAVE VARIANT
+   SAVE
 ========================================================= */
 
 async function saveVariant(){
@@ -1604,58 +1701,58 @@ async function saveVariant(){
         ).value;
 
 
-    const sizeValue =
-        document.getElementById(
-            "stockSize"
-        ).value;
+    const size =
+        number(
+            document.getElementById(
+                "sizeInput"
+            ).value
+        );
 
 
     const unit =
         document.getElementById(
-            "stockUnit"
+            "unitInput"
         ).value;
 
 
     const warehouse =
-        num(
+        number(
             document.getElementById(
-                "stockQuantity"
+                "warehouseInput"
             ).value
         );
 
 
     const onlineGiven =
-        num(
+        number(
             document.getElementById(
-                "onlineGiven"
+                "onlineGivenInput"
             ).value
         );
 
 
     const onlineSold =
-        num(
+        number(
             document.getElementById(
-                "onlineSold"
+                "onlineSoldInput"
             ).value
         );
 
 
-    const offlineGiven =
-        num(
+    const offline =
+        number(
             document.getElementById(
-                "offlineGiven"
+                "offlineInput"
             ).value
         );
 
 
-    /* ================= VALIDATION ================= */
+    /* VALIDATION */
 
-    if(
-        !productId
-    ){
+    if(!productId){
 
         alert(
-            "Please select a product."
+            "Please select product."
         );
 
         return;
@@ -1664,12 +1761,11 @@ async function saveVariant(){
 
 
     if(
-        sizeValue === "" ||
-        num(sizeValue) <= 0
+        size <= 0
     ){
 
         alert(
-            "Please enter a valid size."
+            "Please enter valid product size."
         );
 
         return;
@@ -1681,7 +1777,7 @@ async function saveVariant(){
         warehouse < 0 ||
         onlineGiven < 0 ||
         onlineSold < 0 ||
-        offlineGiven < 0
+        offline < 0
     ){
 
         alert(
@@ -1699,7 +1795,7 @@ async function saveVariant(){
     ){
 
         alert(
-            "Online Sold cannot be greater than Online Given."
+            "Website Sold cannot be greater than Website Given."
         );
 
         return;
@@ -1709,12 +1805,12 @@ async function saveVariant(){
 
     if(
         onlineGiven +
-        offlineGiven >
+        offline >
         warehouse
     ){
 
         alert(
-            "Online Given + Offline Given cannot be greater than Warehouse Stock."
+            "Website Given + Offline Given cannot be greater than Warehouse Stock."
         );
 
         return;
@@ -1722,48 +1818,43 @@ async function saveVariant(){
     }
 
 
+    const data = {
+
+        product_id:
+            Number(productId),
+
+        size:
+            size,
+
+        unit:
+            unit,
+
+        warehouse_stock:
+            warehouse,
+
+        online_given:
+            onlineGiven,
+
+        online_sold:
+            onlineSold,
+
+        offline_given:
+            offline
+
+    };
+
+
     try{
-
-        const variantData = {
-
-            product_id:
-                Number(productId),
-
-            size:
-                num(sizeValue),
-
-            unit:
-                unit,
-
-            warehouse_stock:
-                warehouse,
-
-            online_given:
-                onlineGiven,
-
-            online_sold:
-                onlineSold,
-
-            offline_given:
-                offlineGiven
-
-        };
-
 
         let result;
 
 
-        /* =================================================
-           EDIT EXISTING VARIANT
-        ================================================= */
-
-        if(
-            selectedVariant
-        ){
+        if(editingVariant){
 
             /*
-               UPDATE ONLY THIS VARIANT ID.
-               100g and 125g cannot overwrite each other.
+              IMPORTANT:
+              Update by UNIQUE VARIANT ID.
+              Therefore 100g cannot overwrite 125g.
             */
 
             result =
@@ -1771,30 +1862,19 @@ async function saveVariant(){
                     .from(
                         VARIANT_TABLE
                     )
-                    .update(
-                        variantData
-                    )
+                    .update(data)
                     .eq(
                         "id",
-                        selectedVariant.id
+                        editingVariant.id
                     );
 
         }
-
-
-        /* =================================================
-           ADD NEW VARIANT
-        ================================================= */
-
         else{
 
             /*
-               Unique constraint in database:
-               product_id + size + unit
-
-               Therefore:
-               Soap 100g = one row
-               Soap 125g = another row
+              New variant:
+              Product + Size + Unit
+              are stored as separate variant.
             */
 
             result =
@@ -1802,16 +1882,12 @@ async function saveVariant(){
                     .from(
                         VARIANT_TABLE
                     )
-                    .insert(
-                        variantData
-                    );
+                    .insert(data);
 
         }
 
 
-        if(
-            result.error
-        ){
+        if(result.error){
 
             console.error(
                 result.error
@@ -1824,14 +1900,14 @@ async function saveVariant(){
             ){
 
                 alert(
-                    "Eh product + size + unit variant already exists."
+                    "Eh Product + Size + Unit variant already exist karda hai."
                 );
 
             }
             else{
 
                 alert(
-                    "Stock save failed: " +
+                    "Save failed: " +
                     result.error.message
                 );
 
@@ -1843,11 +1919,15 @@ async function saveVariant(){
         }
 
 
+        const wasEditing =
+            !!editingVariant;
+
+
         closeModal();
 
 
-        showToast(
-            selectedVariant
+        toast(
+            wasEditing
             ? "Variant updated successfully."
             : "New variant added successfully."
         );
@@ -1864,7 +1944,7 @@ async function saveVariant(){
 
 
         alert(
-            "Stock save failed."
+            "Unable to save stock."
         );
 
     }
@@ -1878,7 +1958,7 @@ async function saveVariant(){
 
 supabaseClient
     .channel(
-        "stock-variants-live"
+        "product-stock-variants"
     )
     .on(
         "postgres_changes",
@@ -1911,6 +1991,6 @@ document.addEventListener(
 
 </script>
 
-
 </body>
 </html>
+```
