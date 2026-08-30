@@ -1362,7 +1362,6 @@ body{
 
         <button class="active" onclick="showSection('orders',this)">🛒 Orders</button>
         <button onclick="showSection('sales',this)">💰 Sales</button>
-        <button onclick="showSection('stock',this)">📦 Stock</button>
         <button onclick="showSection('products',this)">🧴 Products</button>
         <button onclick="showSection('add-product',this)">➕ Add Product</button>
         <button onclick="showSection('customers',this)">👥 Customers</button>
@@ -1569,35 +1568,7 @@ body{
 
 <!-- ================= SUPABASE ================= -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-<script>
-/* ===== STOCK ZERO DISPLAY FILTER — ADDED ONLY ===== */
-function hideZeroStockRecords(){
-    document.querySelectorAll(
-        '#stockTableBody tr, #stockList tr, .stock-row, .stock-item'
-    ).forEach(function(row){
-        const txt = (row.textContent || "").trim();
-        if(/\b0\s*(pcs?|units?|items?)?\b/i.test(txt) &&
-           /stock/i.test(txt)){
-            row.style.display = "none";
-        }
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function(){
-    hideZeroStockRecords();
-
-    const observer = new MutationObserver(function(){
-        hideZeroStockRecords();
-    });
-
-    observer.observe(document.body, {
-        childList:true,
-        subtree:true
-    });
-});
-</script>
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
@@ -1899,7 +1870,6 @@ function showSection(section,button){
 
     if(section === "orders") loadOrders();
     else if(section === "sales") loadSales();
-    else if(section === "stock") loadStock();
     else if(section === "products") loadProducts();
     else if(section === "add-product") showAddProduct();
     else if(section === "customers") loadCustomers();
@@ -4468,14 +4438,15 @@ Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredien
             </div>
 
             <div class="form-group full">
-                <label>📷 Product Photo</label>
+                <label>📷 Product Photos (Up to 4)</label>
                 <div class="upload-box">
-                    <strong>Replace Product Photo (Optional)</strong>
+                    <strong>Replace Product Photos (Optional)</strong>
                     <br>
                     <input
                         id="editProductPhotoInput"
                         type="file"
                         accept="image/*"
+                        multiple
                         onchange="previewEditPhoto(event)">
 
                     <div
@@ -4516,18 +4487,31 @@ Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredien
 
 function previewEditPhoto(event){
 
-    const file = event.target.files[0];
-    if(!file) return;
+    const files = [...(event.target.files || [])];
+    if(files.length > 4){
+        alert("Maximum 4 photos upload karo.");
+        event.target.value = "";
+        return;
+    }
 
     const preview = document.getElementById("editPhotoPreview");
     if(!preview) return;
 
-    preview.innerHTML = `
-        <img
-            src="${URL.createObjectURL(file)}"
-            alt="New Product Photo"
-            style="width:170px;height:170px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">
-    `;
+    preview.innerHTML = files.map((file,i)=>`
+        <img src="${URL.createObjectURL(file)}" alt="New Product Photo ${i+1}" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">
+    `).join("");
+}
+
+async function uploadAdditionalProductPhotos(files){
+    const urls = [];
+    for(const file of [...files].slice(0,4)){
+        const extension = file.name.split(".").pop().toLowerCase();
+        const filePath = "products/" + Date.now() + "-" + Math.random().toString(36).substring(2) + "." + extension;
+        const upload = await supabaseClient.storage.from(IMAGE_BUCKET).upload(filePath,file,{cacheControl:"3600",upsert:false});
+        if(upload.error) throw new Error(upload.error.message);
+        urls.push(supabaseClient.storage.from(IMAGE_BUCKET).getPublicUrl(filePath).data.publicUrl);
+    }
+    return urls;
 }
 
 async function saveEditedProduct(id){
@@ -4540,7 +4524,8 @@ async function saveEditedProduct(id){
     const keyIngredients = document.getElementById("editProductKeyIngredientsInput").value.trim();
     const howToUse = document.getElementById("editProductHowToUseInput").value.trim();
     const benefits = document.getElementById("editProductBenefitsInput").value.trim();
-    const file = document.getElementById("editProductPhotoInput").files[0];
+    const files = document.getElementById("editProductPhotoInput").files;
+    const file = files[0];
     const status = document.getElementById("editUploadStatus");
 
     if(!name){
@@ -4619,6 +4604,15 @@ async function saveEditedProduct(id){
                 .data.publicUrl;
         }
 
+        if(files.length > 4){
+            alert("Maximum 4 photos upload karo.");
+            return;
+        }
+
+        const extraPhotoUrls = files.length > 1
+            ? await uploadAdditionalProductPhotos(files.slice(1))
+            : [];
+
         status.innerText = "Saving changes...";
 
         const updateData = {
@@ -4631,6 +4625,9 @@ async function saveEditedProduct(id){
             how_to_use:howToUse,
             benefits:benefits,
             image_url:imageUrl,
+            image_url_2:extraPhotoUrls[0] || oldProduct.image_url_2 || null,
+            image_url_3:extraPhotoUrls[1] || oldProduct.image_url_3 || null,
+            image_url_4:extraPhotoUrls[2] || oldProduct.image_url_4 || null,
             variants:variants
         };
 
@@ -4892,11 +4889,11 @@ Hyaluronic Acid — Helps maintain hydration"></textarea>
 
             <div class="form-group full">
 
-                <label>📷 Product Photo</label>
+                <label>📷 Product Photos (Up to 4)</label>
 
                 <div class="upload-box">
 
-                    <strong>Upload Product Photo</strong>
+                    <strong>Upload Product Photos</strong>
 
                     <br>
 
@@ -4904,6 +4901,7 @@ Hyaluronic Acid — Helps maintain hydration"></textarea>
                         id="productPhotoInput"
                         type="file"
                         accept="image/*"
+                        multiple
                         onchange="previewPhoto(event)">
 
                     <div
@@ -4958,20 +4956,19 @@ Hyaluronic Acid — Helps maintain hydration"></textarea>
 
 function previewPhoto(event){
 
-    const file =
-        event.target.files[0];
+    const files = [...(event.target.files || [])];
+    if(files.length > 4){
+        alert("Maximum 4 photos upload karo.");
+        event.target.value = "";
+        return;
+    }
 
-    if(!file) return;
+    const preview = document.getElementById("photoPreview");
+    if(!preview) return;
 
-    document.getElementById(
-        "previewImage"
-    ).src =
-        URL.createObjectURL(file);
-
-    document.getElementById(
-        "photoPreview"
-    ).style.display =
-        "block";
+    preview.innerHTML = files.map((file,i)=>`
+        <img src="${URL.createObjectURL(file)}" alt="Preview ${i+1}" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">
+    `).join("");
 
 }
 
@@ -5023,10 +5020,17 @@ async function saveProduct(){
             "productBenefitsInput"
         ).value.trim();
 
-    const file =
+    const files =
         document.getElementById(
             "productPhotoInput"
-        ).files[0];
+        ).files;
+
+    if(files.length > 4){
+        alert("Maximum 4 photos upload karo.");
+        return;
+    }
+
+    const file = files[0];
 
     const status =
         document.getElementById(
@@ -5119,6 +5123,10 @@ async function saveProduct(){
         const imageUrl =
             publicData.data.publicUrl;
 
+        const extraPhotoUrls = files.length > 1
+            ? await uploadAdditionalProductPhotos(files.slice(1))
+            : [];
+
         const insert =
             await supabaseClient
             .from("products")
@@ -5132,7 +5140,10 @@ async function saveProduct(){
                 key_ingredients:keyIngredients,
                 how_to_use:howToUse,
                 benefits:benefits,
-                image_url:imageUrl
+                image_url:imageUrl,
+                image_url_2:extraPhotoUrls[0] || null,
+                image_url_3:extraPhotoUrls[1] || null,
+                image_url_4:extraPhotoUrls[2] || null
 
             });
 
@@ -8084,7 +8095,7 @@ async function showStockPartyForm(partyId){
         if(r.error){alert("Products load failed:\n\n"+r.error.message);return;} products=r.data||[];
     }
     document.getElementById("other-content").innerHTML=`
-      <div class="admin-box"><div class="admin-header"><div><p>OFFLINE BUSINESS</p><h2>📤 Give Stock to Party</h2></div><button class="btn" onclick="loadStock()">← Back to Stock</button></div>
+      <div class="admin-box"><div class="admin-header"><div><p>OFFLINE BUSINESS</p><h2>📤 Give Stock to Party</h2></div><button class="btn" onclick="loadParties()">← Back to Parties</button></div>
       <div class="form-grid">
         <div class="form-group"><label>Party</label><select id="stockPartySelect">${parties.map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name||"")} ${x.phone?"— "+escapeHtml(x.phone):""}</option>`).join("")}</select></div>
         <div class="form-group"><label>Product</label><select id="stockPartyProduct">${products.map(x=>`<option value="${escapeHtml(String(x.id))}">${escapeHtml(x.name||"")} — Stock: ${Number(x.stock||0)}</option>`).join("")}</select></div>
@@ -8116,45 +8127,13 @@ async function savePartySaleFromStock(partyId,productId,qty,bill,paid,note){
     if(paid>0){const q=await supabaseClient.from("party_transactions").insert({party_id:partyId,product_id:productId,transaction_type:"payment",amount:paid,note:"Payment received with sale"});if(q.error){alert("Payment save failed:\n\n"+q.error.message);return;}}
     const u=await supabaseClient.from("products").update({stock:stock-qty}).eq("id",productId);
     if(u.error){alert("Stock update failed:\n\n"+u.error.message);return;}
-    const ledger=await supabaseClient.from("stock_transactions").insert({product_id:productId,transaction_type:"offline_out",quantity:qty,party_name:(await supabaseClient.from("parties").select("name").eq("id",partyId).single()).data?.name||null,note:note||"Offline sale"});
-    if(ledger.error){alert("Stock ledger update failed:\n\n"+ledger.error.message);return;}
     alert("Offline sale saved successfully.\nRemaining stock: "+(stock-qty));
-    loadStock();
+    loadParties();
 }
 
 function showPartyPaymentForm(id){ return addPartyPayment(id); }
 
 </script>
-  <a href="stock.html"
-style="
-position:fixed;
-bottom:52px;
-right:15px;
-background:#173b2d;
-color:white;
-padding:6px 9px;
-border-radius:6px;
-text-decoration:none;
-font-size:11px;
-font-weight:bold;
-z-index:999999;
-">📦 Stock</a>
 
-<a href="formula.html"
-style="
-position:fixed;
-bottom:15px;
-right:15px;
-background:#173b2d;
-color:white;
-padding:6px 9px;
-border-radius:6px;
-text-decoration:none;
-font-size:11px;
-font-weight:bold;
-z-index:999999;
-">
-🧮 Formula
-</a>
 </body>
 </html>
