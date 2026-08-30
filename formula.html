@@ -20,11 +20,10 @@ color:#1f2937
 header{
 background:#173b2d;
 color:white;
-padding:15px 20px;
+padding:18px 24px;
 display:flex;
 justify-content:space-between;
-align-items:center;
-gap:10px
+align-items:center
 }
 
 .logo{
@@ -36,35 +35,18 @@ font-weight:bold
 .logo small{
 display:block;
 font-family:Arial,sans-serif;
-font-size:10px;
+font-size:11px;
 letter-spacing:2px;
 opacity:.85;
 margin-top:3px
 }
 
-.header-right{
-display:flex;
-align-items:center;
-gap:8px
-}
-
 .badge{
 background:#d7eadf;
 color:#173b2d;
-padding:5px 9px;
+padding:6px 10px;
 border-radius:20px;
-font-size:11px;
-font-weight:bold
-}
-
-.settings-btn{
-background:#ffffff18;
-border:1px solid #ffffff45;
-color:white;
-padding:7px 10px;
-border-radius:7px;
-font-size:11px;
-cursor:pointer;
+font-size:12px;
 font-weight:bold
 }
 
@@ -77,7 +59,8 @@ padding:0 16px
 .tabs{
 display:flex;
 gap:10px;
-margin-bottom:18px
+margin-bottom:18px;
+flex-wrap:wrap
 }
 
 .tab{
@@ -244,94 +227,73 @@ color:#9b2226
 
 /* SETTINGS */
 
-.settings-panel{
-display:none;
+.settings-button{
 position:fixed;
-top:65px;
-right:15px;
-width:420px;
-max-width:calc(100vw - 30px);
-max-height:calc(100vh - 90px);
-overflow:auto;
-background:white;
-z-index:99999;
-border-radius:12px;
-box-shadow:0 8px 35px #00000030;
-padding:18px
+right:18px;
+top:88px;
+z-index:1000;
+background:#173b2d;
+color:white;
+box-shadow:0 4px 14px #0002
 }
 
-.settings-panel.show{
+.settings-panel{
+position:fixed;
+right:18px;
+top:135px;
+width:390px;
+max-width:calc(100vw - 30px);
+max-height:80vh;
+overflow:auto;
+background:white;
+border-radius:12px;
+padding:18px;
+box-shadow:0 8px 30px #0003;
+z-index:999;
+display:none
+}
+
+.settings-panel.open{
 display:block
 }
 
-.settings-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid #eee;
-padding-bottom:12px;
+.settings-title{
+font-family:Georgia,"Times New Roman",serif;
+font-size:20px;
+font-weight:bold;
+color:#173b2d;
+margin-bottom:4px
+}
+
+.settings-sub{
+font-size:12px;
+color:#777;
 margin-bottom:15px
 }
 
-.settings-head h2{
-margin:0;
-font-size:18px
+.ing-category{
+border:1px solid #e0e4e7;
+border-radius:10px;
+padding:12px;
+margin-top:12px
 }
 
-.close-btn{
-background:#eee;
-padding:6px 9px;
-font-size:12px
+.ing-category h4{
+margin:0 0 10px;
+color:#173b2d
 }
 
-.category-tabs{
-display:flex;
-gap:8px;
-margin-bottom:12px
-}
-
-.category-tab{
-flex:1;
-padding:9px;
-background:#e9eef0;
-border-radius:7px;
-font-weight:bold;
-cursor:pointer;
-border:0
-}
-
-.category-tab.active{
-background:#173b2d;
-color:white
-}
-
-.ingredient-add{
-display:flex;
-gap:7px;
-margin-bottom:12px
-}
-
-.ingredient-add input{
-flex:1
-}
-
-.master-search{
-margin-bottom:10px
-}
-
-.master-list{
-border:1px solid #e1e5e8;
-border-radius:8px;
-max-height:260px;
-overflow:auto
+.ing-add{
+display:grid;
+grid-template-columns:1fr auto;
+gap:7px
 }
 
 .master-item{
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:8px;
-padding:9px 10px;
+padding:7px 0;
 border-bottom:1px solid #eee;
 font-size:13px
 }
@@ -340,92 +302,44 @@ font-size:13px
 border-bottom:0
 }
 
-.master-name{
-flex:1;
-word-break:break-word
-}
-
-.master-actions{
-display:flex;
-gap:5px
-}
-
-.master-actions button{
-padding:5px 7px;
+.small-btn{
+padding:5px 9px;
 font-size:11px
 }
 
-.setting-note{
-font-size:11px;
-color:#667085;
-margin-top:10px;
-line-height:1.5
+.custom-ingredient{
+display:none
 }
 
 /* PRINT */
 
 .brand-print{
 font-family:Georgia,"Times New Roman",serif;
-font-size:28px;
+font-size:26px;
 font-weight:bold;
-text-align:center;
-margin-bottom:2px
+color:#173b2d
 }
 
 .brand-line{
-text-align:center;
 font-size:10px;
 letter-spacing:3px;
-margin-bottom:5px
+margin-top:3px;
+color:#173b2d
 }
 
-.print-rule{
-border-top:2px solid #173b2d;
-margin:10px 0 18px
-}
-
-.print-title{
-text-align:center;
-font-size:18px;
-font-weight:bold;
+.print-head{
+border-bottom:2px solid #173b2d;
+padding-bottom:12px;
 margin-bottom:18px
 }
 
-.print-section{
-font-weight:bold;
-font-size:14px;
-margin-top:18px;
-margin-bottom:7px;
-border-bottom:1px solid #aaa;
-padding-bottom:4px
-}
-
-.print-text{
-font-size:12px;
-line-height:1.6;
-white-space:normal
-}
-
 .print-footer{
-margin-top:30px;
-padding-top:10px;
 border-top:1px solid #999;
-display:flex;
-justify-content:space-between;
-font-size:9px;
-color:#555
-}
-
-.print-table{
-width:100%;
-border-collapse:collapse
-}
-
-.print-table th,
-.print-table td{
-border:1px solid #999;
-padding:7px;
-font-size:11px
+padding-top:8px;
+margin-top:25px;
+text-align:center;
+font-size:10px;
+color:#666
 }
 
 @media(max-width:800px){
@@ -439,11 +353,6 @@ grid-template-columns:1fr 1fr
 grid-template-columns:1fr 1fr
 }
 
-.header-right{
-flex-wrap:wrap;
-justify-content:flex-end
-}
-
 }
 
 @media(max-width:520px){
@@ -453,21 +362,20 @@ grid-template-columns:1fr
 }
 
 header{
-padding:12px
+padding:15px
 }
 
 .logo{
-font-size:19px
-}
-
-.badge{
-display:none
+font-size:20px
 }
 
 .settings-panel{
-top:55px;
-right:8px;
-width:calc(100vw - 16px)
+right:10px;
+width:calc(100vw - 20px)
+}
+
+.settings-button{
+right:10px
 }
 
 }
@@ -481,20 +389,27 @@ background:white
 header,
 .tabs,
 .no-print,
+.settings-button,
+.settings-panel,
 #seen,
-#edit,
-#status{
+#edit{
 display:none!important
-}
-
-.container{
-margin:0;
-padding:0
 }
 
 #printArea{
 display:block!important;
-padding:15px 20px
+padding:15px
+}
+
+.print-table{
+width:100%;
+border-collapse:collapse
+}
+
+.print-table th,
+.print-table td{
+border:1px solid #999;
+padding:7px
 }
 
 }
@@ -510,124 +425,120 @@ Liara Professional™
 <small>ADVANCED HERBAL</small>
 </div>
 
-<div class="header-right">
-
 <span class="badge">
 ☁ Online Formula
 </span>
 
-<button
-class="settings-btn no-print"
-onclick="openSettings()">
-⚙️ Settings
-</button>
-
-</div>
-
 </header>
 
 
-<!-- SETTINGS -->
-
-<div id="settingsPanel" class="settings-panel no-print">
-
-<div class="settings-head">
-
-<h2>⚙️ Ingredient Settings</h2>
+<!-- SETTINGS BUTTON -->
 
 <button
-class="close-btn"
-onclick="closeSettings()">
-✕
+class="settings-button no-print"
+type="button"
+onclick="toggleSettings()">
+
+⚙️ Settings
+
+</button>
+
+
+<!-- SETTINGS PANEL -->
+
+<div
+id="settingsPanel"
+class="settings-panel no-print">
+
+<div class="settings-title">
+Liara Professional™
+</div>
+
+<div class="settings-sub">
+Ingredient Management • Advanced Herbal
+</div>
+
+
+<!-- SCIENCE -->
+
+<div class="ing-category">
+
+<h4>
+🧪 Science Ingredients
+</h4>
+
+<div class="ing-add">
+
+<input
+id="scienceInput"
+placeholder="Add science ingredient..."
+onkeydown="if(event.key==='Enter') addMasterIngredient('science')">
+
+<button
+class="primary"
+type="button"
+onclick="addMasterIngredient('science')">
+
++ Add
+
 </button>
 
 </div>
 
+<div
+id="scienceList"
+style="margin-top:10px">
 
-<div id="passwordBox">
+</div>
 
-<label style="
-font-size:12px;
-font-weight:bold;
-display:block;
-margin-bottom:6px">
-Settings Password
-</label>
+</div>
+
+
+<!-- NATURAL -->
+
+<div class="ing-category">
+
+<h4>
+🌿 Natural / Herbal Ingredients
+</h4>
+
+<div class="ing-add">
 
 <input
-id="settingsPassword"
-type="password"
-placeholder="Enter password">
+id="naturalInput"
+placeholder="Add natural ingredient..."
+onkeydown="if(event.key==='Enter') addMasterIngredient('natural')">
 
 <button
 class="primary"
-style="margin-top:10px;width:100%"
-onclick="unlockSettings()">
-🔐 Unlock Settings
+type="button"
+onclick="addMasterIngredient('natural')">
+
++ Add
+
 </button>
+
+</div>
+
+<div
+id="naturalList"
+style="margin-top:10px">
+
+</div>
 
 </div>
 
 
 <div
-id="settingsContent"
-style="display:none">
+style="
+font-size:11px;
+color:#777;
+margin-top:14px;
+line-height:1.5;
+">
 
-
-<div class="category-tabs">
-
-<button
-id="scienceTab"
-class="category-tab active"
-onclick="selectCategory('Science')">
-🧪 Science
-</button>
-
-<button
-id="naturalTab"
-class="category-tab"
-onclick="selectCategory('Natural')">
-🌿 Natural
-</button>
-
-</div>
-
-
-<div class="ingredient-add">
-
-<input
-id="masterIngredientName"
-placeholder="Add ingredient name">
-
-<button
-class="primary"
-onclick="addMasterIngredient()">
-+ Add
-</button>
-
-</div>
-
-
-<input
-id="masterSearch"
-class="master-search"
-placeholder="Search ingredient..."
-oninput="renderMasterIngredients()">
-
-
-<div id="masterList" class="master-list">
-
-<div class="empty">
-Loading...
-</div>
-
-</div>
-
-
-<div class="setting-note">
-Science and Natural ingredients are saved online in Supabase.
-The same master list can be used while creating formulas.
-</div>
+Ingredients added here are saved in this browser.
+Your existing Supabase formula data is not changed.
 
 </div>
 
@@ -636,18 +547,26 @@ The same master list can be used while creating formulas.
 
 <div class="container">
 
+
 <div class="tabs no-print">
 
 <button
+type="button"
 class="tab active"
 onclick="showTab('seen',this)">
+
 👁 Formula Seen
+
 </button>
 
+
 <button
+type="button"
 class="tab"
 onclick="showTab('edit',this)">
+
 ➕ Add / Edit Formula
+
 </button>
 
 </div>
@@ -656,7 +575,9 @@ onclick="showTab('edit',this)">
 <div
 id="status"
 class="status no-print">
+
 ☁ Connecting to Supabase...
+
 </div>
 
 
@@ -673,13 +594,18 @@ id="search"
 placeholder="Search product, formula no. or formula name..."
 oninput="renderList()">
 
+
 <button
+type="button"
 class="secondary"
 onclick="newFormula()">
+
 ➕ New
+
 </button>
 
 </div>
+
 
 <div id="formulaList">
 
@@ -699,6 +625,7 @@ id="edit"
 class="panel">
 
 <div class="grid">
+
 
 <div class="field">
 
@@ -836,6 +763,7 @@ Total:
 
 
 <button
+type="button"
 class="secondary no-print"
 onclick="addIngredient()">
 
@@ -891,6 +819,7 @@ placeholder="Additional notes..."></textarea>
 <div class="actions no-print">
 
 <button
+type="button"
 class="primary"
 onclick="saveFormula()">
 
@@ -900,6 +829,7 @@ onclick="saveFormula()">
 
 
 <button
+type="button"
 class="secondary"
 onclick="newFormula()">
 
@@ -909,6 +839,7 @@ Clear
 
 
 <button
+type="button"
 class="danger"
 id="deleteBtn"
 onclick="deleteCurrent()"
@@ -928,6 +859,7 @@ style="display:none">
 <section
 id="printArea"
 style="display:none">
+
 </section>
 
 
@@ -936,9 +868,9 @@ style="display:none">
 
 <script>
 
-/* =================================
+/* =========================================
    SUPABASE
-================================= */
+========================================= */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -953,37 +885,34 @@ SUPABASE_KEY
 );
 
 
-/* =================================
+/* =========================================
    VARIABLES
-================================= */
+========================================= */
 
 let formulas = [];
 
 let editingId = null;
 
-let masterIngredients = [];
 
-let currentCategory = "Science";
-
-let settingsUnlocked = false;
-
-
-/* =================================
+/* =========================================
    SHORTCUT
-================================= */
+========================================= */
 
 function $(id){
+
 return document.getElementById(id);
+
 }
 
 
-/* =================================
+/* =========================================
    STATUS
-================================= */
+========================================= */
 
 function setStatus(message,error=false){
 
-$("status").textContent = message;
+$("status").textContent =
+message;
 
 $("status").className =
 error
@@ -993,9 +922,9 @@ error
 }
 
 
-/* =================================
-   TEXT SECURITY
-================================= */
+/* =========================================
+   ESCAPE
+========================================= */
 
 function esc(value){
 
@@ -1028,9 +957,9 @@ return esc(value)
 }
 
 
-/* =================================
+/* =========================================
    DATE
-================================= */
+========================================= */
 
 function today(){
 
@@ -1041,458 +970,351 @@ return new Date()
 }
 
 
-/* =================================
+/* =========================================
+   SETTINGS
+========================================= */
+
+function toggleSettings(){
+
+$("settingsPanel")
+.classList.toggle("open");
+
+renderMasterLists();
+
+}
+
+
+/* =========================================
+   MASTER INGREDIENT DATA
+========================================= */
+
+function getMasterIngredients(){
+
+try{
+
+const saved =
+localStorage.getItem(
+"liara_formula_ingredients"
+);
+
+if(saved){
+
+const data =
+JSON.parse(saved);
+
+return {
+
+science:
+Array.isArray(data.science)
+? data.science
+: [],
+
+natural:
+Array.isArray(data.natural)
+? data.natural
+: []
+
+};
+
+}
+
+}catch(e){}
+
+return {
+
+science:[],
+
+natural:[]
+
+};
+
+}
+
+
+function saveMasterIngredients(data){
+
+localStorage.setItem(
+"liara_formula_ingredients",
+JSON.stringify(data)
+);
+
+renderMasterLists();
+
+}
+
+
+/* =========================================
+   ADD MASTER INGREDIENT
+========================================= */
+
+function addMasterIngredient(type){
+
+const input =
+$(type+"Input");
+
+const value =
+input.value.trim();
+
+if(!value)
+return;
+
+
+const data =
+getMasterIngredients();
+
+
+if(
+!data[type].some(
+x =>
+x.toLowerCase() ===
+value.toLowerCase()
+)
+){
+
+data[type].push(value);
+
+data[type].sort(
+(a,b) =>
+a.localeCompare(b)
+);
+
+saveMasterIngredients(data);
+
+}
+
+
+input.value = "";
+
+input.focus();
+
+}
+
+
+/* =========================================
+   DELETE MASTER INGREDIENT
+========================================= */
+
+function deleteMasterIngredient(type,index){
+
+const data =
+getMasterIngredients();
+
+
+if(
+!confirm(
+"Delete this ingredient from the list?"
+)
+)
+return;
+
+
+data[type].splice(
+index,
+1
+);
+
+saveMasterIngredients(data);
+
+}
+
+
+/* =========================================
+   RENDER MASTER LISTS
+========================================= */
+
+function renderMasterLists(){
+
+const data =
+getMasterIngredients();
+
+
+renderMasterList(
+"science",
+data.science
+);
+
+renderMasterList(
+"natural",
+data.natural
+);
+
+}
+
+
+function renderMasterList(type,list){
+
+const box =
+$(type+"List");
+
+
+if(!list.length){
+
+box.innerHTML =
+`<div style="font-size:12px;color:#999">
+No ingredients added yet.
+</div>`;
+
+return;
+
+}
+
+
+box.innerHTML =
+list
+.map(
+(item,index) => `
+
+<div class="master-item">
+
+<span>
+${esc(item)}
+</span>
+
+<button
+type="button"
+class="danger small-btn"
+onclick="deleteMasterIngredient('${type}',${index})">
+
+× Delete
+
+</button>
+
+</div>
+
+`
+)
+.join("");
+
+}
+
+
+/* =========================================
+   INGREDIENT OPTIONS
+========================================= */
+
+function getIngredientOptions(
+selected=""
+){
+
+const data =
+getMasterIngredients();
+
+
+let html =
+`
+<option value="">
+Select ingredient...
+</option>
+`;
+
+
+if(data.natural.length){
+
+html += `
+<optgroup label="🌿 Natural / Herbal">
+`;
+
+data.natural.forEach(
+item => {
+
+html += `
+<option
+value="${esc(item)}"
+${item === selected ? "selected" : ""}>
+
+${esc(item)}
+
+</option>
+`;
+
+});
+
+html += `
+</optgroup>
+`;
+
+}
+
+
+if(data.science.length){
+
+html += `
+<optgroup label="🧪 Science">
+`;
+
+data.science.forEach(
+item => {
+
+html += `
+<option
+value="${esc(item)}"
+${item === selected ? "selected" : ""}>
+
+${esc(item)}
+
+</option>
+`;
+
+});
+
+html += `
+</optgroup>
+`;
+
+}
+
+
+html += `
+<option value="__custom__">
+✏️ Other / Type Manually
+</option>
+`;
+
+
+return html;
+
+}
+
+
+/* =========================================
    TAB
-================================= */
+========================================= */
 
 function showTab(id,btn){
 
 document
 .querySelectorAll(".panel")
 .forEach(
-p => p.classList.remove("active")
+p =>
+p.classList.remove("active")
 );
 
-$(id).classList.add("active");
+
+$(id)
+.classList.add("active");
+
 
 document
 .querySelectorAll(".tab")
 .forEach(
-b => b.classList.remove("active")
+b =>
+b.classList.remove("active")
 );
+
 
 btn.classList.add("active");
 
 }
 
 
-/* =================================
-   SETTINGS
-================================= */
-
-function openSettings(){
-
-$("settingsPanel")
-.classList.add("show");
-
-$("settingsPassword").value = "";
-
-if(settingsUnlocked){
-
-$("passwordBox").style.display = "none";
-
-$("settingsContent").style.display = "block";
-
-renderMasterIngredients();
-
-}else{
-
-$("passwordBox").style.display = "block";
-
-$("settingsContent").style.display = "none";
-
-}
-
-}
-
-
-function closeSettings(){
-
-$("settingsPanel")
-.classList.remove("show");
-
-}
-
-
-function unlockSettings(){
-
-const password =
-$("settingsPassword").value;
-
-if(password !== "Samar@123"){
-
-alert("Wrong password.");
-
-return;
-
-}
-
-settingsUnlocked = true;
-
-$("passwordBox").style.display = "none";
-
-$("settingsContent").style.display = "block";
-
-loadMasterIngredients();
-
-}
-
-
-/* =================================
-   CATEGORY
-================================= */
-
-function selectCategory(category){
-
-currentCategory = category;
-
-$("scienceTab")
-.classList.toggle(
-"active",
-category === "Science"
-);
-
-$("naturalTab")
-.classList.toggle(
-"active",
-category === "Natural"
-);
-
-$("masterSearch").value = "";
-
-renderMasterIngredients();
-
-}
-
-
-/* =================================
-   LOAD MASTER INGREDIENTS
-================================= */
-
-async function loadMasterIngredients(){
-
-const {data,error} =
-await supabase
-.from("ingredients_master")
-.select("*")
-.order("name",{ascending:true});
-
-
-if(error){
-
-console.error(error);
-
-alert(
-"Could not load ingredients: "
-+ error.message
-);
-
-return;
-
-}
-
-masterIngredients = data || [];
-
-renderMasterIngredients();
-
-}
-
-
-/* =================================
-   RENDER MASTER LIST
-================================= */
-
-function renderMasterIngredients(){
-
-const q =
-($("masterSearch")?.value || "")
-.toLowerCase()
-.trim();
-
-
-const list =
-masterIngredients.filter(x =>
-x.category === currentCategory &&
-x.name.toLowerCase().includes(q)
-);
-
-
-if(!list.length){
-
-$("masterList").innerHTML = `
-
-<div class="empty">
-No ${esc(currentCategory)} ingredients found.
-</div>
-
-`;
-
-return;
-
-}
-
-
-$("masterList").innerHTML = list.map(x => `
-
-<div class="master-item">
-
-<div class="master-name">
-${esc(x.name)}
-</div>
-
-<div class="master-actions">
-
-<button
-class="secondary"
-onclick="editMasterIngredient('${x.id}')">
-✏️
-</button>
-
-<button
-class="danger"
-onclick="deleteMasterIngredient('${x.id}')">
-×
-</button>
-
-</div>
-
-</div>
-
-`).join("");
-
-}
-
-
-/* =================================
-   ADD MASTER INGREDIENT
-================================= */
-
-async function addMasterIngredient(){
-
-const name =
-$("masterIngredientName")
-.value
-.trim();
-
-
-if(!name){
-
-alert("Ingredient name required.");
-
-return;
-
-}
-
-
-const exists =
-masterIngredients.some(
-x =>
-x.category === currentCategory &&
-x.name.toLowerCase() === name.toLowerCase()
-);
-
-
-if(exists){
-
-alert(
-"This ingredient already exists in "
-+ currentCategory
-+ "."
-);
-
-return;
-
-}
-
-
-const {data,error} =
-await supabase
-.from("ingredients_master")
-.insert({
-
-name:name,
-category:currentCategory,
-updated_at:new Date().toISOString()
-
-})
-.select()
-.single();
-
-
-if(error){
-
-alert(
-"Could not add ingredient: "
-+ error.message
-);
-
-return;
-
-}
-
-
-masterIngredients.push(data);
-
-masterIngredients.sort(
-(a,b) =>
-a.name.localeCompare(b.name)
-);
-
-$("masterIngredientName").value = "";
-
-renderMasterIngredients();
-
-}
-
-
-/* =================================
-   EDIT MASTER INGREDIENT
-================================= */
-
-async function editMasterIngredient(id){
-
-const item =
-masterIngredients.find(
-x => x.id === id
-);
-
-
-if(!item)
-return;
-
-
-const newName =
-prompt(
-"Edit ingredient name:",
-item.name
-);
-
-
-if(newName === null)
-return;
-
-
-const name =
-newName.trim();
-
-
-if(!name){
-
-alert("Ingredient name cannot be empty.");
-
-return;
-
-}
-
-
-const duplicate =
-masterIngredients.some(
-x =>
-x.id !== id &&
-x.category === item.category &&
-x.name.toLowerCase() === name.toLowerCase()
-);
-
-
-if(duplicate){
-
-alert("Ingredient already exists.");
-
-return;
-
-}
-
-
-const {error} =
-await supabase
-.from("ingredients_master")
-.update({
-
-name:name,
-updated_at:new Date().toISOString()
-
-})
-.eq("id",id);
-
-
-if(error){
-
-alert(
-"Update error: "
-+ error.message
-);
-
-return;
-
-}
-
-
-item.name = name;
-
-masterIngredients.sort(
-(a,b) =>
-a.name.localeCompare(b.name)
-);
-
-renderMasterIngredients();
-
-}
-
-
-/* =================================
-   DELETE MASTER INGREDIENT
-================================= */
-
-async function deleteMasterIngredient(id){
-
-const item =
-masterIngredients.find(
-x => x.id === id
-);
-
-
-if(!item)
-return;
-
-
-if(!confirm(
-"Delete ingredient \"" +
-item.name +
-"\" from " +
-item.category +
-"?")){
-
-return;
-
-}
-
-
-const {error} =
-await supabase
-.from("ingredients_master")
-.delete()
-.eq("id",id);
-
-
-if(error){
-
-alert(
-"Delete error: "
-+ error.message
-);
-
-return;
-
-}
-
-
-masterIngredients =
-masterIngredients.filter(
-x => x.id !== id
-);
-
-renderMasterIngredients();
-
-}
-
-
-/* =================================
-   NEW FORMULA
-================================= */
+/* =========================================
+   NEW
+========================================= */
 
 function newFormula(){
 
 editingId = null;
+
 
 [
 "formulaNo",
@@ -1505,19 +1327,31 @@ editingId = null;
 "batchSize"
 
 ].forEach(
-id => $(id).value=""
+
+id =>
+$(id).value = ""
+
 );
 
 
-$("date").value = today();
+$("date").value =
+today();
 
-$("batchUnit").value = "g";
 
-$("ingredients").innerHTML = "";
+$("batchUnit").value =
+"g";
+
+
+$("ingredients").innerHTML =
+"";
+
 
 addIngredient();
 
-$("deleteBtn").style.display = "none";
+
+$("deleteBtn").style.display =
+"none";
+
 
 document
 .querySelectorAll(".tab")[1]
@@ -1526,64 +1360,41 @@ document
 }
 
 
-/* =================================
-   INGREDIENT ROW
-================================= */
+/* =========================================
+   ADD INGREDIENT
+========================================= */
 
 function addIngredient(data={}){
 
 const row =
 document.createElement("div");
 
-row.className = "ing-row";
 
-
-const selectedName =
-data.name || "";
-
-
-let options = `
-
-<option value="">
-Select / type ingredient
-</option>
-
-`;
-
-
-const sorted =
-[...masterIngredients]
-.sort(
-(a,b) =>
-a.name.localeCompare(b.name)
-);
-
-
-sorted.forEach(x => {
-
-options += `
-
-<option
-value="${esc(x.name)}"
-${x.name === selectedName ? "selected" : ""}>
-${esc(x.name)}
-[${esc(x.category)}]
-</option>
-
-`;
-
-});
+row.className =
+"ing-row";
 
 
 row.innerHTML = `
 
-<select
-class="iname"
-onchange="calcTotals()">
+<div>
 
-${options}
+<select
+class="iname-select"
+onchange="ingredientSelectChanged(this)">
+
+${getIngredientOptions(
+data.name || ""
+)}
 
 </select>
+
+<input
+class="iname custom-ingredient"
+placeholder="Type ingredient name"
+value="${esc(data.name || "")}">
+
+</div>
+
 
 <input
 class="iqty"
@@ -1593,6 +1404,7 @@ step="any"
 placeholder="Qty"
 value="${data.qty ?? ""}"
 oninput="calcTotals()">
+
 
 <select class="iunit">
 
@@ -1614,6 +1426,7 @@ L
 
 </select>
 
+
 <input
 class="ipct"
 type="number"
@@ -1623,28 +1436,114 @@ placeholder="%"
 value="${data.pct ?? ""}"
 oninput="calcTotals()">
 
+
 <button
+type="button"
 class="danger"
 onclick="
 this.parentElement.remove();
 calcTotals();
 ">
+
 ×
+
 </button>
 
 `;
 
+
 $("ingredients")
 .appendChild(row);
+
+
+const select =
+row.querySelector(
+".iname-select"
+);
+
+
+const custom =
+row.querySelector(
+".custom-ingredient"
+);
+
+
+const all =
+getMasterIngredients();
+
+
+const exists =
+[
+...all.natural,
+...all.science
+]
+.some(
+x =>
+x === data.name
+);
+
+
+if(
+data.name &&
+!exists
+){
+
+select.value =
+"__custom__";
+
+custom.style.display =
+"block";
+
+}
+
 
 calcTotals();
 
 }
 
 
-/* =================================
+/* =========================================
+   INGREDIENT SELECT
+========================================= */
+
+function ingredientSelectChanged(select){
+
+const row =
+select.closest(".ing-row");
+
+
+const custom =
+row.querySelector(
+".custom-ingredient"
+);
+
+
+if(
+select.value ===
+"__custom__"
+){
+
+custom.style.display =
+"block";
+
+custom.focus();
+
+}else{
+
+custom.style.display =
+"none";
+
+custom.value =
+select.value;
+
+}
+
+}
+
+
+/* =========================================
    TOTALS
-================================= */
+========================================= */
 
 function calcTotals(){
 
@@ -1656,72 +1555,109 @@ let p = 0;
 document
 .querySelectorAll(".iqty")
 .forEach(
-x => q += Number(x.value) || 0
+x =>
+q += Number(x.value) || 0
 );
 
 
 document
 .querySelectorAll(".ipct")
 .forEach(
-x => p += Number(x.value) || 0
+x =>
+p += Number(x.value) || 0
 );
 
 
 $("totalQty").textContent =
-q.toFixed(2).replace(/\.00$/,"");
+q.toFixed(2)
+.replace(/\.00$/,"");
 
 
 $("totalPct").textContent =
-p.toFixed(2).replace(/\.00$/,"")
-+ "%";
+p.toFixed(2)
+.replace(/\.00$/,"")
++
+"%";
 
 
 $("totalPercent").value =
-p.toFixed(2).replace(/\.00$/,"")
-+ "%";
+p.toFixed(2)
+.replace(/\.00$/,"")
++
+"%";
 
 }
 
 
-/* =================================
+/* =========================================
    GET INGREDIENTS
-================================= */
+========================================= */
 
 function getIngredients(){
 
 return [
 
-...document
-.querySelectorAll(
+...
+document.querySelectorAll(
 "#ingredients .ing-row"
 )
 
 ]
 
-.map(row => ({
+.map(
 
-name:
-row
-.querySelector(".iname")
-.value
-.trim(),
+row => {
+
+const select =
+row.querySelector(
+".iname-select"
+);
+
+const custom =
+row.querySelector(
+".custom-ingredient"
+);
+
+let name = "";
+
+
+if(
+select.value ===
+"__custom__"
+){
+
+name =
+custom.value.trim();
+
+}else{
+
+name =
+select.value.trim();
+
+}
+
+
+return {
+
+name:name,
 
 qty:
-row
-.querySelector(".iqty")
+row.querySelector(".iqty")
 .value,
 
 unit:
-row
-.querySelector(".iunit")
+row.querySelector(".iunit")
 .value,
 
 pct:
-row
-.querySelector(".ipct")
+row.querySelector(".ipct")
 .value
 
-}))
+};
+
+}
+
+)
 
 .filter(
 x =>
@@ -1733,9 +1669,9 @@ x.pct
 }
 
 
-/* =================================
-   SAVE FORMULA
-================================= */
+/* =========================================
+   SAVE
+========================================= */
 
 async function saveFormula(){
 
@@ -1778,27 +1714,41 @@ $("version")
 
 formula_date:
 $("date")
-.value || today(),
+.value ||
+today(),
 
 batch_size:
+$("batchSize")
+.value
+?
+Number(
 $("batchSize").value
-? Number($("batchSize").value)
-: null,
+)
+:
+null,
 
 batch_unit:
-$("batchUnit").value,
+$("batchUnit")
+.value,
 
 preparation_method:
-$("method").value.trim(),
+$("method")
+.value
+.trim(),
 
 result:
-$("result").value.trim(),
+$("result")
+.value
+.trim(),
 
 notes:
-$("notes").value.trim(),
+$("notes")
+.value
+.trim(),
 
 updated_at:
-new Date().toISOString()
+new Date()
+.toISOString()
 
 };
 
@@ -1817,18 +1767,26 @@ const {error} =
 await supabase
 .from("formulas")
 .update(item)
-.eq("id",editingId);
+.eq(
+"id",
+editingId
+);
 
 
 if(error)
 throw error;
 
 
-const {error:deleteError} =
+const {
+error:deleteError
+} =
 await supabase
 .from("formula_ingredients")
 .delete()
-.eq("formula_id",editingId);
+.eq(
+"formula_id",
+editingId
+);
 
 
 if(deleteError)
@@ -1841,7 +1799,10 @@ throw deleteError;
 
 else{
 
-const {data,error} =
+const {
+data,
+error
+} =
 await supabase
 .from("formulas")
 .insert(item)
@@ -1853,7 +1814,8 @@ if(error)
 throw error;
 
 
-formulaId = data.id;
+formulaId =
+data.id;
 
 }
 
@@ -1862,7 +1824,8 @@ formulaId = data.id;
 
 const ingredients =
 getIngredients()
-.map(x => ({
+.map(
+x => ({
 
 formula_id:
 formulaId,
@@ -1872,26 +1835,35 @@ x.name,
 
 quantity:
 x.qty
-? Number(x.qty)
-: null,
+?
+Number(x.qty)
+:
+null,
 
 unit:
 x.unit,
 
 percentage:
 x.pct
-? Number(x.pct)
-: null
+?
+Number(x.pct)
+:
+null
 
-}));
+})
+);
 
 
-if(ingredients.length){
+if(
+ingredients.length
+){
 
 const {error} =
 await supabase
 .from("formula_ingredients")
-.insert(ingredients);
+.insert(
+ingredients
+);
 
 
 if(error)
@@ -1902,8 +1874,10 @@ throw error;
 
 alert(
 editingId
-? "Formula updated successfully."
-: "Formula saved successfully."
+?
+"Formula updated successfully."
+:
+"Formula saved successfully."
 );
 
 
@@ -1919,7 +1893,8 @@ console.error(error);
 
 alert(
 "Supabase error: "
-+ error.message
++
+error.message
 );
 
 }
@@ -1927,9 +1902,9 @@ alert(
 }
 
 
-/* =================================
-   LOAD FORMULAS
-================================= */
+/* =========================================
+   LOAD
+========================================= */
 
 async function loadFormulas(){
 
@@ -1938,7 +1913,10 @@ setStatus(
 );
 
 
-const {data,error} =
+const {
+data,
+error
+} =
 await supabase
 .from("formulas")
 .select(
@@ -1946,7 +1924,9 @@ await supabase
 )
 .order(
 "created_at",
-{ascending:false}
+{
+ascending:false
+}
 );
 
 
@@ -1954,11 +1934,14 @@ if(error){
 
 setStatus(
 "❌ Supabase error: "
-+ error.message,
++
+error.message,
 true
 );
 
-$("formulaList").innerHTML = `
+
+$("formulaList")
+.innerHTML = `
 
 <div class="empty">
 
@@ -1977,13 +1960,16 @@ return;
 }
 
 
-formulas = data || [];
+formulas =
+data || [];
 
 
 setStatus(
 "☁ Connected • "
-+ formulas.length
-+ " formula(s) online"
++
+formulas.length
++
+" formula(s) online"
 );
 
 
@@ -1992,9 +1978,9 @@ renderList();
 }
 
 
-/* =================================
-   FORMULA LIST
-================================= */
+/* =========================================
+   LIST
+========================================= */
 
 function renderList(){
 
@@ -2007,23 +1993,30 @@ $("search")
 
 const list =
 formulas.filter(
+
 f => (
 
 (f.product_name || "")
-+ " "
-+ (f.formula_no || "")
-+ " "
-+ (f.formula_name || "")
++
+" "
++
+(f.formula_no || "")
++
+" "
++
+(f.formula_name || "")
 
 )
 .toLowerCase()
 .includes(q)
+
 );
 
 
 if(!list.length){
 
-$("formulaList").innerHTML = `
+$("formulaList")
+.innerHTML = `
 
 <div class="empty">
 
@@ -2043,7 +2036,8 @@ return;
 }
 
 
-$("formulaList").innerHTML = `
+$("formulaList")
+.innerHTML = `
 
 <table>
 
@@ -2056,7 +2050,9 @@ $("formulaList").innerHTML = `
 <th>Formula</th>
 <th>Version</th>
 <th>Date</th>
-<th class="no-print">Action</th>
+<th class="no-print">
+Action
+</th>
 
 </tr>
 
@@ -2065,57 +2061,82 @@ $("formulaList").innerHTML = `
 <tbody>
 
 ${
-list.map(f => `
+list
+.map(
+f => `
 
 <tr>
 
 <td>
-${esc(f.formula_no || "-")}
+${esc(
+f.formula_no || "-"
+)}
 </td>
 
 <td>
 <b>
-${esc(f.product_name)}
+${esc(
+f.product_name
+)}
 </b>
 </td>
 
 <td>
-${esc(f.formula_name || "-")}
+${esc(
+f.formula_name || "-"
+)}
 </td>
 
 <td>
-${esc(f.version || "-")}
+${esc(
+f.version || "-"
+)}
 </td>
 
 <td>
-${esc(f.formula_date || "-")}
+${esc(
+f.formula_date || "-"
+)}
 </td>
 
 <td class="no-print">
 
 <button
+type="button"
 class="secondary"
 onclick="viewFormula('${f.id}')">
+
 👁 View
+
 </button>
 
+
 <button
+type="button"
 class="secondary"
 onclick="editFormula('${f.id}')">
+
 ✏️ Edit
+
 </button>
 
+
 <button
+type="button"
 class="secondary"
 onclick="printFormula('${f.id}')">
+
 🖨️ Print
+
 </button>
 
 </td>
 
 </tr>
 
-`).join("")
+`
+)
+.join("")
 }
 
 </tbody>
@@ -2127,15 +2148,17 @@ onclick="printFormula('${f.id}')">
 }
 
 
-/* =================================
-   EDIT FORMULA
-================================= */
+/* =========================================
+   EDIT
+========================================= */
 
 function editFormula(id){
 
 const f =
 formulas.find(
-x => x.id === id
+x =>
+String(x.id) ===
+String(id)
 );
 
 
@@ -2143,7 +2166,8 @@ if(!f)
 return;
 
 
-editingId = id;
+editingId =
+id;
 
 
 $("formulaNo").value =
@@ -2163,7 +2187,8 @@ f.version || "";
 
 
 $("date").value =
-f.formula_date || today();
+f.formula_date ||
+today();
 
 
 $("batchSize").value =
@@ -2186,7 +2211,8 @@ $("notes").value =
 f.notes || "";
 
 
-$("ingredients").innerHTML = "";
+$("ingredients").innerHTML =
+"";
 
 
 const ingredients =
@@ -2196,15 +2222,24 @@ f.formula_ingredients || [];
 if(ingredients.length){
 
 ingredients.forEach(
+
 x =>
 addIngredient({
 
-name:x.ingredient_name,
-qty:x.quantity,
-unit:x.unit,
-pct:x.percentage
+name:
+x.ingredient_name,
+
+qty:
+x.quantity,
+
+unit:
+x.unit,
+
+pct:
+x.percentage
 
 })
+
 );
 
 }else{
@@ -2229,15 +2264,17 @@ document
 }
 
 
-/* =================================
+/* =========================================
    VIEW
-================================= */
+========================================= */
 
 function viewFormula(id){
 
 const f =
 formulas.find(
-x => x.id === id
+x =>
+String(x.id) ===
+String(id)
 );
 
 
@@ -2251,54 +2288,76 @@ f.formula_ingredients || [];
 
 const ing =
 ingredients
-.map(x => `
+.map(
+x => `
 
 <tr>
 
 <td>
-${esc(x.ingredient_name)}
+${esc(
+x.ingredient_name
+)}
 </td>
 
 <td>
-${esc(x.quantity ?? "")}
+${esc(
+x.quantity ?? ""
+)}
 </td>
 
 <td>
-${esc(x.unit || "")}
+${esc(
+x.unit || ""
+)}
 </td>
 
 <td>
-${esc(x.percentage ?? "")}
+${esc(
+x.percentage ?? ""
+)}
 </td>
 
 </tr>
 
-`)
+`
+)
 .join("");
 
 
-$("formulaList").innerHTML = `
+$("formulaList")
+.innerHTML = `
 
 <div class="card">
 
 <div class="actions no-print">
 
 <button
+type="button"
 class="secondary"
 onclick="renderList()">
+
 ← Back
+
 </button>
 
+
 <button
+type="button"
 class="primary"
 onclick="printFormula('${f.id}')">
+
 🖨️ Print
+
 </button>
 
+
 <button
+type="button"
 class="secondary"
 onclick="editFormula('${f.id}')">
+
 ✏️ Edit
+
 </button>
 
 </div>
@@ -2370,7 +2429,9 @@ Preparation Method
 </h3>
 
 <div>
-${nl(f.preparation_method || "-")}
+${nl(
+f.preparation_method || "-"
+)}
 </div>
 
 
@@ -2379,7 +2440,9 @@ Result
 </h3>
 
 <div>
-${nl(f.result || "-")}
+${nl(
+f.result || "-"
+)}
 </div>
 
 
@@ -2388,7 +2451,9 @@ Notes
 </h3>
 
 <div>
-${nl(f.notes || "-")}
+${nl(
+f.notes || "-"
+)}
 </div>
 
 </div>
@@ -2398,9 +2463,9 @@ ${nl(f.notes || "-")}
 }
 
 
-/* =================================
-   DELETE FORMULA
-================================= */
+/* =========================================
+   DELETE
+========================================= */
 
 async function deleteCurrent(){
 
@@ -2408,9 +2473,11 @@ if(!editingId)
 return;
 
 
-if(!confirm(
+if(
+!confirm(
 "Delete this formula?"
-))
+)
+)
 return;
 
 
@@ -2420,7 +2487,10 @@ const {error} =
 await supabase
 .from("formulas")
 .delete()
-.eq("id",editingId);
+.eq(
+"id",
+editingId
+);
 
 
 if(error)
@@ -2432,9 +2502,12 @@ alert(
 );
 
 
-editingId = null;
+editingId =
+null;
+
 
 await loadFormulas();
+
 
 document
 .querySelectorAll(".tab")[0]
@@ -2446,7 +2519,8 @@ catch(error){
 
 alert(
 "Delete error: "
-+ error.message
++
+error.message
 );
 
 }
@@ -2454,15 +2528,17 @@ alert(
 }
 
 
-/* =================================
-   PROFESSIONAL PRINT
-================================= */
+/* =========================================
+   PRINT
+========================================= */
 
 function printFormula(id){
 
 const f =
 formulas.find(
-x => x.id === id
+x =>
+String(x.id) ===
+String(id)
 );
 
 
@@ -2476,33 +2552,46 @@ f.formula_ingredients || [];
 
 const ing =
 ingredients
-.map(x => `
+.map(
+x => `
 
 <tr>
 
 <td>
-${esc(x.ingredient_name)}
+${esc(
+x.ingredient_name
+)}
 </td>
 
 <td>
-${esc(x.quantity ?? "")}
+${esc(
+x.quantity ?? ""
+)}
 </td>
 
 <td>
-${esc(x.unit || "")}
+${esc(
+x.unit || ""
+)}
 </td>
 
 <td>
-${esc(x.percentage ?? "")}
+${esc(
+x.percentage ?? ""
+)}
 </td>
 
 </tr>
 
-`)
+`
+)
 .join("");
 
 
-$("printArea").innerHTML = `
+$("printArea")
+.innerHTML = `
+
+<div class="print-head">
 
 <div class="brand-print">
 Liara Professional™
@@ -2512,44 +2601,40 @@ Liara Professional™
 ADVANCED HERBAL
 </div>
 
-<div class="print-rule"></div>
-
-<div class="print-title">
-FORMULA SHEET
+<div style="font-size:11px;margin-top:5px">
+Professional Formula & Product Development
 </div>
+
+</div>
+
+
+<h2>
+FORMULA SHEET
+</h2>
 
 
 <table class="print-table">
 
 <tr>
 
-<th>Product Name</th>
+<th>
+Product Name
+</th>
 
 <td>
-${esc(f.product_name)}
+${esc(
+f.product_name
+)}
 </td>
 
-<th>Formula No.</th>
+<th>
+Formula No.
+</th>
 
 <td>
-${esc(f.formula_no || "-")}
-</td>
-
-</tr>
-
-
-<tr>
-
-<th>Formula Name</th>
-
-<td>
-${esc(f.formula_name || "-")}
-</td>
-
-<th>Version</th>
-
-<td>
-${esc(f.version || "-")}
+${esc(
+f.formula_no || "-"
+)}
 </td>
 
 </tr>
@@ -2557,17 +2642,52 @@ ${esc(f.version || "-")}
 
 <tr>
 
-<th>Date</th>
+<th>
+Formula Name
+</th>
 
 <td>
-${esc(f.formula_date || "-")}
+${esc(
+f.formula_name || "-"
+)}
 </td>
 
-<th>Batch</th>
+<th>
+Version
+</th>
 
 <td>
-${esc(f.batch_size ?? "-")}
-${esc(f.batch_unit || "")}
+${esc(
+f.version || "-"
+)}
+</td>
+
+</tr>
+
+
+<tr>
+
+<th>
+Date
+</th>
+
+<td>
+${esc(
+f.formula_date || "-"
+)}
+</td>
+
+<th>
+Batch
+</th>
+
+<td>
+${esc(
+f.batch_size ?? "-"
+)}
+${esc(
+f.batch_unit || ""
+)}
 </td>
 
 </tr>
@@ -2575,103 +2695,75 @@ ${esc(f.batch_unit || "")}
 </table>
 
 
-<div class="print-section">
-INGREDIENTS
-</div>
+<h3>
+Ingredients
+</h3>
 
 
 <table class="print-table">
 
 <tr>
 
-<th>#</th>
-<th>Ingredient</th>
-<th>Quantity</th>
-<th>Unit</th>
-<th>%</th>
-
-</tr>
-
-${
-ingredients.map((x,i) => `
-
-<tr>
-
-<td>${i+1}</td>
-
-<td>${esc(x.ingredient_name)}</td>
-
-<td>${esc(x.quantity ?? "")}</td>
-
-<td>${esc(x.unit || "")}</td>
-
-<td>${esc(x.percentage ?? "")}</td>
-
-</tr>
-
-`).join("")
-}
-
-
-<tr>
-
-<th colspan="4">
-TOTAL
+<th>
+Ingredient
 </th>
 
 <th>
-${ingredients.reduce(
-(sum,x) =>
-sum + (Number(x.percentage) || 0),
-0
-).toFixed(2).replace(/\.00$/,"")}%
+Quantity
+</th>
+
+<th>
+Unit
+</th>
+
+<th>
+%
 </th>
 
 </tr>
 
+${ing}
+
 </table>
 
 
-<div class="print-section">
-PREPARATION METHOD
-</div>
+<h3>
+Preparation Method
+</h3>
 
-<div class="print-text">
-${nl(f.preparation_method || "-")}
-</div>
-
-
-<div class="print-section">
-RESULT
-</div>
-
-<div class="print-text">
-${nl(f.result || "-")}
+<div>
+${nl(
+f.preparation_method || "-"
+)}
 </div>
 
 
-<div class="print-section">
-NOTES
+<h3>
+Result
+</h3>
+
+<div>
+${nl(
+f.result || "-"
+)}
 </div>
 
-<div class="print-text">
-${nl(f.notes || "-")}
+
+<h3>
+Notes
+</h3>
+
+<div>
+${nl(
+f.notes || "-"
+)}
 </div>
 
 
 <div class="print-footer">
 
-<span>
-Liara Professional™ • Advanced Herbal
-</span>
-
-<span>
-Formula No: ${esc(f.formula_no || "-")}
-</span>
-
-<span>
-${esc(f.formula_date || "-")}
-</span>
+Liara Professional™ • Advanced Herbal<br>
+Professional Formula Sheet
 
 </div>
 
@@ -2681,35 +2773,48 @@ ${esc(f.formula_date || "-")}
 document
 .querySelectorAll(".panel")
 .forEach(
-p => p.classList.remove("active")
+p =>
+p.classList.remove("active")
 );
 
 
 $("printArea")
-.style.display = "block";
+.style.display =
+"block";
 
+
+setTimeout(
+function(){
 
 window.print();
 
-
 $("printArea")
-.style.display = "none";
+.style.display =
+"none";
 
 
 document
 .querySelectorAll(".tab")[0]
 .click();
 
+},
+100
+);
+
 }
 
 
-/* =================================
+/* =========================================
    START
-================================= */
+========================================= */
 
-$("date").value = today();
+$("date").value =
+today();
+
 
 addIngredient();
+
+renderMasterLists();
 
 loadFormulas();
 
