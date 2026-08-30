@@ -8041,6 +8041,15 @@ async function savePartySale(partyId){
     const {error:stockError}=await supabaseClient.from("products").update({stock:currentStock-qty}).eq("id",productId);
     if(stockError){alert("Stock update failed:\n\n"+stockError.message);return;}
 
+    const {error:stockTxError}=await supabaseClient.from("stock_transactions").insert({
+        product_id:productId,
+        transaction_type:"offline_out",
+        quantity:qty,
+        party_name:party.name||null,
+        note:note||"Offline sale"
+    });
+    if(stockTxError){alert("Stock movement record failed:\n\n"+stockTxError.message);return;}
+
     alert("Sale saved successfully.\n\nBill: ₹"+amount.toLocaleString("en-IN")+"\nPaid: ₹"+paid.toLocaleString("en-IN")+"\nBaki: ₹"+(amount-paid).toLocaleString("en-IN")+"\nRemaining stock: "+(currentStock-qty));
     await viewParty(partyId);
 }
@@ -8086,8 +8095,6 @@ async function savePartySaleFromStock(partyId,productId,qty,bill,paid,note){
     const {error}=await supabaseClient.from("party_transactions").insert({party_id:partyId,product_id:productId,transaction_type:"sale",quantity:qty,amount:bill,note:note||"Offline sale"});
     if(error){alert("Party sale save failed:\n\n"+error.message);return;}
     if(paid>0){const q=await supabaseClient.from("party_transactions").insert({party_id:partyId,product_id:productId,transaction_type:"payment",amount:paid,note:"Payment received with sale"});if(q.error){alert("Payment save failed:\n\n"+q.error.message);return;}}
-    const tx=await supabaseClient.from("stock_transactions").insert({product_id:productId,transaction_type:"offline_out",quantity:qty,note:note||"Offline sale to party"});
-    if(tx.error){alert("Stock movement save failed:\n\n"+tx.error.message);return;}
     const u=await supabaseClient.from("products").update({stock:stock-qty}).eq("id",productId);
     if(u.error){alert("Stock update failed:\n\n"+u.error.message);return;}
     alert("Offline sale saved successfully.\nRemaining stock: "+(stock-qty));
