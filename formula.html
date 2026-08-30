@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -932,6 +933,24 @@ let editingId = null;
 
 
 /* =========================================
+   BATCH SCALING VARIABLES
+========================================= */
+
+/*
+Stores the last committed batch size.
+
+Example:
+200 g -> 500 g
+Scale = 500 / 200 = 2.5
+
+Percentages are never changed.
+Only ingredient quantities are scaled.
+*/
+
+let lastBatchSize = 0;
+
+
+/* =========================================
    SHORTCUT
 ========================================= */
 
@@ -1524,6 +1543,8 @@ function newFormula(){
 
 editingId = null;
 
+lastBatchSize = 0;
+
 
 [
 "formulaNo",
@@ -1865,6 +1886,152 @@ p.toFixed(2)
 .replace(/\.00$/,"")
 +
 "%";
+
+}
+
+
+/* =========================================
+   BATCH SIZE SCALING
+========================================= */
+
+/*
+IMPORTANT:
+
+This runs on the batchSize "change" event.
+
+That means typing:
+200 -> 500
+
+does NOT continuously modify quantities.
+
+Only after the user leaves the field
+or presses Tab will the quantities scale.
+
+Percentages are never touched.
+
+Example:
+
+Old batch = 200
+New batch = 500
+Scale = 500 / 200 = 2.5
+
+40 g -> 100 g
+20 g -> 50 g
+10 g -> 25 g
+*/
+
+function scaleIngredientsForBatch(){
+
+const batchField =
+$("batchSize");
+
+if(!batchField)
+return;
+
+
+const newBatch =
+Number(batchField.value);
+
+
+if(
+!Number.isFinite(newBatch) ||
+newBatch <= 0
+){
+
+return;
+
+}
+
+
+/*
+If there is no previous batch size,
+just remember this batch size.
+
+This prevents the first batch entry from
+unexpectedly changing ingredient quantities.
+*/
+
+if(
+!lastBatchSize ||
+lastBatchSize <= 0
+){
+
+lastBatchSize =
+newBatch;
+
+return;
+
+}
+
+
+/*
+Same batch size = nothing to scale.
+*/
+
+if(
+Math.abs(newBatch - lastBatchSize)
+< 0.0000001
+){
+
+return;
+
+}
+
+
+const multiplier =
+newBatch / lastBatchSize;
+
+
+document
+.querySelectorAll(
+"#ingredients .ing-row"
+)
+.forEach(
+row => {
+
+const qty =
+row.querySelector(".iqty");
+
+if(!qty)
+return;
+
+
+const oldQty =
+Number(qty.value);
+
+
+if(
+!Number.isFinite(oldQty)
+){
+
+return;
+
+}
+
+
+const newQty =
+oldQty * multiplier;
+
+
+qty.value =
+newQty
+.toFixed(6)
+.replace(/\.?0+$/,"");
+
+}
+);
+
+
+/*
+Only update the remembered batch size
+after the scaling has completed.
+*/
+
+lastBatchSize =
+newBatch;
+
+
+calcTotals();
 
 }
 
@@ -2599,6 +2766,16 @@ f.batch_unit ||
 "g";
 
 
+/*
+Remember the saved batch size.
+
+This is the baseline for future scaling.
+*/
+
+lastBatchSize =
+Number(f.batch_size) || 0;
+
+
 $("method").value =
 f.preparation_method || "";
 
@@ -2966,6 +3143,8 @@ alert(
 
 editingId = null;
 
+lastBatchSize = 0;
+
 
 await loadFormulas();
 
@@ -3278,7 +3457,7 @@ renderList();
 
 /* =========================================
    ALL BUTTON EVENTS
-   ========================================= */
+========================================= */
 
 function setupEvents(){
 
@@ -3442,6 +3621,28 @@ addMasterIngredient(
 }
 );
 
+
+/* =========================================
+   BATCH SIZE CHANGE
+========================================= */
+
+/*
+The change event fires when the user finishes
+editing the batch field and leaves it / presses Tab.
+
+It does NOT run for every keystroke.
+*/
+
+$("batchSize")
+.addEventListener(
+"change",
+function(){
+
+scaleIngredientsForBatch();
+
+}
+);
+
 }
 
 
@@ -3471,3 +3672,4 @@ loadFormulas();
 
 </body>
 </html>
+```
