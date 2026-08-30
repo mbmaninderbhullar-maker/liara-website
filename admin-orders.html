@@ -8126,23 +8126,21 @@ function showPartyPaymentForm(id){ return addPartyPayment(id); }
 
 </script>
 <script>
-const FORMULA_PASSWORD = "Samar@123";
-
-const enteredPassword = prompt("🔐 Formula Password:");
-
-if (enteredPassword !== FORMULA_PASSWORD) {
-    document.body.innerHTML = `
-        <div style="
-            text-align:center;
-            padding:100px 20px;
-            font-family:Arial;
-        ">
-            <h2>🔒 Access Denied</h2>
-            <p>Wrong password.</p>
-        </div>
-    `;
-    throw new Error("Unauthorized");
-}
-</script>
+<a href="formula.html"
+style="
+position:fixed;
+top:15px;
+left:15px;
+background:#173b2d;
+color:white;
+padding:5px 8px;
+border-radius:5px;
+text-decoration:none;
+font-size:10px;
+font-weight:bold;
+z-index:9999;
+">
+🧮 Formula
+</a>
 </body>
 </html>
