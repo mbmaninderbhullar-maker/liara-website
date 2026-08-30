@@ -134,13 +134,18 @@ cursor:pointer;
 font-weight:bold
 }
 
+button:active{
+transform:scale(.98)
+}
+
 .primary{
 background:#173b2d;
 color:white
 }
 
 .secondary{
-background:#e9eef0
+background:#e9eef0;
+color:#1f2937
 }
 
 .danger{
@@ -197,6 +202,10 @@ margin-bottom:8px
 .ing-head{
 font-size:12px;
 font-weight:bold
+}
+
+.ing-row > div{
+min-width:0
 }
 
 .total{
@@ -295,7 +304,8 @@ justify-content:space-between;
 align-items:center;
 padding:7px 0;
 border-bottom:1px solid #eee;
-font-size:13px
+font-size:13px;
+gap:10px
 }
 
 .master-item:last-child{
@@ -308,7 +318,8 @@ font-size:11px
 }
 
 .custom-ingredient{
-display:none
+display:none;
+margin-top:7px
 }
 
 /* PRINT */
@@ -378,7 +389,13 @@ width:calc(100vw - 20px)
 right:10px
 }
 
+.searchbar{
+flex-direction:column
 }
+
+}
+
+/* PRINT */
 
 @media print{
 
@@ -435,9 +452,9 @@ Liara Professional™
 <!-- SETTINGS BUTTON -->
 
 <button
+id="settingsButton"
 class="settings-button no-print"
-type="button"
-onclick="toggleSettings()">
+type="button">
 
 ⚙️ Settings
 
@@ -471,13 +488,12 @@ Ingredient Management • Advanced Herbal
 
 <input
 id="scienceInput"
-placeholder="Add science ingredient..."
-onkeydown="if(event.key==='Enter') addMasterIngredient('science')">
+placeholder="Add science ingredient...">
 
 <button
+id="scienceAddBtn"
 class="primary"
-type="button"
-onclick="addMasterIngredient('science')">
+type="button">
 
 + Add
 
@@ -506,13 +522,12 @@ style="margin-top:10px">
 
 <input
 id="naturalInput"
-placeholder="Add natural ingredient..."
-onkeydown="if(event.key==='Enter') addMasterIngredient('natural')">
+placeholder="Add natural ingredient...">
 
 <button
+id="naturalAddBtn"
 class="primary"
-type="button"
-onclick="addMasterIngredient('natural')">
+type="button">
 
 + Add
 
@@ -551,9 +566,9 @@ Your existing Supabase formula data is not changed.
 <div class="tabs no-print">
 
 <button
+id="seenTab"
 type="button"
-class="tab active"
-onclick="showTab('seen',this)">
+class="tab active">
 
 👁 Formula Seen
 
@@ -561,9 +576,9 @@ onclick="showTab('seen',this)">
 
 
 <button
+id="editTab"
 type="button"
-class="tab"
-onclick="showTab('edit',this)">
+class="tab">
 
 ➕ Add / Edit Formula
 
@@ -591,14 +606,13 @@ class="panel active">
 
 <input
 id="search"
-placeholder="Search product, formula no. or formula name..."
-oninput="renderList()">
+placeholder="Search product, formula no. or formula name...">
 
 
 <button
+id="newTopBtn"
 type="button"
-class="secondary"
-onclick="newFormula()">
+class="secondary">
 
 ➕ New
 
@@ -702,10 +716,10 @@ placeholder="e.g. 1000">
 
 <select id="batchUnit">
 
-<option>g</option>
-<option>kg</option>
-<option>ml</option>
-<option>L</option>
+<option value="g">g</option>
+<option value="kg">kg</option>
+<option value="ml">ml</option>
+<option value="L">L</option>
 
 </select>
 
@@ -763,9 +777,10 @@ Total:
 
 
 <button
+id="addIngredientBtn"
 type="button"
 class="secondary no-print"
-onclick="addIngredient()">
+style="margin-top:10px">
 
 + Add Ingredient
 
@@ -819,9 +834,9 @@ placeholder="Additional notes..."></textarea>
 <div class="actions no-print">
 
 <button
+id="saveBtn"
 type="button"
-class="primary"
-onclick="saveFormula()">
+class="primary">
 
 💾 Save Formula
 
@@ -829,9 +844,9 @@ onclick="saveFormula()">
 
 
 <button
+id="clearBtn"
 type="button"
-class="secondary"
-onclick="newFormula()">
+class="secondary">
 
 Clear
 
@@ -839,10 +854,9 @@ Clear
 
 
 <button
+id="deleteBtn"
 type="button"
 class="danger"
-id="deleteBtn"
-onclick="deleteCurrent()"
 style="display:none">
 
 🗑 Delete
@@ -878,11 +892,34 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
 
-const supabase =
+let supabaseClient = null;
+
+try{
+
+if(
+window.supabase &&
+typeof window.supabase.createClient === "function"
+){
+
+supabaseClient =
 window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY
 );
+
+}else{
+
+throw new Error(
+"Supabase library failed to load."
+);
+
+}
+
+}catch(error){
+
+console.error(error);
+
+}
 
 
 /* =========================================
@@ -909,12 +946,19 @@ return document.getElementById(id);
    STATUS
 ========================================= */
 
-function setStatus(message,error=false){
+function setStatus(
+message,
+error=false
+){
 
-$("status").textContent =
-message;
+const box = $("status");
 
-$("status").className =
+if(!box)
+return;
+
+box.textContent = message;
+
+box.className =
 error
 ? "status error no-print"
 : "status no-print";
@@ -931,7 +975,6 @@ function esc(value){
 return String(value ?? "")
 .replace(
 /[&<>"']/g,
-
 function(m){
 
 return {
@@ -963,9 +1006,63 @@ return esc(value)
 
 function today(){
 
-return new Date()
-.toISOString()
-.slice(0,10);
+const d = new Date();
+
+const year =
+d.getFullYear();
+
+const month =
+String(
+d.getMonth()+1
+).padStart(2,"0");
+
+const day =
+String(
+d.getDate()
+).padStart(2,"0");
+
+return year+"-"+month+"-"+day;
+
+}
+
+
+/* =========================================
+   TAB
+========================================= */
+
+function showTab(id){
+
+document
+.querySelectorAll(".panel")
+.forEach(
+p =>
+p.classList.remove("active")
+);
+
+const panel = $(id);
+
+if(panel)
+panel.classList.add("active");
+
+
+document
+.querySelectorAll(".tab")
+.forEach(
+b =>
+b.classList.remove("active")
+);
+
+if(id === "seen"){
+
+$("seenTab")
+.classList.add("active");
+
+}else{
+
+$("editTab")
+.classList.add("active");
+
+}
 
 }
 
@@ -976,8 +1073,10 @@ return new Date()
 
 function toggleSettings(){
 
-$("settingsPanel")
-.classList.toggle("open");
+const panel =
+$("settingsPanel");
+
+panel.classList.toggle("open");
 
 renderMasterLists();
 
@@ -1018,7 +1117,14 @@ Array.isArray(data.natural)
 
 }
 
-}catch(e){}
+}catch(error){
+
+console.error(
+"Ingredient storage error:",
+error
+);
+
+}
 
 return {
 
@@ -1031,12 +1137,30 @@ natural:[]
 }
 
 
+/* =========================================
+   SAVE MASTER DATA
+========================================= */
+
 function saveMasterIngredients(data){
+
+try{
 
 localStorage.setItem(
 "liara_formula_ingredients",
 JSON.stringify(data)
 );
+
+}catch(error){
+
+alert(
+"Could not save ingredient list: "
++
+error.message
+);
+
+return;
+
+}
 
 renderMasterLists();
 
@@ -1052,6 +1176,9 @@ function addMasterIngredient(type){
 const input =
 $(type+"Input");
 
+if(!input)
+return;
+
 const value =
 input.value.trim();
 
@@ -1063,13 +1190,15 @@ const data =
 getMasterIngredients();
 
 
-if(
-!data[type].some(
+const exists =
+data[type].some(
 x =>
-x.toLowerCase() ===
+String(x).toLowerCase() ===
 value.toLowerCase()
-)
-){
+);
+
+
+if(!exists){
 
 data[type].push(value);
 
@@ -1087,6 +1216,14 @@ input.value = "";
 
 input.focus();
 
+
+/*
+Refresh open ingredient dropdowns
+without changing saved formula data.
+*/
+
+refreshIngredientDropdowns();
+
 }
 
 
@@ -1094,7 +1231,10 @@ input.focus();
    DELETE MASTER INGREDIENT
 ========================================= */
 
-function deleteMasterIngredient(type,index){
+function deleteMasterIngredient(
+type,
+index
+){
 
 const data =
 getMasterIngredients();
@@ -1115,6 +1255,8 @@ index,
 
 saveMasterIngredients(data);
 
+refreshIngredientDropdowns();
+
 }
 
 
@@ -1126,7 +1268,6 @@ function renderMasterLists(){
 
 const data =
 getMasterIngredients();
-
 
 renderMasterList(
 "science",
@@ -1141,18 +1282,30 @@ data.natural
 }
 
 
-function renderMasterList(type,list){
+/* =========================================
+   RENDER MASTER LIST
+========================================= */
+
+function renderMasterList(
+type,
+list
+){
 
 const box =
 $(type+"List");
+
+if(!box)
+return;
 
 
 if(!list.length){
 
 box.innerHTML =
-`<div style="font-size:12px;color:#999">
+`
+<div style="font-size:12px;color:#999">
 No ingredients added yet.
-</div>`;
+</div>
+`;
 
 return;
 
@@ -1162,7 +1315,8 @@ return;
 box.innerHTML =
 list
 .map(
-(item,index) => `
+(item,index) =>
+`
 
 <div class="master-item">
 
@@ -1173,7 +1327,8 @@ ${esc(item)}
 <button
 type="button"
 class="danger small-btn"
-onclick="deleteMasterIngredient('${type}',${index})">
+data-master-type="${esc(type)}"
+data-master-index="${index}">
 
 × Delete
 
@@ -1184,6 +1339,31 @@ onclick="deleteMasterIngredient('${type}',${index})">
 `
 )
 .join("");
+
+
+box
+.querySelectorAll(
+"button[data-master-type]"
+)
+.forEach(
+button => {
+
+button.addEventListener(
+"click",
+function(){
+
+deleteMasterIngredient(
+this.dataset.masterType,
+Number(
+this.dataset.masterIndex
+)
+);
+
+}
+);
+
+}
+);
 
 }
 
@@ -1210,26 +1390,27 @@ Select ingredient...
 
 if(data.natural.length){
 
-html += `
+html +=
+`
 <optgroup label="🌿 Natural / Herbal">
 `;
 
 data.natural.forEach(
 item => {
 
-html += `
+html +=
+`
 <option
 value="${esc(item)}"
 ${item === selected ? "selected" : ""}>
-
 ${esc(item)}
-
 </option>
 `;
 
 });
 
-html += `
+html +=
+`
 </optgroup>
 `;
 
@@ -1238,33 +1419,35 @@ html += `
 
 if(data.science.length){
 
-html += `
+html +=
+`
 <optgroup label="🧪 Science">
 `;
 
 data.science.forEach(
 item => {
 
-html += `
+html +=
+`
 <option
 value="${esc(item)}"
 ${item === selected ? "selected" : ""}>
-
 ${esc(item)}
-
 </option>
 `;
 
 });
 
-html += `
+html +=
+`
 </optgroup>
 `;
 
 }
 
 
-html += `
+html +=
+`
 <option value="__custom__">
 ✏️ Other / Type Manually
 </option>
@@ -1277,38 +1460,64 @@ return html;
 
 
 /* =========================================
-   TAB
+   REFRESH INGREDIENT DROPDOWNS
 ========================================= */
 
-function showTab(id,btn){
+function refreshIngredientDropdowns(){
 
 document
-.querySelectorAll(".panel")
+.querySelectorAll(
+"#ingredients .ing-row"
+)
 .forEach(
-p =>
-p.classList.remove("active")
+row => {
+
+const select =
+row.querySelector(
+".iname-select"
 );
 
+if(!select)
+return;
 
-$(id)
-.classList.add("active");
+let current = "";
 
+if(
+select.value &&
+select.value !==
+"__custom__"
+){
 
-document
-.querySelectorAll(".tab")
-.forEach(
-b =>
-b.classList.remove("active")
+current =
+select.value;
+
+}else{
+
+const custom =
+row.querySelector(
+".custom-ingredient"
 );
 
+if(custom)
+current =
+custom.value.trim();
 
-btn.classList.add("active");
+}
+
+
+select.innerHTML =
+getIngredientOptions(
+current
+);
+
+}
+);
 
 }
 
 
 /* =========================================
-   NEW
+   NEW FORMULA
 ========================================= */
 
 function newFormula(){
@@ -1325,18 +1534,19 @@ editingId = null;
 "result",
 "notes",
 "batchSize"
+]
+.forEach(
+id => {
 
-].forEach(
+if($(id))
+$(id).value = "";
 
-id =>
-$(id).value = ""
-
+}
 );
 
 
 $("date").value =
 today();
-
 
 $("batchUnit").value =
 "g";
@@ -1353,9 +1563,10 @@ $("deleteBtn").style.display =
 "none";
 
 
-document
-.querySelectorAll(".tab")[1]
-.click();
+showTab("edit");
+
+
+$("formulaNo").focus();
 
 }
 
@@ -1364,34 +1575,42 @@ document
    ADD INGREDIENT
 ========================================= */
 
-function addIngredient(data={}){
+function addIngredient(
+data={}
+){
 
 const row =
 document.createElement("div");
-
 
 row.className =
 "ing-row";
 
 
-row.innerHTML = `
+const safeName =
+String(
+data.name || ""
+);
+
+
+row.innerHTML =
+`
 
 <div>
 
 <select
-class="iname-select"
-onchange="ingredientSelectChanged(this)">
+class="iname-select">
 
 ${getIngredientOptions(
-data.name || ""
+safeName
 )}
 
 </select>
 
 <input
 class="iname custom-ingredient"
+type="text"
 placeholder="Type ingredient name"
-value="${esc(data.name || "")}">
+value="${esc(safeName)}">
 
 </div>
 
@@ -1402,27 +1621,15 @@ type="number"
 min="0"
 step="any"
 placeholder="Qty"
-value="${data.qty ?? ""}"
-oninput="calcTotals()">
+value="${esc(data.qty ?? "")}">
 
 
 <select class="iunit">
 
-<option ${data.unit==="g"?"selected":""}>
-g
-</option>
-
-<option ${data.unit==="kg"?"selected":""}>
-kg
-</option>
-
-<option ${data.unit==="ml"?"selected":""}>
-ml
-</option>
-
-<option ${data.unit==="L"?"selected":""}>
-L
-</option>
+<option value="g">g</option>
+<option value="kg">kg</option>
+<option value="ml">ml</option>
+<option value="L">L</option>
 
 </select>
 
@@ -1433,17 +1640,12 @@ type="number"
 min="0"
 step="any"
 placeholder="%"
-value="${data.pct ?? ""}"
-oninput="calcTotals()">
+value="${esc(data.pct ?? "")}">
 
 
 <button
 type="button"
-class="danger"
-onclick="
-this.parentElement.remove();
-calcTotals();
-">
+class="danger ingredient-delete">
 
 ×
 
@@ -1456,11 +1658,20 @@ $("ingredients")
 .appendChild(row);
 
 
+const unit =
+row.querySelector(
+".iunit"
+);
+
+if(data.unit)
+unit.value =
+data.unit;
+
+
 const select =
 row.querySelector(
 ".iname-select"
 );
-
 
 const custom =
 row.querySelector(
@@ -1479,12 +1690,12 @@ const exists =
 ]
 .some(
 x =>
-x === data.name
+x === safeName
 );
 
 
 if(
-data.name &&
+safeName &&
 !exists
 ){
 
@@ -1494,7 +1705,67 @@ select.value =
 custom.style.display =
 "block";
 
+}else{
+
+custom.style.display =
+"none";
+
 }
+
+
+select.addEventListener(
+"change",
+function(){
+
+ingredientSelectChanged(
+this
+);
+
+}
+);
+
+
+custom.addEventListener(
+"input",
+function(){
+
+calcTotals();
+
+}
+);
+
+
+row.querySelector(
+".iqty"
+)
+.addEventListener(
+"input",
+calcTotals
+);
+
+
+row.querySelector(
+".ipct"
+)
+.addEventListener(
+"input",
+calcTotals
+);
+
+
+row.querySelector(
+".ingredient-delete"
+)
+.addEventListener(
+"click",
+function(){
+
+row.remove();
+
+calcTotals();
+
+}
+);
 
 
 calcTotals();
@@ -1506,10 +1777,15 @@ calcTotals();
    INGREDIENT SELECT
 ========================================= */
 
-function ingredientSelectChanged(select){
+function ingredientSelectChanged(
+select
+){
 
 const row =
 select.closest(".ing-row");
+
+if(!row)
+return;
 
 
 const custom =
@@ -1538,6 +1814,8 @@ select.value;
 
 }
 
+calcTotals();
+
 }
 
 
@@ -1556,7 +1834,8 @@ document
 .querySelectorAll(".iqty")
 .forEach(
 x =>
-q += Number(x.value) || 0
+q +=
+Number(x.value) || 0
 );
 
 
@@ -1564,7 +1843,8 @@ document
 .querySelectorAll(".ipct")
 .forEach(
 x =>
-p += Number(x.value) || 0
+p +=
+Number(x.value) || 0
 );
 
 
@@ -1603,9 +1883,7 @@ document.querySelectorAll(
 )
 
 ]
-
 .map(
-
 row => {
 
 const select =
@@ -1622,17 +1900,22 @@ let name = "";
 
 
 if(
+select &&
 select.value ===
 "__custom__"
 ){
 
 name =
-custom.value.trim();
+custom
+? custom.value.trim()
+: "";
 
 }else{
 
 name =
-select.value.trim();
+select
+? select.value.trim()
+: "";
 
 }
 
@@ -1642,23 +1925,24 @@ return {
 name:name,
 
 qty:
-row.querySelector(".iqty")
-.value,
+row.querySelector(
+".iqty"
+).value,
 
 unit:
-row.querySelector(".iunit")
-.value,
+row.querySelector(
+".iunit"
+).value,
 
 pct:
-row.querySelector(".ipct")
-.value
+row.querySelector(
+".ipct"
+).value
 
 };
 
 }
-
 )
-
 .filter(
 x =>
 x.name ||
@@ -1670,10 +1954,21 @@ x.pct
 
 
 /* =========================================
-   SAVE
+   SAVE FORMULA
 ========================================= */
 
 async function saveFormula(){
+
+if(!supabaseClient){
+
+alert(
+"Supabase is not connected."
+);
+
+return;
+
+}
+
 
 const product =
 $("productName")
@@ -1686,6 +1981,8 @@ if(!product){
 alert(
 "Product Name is required."
 );
+
+$("productName").focus();
 
 return;
 
@@ -1763,15 +2060,16 @@ editingId;
 
 if(editingId){
 
-const {error} =
-await supabase
+const {
+error
+} =
+await supabaseClient
 .from("formulas")
 .update(item)
 .eq(
 "id",
 editingId
 );
-
 
 if(error)
 throw error;
@@ -1780,14 +2078,13 @@ throw error;
 const {
 error:deleteError
 } =
-await supabase
+await supabaseClient
 .from("formula_ingredients")
 .delete()
 .eq(
 "formula_id",
 editingId
 );
-
 
 if(deleteError)
 throw deleteError;
@@ -1803,7 +2100,7 @@ const {
 data,
 error
 } =
-await supabase
+await supabaseClient
 .from("formulas")
 .insert(item)
 .select("id")
@@ -1858,13 +2155,14 @@ if(
 ingredients.length
 ){
 
-const {error} =
-await supabase
+const {
+error
+} =
+await supabaseClient
 .from("formula_ingredients")
 .insert(
 ingredients
 );
-
 
 if(error)
 throw error;
@@ -1889,12 +2187,15 @@ editFormula(formulaId);
 
 catch(error){
 
-console.error(error);
+console.error(
+"Save formula error:",
+error
+);
 
 alert(
 "Supabase error: "
 +
-error.message
+(error.message || error)
 );
 
 }
@@ -1903,21 +2204,35 @@ error.message
 
 
 /* =========================================
-   LOAD
+   LOAD FORMULAS
 ========================================= */
 
 async function loadFormulas(){
+
+if(!supabaseClient){
+
+setStatus(
+"❌ Supabase library not available.",
+true
+);
+
+return;
+
+}
+
 
 setStatus(
 "☁ Loading formulas..."
 );
 
 
+try{
+
 const {
 data,
 error
 } =
-await supabase
+await supabaseClient
 .from("formulas")
 .select(
 "*, formula_ingredients(*)"
@@ -1930,34 +2245,8 @@ ascending:false
 );
 
 
-if(error){
-
-setStatus(
-"❌ Supabase error: "
-+
-error.message,
-true
-);
-
-
-$("formulaList")
-.innerHTML = `
-
-<div class="empty">
-
-Could not load formulas.
-
-<br><br>
-
-${esc(error.message)}
-
-</div>
-
-`;
-
-return;
-
-}
+if(error)
+throw error;
 
 
 formulas =
@@ -1977,6 +2266,43 @@ renderList();
 
 }
 
+catch(error){
+
+console.error(
+"Load formulas error:",
+error
+);
+
+setStatus(
+"❌ Supabase error: "
++
+(error.message || error),
+true
+);
+
+
+$("formulaList")
+.innerHTML =
+`
+
+<div class="empty">
+
+Could not load formulas.
+
+<br><br>
+
+${esc(
+error.message || error
+)}
+
+</div>
+
+`;
+
+}
+
+}
+
 
 /* =========================================
    LIST
@@ -1984,18 +2310,21 @@ renderList();
 
 function renderList(){
 
+const input =
+$("search");
+
 const q =
-$("search")
-.value
+input
+? input.value
 .toLowerCase()
-.trim();
+.trim()
+: "";
 
 
 const list =
 formulas.filter(
-
-f => (
-
+f =>
+(
 (f.product_name || "")
 +
 " "
@@ -2005,18 +2334,17 @@ f => (
 " "
 +
 (f.formula_name || "")
-
 )
 .toLowerCase()
 .includes(q)
-
 );
 
 
 if(!list.length){
 
 $("formulaList")
-.innerHTML = `
+.innerHTML =
+`
 
 <div class="empty">
 
@@ -2037,7 +2365,8 @@ return;
 
 
 $("formulaList")
-.innerHTML = `
+.innerHTML =
+`
 
 <table>
 
@@ -2063,7 +2392,8 @@ Action
 ${
 list
 .map(
-f => `
+f =>
+`
 
 <tr>
 
@@ -2103,8 +2433,8 @@ f.formula_date || "-"
 
 <button
 type="button"
-class="secondary"
-onclick="viewFormula('${f.id}')">
+class="secondary view-btn"
+data-id="${esc(f.id)}">
 
 👁 View
 
@@ -2113,8 +2443,8 @@ onclick="viewFormula('${f.id}')">
 
 <button
 type="button"
-class="secondary"
-onclick="editFormula('${f.id}')">
+class="secondary edit-btn"
+data-id="${esc(f.id)}">
 
 ✏️ Edit
 
@@ -2123,8 +2453,8 @@ onclick="editFormula('${f.id}')">
 
 <button
 type="button"
-class="secondary"
-onclick="printFormula('${f.id}')">
+class="secondary print-btn"
+data-id="${esc(f.id)}">
 
 🖨️ Print
 
@@ -2145,6 +2475,68 @@ onclick="printFormula('${f.id}')">
 
 `;
 
+
+/* Attach events after rendering */
+
+$("formulaList")
+.querySelectorAll(".view-btn")
+.forEach(
+button => {
+
+button.addEventListener(
+"click",
+function(){
+
+viewFormula(
+this.dataset.id
+);
+
+}
+);
+
+}
+);
+
+
+$("formulaList")
+.querySelectorAll(".edit-btn")
+.forEach(
+button => {
+
+button.addEventListener(
+"click",
+function(){
+
+editFormula(
+this.dataset.id
+);
+
+}
+);
+
+}
+);
+
+
+$("formulaList")
+.querySelectorAll(".print-btn")
+.forEach(
+button => {
+
+button.addEventListener(
+"click",
+function(){
+
+printFormula(
+this.dataset.id
+);
+
+}
+);
+
+}
+);
+
 }
 
 
@@ -2162,12 +2554,19 @@ String(id)
 );
 
 
-if(!f)
+if(!f){
+
+alert(
+"Formula not found."
+);
+
 return;
+
+}
 
 
 editingId =
-id;
+f.id;
 
 
 $("formulaNo").value =
@@ -2196,7 +2595,8 @@ f.batch_size ?? "";
 
 
 $("batchUnit").value =
-f.batch_unit || "g";
+f.batch_unit ||
+"g";
 
 
 $("method").value =
@@ -2222,7 +2622,6 @@ f.formula_ingredients || [];
 if(ingredients.length){
 
 ingredients.forEach(
-
 x =>
 addIngredient({
 
@@ -2239,7 +2638,6 @@ pct:
 x.percentage
 
 })
-
 );
 
 }else{
@@ -2256,10 +2654,7 @@ $("deleteBtn")
 
 calcTotals();
 
-
-document
-.querySelectorAll(".tab")[1]
-.click();
+showTab("edit");
 
 }
 
@@ -2278,8 +2673,15 @@ String(id)
 );
 
 
-if(!f)
+if(!f){
+
+alert(
+"Formula not found."
+);
+
 return;
+
+}
 
 
 const ingredients =
@@ -2289,7 +2691,8 @@ f.formula_ingredients || [];
 const ing =
 ingredients
 .map(
-x => `
+x =>
+`
 
 <tr>
 
@@ -2325,7 +2728,8 @@ x.percentage ?? ""
 
 
 $("formulaList")
-.innerHTML = `
+.innerHTML =
+`
 
 <div class="card">
 
@@ -2334,7 +2738,7 @@ $("formulaList")
 <button
 type="button"
 class="secondary"
-onclick="renderList()">
+id="viewBackBtn">
 
 ← Back
 
@@ -2344,7 +2748,7 @@ onclick="renderList()">
 <button
 type="button"
 class="primary"
-onclick="printFormula('${f.id}')">
+id="viewPrintBtn">
 
 🖨️ Print
 
@@ -2354,7 +2758,7 @@ onclick="printFormula('${f.id}')">
 <button
 type="button"
 class="secondary"
-onclick="editFormula('${f.id}')">
+id="viewEditBtn">
 
 ✏️ Edit
 
@@ -2460,6 +2864,35 @@ f.notes || "-"
 
 `;
 
+
+$("viewBackBtn")
+.addEventListener(
+"click",
+renderList
+);
+
+
+$("viewPrintBtn")
+.addEventListener(
+"click",
+function(){
+
+printFormula(f.id);
+
+}
+);
+
+
+$("viewEditBtn")
+.addEventListener(
+"click",
+function(){
+
+editFormula(f.id);
+
+}
+);
+
 }
 
 
@@ -2481,10 +2914,39 @@ if(
 return;
 
 
+if(!supabaseClient){
+
+alert(
+"Supabase is not connected."
+);
+
+return;
+
+}
+
+
 try{
 
-const {error} =
-await supabase
+const {
+error:ingredientDeleteError
+} =
+await supabaseClient
+.from("formula_ingredients")
+.delete()
+.eq(
+"formula_id",
+editingId
+);
+
+
+if(ingredientDeleteError)
+throw ingredientDeleteError;
+
+
+const {
+error
+} =
+await supabaseClient
 .from("formulas")
 .delete()
 .eq(
@@ -2502,25 +2964,27 @@ alert(
 );
 
 
-editingId =
-null;
+editingId = null;
 
 
 await loadFormulas();
 
 
-document
-.querySelectorAll(".tab")[0]
-.click();
+showTab("seen");
 
 }
 
 catch(error){
 
+console.error(
+"Delete error:",
+error
+);
+
 alert(
 "Delete error: "
 +
-error.message
+(error.message || error)
 );
 
 }
@@ -2542,8 +3006,15 @@ String(id)
 );
 
 
-if(!f)
+if(!f){
+
+alert(
+"Formula not found."
+);
+
 return;
+
+}
 
 
 const ingredients =
@@ -2553,7 +3024,8 @@ f.formula_ingredients || [];
 const ing =
 ingredients
 .map(
-x => `
+x =>
+`
 
 <tr>
 
@@ -2589,7 +3061,8 @@ x.percentage ?? ""
 
 
 $("printArea")
-.innerHTML = `
+.innerHTML =
+`
 
 <div class="print-head">
 
@@ -2792,10 +3265,9 @@ $("printArea")
 .style.display =
 "none";
 
+showTab("seen");
 
-document
-.querySelectorAll(".tab")[0]
-.click();
+renderList();
 
 },
 100
@@ -2805,18 +3277,195 @@ document
 
 
 /* =========================================
+   ALL BUTTON EVENTS
+   ========================================= */
+
+function setupEvents(){
+
+/* Settings */
+
+$("settingsButton")
+.addEventListener(
+"click",
+toggleSettings
+);
+
+
+/* Tabs */
+
+$("seenTab")
+.addEventListener(
+"click",
+function(){
+
+showTab("seen");
+
+}
+);
+
+
+$("editTab")
+.addEventListener(
+"click",
+function(){
+
+showTab("edit");
+
+}
+);
+
+
+/* New */
+
+$("newTopBtn")
+.addEventListener(
+"click",
+newFormula
+);
+
+
+/* Clear */
+
+$("clearBtn")
+.addEventListener(
+"click",
+newFormula
+);
+
+
+/* Save */
+
+$("saveBtn")
+.addEventListener(
+"click",
+saveFormula
+);
+
+
+/* Delete */
+
+$("deleteBtn")
+.addEventListener(
+"click",
+deleteCurrent
+);
+
+
+/* Add Ingredient */
+
+$("addIngredientBtn")
+.addEventListener(
+"click",
+function(){
+
+addIngredient();
+
+}
+);
+
+
+/* Search */
+
+$("search")
+.addEventListener(
+"input",
+renderList
+);
+
+
+/* Science add */
+
+$("scienceAddBtn")
+.addEventListener(
+"click",
+function(){
+
+addMasterIngredient(
+"science"
+);
+
+}
+);
+
+
+/* Natural add */
+
+$("naturalAddBtn")
+.addEventListener(
+"click",
+function(){
+
+addMasterIngredient(
+"natural"
+);
+
+}
+);
+
+
+/* Enter key */
+
+$("scienceInput")
+.addEventListener(
+"keydown",
+function(event){
+
+if(event.key === "Enter"){
+
+event.preventDefault();
+
+addMasterIngredient(
+"science"
+);
+
+}
+
+}
+);
+
+
+$("naturalInput")
+.addEventListener(
+"keydown",
+function(event){
+
+if(event.key === "Enter"){
+
+event.preventDefault();
+
+addMasterIngredient(
+"natural"
+);
+
+}
+
+}
+);
+
+}
+
+
+/* =========================================
    START
 ========================================= */
 
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+setupEvents();
+
 $("date").value =
 today();
-
 
 addIngredient();
 
 renderMasterLists();
 
 loadFormulas();
+
+}
+);
 
 </script>
 
