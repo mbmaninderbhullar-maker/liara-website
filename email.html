@@ -1,0 +1,1471 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Liara Professional™ | Email & Orders</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f6f8;
+color:#1f2937
+}
+
+header{
+background:#173b2d;
+color:white;
+padding:18px 24px;
+display:flex;
+justify-content:space-between;
+align-items:center
+}
+
+.logo{
+font-family:Georgia,"Times New Roman",serif;
+font-size:25px;
+font-weight:bold
+}
+
+.logo small{
+display:block;
+font-family:Arial,sans-serif;
+font-size:11px;
+letter-spacing:2px;
+opacity:.85;
+margin-top:3px
+}
+
+.badge{
+background:#d7eadf;
+color:#173b2d;
+padding:6px 10px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold
+}
+
+.container{
+max-width:1200px;
+margin:24px auto;
+padding:0 16px
+}
+
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:18px;
+flex-wrap:wrap
+}
+
+.tab{
+border:0;
+padding:12px 20px;
+border-radius:8px;
+background:#ddd;
+cursor:pointer;
+font-weight:bold
+}
+
+.tab.active{
+background:#173b2d;
+color:white
+}
+
+.panel{
+display:none;
+background:white;
+border-radius:12px;
+padding:20px;
+box-shadow:0 2px 10px #00000012
+}
+
+.panel.active{
+display:block
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:14px
+}
+
+.field label{
+display:block;
+font-size:12px;
+font-weight:bold;
+margin-bottom:6px
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+border:1px solid #d5d9de;
+border-radius:7px;
+font-size:14px
+}
+
+textarea{
+min-height:130px;
+resize:vertical
+}
+
+.full{
+grid-column:1/-1
+}
+
+button{
+border:0;
+border-radius:7px;
+padding:10px 15px;
+cursor:pointer;
+font-weight:bold
+}
+
+.primary{
+background:#173b2d;
+color:white
+}
+
+.secondary{
+background:#e9eef0
+}
+
+.danger{
+background:#c0392b;
+color:white
+}
+
+.card{
+border:1px solid #e1e5e8;
+border-radius:10px;
+padding:16px;
+margin-top:15px
+}
+
+.searchbar{
+display:flex;
+gap:10px;
+margin-bottom:15px
+}
+
+.searchbar input{
+flex:1
+}
+
+.actions{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-top:18px
+}
+
+.status{
+font-size:12px;
+margin-bottom:14px;
+padding:9px;
+border-radius:7px;
+background:#eef5f1
+}
+
+.status.error{
+background:#fdecec;
+color:#9b2226
+}
+
+.empty{
+text-align:center;
+padding:35px;
+color:#777
+}
+
+table{
+width:100%;
+border-collapse:collapse
+}
+
+th,td{
+padding:11px 9px;
+border-bottom:1px solid #e7e9eb;
+text-align:left;
+font-size:13px;
+vertical-align:top
+}
+
+th{
+background:#f5f7f8
+}
+
+.order-card{
+border:1px solid #e1e5e8;
+border-radius:10px;
+padding:15px;
+margin-bottom:12px
+}
+
+.order-head{
+display:flex;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:12px
+}
+
+.order-no{
+font-weight:bold;
+color:#173b2d
+}
+
+.order-date{
+font-size:12px;
+color:#777
+}
+
+.customer{
+background:#f7f9fa;
+padding:12px;
+border-radius:8px;
+margin-bottom:12px
+}
+
+.customer b{
+color:#173b2d
+}
+
+.email-status{
+padding:8px 10px;
+border-radius:7px;
+font-size:12px;
+display:inline-block;
+background:#eef5f1;
+margin-top:5px
+}
+
+.email-status.sent{
+background:#e6f4ea;
+color:#216e39
+}
+
+.email-status.pending{
+background:#fff4d6;
+color:#8a6100
+}
+
+.email-status.failed{
+background:#fdecec;
+color:#9b2226
+}
+
+.template-list{
+display:grid;
+gap:10px
+}
+
+.template{
+border:1px solid #e1e5e8;
+border-radius:9px;
+padding:13px
+}
+
+.template h3{
+margin:0 0 8px;
+font-size:15px;
+color:#173b2d
+}
+
+.template p{
+margin:0;
+font-size:12px;
+color:#777
+}
+
+.back-btn{
+margin-bottom:15px
+}
+
+.small{
+font-size:11px;
+color:#777
+}
+
+@media(max-width:800px){
+
+.grid{
+grid-template-columns:1fr 1fr
+}
+
+}
+
+@media(max-width:520px){
+
+.grid{
+grid-template-columns:1fr
+}
+
+header{
+padding:15px
+}
+
+.logo{
+font-size:20px
+}
+
+.searchbar{
+flex-direction:column
+}
+
+}
+
+@media print{
+
+.no-print,
+header,
+.tabs{
+display:none!important
+}
+
+body{
+background:white
+}
+
+.panel{
+display:block!important;
+box-shadow:none
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+Liara Professional™
+<small>ADVANCED HERBAL</small>
+</div>
+
+<span class="badge">
+📧 Email & Orders
+</span>
+
+</header>
+
+
+<div class="container">
+
+<div class="tabs no-print">
+
+<button
+type="button"
+class="tab active"
+onclick="showTab('orders',this)">
+📦 Orders
+</button>
+
+<button
+type="button"
+class="tab"
+onclick="showTab('compose',this)">
+✉️ Compose Email
+</button>
+
+<button
+type="button"
+class="tab"
+onclick="showTab('templates',this)">
+📝 Templates
+</button>
+
+</div>
+
+
+<div
+id="status"
+class="status no-print">
+☁ Connecting to Supabase...
+</div>
+
+
+<!-- ================= ORDERS ================= -->
+
+<section
+id="orders"
+class="panel active">
+
+<div class="searchbar no-print">
+
+<input
+id="orderSearch"
+placeholder="Search order no., customer name, phone or email..."
+oninput="renderOrders()">
+
+<button
+type="button"
+class="secondary"
+onclick="loadOrders()">
+↻ Refresh
+</button>
+
+</div>
+
+<div id="orderList">
+
+<div class="empty">
+Loading orders...
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= COMPOSE ================= -->
+
+<section
+id="compose"
+class="panel">
+
+<button
+type="button"
+class="secondary back-btn no-print"
+onclick="showTabById('orders')">
+← Back to Orders
+</button>
+
+<div class="grid">
+
+<div class="field">
+
+<label>Customer Name</label>
+
+<input
+id="emailName"
+placeholder="Customer name">
+
+</div>
+
+<div class="field">
+
+<label>Customer Email *</label>
+
+<input
+id="emailTo"
+type="email"
+placeholder="customer@example.com">
+
+</div>
+
+<div class="field">
+
+<label>Order No.</label>
+
+<input
+id="emailOrderNo"
+placeholder="Order number">
+
+</div>
+
+<div class="field">
+
+<label>Email Type</label>
+
+<select id="emailType" onchange="loadTemplate()">
+
+<option value="custom">Custom Email</option>
+<option value="order_received">Order Received</option>
+<option value="order_confirmed">Order Confirmed</option>
+<option value="order_shipped">Order Shipped</option>
+<option value="order_delivered">Order Delivered</option>
+<option value="order_cancelled">Order Cancelled</option>
+
+</select>
+
+</div>
+
+<div class="field full">
+
+<label>Subject</label>
+
+<input
+id="emailSubject"
+placeholder="Email subject">
+
+</div>
+
+<div class="field full">
+
+<label>Message</label>
+
+<textarea
+id="emailMessage"
+placeholder="Write your email message..."></textarea>
+
+</div>
+
+</div>
+
+<div class="actions no-print">
+
+<button
+type="button"
+class="primary"
+onclick="sendEmail()">
+📤 Send Email
+</button>
+
+<button
+type="button"
+class="secondary"
+onclick="clearEmail()">
+Clear
+</button>
+
+</div>
+
+<p class="small">
+Note: This page prepares and manages email/order data. Actual email delivery requires an email service/API connected to your project.
+</p>
+
+</section>
+
+
+<!-- ================= TEMPLATES ================= -->
+
+<section
+id="templates"
+class="panel">
+
+<div class="template-list">
+
+<div class="template">
+
+<h3>📥 Order Received</h3>
+
+<p>
+Your order has been received successfully. We will process it shortly.
+</p>
+
+<button
+type="button"
+class="secondary"
+onclick="useTemplate('order_received')">
+Use Template
+</button>
+
+</div>
+
+
+<div class="template">
+
+<h3>✅ Order Confirmed</h3>
+
+<p>
+Your order has been confirmed and is being prepared.
+</p>
+
+<button
+type="button"
+class="secondary"
+onclick="useTemplate('order_confirmed')">
+Use Template
+</button>
+
+</div>
+
+
+<div class="template">
+
+<h3>🚚 Order Shipped</h3>
+
+<p>
+Your order has been shipped and is on the way.
+</p>
+
+<button
+type="button"
+class="secondary"
+onclick="useTemplate('order_shipped')">
+Use Template
+</button>
+
+</div>
+
+
+<div class="template">
+
+<h3>📦 Order Delivered</h3>
+
+<p>
+Your order has been delivered successfully.
+</p>
+
+<button
+type="button"
+class="secondary"
+onclick="useTemplate('order_delivered')">
+Use Template
+</button>
+
+</div>
+
+
+<div class="template">
+
+<h3>❌ Order Cancelled</h3>
+
+<p>
+Your order has been cancelled as requested.
+</p>
+
+<button
+type="button"
+class="secondary"
+onclick="useTemplate('order_cancelled')">
+Use Template
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+
+const supabase =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* =========================================
+   VARIABLES
+========================================= */
+
+let orders = [];
+
+
+/* =========================================
+   SHORTCUT
+========================================= */
+
+function $(id){
+return document.getElementById(id);
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+function setStatus(message,error=false){
+
+$("status").textContent = message;
+
+$("status").className =
+error
+? "status error no-print"
+: "status no-print";
+
+}
+
+
+/* =========================================
+   ESCAPE
+========================================= */
+
+function esc(value){
+
+return String(value ?? "")
+.replace(
+/[&<>"']/g,
+function(m){
+
+return {
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+
+}[m];
+
+});
+
+}
+
+
+/* =========================================
+   TABS
+========================================= */
+
+function showTab(id,btn){
+
+document
+.querySelectorAll(".panel")
+.forEach(
+p => p.classList.remove("active")
+);
+
+$(id).classList.add("active");
+
+document
+.querySelectorAll(".tab")
+.forEach(
+b => b.classList.remove("active")
+);
+
+btn.classList.add("active");
+
+}
+
+
+function showTabById(id){
+
+const buttons =
+document.querySelectorAll(".tab");
+
+if(id === "orders"){
+
+buttons[0].click();
+
+}
+
+if(id === "compose"){
+
+buttons[1].click();
+
+}
+
+if(id === "templates"){
+
+buttons[2].click();
+
+}
+
+}
+
+
+/* =========================================
+   LOAD ORDERS
+========================================= */
+
+async function loadOrders(){
+
+setStatus(
+"☁ Loading orders..."
+);
+
+try{
+
+/*
+  Tries common order table name.
+  Change "orders" here only if your
+  Supabase table has another name.
+*/
+
+const {
+data,
+error
+} =
+await supabase
+.from("orders")
+.select("*")
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+if(error)
+throw error;
+
+
+orders =
+data || [];
+
+
+setStatus(
+"☁ Connected • "
++
+orders.length
++
+" order(s)"
+);
+
+
+renderOrders();
+
+}
+
+catch(error){
+
+console.error(error);
+
+setStatus(
+"❌ Orders error: "
++
+error.message,
+true
+);
+
+$("orderList").innerHTML = `
+
+<div class="empty">
+
+Could not load orders.
+
+<br><br>
+
+${esc(error.message)}
+
+</div>
+
+`;
+
+}
+
+}
+
+
+/* =========================================
+   RENDER ORDERS
+========================================= */
+
+function renderOrders(){
+
+const q =
+$("orderSearch")
+.value
+.toLowerCase()
+.trim();
+
+
+const list =
+orders.filter(
+o => {
+
+const text =
+JSON.stringify(o)
+.toLowerCase();
+
+return text.includes(q);
+
+}
+);
+
+
+if(!list.length){
+
+$("orderList").innerHTML = `
+
+<div class="empty">
+
+No orders found.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+$("orderList").innerHTML =
+list
+.map(
+order => {
+
+const orderNo =
+order.order_no ||
+order.order_number ||
+order.id ||
+"-";
+
+const name =
+order.customer_name ||
+order.name ||
+order.full_name ||
+"-";
+
+const email =
+order.customer_email ||
+order.email ||
+"-";
+
+const phone =
+order.customer_phone ||
+order.phone ||
+"-";
+
+const status =
+order.status ||
+"Pending";
+
+
+return `
+
+<div class="order-card">
+
+<div class="order-head">
+
+<div>
+
+<div class="order-no">
+Order #${esc(orderNo)}
+</div>
+
+<div class="order-date">
+${esc(order.created_at || "")}
+</div>
+
+</div>
+
+<div>
+
+<span class="email-status pending">
+${esc(status)}
+</span>
+
+</div>
+
+</div>
+
+
+<div class="customer">
+
+<b>Customer:</b>
+${esc(name)}
+
+<br>
+
+<b>Email:</b>
+${esc(email)}
+
+<br>
+
+<b>Phone:</b>
+${esc(phone)}
+
+</div>
+
+
+<div class="actions no-print">
+
+<button
+type="button"
+class="primary"
+onclick="composeForOrder('${esc(order.id || "")}')">
+
+✉️ Email Customer
+
+</button>
+
+<button
+type="button"
+class="secondary"
+onclick="viewOrder('${esc(order.id || "")}')">
+
+👁 View Order
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+)
+.join("");
+
+}
+
+
+/* =========================================
+   COMPOSE FOR ORDER
+========================================= */
+
+function composeForOrder(id){
+
+const order =
+orders.find(
+o => String(o.id) === String(id)
+);
+
+
+if(!order)
+return;
+
+
+$("emailName").value =
+order.customer_name ||
+order.name ||
+order.full_name ||
+"";
+
+
+$("emailTo").value =
+order.customer_email ||
+order.email ||
+"";
+
+
+$("emailOrderNo").value =
+order.order_no ||
+order.order_number ||
+order.id ||
+"";
+
+
+$("emailType").value =
+"order_received";
+
+
+loadTemplate();
+
+
+showTabById("compose");
+
+}
+
+
+/* =========================================
+   TEMPLATES
+========================================= */
+
+const templates = {
+
+order_received:{
+subject:"Your order has been received",
+message:
+`Dear {{name}},
+
+Thank you for your order with Liara Professional™.
+
+We have received your order {{order_no}} successfully.
+
+Our team will process your order shortly.
+
+Regards,
+Liara Professional™
+Advanced Herbal`
+},
+
+order_confirmed:{
+subject:"Your order has been confirmed",
+message:
+`Dear {{name}},
+
+Your order {{order_no}} has been confirmed successfully.
+
+We are now preparing your order.
+
+Regards,
+Liara Professional™
+Advanced Herbal`
+},
+
+order_shipped:{
+subject:"Your order has been shipped",
+message:
+`Dear {{name}},
+
+Your order {{order_no}} has been shipped.
+
+It is now on the way to you.
+
+Regards,
+Liara Professional™
+Advanced Herbal`
+},
+
+order_delivered:{
+subject:"Your order has been delivered",
+message:
+`Dear {{name}},
+
+Your order {{order_no}} has been delivered successfully.
+
+Thank you for choosing Liara Professional™.
+
+Regards,
+Liara Professional™
+Advanced Herbal`
+},
+
+order_cancelled:{
+subject:"Your order has been cancelled",
+message:
+`Dear {{name}},
+
+Your order {{order_no}} has been cancelled.
+
+If you have any questions, please contact us.
+
+Regards,
+Liara Professional™
+Advanced Herbal`
+},
+
+custom:{
+subject:"",
+message:""
+}
+
+};
+
+
+/* =========================================
+   LOAD TEMPLATE
+========================================= */
+
+function loadTemplate(){
+
+const type =
+$("emailType").value;
+
+const t =
+templates[type] ||
+templates.custom;
+
+
+const name =
+$("emailName").value.trim() ||
+"Customer";
+
+
+const orderNo =
+$("emailOrderNo").value.trim() ||
+"your order";
+
+
+$("emailSubject").value =
+t.subject
+.replaceAll(
+"{{name}}",
+name
+)
+.replaceAll(
+"{{order_no}}",
+orderNo
+);
+
+
+$("emailMessage").value =
+t.message
+.replaceAll(
+"{{name}}",
+name
+)
+.replaceAll(
+"{{order_no}}",
+orderNo
+);
+
+}
+
+
+/* =========================================
+   USE TEMPLATE
+========================================= */
+
+function useTemplate(type){
+
+showTabById("compose");
+
+$("emailType").value =
+type;
+
+loadTemplate();
+
+}
+
+
+/* =========================================
+   CLEAR EMAIL
+========================================= */
+
+function clearEmail(){
+
+$("emailName").value = "";
+$("emailTo").value = "";
+$("emailOrderNo").value = "";
+$("emailType").value = "custom";
+$("emailSubject").value = "";
+$("emailMessage").value = "";
+
+}
+
+
+/* =========================================
+   SEND EMAIL
+========================================= */
+
+async function sendEmail(){
+
+const name =
+$("emailName")
+.value
+.trim();
+
+const to =
+$("emailTo")
+.value
+.trim();
+
+const orderNo =
+$("emailOrderNo")
+.value
+.trim();
+
+const subject =
+$("emailSubject")
+.value
+.trim();
+
+const message =
+$("emailMessage")
+.value
+.trim();
+
+
+if(!to){
+
+alert(
+"Customer email is required."
+);
+
+return;
+
+}
+
+
+if(!subject){
+
+alert(
+"Email subject is required."
+);
+
+return;
+
+}
+
+
+if(!message){
+
+alert(
+"Email message is required."
+);
+
+return;
+
+}
+
+
+/*
+  IMPORTANT:
+  Browser cannot securely send SMTP
+  email directly.
+
+  This section saves the email request
+  in Supabase if an email_logs table
+  exists.
+
+  A Supabase Edge Function / email
+  provider can then send the actual email.
+*/
+
+
+try{
+
+const {
+error
+} =
+await supabase
+.from("email_logs")
+.insert({
+
+recipient_email:to,
+
+customer_name:name,
+
+order_no:orderNo,
+
+subject:subject,
+
+message:message,
+
+status:"pending",
+
+created_at:
+new Date().toISOString()
+
+});
+
+
+if(error){
+
+/*
+  If email_logs table does not exist,
+  show a clear message instead of pretending
+  the email was sent.
+*/
+
+throw error;
+
+}
+
+
+alert(
+"Email saved successfully and marked Pending."
+);
+
+
+clearEmail();
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"Email was NOT sent.\n\n"
++
+"Email delivery needs an email service / Edge Function connected to Supabase.\n\n"
++
+error.message
+);
+
+}
+
+}
+
+
+/* =========================================
+   VIEW ORDER
+========================================= */
+
+function viewOrder(id){
+
+const order =
+orders.find(
+o => String(o.id) === String(id)
+);
+
+
+if(!order)
+return;
+
+
+const details =
+Object.entries(order)
+.map(
+([key,value]) => `
+
+<tr>
+
+<th>
+${esc(key)}
+</th>
+
+<td>
+${esc(
+typeof value === "object"
+? JSON.stringify(value)
+: value
+)}
+</td>
+
+</tr>
+
+`
+)
+.join("");
+
+
+$("orderList").innerHTML = `
+
+<div class="card">
+
+<div class="actions no-print">
+
+<button
+type="button"
+class="secondary"
+onclick="renderOrders()">
+
+← Back
+
+</button>
+
+<button
+type="button"
+class="primary"
+onclick="composeForOrder('${esc(order.id || "")}')">
+
+✉️ Email Customer
+
+</button>
+
+</div>
+
+
+<h2>
+Order Details
+</h2>
+
+
+<table>
+
+${details}
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+loadOrders();
+
+</script>
+
+</body>
+</html>
+```
+
