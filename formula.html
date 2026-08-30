@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formula Manager</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f6f8;
+    color:#1f2937;
+}
+
+header{
+    background:#173b2d;
+    color:white;
+    padding:18px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h1{
+    margin:0;
+    font-size:24px;
+}
+
+.badge{
+    background:#d7eadf;
+    color:#173b2d;
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:1200px;
+    margin:24px auto;
+    padding:0 16px;
+}
+
+.tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.tab{
+    border:0;
+    padding:12px 20px;
+    border-radius:8px;
+    background:#ddd;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.tab.active{
+    background:#173b2d;
+    color:white;
+}
+
+.panel{
+    display:none;
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 2px 10px #00000012;
+}
+
+.panel.active{
+    display:block;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.field label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #d5d9de;
+    border-radius:7px;
+    font-size:14px;
+}
+
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.actions{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+    margin-top:18px;
+}
+
+button{
+    border:0;
+    border-radius:7px;
+    padding:10px 15px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.primary{
+    background:#173b2d;
+    color:white;
+}
+
+.secondary{
+    background:#e9eef0;
+}
+
+.danger{
+    background:#c0392b;
+    color:white;
+}
+
+.searchbar{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.searchbar input{
+    flex:1;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:11px 9px;
+    border-bottom:1px solid #e7e9eb;
+    text-align:left;
+    font-size:13px;
+    vertical-align:top;
+}
+
+th{
+    background:#f5f7f8;
+}
+
+.empty{
+    text-align:center;
+    padding:35px;
+    color:#777;
+}
+
+.ingredients{
+    overflow:auto;
+    margin-top:10px;
+}
+
+.ing-head,
+.ing-row{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr auto;
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.ing-head{
+    font-size:12px;
+    font-weight:bold;
+}
+
+.total{
+    text-align:right;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.card{
+    border:1px solid #e1e5e8;
+    border-radius:10px;
+    padding:14px;
+    margin-top:15px;
+}
+
+.small{
+    font-size:12px;
+    color:#667085;
+}
+
+@media(max-width:800px){
+    .grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .ing-head,
+    .ing-row{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:520px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    header{
+        padding:15px;
+    }
+
+    header h1{
+        font-size:20px;
+    }
+}
+
+/* PRINT */
+@media print{
+
+    body{
+        background:white;
+    }
+
+    header,
+    .tabs,
+    .no-print{
+        display:none !important;
+    }
+
+    .panel{
+        display:none !important;
+        box-shadow:none;
+    }
+
+    .print-area{
+        display:block !important;
+        padding:10px;
+    }
+
+    .print-table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    .print-table th,
+    .print-table td{
+        border:1px solid #999;
+        padding:7px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🧪 Formula Manager</h1>
+    <span class="badge">Offline + Online Ready</span>
+</header>
+
+<div class="container">
+
+    <div class="tabs no-print">
+
+        <button class="tab active"
+                onclick="showTab('seen',this)">
+            👁 Formula Seen
+        </button>
+
+        <button class="tab"
+                onclick="showTab('edit',this)">
+            ➕ Add / Edit Formula
+        </button>
+
+    </div>
+
+
+    <!-- FORMULA SEEN -->
+
+    <section id="seen" class="panel active">
+
+        <div class="searchbar no-print">
+
+            <input
+                id="search"
+                placeholder="Search product, formula no. or formula name..."
+                oninput="renderList()"
+            >
+
+            <button
+                class="secondary"
+                onclick="newFormula()">
+                ➕ New
+            </button>
+
+        </div>
+
+        <div id="formulaList"></div>
+
+    </section>
+
+
+    <!-- ADD / EDIT -->
+
+    <section id="edit" class="panel">
+
+        <div class="grid">
+
+            <div class="field">
+                <label>Formula No.</label>
+                <input
+                    id="formulaNo"
+                    placeholder="e.g. LP-F-001">
+            </div>
+
+            <div class="field">
+                <label>Product Name *</label>
+                <input
+                    id="productName"
+                    placeholder="Product name">
+            </div>
+
+            <div class="field">
+                <label>Formula Name</label>
+                <input
+                    id="formulaName"
+                    placeholder="Formula name">
+            </div>
+
+            <div class="field">
+                <label>Version</label>
+                <input
+                    id="version"
+                    placeholder="e.g. V1.0">
+            </div>
+
+            <div class="field">
+                <label>Date</label>
+                <input
+                    id="date"
+                    type="date">
+            </div>
+
+            <div class="field">
+                <label>Batch Size</label>
+                <input
+                    id="batchSize"
+                    type="number"
+                    min="0"
+                    step="any"
+                    placeholder="e.g. 1000">
+            </div>
+
+            <div class="field">
+                <label>Batch Unit</label>
+
+                <select id="batchUnit">
+                    <option>g</option>
+                    <option>kg</option>
+                    <option>ml</option>
+                    <option>L</option>
+                </select>
+
+            </div>
+
+            <div class="field">
+                <label>Total %</label>
+                <input
+                    id="totalPercent"
+                    readonly
+                    value="0%">
+            </div>
+
+        </div>
+
+
+        <!-- INGREDIENTS -->
+
+        <div class="card">
+
+            <b>Ingredients</b>
+
+            <div class="ingredients">
+
+                <div class="ing-head">
+                    <span>Ingredient</span>
+                    <span>Quantity</span>
+                    <span>Unit</span>
+                    <span>%</span>
+                    <span></span>
+                </div>
+
+                <div id="ingredients"></div>
+
+            </div>
+
+            <div class="total">
+
+                Total Quantity:
+                <span id="totalQty">0</span>
+
+                &nbsp; | &nbsp;
+
+                Total:
+                <span id="totalPct">0%</span>
+
+            </div>
+
+            <button
+                class="secondary no-print"
+                onclick="addIngredient()">
+
+                + Add Ingredient
+
+            </button>
+
+        </div>
+
+
+        <!-- OTHER DETAILS -->
+
+        <div
+            class="grid"
+            style="margin-top:15px">
+
+            <div class="field full">
+
+                <label>Preparation Method</label>
+
+                <textarea
+                    id="method"
+                    placeholder="Write preparation / manufacturing method...">
+                </textarea>
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>Result</label>
+
+                <textarea
+                    id="result"
+                    placeholder="Final result / observation, colour, texture, pH, fragrance, etc.">
+                </textarea>
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>Notes</label>
+
+                <textarea
+                    id="notes"
+                    placeholder="Additional notes...">
+                </textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="actions no-print">
+
+            <button
+                class="primary"
+                onclick="saveFormula()">
+                💾 Save Formula
+            </button>
+
+            <button
+                class="secondary"
+                onclick="newFormula()">
+                Clear
+            </button>
+
+            <button
+                class="danger"
+                id="deleteBtn"
+                onclick="deleteCurrent()"
+                style="display:none">
+                🗑 Delete
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRINT AREA -->
+
+    <section
+        id="printArea"
+        class="print-area"
+        style="display:none">
+    </section>
+
+</div>
+
+
+<script>
+
+let formulas =
+    JSON.parse(
+        localStorage.getItem("liara_formulas") || "[]"
+    );
+
+let editingId = null;
+
+
+function $(id){
+    return document.getElementById(id);
+}
+
+
+/* TAB */
+
+function showTab(id,btn){
+
+    document
+        .querySelectorAll(".panel")
+        .forEach(p =>
+            p.classList.remove("active")
+        );
+
+    $(id).classList.add("active");
+
+    document
+        .querySelectorAll(".tab")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+    btn.classList.add("active");
+}
+
+
+/* DATE */
+
+function today(){
+
+    return new Date()
+        .toISOString()
+        .slice(0,10);
+
+}
+
+
+/* NEW FORMULA */
+
+function newFormula(){
+
+    editingId = null;
+
+    [
+        "formulaNo",
+        "productName",
+        "formulaName",
+        "version",
+        "method",
+        "result",
+        "notes",
+        "batchSize"
+    ]
+    .forEach(id => $(id).value="");
+
+    $("date").value = today();
+
+    $("batchUnit").value = "g";
+
+    $("ingredients").innerHTML = "";
+
+    addIngredient();
+
+    $("deleteBtn").style.display = "none";
+
+    document
+        .querySelectorAll(".tab")[1]
+        .click();
+
+}
+
+
+/* ADD INGREDIENT */
+
+function addIngredient(data={}){
+
+    const row =
+        document.createElement("div");
+
+    row.className = "ing-row";
+
+    row.innerHTML = `
+
+        <input
+            class="iname"
+            placeholder="Ingredient name"
+            value="${esc(data.name || "")}">
+
+        <input
+            class="iqty"
+            type="number"
+            min="0"
+            step="any"
+            placeholder="Qty"
+            value="${data.qty ?? ""}"
+            oninput="calcTotals()">
+
+        <select class="iunit">
+
+            <option ${data.unit==="g"?"selected":""}>
+                g
+            </option>
+
+            <option ${data.unit==="kg"?"selected":""}>
+                kg
+            </option>
+
+            <option ${data.unit==="ml"?"selected":""}>
+                ml
+            </option>
+
+            <option ${data.unit==="L"?"selected":""}>
+                L
+            </option>
+
+        </select>
+
+        <input
+            class="ipct"
+            type="number"
+            min="0"
+            step="any"
+            placeholder="%"
+            value="${data.pct ?? ""}"
+            oninput="calcTotals()">
+
+        <button
+            class="danger"
+            onclick="
+                this.parentElement.remove();
+                calcTotals();
+            ">
+            ×
+        </button>
+
+    `;
+
+    $("ingredients").appendChild(row);
+
+    calcTotals();
+
+}
+
+
+/* TOTAL */
+
+function calcTotals(){
+
+    let q = 0;
+    let p = 0;
+
+    document
+        .querySelectorAll(".iqty")
+        .forEach(x =>
+            q += Number(x.value) || 0
+        );
+
+    document
+        .querySelectorAll(".ipct")
+        .forEach(x =>
+            p += Number(x.value) || 0
+        );
+
+    $("totalQty").textContent =
+        q.toFixed(2).replace(/\.00$/,"");
+
+    $("totalPct").textContent =
+        p.toFixed(2).replace(/\.00$/,"") + "%";
+
+    $("totalPercent").value =
+        p.toFixed(2).replace(/\.00$/,"") + "%";
+
+}
+
+
+/* GET INGREDIENTS */
+
+function getIngredients(){
+
+    return [
+        ...document
+        .querySelectorAll("#ingredients .ing-row")
+    ]
+
+    .map(r => ({
+
+        name:
+            r.querySelector(".iname")
+            .value
+            .trim(),
+
+        qty:
+            r.querySelector(".iqty")
+            .value,
+
+        unit:
+            r.querySelector(".iunit")
+            .value,
+
+        pct:
+            r.querySelector(".ipct")
+            .value
+
+    }))
+
+    .filter(x =>
+        x.name ||
+        x.qty ||
+        x.pct
+    );
+
+}
+
+
+/* SAVE */
+
+function saveFormula(){
+
+    const product =
+        $("productName")
+        .value
+        .trim();
+
+    if(!product){
+
+        alert("Product Name is required.");
+
+        return;
+    }
+
+
+    const item = {
+
+        id:
+            editingId ||
+            Date.now().toString(),
+
+        formulaNo:
+            $("formulaNo").value.trim(),
+
+        productName:
+            product,
+
+        formulaName:
+            $("formulaName").value.trim(),
+
+        version:
+            $("version").value.trim(),
+
+        date:
+            $("date").value || today(),
+
+        batchSize:
+            $("batchSize").value,
+
+        batchUnit:
+            $("batchUnit").value,
+
+        ingredients:
+            getIngredients(),
+
+        method:
+            $("method").value.trim(),
+
+        result:
+            $("result").value.trim(),
+
+        notes:
+            $("notes").value.trim()
+
+    };
+
+
+    const index =
+        formulas.findIndex(
+            x => x.id === item.id
+        );
+
+
+    if(index >= 0){
+
+        formulas[index] = item;
+
+        alert("Formula updated successfully.");
+
+    }else{
+
+        formulas.unshift(item);
+
+        alert("Formula saved successfully.");
+
+    }
+
+
+    localStorage.setItem(
+        "liara_formulas",
+        JSON.stringify(formulas)
+    );
+
+
+    renderList();
+
+    editFormula(item.id);
+
+}
+
+
+/* LIST */
+
+function renderList(){
+
+    const q =
+        $("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const list =
+        formulas.filter(f =>
+            (
+                f.productName +
+                " " +
+                f.formulaNo +
+                " " +
+                f.formulaName
+            )
+            .toLowerCase()
+            .includes(q)
+        );
+
+
+    if(!list.length){
+
+        $("formulaList").innerHTML = `
+
+            <div class="empty">
+
+                No formulas found.
+
+                <br><br>
+
+                Click <b>New</b>
+                to add one.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    $("formulaList").innerHTML = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Formula No.</th>
+                    <th>Product</th>
+                    <th>Formula</th>
+                    <th>Version</th>
+                    <th>Date</th>
+                    <th class="no-print">Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${
+                    list.map(f => `
+
+                    <tr>
+
+                        <td>
+                            ${esc(f.formulaNo || "-")}
+                        </td>
+
+                        <td>
+                            <b>
+                                ${esc(f.productName)}
+                            </b>
+                        </td>
+
+                        <td>
+                            ${esc(f.formulaName || "-")}
+                        </td>
+
+                        <td>
+                            ${esc(f.version || "-")}
+                        </td>
+
+                        <td>
+                            ${esc(f.date || "-")}
+                        </td>
+
+                        <td class="no-print">
+
+                            <button
+                                class="secondary"
+                                onclick="viewFormula('${f.id}')">
+                                👁 View
+                            </button>
+
+                            <button
+                                class="secondary"
+                                onclick="editFormula('${f.id}')">
+                                ✏️ Edit
+                            </button>
+
+                            <button
+                                class="secondary"
+                                onclick="printFormula('${f.id}')">
+                                🖨️ Print
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    `).join("")
+                }
+
+            </tbody>
+
+        </table>
+
+    `;
+
+}
+
+
+/* EDIT */
+
+function editFormula(id){
+
+    const f =
+        formulas.find(x =>
+            x.id === id
+        );
+
+    if(!f)return;
+
+
+    editingId = id;
+
+
+    $("formulaNo").value =
+        f.formulaNo || "";
+
+    $("productName").value =
+        f.productName || "";
+
+    $("formulaName").value =
+        f.formulaName || "";
+
+    $("version").value =
+        f.version || "";
+
+    $("date").value =
+        f.date || today();
+
+    $("batchSize").value =
+        f.batchSize || "";
+
+    $("batchUnit").value =
+        f.batchUnit || "g";
+
+    $("method").value =
+        f.method || "";
+
+    $("result").value =
+        f.result || "";
+
+    $("notes").value =
+        f.notes || "";
+
+
+    $("ingredients").innerHTML = "";
+
+
+    if(f.ingredients && f.ingredients.length){
+
+        f.ingredients.forEach(addIngredient);
+
+    }else{
+
+        addIngredient();
+
+    }
+
+
+    $("deleteBtn").style.display =
+        "inline-block";
+
+
+    calcTotals();
+
+
+    document
+        .querySelectorAll(".tab")[1]
+        .click();
+
+}
+
+
+/* VIEW */
+
+function viewFormula(id){
+
+    const f =
+        formulas.find(x =>
+            x.id === id
+        );
+
+    if(!f)return;
+
+
+    const ing =
+        (f.ingredients || [])
+        .map(x => `
+
+            <tr>
+
+                <td>${esc(x.name)}</td>
+
+                <td>${esc(x.qty || "")}</td>
+
+                <td>${esc(x.unit || "")}</td>
+
+                <td>${esc(x.pct || "")}</td>
+
+            </tr>
+
+        `)
+        .join("");
+
+
+    $("formulaList").innerHTML = `
+
+        <div class="card">
+
+            <div class="actions no-print">
+
+                <button
+                    class="secondary"
+                    onclick="renderList()">
+                    ← Back
+                </button>
+
+                <button
+                    class="primary"
+                    onclick="printFormula('${f.id}')">
+                    🖨️ Print
+                </button>
+
+                <button
+                    class="secondary"
+                    onclick="editFormula('${f.id}')">
+                    ✏️ Edit
+                </button>
+
+            </div>
+
+
+            <h2>
+                ${esc(f.productName)}
+            </h2>
+
+
+            <p>
+
+                <b>Formula No:</b>
+                ${esc(f.formulaNo || "-")}
+
+                &nbsp;&nbsp;
+
+                <b>Version:</b>
+                ${esc(f.version || "-")}
+
+                &nbsp;&nbsp;
+
+                <b>Date:</b>
+                ${esc(f.date || "-")}
+
+            </p>
+
+
+            <p>
+
+                <b>Formula Name:</b>
+                ${esc(f.formulaName || "-")}
+
+            </p>
+
+
+            <h3>
+                Ingredients
+            </h3>
+
+
+            <table>
+
+                <tr>
+
+                    <th>Ingredient</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>%</th>
+
+                </tr>
+
+                ${
+                    ing ||
+                    `
+                    <tr>
+                        <td colspan="4">
+                            No ingredients
+                        </td>
+                    </tr>
+                    `
+                }
+
+            </table>
+
+
+            <h3>
+                Preparation Method
+            </h3>
+
+            <div>
+                ${nl(f.method || "-")}
+            </div>
+
+
+            <h3>
+                Result
+            </h3>
+
+            <div>
+                ${nl(f.result || "-")}
+            </div>
+
+
+            <h3>
+                Notes
+            </h3>
+
+            <div>
+                ${nl(f.notes || "-")}
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* DELETE */
+
+function deleteCurrent(){
+
+    if(!editingId)return;
+
+
+    if(confirm("Delete this formula?")){
+
+        formulas =
+            formulas.filter(
+                x => x.id !== editingId
+            );
+
+
+        localStorage.setItem(
+            "liara_formulas",
+            JSON.stringify(formulas)
+        );
+
+
+        editingId = null;
+
+        renderList();
+
+        document
+            .querySelectorAll(".tab")[0]
+            .click();
+
+    }
+
+}
+
+
+/* PRINT */
+
+function printFormula(id){
+
+    const f =
+        formulas.find(x =>
+            x.id === id
+        );
+
+    if(!f)return;
+
+
+    const ing =
+        (f.ingredients || [])
+        .map(x => `
+
+            <tr>
+
+                <td>${esc(x.name)}</td>
+                <td>${esc(x.qty || "")}</td>
+                <td>${esc(x.unit || "")}</td>
+                <td>${esc(x.pct || "")}</td>
+
+            </tr>
+
+        `)
+        .join("");
+
+
+    $("printArea").innerHTML = `
+
+        <h2>
+            Formula Sheet
+        </h2>
+
+
+        <table class="print-table">
+
+            <tr>
+
+                <th>Product Name</th>
+
+                <td>
+                    ${esc(f.productName)}
+                </td>
+
+                <th>Formula No.</th>
+
+                <td>
+                    ${esc(f.formulaNo || "-")}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Formula Name</th>
+
+                <td>
+                    ${esc(f.formulaName || "-")}
+                </td>
+
+                <th>Version</th>
+
+                <td>
+                    ${esc(f.version || "-")}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Date</th>
+
+                <td>
+                    ${esc(f.date || "-")}
+                </td>
+
+                <th>Batch</th>
+
+                <td>
+                    ${esc(f.batchSize || "-")}
+                    ${esc(f.batchUnit || "")}
+                </td>
+
+            </tr>
+
+        </table>
+
+
+        <h3>
+            Ingredients
+        </h3>
+
+
+        <table class="print-table">
+
+            <tr>
+
+                <th>Ingredient</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>%</th>
+
+            </tr>
+
+            ${ing}
+
+        </table>
+
+
+        <h3>
+            Preparation Method
+        </h3>
+
+        <div>
+            ${nl(f.method || "-")}
+        </div>
+
+
+        <h3>
+            Result
+        </h3>
+
+        <div>
+            ${nl(f.result || "-")}
+        </div>
+
+
+        <h3>
+            Notes
+        </h3>
+
+        <div>
+            ${nl(f.notes || "-")}
+        </div>
+
+    `;
+
+
+    document
+        .querySelectorAll(".panel")
+        .forEach(p =>
+            p.classList.remove("active")
+        );
+
+
+    $("printArea").style.display =
+        "block";
+
+
+    window.print();
+
+
+    $("printArea").style.display =
+        "none";
+
+
+    document
+        .querySelectorAll(".tab")[0]
+        .click();
+
+}
+
+
+/* SECURITY / TEXT */
+
+function esc(v){
+
+    return String(v)
+        .replace(
+            /[&<>"']/g,
+            m => ({
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#39;"
+            }[m])
+        );
+
+}
+
+
+function nl(v){
+
+    return esc(v)
+        .replace(/\n/g,"<br>");
+
+}
+
+
+/* START */
+
+$("date").value = today();
+
+addIngredient();
+
+renderList();
+
+</script>
+
+</body>
+</html>
