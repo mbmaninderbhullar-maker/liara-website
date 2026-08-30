@@ -1,267 +1,302 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formula Manager</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Liara Professional™ | Formula Manager</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f4f6f8;
-    color:#1f2937;
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f6f8;
+color:#1f2937
 }
 
 header{
-    background:#173b2d;
-    color:white;
-    padding:18px 24px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+background:#173b2d;
+color:white;
+padding:18px 24px;
+display:flex;
+justify-content:space-between;
+align-items:center
 }
 
-header h1{
-    margin:0;
-    font-size:24px;
+.logo{
+font-family:Georgia,"Times New Roman",serif;
+font-size:25px;
+font-weight:bold
+}
+
+.logo small{
+display:block;
+font-family:Arial,sans-serif;
+font-size:11px;
+letter-spacing:2px;
+opacity:.85;
+margin-top:3px
 }
 
 .badge{
-    background:#d7eadf;
-    color:#173b2d;
-    padding:6px 10px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:bold;
+background:#d7eadf;
+color:#173b2d;
+padding:6px 10px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold
 }
 
 .container{
-    max-width:1200px;
-    margin:24px auto;
-    padding:0 16px;
+max-width:1200px;
+margin:24px auto;
+padding:0 16px
 }
 
 .tabs{
-    display:flex;
-    gap:10px;
-    margin-bottom:18px;
+display:flex;
+gap:10px;
+margin-bottom:18px
 }
 
 .tab{
-    border:0;
-    padding:12px 20px;
-    border-radius:8px;
-    background:#ddd;
-    cursor:pointer;
-    font-weight:bold;
+border:0;
+padding:12px 20px;
+border-radius:8px;
+background:#ddd;
+cursor:pointer;
+font-weight:bold
 }
 
 .tab.active{
-    background:#173b2d;
-    color:white;
+background:#173b2d;
+color:white
 }
 
 .panel{
-    display:none;
-    background:white;
-    border-radius:12px;
-    padding:20px;
-    box-shadow:0 2px 10px #00000012;
+display:none;
+background:white;
+border-radius:12px;
+padding:20px;
+box-shadow:0 2px 10px #00000012
 }
 
 .panel.active{
-    display:block;
+display:block
 }
 
 .grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:14px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:14px
 }
 
 .field label{
-    display:block;
-    font-size:12px;
-    font-weight:bold;
-    margin-bottom:6px;
+display:block;
+font-size:12px;
+font-weight:bold;
+margin-bottom:6px
 }
 
 input,select,textarea{
-    width:100%;
-    padding:10px;
-    border:1px solid #d5d9de;
-    border-radius:7px;
-    font-size:14px;
+width:100%;
+padding:10px;
+border:1px solid #d5d9de;
+border-radius:7px;
+font-size:14px
 }
 
 textarea{
-    min-height:90px;
-    resize:vertical;
+min-height:90px;
+resize:vertical
 }
 
 .full{
-    grid-column:1/-1;
+grid-column:1/-1
 }
 
 .actions{
-    display:flex;
-    gap:9px;
-    flex-wrap:wrap;
-    margin-top:18px;
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-top:18px
 }
 
 button{
-    border:0;
-    border-radius:7px;
-    padding:10px 15px;
-    cursor:pointer;
-    font-weight:bold;
+border:0;
+border-radius:7px;
+padding:10px 15px;
+cursor:pointer;
+font-weight:bold
 }
 
 .primary{
-    background:#173b2d;
-    color:white;
+background:#173b2d;
+color:white
 }
 
 .secondary{
-    background:#e9eef0;
+background:#e9eef0
 }
 
 .danger{
-    background:#c0392b;
-    color:white;
+background:#c0392b;
+color:white
 }
 
 .searchbar{
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
+display:flex;
+gap:10px;
+margin-bottom:15px
 }
 
 .searchbar input{
-    flex:1;
+flex:1
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
+width:100%;
+border-collapse:collapse
 }
 
 th,td{
-    padding:11px 9px;
-    border-bottom:1px solid #e7e9eb;
-    text-align:left;
-    font-size:13px;
-    vertical-align:top;
+padding:11px 9px;
+border-bottom:1px solid #e7e9eb;
+text-align:left;
+font-size:13px;
+vertical-align:top
 }
 
 th{
-    background:#f5f7f8;
+background:#f5f7f8
 }
 
 .empty{
-    text-align:center;
-    padding:35px;
-    color:#777;
+text-align:center;
+padding:35px;
+color:#777
 }
 
 .ingredients{
-    overflow:auto;
-    margin-top:10px;
+overflow:auto;
+margin-top:10px
 }
 
 .ing-head,
 .ing-row{
-    display:grid;
-    grid-template-columns:2fr 1fr 1fr 1fr auto;
-    gap:8px;
-    margin-bottom:8px;
+display:grid;
+grid-template-columns:2fr 1fr 1fr 1fr auto;
+gap:8px;
+margin-bottom:8px
 }
 
 .ing-head{
-    font-size:12px;
-    font-weight:bold;
+font-size:12px;
+font-weight:bold
 }
 
 .total{
-    text-align:right;
-    font-weight:bold;
-    margin-top:8px;
+text-align:right;
+font-weight:bold;
+margin-top:8px
 }
 
 .card{
-    border:1px solid #e1e5e8;
-    border-radius:10px;
-    padding:14px;
-    margin-top:15px;
+border:1px solid #e1e5e8;
+border-radius:10px;
+padding:14px;
+margin-top:15px
 }
 
-.small{
-    font-size:12px;
-    color:#667085;
+.status{
+font-size:12px;
+margin-bottom:14px;
+padding:8px;
+border-radius:7px;
+background:#eef5f1
+}
+
+.status.error{
+background:#fdecec;
+color:#9b2226
+}
+
+.brand-print{
+font-family:Georgia,"Times New Roman",serif;
+font-size:22px;
+font-weight:bold;
+margin-bottom:3px
+}
+
+.brand-line{
+font-size:10px;
+letter-spacing:2px;
+margin-bottom:20px
 }
 
 @media(max-width:800px){
-    .grid{
-        grid-template-columns:1fr 1fr;
-    }
 
-    .ing-head,
-    .ing-row{
-        grid-template-columns:1fr 1fr;
-    }
+.grid{
+grid-template-columns:1fr 1fr
+}
+
+.ing-head,
+.ing-row{
+grid-template-columns:1fr 1fr
+}
+
 }
 
 @media(max-width:520px){
-    .grid{
-        grid-template-columns:1fr;
-    }
 
-    header{
-        padding:15px;
-    }
-
-    header h1{
-        font-size:20px;
-    }
+.grid{
+grid-template-columns:1fr
 }
 
-/* PRINT */
+header{
+padding:15px
+}
+
+.logo{
+font-size:20px
+}
+
+}
+
 @media print{
 
-    body{
-        background:white;
-    }
+body{
+background:white
+}
 
-    header,
-    .tabs,
-    .no-print{
-        display:none !important;
-    }
+header,
+.tabs,
+.no-print,
+#seen,
+#edit{
+display:none!important
+}
 
-    .panel{
-        display:none !important;
-        box-shadow:none;
-    }
+#printArea{
+display:block!important;
+padding:15px
+}
 
-    .print-area{
-        display:block !important;
-        padding:10px;
-    }
+.print-table{
+width:100%;
+border-collapse:collapse
+}
 
-    .print-table{
-        width:100%;
-        border-collapse:collapse;
-    }
+.print-table th,
+.print-table td{
+border:1px solid #999;
+padding:7px
+}
 
-    .print-table th,
-    .print-table td{
-        border:1px solid #999;
-        padding:7px;
-    }
 }
 </style>
 </head>
@@ -269,1163 +304,1630 @@ th{
 <body>
 
 <header>
-    <h1>🧪 Formula Manager</h1>
-    <span class="badge">Offline + Online Ready</span>
+
+<div class="logo">
+Liara Professional™
+<small>ADVANCED HERBAL</small>
+</div>
+
+<span class="badge">
+☁ Online Formula
+</span>
+
 </header>
+
 
 <div class="container">
 
-    <div class="tabs no-print">
-
-        <button class="tab active"
-                onclick="showTab('seen',this)">
-            👁 Formula Seen
-        </button>
-
-        <button class="tab"
-                onclick="showTab('edit',this)">
-            ➕ Add / Edit Formula
-        </button>
-
-    </div>
-
+<div class="tabs no-print">
 
-    <!-- FORMULA SEEN -->
+<button
+class="tab active"
+onclick="showTab('seen',this)">
+👁 Formula Seen
+</button>
 
-    <section id="seen" class="panel active">
+<button
+class="tab"
+onclick="showTab('edit',this)">
+➕ Add / Edit Formula
+</button>
 
-        <div class="searchbar no-print">
+</div>
 
-            <input
-                id="search"
-                placeholder="Search product, formula no. or formula name..."
-                oninput="renderList()"
-            >
 
-            <button
-                class="secondary"
-                onclick="newFormula()">
-                ➕ New
-            </button>
+<!-- STATUS -->
 
-        </div>
+<div
+id="status"
+class="status no-print">
+☁ Connecting to Supabase...
+</div>
 
-        <div id="formulaList"></div>
 
-    </section>
+<!-- FORMULA SEEN -->
 
+<section
+id="seen"
+class="panel active">
 
-    <!-- ADD / EDIT -->
+<div class="searchbar no-print">
 
-    <section id="edit" class="panel">
+<input
+id="search"
+placeholder="Search product, formula no. or formula name..."
+oninput="renderList()">
 
-        <div class="grid">
+<button
+class="secondary"
+onclick="newFormula()">
+➕ New
+</button>
 
-            <div class="field">
-                <label>Formula No.</label>
-                <input
-                    id="formulaNo"
-                    placeholder="e.g. LP-F-001">
-            </div>
+</div>
 
-            <div class="field">
-                <label>Product Name *</label>
-                <input
-                    id="productName"
-                    placeholder="Product name">
-            </div>
+<div id="formulaList">
 
-            <div class="field">
-                <label>Formula Name</label>
-                <input
-                    id="formulaName"
-                    placeholder="Formula name">
-            </div>
+<div class="empty">
+Loading formulas...
+</div>
 
-            <div class="field">
-                <label>Version</label>
-                <input
-                    id="version"
-                    placeholder="e.g. V1.0">
-            </div>
+</div>
 
-            <div class="field">
-                <label>Date</label>
-                <input
-                    id="date"
-                    type="date">
-            </div>
+</section>
 
-            <div class="field">
-                <label>Batch Size</label>
-                <input
-                    id="batchSize"
-                    type="number"
-                    min="0"
-                    step="any"
-                    placeholder="e.g. 1000">
-            </div>
 
-            <div class="field">
-                <label>Batch Unit</label>
+<!-- ADD / EDIT -->
 
-                <select id="batchUnit">
-                    <option>g</option>
-                    <option>kg</option>
-                    <option>ml</option>
-                    <option>L</option>
-                </select>
+<section
+id="edit"
+class="panel">
 
-            </div>
+<div class="grid">
 
-            <div class="field">
-                <label>Total %</label>
-                <input
-                    id="totalPercent"
-                    readonly
-                    value="0%">
-            </div>
+<div class="field">
 
-        </div>
+<label>Formula No.</label>
 
+<input
+id="formulaNo"
+placeholder="e.g. LP-F-001">
 
-        <!-- INGREDIENTS -->
+</div>
 
-        <div class="card">
 
-            <b>Ingredients</b>
+<div class="field">
 
-            <div class="ingredients">
+<label>Product Name *</label>
 
-                <div class="ing-head">
-                    <span>Ingredient</span>
-                    <span>Quantity</span>
-                    <span>Unit</span>
-                    <span>%</span>
-                    <span></span>
-                </div>
+<input
+id="productName"
+placeholder="Product name">
 
-                <div id="ingredients"></div>
+</div>
 
-            </div>
 
-            <div class="total">
+<div class="field">
 
-                Total Quantity:
-                <span id="totalQty">0</span>
+<label>Formula Name</label>
 
-                &nbsp; | &nbsp;
+<input
+id="formulaName"
+placeholder="Formula name">
 
-                Total:
-                <span id="totalPct">0%</span>
+</div>
 
-            </div>
 
-            <button
-                class="secondary no-print"
-                onclick="addIngredient()">
+<div class="field">
 
-                + Add Ingredient
+<label>Version</label>
 
-            </button>
+<input
+id="version"
+placeholder="e.g. V1.0">
 
-        </div>
+</div>
 
 
-        <!-- OTHER DETAILS -->
+<div class="field">
 
-        <div
-            class="grid"
-            style="margin-top:15px">
+<label>Date</label>
 
-            <div class="field full">
+<input
+id="date"
+type="date">
 
-                <label>Preparation Method</label>
+</div>
 
-                <textarea
-                    id="method"
-                    placeholder="Write preparation / manufacturing method...">
-                </textarea>
 
-            </div>
+<div class="field">
 
+<label>Batch Size</label>
 
-            <div class="field full">
+<input
+id="batchSize"
+type="number"
+min="0"
+step="any"
+placeholder="e.g. 1000">
 
-                <label>Result</label>
+</div>
 
-                <textarea
-                    id="result"
-                    placeholder="Final result / observation, colour, texture, pH, fragrance, etc.">
-                </textarea>
 
-            </div>
+<div class="field">
 
+<label>Batch Unit</label>
 
-            <div class="field full">
+<select id="batchUnit">
 
-                <label>Notes</label>
+<option>g</option>
+<option>kg</option>
+<option>ml</option>
+<option>L</option>
 
-                <textarea
-                    id="notes"
-                    placeholder="Additional notes...">
-                </textarea>
+</select>
 
-            </div>
+</div>
 
-        </div>
 
+<div class="field">
 
-        <div class="actions no-print">
+<label>Total %</label>
 
-            <button
-                class="primary"
-                onclick="saveFormula()">
-                💾 Save Formula
-            </button>
+<input
+id="totalPercent"
+readonly
+value="0%">
 
-            <button
-                class="secondary"
-                onclick="newFormula()">
-                Clear
-            </button>
+</div>
 
-            <button
-                class="danger"
-                id="deleteBtn"
-                onclick="deleteCurrent()"
-                style="display:none">
-                🗑 Delete
-            </button>
+</div>
 
-        </div>
 
-    </section>
+<!-- INGREDIENTS -->
 
+<div class="card">
 
-    <!-- PRINT AREA -->
+<b>Ingredients</b>
 
-    <section
-        id="printArea"
-        class="print-area"
-        style="display:none">
-    </section>
+<div class="ingredients">
+
+<div class="ing-head">
+
+<span>Ingredient</span>
+<span>Quantity</span>
+<span>Unit</span>
+<span>%</span>
+<span></span>
+
+</div>
+
+<div id="ingredients"></div>
+
+</div>
+
+
+<div class="total">
+
+Total Quantity:
+<span id="totalQty">0</span>
+
+&nbsp; | &nbsp;
+
+Total:
+<span id="totalPct">0%</span>
+
+</div>
+
+
+<button
+class="secondary no-print"
+onclick="addIngredient()">
+
++ Add Ingredient
+
+</button>
+
+</div>
+
+
+<!-- OTHER DETAILS -->
+
+<div
+class="grid"
+style="margin-top:15px">
+
+
+<div class="field full">
+
+<label>Preparation Method</label>
+
+<textarea
+id="method"
+placeholder="Write preparation / manufacturing method..."></textarea>
+
+</div>
+
+
+<div class="field full">
+
+<label>Result</label>
+
+<textarea
+id="result"
+placeholder="Final result / observation, colour, texture, pH, fragrance, etc."></textarea>
+
+</div>
+
+
+<div class="field full">
+
+<label>Notes</label>
+
+<textarea
+id="notes"
+placeholder="Additional notes..."></textarea>
+
+</div>
+
+</div>
+
+
+<div class="actions no-print">
+
+<button
+class="primary"
+onclick="saveFormula()">
+
+💾 Save Formula
+
+</button>
+
+
+<button
+class="secondary"
+onclick="newFormula()">
+
+Clear
+
+</button>
+
+
+<button
+class="danger"
+id="deleteBtn"
+onclick="deleteCurrent()"
+style="display:none">
+
+🗑 Delete
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- PRINT AREA -->
+
+<section
+id="printArea"
+style="display:none">
+</section>
+
 
 </div>
 
 
 <script>
 
-let formulas =
-    JSON.parse(
-        localStorage.getItem("liara_formulas") || "[]"
-    );
+/* ================================
+   SUPABASE CONNECTION
+================================ */
+
+const SUPABASE_URL =
+"https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+
+const supabase =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+/* ================================
+   VARIABLES
+================================ */
+
+let formulas = [];
 
 let editingId = null;
 
 
+/* ================================
+   SHORTCUT
+================================ */
+
 function $(id){
-    return document.getElementById(id);
+
+return document.getElementById(id);
+
 }
 
 
-/* TAB */
+/* ================================
+   STATUS
+================================ */
 
-function showTab(id,btn){
+function setStatus(message,error=false){
 
-    document
-        .querySelectorAll(".panel")
-        .forEach(p =>
-            p.classList.remove("active")
-        );
+$("status").textContent = message;
 
-    $(id).classList.add("active");
+$("status").className =
+error
+? "status error no-print"
+: "status no-print";
 
-    document
-        .querySelectorAll(".tab")
-        .forEach(b =>
-            b.classList.remove("active")
-        );
-
-    btn.classList.add("active");
 }
 
 
-/* DATE */
+/* ================================
+   ESCAPE TEXT
+================================ */
+
+function esc(value){
+
+return String(value ?? "")
+.replace(
+/[&<>"']/g,
+
+function(m){
+
+return {
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+
+}[m];
+
+});
+
+}
+
+
+function nl(value){
+
+return esc(value)
+.replace(/\n/g,"<br>");
+
+}
+
+
+/* ================================
+   DATE
+================================ */
 
 function today(){
 
-    return new Date()
-        .toISOString()
-        .slice(0,10);
+return new Date()
+.toISOString()
+.slice(0,10);
 
 }
 
 
-/* NEW FORMULA */
+/* ================================
+   TAB
+================================ */
+
+function showTab(id,btn){
+
+document
+.querySelectorAll(".panel")
+.forEach(
+p => p.classList.remove("active")
+);
+
+$(id).classList.add("active");
+
+document
+.querySelectorAll(".tab")
+.forEach(
+b => b.classList.remove("active")
+);
+
+btn.classList.add("active");
+
+}
+
+
+/* ================================
+   NEW FORMULA
+================================ */
 
 function newFormula(){
 
-    editingId = null;
+editingId = null;
 
-    [
-        "formulaNo",
-        "productName",
-        "formulaName",
-        "version",
-        "method",
-        "result",
-        "notes",
-        "batchSize"
-    ]
-    .forEach(id => $(id).value="");
+[
+"formulaNo",
+"productName",
+"formulaName",
+"version",
+"method",
+"result",
+"notes",
+"batchSize"
 
-    $("date").value = today();
+].forEach(
 
-    $("batchUnit").value = "g";
+id => $(id).value=""
 
-    $("ingredients").innerHTML = "";
+);
 
-    addIngredient();
 
-    $("deleteBtn").style.display = "none";
+$("date").value = today();
 
-    document
-        .querySelectorAll(".tab")[1]
-        .click();
+$("batchUnit").value = "g";
+
+$("ingredients").innerHTML = "";
+
+addIngredient();
+
+$("deleteBtn").style.display = "none";
+
+document
+.querySelectorAll(".tab")[1]
+.click();
 
 }
 
 
-/* ADD INGREDIENT */
+/* ================================
+   ADD INGREDIENT
+================================ */
 
 function addIngredient(data={}){
 
-    const row =
-        document.createElement("div");
+const row =
+document.createElement("div");
 
-    row.className = "ing-row";
+row.className = "ing-row";
 
-    row.innerHTML = `
+row.innerHTML = `
 
-        <input
-            class="iname"
-            placeholder="Ingredient name"
-            value="${esc(data.name || "")}">
+<input
+class="iname"
+placeholder="Ingredient name"
+value="${esc(data.name || "")}">
 
-        <input
-            class="iqty"
-            type="number"
-            min="0"
-            step="any"
-            placeholder="Qty"
-            value="${data.qty ?? ""}"
-            oninput="calcTotals()">
+<input
+class="iqty"
+type="number"
+min="0"
+step="any"
+placeholder="Qty"
+value="${data.qty ?? ""}"
+oninput="calcTotals()">
 
-        <select class="iunit">
+<select class="iunit">
 
-            <option ${data.unit==="g"?"selected":""}>
-                g
-            </option>
+<option ${data.unit==="g"?"selected":""}>
+g
+</option>
 
-            <option ${data.unit==="kg"?"selected":""}>
-                kg
-            </option>
+<option ${data.unit==="kg"?"selected":""}>
+kg
+</option>
 
-            <option ${data.unit==="ml"?"selected":""}>
-                ml
-            </option>
+<option ${data.unit==="ml"?"selected":""}>
+ml
+</option>
 
-            <option ${data.unit==="L"?"selected":""}>
-                L
-            </option>
+<option ${data.unit==="L"?"selected":""}>
+L
+</option>
 
-        </select>
+</select>
 
-        <input
-            class="ipct"
-            type="number"
-            min="0"
-            step="any"
-            placeholder="%"
-            value="${data.pct ?? ""}"
-            oninput="calcTotals()">
+<input
+class="ipct"
+type="number"
+min="0"
+step="any"
+placeholder="%"
+value="${data.pct ?? ""}"
+oninput="calcTotals()">
 
-        <button
-            class="danger"
-            onclick="
-                this.parentElement.remove();
-                calcTotals();
-            ">
-            ×
-        </button>
+<button
+class="danger"
+onclick="
+this.parentElement.remove();
+calcTotals();
+">
 
-    `;
+×
 
-    $("ingredients").appendChild(row);
+</button>
 
-    calcTotals();
+`;
+
+$("ingredients")
+.appendChild(row);
+
+calcTotals();
 
 }
 
 
-/* TOTAL */
+/* ================================
+   TOTALS
+================================ */
 
 function calcTotals(){
 
-    let q = 0;
-    let p = 0;
+let q = 0;
 
-    document
-        .querySelectorAll(".iqty")
-        .forEach(x =>
-            q += Number(x.value) || 0
-        );
+let p = 0;
 
-    document
-        .querySelectorAll(".ipct")
-        .forEach(x =>
-            p += Number(x.value) || 0
-        );
 
-    $("totalQty").textContent =
-        q.toFixed(2).replace(/\.00$/,"");
+document
+.querySelectorAll(".iqty")
+.forEach(
+x => q += Number(x.value) || 0
+);
 
-    $("totalPct").textContent =
-        p.toFixed(2).replace(/\.00$/,"") + "%";
 
-    $("totalPercent").value =
-        p.toFixed(2).replace(/\.00$/,"") + "%";
+document
+.querySelectorAll(".ipct")
+.forEach(
+x => p += Number(x.value) || 0
+);
+
+
+$("totalQty").textContent =
+q.toFixed(2).replace(/\.00$/,"");
+
+
+$("totalPct").textContent =
+p.toFixed(2).replace(/\.00$/,"")
++ "%";
+
+
+$("totalPercent").value =
+p.toFixed(2).replace(/\.00$/,"")
++ "%";
 
 }
 
 
-/* GET INGREDIENTS */
+/* ================================
+   GET INGREDIENTS
+================================ */
 
 function getIngredients(){
 
-    return [
-        ...document
-        .querySelectorAll("#ingredients .ing-row")
-    ]
+return [
 
-    .map(r => ({
+...document
+.querySelectorAll(
+"#ingredients .ing-row"
+)
 
-        name:
-            r.querySelector(".iname")
-            .value
-            .trim(),
+]
 
-        qty:
-            r.querySelector(".iqty")
-            .value,
+.map(
 
-        unit:
-            r.querySelector(".iunit")
-            .value,
+row => ({
 
-        pct:
-            r.querySelector(".ipct")
-            .value
+name:
+row
+.querySelector(".iname")
+.value
+.trim(),
 
-    }))
+qty:
+row
+.querySelector(".iqty")
+.value,
 
-    .filter(x =>
-        x.name ||
-        x.qty ||
-        x.pct
-    );
+unit:
+row
+.querySelector(".iunit")
+.value,
 
-}
+pct:
+row
+.querySelector(".ipct")
+.value
 
+})
 
-/* SAVE */
+)
 
-function saveFormula(){
-
-    const product =
-        $("productName")
-        .value
-        .trim();
-
-    if(!product){
-
-        alert("Product Name is required.");
-
-        return;
-    }
-
-
-    const item = {
-
-        id:
-            editingId ||
-            Date.now().toString(),
-
-        formulaNo:
-            $("formulaNo").value.trim(),
-
-        productName:
-            product,
-
-        formulaName:
-            $("formulaName").value.trim(),
-
-        version:
-            $("version").value.trim(),
-
-        date:
-            $("date").value || today(),
-
-        batchSize:
-            $("batchSize").value,
-
-        batchUnit:
-            $("batchUnit").value,
-
-        ingredients:
-            getIngredients(),
-
-        method:
-            $("method").value.trim(),
-
-        result:
-            $("result").value.trim(),
-
-        notes:
-            $("notes").value.trim()
-
-    };
-
-
-    const index =
-        formulas.findIndex(
-            x => x.id === item.id
-        );
-
-
-    if(index >= 0){
-
-        formulas[index] = item;
-
-        alert("Formula updated successfully.");
-
-    }else{
-
-        formulas.unshift(item);
-
-        alert("Formula saved successfully.");
-
-    }
-
-
-    localStorage.setItem(
-        "liara_formulas",
-        JSON.stringify(formulas)
-    );
-
-
-    renderList();
-
-    editFormula(item.id);
+.filter(
+x =>
+x.name ||
+x.qty ||
+x.pct
+);
 
 }
 
 
-/* LIST */
+/* ================================
+   SAVE FORMULA
+================================ */
+
+async function saveFormula(){
+
+const product =
+$("productName")
+.value
+.trim();
+
+
+if(!product){
+
+alert("Product Name is required.");
+
+return;
+
+}
+
+
+const item = {
+
+formula_no:
+$("formulaNo")
+.value
+.trim(),
+
+product_name:
+product,
+
+formula_name:
+$("formulaName")
+.value
+.trim(),
+
+version:
+$("version")
+.value
+.trim(),
+
+formula_date:
+$("date")
+.value || today(),
+
+batch_size:
+$("batchSize")
+.value
+? Number($("batchSize").value)
+: null,
+
+batch_unit:
+$("batchUnit")
+.value,
+
+preparation_method:
+$("method")
+.value
+.trim(),
+
+result:
+$("result")
+.value
+.trim(),
+
+notes:
+$("notes")
+.value
+.trim(),
+
+updated_at:
+new Date().toISOString()
+
+};
+
+
+try{
+
+let formulaId =
+editingId;
+
+
+/* UPDATE */
+
+if(editingId){
+
+const {error} =
+await supabase
+.from("formulas")
+.update(item)
+.eq("id",editingId);
+
+
+if(error)
+throw error;
+
+
+/* Remove old ingredients */
+
+const {error:deleteError} =
+await supabase
+.from("formula_ingredients")
+.delete()
+.eq("formula_id",editingId);
+
+
+if(deleteError)
+throw deleteError;
+
+}
+
+
+/* INSERT */
+
+else{
+
+const {data,error} =
+await supabase
+.from("formulas")
+.insert(item)
+.select("id")
+.single();
+
+
+if(error)
+throw error;
+
+
+formulaId = data.id;
+
+}
+
+
+/* INGREDIENTS */
+
+const ingredients =
+getIngredients()
+.map(x => ({
+
+formula_id:
+formulaId,
+
+ingredient_name:
+x.name,
+
+quantity:
+x.qty
+? Number(x.qty)
+: null,
+
+unit:
+x.unit,
+
+percentage:
+x.pct
+? Number(x.pct)
+: null
+
+}));
+
+
+if(ingredients.length){
+
+const {error} =
+await supabase
+.from("formula_ingredients")
+.insert(ingredients);
+
+
+if(error)
+throw error;
+
+}
+
+
+alert(
+editingId
+? "Formula updated successfully."
+: "Formula saved successfully."
+);
+
+
+await loadFormulas();
+
+editFormula(formulaId);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"Supabase error: "
++ error.message
+);
+
+}
+
+}
+
+
+/* ================================
+   LOAD FORMULAS
+================================ */
+
+async function loadFormulas(){
+
+setStatus(
+"☁ Loading formulas..."
+);
+
+
+const {data,error} =
+await supabase
+.from("formulas")
+.select(
+"*, formula_ingredients(*)"
+)
+.order(
+"created_at",
+{ascending:false}
+);
+
+
+if(error){
+
+setStatus(
+"❌ Supabase error: "
++ error.message,
+true
+);
+
+$("formulaList").innerHTML = `
+
+<div class="empty">
+
+Could not load formulas.
+
+<br><br>
+
+${esc(error.message)}
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+formulas = data || [];
+
+
+setStatus(
+"☁ Connected • "
++ formulas.length
++ " formula(s) online"
+);
+
+
+renderList();
+
+}
+
+
+/* ================================
+   LIST
+================================ */
 
 function renderList(){
 
-    const q =
-        $("search")
-        .value
-        .toLowerCase()
-        .trim();
+const q =
+$("search")
+.value
+.toLowerCase()
+.trim();
 
 
-    const list =
-        formulas.filter(f =>
-            (
-                f.productName +
-                " " +
-                f.formulaNo +
-                " " +
-                f.formulaName
-            )
-            .toLowerCase()
-            .includes(q)
-        );
+const list =
+formulas.filter(
+
+f => (
+
+(f.product_name || "")
++ " "
++ (f.formula_no || "")
++ " "
++ (f.formula_name || "")
+
+)
+.toLowerCase()
+.includes(q)
+
+);
 
 
-    if(!list.length){
+if(!list.length){
 
-        $("formulaList").innerHTML = `
+$("formulaList").innerHTML = `
 
-            <div class="empty">
+<div class="empty">
 
-                No formulas found.
+No formulas found.
 
-                <br><br>
+<br><br>
 
-                Click <b>New</b>
-                to add one.
+Click <b>New</b>
+to add one.
 
-            </div>
+</div>
 
-        `;
+`;
 
-        return;
-    }
-
-
-    $("formulaList").innerHTML = `
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Formula No.</th>
-                    <th>Product</th>
-                    <th>Formula</th>
-                    <th>Version</th>
-                    <th>Date</th>
-                    <th class="no-print">Action</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                ${
-                    list.map(f => `
-
-                    <tr>
-
-                        <td>
-                            ${esc(f.formulaNo || "-")}
-                        </td>
-
-                        <td>
-                            <b>
-                                ${esc(f.productName)}
-                            </b>
-                        </td>
-
-                        <td>
-                            ${esc(f.formulaName || "-")}
-                        </td>
-
-                        <td>
-                            ${esc(f.version || "-")}
-                        </td>
-
-                        <td>
-                            ${esc(f.date || "-")}
-                        </td>
-
-                        <td class="no-print">
-
-                            <button
-                                class="secondary"
-                                onclick="viewFormula('${f.id}')">
-                                👁 View
-                            </button>
-
-                            <button
-                                class="secondary"
-                                onclick="editFormula('${f.id}')">
-                                ✏️ Edit
-                            </button>
-
-                            <button
-                                class="secondary"
-                                onclick="printFormula('${f.id}')">
-                                🖨️ Print
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                    `).join("")
-                }
-
-            </tbody>
-
-        </table>
-
-    `;
+return;
 
 }
 
 
-/* EDIT */
+$("formulaList").innerHTML = `
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Formula No.</th>
+<th>Product</th>
+<th>Formula</th>
+<th>Version</th>
+<th>Date</th>
+<th class="no-print">
+Action
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${
+list.map(f => `
+
+<tr>
+
+<td>
+${esc(f.formula_no || "-")}
+</td>
+
+<td>
+<b>
+${esc(f.product_name)}
+</b>
+</td>
+
+<td>
+${esc(f.formula_name || "-")}
+</td>
+
+<td>
+${esc(f.version || "-")}
+</td>
+
+<td>
+${esc(f.formula_date || "-")}
+</td>
+
+<td class="no-print">
+
+<button
+class="secondary"
+onclick="viewFormula('${f.id}')">
+👁 View
+</button>
+
+<button
+class="secondary"
+onclick="editFormula('${f.id}')">
+✏️ Edit
+</button>
+
+<button
+class="secondary"
+onclick="printFormula('${f.id}')">
+🖨️ Print
+</button>
+
+</td>
+
+</tr>
+
+`).join("")
+}
+
+</tbody>
+
+</table>
+
+`;
+
+}
+
+
+/* ================================
+   EDIT
+================================ */
 
 function editFormula(id){
 
-    const f =
-        formulas.find(x =>
-            x.id === id
-        );
-
-    if(!f)return;
+const f =
+formulas.find(
+x => x.id === id
+);
 
 
-    editingId = id;
+if(!f)
+return;
 
 
-    $("formulaNo").value =
-        f.formulaNo || "";
-
-    $("productName").value =
-        f.productName || "";
-
-    $("formulaName").value =
-        f.formulaName || "";
-
-    $("version").value =
-        f.version || "";
-
-    $("date").value =
-        f.date || today();
-
-    $("batchSize").value =
-        f.batchSize || "";
-
-    $("batchUnit").value =
-        f.batchUnit || "g";
-
-    $("method").value =
-        f.method || "";
-
-    $("result").value =
-        f.result || "";
-
-    $("notes").value =
-        f.notes || "";
+editingId = id;
 
 
-    $("ingredients").innerHTML = "";
+$("formulaNo").value =
+f.formula_no || "";
 
 
-    if(f.ingredients && f.ingredients.length){
-
-        f.ingredients.forEach(addIngredient);
-
-    }else{
-
-        addIngredient();
-
-    }
+$("productName").value =
+f.product_name || "";
 
 
-    $("deleteBtn").style.display =
-        "inline-block";
+$("formulaName").value =
+f.formula_name || "";
 
 
-    calcTotals();
+$("version").value =
+f.version || "";
 
 
-    document
-        .querySelectorAll(".tab")[1]
-        .click();
+$("date").value =
+f.formula_date || today();
+
+
+$("batchSize").value =
+f.batch_size ?? "";
+
+
+$("batchUnit").value =
+f.batch_unit || "g";
+
+
+$("method").value =
+f.preparation_method || "";
+
+
+$("result").value =
+f.result || "";
+
+
+$("notes").value =
+f.notes || "";
+
+
+$("ingredients").innerHTML = "";
+
+
+const ingredients =
+f.formula_ingredients || [];
+
+
+if(ingredients.length){
+
+ingredients.forEach(
+
+x => addIngredient({
+
+name:
+x.ingredient_name,
+
+qty:
+x.quantity,
+
+unit:
+x.unit,
+
+pct:
+x.percentage
+
+})
+
+);
+
+}
+
+else{
+
+addIngredient();
 
 }
 
 
-/* VIEW */
+$("deleteBtn")
+.style.display =
+"inline-block";
+
+
+calcTotals();
+
+
+document
+.querySelectorAll(".tab")[1]
+.click();
+
+}
+
+
+/* ================================
+   VIEW
+================================ */
 
 function viewFormula(id){
 
-    const f =
-        formulas.find(x =>
-            x.id === id
-        );
-
-    if(!f)return;
+const f =
+formulas.find(
+x => x.id === id
+);
 
 
-    const ing =
-        (f.ingredients || [])
-        .map(x => `
-
-            <tr>
-
-                <td>${esc(x.name)}</td>
-
-                <td>${esc(x.qty || "")}</td>
-
-                <td>${esc(x.unit || "")}</td>
-
-                <td>${esc(x.pct || "")}</td>
-
-            </tr>
-
-        `)
-        .join("");
+if(!f)
+return;
 
 
-    $("formulaList").innerHTML = `
-
-        <div class="card">
-
-            <div class="actions no-print">
-
-                <button
-                    class="secondary"
-                    onclick="renderList()">
-                    ← Back
-                </button>
-
-                <button
-                    class="primary"
-                    onclick="printFormula('${f.id}')">
-                    🖨️ Print
-                </button>
-
-                <button
-                    class="secondary"
-                    onclick="editFormula('${f.id}')">
-                    ✏️ Edit
-                </button>
-
-            </div>
+const ingredients =
+f.formula_ingredients || [];
 
 
-            <h2>
-                ${esc(f.productName)}
-            </h2>
+const ing =
+ingredients
+.map(x => `
+
+<tr>
+
+<td>
+${esc(x.ingredient_name)}
+</td>
+
+<td>
+${esc(x.quantity ?? "")}
+</td>
+
+<td>
+${esc(x.unit || "")}
+</td>
+
+<td>
+${esc(x.percentage ?? "")}
+</td>
+
+</tr>
+
+`)
+.join("");
 
 
-            <p>
+$("formulaList").innerHTML = `
 
-                <b>Formula No:</b>
-                ${esc(f.formulaNo || "-")}
+<div class="card">
 
-                &nbsp;&nbsp;
+<div class="actions no-print">
 
-                <b>Version:</b>
-                ${esc(f.version || "-")}
+<button
+class="secondary"
+onclick="renderList()">
+← Back
+</button>
 
-                &nbsp;&nbsp;
+<button
+class="primary"
+onclick="printFormula('${f.id}')">
+🖨️ Print
+</button>
 
-                <b>Date:</b>
-                ${esc(f.date || "-")}
+<button
+class="secondary"
+onclick="editFormula('${f.id}')">
+✏️ Edit
+</button>
 
-            </p>
-
-
-            <p>
-
-                <b>Formula Name:</b>
-                ${esc(f.formulaName || "-")}
-
-            </p>
-
-
-            <h3>
-                Ingredients
-            </h3>
+</div>
 
 
-            <table>
-
-                <tr>
-
-                    <th>Ingredient</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                    <th>%</th>
-
-                </tr>
-
-                ${
-                    ing ||
-                    `
-                    <tr>
-                        <td colspan="4">
-                            No ingredients
-                        </td>
-                    </tr>
-                    `
-                }
-
-            </table>
+<h2>
+${esc(f.product_name)}
+</h2>
 
 
-            <h3>
-                Preparation Method
-            </h3>
+<p>
 
-            <div>
-                ${nl(f.method || "-")}
-            </div>
+<b>Formula No:</b>
+${esc(f.formula_no || "-")}
+
+&nbsp;&nbsp;
+
+<b>Version:</b>
+${esc(f.version || "-")}
+
+&nbsp;&nbsp;
+
+<b>Date:</b>
+${esc(f.formula_date || "-")}
+
+</p>
 
 
-            <h3>
-                Result
-            </h3>
+<p>
 
-            <div>
-                ${nl(f.result || "-")}
-            </div>
+<b>Formula Name:</b>
+${esc(f.formula_name || "-")}
+
+</p>
 
 
-            <h3>
-                Notes
-            </h3>
+<h3>
+Ingredients
+</h3>
 
-            <div>
-                ${nl(f.notes || "-")}
-            </div>
 
-        </div>
+<table>
 
-    `;
+<tr>
+
+<th>Ingredient</th>
+<th>Quantity</th>
+<th>Unit</th>
+<th>%</th>
+
+</tr>
+
+${
+ing ||
+`
+<tr>
+<td colspan="4">
+No ingredients
+</td>
+</tr>
+`
+}
+
+</table>
+
+
+<h3>
+Preparation Method
+</h3>
+
+<div>
+${nl(f.preparation_method || "-")}
+</div>
+
+
+<h3>
+Result
+</h3>
+
+<div>
+${nl(f.result || "-")}
+</div>
+
+
+<h3>
+Notes
+</h3>
+
+<div>
+${nl(f.notes || "-")}
+</div>
+
+</div>
+
+`;
 
 }
 
 
-/* DELETE */
+/* ================================
+   DELETE
+================================ */
 
-function deleteCurrent(){
+async function deleteCurrent(){
 
-    if(!editingId)return;
-
-
-    if(confirm("Delete this formula?")){
-
-        formulas =
-            formulas.filter(
-                x => x.id !== editingId
-            );
+if(!editingId)
+return;
 
 
-        localStorage.setItem(
-            "liara_formulas",
-            JSON.stringify(formulas)
-        );
+if(
+!confirm(
+"Delete this formula?"
+)
+)
+return;
 
 
-        editingId = null;
+try{
 
-        renderList();
+const {error} =
+await supabase
+.from("formulas")
+.delete()
+.eq("id",editingId);
 
-        document
-            .querySelectorAll(".tab")[0]
-            .click();
 
-    }
+if(error)
+throw error;
+
+
+alert(
+"Formula deleted successfully."
+);
+
+
+editingId = null;
+
+
+await loadFormulas();
+
+
+document
+.querySelectorAll(".tab")[0]
+.click();
+
+}
+
+catch(error){
+
+alert(
+"Delete error: "
++ error.message
+);
+
+}
 
 }
 
 
-/* PRINT */
+/* ================================
+   PRINT
+================================ */
 
 function printFormula(id){
 
-    const f =
-        formulas.find(x =>
-            x.id === id
-        );
-
-    if(!f)return;
+const f =
+formulas.find(
+x => x.id === id
+);
 
 
-    const ing =
-        (f.ingredients || [])
-        .map(x => `
-
-            <tr>
-
-                <td>${esc(x.name)}</td>
-                <td>${esc(x.qty || "")}</td>
-                <td>${esc(x.unit || "")}</td>
-                <td>${esc(x.pct || "")}</td>
-
-            </tr>
-
-        `)
-        .join("");
+if(!f)
+return;
 
 
-    $("printArea").innerHTML = `
-
-        <h2>
-            Formula Sheet
-        </h2>
+const ingredients =
+f.formula_ingredients || [];
 
 
-        <table class="print-table">
+const ing =
+ingredients
+.map(x => `
 
-            <tr>
+<tr>
 
-                <th>Product Name</th>
+<td>
+${esc(x.ingredient_name)}
+</td>
 
-                <td>
-                    ${esc(f.productName)}
-                </td>
+<td>
+${esc(x.quantity ?? "")}
+</td>
 
-                <th>Formula No.</th>
+<td>
+${esc(x.unit || "")}
+</td>
 
-                <td>
-                    ${esc(f.formulaNo || "-")}
-                </td>
+<td>
+${esc(x.percentage ?? "")}
+</td>
 
-            </tr>
+</tr>
 
-
-            <tr>
-
-                <th>Formula Name</th>
-
-                <td>
-                    ${esc(f.formulaName || "-")}
-                </td>
-
-                <th>Version</th>
-
-                <td>
-                    ${esc(f.version || "-")}
-                </td>
-
-            </tr>
+`)
+.join("");
 
 
-            <tr>
+$("printArea").innerHTML = `
 
-                <th>Date</th>
+<div class="brand-print">
+Liara Professional™
+</div>
 
-                <td>
-                    ${esc(f.date || "-")}
-                </td>
-
-                <th>Batch</th>
-
-                <td>
-                    ${esc(f.batchSize || "-")}
-                    ${esc(f.batchUnit || "")}
-                </td>
-
-            </tr>
-
-        </table>
+<div class="brand-line">
+ADVANCED HERBAL
+</div>
 
 
-        <h3>
-            Ingredients
-        </h3>
+<h2>
+FORMULA SHEET
+</h2>
 
 
-        <table class="print-table">
+<table class="print-table">
 
-            <tr>
+<tr>
 
-                <th>Ingredient</th>
-                <th>Quantity</th>
-                <th>Unit</th>
-                <th>%</th>
+<th>Product Name</th>
 
-            </tr>
+<td>
+${esc(f.product_name)}
+</td>
 
-            ${ing}
+<th>Formula No.</th>
 
-        </table>
+<td>
+${esc(f.formula_no || "-")}
+</td>
 
-
-        <h3>
-            Preparation Method
-        </h3>
-
-        <div>
-            ${nl(f.method || "-")}
-        </div>
+</tr>
 
 
-        <h3>
-            Result
-        </h3>
+<tr>
 
-        <div>
-            ${nl(f.result || "-")}
-        </div>
+<th>Formula Name</th>
 
+<td>
+${esc(f.formula_name || "-")}
+</td>
 
-        <h3>
-            Notes
-        </h3>
+<th>Version</th>
 
-        <div>
-            ${nl(f.notes || "-")}
-        </div>
+<td>
+${esc(f.version || "-")}
+</td>
 
-    `;
+</tr>
 
 
-    document
-        .querySelectorAll(".panel")
-        .forEach(p =>
-            p.classList.remove("active")
-        );
+<tr>
+
+<th>Date</th>
+
+<td>
+${esc(f.formula_date || "-")}
+</td>
+
+<th>Batch</th>
+
+<td>
+${esc(f.batch_size ?? "-")}
+${esc(f.batch_unit || "")}
+</td>
+
+</tr>
+
+</table>
 
 
-    $("printArea").style.display =
-        "block";
+<h3>
+Ingredients
+</h3>
 
 
-    window.print();
+<table class="print-table">
+
+<tr>
+
+<th>Ingredient</th>
+<th>Quantity</th>
+<th>Unit</th>
+<th>%</th>
+
+</tr>
+
+${ing}
+
+</table>
 
 
-    $("printArea").style.display =
-        "none";
+<h3>
+Preparation Method
+</h3>
+
+<div>
+${nl(f.preparation_method || "-")}
+</div>
 
 
-    document
-        .querySelectorAll(".tab")[0]
-        .click();
+<h3>
+Result
+</h3>
+
+<div>
+${nl(f.result || "-")}
+</div>
+
+
+<h3>
+Notes
+</h3>
+
+<div>
+${nl(f.notes || "-")}
+</div>
+
+
+<br>
+
+<div style="
+text-align:center;
+font-size:10px;
+color:#666;
+">
+
+Liara Professional™ • Advanced Herbal
+
+</div>
+
+`;
+
+
+document
+.querySelectorAll(".panel")
+.forEach(
+p => p.classList.remove("active")
+);
+
+
+$("printArea")
+.style.display = "block";
+
+
+window.print();
+
+
+$("printArea")
+.style.display = "none";
+
+
+document
+.querySelectorAll(".tab")[0]
+.click();
 
 }
 
 
-/* SECURITY / TEXT */
-
-function esc(v){
-
-    return String(v)
-        .replace(
-            /[&<>"']/g,
-            m => ({
-                "&":"&amp;",
-                "<":"&lt;",
-                ">":"&gt;",
-                '"':"&quot;",
-                "'":"&#39;"
-            }[m])
-        );
-
-}
-
-
-function nl(v){
-
-    return esc(v)
-        .replace(/\n/g,"<br>");
-
-}
-
-
-/* START */
+/* ================================
+   START
+================================ */
 
 $("date").value = today();
 
 addIngredient();
 
-renderList();
+loadFormulas();
 
 </script>
 
 </body>
 </html>
+```
