@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,243 +9,482 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+:root{
+    --bg:#f4f5f7;
+    --surface:#fff;
+    --text:#15171b;
+    --muted:#747982;
+    --line:#e7e8eb;
+    --dark:#17191d;
+    --green:#16734b;
+    --green-bg:#e7f6ee;
+    --red:#b42318;
+    --red-bg:#fcebea;
+    --amber:#a15c00;
+    --amber-bg:#fff4df;
+    --blue:#2457c5;
+    --blue-bg:#eaf1ff;
+    --purple:#6941c6;
+    --purple-bg:#f0ebff;
+    --shadow:0 10px 28px rgba(16,24,40,.055);
+}
+
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f5f6f8;
-    color:#222;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,
+    BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
+/* HEADER */
+
 .header{
-    background:#111827;
+    background:linear-gradient(135deg,#0f1115 0%,#24282f 100%);
     color:#fff;
-    padding:18px;
+    padding:22px 18px;
+    border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .header-inner{
-    max-width:1200px;
+    max-width:1280px;
     margin:auto;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:15px;
+    gap:18px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.brand-icon{
+    width:45px;
+    height:45px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.12);
+    font-size:21px;
 }
 
 .header h1{
     margin:0;
     font-size:22px;
+    letter-spacing:-.35px;
 }
 
 .header p{
-    margin:4px 0 0;
-    opacity:.75;
-    font-size:13px;
+    margin:5px 0 0;
+    color:rgba(255,255,255,.62);
+    font-size:12px;
 }
 
 .back-btn{
     background:#fff;
-    color:#111827;
+    color:#17191d;
     text-decoration:none;
-    padding:8px 12px;
-    border-radius:7px;
-    font-weight:bold;
-    font-size:13px;
+    padding:10px 15px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:800;
+    box-shadow:0 5px 18px rgba(0,0,0,.15);
 }
 
+/* MAIN */
+
 .container{
-    max-width:1200px;
-    margin:22px auto;
-    padding:0 15px;
+    max-width:1280px;
+    margin:25px auto;
+    padding:0 16px;
 }
+
+.section-heading{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:15px;
+    margin:0 0 13px;
+}
+
+.section-heading h2{
+    margin:0;
+    font-size:15px;
+    letter-spacing:-.15px;
+}
+
+.section-heading span{
+    color:var(--muted);
+    font-size:11px;
+}
+
+/* CARDS */
 
 .cards{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(5,1fr);
     gap:12px;
-    margin-bottom:18px;
+    margin-bottom:25px;
 }
 
 .card{
-    background:#fff;
-    border-radius:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
     padding:17px;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+    box-shadow:var(--shadow);
+    min-height:105px;
+}
+
+.card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
 }
 
 .card-title{
-    color:#777;
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.55px;
+}
+
+.card-icon{
+    width:30px;
+    height:30px;
+    border-radius:9px;
+    display:grid;
+    place-items:center;
+    background:#f1f2f4;
     font-size:13px;
-    margin-bottom:7px;
+    font-weight:800;
 }
 
 .card-number{
-    font-size:27px;
-    font-weight:bold;
+    margin-top:13px;
+    font-size:26px;
+    font-weight:850;
+    letter-spacing:-.8px;
 }
 
+.card.green .card-icon{
+    background:var(--green-bg);
+}
+
+.card.blue .card-icon{
+    background:var(--blue-bg);
+}
+
+.card.amber .card-icon{
+    background:var(--amber-bg);
+}
+
+.card.red .card-icon{
+    background:var(--red-bg);
+}
+
+.card.purple .card-icon{
+    background:var(--purple-bg);
+}
+
+/* TOOLBAR */
+
 .toolbar{
-    background:#fff;
-    padding:13px;
-    border-radius:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
     display:flex;
     gap:9px;
     flex-wrap:wrap;
-    margin-bottom:18px;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+    margin-bottom:13px;
+    box-shadow:var(--shadow);
 }
 
-.search{
+.search-wrap{
+    position:relative;
     flex:1;
-    min-width:200px;
+    min-width:220px;
 }
 
-input,select{
-    padding:10px 11px;
-    border:1px solid #ddd;
-    border-radius:7px;
-    font-size:13px;
+.search-wrap span{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#9297a0;
+    font-size:14px;
+}
+
+input,
+select{
+    padding:10px 12px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--text);
+    border-radius:10px;
+    font-size:12px;
     outline:none;
+    transition:.18s;
+}
+
+.search-wrap input{
+    width:100%;
+    padding-left:34px;
+}
+
+input:focus,
+select:focus{
+    border-color:#aeb3bc;
+    box-shadow:0 0 0 3px rgba(0,0,0,.035);
 }
 
 button{
     border:0;
-    border-radius:7px;
-    padding:10px 13px;
+    border-radius:10px;
+    padding:10px 14px;
     cursor:pointer;
-    font-weight:bold;
-    font-size:12px;
+    font-weight:800;
+    font-size:11px;
+    transition:transform .15s,opacity .15s;
+}
+
+button:hover{
+    transform:translateY(-1px);
 }
 
 .refresh{
-    background:#111827;
+    background:var(--dark);
     color:#fff;
 }
 
+/* TABLE */
+
 .table-box{
-    background:#fff;
-    border-radius:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
     overflow:auto;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+    box-shadow:var(--shadow);
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:760px;
+    min-width:1080px;
 }
 
-th,td{
-    padding:13px;
-    border-bottom:1px solid #eee;
+th,
+td{
+    padding:14px 13px;
+    border-bottom:1px solid #f0f1f3;
     text-align:left;
 }
 
 th{
     background:#fafafa;
+    color:#7b8089;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.45px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+td{
     font-size:12px;
-    color:#666;
+    vertical-align:middle;
+}
+
+tbody tr{
+    transition:background .15s;
+}
+
+tbody tr:hover{
+    background:#fcfcfd;
+}
+
+tbody tr:last-child td{
+    border-bottom:0;
 }
 
 .product-name{
-    font-weight:bold;
+    font-weight:800;
+    font-size:12px;
+}
+
+.price{
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.stock-number{
+    font-size:14px;
+    font-weight:850;
 }
 
 .status{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
     padding:5px 9px;
-    border-radius:18px;
-    font-size:11px;
-    font-weight:bold;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.status:before{
+    content:"";
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:currentColor;
 }
 
 .available{
-    background:#dcfce7;
-    color:#166534;
+    background:var(--green-bg);
+    color:var(--green);
 }
 
 .low{
-    background:#fef3c7;
-    color:#92400e;
+    background:var(--amber-bg);
+    color:var(--amber);
 }
 
 .out{
-    background:#fee2e2;
-    color:#991b1b;
+    background:var(--red-bg);
+    color:var(--red);
+}
+
+.track{
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.sold{
+    color:var(--green);
+}
+
+.pending{
+    color:var(--amber);
+}
+
+.track-pill{
+    display:inline-block;
+    min-width:28px;
+    padding:4px 7px;
+    text-align:center;
+    border-radius:7px;
+    background:#f5f6f7;
+}
+
+.track-pill.sold-bg{
+    background:var(--green-bg);
+}
+
+.track-pill.pending-bg{
+    background:var(--amber-bg);
+}
+
+.track-pill.blue-bg{
+    background:var(--blue-bg);
+    color:var(--blue);
+}
+
+.track-pill.purple-bg{
+    background:var(--purple-bg);
+    color:var(--purple);
+}
+
+.actions{
+    white-space:nowrap;
 }
 
 .add{
-    background:#166534;
+    background:var(--green);
     color:#fff;
 }
 
 .remove{
-    background:#991b1b;
+    background:var(--red);
     color:#fff;
     margin-left:4px;
-}
-
-.online{
-    background:#dbeafe;
-    color:#1d4ed8;
-}
-
-.offline{
-    background:#ede9fe;
-    color:#6d28d9;
-}
-
-.track{
-    font-weight:bold;
-    white-space:nowrap;
-}
-.pending{
-    color:#b45309;
-}
-.sold{
-    color:#166534;
 }
 
 .loading,
 .empty,
 .error{
     text-align:center;
-    padding:35px;
-    color:#777;
+    padding:42px;
+    color:#858b94;
 }
 
 .error{
-    color:#991b1b;
+    color:var(--red);
 }
+
+/* MODAL */
 
 .modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.65);
+    background:rgba(10,12,15,.68);
+    backdrop-filter:blur(5px);
     display:none;
     align-items:center;
     justify-content:center;
     z-index:9999;
+    padding:15px;
 }
 
 .modal-box{
     background:#fff;
-    width:min(400px,92%);
-    border-radius:14px;
+    width:min(430px,100%);
+    border-radius:18px;
     padding:22px;
+    box-shadow:0 25px 70px rgba(0,0,0,.25);
+}
+
+.modal-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
 }
 
 .modal-box h2{
-    margin:0 0 15px;
-    font-size:20px;
+    margin:0;
+    font-size:19px;
+}
+
+.modal-close{
+    width:30px;
+    height:30px;
+    padding:0;
+    border-radius:8px;
+    background:#f2f3f5;
+    color:#555;
 }
 
 .modal-box label{
     display:block;
-    margin:13px 0 6px;
-    font-size:12px;
-    font-weight:bold;
+    margin:16px 0 7px;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    color:#646a73;
 }
 
 .modal-box input,
@@ -255,30 +493,12 @@ th{
 }
 
 .product-info{
-    background:#f5f6f8;
-    padding:11px;
-    border-radius:8px;
-    font-size:13px;
-}
-
-.modal-actions{
-    display:flex;
-    gap:8px;
-    margin-top:18px;
-}
-
-.modal-actions button{
-    flex:1;
-}
-
-.save{
-    background:#111827;
-    color:#fff;
-}
-
-.cancel{
-    background:#ddd;
-    color:#222;
+    background:#f6f7f8;
+    border:1px solid #eceef0;
+    padding:12px;
+    border-radius:10px;
+    font-size:12px;
+    margin-top:15px;
 }
 
 .entry-type{
@@ -299,312 +519,649 @@ th{
 .entry-option{
     display:block;
     text-align:center;
-    padding:10px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    font-size:12px;
-    font-weight:bold;
+    padding:11px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-size:11px;
+    font-weight:800;
 }
 
 .entry-type input:checked + .entry-option{
-    border-color:#111827;
-    background:#f1f5f9;
+    border-color:#17191d;
+    background:#f1f2f4;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:20px;
+}
+
+.modal-actions button{
+    flex:1;
+}
+
+.save{
+    background:var(--dark);
+    color:#fff;
+}
+
+.cancel{
+    background:#eceef1;
+    color:#222;
 }
 
 .toast{
     position:fixed;
-    right:15px;
-    bottom:15px;
-    background:#111827;
+    right:18px;
+    bottom:18px;
+    background:#17191d;
     color:#fff;
-    padding:11px 15px;
-    border-radius:8px;
+    padding:12px 16px;
+    border-radius:11px;
     display:none;
     z-index:10000;
-    font-size:13px;
+    font-size:12px;
+    font-weight:700;
+    box-shadow:0 12px 35px rgba(0,0,0,.2);
 }
 
-@media(max-width:800px){
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+    .cards{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:700px){
+
     .cards{
         grid-template-columns:repeat(2,1fr);
     }
-}
 
-@media(max-width:500px){
-    .cards{
-        grid-template-columns:1fr 1fr;
+    .header{
+        padding:17px 14px;
+    }
+
+    .header h1{
+        font-size:19px;
+    }
+
+    .container{
+        padding:0 12px;
+        margin-top:18px;
     }
 
     .card{
-        padding:13px;
+        padding:14px;
+        min-height:95px;
     }
 
     .card-number{
-        font-size:23px;
+        font-size:22px;
     }
 
-    .header-inner{
-        align-items:flex-start;
+}
+
+@media(max-width:430px){
+
+    .cards{
+        gap:8px;
     }
+
+    .card{
+        padding:12px;
+    }
+
+    .card-title{
+        font-size:9px;
+    }
+
+    .card-number{
+        font-size:20px;
+    }
+
+    .back-btn{
+        padding:9px 11px;
+    }
+
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="header">
     <div class="header-inner">
-        <div>
-            <h1>📦 Stock Management</h1>
-            <p>Liara Professional™ — Live Supabase Stock</p>
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                📦
+            </div>
+
+            <div>
+                <h1>Stock Management</h1>
+                <p>
+                    Liara Professional™ · Live inventory & stock movement
+                </p>
+            </div>
+
         </div>
 
-```
-    <a href="admin.html" class="back-btn">
-        ← Admin
-    </a>
-</div>
-```
+        <a href="admin.html" class="back-btn">
+            ← Admin Panel
+        </a>
 
+    </div>
 </div>
+
 
 <div class="container">
 
-```
-<div class="cards">
-
-    <div class="card">
-        <div class="card-title">Total Products</div>
-        <div class="card-number" id="totalProducts">0</div>
+    <div class="section-heading">
+        <h2>Inventory Overview</h2>
+        <span>Live product stock</span>
     </div>
 
-    <div class="card">
-        <div class="card-title">Total Stock</div>
-        <div class="card-number" id="totalStock">0</div>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Total Products
+                </div>
+
+                <div class="card-icon">
+                    ◈
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="totalProducts"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card green">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Total Stock
+                </div>
+
+                <div class="card-icon">
+                    ▦
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="totalStock"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card amber">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Low Stock
+                </div>
+
+                <div class="card-icon">
+                    !
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="lowStock"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card red">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Out of Stock
+                </div>
+
+                <div class="card-icon">
+                    ×
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="zeroStock"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card blue">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Online Given
+                </div>
+
+                <div class="card-icon">
+                    ⌁
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="onlineGiven"
+            >
+                0
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="card">
-        <div class="card-title">Low Stock</div>
-        <div class="card-number" id="lowStock">0</div>
+
+    <div class="section-heading">
+
+        <h2>
+            Party / Channel Tracking
+        </h2>
+
+        <span>
+            Given · Sold · Pending
+        </span>
+
     </div>
 
-    <div class="card">
-        <div class="card-title">Out of Stock</div>
-        <div class="card-number" id="zeroStock">0</div>
+
+    <div class="cards">
+
+        <div class="card blue">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Online Sold
+                </div>
+
+                <div class="card-icon">
+                    ✓
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="onlineSold"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card amber">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Online Pending
+                </div>
+
+                <div class="card-icon">
+                    ◷
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="onlinePending"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card purple">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Offline Given
+                </div>
+
+                <div class="card-icon">
+                    ⌂
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="offlineGiven"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card green">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Offline Sold
+                </div>
+
+                <div class="card-icon">
+                    ✓
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="offlineSold"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card amber">
+
+            <div class="card-top">
+                <div class="card-title">
+                    Offline Pending
+                </div>
+
+                <div class="card-icon">
+                    ◷
+                </div>
+            </div>
+
+            <div
+                class="card-number"
+                id="offlinePending"
+            >
+                0
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="card">
-        <div class="card-title">Online Given</div>
-        <div class="card-number" id="onlineGiven">0</div>
-    </div>
 
-    <div class="card">
-        <div class="card-title">Online Sold</div>
-        <div class="card-number" id="onlineSold">0</div>
-    </div>
+    <div class="toolbar">
 
-    <div class="card">
-        <div class="card-title">Online Pending</div>
-        <div class="card-number" id="onlinePending">0</div>
-    </div>
+        <div class="search-wrap">
 
-    <div class="card">
-        <div class="card-title">Offline Given</div>
-        <div class="card-number" id="offlineGiven">0</div>
-    </div>
+            <span>
+                ⌕
+            </span>
 
-    <div class="card">
-        <div class="card-title">Offline Sold</div>
-        <div class="card-number" id="offlineSold">0</div>
-    </div>
-
-    <div class="card">
-        <div class="card-title">Offline Pending</div>
-        <div class="card-number" id="offlinePending">0</div>
-    </div>
-
-</div>
-
-
-<div class="toolbar">
-
-    <input
-        id="search"
-        class="search"
-        type="text"
-        placeholder="Search product..."
-        oninput="renderProducts()"
-    >
-
-    <select id="filter" onchange="renderProducts()">
-
-        <option value="all">All Stock</option>
-
-        <option value="available">
-            Available
-        </option>
-
-        <option value="low">
-            Low Stock
-        </option>
-
-        <option value="out">
-            Out of Stock
-        </option>
-
-    </select>
-
-    <button
-        class="refresh"
-        onclick="loadProducts()"
-    >
-        ↻ Refresh
-    </button>
-
-</div>
-
-
-<div class="table-box">
-
-    <table>
-
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Online Given</th>
-                <th>Online Sold</th>
-                <th>Online Pending</th>
-                <th>Offline Given</th>
-                <th>Offline Sold</th>
-                <th>Offline Pending</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-
-        <tbody id="stockBody">
-
-            <tr>
-                <td colspan="13" class="loading">
-                    Loading stock...
-                </td>
-            </tr>
-
-        </tbody>
-
-    </table>
-
-</div>
-```
-
-</div>
-
-<!-- ================= STOCK MODAL ================= -->
-
-<div class="modal" id="stockModal">
-
-```
-<div class="modal-box">
-
-    <h2 id="modalTitle">
-        Stock Update
-    </h2>
-
-    <div
-        id="modalProduct"
-        class="product-info"
-    ></div>
-
-
-    <label>
-        Entry Type
-    </label>
-
-    <div class="entry-type">
-
-        <label>
             <input
-                type="radio"
-                name="entrySource"
-                value="online"
-                checked
+                id="search"
+                type="text"
+                placeholder="Search product..."
+                oninput="renderProducts()"
             >
 
-            <span class="entry-option">
-                🌐 Online
-            </span>
+        </div>
+
+
+        <select
+            id="filter"
+            onchange="renderProducts()"
+        >
+
+            <option value="all">
+                All Stock
+            </option>
+
+            <option value="available">
+                Available
+            </option>
+
+            <option value="low">
+                Low Stock
+            </option>
+
+            <option value="out">
+                Out of Stock
+            </option>
+
+        </select>
+
+
+        <button
+            class="refresh"
+            onclick="loadProducts()"
+        >
+            ↻ Refresh
+        </button>
+
+    </div>
+
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>
+                        Product
+                    </th>
+
+                    <th>
+                        Price
+                    </th>
+
+                    <th>
+                        Stock
+                    </th>
+
+                    <th>
+                        Online Given
+                    </th>
+
+                    <th>
+                        Online Sold
+                    </th>
+
+                    <th>
+                        Online Pending
+                    </th>
+
+                    <th>
+                        Offline Given
+                    </th>
+
+                    <th>
+                        Offline Sold
+                    </th>
+
+                    <th>
+                        Offline Pending
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="stockBody">
+
+                <tr>
+
+                    <td
+                        colspan="12"
+                        class="loading"
+                    >
+                        Loading stock...
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- STOCK MODAL -->
+
+<div
+    class="modal"
+    id="stockModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-head">
+
+            <h2 id="modalTitle">
+                Stock Update
+            </h2>
+
+            <button
+                class="modal-close"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="modalProduct"
+            class="product-info"
+        ></div>
+
+
+        <label>
+            Entry Type
         </label>
 
 
-        <label>
-            <input
-                type="radio"
-                name="entrySource"
-                value="offline"
-            >
+        <div class="entry-type">
 
-            <span class="entry-option">
-                🏪 Offline
-            </span>
+            <label>
+
+                <input
+                    type="radio"
+                    name="entrySource"
+                    value="online"
+                    checked
+                >
+
+                <span class="entry-option">
+                    🌐 Online
+                </span>
+
+            </label>
+
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="entrySource"
+                    value="offline"
+                >
+
+                <span class="entry-option">
+                    🏪 Offline
+                </span>
+
+            </label>
+
+        </div>
+
+
+        <label>
+            Quantity
         </label>
 
-    </div>
-
-
-    <label>
-        Quantity
-    </label>
-
-    <input
-        id="stockQuantity"
-        type="number"
-        min="1"
-        placeholder="Enter quantity"
-    >
-
-
-    <label>
-        Note
-    </label>
-
-    <input
-        id="stockNote"
-        type="text"
-        placeholder="Optional note"
-    >
-
-
-    <div class="modal-actions">
-
-        <button
-            class="save"
-            onclick="saveStock()"
+        <input
+            id="stockQuantity"
+            type="number"
+            min="1"
+            placeholder="Enter quantity"
         >
-            Save Entry
-        </button>
 
-        <button
-            class="cancel"
-            onclick="closeModal()"
+
+        <label>
+            Note
+        </label>
+
+        <input
+            id="stockNote"
+            type="text"
+            placeholder="Optional note"
         >
-            Cancel
-        </button>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="save"
+                onclick="saveStock()"
+            >
+                Save Entry
+            </button>
+
+            <button
+                class="cancel"
+                onclick="closeModal()"
+            >
+                Cancel
+            </button>
+
+        </div>
 
     </div>
 
 </div>
-```
 
-</div>
 
 <div
     class="toast"
     id="toast"
 ></div>
+
 
 <script>
 
@@ -631,10 +1188,6 @@ window.supabase.createClient(
 
 const PRODUCT_TABLE = "products";
 
-/*
-  Online / Offline stock entries
-  are saved in this table.
-*/
 const STOCK_ENTRY_TABLE = "stock_entries";
 
 
@@ -648,100 +1201,250 @@ let selectedProduct = null;
 
 let stockMode = "in";
 
-/* =========================================================
-   ONLINE / OFFLINE TRACKING
-   Given = stock entries marked as "in"
-   Sold = stock entries marked as "out"
-   Pending = Given - Sold
-   The existing product stock is NOT changed by these
-   calculations; it remains the live physical stock.
-========================================================= */
-
 let stockEntryStats = {};
 
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
 function emptyStats(){
+
     return {
-        onlineGiven: 0,
-        onlineSold: 0,
-        offlineGiven: 0,
-        offlineSold: 0
+
+        onlineGiven:0,
+
+        onlineSold:0,
+
+        offlineGiven:0,
+
+        offlineSold:0
+
     };
+
 }
 
+
 async function loadStockEntryStats(){
+
     stockEntryStats = {};
 
     try{
-        const result = await supabaseClient
-            .from(STOCK_ENTRY_TABLE)
-            .select("product_id, quantity, type, source");
+
+        const result =
+            await supabaseClient
+                .from(STOCK_ENTRY_TABLE)
+                .select(
+                    "product_id, quantity, type, source"
+                );
+
 
         if(result.error){
-            console.warn("Stock tracking unavailable:", result.error);
+
+            console.warn(
+                "Stock tracking unavailable:",
+                result.error
+            );
+
             updateTrackingCards();
+
             return;
+
         }
 
-        (result.data || []).forEach(function(entry){
-            const id = String(entry.product_id);
-            if(!stockEntryStats[id]){
-                stockEntryStats[id] = emptyStats();
-            }
 
-            const qty = Number(entry.quantity) || 0;
-            const source = String(entry.source || "").toLowerCase();
-            const type = String(entry.type || "").toLowerCase();
+        (result.data || []).forEach(
+            function(entry){
 
-            if(source === "online"){
-                if(type === "in") stockEntryStats[id].onlineGiven += qty;
-                if(type === "out") stockEntryStats[id].onlineSold += qty;
-            }
+                const id =
+                    String(entry.product_id);
 
-            if(source === "offline"){
-                if(type === "in") stockEntryStats[id].offlineGiven += qty;
-                if(type === "out") stockEntryStats[id].offlineSold += qty;
+
+                if(!stockEntryStats[id]){
+
+                    stockEntryStats[id] =
+                        emptyStats();
+
+                }
+
+
+                const qty =
+                    Number(entry.quantity) || 0;
+
+
+                const source =
+                    String(
+                        entry.source || ""
+                    ).toLowerCase();
+
+
+                const type =
+                    String(
+                        entry.type || ""
+                    ).toLowerCase();
+
+
+                if(source === "online"){
+
+                    if(type === "in"){
+
+                        stockEntryStats[id]
+                            .onlineGiven += qty;
+
+                    }
+
+
+                    if(type === "out"){
+
+                        stockEntryStats[id]
+                            .onlineSold += qty;
+
+                    }
+
+                }
+
+
+                if(source === "offline"){
+
+                    if(type === "in"){
+
+                        stockEntryStats[id]
+                            .offlineGiven += qty;
+
+                    }
+
+
+                    if(type === "out"){
+
+                        stockEntryStats[id]
+                            .offlineSold += qty;
+
+                    }
+
+                }
+
             }
-        });
+        );
+
 
         updateTrackingCards();
+
 
     }catch(error){
-        console.warn("Unable to load stock tracking:", error);
+
+        console.warn(
+            "Unable to load stock tracking:",
+            error
+        );
+
         updateTrackingCards();
+
     }
+
 }
+
 
 function getTracking(product){
-    return stockEntryStats[String(getProductId(product))] || emptyStats();
+
+    return (
+        stockEntryStats[
+            String(
+                getProductId(product)
+            )
+        ] || emptyStats()
+    );
+
 }
 
-function pendingValue(given, sold){
-    return Math.max(0, Number(given || 0) - Number(sold || 0));
+
+function pendingValue(given,sold){
+
+    return Math.max(
+        0,
+        Number(given || 0) -
+        Number(sold || 0)
+    );
+
 }
+
 
 function updateTrackingCards(){
+
     let onlineGiven = 0;
+
     let onlineSold = 0;
+
     let offlineGiven = 0;
+
     let offlineSold = 0;
 
-    Object.keys(stockEntryStats).forEach(function(id){
-        const s = stockEntryStats[id];
-        onlineGiven += s.onlineGiven;
-        onlineSold += s.onlineSold;
-        offlineGiven += s.offlineGiven;
-        offlineSold += s.offlineSold;
-    });
 
-    document.getElementById("onlineGiven").textContent = onlineGiven;
-    document.getElementById("onlineSold").textContent = onlineSold;
-    document.getElementById("onlinePending").textContent =
-        pendingValue(onlineGiven, onlineSold);
+    Object.keys(stockEntryStats)
+        .forEach(function(id){
 
-    document.getElementById("offlineGiven").textContent = offlineGiven;
-    document.getElementById("offlineSold").textContent = offlineSold;
-    document.getElementById("offlinePending").textContent =
-        pendingValue(offlineGiven, offlineSold);
+            const s =
+                stockEntryStats[id];
+
+
+            onlineGiven +=
+                s.onlineGiven;
+
+
+            onlineSold +=
+                s.onlineSold;
+
+
+            offlineGiven +=
+                s.offlineGiven;
+
+
+            offlineSold +=
+                s.offlineSold;
+
+        });
+
+
+    document.getElementById(
+        "onlineGiven"
+    ).textContent =
+        onlineGiven;
+
+
+    document.getElementById(
+        "onlineSold"
+    ).textContent =
+        onlineSold;
+
+
+    document.getElementById(
+        "onlinePending"
+    ).textContent =
+        pendingValue(
+            onlineGiven,
+            onlineSold
+        );
+
+
+    document.getElementById(
+        "offlineGiven"
+    ).textContent =
+        offlineGiven;
+
+
+    document.getElementById(
+        "offlineSold"
+    ).textContent =
+        offlineSold;
+
+
+    document.getElementById(
+        "offlinePending"
+    ).textContent =
+        pendingValue(
+            offlineGiven,
+            offlineSold
+        );
+
 }
 
 
@@ -818,15 +1521,24 @@ function showToast(message){
     const toast =
         document.getElementById("toast");
 
-    toast.textContent = message;
 
-    toast.style.display = "block";
+    toast.textContent =
+        message;
 
-    setTimeout(function(){
 
-        toast.style.display = "none";
+    toast.style.display =
+        "block";
 
-    },2500);
+
+    setTimeout(
+        function(){
+
+            toast.style.display =
+                "none";
+
+        },
+        2500
+    );
 
 }
 
@@ -838,11 +1550,14 @@ function showToast(message){
 async function loadProducts(){
 
     const body =
-        document.getElementById("stockBody");
+        document.getElementById(
+            "stockBody"
+        );
+
 
     body.innerHTML = `
         <tr>
-            <td colspan="13" class="loading">
+            <td colspan="12" class="loading">
                 Loading stock from Supabase...
             </td>
         </tr>
@@ -855,34 +1570,46 @@ async function loadProducts(){
             await supabaseClient
                 .from(PRODUCT_TABLE)
                 .select("*")
-                .order("id",{ascending:false});
+                .order(
+                    "id",
+                    {ascending:false}
+                );
 
 
-        const data = result.data;
+        const data =
+            result.data;
 
-        const error = result.error;
+
+        const error =
+            result.error;
 
 
         if(error){
 
             console.error(error);
 
+
             body.innerHTML = `
                 <tr>
-                    <td colspan="13" class="error">
+                    <td colspan="12" class="error">
                         ${escapeHtml(error.message)}
                     </td>
                 </tr>
             `;
+
 
             return;
 
         }
 
 
-        allProducts = data || [];
+        allProducts =
+            data || [];
+
 
         await loadStockEntryStats();
+
+
         renderProducts();
 
 
@@ -890,9 +1617,10 @@ async function loadProducts(){
 
         console.error(error);
 
+
         body.innerHTML = `
             <tr>
-                <td colspan="13" class="error">
+                <td colspan="12" class="error">
                     Unable to load products.
                 </td>
             </tr>
@@ -910,7 +1638,9 @@ async function loadProducts(){
 function renderProducts(){
 
     const body =
-        document.getElementById("stockBody");
+        document.getElementById(
+            "stockBody"
+        );
 
 
     const search =
@@ -937,26 +1667,28 @@ function renderProducts(){
     let zeroStock = 0;
 
 
-    allProducts.forEach(function(product){
+    allProducts.forEach(
+        function(product){
 
-        const stock =
-            getProductStock(product);
-
-
-        totalStock += stock;
+            const stock =
+                getProductStock(product);
 
 
-        if(stock === 0){
+            totalStock += stock;
 
-            zeroStock++;
 
-        }else if(stock <= 5){
+            if(stock === 0){
 
-            lowStock++;
+                zeroStock++;
+
+            }else if(stock <= 5){
+
+                lowStock++;
+
+            }
 
         }
-
-    });
+    );
 
 
     document.getElementById(
@@ -986,158 +1718,191 @@ function renderProducts(){
     let shown = 0;
 
 
-    allProducts.forEach(function(product,index){
+    allProducts.forEach(
+        function(product,index){
 
-        const name =
-            getProductName(product);
-
-        const stock =
-            getProductStock(product);
-
-        const price =
-            getProductPrice(product);
-
-        const tracking = getTracking(product);
-        const onlinePending = pendingValue(
-            tracking.onlineGiven,
-            tracking.onlineSold
-        );
-        const offlinePending = pendingValue(
-            tracking.offlineGiven,
-            tracking.offlineSold
-        );
+            const name =
+                getProductName(product);
 
 
-        if(
-            search &&
-            !name.toLowerCase().includes(search)
-        ){
+            const stock =
+                getProductStock(product);
 
-            return;
+
+            const price =
+                getProductPrice(product);
+
+
+            const tracking =
+                getTracking(product);
+
+
+            const onlinePending =
+                pendingValue(
+                    tracking.onlineGiven,
+                    tracking.onlineSold
+                );
+
+
+            const offlinePending =
+                pendingValue(
+                    tracking.offlineGiven,
+                    tracking.offlineSold
+                );
+
+
+            if(
+                search &&
+                !name
+                    .toLowerCase()
+                    .includes(search)
+            ){
+
+                return;
+
+            }
+
+
+            let status =
+                "available";
+
+
+            let statusText =
+                "Available";
+
+
+            if(stock <= 0){
+
+                status =
+                    "out";
+
+                statusText =
+                    "Out of Stock";
+
+            }else if(stock <= 5){
+
+                status =
+                    "low";
+
+                statusText =
+                    "Low Stock";
+
+            }
+
+
+            if(
+                filter !== "all" &&
+                filter !== status
+            ){
+
+                return;
+
+            }
+
+
+            shown++;
+
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+                <td>
+                    <div class="product-name">
+                        ${escapeHtml(name)}
+                    </div>
+                </td>
+
+                <td class="price">
+                    ₹${price.toLocaleString("en-IN")}
+                </td>
+
+                <td>
+                    <span class="stock-number">
+                        ${stock}
+                    </span>
+                </td>
+
+                <td class="track">
+                    <span class="track-pill blue-bg">
+                        ${tracking.onlineGiven}
+                    </span>
+                </td>
+
+                <td class="track sold">
+                    <span class="track-pill sold-bg">
+                        ${tracking.onlineSold}
+                    </span>
+                </td>
+
+                <td class="track pending">
+                    <span class="track-pill pending-bg">
+                        ${onlinePending}
+                    </span>
+                </td>
+
+                <td class="track">
+                    <span class="track-pill purple-bg">
+                        ${tracking.offlineGiven}
+                    </span>
+                </td>
+
+                <td class="track sold">
+                    <span class="track-pill sold-bg">
+                        ${tracking.offlineSold}
+                    </span>
+                </td>
+
+                <td class="track pending">
+                    <span class="track-pill pending-bg">
+                        ${offlinePending}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="status ${status}">
+                        ${statusText}
+                    </span>
+                </td>
+
+                <td class="actions">
+
+                    <button
+                        class="add"
+                        onclick="openStockModal(${index},'in')"
+                    >
+                        + Add
+                    </button>
+
+                    <button
+                        class="remove"
+                        onclick="openStockModal(${index},'out')"
+                    >
+                        − Remove
+                    </button>
+
+                </td>
+
+            `;
+
+
+            body.appendChild(row);
 
         }
-
-
-        let status = "available";
-
-        let statusText = "Available";
-
-
-        if(stock <= 0){
-
-            status = "out";
-
-            statusText = "Out of Stock";
-
-        }else if(stock <= 5){
-
-            status = "low";
-
-            statusText = "Low Stock";
-
-        }
-
-
-        if(
-            filter !== "all" &&
-            filter !== status
-        ){
-
-            return;
-
-        }
-
-
-        shown++;
-
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>
-                ${index + 1}
-            </td>
-
-            <td>
-                <div class="product-name">
-                    ${escapeHtml(name)}
-                </div>
-            </td>
-
-            <td>
-                ₹${price.toLocaleString("en-IN")}
-            </td>
-
-            <td>
-                <strong>
-                    ${stock}
-                </strong>
-            </td>
-
-            <td class="track">
-                ${tracking.onlineGiven}
-            </td>
-
-            <td class="track sold">
-                ${tracking.onlineSold}
-            </td>
-
-            <td class="track pending">
-                ${onlinePending}
-            </td>
-
-            <td class="track">
-                ${tracking.offlineGiven}
-            </td>
-
-            <td class="track sold">
-                ${tracking.offlineSold}
-            </td>
-
-            <td class="track pending">
-                ${offlinePending}
-            </td>
-
-            <td>
-                <span class="status ${status}">
-                    ${statusText}
-                </span>
-            </td>
-
-            <td>
-
-                <button
-                    class="add"
-                    onclick="openStockModal(${index},'in')"
-                >
-                    + Add
-                </button>
-
-                <button
-                    class="remove"
-                    onclick="openStockModal(${index},'out')"
-                >
-                    − Remove
-                </button>
-
-            </td>
-
-        `;
-
-
-        body.appendChild(row);
-
-    });
+    );
 
 
     if(shown === 0){
 
         body.innerHTML = `
             <tr>
-                <td colspan="13" class="empty">
+                <td colspan="12" class="empty">
                     No products found.
                 </td>
             </tr>
@@ -1158,14 +1923,21 @@ function openStockModal(index,mode){
         allProducts[index];
 
 
-    if(!selectedProduct) return;
+    if(!selectedProduct){
+
+        return;
+
+    }
 
 
-    stockMode = mode;
+    stockMode =
+        mode;
 
 
     const name =
-        getProductName(selectedProduct);
+        getProductName(
+            selectedProduct
+        );
 
 
     document.getElementById(
@@ -1188,7 +1960,9 @@ function openStockModal(index,mode){
 
         Current Stock:
         <strong>
-            ${getProductStock(selectedProduct)}
+            ${getProductStock(
+                selectedProduct
+            )}
         </strong>
 
     `;
@@ -1211,7 +1985,8 @@ function openStockModal(index,mode){
 
     document.getElementById(
         "stockModal"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 }
 
@@ -1224,10 +1999,12 @@ function closeModal(){
 
     document.getElementById(
         "stockModal"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
-    selectedProduct = null;
+    selectedProduct =
+        null;
 
 }
 
@@ -1304,7 +2081,7 @@ function findStockColumn(product){
 
 
 /* =========================================================
-   SAVE STOCK ENTRY
+   SAVE STOCK
 ========================================================= */
 
 async function saveStock(){
@@ -1348,7 +2125,9 @@ async function saveStock(){
 
 
     const currentStock =
-        getProductStock(selectedProduct);
+        getProductStock(
+            selectedProduct
+        );
 
 
     let newStock;
@@ -1357,7 +2136,8 @@ async function saveStock(){
     if(stockMode === "in"){
 
         newStock =
-            currentStock + quantity;
+            currentStock +
+            quantity;
 
     }else{
 
@@ -1373,13 +2153,16 @@ async function saveStock(){
 
 
         newStock =
-            currentStock - quantity;
+            currentStock -
+            quantity;
 
     }
 
 
     const productId =
-        getProductId(selectedProduct);
+        getProductId(
+            selectedProduct
+        );
 
 
     if(productId == null){
@@ -1394,7 +2177,9 @@ async function saveStock(){
 
 
     const stockColumn =
-        findStockColumn(selectedProduct);
+        findStockColumn(
+            selectedProduct
+        );
 
 
     if(!stockColumn){
@@ -1410,15 +2195,12 @@ async function saveStock(){
 
     const updateData = {};
 
+
     updateData[stockColumn] =
         newStock;
 
 
     try{
-
-        /* =========================================
-           FIRST UPDATE PRODUCT STOCK
-        ========================================= */
 
         const updateResult =
             await supabaseClient
@@ -1433,38 +2215,45 @@ async function saveStock(){
                 updateResult.error
             );
 
+
             alert(
                 "Stock update failed: " +
                 updateResult.error.message
             );
+
 
             return;
 
         }
 
 
-        /* =========================================
-           SAVE ONLINE / OFFLINE ENTRY
-        ========================================= */
-
         const entryData = {
 
-            product_id: productId,
+            product_id:
+                productId,
 
             product_name:
-                getProductName(selectedProduct),
+                getProductName(
+                    selectedProduct
+                ),
 
-            quantity: quantity,
+            quantity:
+                quantity,
 
-            type: stockMode,
+            type:
+                stockMode,
 
-            source: source,
+            source:
+                source,
 
-            previous_stock: currentStock,
+            previous_stock:
+                currentStock,
 
-            new_stock: newStock,
+            new_stock:
+                newStock,
 
-            note: note || null
+            note:
+                note || null
 
         };
 
@@ -1472,13 +2261,10 @@ async function saveStock(){
         const entryResult =
             await supabaseClient
                 .from(STOCK_ENTRY_TABLE)
-                .insert([entryData]);
+                .insert([
+                    entryData
+                ]);
 
-
-        /*
-          Product stock already updated.
-          If entry table does not exist, don't undo stock.
-        */
 
         if(entryResult.error){
 
@@ -1486,6 +2272,7 @@ async function saveStock(){
                 "Stock entry could not be saved:",
                 entryResult.error
             );
+
 
             showToast(
                 "Stock updated. Entry table not connected."
@@ -1507,11 +2294,17 @@ async function saveStock(){
         }
 
 
-        selectedProduct[stockColumn] =
+        selectedProduct[
+            stockColumn
+        ] =
             newStock;
 
 
         closeModal();
+
+
+        await loadStockEntryStats();
+
 
         renderProducts();
 
@@ -1520,6 +2313,7 @@ async function saveStock(){
 
         console.error(error);
 
+
         alert(
             "Stock update failed."
         );
@@ -1527,6 +2321,40 @@ async function saveStock(){
     }
 
 }
+
+
+/* =========================================================
+   MODAL UX
+========================================================= */
+
+document.getElementById(
+    "stockModal"
+).addEventListener(
+    "click",
+    function(e){
+
+        if(e.target === this){
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key === "Escape"){
+
+            closeModal();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -1550,6 +2378,7 @@ supabaseClient
     )
     .subscribe();
 
+
 supabaseClient
     .channel("stock-entries-live")
     .on(
@@ -1560,8 +2389,11 @@ supabaseClient
             table:STOCK_ENTRY_TABLE
         },
         function(){
+
             loadStockEntryStats();
+
             renderProducts();
+
         }
     )
     .subscribe();
