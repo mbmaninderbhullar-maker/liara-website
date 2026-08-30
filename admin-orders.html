@@ -1569,7 +1569,35 @@ body{
 
 <!-- ================= SUPABASE ================= -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+<script>
+/* ===== STOCK ZERO DISPLAY FILTER — ADDED ONLY ===== */
+function hideZeroStockRecords(){
+    document.querySelectorAll(
+        '#stockTableBody tr, #stockList tr, .stock-row, .stock-item'
+    ).forEach(function(row){
+        const txt = (row.textContent || "").trim();
+        if(/\b0\s*(pcs?|units?|items?)?\b/i.test(txt) &&
+           /stock/i.test(txt)){
+            row.style.display = "none";
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    hideZeroStockRecords();
+
+    const observer = new MutationObserver(function(){
+        hideZeroStockRecords();
+    });
+
+    observer.observe(document.body, {
+        childList:true,
+        subtree:true
+    });
+});
+</script>
+</script>
 
 <script>
 
