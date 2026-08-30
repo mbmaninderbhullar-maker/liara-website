@@ -1444,84 +1444,14 @@ function getProductPrice(p){
 }
 
 
-function getProductWarehouseStock(p){
+function getProductStock(p){
 
   return Number(
     p.stock ??
     p.quantity ??
     p.inventory ??
-    0
-  ) || 0;
-
-}
-
-
-/* Website stock = Online Given - Online Sold */
-async function getOnlineStockMap(){
-
-  const onlineStock = {};
-
-  try{
-
-    const { data, error } =
-      await supabaseClient
-        .from("stock_entries")
-        .select("product_id, quantity, type, source")
-        .eq("source", "online");
-
-    if(error){
-
-      console.warn(
-        "Online stock loading failed:",
-        error
-      );
-
-      return onlineStock;
-
-    }
-
-    (data || []).forEach(entry => {
-
-      const id =
-        String(entry.product_id);
-
-      const qty =
-        Number(entry.quantity) || 0;
-
-      if(!onlineStock[id]){
-        onlineStock[id] = 0;
-      }
-
-      if(entry.type === "out"){
-        onlineStock[id] += qty;
-      }
-
-      if(entry.type === "sale"){
-        onlineStock[id] -= qty;
-      }
-
-    });
-
-    Object.keys(onlineStock).forEach(id => {
-
-      onlineStock[id] =
-        Math.max(
-          0,
-          onlineStock[id]
-        );
-
-    });
-
-  }catch(error){
-
-    console.error(
-      "Online stock error:",
-      error
-    );
-
-  }
-
-  return onlineStock;
+    1
+  );
 
 }
 
@@ -1624,342 +1554,12 @@ function buyNow(product){
 }
 
 
-<script>
-
-const SUPABASE_URL =
-  "https://oinafbuicwhleudztzyz.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
-
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-function getProductImage(p){
-
-  return p.image_url ||
-         p.photo_url ||
-         p.image ||
-         p.photo ||
-         p.product_image ||
-         p.imageUrl ||
-         "";
-
-}
-
-
-function getProductName(p){
-
-  return p.name ||
-         p.product_name ||
-         p.title ||
-         p.product_title ||
-         "Liara Product";
-
-}
-
-
-function getProductDescription(p){
-
-  return p.description ||
-         p.details ||
-         p.product_description ||
-         "Premium Advanced Herbal beauty and personal care product.";
-
-}
-
-
-function getProductPrice(p){
-
-  return Number(
-    p.price ??
-    p.sale_price ??
-    p.selling_price ??
-    0
-  );
-
-}
-
-
-/* =========================================================
-   WEBSITE STOCK
-   Warehouse stock is NOT shown directly.
-   Website stock = Online Given - Online Sold
-========================================================= */
-
-async function getOnlineStockMap(){
-
-  const onlineStock = {};
-
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("stock_entries")
-        .select(
-          "product_id, quantity, type, source"
-        )
-        .eq(
-          "source",
-          "online"
-        );
-
-
-    if(error){
-
-      console.error(
-        "ONLINE STOCK ERROR:",
-        error
-      );
-
-      return onlineStock;
-
-    }
-
-
-    (data || []).forEach(
-      entry => {
-
-        const id =
-          String(
-            entry.product_id
-          );
-
-
-        const quantity =
-          Number(
-            entry.quantity
-          ) || 0;
-
-
-        if(
-          !onlineStock[id]
-        ){
-
-          onlineStock[id] = 0;
-
-        }
-
-
-        /* Give stock to website */
-
-        if(
-          String(
-            entry.type
-          ).toLowerCase() === "out"
-        ){
-
-          onlineStock[id] +=
-            quantity;
-
-        }
-
-
-        /* Online order/sale */
-
-        if(
-          String(
-            entry.type
-          ).toLowerCase() === "sale"
-        ){
-
-          onlineStock[id] -=
-            quantity;
-
-        }
-
-      }
-    );
-
-
-    /* Never allow negative website stock */
-
-    Object.keys(
-      onlineStock
-    ).forEach(
-      id => {
-
-        onlineStock[id] =
-          Math.max(
-            0,
-            onlineStock[id]
-          );
-
-      }
-    );
-
-
-  }catch(error){
-
-    console.error(
-      "ONLINE STOCK ERROR:",
-      error
-    );
-
-  }
-
-
-  return onlineStock;
-
-}
-
-
-/* =========================================================
-   PRODUCT PAGE
-========================================================= */
-
-function openProduct(productId){
-
-  localStorage.setItem(
-    "selectedProductId",
-    productId
-  );
-
-  window.location.href =
-    "product.html";
-
-}
-
-
-/* =========================================================
-   CART
-========================================================= */
-
-async function addToCart(product){
-
-  const id =
-    product.id || "";
-
-
-  const item = {
-
-    id:id,
-
-    product_id:id,
-
-    name:
-      getProductName(product),
-
-    price:
-      getProductPrice(product),
-
-    image:
-      getProductImage(product),
-
-    quantity:1
-
-  };
-
-
-  let cart = [];
-
-
-  try{
-
-    cart =
-      JSON.parse(
-        localStorage.getItem(
-          "cart"
-        ) || "[]"
-      );
-
-  }catch(e){
-
-    cart = [];
-
-  }
-
-
-  const existing =
-    cart.find(
-      x =>
-        String(x.id) ===
-          String(id) ||
-
-        String(x.product_id) ===
-          String(id)
-    );
-
-
-  if(existing){
-
-    existing.quantity =
-      Number(
-        existing.quantity || 1
-      ) + 1;
-
-  }else{
-
-    cart.push(item);
-
-  }
-
-
-  localStorage.setItem(
-    "cart",
-    JSON.stringify(cart)
-  );
-
-
-  window.location.href =
-    "cart.html";
-
-}
-
-
-/* =========================================================
-   BUY NOW
-========================================================= */
-
-function buyNow(product){
-
-  const id =
-    product.id || "";
-
-
-  localStorage.setItem(
-    "selectedProductId",
-    id
-  );
-
-
-  window.location.href =
-    "product.html";
-
-}
-
-
-/* =========================================================
-   LOAD PRODUCTS
-========================================================= */
-
 async function loadHomepageProducts(){
 
   const box =
     document.getElementById(
       "dynamicProducts"
     );
-
 
   const count =
     document.getElementById(
@@ -1968,10 +1568,6 @@ async function loadHomepageProducts(){
 
 
   try{
-
-    /* -----------------------------------------
-       PRODUCTS
-    ----------------------------------------- */
 
     const {
       data,
@@ -1992,62 +1588,23 @@ async function loadHomepageProducts(){
       throw error;
 
 
-    if(
-      !data ||
-      data.length === 0
-    ){
+    if(!data || data.length === 0){
 
       box.innerHTML =
         '<div class="empty">No products available right now.</div>';
 
-
       count.textContent =
         "0 products";
-
 
       return;
 
     }
 
 
-    /* -----------------------------------------
-       ONLINE STOCK ONLY
-    ----------------------------------------- */
-
-    const onlineStockMap =
-      await getOnlineStockMap();
-
-
-    /* -----------------------------------------
-       ONLY SHOW PRODUCTS GIVEN ONLINE
-    ----------------------------------------- */
-
-    const availableProducts =
-      data.filter(
-        product => {
-
-          const id =
-            String(
-              product.id || ""
-            );
-
-
-          const onlineStock =
-            Number(
-              onlineStockMap[id] || 0
-            );
-
-
-          return onlineStock > 0;
-
-        }
-      );
-
-
     count.textContent =
-      availableProducts.length +
+      data.length +
       (
-        availableProducts.length === 1
+        data.length === 1
         ? " product"
         : " products"
       );
@@ -2056,166 +1613,114 @@ async function loadHomepageProducts(){
     box.innerHTML = "";
 
 
-    if(
-      availableProducts.length === 0
-    ){
+    data.forEach(product=>{
 
-      box.innerHTML =
-        '<div class="empty">No products available right now.</div>';
+      const id =
+        product.id || "";
 
+      const name =
+        getProductName(product);
 
-      return;
+      const desc =
+        getProductDescription(product);
 
-    }
+      const price =
+        getProductPrice(product);
 
+      const stock =
+        getProductStock(product);
 
-    /* -----------------------------------------
-       CREATE PRODUCT CARDS
-    ----------------------------------------- */
-
-    availableProducts.forEach(
-      product => {
-
-        const id =
-          product.id || "";
+      const image =
+        getProductImage(product);
 
 
-        const name =
-          getProductName(
-            product
-          );
+      const card =
+        document.createElement(
+          "article"
+        );
 
 
-        const desc =
-          getProductDescription(
-            product
-          );
+      card.className =
+        "product-card";
 
 
-        const price =
-          getProductPrice(
-            product
-          );
+      const imageHtml = image
+
+        ? `<img
+             src="${escapeHtml(image)}"
+             alt="${escapeHtml(name)}"
+             onerror="this.onerror=null;this.style.display='none';"
+           >`
+
+        : `<div class="hero-product-placeholder">
+             <span>LIARA</span>
+           </div>`;
 
 
-        /*
-          IMPORTANT:
+      card.innerHTML = `
 
-          This is NOT warehouse stock.
+        <div class="product-image">
+          ${imageHtml}
+        </div>
 
-          This is ONLY:
-          Online Given - Online Sold
-        */
+        <div class="product-info">
 
-        const stock =
-          Number(
-            onlineStockMap[
-              String(id)
-            ] || 0
-          );
+          <div class="product-name">
+            ${escapeHtml(name)}
+          </div>
 
+          <div class="product-desc">
+            ${escapeHtml(desc)}
+          </div>
 
-        const image =
-          getProductImage(
-            product
-          );
+          <div class="product-meta">
 
+            <span class="price">
+              ₹${price.toLocaleString("en-IN")}
+            </span>
 
-        const card =
-          document.createElement(
-            "article"
-          );
+            <span class="stock ${
+              stock > 0 ? "" : "out"
+            }">
 
+              ${
+                stock > 0
+                ? "IN STOCK"
+                : "OUT OF STOCK"
+              }
 
-        card.className =
-          "product-card";
-
-
-        const imageHtml =
-          image
-
-          ? `<img
-               src="${escapeHtml(image)}"
-               alt="${escapeHtml(name)}"
-               onerror="this.onerror=null;this.style.display='none';"
-             >`
-
-          : `<div class="hero-product-placeholder">
-               <span>LIARA</span>
-             </div>`;
-
-
-        card.innerHTML = `
-
-          <div class="product-image">
-
-            ${imageHtml}
+            </span>
 
           </div>
 
+          ${
+            stock > 0
+            ? `
 
-          <div class="product-info">
+              <div class="product-actions">
 
-            <div class="product-name">
+                <button
+                  class="outline"
+                  type="button">
+                  ADD TO CART
+                </button>
 
-              ${escapeHtml(name)}
+                <button type="button">
+                  BUY NOW
+                </button>
 
-            </div>
+              </div>
 
+            `
+            : ""
+          }
 
-            <div class="product-desc">
+        </div>
 
-              ${escapeHtml(desc)}
-
-            </div>
-
-
-            <div class="product-meta">
-
-              <span class="price">
-
-                ₹${price.toLocaleString("en-IN")}
-
-              </span>
-
-
-              <span class="stock">
-
-                ${stock} IN STOCK
-
-              </span>
-
-            </div>
+      `;
 
 
-            <div class="product-actions">
-
-              <button
-                class="outline"
-                type="button">
-
-                ADD TO CART
-
-              </button>
-
-
-              <button
-                type="button">
-
-                BUY NOW
-
-              </button>
-
-            </div>
-
-          </div>
-
-        `;
-
-
-        /* ---------------------------------------
-           BUTTONS
-        --------------------------------------- */
+      if(stock > 0){
 
         const buttons =
           card.querySelectorAll(
@@ -2234,28 +1739,26 @@ async function loadHomepageProducts(){
           () => buyNow(product)
         );
 
-
-        /* ---------------------------------------
-           OPEN PRODUCT
-        --------------------------------------- */
-
-        card
-          .querySelector(
-            ".product-image"
-          )
-          .addEventListener(
-            "click",
-            () =>
-              openProduct(id)
-          );
+      }
 
 
-        box.appendChild(
-          card
+      card
+        .querySelector(
+          ".product-image"
+        )
+        .addEventListener(
+          "click",
+          () => openProduct(id)
         );
 
-      }
-    );
+
+      card.style.cursor =
+        "default";
+
+
+      box.appendChild(card);
+
+    });
 
 
   }catch(error){
@@ -2265,56 +1768,20 @@ async function loadHomepageProducts(){
       error
     );
 
-
     count.textContent =
       "Products unavailable";
 
-
     box.innerHTML =
-
       `<div class="empty">
-
         Products could not be loaded.
-
         <br><br>
-
         Please refresh the page.
-
-      </div>`;
+       </div>`;
 
   }
 
 }
 
-
-/* =========================================================
-   REALTIME
-   Website updates when stock_entries changes
-========================================================= */
-
-supabaseClient
-  .channel(
-    "website-online-stock"
-  )
-  .on(
-    "postgres_changes",
-    {
-      event:"*",
-      schema:"public",
-      table:"stock_entries"
-    },
-    function(){
-
-      loadHomepageProducts();
-
-    }
-  )
-  .subscribe();
-
-
-/* =========================================================
-   START
-========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
