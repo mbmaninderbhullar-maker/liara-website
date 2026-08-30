@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Management</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f7fb;
+  color:#222;
+}
+.header{
+  background:#111827;
+  color:white;
+  padding:20px;
+  text-align:center;
+}
+.header h1{margin:0 0 5px}
+.container{
+  max-width:1200px;
+  margin:25px auto;
+  padding:0 15px;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+.card{
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  box-shadow:0 3px 12px #0001;
+}
+.card h3{
+  margin:0 0 10px;
+  font-size:14px;
+  color:#666;
+}
+.card strong{
+  font-size:28px;
+}
+.toolbar{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+  box-shadow:0 3px 12px #0001;
+}
+input,select,button{
+  padding:11px 13px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:14px;
+}
+input{
+  flex:1;
+  min-width:220px;
+}
+button{
+  cursor:pointer;
+  border:0;
+  background:#111827;
+  color:white;
+}
+button:hover{opacity:.85}
+
+.tablebox{
+  background:white;
+  border-radius:12px;
+  overflow:auto;
+  box-shadow:0 3px 12px #0001;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+th,td{
+  padding:14px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+}
+th{
+  background:#f8fafc;
+  font-size:13px;
+}
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
+.good{background:#dcfce7;color:#166534}
+.low{background:#fef3c7;color:#92400e}
+.zero{background:#fee2e2;color:#991b1b}
+
+.empty{
+  text-align:center;
+  padding:40px;
+  color:#777;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+.modalbox{
+  width:min(400px,92%);
+  background:white;
+  padding:25px;
+  border-radius:15px;
+}
+.modalbox h2{margin-top:0}
+.modalbox input,
+.modalbox select{
+  width:100%;
+  margin-bottom:12px;
+}
+.actions{
+  display:flex;
+  gap:10px;
+}
+.actions button{flex:1}
+.cancel{background:#6b7280}
+
+@media(max-width:800px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:500px){
+  .cards{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>📦 Stock Management</h1>
+  <div>Live Product Stock</div>
+</div>
+
+<div class="container">
+
+  <div class="cards">
+    <div class="card">
+      <h3>Total Products</h3>
+      <strong id="totalProducts">0</strong>
+    </div>
+
+    <div class="card">
+      <h3>Total Stock</h3>
+      <strong id="totalStock">0</strong>
+    </div>
+
+    <div class="card">
+      <h3>Low Stock</h3>
+      <strong id="lowStock">0</strong>
+    </div>
+
+    <div class="card">
+      <h3>Out of Stock</h3>
+      <strong id="zeroStock">0</strong>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input
+      type="text"
+      id="search"
+      placeholder="Search product..."
+      oninput="renderStock()"
+    >
+
+    <select id="filter" onchange="renderStock()">
+      <option value="all">All Stock</option>
+      <option value="good">Available</option>
+      <option value="low">Low Stock</option>
+      <option value="zero">Out of Stock</option>
+    </select>
+
+    <button onclick="openStockModal('in')">＋ Stock In</button>
+    <button onclick="openStockModal('out')">− Stock Out</button>
+    <button onclick="loadProducts()">↻ Refresh</button>
+  </div>
+
+  <div class="tablebox">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Product</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="stockBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- STOCK MODAL -->
+
+<div class="modal" id="stockModal">
+  <div class="modalbox">
+
+    <h2 id="modalTitle">Stock In</h2>
+
+    <select id="productSelect"></select>
+
+    <input
+      type="number"
+      id="stockQty"
+      min="1"
+      placeholder="Enter quantity"
+    >
+
+    <div class="actions">
+      <button onclick="saveStock()">Save</button>
+      <button class="cancel" onclick="closeModal()">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+/* =========================================================
+   STOCK MANAGEMENT
+========================================================= */
+
+let products = [];
+let stockMode = "in";
+
+/*
+  IMPORTANT:
+
+  Eh page kai common localStorage keys check karda.
+  Je tere existing system ch products ehna vicho kise key
+  te save ne, automatic load ho jaan ge.
+*/
+
+const PRODUCT_KEYS = [
+  "products",
+  "Products",
+  "productData",
+  "productList",
+  "inventory",
+  "items"
+];
+
+function getStoredProducts(){
+
+  for(const key of PRODUCT_KEYS){
+
+    try{
+
+      const data = localStorage.getItem(key);
+
+      if(!data) continue;
+
+      const parsed = JSON.parse(data);
+
+      if(Array.isArray(parsed)){
+        return parsed;
+      }
+
+      if(parsed && Array.isArray(parsed.products)){
+        return parsed.products;
+      }
+
+      if(parsed && Array.isArray(parsed.items)){
+        return parsed.items;
+      }
+
+    }catch(e){}
+
+  }
+
+  return [];
+}
+
+
+/* =========================================================
+   PRODUCT NAME
+========================================================= */
+
+function productName(product){
+
+  return (
+    product.name ||
+    product.productName ||
+    product.title ||
+    product.product ||
+    product.Name ||
+    "Unnamed Product"
+  );
+
+}
+
+
+/* =========================================================
+   STOCK VALUE
+========================================================= */
+
+function getStock(product){
+
+  let value =
+    product.stock ??
+    product.quantity ??
+    product.qty ??
+    product.Stock ??
+    product.currentStock ??
+    0;
+
+  value = Number(value);
+
+  if(isNaN(value)) value = 0;
+
+  return Math.max(0,value);
+
+}
+
+
+/* =========================================================
+   LOAD PRODUCTS
+========================================================= */
+
+function loadProducts(){
+
+  products = getStoredProducts();
+
+  /*
+    Je separate stock object pehlan ton exist karda,
+    ohnu product stock naal merge karan di koshish.
+  */
+
+  const savedStock = localStorage.getItem("stockData");
+
+  if(savedStock){
+
+    try{
+
+      const stockData = JSON.parse(savedStock);
+
+      products.forEach((p,i)=>{
+
+        const id =
+          p.id ??
+          p.productId ??
+          p.ID ??
+          i;
+
+        if(stockData[id] !== undefined){
+
+          p.stock = Number(stockData[id]) || 0;
+
+        }
+
+      });
+
+    }catch(e){}
+
+  }
+
+  renderStock();
+
+}
+
+
+/* =========================================================
+   SAVE STOCK DATA
+========================================================= */
+
+function saveAllStock(){
+
+  const stockData = {};
+
+  products.forEach((p,i)=>{
+
+    const id =
+      p.id ??
+      p.productId ??
+      p.ID ??
+      i;
+
+    stockData[id] = getStock(p);
+
+  });
+
+  localStorage.setItem(
+    "stockData",
+    JSON.stringify(stockData)
+  );
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderStock(){
+
+  const body =
+    document.getElementById("stockBody");
+
+  const search =
+    document.getElementById("search")
+      .value
+      .toLowerCase()
+      .trim();
+
+  const filter =
+    document.getElementById("filter").value;
+
+  body.innerHTML = "";
+
+  let totalStock = 0;
+  let low = 0;
+  let zero = 0;
+
+  products.forEach(p=>{
+
+    const stock = getStock(p);
+
+    totalStock += stock;
+
+    if(stock === 0) zero++;
+    else if(stock <= 5) low++;
+
+  });
+
+
+  document.getElementById("totalProducts")
+    .textContent = products.length;
+
+  document.getElementById("totalStock")
+    .textContent = totalStock;
+
+  document.getElementById("lowStock")
+    .textContent = low;
+
+  document.getElementById("zeroStock")
+    .textContent = zero;
+
+
+  let shown = 0;
+
+  products.forEach((product,index)=>{
+
+    const name = productName(product);
+    const stock = getStock(product);
+
+    const matchesSearch =
+      name.toLowerCase().includes(search);
+
+    if(!matchesSearch) return;
+
+
+    let status = "good";
+    let statusText = "Available";
+
+    if(stock === 0){
+
+      status = "zero";
+      statusText = "Out of Stock";
+
+    }else if(stock <= 5){
+
+      status = "low";
+      statusText = "Low Stock";
+
+    }
+
+
+    if(filter !== "all" && filter !== status)
+      return;
+
+
+    shown++;
+
+    const row =
+      document.createElement("tr");
+
+    row.innerHTML = `
+
+      <td>${index + 1}</td>
+
+      <td>
+        <strong>${escapeHTML(name)}</strong>
+      </td>
+
+      <td>
+        <strong>${stock}</strong>
+      </td>
+
+      <td>
+        <span class="status ${status}">
+          ${statusText}
+        </span>
+      </td>
+
+      <td>
+        <button
+          onclick="quickStock(${index},'in')">
+          + Add
+        </button>
+
+        <button
+          onclick="quickStock(${index},'out')">
+          − Remove
+        </button>
+      </td>
+
+    `;
+
+    body.appendChild(row);
+
+  });
+
+
+  if(shown === 0){
+
+    body.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty">
+          No products found
+        </td>
+      </tr>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   OPEN MODAL
+========================================================= */
+
+function openStockModal(mode){
+
+  if(products.length === 0){
+
+    alert("No products found.");
+
+    return;
+
+  }
+
+  stockMode = mode;
+
+  document.getElementById("modalTitle")
+    .textContent =
+    mode === "in"
+      ? "＋ Stock In"
+      : "− Stock Out";
+
+
+  const select =
+    document.getElementById("productSelect");
+
+  select.innerHTML = "";
+
+  products.forEach((p,i)=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value = i;
+
+    option.textContent =
+      productName(p) +
+      " — Stock: " +
+      getStock(p);
+
+    select.appendChild(option);
+
+  });
+
+
+  document.getElementById("stockQty")
+    .value = "";
+
+  document.getElementById("stockModal")
+    .style.display = "flex";
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal(){
+
+  document.getElementById("stockModal")
+    .style.display = "none";
+
+}
+
+
+/* =========================================================
+   SAVE STOCK
+========================================================= */
+
+function saveStock(){
+
+  const index =
+    Number(
+      document.getElementById("productSelect").value
+    );
+
+  const qty =
+    Number(
+      document.getElementById("stockQty").value
+    );
+
+  if(!qty || qty <= 0){
+
+    alert("Please enter valid quantity.");
+
+    return;
+
+  }
+
+  const product = products[index];
+
+  if(!product) return;
+
+  let current = getStock(product);
+
+  if(stockMode === "in"){
+
+    current += qty;
+
+  }else{
+
+    if(qty > current){
+
+      alert(
+        "Stock out quantity cannot be greater than current stock."
+      );
+
+      return;
+
+    }
+
+    current -= qty;
+
+  }
+
+
+  /*
+    Main product object ch stock update
+  */
+
+  product.stock = current;
+
+
+  saveAllStock();
+
+  /*
+    Common localStorage product keys update
+  */
+
+  PRODUCT_KEYS.forEach(key=>{
+
+    try{
+
+      const existing =
+        localStorage.getItem(key);
+
+      if(!existing) return;
+
+      const parsed =
+        JSON.parse(existing);
+
+      if(Array.isArray(parsed)){
+
+        /*
+          Sirf odo update karo jadon length
+          current products de barabar hove.
+        */
+
+        if(parsed.length === products.length){
+
+          localStorage.setItem(
+            key,
+            JSON.stringify(products)
+          );
+
+        }
+
+      }
+
+    }catch(e){}
+
+  });
+
+
+  closeModal();
+
+  renderStock();
+
+}
+
+
+/* =========================================================
+   QUICK STOCK
+========================================================= */
+
+function quickStock(index,mode){
+
+  const product = products[index];
+
+  if(!product) return;
+
+  const qty =
+    Number(
+      prompt(
+        mode === "in"
+          ? "Stock In quantity:"
+          : "Stock Out quantity:"
+      )
+    );
+
+  if(!qty || qty <= 0) return;
+
+  let current = getStock(product);
+
+
+  if(mode === "in"){
+
+    current += qty;
+
+  }else{
+
+    if(qty > current){
+
+      alert("Not enough stock.");
+
+      return;
+
+    }
+
+    current -= qty;
+
+  }
+
+
+  product.stock = current;
+
+  saveAllStock();
+
+  PRODUCT_KEYS.forEach(key=>{
+
+    try{
+
+      const existing =
+        localStorage.getItem(key);
+
+      if(!existing) return;
+
+      const parsed =
+        JSON.parse(existing);
+
+      if(
+        Array.isArray(parsed) &&
+        parsed.length === products.length
+      ){
+
+        localStorage.setItem(
+          key,
+          JSON.stringify(products)
+        );
+
+      }
+
+    }catch(e){}
+
+  });
+
+
+  renderStock();
+
+}
+
+
+/* =========================================================
+   AUTO REFRESH
+========================================================= */
+
+window.addEventListener(
+  "storage",
+  function(){
+
+    loadProducts();
+
+  }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
