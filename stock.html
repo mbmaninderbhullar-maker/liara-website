@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Liara Professional™ | Stock</title>
+<title>Liara Professional™ | Warehouse Stock</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
@@ -26,7 +28,7 @@ body{
 }
 
 .header-inner{
-    max-width:1200px;
+    max-width:1100px;
     margin:auto;
     display:flex;
     align-items:center;
@@ -56,14 +58,14 @@ body{
 }
 
 .container{
-    max-width:1200px;
+    max-width:1100px;
     margin:18px auto;
     padding:0 15px;
 }
 
 .cards{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(3,1fr);
     gap:10px;
     margin-bottom:15px;
 }
@@ -102,7 +104,8 @@ body{
     min-width:200px;
 }
 
-input,select{
+input,
+select{
     padding:9px 10px;
     border:1px solid #ddd;
     border-radius:7px;
@@ -135,10 +138,11 @@ button{
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:1100px;
+    min-width:850px;
 }
 
-th,td{
+th,
+td{
     padding:11px;
     border-bottom:1px solid #eee;
     text-align:left;
@@ -156,20 +160,17 @@ th{
     font-weight:400;
 }
 
-.track{
-    white-space:nowrap;
+.variant{
+    color:#555;
 }
 
-.pending{
-    color:#b45309;
+.stock{
+    font-size:15px;
 }
 
-.sold{
-    color:#166534;
-}
-
-.warehouse{
-    color:#111827;
+.unit{
+    color:#777;
+    margin-left:3px;
 }
 
 .status{
@@ -194,18 +195,14 @@ th{
     color:#991b1b;
 }
 
-.add{
-    background:#166534;
-    color:#fff;
-}
-
-.give{
+.update{
     background:#111827;
     color:#fff;
-    margin-left:4px;
 }
 
-.loading,.empty,.error{
+.loading,
+.empty,
+.error{
     text-align:center;
     padding:32px;
     color:#777;
@@ -228,8 +225,6 @@ th{
 .modal-box{
     background:#fff;
     width:min(410px,92%);
-    max-height:90vh;
-    overflow:auto;
     border-radius:12px;
     padding:20px;
 }
@@ -256,48 +251,6 @@ th{
     padding:10px;
     border-radius:8px;
     font-size:12px;
-    line-height:1.6;
-}
-
-.entry-type{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-}
-
-.entry-type label{
-    margin:0;
-    cursor:pointer;
-}
-
-.entry-type input{
-    display:none;
-}
-
-.entry-option{
-    display:block;
-    text-align:center;
-    padding:9px;
-    border:1px solid #ddd;
-    border-radius:8px;
-    font-size:12px;
-}
-
-.entry-type input:checked + .entry-option{
-    border-color:#111827;
-    background:#f1f5f9;
-}
-
-.unit-row{
-    display:grid;
-    grid-template-columns:1fr 120px;
-    gap:8px;
-}
-
-.party-note{
-    font-size:11px;
-    color:#777;
-    margin-top:5px;
 }
 
 .modal-actions{
@@ -333,13 +286,13 @@ th{
     font-size:12px;
 }
 
-@media(max-width:800px){
+@media(max-width:700px){
     .cards{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:1fr 1fr;
     }
 }
 
-@media(max-width:500px){
+@media(max-width:450px){
     .cards{
         grid-template-columns:1fr 1fr;
     }
@@ -351,10 +304,6 @@ th{
     .card-number{
         font-size:21px;
     }
-
-    .unit-row{
-        grid-template-columns:1fr 100px;
-    }
 }
 </style>
 </head>
@@ -365,40 +314,39 @@ th{
     <div class="header-inner">
 
         <div>
-            <h1>Stock Management</h1>
-            <p>Liara Professional™ — Warehouse & Party Stock</p>
+            <h1>Warehouse Stock</h1>
+            <p>Liara Professional™ — Product Variants</p>
         </div>
 
-        <a href="admin.html" class="back-btn">← Admin</a>
+        <a href="admin.html" class="back-btn">
+            ← Admin
+        </a>
 
     </div>
 </div>
+
 
 <div class="container">
 
     <div class="cards">
 
         <div class="card">
-            <div class="card-title">Total Products</div>
+            <div class="card-title">Products</div>
             <div class="card-number" id="totalProducts">0</div>
         </div>
 
         <div class="card">
             <div class="card-title">Warehouse Stock</div>
-            <div class="card-number" id="totalWarehouse">0</div>
+            <div class="card-number" id="totalStock">0</div>
         </div>
 
         <div class="card">
-            <div class="card-title">Low Warehouse</div>
+            <div class="card-title">Low Stock</div>
             <div class="card-number" id="lowStock">0</div>
         </div>
 
-        <div class="card">
-            <div class="card-title">Empty Warehouse</div>
-            <div class="card-number" id="zeroStock">0</div>
-        </div>
-
     </div>
+
 
     <div class="toolbar">
 
@@ -410,18 +358,27 @@ th{
             oninput="renderProducts()"
         >
 
-        <select id="filter" onchange="renderProducts()">
-            <option value="all">All Stock</option>
-            <option value="available">Available</option>
-            <option value="low">Low Stock</option>
-            <option value="out">Empty</option>
+        <select
+            id="unitFilter"
+            onchange="renderProducts()"
+        >
+            <option value="all">All Units</option>
+            <option value="pcs">PCS</option>
+            <option value="ml">ML</option>
+            <option value="ltr">Litre</option>
+            <option value="g">Gram</option>
+            <option value="kg">KG</option>
         </select>
 
-        <button class="refresh" onclick="loadProducts()">
+        <button
+            class="refresh"
+            onclick="loadProducts()"
+        >
             Refresh
         </button>
 
     </div>
+
 
     <div class="table-box">
 
@@ -431,12 +388,9 @@ th{
                 <tr>
                     <th>#</th>
                     <th>Product</th>
+                    <th>Size</th>
                     <th>Unit</th>
-                    <th>Online Stock</th>
                     <th>Warehouse</th>
-                    <th>Given</th>
-                    <th>Sold</th>
-                    <th>Pending</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -445,8 +399,8 @@ th{
             <tbody id="stockBody">
 
                 <tr>
-                    <td colspan="10" class="loading">
-                        Loading stock...
+                    <td colspan="7" class="loading">
+                        Loading warehouse stock...
                     </td>
                 </tr>
 
@@ -463,86 +417,68 @@ th{
 
     <div class="modal-box">
 
-        <h2 id="modalTitle">Warehouse Stock</h2>
+        <h2>Update Warehouse Stock</h2>
 
-        <div id="modalProduct" class="product-info"></div>
+        <div
+            id="modalProduct"
+            class="product-info"
+        ></div>
 
-        <div id="partyArea">
 
-            <label>Give To Party</label>
-
-            <select id="partySelect">
-                <option value="">Loading parties...</option>
-            </select>
-
-            <div class="party-note">
-                Party name will be saved with this stock entry.
-            </div>
-
-        </div>
-
-        <label>Source</label>
-
-        <div class="entry-type">
-
-            <label>
-                <input
-                    type="radio"
-                    name="entrySource"
-                    value="online"
-                    checked
-                >
-                <span class="entry-option">Online</span>
-            </label>
-
-            <label>
-                <input
-                    type="radio"
-                    name="entrySource"
-                    value="offline"
-                >
-                <span class="entry-option">Offline</span>
-            </label>
-
-        </div>
-
-        <label>Quantity & Unit</label>
-
-        <div class="unit-row">
-
-            <input
-                id="stockQuantity"
-                type="number"
-                min="0.01"
-                step="0.01"
-                placeholder="Quantity"
-            >
-
-            <select id="stockUnit">
-                <option value="pcs">pcs</option>
-                <option value="ml">ml</option>
-                <option value="L">L</option>
-                <option value="g">g</option>
-                <option value="kg">kg</option>
-            </select>
-
-        </div>
-
-        <label>Note</label>
+        <label>
+            Size
+        </label>
 
         <input
-            id="stockNote"
-            type="text"
-            placeholder="Optional note"
+            id="stockSize"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="Example: 30"
         >
+
+
+        <label>
+            Unit
+        </label>
+
+        <select id="stockUnit">
+
+            <option value="pcs">Pieces</option>
+            <option value="ml">ML</option>
+            <option value="ltr">Litre</option>
+            <option value="g">Gram</option>
+            <option value="kg">KG</option>
+
+        </select>
+
+
+        <label>
+            Warehouse Quantity
+        </label>
+
+        <input
+            id="stockQuantity"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Example: 20"
+        >
+
 
         <div class="modal-actions">
 
-            <button class="save" onclick="saveStock()">
-                Save Entry
+            <button
+                class="save"
+                onclick="saveWarehouseStock()"
+            >
+                Save
             </button>
 
-            <button class="cancel" onclick="closeModal()">
+            <button
+                class="cancel"
+                onclick="closeModal()"
+            >
                 Cancel
             </button>
 
@@ -558,6 +494,10 @@ th{
 
 <script>
 
+/* =========================================================
+   SUPABASE
+========================================================= */
+
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
 
@@ -571,83 +511,79 @@ window.supabase.createClient(
 );
 
 
-const PRODUCT_TABLE = "products";
-const STOCK_ENTRY_TABLE = "stock_entries";
-const PARTY_TABLE = "parties";
+/* =========================================================
+   TABLE
+========================================================= */
 
+const PRODUCT_TABLE = "products";
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
 
 let allProducts = [];
-let allParties = [];
-let selectedProduct = null;
-let stockMode = "in";
-let stockStats = {};
 
+let selectedProduct = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function escapeHtml(value){
+
     return String(value ?? "")
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+
 }
 
 
 function getProductId(product){
-    return (
-        product.id ??
-        product.product_id ??
-        product.productId
-    );
+
+    return product.id;
+
 }
 
 
 function getProductName(product){
+
     return (
-        product.product_name ??
-        product.name ??
-        product.productName ??
-        product.title ??
-        product.product ??
+        product.name ||
+        product.product_name ||
         "Unnamed Product"
     );
+
 }
 
 
-function getProductPrice(product){
-    return Number(
-        product.price ??
-        product.sale_price ??
-        product.selling_price ??
-        product.unit_price ??
-        0
-    ) || 0;
-}
-
-
-/* ONLINE WEBSITE STOCK */
-function getOnlineStock(product){
-    return Number(product.stock) || 0;
-}
-
-
-/* WAREHOUSE STOCK ONLY */
 function getWarehouseStock(product){
-    return Number(product.warehouse_stock) || 0;
+
+    return Number(
+        product.warehouse_stock ?? 0
+    ) || 0;
+
 }
 
 
-function getProductUnit(product){
+function getSize(product){
+
+    return product.size ?? "";
+
+}
+
+
+function getUnit(product){
+
     return (
-        product.unit ??
-        product.stock_unit ??
+        product.unit ||
         "pcs"
-    );
-}
+    ).toLowerCase();
 
-
-function findStockColumn(){
-    return "warehouse_stock";
 }
 
 
@@ -657,197 +593,21 @@ function showToast(message){
         document.getElementById("toast");
 
     toast.textContent = message;
+
     toast.style.display = "block";
 
     setTimeout(function(){
+
         toast.style.display = "none";
+
     },2500);
-}
-
-
-/* =========================================
-   LOAD PARTIES
-========================================= */
-
-async function loadParties(){
-
-    const select =
-        document.getElementById("partySelect");
-
-    try{
-
-        const result =
-            await supabaseClient
-                .from(PARTY_TABLE)
-                .select("*")
-                .order("id",{ascending:false});
-
-        if(result.error){
-
-            console.warn(
-                "Party loading failed:",
-                result.error
-            );
-
-            select.innerHTML =
-                '<option value="">Party loading failed</option>';
-
-            return;
-        }
-
-        allParties = result.data || [];
-
-        select.innerHTML =
-            '<option value="">Select party</option>';
-
-        allParties.forEach(function(party){
-
-            const id =
-                party.id ??
-                party.party_id;
-
-            const name =
-                party.name ??
-                party.party_name ??
-                party.partyName ??
-                party.title ??
-                "Unnamed Party";
-
-            if(id != null){
-
-                select.innerHTML += `
-                    <option value="${escapeHtml(id)}">
-                        ${escapeHtml(name)}
-                    </option>
-                `;
-
-            }
-
-        });
-
-    }catch(error){
-
-        console.warn(error);
-
-    }
 
 }
 
 
-/* =========================================
-   LOAD ENTRIES
-========================================= */
-
-async function loadStockStats(){
-
-    stockStats = {};
-
-    try{
-
-        const result =
-            await supabaseClient
-                .from(STOCK_ENTRY_TABLE)
-                .select(
-                    "product_id,quantity,type,source,party_id"
-                );
-
-        if(result.error){
-
-            console.warn(
-                "Stock entries unavailable:",
-                result.error
-            );
-
-            return;
-        }
-
-        (result.data || []).forEach(function(entry){
-
-            const id =
-                String(entry.product_id);
-
-            if(!stockStats[id]){
-
-                stockStats[id] = {
-                    onlineGiven:0,
-                    offlineGiven:0,
-                    onlineSold:0,
-                    offlineSold:0
-                };
-
-            }
-
-            const qty =
-                Number(entry.quantity) || 0;
-
-            const source =
-                String(
-                    entry.source || ""
-                ).toLowerCase();
-
-            const type =
-                String(
-                    entry.type || ""
-                ).toLowerCase();
-
-
-            /*
-              "out" = stock given to party
-              "sale" = sold/returned sales record
-            */
-
-            if(type === "out"){
-
-                if(source === "online"){
-                    stockStats[id].onlineGiven += qty;
-                }
-
-                if(source === "offline"){
-                    stockStats[id].offlineGiven += qty;
-                }
-
-            }
-
-            if(type === "sale"){
-
-                if(source === "online"){
-                    stockStats[id].onlineSold += qty;
-                }
-
-                if(source === "offline"){
-                    stockStats[id].offlineSold += qty;
-                }
-
-            }
-
-        });
-
-    }catch(error){
-
-        console.warn(error);
-
-    }
-
-}
-
-
-function getStats(product){
-
-    return stockStats[
-        String(getProductId(product))
-    ] || {
-        onlineGiven:0,
-        offlineGiven:0,
-        onlineSold:0,
-        offlineSold:0
-    };
-
-}
-
-
-/* =========================================
+/* =========================================================
    LOAD PRODUCTS
-========================================= */
+========================================================= */
 
 async function loadProducts(){
 
@@ -856,11 +616,12 @@ async function loadProducts(){
 
     body.innerHTML = `
         <tr>
-            <td colspan="10" class="loading">
-                Loading stock from Supabase...
+            <td colspan="7" class="loading">
+                Loading warehouse stock...
             </td>
         </tr>
     `;
+
 
     try{
 
@@ -870,28 +631,32 @@ async function loadProducts(){
                 .select("*")
                 .order("id",{ascending:false});
 
+
         if(result.error){
+
+            console.error(result.error);
 
             body.innerHTML = `
                 <tr>
-                    <td colspan="10" class="error">
-                        ${escapeHtml(result.error.message)}
+                    <td colspan="7" class="error">
+                        ${escapeHtml(
+                            result.error.message
+                        )}
                     </td>
                 </tr>
             `;
 
             return;
+
         }
+
 
         allProducts =
             result.data || [];
 
-        await Promise.all([
-            loadParties(),
-            loadStockStats()
-        ]);
 
         renderProducts();
+
 
     }catch(error){
 
@@ -899,7 +664,7 @@ async function loadProducts(){
 
         body.innerHTML = `
             <tr>
-                <td colspan="10" class="error">
+                <td colspan="7" class="error">
                     Unable to load products.
                 </td>
             </tr>
@@ -910,9 +675,9 @@ async function loadProducts(){
 }
 
 
-/* =========================================
+/* =========================================================
    RENDER
-========================================= */
+========================================================= */
 
 function renderProducts(){
 
@@ -920,106 +685,59 @@ function renderProducts(){
         document.getElementById("stockBody");
 
     const search =
-        document.getElementById("search")
+        document
+            .getElementById("search")
             .value
             .toLowerCase()
             .trim();
 
-    const filter =
-        document.getElementById("filter")
+    const unitFilter =
+        document
+            .getElementById("unitFilter")
             .value;
+
 
     body.innerHTML = "";
 
-    let totalWarehouse = 0;
+
+    let totalStock = 0;
     let lowStock = 0;
-    let zeroStock = 0;
-
-    allProducts.forEach(function(product){
-
-        const warehouse =
-            getWarehouseStock(product);
-
-        totalWarehouse += warehouse;
-
-        if(warehouse <= 0){
-            zeroStock++;
-        }else if(warehouse <= 5){
-            lowStock++;
-        }
-
-    });
-
-    document.getElementById(
-        "totalProducts"
-    ).textContent =
-        allProducts.length;
-
-    document.getElementById(
-        "totalWarehouse"
-    ).textContent =
-        totalWarehouse;
-
-    document.getElementById(
-        "lowStock"
-    ).textContent =
-        lowStock;
-
-    document.getElementById(
-        "zeroStock"
-    ).textContent =
-        zeroStock;
-
-
     let shown = 0;
 
 
-    allProducts.forEach(function(product,index){
+    allProducts.forEach(function(product){
+
+        const stock =
+            getWarehouseStock(product);
+
+        const unit =
+            getUnit(product);
 
         const name =
             getProductName(product);
 
-        const onlineStock =
-            getOnlineStock(product);
 
-        const warehouse =
-            getWarehouseStock(product);
+        totalStock += stock;
 
-        const unit =
-            getProductUnit(product);
 
-        const stats =
-            getStats(product);
+        if(stock <= 5){
+            lowStock++;
+        }
 
 
         if(
             search &&
-            !name.toLowerCase().includes(search)
+            !name
+                .toLowerCase()
+                .includes(search)
         ){
             return;
         }
 
 
-        let status = "available";
-        let statusText = "Available";
-
-
-        if(warehouse <= 0){
-
-            status = "out";
-            statusText = "Empty";
-
-        }else if(warehouse <= 5){
-
-            status = "low";
-            statusText = "Low";
-
-        }
-
-
         if(
-            filter !== "all" &&
-            filter !== status
+            unitFilter !== "all" &&
+            unit !== unitFilter
         ){
             return;
         }
@@ -1028,19 +746,30 @@ function renderProducts(){
         shown++;
 
 
-        const totalGiven =
-            stats.onlineGiven +
-            stats.offlineGiven;
+        let status =
+            "available";
 
-        const totalSold =
-            stats.onlineSold +
-            stats.offlineSold;
+        let statusText =
+            "Available";
 
-        const pending =
-            Math.max(
-                0,
-                totalGiven - totalSold
-            );
+
+        if(stock <= 0){
+
+            status =
+                "out";
+
+            statusText =
+                "Out of Stock";
+
+        }else if(stock <= 5){
+
+            status =
+                "low";
+
+            statusText =
+                "Low Stock";
+
+        }
 
 
         const row =
@@ -1050,7 +779,7 @@ function renderProducts(){
         row.innerHTML = `
 
             <td>
-                ${index + 1}
+                ${shown}
             </td>
 
             <td>
@@ -1059,66 +788,80 @@ function renderProducts(){
                 </div>
             </td>
 
+            <td class="variant">
+                ${
+                    getSize(product) !== ""
+                    ? escapeHtml(getSize(product))
+                    : "—"
+                }
+            </td>
+
             <td>
                 ${escapeHtml(unit)}
             </td>
 
-            <td>
-                ${onlineStock}
-            </td>
+            <td class="stock">
 
-            <td class="warehouse">
-                ${warehouse}
-            </td>
+                ${stock}
 
-            <td class="track">
-                ${totalGiven}
-            </td>
+                <span class="unit">
+                    ${escapeHtml(unit)}
+                </span>
 
-            <td class="track sold">
-                ${totalSold}
-            </td>
-
-            <td class="track pending">
-                ${pending}
             </td>
 
             <td>
-                <span class="status ${status}">
+
+                <span
+                    class="status ${status}"
+                >
                     ${statusText}
                 </span>
+
             </td>
 
             <td>
 
                 <button
-                    class="add"
-                    onclick="openStockModal(${index},'in')"
+                    class="update"
+                    onclick="openStockModal(${product.id})"
                 >
-                    + Warehouse
-                </button>
-
-                <button
-                    class="give"
-                    onclick="openStockModal(${index},'give')"
-                >
-                    Give
+                    Update
                 </button>
 
             </td>
 
         `;
 
+
         body.appendChild(row);
 
     });
+
+
+    document.getElementById(
+        "totalProducts"
+    ).textContent =
+        allProducts.length;
+
+
+    document.getElementById(
+        "totalStock"
+    ).textContent =
+        totalStock;
+
+
+    document.getElementById(
+        "lowStock"
+    ).textContent =
+        lowStock;
 
 
     if(shown === 0){
 
         body.innerHTML = `
             <tr>
-                <td colspan="10" class="empty">
+                <td colspan="7" class="empty">
                     No products found.
                 </td>
             </tr>
@@ -1129,82 +872,65 @@ function renderProducts(){
 }
 
 
-/* =========================================
+/* =========================================================
    OPEN MODAL
-========================================= */
+========================================================= */
 
-function openStockModal(index,mode){
+function openStockModal(productId){
 
     selectedProduct =
-        allProducts[index];
+        allProducts.find(function(product){
+
+            return String(
+                getProductId(product)
+            ) === String(productId);
+
+        });
+
 
     if(!selectedProduct){
         return;
     }
-
-    stockMode = mode;
-
-
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        mode === "in"
-        ? "Add to Warehouse"
-        : "Give Stock to Party";
 
 
     document.getElementById(
         "modalProduct"
     ).innerHTML = `
 
-        <div>
-            ${escapeHtml(
-                getProductName(
-                    selectedProduct
-                )
-            )}
-        </div>
+        ${escapeHtml(
+            getProductName(
+                selectedProduct
+            )
+        )}
 
-        <div>
-            Online Stock:
-            ${getOnlineStock(selectedProduct)}
-        </div>
+        <br>
 
-        <div>
-            Warehouse Stock:
-            ${getWarehouseStock(selectedProduct)}
-        </div>
+        Current Warehouse Stock:
+        ${getWarehouseStock(
+            selectedProduct
+        )}
 
     `;
 
 
     document.getElementById(
-        "stockQuantity"
-    ).value = "";
-
-
-    document.getElementById(
-        "stockNote"
-    ).value = "";
+        "stockSize"
+    ).value =
+        getSize(selectedProduct);
 
 
     document.getElementById(
         "stockUnit"
     ).value =
-        getProductUnit(selectedProduct);
+        getUnit(selectedProduct);
 
 
     document.getElementById(
-        "partyArea"
-    ).style.display =
-        mode === "give"
-        ? "block"
-        : "none";
-
-
-    document.querySelector(
-        'input[name="entrySource"][value="online"]'
-    ).checked = true;
+        "stockQuantity"
+    ).value =
+        getWarehouseStock(
+            selectedProduct
+        );
 
 
     document.getElementById(
@@ -1215,9 +941,9 @@ function openStockModal(index,mode){
 }
 
 
-/* =========================================
-   CLOSE
-========================================= */
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
 
 function closeModal(){
 
@@ -1226,20 +952,33 @@ function closeModal(){
     ).style.display =
         "none";
 
-    selectedProduct = null;
+    selectedProduct =
+        null;
 
 }
 
 
-/* =========================================
-   SAVE STOCK
-========================================= */
+/* =========================================================
+   SAVE
+========================================================= */
 
-async function saveStock(){
+async function saveWarehouseStock(){
 
     if(!selectedProduct){
         return;
     }
+
+
+    const size =
+        document.getElementById(
+            "stockSize"
+        ).value;
+
+
+    const unit =
+        document.getElementById(
+            "stockUnit"
+        ).value;
 
 
     const quantity =
@@ -1250,28 +989,13 @@ async function saveStock(){
         );
 
 
-    const unit =
-        document.getElementById(
-            "stockUnit"
-        ).value;
-
-
-    const note =
-        document.getElementById(
-            "stockNote"
-        ).value.trim();
-
-
-    const source =
-        document.querySelector(
-            'input[name="entrySource"]:checked'
-        ).value;
-
-
-    if(!quantity || quantity <= 0){
+    if(
+        size === "" ||
+        Number(size) < 0
+    ){
 
         alert(
-            "Please enter a valid quantity."
+            "Please enter a valid size."
         );
 
         return;
@@ -1279,235 +1003,53 @@ async function saveStock(){
     }
 
 
-    const productId =
-        getProductId(selectedProduct);
-
-
-    if(productId == null){
+    if(
+        !quantity ||
+        quantity < 0
+    ){
 
         alert(
-            "Product ID not found."
+            "Please enter a valid warehouse quantity."
         );
 
         return;
 
     }
-
-
-    const currentWarehouse =
-        getWarehouseStock(
-            selectedProduct
-        );
-
-
-    /* =========================================
-       WAREHOUSE STOCK IN
-       IMPORTANT:
-       DOES NOT CHANGE products.stock
-    ========================================= */
-
-    if(stockMode === "in"){
-
-        const newWarehouse =
-            currentWarehouse + quantity;
-
-
-        try{
-
-            const updateResult =
-                await supabaseClient
-                    .from(PRODUCT_TABLE)
-                    .update({
-                        warehouse_stock:
-                            newWarehouse
-                    })
-                    .eq(
-                        "id",
-                        productId
-                    );
-
-
-            if(updateResult.error){
-
-                alert(
-                    "Warehouse update failed: " +
-                    updateResult.error.message
-                );
-
-                return;
-
-            }
-
-
-            const entryResult =
-                await supabaseClient
-                    .from(STOCK_ENTRY_TABLE)
-                    .insert([{
-
-                        product_id:
-                            productId,
-
-                        product_name:
-                            getProductName(
-                                selectedProduct
-                            ),
-
-                        quantity:
-                            quantity,
-
-                        unit:
-                            unit,
-
-                        type:
-                            "in",
-
-                        source:
-                            "warehouse",
-
-                        previous_stock:
-                            currentWarehouse,
-
-                        new_stock:
-                            newWarehouse,
-
-                        note:
-                            note || null
-
-                    }]);
-
-
-            if(entryResult.error){
-
-                console.warn(
-                    "Warehouse entry save failed:",
-                    entryResult.error
-                );
-
-                showToast(
-                    "Warehouse stock updated."
-                );
-
-            }else{
-
-                showToast(
-                    "Added to warehouse."
-                );
-
-            }
-
-
-            selectedProduct.warehouse_stock =
-                newWarehouse;
-
-
-            closeModal();
-
-            await loadStockStats();
-
-            renderProducts();
-
-
-        }catch(error){
-
-            console.error(error);
-
-            alert(
-                "Warehouse update failed."
-            );
-
-        }
-
-        return;
-    }
-
-
-    /* =========================================
-       GIVE TO PARTY
-       ONLY warehouse_stock decreases
-    ========================================= */
-
-    const partyId =
-        document.getElementById(
-            "partySelect"
-        ).value;
-
-
-    if(!partyId){
-
-        alert(
-            "Please select a party."
-        );
-
-        return;
-
-    }
-
-
-    if(quantity > currentWarehouse){
-
-        alert(
-            "Quantity cannot be greater than warehouse stock."
-        );
-
-        return;
-
-    }
-
-
-    const party =
-        allParties.find(function(party){
-
-            return String(
-                party.id ??
-                party.party_id
-            ) === String(
-                partyId
-            );
-
-        });
-
-
-    const partyName =
-        party
-        ? (
-            party.name ??
-            party.party_name ??
-            party.partyName ??
-            party.title ??
-            "Unnamed Party"
-        )
-        : "Unnamed Party";
-
-
-    const newWarehouse =
-        currentWarehouse - quantity;
 
 
     try{
-
-        /*
-          IMPORTANT:
-          products.stock IS NOT UPDATED HERE.
-          Only warehouse_stock is reduced.
-        */
 
         const updateResult =
             await supabaseClient
                 .from(PRODUCT_TABLE)
                 .update({
+
+                    size:
+                        Number(size),
+
+                    unit:
+                        unit,
+
                     warehouse_stock:
-                        newWarehouse
+                        quantity
+
                 })
                 .eq(
                     "id",
-                    productId
+                    getProductId(
+                        selectedProduct
+                    )
                 );
 
 
         if(updateResult.error){
 
+            console.error(
+                updateResult.error
+            );
+
             alert(
-                "Warehouse stock update failed: " +
+                "Warehouse update failed: " +
                 updateResult.error.message
             );
 
@@ -1516,82 +1058,23 @@ async function saveStock(){
         }
 
 
-        const entryResult =
-            await supabaseClient
-                .from(STOCK_ENTRY_TABLE)
-                .insert([{
+        selectedProduct.size =
+            Number(size);
 
-                    product_id:
-                        productId,
-
-                    product_name:
-                        getProductName(
-                            selectedProduct
-                        ),
-
-                    quantity:
-                        quantity,
-
-                    unit:
-                        unit,
-
-                    type:
-                        "out",
-
-                    source:
-                        source,
-
-                    party_id:
-                        partyId,
-
-                    party_name:
-                        partyName,
-
-                    previous_stock:
-                        currentWarehouse,
-
-                    new_stock:
-                        newWarehouse,
-
-                    note:
-                        note || null
-
-                }]);
-
-
-        if(entryResult.error){
-
-            console.warn(
-                "Party entry save failed:",
-                entryResult.error
-            );
-
-            showToast(
-                "Stock given. Party entry save failed."
-            );
-
-        }else{
-
-            showToast(
-                quantity +
-                " " +
-                unit +
-                " given to " +
-                partyName
-            );
-
-        }
-
+        selectedProduct.unit =
+            unit;
 
         selectedProduct.warehouse_stock =
-            newWarehouse;
+            quantity;
 
 
         closeModal();
 
-        await loadStockStats();
-
         renderProducts();
+
+        showToast(
+            "Warehouse stock updated."
+        );
 
 
     }catch(error){
@@ -1599,7 +1082,7 @@ async function saveStock(){
         console.error(error);
 
         alert(
-            "Stock update failed."
+            "Warehouse update failed."
         );
 
     }
@@ -1607,12 +1090,12 @@ async function saveStock(){
 }
 
 
-/* =========================================
-   REALTIME PRODUCTS
-========================================= */
+/* =========================================================
+   REALTIME
+========================================================= */
 
 supabaseClient
-    .channel("stock-products-live")
+    .channel("warehouse-stock-live")
     .on(
         "postgres_changes",
         {
@@ -1621,39 +1104,17 @@ supabaseClient
             table:PRODUCT_TABLE
         },
         function(){
+
             loadProducts();
-        }
-    )
-    .subscribe();
-
-
-/* =========================================
-   REALTIME ENTRIES
-========================================= */
-
-supabaseClient
-    .channel("stock-entries-live")
-    .on(
-        "postgres_changes",
-        {
-            event:"*",
-            schema:"public",
-            table:STOCK_ENTRY_TABLE
-        },
-        async function(){
-
-            await loadStockStats();
-
-            renderProducts();
 
         }
     )
     .subscribe();
 
 
-/* =========================================
+/* =========================================================
    START
-========================================= */
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
