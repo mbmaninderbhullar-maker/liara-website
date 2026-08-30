@@ -137,7 +137,7 @@ button{
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:1030px;
+    min-width:1180px;
 }
 
 th,
@@ -229,6 +229,8 @@ th{
 .modal-box{
     background:#fff;
     width:min(410px,92%);
+    max-height:92vh;
+    overflow:auto;
     border-radius:12px;
     padding:20px;
 }
@@ -255,6 +257,7 @@ th{
     padding:10px;
     border-radius:8px;
     font-size:12px;
+    line-height:1.6;
 }
 
 .entry-type{
@@ -326,15 +329,12 @@ th{
 }
 
 @media(max-width:800px){
-
     .cards{
         grid-template-columns:repeat(2,1fr);
     }
-
 }
 
 @media(max-width:500px){
-
     .cards{
         grid-template-columns:1fr 1fr;
     }
@@ -346,114 +346,48 @@ th{
     .card-number{
         font-size:21px;
     }
-
 }
 </style>
-
 </head>
 
 <body>
 
 <div class="header">
-
     <div class="header-inner">
-
         <div>
-
             <h1>Stock Management</h1>
-
-            <p>
-                Liara Professional™ — Warehouse & Party Stock
-            </p>
-
+            <p>Liara Professional™ — Warehouse & Party Stock</p>
         </div>
 
-        <a
-            href="admin.html"
-            class="back-btn"
-        >
-            ← Admin
-        </a>
-
+        <a href="admin.html" class="back-btn">← Admin</a>
     </div>
-
 </div>
 
-
 <div class="container">
-
-
-    <!-- ================= OVERVIEW ================= -->
 
     <div class="cards">
 
         <div class="card">
-
-            <div class="card-title">
-                Total Products
-            </div>
-
-            <div
-                class="card-number"
-                id="totalProducts"
-            >
-                0
-            </div>
-
+            <div class="card-title">Total Products</div>
+            <div class="card-number" id="totalProducts">0</div>
         </div>
 
-
         <div class="card">
-
-            <div class="card-title">
-                Warehouse Stock
-            </div>
-
-            <div
-                class="card-number"
-                id="totalStock"
-            >
-                0
-            </div>
-
+            <div class="card-title">Warehouse Stock</div>
+            <div class="card-number" id="totalStock">0</div>
         </div>
 
-
         <div class="card">
-
-            <div class="card-title">
-                Low Stock
-            </div>
-
-            <div
-                class="card-number"
-                id="lowStock"
-            >
-                0
-            </div>
-
+            <div class="card-title">Low Stock</div>
+            <div class="card-number" id="lowStock">0</div>
         </div>
 
-
         <div class="card">
-
-            <div class="card-title">
-                Out of Stock
-            </div>
-
-            <div
-                class="card-number"
-                id="zeroStock"
-            >
-                0
-            </div>
-
+            <div class="card-title">Out of Stock</div>
+            <div class="card-number" id="zeroStock">0</div>
         </div>
 
     </div>
-
-
-    <!-- ================= TOOLBAR ================= -->
 
     <div class="toolbar">
 
@@ -465,115 +399,46 @@ th{
             oninput="renderProducts()"
         >
 
-
-        <select
-            id="filter"
-            onchange="renderProducts()"
-        >
-
-            <option value="all">
-                All Stock
-            </option>
-
-            <option value="available">
-                Available
-            </option>
-
-            <option value="low">
-                Low Stock
-            </option>
-
-            <option value="out">
-                Out of Stock
-            </option>
-
+        <select id="filter" onchange="renderProducts()">
+            <option value="all">All Stock</option>
+            <option value="available">Available</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
         </select>
 
-
-        <button
-            class="refresh"
-            onclick="loadProducts()"
-        >
+        <button class="refresh" onclick="loadProducts()">
             Refresh
         </button>
 
     </div>
-
-
-    <!-- ================= TABLE ================= -->
 
     <div class="table-box">
 
         <table>
 
             <thead>
-
                 <tr>
-
                     <th>#</th>
-
-                    <th>
-                        Product
-                    </th>
-
-                    <th>
-                        Price
-                    </th>
-
-                    <th>
-                        Warehouse
-                    </th>
-
-                    <th>
-                        Online Given
-                    </th>
-
-                    <th>
-                        Online Sold
-                    </th>
-
-                    <th>
-                        Online Pending
-                    </th>
-
-                    <th>
-                        Offline Given
-                    </th>
-
-                    <th>
-                        Offline Sold
-                    </th>
-
-                    <th>
-                        Offline Pending
-                    </th>
-
-                    <th>
-                        Status
-                    </th>
-
-                    <th>
-                        Action
-                    </th>
-
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Warehouse</th>
+                    <th>Online Given</th>
+                    <th>Online Sold</th>
+                    <th>Online Pending</th>
+                    <th>Offline Given</th>
+                    <th>Offline Sold</th>
+                    <th>Offline Pending</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
-
             </thead>
 
-
             <tbody id="stockBody">
-
                 <tr>
-
-                    <td
-                        colspan="12"
-                        class="loading"
-                    >
+                    <td colspan="12" class="loading">
                         Loading stock...
                     </td>
-
                 </tr>
-
             </tbody>
 
         </table>
@@ -583,111 +448,79 @@ th{
 </div>
 
 
-<!-- ================= STOCK MODAL ================= -->
-
-<div
-    class="modal"
-    id="stockModal"
->
+<div class="modal" id="stockModal">
 
     <div class="modal-box">
 
+        <h2 id="modalTitle">Stock Update</h2>
 
-        <h2 id="modalTitle">
-            Stock Update
-        </h2>
+        <div id="modalProduct" class="product-info"></div>
 
-
-        <div
-            id="modalProduct"
-            class="product-info"
-        ></div>
-
-
-        <!-- PARTY -->
 
         <div id="partyArea">
 
-            <label>
-                Give To Party
-            </label>
+            <label>Give To Party</label>
 
             <select id="partySelect">
-
-                <option value="">
-                    Loading parties...
-                </option>
-
+                <option value="">Loading parties...</option>
             </select>
 
             <div class="party-note">
-                Party will be saved with this stock entry.
+                Party will be saved with this stock transaction.
             </div>
 
         </div>
 
 
-        <!-- SOURCE -->
-
-        <label>
-            Entry Type
-        </label>
-
+        <label>Source</label>
 
         <div class="entry-type">
 
             <label>
-
                 <input
                     type="radio"
                     name="entrySource"
                     value="online"
                     checked
                 >
-
-                <span class="entry-option">
-                    Online
-                </span>
-
+                <span class="entry-option">Online</span>
             </label>
 
-
             <label>
-
                 <input
                     type="radio"
                     name="entrySource"
                     value="offline"
                 >
-
-                <span class="entry-option">
-                    Offline
-                </span>
-
+                <span class="entry-option">Offline</span>
             </label>
 
         </div>
 
 
-        <!-- QUANTITY -->
+        <label>Unit</label>
 
-        <label>
-            Quantity
-        </label>
+        <select id="stockUnit">
+            <option value="pcs">Pcs</option>
+            <option value="ml">ML</option>
+            <option value="l">L</option>
+            <option value="g">G</option>
+            <option value="kg">KG</option>
+        </select>
+
+
+        <label>Quantity</label>
 
         <input
             id="stockQuantity"
             type="number"
-            min="1"
+            min="0.01"
+            step="0.01"
             placeholder="Enter quantity"
         >
 
 
-        <!-- NOTE -->
-
-        <label>
-            Note
-        </label>
+        <label>Note</label>
 
         <input
             id="stockNote"
@@ -698,18 +531,11 @@ th{
 
         <div class="modal-actions">
 
-            <button
-                class="save"
-                onclick="saveStock()"
-            >
+            <button class="save" onclick="saveStock()">
                 Save Entry
             </button>
 
-
-            <button
-                class="cancel"
-                onclick="closeModal()"
-            >
+            <button class="cancel" onclick="closeModal()">
                 Cancel
             </button>
 
@@ -720,10 +546,7 @@ th{
 </div>
 
 
-<div
-    class="toast"
-    id="toast"
-></div>
+<div class="toast" id="toast"></div>
 
 
 <script>
@@ -738,7 +561,6 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
-
 const supabaseClient =
 window.supabase.createClient(
     SUPABASE_URL,
@@ -750,14 +572,9 @@ window.supabase.createClient(
    TABLES
 ========================================================= */
 
-const PRODUCT_TABLE =
-"products";
-
-const STOCK_ENTRY_TABLE =
-"stock_entries";
-
-const PARTY_TABLE =
-"parties";
+const PRODUCT_TABLE = "products";
+const TRANSACTION_TABLE = "stock_transactions";
+const PARTY_TABLE = "parties";
 
 
 /* =========================================================
@@ -765,14 +582,10 @@ const PARTY_TABLE =
 ========================================================= */
 
 let allProducts = [];
-
 let allParties = [];
-
 let selectedProduct = null;
-
 let stockMode = "in";
-
-let stockEntryStats = {};
+let stockStats = {};
 
 
 /* =========================================================
@@ -780,102 +593,83 @@ let stockEntryStats = {};
 ========================================================= */
 
 function emptyStats(){
-
     return {
-
         onlineGiven:0,
-
         onlineSold:0,
-
         offlineGiven:0,
-
         offlineSold:0
-
     };
-
-}
-
-
-function pendingValue(
-    given,
-    sold
-){
-
-    return Math.max(
-        0,
-        Number(given || 0) -
-        Number(sold || 0)
-    );
-
 }
 
 
 function getProductId(product){
-
-    return (
-        product.id ??
-        product.product_id ??
-        product.productId
-    );
-
+    return product.id ?? product.product_id ?? product.productId;
 }
 
 
 function getProductName(product){
-
     return (
-        product.product_name ??
         product.name ??
+        product.product_name ??
         product.productName ??
         product.title ??
         product.product ??
         "Unnamed Product"
     );
-
 }
 
 
 function getProductPrice(product){
-
     return Number(
-
         product.price ??
         product.sale_price ??
         product.selling_price ??
         product.unit_price ??
         0
-
     ) || 0;
-
 }
 
 
 function getProductStock(product){
+    return Number(product.stock) || 0;
+}
 
-    return Number(
 
-        product.stock ??
-        product.stock_quantity ??
-        product.quantity ??
-        product.qty ??
-        product.current_stock ??
-        0
+function getProductUnit(product){
+    return String(
+        product.unit ??
+        "pcs"
+    ).toLowerCase();
+}
 
-    ) || 0;
 
+function unitLabel(unit){
+    const u = String(unit || "pcs").toLowerCase();
+
+    if(u === "ml") return "ML";
+    if(u === "l" || u === "ltr" || u === "liter") return "L";
+    if(u === "g" || u === "gram" || u === "grams") return "G";
+    if(u === "kg" || u === "kgs") return "KG";
+
+    return "Pcs";
+}
+
+
+function pendingValue(given,sold){
+    return Math.max(
+        0,
+        Number(given || 0) - Number(sold || 0)
+    );
 }
 
 
 function escapeHtml(value){
-
     return String(value ?? "")
-
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
-
 }
 
 
@@ -884,107 +678,26 @@ function showToast(message){
     const toast =
         document.getElementById("toast");
 
-    toast.textContent =
-        message;
+    toast.textContent = message;
+    toast.style.display = "block";
 
-    toast.style.display =
-        "block";
+    clearTimeout(window.toastTimer);
 
-    setTimeout(
-        function(){
-
-            toast.style.display =
-                "none";
-
-        },
-        2500
-    );
-
+    window.toastTimer =
+        setTimeout(function(){
+            toast.style.display = "none";
+        },2500);
 }
 
 
 function getTracking(product){
 
     return (
-        stockEntryStats[
-            String(
-                getProductId(product)
-            )
+        stockStats[
+            String(getProductId(product))
         ] ||
         emptyStats()
     );
-
-}
-
-
-/* =========================================================
-   FIND STOCK COLUMN
-========================================================= */
-
-function findStockColumn(product){
-
-    if(
-        Object.prototype.hasOwnProperty.call(
-            product,
-            "stock"
-        )
-    ){
-
-        return "stock";
-
-    }
-
-
-    if(
-        Object.prototype.hasOwnProperty.call(
-            product,
-            "stock_quantity"
-        )
-    ){
-
-        return "stock_quantity";
-
-    }
-
-
-    if(
-        Object.prototype.hasOwnProperty.call(
-            product,
-            "current_stock"
-        )
-    ){
-
-        return "current_stock";
-
-    }
-
-
-    if(
-        Object.prototype.hasOwnProperty.call(
-            product,
-            "quantity"
-        )
-    ){
-
-        return "quantity";
-
-    }
-
-
-    if(
-        Object.prototype.hasOwnProperty.call(
-            product,
-            "qty"
-        )
-    ){
-
-        return "qty";
-
-    }
-
-
-    return null;
-
 }
 
 
@@ -1000,73 +713,49 @@ async function loadParties(){
             await supabaseClient
                 .from(PARTY_TABLE)
                 .select("*")
-                .order(
-                    "id",
-                    {
-                        ascending:false
-                    }
-                );
-
+                .order("id",{ascending:false});
 
         if(result.error){
-
             console.warn(
                 "Party loading failed:",
                 result.error
             );
-
             return;
-
         }
 
-
-        allParties =
-            result.data || [];
-
+        allParties = result.data || [];
 
         const select =
-            document.getElementById(
-                "partySelect"
-            );
-
+            document.getElementById("partySelect");
 
         select.innerHTML =
             '<option value="">Select party</option>';
 
+        allParties.forEach(function(party){
 
-        allParties.forEach(
-            function(party){
+            const id =
+                party.id ??
+                party.party_id;
 
-                const id =
-                    party.id ??
-                    party.party_id;
+            const name =
+                party.name ??
+                party.party_name ??
+                party.partyName ??
+                party.title ??
+                "Unnamed Party";
 
+            if(id != null){
 
-                const name =
-                    party.name ??
-                    party.party_name ??
-                    party.partyName ??
-                    party.title ??
-                    "Unnamed Party";
+                const option =
+                    document.createElement("option");
 
+                option.value = id;
+                option.textContent = name;
 
-                if(id != null){
-
-                    select.innerHTML += `
-
-                        <option value="${escapeHtml(id)}">
-
-                            ${escapeHtml(name)}
-
-                        </option>
-
-                    `;
-
-                }
-
+                select.appendChild(option);
             }
-        );
 
+        });
 
     }catch(error){
 
@@ -1081,124 +770,100 @@ async function loadParties(){
 
 
 /* =========================================================
-   LOAD STOCK ENTRY TRACKING
+   LOAD TRANSACTIONS
 ========================================================= */
 
-async function loadStockEntryStats(){
+async function loadStockStats(){
 
-    stockEntryStats = {};
-
+    stockStats = {};
 
     try{
 
         const result =
             await supabaseClient
-                .from(STOCK_ENTRY_TABLE)
-                .select(
-                    "product_id,quantity,type,source"
-                );
-
+                .from(TRANSACTION_TABLE)
+                .select("*");
 
         if(result.error){
 
             console.warn(
-                "Stock tracking unavailable:",
+                "Transaction loading failed:",
                 result.error
             );
 
             return;
-
         }
 
+        (result.data || []).forEach(function(transaction){
 
-        (result.data || []).forEach(
-            function(entry){
+            const productId =
+                transaction.product_id;
 
-                const id =
-                    String(
-                        entry.product_id
-                    );
+            if(productId == null) return;
 
+            const id =
+                String(productId);
 
-                if(
-                    !stockEntryStats[id]
-                ){
-
-                    stockEntryStats[id] =
-                        emptyStats();
-
-                }
-
-
-                const quantity =
-                    Number(
-                        entry.quantity
-                    ) || 0;
-
-
-                const source =
-                    String(
-                        entry.source || ""
-                    ).toLowerCase();
-
-
-                const type =
-                    String(
-                        entry.type || ""
-                    ).toLowerCase();
-
-
-                if(
-                    source === "online" &&
-                    type === "out"
-                ){
-
-                    stockEntryStats[id]
-                        .onlineGiven += quantity;
-
-                }
-
-
-                if(
-                    source === "online" &&
-                    type === "sale"
-                ){
-
-                    stockEntryStats[id]
-                        .onlineSold += quantity;
-
-                }
-
-
-                if(
-                    source === "offline" &&
-                    type === "out"
-                ){
-
-                    stockEntryStats[id]
-                        .offlineGiven += quantity;
-
-                }
-
-
-                if(
-                    source === "offline" &&
-                    type === "sale"
-                ){
-
-                    stockEntryStats[id]
-                        .offlineSold += quantity;
-
-                }
-
+            if(!stockStats[id]){
+                stockStats[id] =
+                    emptyStats();
             }
-        );
 
+            const quantity =
+                Number(transaction.quantity) || 0;
+
+            const source =
+                String(
+                    transaction.source ||
+                    ""
+                ).toLowerCase();
+
+            const type =
+                String(
+                    transaction.transaction_type ||
+                    ""
+                ).toLowerCase();
+
+
+            /*
+              "out" = stock given to party
+              "sale" = sold by party
+            */
+
+            if(
+                source === "online" &&
+                type === "out"
+            ){
+                stockStats[id].onlineGiven += quantity;
+            }
+
+            if(
+                source === "online" &&
+                type === "sale"
+            ){
+                stockStats[id].onlineSold += quantity;
+            }
+
+            if(
+                source === "offline" &&
+                type === "out"
+            ){
+                stockStats[id].offlineGiven += quantity;
+            }
+
+            if(
+                source === "offline" &&
+                type === "sale"
+            ){
+                stockStats[id].offlineSold += quantity;
+            }
+
+        });
 
     }catch(error){
 
         console.warn(
-            "Tracking load failed:",
+            "Transaction stats error:",
             error
         );
 
@@ -1214,26 +879,15 @@ async function loadStockEntryStats(){
 async function loadProducts(){
 
     const body =
-        document.getElementById(
-            "stockBody"
-        );
-
+        document.getElementById("stockBody");
 
     body.innerHTML = `
-
         <tr>
-
-            <td
-                colspan="12"
-                class="loading"
-            >
+            <td colspan="12" class="loading">
                 Loading stock from Supabase...
             </td>
-
         </tr>
-
     `;
-
 
     try{
 
@@ -1241,72 +895,41 @@ async function loadProducts(){
             await supabaseClient
                 .from(PRODUCT_TABLE)
                 .select("*")
-                .order(
-                    "id",
-                    {
-                        ascending:false
-                    }
-                );
-
+                .order("id",{ascending:false});
 
         if(result.error){
 
             body.innerHTML = `
-
                 <tr>
-
-                    <td
-                        colspan="12"
-                        class="error"
-                    >
-                        ${escapeHtml(
-                            result.error.message
-                        )}
+                    <td colspan="12" class="error">
+                        ${escapeHtml(result.error.message)}
                     </td>
-
                 </tr>
-
             `;
 
             return;
-
         }
-
 
         allProducts =
             result.data || [];
 
-
         await Promise.all([
-
-            loadStockEntryStats(),
-
+            loadStockStats(),
             loadParties()
-
         ]);
 
-
         renderProducts();
-
 
     }catch(error){
 
         console.error(error);
 
-
         body.innerHTML = `
-
             <tr>
-
-                <td
-                    colspan="12"
-                    class="error"
-                >
+                <td colspan="12" class="error">
                     Unable to load products.
                 </td>
-
             </tr>
-
         `;
 
     }
@@ -1315,16 +938,13 @@ async function loadProducts(){
 
 
 /* =========================================================
-   RENDER PRODUCTS
+   RENDER
 ========================================================= */
 
 function renderProducts(){
 
     const body =
-        document.getElementById(
-            "stockBody"
-        );
-
+        document.getElementById("stockBody");
 
     const search =
         document
@@ -1333,275 +953,203 @@ function renderProducts(){
             .toLowerCase()
             .trim();
 
-
     const filter =
-        document.getElementById(
-            "filter"
-        ).value;
-
+        document
+            .getElementById("filter")
+            .value;
 
     body.innerHTML = "";
 
-
     let totalStock = 0;
-
     let lowStock = 0;
-
     let zeroStock = 0;
 
+    allProducts.forEach(function(product){
 
-    allProducts.forEach(
-        function(product){
+        const stock =
+            getProductStock(product);
 
-            const stock =
-                getProductStock(product);
+        totalStock += stock;
 
-
-            totalStock += stock;
-
-
-            if(stock === 0){
-
-                zeroStock++;
-
-            }else if(stock <= 5){
-
-                lowStock++;
-
-            }
-
+        if(stock <= 0){
+            zeroStock++;
+        }else if(
+            stock <= Number(product.low_stock ?? 5)
+        ){
+            lowStock++;
         }
-    );
 
+    });
 
-    document.getElementById(
-        "totalProducts"
-    ).textContent =
-        allProducts.length;
+    document.getElementById("totalProducts")
+        .textContent = allProducts.length;
 
+    document.getElementById("totalStock")
+        .textContent = totalStock;
 
-    document.getElementById(
-        "totalStock"
-    ).textContent =
-        totalStock;
+    document.getElementById("lowStock")
+        .textContent = lowStock;
 
-
-    document.getElementById(
-        "lowStock"
-    ).textContent =
-        lowStock;
-
-
-    document.getElementById(
-        "zeroStock"
-    ).textContent =
-        zeroStock;
+    document.getElementById("zeroStock")
+        .textContent = zeroStock;
 
 
     let shown = 0;
 
+    allProducts.forEach(function(product,index){
 
-    allProducts.forEach(
-        function(product,index){
+        const name =
+            getProductName(product);
 
-            const name =
-                getProductName(product);
+        const stock =
+            getProductStock(product);
 
+        const price =
+            getProductPrice(product);
 
-            const stock =
-                getProductStock(product);
+        const unit =
+            getProductUnit(product);
 
+        const tracking =
+            getTracking(product);
 
-            const price =
-                getProductPrice(product);
+        if(
+            search &&
+            !name.toLowerCase().includes(search)
+        ){
+            return;
+        }
 
 
-            const tracking =
-                getTracking(product);
+        let status = "available";
+        let statusText = "Available";
 
+        const lowLimit =
+            Number(product.low_stock ?? 5);
 
-            if(
-                search &&
-                !name
-                    .toLowerCase()
-                    .includes(search)
-            ){
 
-                return;
+        if(stock <= 0){
 
-            }
+            status = "out";
+            statusText = "Out of Stock";
 
+        }else if(stock <= lowLimit){
 
-            let status =
-                "available";
-
-
-            let statusText =
-                "Available";
-
-
-            if(stock <= 0){
-
-                status =
-                    "out";
-
-                statusText =
-                    "Out of Stock";
-
-            }else if(stock <= 5){
-
-                status =
-                    "low";
-
-                statusText =
-                    "Low Stock";
-
-            }
-
-
-            if(
-                filter !== "all" &&
-                filter !== status
-            ){
-
-                return;
-
-            }
-
-
-            shown++;
-
-
-            const onlinePending =
-                pendingValue(
-                    tracking.onlineGiven,
-                    tracking.onlineSold
-                );
-
-
-            const offlinePending =
-                pendingValue(
-                    tracking.offlineGiven,
-                    tracking.offlineSold
-                );
-
-
-            const row =
-                document.createElement("tr");
-
-
-            row.innerHTML = `
-
-                <td>
-                    ${index + 1}
-                </td>
-
-
-                <td>
-
-                    <div class="product-name">
-
-                        ${escapeHtml(name)}
-
-                    </div>
-
-                </td>
-
-
-                <td>
-                    ₹${price.toLocaleString("en-IN")}
-                </td>
-
-
-                <td>
-                    ${stock}
-                </td>
-
-
-                <td class="track">
-                    ${tracking.onlineGiven}
-                </td>
-
-
-                <td class="track sold">
-                    ${tracking.onlineSold}
-                </td>
-
-
-                <td class="track pending">
-                    ${onlinePending}
-                </td>
-
-
-                <td class="track">
-                    ${tracking.offlineGiven}
-                </td>
-
-
-                <td class="track sold">
-                    ${tracking.offlineSold}
-                </td>
-
-
-                <td class="track pending">
-                    ${offlinePending}
-                </td>
-
-
-                <td>
-
-                    <span
-                        class="status ${status}"
-                    >
-                        ${statusText}
-                    </span>
-
-                </td>
-
-
-                <td>
-
-                    <button
-                        class="add"
-                        onclick="openStockModal(${index},'in')"
-                    >
-                        + Add
-                    </button>
-
-
-                    <button
-                        class="give"
-                        onclick="openStockModal(${index},'give')"
-                    >
-                        Give
-                    </button>
-
-                </td>
-
-            `;
-
-
-            body.appendChild(row);
+            status = "low";
+            statusText = "Low Stock";
 
         }
-    );
+
+
+        if(
+            filter !== "all" &&
+            filter !== status
+        ){
+            return;
+        }
+
+
+        shown++;
+
+
+        const onlinePending =
+            pendingValue(
+                tracking.onlineGiven,
+                tracking.onlineSold
+            );
+
+        const offlinePending =
+            pendingValue(
+                tracking.offlineGiven,
+                tracking.offlineSold
+            );
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>${index + 1}</td>
+
+            <td>
+                <div class="product-name">
+                    ${escapeHtml(name)}
+                </div>
+            </td>
+
+            <td>
+                ₹${price.toLocaleString("en-IN")}
+            </td>
+
+            <td>
+                ${stock} ${escapeHtml(unitLabel(unit))}
+            </td>
+
+            <td class="track">
+                ${tracking.onlineGiven} ${escapeHtml(unitLabel(unit))}
+            </td>
+
+            <td class="track sold">
+                ${tracking.onlineSold} ${escapeHtml(unitLabel(unit))}
+            </td>
+
+            <td class="track pending">
+                ${onlinePending} ${escapeHtml(unitLabel(unit))}
+            </td>
+
+            <td class="track">
+                ${tracking.offlineGiven} ${escapeHtml(unitLabel(unit))}
+            </td>
+
+            <td class="track sold">
+                ${tracking.offlineSold} ${escapeHtml(unitLabel(unit))}
+            </td>
+
+            <td class="track pending">
+                ${offlinePending} ${escapeHtml(unitLabel(unit))}
+            </td>
+
+            <td>
+                <span class="status ${status}">
+                    ${statusText}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="add"
+                    onclick="openStockModal(${index},'in')"
+                >
+                    + Add
+                </button>
+
+                <button
+                    class="give"
+                    onclick="openStockModal(${index},'give')"
+                >
+                    Give
+                </button>
+
+            </td>
+
+        `;
+
+        body.appendChild(row);
+
+    });
 
 
     if(shown === 0){
 
         body.innerHTML = `
-
             <tr>
-
-                <td
-                    colspan="12"
-                    class="empty"
-                >
+                <td colspan="12" class="empty">
                     No products found.
                 </td>
-
             </tr>
-
         `;
 
     }
@@ -1613,76 +1161,67 @@ function renderProducts(){
    OPEN MODAL
 ========================================================= */
 
-function openStockModal(
-    index,
-    mode
-){
+function openStockModal(index,mode){
 
     selectedProduct =
         allProducts[index];
 
-
-    if(!selectedProduct){
-
-        return;
-
-    }
-
+    if(!selectedProduct) return;
 
     stockMode =
         mode;
 
 
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
+    const name =
+        getProductName(selectedProduct);
 
-        mode === "in"
+    const stock =
+        getProductStock(selectedProduct);
 
-        ? "Warehouse Stock In"
-
-        : "Give Stock to Party";
-
-
-    document.getElementById(
-        "modalProduct"
-    ).innerHTML = `
-
-        ${escapeHtml(
-            getProductName(
-                selectedProduct
-            )
-        )}
-
-        <br>
-
-        Warehouse Stock:
-        ${getProductStock(
-            selectedProduct
-        )}
-
-    `;
+    const productUnit =
+        getProductUnit(selectedProduct);
 
 
-    document.getElementById(
-        "stockQuantity"
-    ).value = "";
+    document.getElementById("modalTitle")
+        .textContent =
+            mode === "in"
+            ? "Warehouse Stock In"
+            : "Give Stock to Party";
 
 
-    document.getElementById(
-        "stockNote"
-    ).value = "";
+    document.getElementById("modalProduct")
+        .innerHTML = `
+
+            <div>
+                ${escapeHtml(name)}
+            </div>
+
+            <div>
+                Warehouse Stock:
+                ${stock}
+                ${escapeHtml(unitLabel(productUnit))}
+            </div>
+
+        `;
 
 
-    document.getElementById(
-        "partyArea"
-    ).style.display =
+    document.getElementById("stockQuantity")
+        .value = "";
 
-        mode === "in"
+    document.getElementById("stockNote")
+        .value = "";
 
-        ? "none"
 
-        : "block";
+    document.getElementById("stockUnit")
+        .value =
+            productUnit;
+
+
+    document.getElementById("partyArea")
+        .style.display =
+            mode === "give"
+            ? "block"
+            : "none";
 
 
     document.querySelector(
@@ -1690,10 +1229,8 @@ function openStockModal(
     ).checked = true;
 
 
-    document.getElementById(
-        "stockModal"
-    ).style.display =
-        "flex";
+    document.getElementById("stockModal")
+        .style.display = "flex";
 
 }
 
@@ -1704,14 +1241,42 @@ function openStockModal(
 
 function closeModal(){
 
-    document.getElementById(
-        "stockModal"
-    ).style.display =
-        "none";
+    document.getElementById("stockModal")
+        .style.display = "none";
+
+    selectedProduct = null;
+
+}
 
 
-    selectedProduct =
-        null;
+/* =========================================================
+   UPDATE PRODUCT STOCK
+========================================================= */
+
+async function updateProductStock(
+    productId,
+    newStock
+){
+
+    return await supabaseClient
+        .from(PRODUCT_TABLE)
+        .update({
+            stock:newStock
+        })
+        .eq("id",productId);
+
+}
+
+
+/* =========================================================
+   SAVE TRANSACTION
+========================================================= */
+
+async function saveTransaction(data){
+
+    return await supabaseClient
+        .from(TRANSACTION_TABLE)
+        .insert([data]);
 
 }
 
@@ -1722,11 +1287,7 @@ function closeModal(){
 
 async function saveStock(){
 
-    if(!selectedProduct){
-
-        return;
-
-    }
+    if(!selectedProduct) return;
 
 
     const quantity =
@@ -1743,6 +1304,18 @@ async function saveStock(){
         ).value.trim();
 
 
+    const unit =
+        document.getElementById(
+            "stockUnit"
+        ).value;
+
+
+    const source =
+        document.querySelector(
+            'input[name="entrySource"]:checked'
+        ).value;
+
+
     if(
         !quantity ||
         quantity <= 0
@@ -1753,32 +1326,11 @@ async function saveStock(){
         );
 
         return;
-
     }
 
 
-    const currentStock =
-        getProductStock(
-            selectedProduct
-        );
-
-
-    const source =
-        document.querySelector(
-            'input[name="entrySource"]:checked'
-        ).value;
-
-
     const productId =
-        getProductId(
-            selectedProduct
-        );
-
-
-    const stockColumn =
-        findStockColumn(
-            selectedProduct
-        );
+        getProductId(selectedProduct);
 
 
     if(productId == null){
@@ -1788,19 +1340,11 @@ async function saveStock(){
         );
 
         return;
-
     }
 
 
-    if(!stockColumn){
-
-        alert(
-            "Stock column not found."
-        );
-
-        return;
-
-    }
+    const currentStock =
+        getProductStock(selectedProduct);
 
 
     /* =====================================================
@@ -1813,122 +1357,98 @@ async function saveStock(){
             currentStock + quantity;
 
 
-        const updateData = {};
+        const updateResult =
+            await updateProductStock(
+                productId,
+                newStock
+            );
 
 
-        updateData[stockColumn] =
-            newStock;
-
-
-        try{
-
-            const updateResult =
-                await supabaseClient
-                    .from(PRODUCT_TABLE)
-                    .update(updateData)
-                    .eq(
-                        "id",
-                        productId
-                    );
-
-
-            if(updateResult.error){
-
-                alert(
-                    "Warehouse stock update failed: " +
-                    updateResult.error.message
-                );
-
-                return;
-
-            }
-
-
-            const entryData = {
-
-                product_id:
-                    productId,
-
-                product_name:
-                    getProductName(
-                        selectedProduct
-                    ),
-
-                quantity:
-                    quantity,
-
-                type:
-                    "in",
-
-                source:
-                    "warehouse",
-
-                previous_stock:
-                    currentStock,
-
-                new_stock:
-                    newStock,
-
-                note:
-                    note || null
-
-            };
-
-
-            const entryResult =
-                await supabaseClient
-                    .from(STOCK_ENTRY_TABLE)
-                    .insert([
-                        entryData
-                    ]);
-
-
-            if(entryResult.error){
-
-                showToast(
-                    "Warehouse stock updated."
-                );
-
-            }else{
-
-                showToast(
-                    "Warehouse stock added."
-                );
-
-            }
-
-
-            selectedProduct[
-                stockColumn
-            ] =
-                newStock;
-
-
-            closeModal();
-
-            await loadStockEntryStats();
-
-            renderProducts();
-
-
-        }catch(error){
-
-            console.error(error);
+        if(updateResult.error){
 
             alert(
-                "Stock update failed."
+                "Warehouse stock update failed: " +
+                updateResult.error.message
+            );
+
+            return;
+        }
+
+
+        const transaction = {
+
+            product_id:
+                productId,
+
+            transaction_type:
+                "in",
+
+            quantity:
+                quantity,
+
+            party_name:
+                null,
+
+            note:
+                note || null,
+
+            unit:
+                unit,
+
+            source:
+                "warehouse",
+
+            previous_stock:
+                currentStock,
+
+            new_stock:
+                newStock
+
+        };
+
+
+        const transactionResult =
+            await saveTransaction(
+                transaction
+            );
+
+
+        if(transactionResult.error){
+
+            console.warn(
+                "Transaction save failed:",
+                transactionResult.error
+            );
+
+            showToast(
+                "Warehouse stock updated."
+            );
+
+        }else{
+
+            showToast(
+                "Warehouse stock added."
             );
 
         }
 
 
-        return;
+        selectedProduct.stock =
+            newStock;
 
+
+        closeModal();
+
+        await loadStockStats();
+
+        renderProducts();
+
+        return;
     }
 
 
     /* =====================================================
-       GIVE STOCK TO PARTY
+       GIVE TO PARTY
     ===================================================== */
 
     const partyId =
@@ -1944,7 +1464,6 @@ async function saveStock(){
         );
 
         return;
-
     }
 
 
@@ -1955,24 +1474,17 @@ async function saveStock(){
         );
 
         return;
-
     }
-
-
-    const newStock =
-        currentStock - quantity;
 
 
     const party =
         allParties.find(
-            function(p){
+            function(party){
 
                 return String(
-                    p.id ??
-                    p.party_id
-                ) === String(
-                    partyId
-                );
+                    party.id ??
+                    party.party_id
+                ) === String(partyId);
 
             }
         );
@@ -1980,7 +1492,6 @@ async function saveStock(){
 
     const partyName =
         party
-
         ? (
             party.name ??
             party.party_name ??
@@ -1988,149 +1499,115 @@ async function saveStock(){
             party.title ??
             "Unnamed Party"
         )
-
         : "Unnamed Party";
 
 
-    const updateData = {};
+    const newStock =
+        currentStock - quantity;
 
 
-    updateData[stockColumn] =
-        newStock;
+    const updateResult =
+        await updateProductStock(
+            productId,
+            newStock
+        );
 
 
-    try{
-
-        /* ===============================================
-           UPDATE WAREHOUSE STOCK
-        =============================================== */
-
-        const updateResult =
-            await supabaseClient
-                .from(PRODUCT_TABLE)
-                .update(updateData)
-                .eq(
-                    "id",
-                    productId
-                );
-
-
-        if(updateResult.error){
-
-            alert(
-                "Stock update failed: " +
-                updateResult.error.message
-            );
-
-            return;
-
-        }
-
-
-        /* ===============================================
-           SAVE PARTY STOCK ENTRY
-        =============================================== */
-
-        const entryData = {
-
-            product_id:
-                productId,
-
-            product_name:
-                getProductName(
-                    selectedProduct
-                ),
-
-            quantity:
-                quantity,
-
-            type:
-                "out",
-
-            source:
-                source,
-
-            party_id:
-                partyId,
-
-            party_name:
-                partyName,
-
-            previous_stock:
-                currentStock,
-
-            new_stock:
-                newStock,
-
-            note:
-                note || null
-
-        };
-
-
-        const entryResult =
-            await supabaseClient
-                .from(STOCK_ENTRY_TABLE)
-                .insert([
-                    entryData
-                ]);
-
-
-        if(entryResult.error){
-
-            console.warn(
-                "Party stock entry failed:",
-                entryResult.error
-            );
-
-
-            showToast(
-                "Stock given, but party entry was not saved."
-            );
-
-        }else{
-
-            showToast(
-                quantity +
-                " stock given to " +
-                partyName
-            );
-
-        }
-
-
-        selectedProduct[
-            stockColumn
-        ] =
-            newStock;
-
-
-        closeModal();
-
-        await loadStockEntryStats();
-
-        renderProducts();
-
-
-    }catch(error){
-
-        console.error(error);
+    if(updateResult.error){
 
         alert(
-            "Stock update failed."
+            "Warehouse stock update failed: " +
+            updateResult.error.message
+        );
+
+        return;
+    }
+
+
+    const transaction = {
+
+        product_id:
+            productId,
+
+        transaction_type:
+            "out",
+
+        quantity:
+            quantity,
+
+        party_name:
+            partyName,
+
+        note:
+            note || null,
+
+        unit:
+            unit,
+
+        source:
+            source,
+
+        party_id:
+            Number(partyId),
+
+        previous_stock:
+            currentStock,
+
+        new_stock:
+            newStock
+
+    };
+
+
+    const transactionResult =
+        await saveTransaction(
+            transaction
+        );
+
+
+    if(transactionResult.error){
+
+        console.warn(
+            "Party transaction save failed:",
+            transactionResult.error
+        );
+
+        showToast(
+            "Stock given, but transaction was not saved."
+        );
+
+    }else{
+
+        showToast(
+            quantity +
+            " " +
+            unitLabel(unit) +
+            " given to " +
+            partyName
         );
 
     }
+
+
+    selectedProduct.stock =
+        newStock;
+
+
+    closeModal();
+
+    await loadStockStats();
+
+    renderProducts();
 
 }
 
 
 /* =========================================================
-   REALTIME
+   REALTIME PRODUCTS
 ========================================================= */
 
 supabaseClient
-    .channel("stock-live")
+    .channel("stock-products-live")
     .on(
         "postgres_changes",
         {
@@ -2139,32 +1616,54 @@ supabaseClient
             table:PRODUCT_TABLE
         },
         function(){
-
             loadProducts();
-
         }
     )
     .subscribe();
 
 
+/* =========================================================
+   REALTIME TRANSACTIONS
+========================================================= */
+
 supabaseClient
-    .channel("stock-entries-live")
+    .channel("stock-transactions-live")
     .on(
         "postgres_changes",
         {
             event:"*",
             schema:"public",
-            table:STOCK_ENTRY_TABLE
+            table:TRANSACTION_TABLE
         },
         async function(){
 
-            await loadStockEntryStats();
+            await loadStockStats();
 
             renderProducts();
 
         }
     )
     .subscribe();
+
+
+/* =========================================================
+   CLOSE MODAL ON BACKDROP
+========================================================= */
+
+document.getElementById("stockModal")
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                this
+            ){
+                closeModal();
+            }
+
+        }
+    );
 
 
 /* =========================================================
