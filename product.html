@@ -2389,10 +2389,9 @@ function getSelectedVariant() {
 }
 
 function getSelectedStock(product) {
-    const variant = getSelectedVariant();
-    if (variant && variant.stock !== null && variant.stock !== undefined) {
-        return Math.max(0, Number(variant.stock) || 0);
-    }
+    // Main product stock is the master stock status.
+    // If products.stock is 0, the product must show Out of Stock
+    // even when an old size/ML variant still contains a stock value.
     return Math.max(0, Number(product?.stock || 0));
 }
 
@@ -3657,4 +3656,3 @@ document.addEventListener("DOMContentLoaded", function(){
 </body>
 
 </html>
-```
