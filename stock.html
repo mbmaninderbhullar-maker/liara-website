@@ -3,146 +3,290 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stock Management</title>
+
+<title>Liara Professional™ | Stock</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
+
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f5f7fb;
-  color:#222;
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f6f8;
+    color:#222;
 }
+
 .header{
-  background:#111827;
-  color:white;
-  padding:20px;
-  text-align:center;
+    background:#111827;
+    color:#fff;
+    padding:22px;
 }
-.header h1{margin:0 0 5px}
+
+.header-inner{
+    max-width:1200px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+}
+
+.header h1{
+    margin:0;
+    font-size:24px;
+}
+
+.header p{
+    margin:5px 0 0;
+    opacity:.75;
+}
+
+.back-btn{
+    background:#fff;
+    color:#111827;
+    text-decoration:none;
+    padding:10px 15px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
 .container{
-  max-width:1200px;
-  margin:25px auto;
-  padding:0 15px;
+    max-width:1200px;
+    margin:25px auto;
+    padding:0 15px;
 }
+
 .cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-bottom:20px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
 }
+
 .card{
-  background:white;
-  border-radius:12px;
-  padding:20px;
-  box-shadow:0 3px 12px #0001;
+    background:#fff;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 3px 15px rgba(0,0,0,.07);
 }
-.card h3{
-  margin:0 0 10px;
-  font-size:14px;
-  color:#666;
+
+.card-title{
+    color:#777;
+    font-size:14px;
+    margin-bottom:8px;
 }
-.card strong{
-  font-size:28px;
+
+.card-number{
+    font-size:30px;
+    font-weight:bold;
 }
+
 .toolbar{
-  background:white;
-  padding:15px;
-  border-radius:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-  box-shadow:0 3px 12px #0001;
+    background:#fff;
+    padding:15px;
+    border-radius:14px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+    box-shadow:0 3px 15px rgba(0,0,0,.07);
 }
-input,select,button{
-  padding:11px 13px;
-  border:1px solid #ddd;
-  border-radius:8px;
-  font-size:14px;
+
+.search{
+    flex:1;
+    min-width:220px;
 }
-input{
-  flex:1;
-  min-width:220px;
+
+input,
+select{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:14px;
+    outline:none;
 }
+
+input:focus,
+select:focus{
+    border-color:#111827;
+}
+
 button{
-  cursor:pointer;
-  border:0;
-  background:#111827;
-  color:white;
+    border:0;
+    border-radius:8px;
+    padding:12px 16px;
+    cursor:pointer;
+    font-weight:bold;
 }
-button:hover{opacity:.85}
 
-.tablebox{
-  background:white;
-  border-radius:12px;
-  overflow:auto;
-  box-shadow:0 3px 12px #0001;
+.refresh{
+    background:#111827;
+    color:#fff;
 }
+
+.table-box{
+    background:#fff;
+    border-radius:14px;
+    overflow:auto;
+    box-shadow:0 3px 15px rgba(0,0,0,.07);
+}
+
 table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:700px;
+    width:100%;
+    border-collapse:collapse;
+    min-width:750px;
 }
-th,td{
-  padding:14px;
-  border-bottom:1px solid #eee;
-  text-align:left;
-}
-th{
-  background:#f8fafc;
-  font-size:13px;
-}
-.status{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
-}
-.good{background:#dcfce7;color:#166534}
-.low{background:#fef3c7;color:#92400e}
-.zero{background:#fee2e2;color:#991b1b}
 
-.empty{
-  text-align:center;
-  padding:40px;
-  color:#777;
+th,
+td{
+    padding:15px;
+    border-bottom:1px solid #eee;
+    text-align:left;
+}
+
+th{
+    background:#fafafa;
+    font-size:13px;
+    color:#666;
+}
+
+.product-name{
+    font-weight:bold;
+}
+
+.status{
+    display:inline-block;
+    padding:6px 11px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.available{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.low{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.out{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.add{
+    background:#166534;
+    color:#fff;
+}
+
+.remove{
+    background:#991b1b;
+    color:#fff;
+    margin-left:5px;
+}
+
+.loading,
+.empty,
+.error{
+    text-align:center;
+    padding:40px;
+    color:#777;
+}
+
+.error{
+    color:#991b1b;
 }
 
 .modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:#0008;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
 }
-.modalbox{
-  width:min(400px,92%);
-  background:white;
-  padding:25px;
-  border-radius:15px;
+
+.modal-box{
+    background:#fff;
+    width:min(400px,92%);
+    border-radius:15px;
+    padding:25px;
 }
-.modalbox h2{margin-top:0}
-.modalbox input,
-.modalbox select{
-  width:100%;
-  margin-bottom:12px;
+
+.modal-box h2{
+    margin-top:0;
 }
-.actions{
-  display:flex;
-  gap:10px;
+
+.modal-box label{
+    display:block;
+    margin:15px 0 6px;
+    font-size:13px;
+    font-weight:bold;
 }
-.actions button{flex:1}
-.cancel{background:#6b7280}
+
+.modal-box input{
+    width:100%;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-actions button{
+    flex:1;
+}
+
+.save{
+    background:#111827;
+    color:#fff;
+}
+
+.cancel{
+    background:#ddd;
+    color:#222;
+}
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#111827;
+    color:#fff;
+    padding:13px 18px;
+    border-radius:9px;
+    display:none;
+    z-index:10000;
+}
 
 @media(max-width:800px){
-  .cards{grid-template-columns:repeat(2,1fr)}
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
 }
+
 @media(max-width:500px){
-  .cards{grid-template-columns:1fr}
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .header-inner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
 }
 </style>
 </head>
@@ -150,473 +294,652 @@ th{
 <body>
 
 <div class="header">
-  <h1>📦 Stock Management</h1>
-  <div>Live Product Stock</div>
+
+    <div class="header-inner">
+
+        <div>
+            <h1>📦 Stock Management</h1>
+            <p>Liara Professional™ — Live Supabase Stock</p>
+        </div>
+
+        <a href="admin.html" class="back-btn">
+            ← Admin
+        </a>
+
+    </div>
+
 </div>
+
 
 <div class="container">
 
-  <div class="cards">
-    <div class="card">
-      <h3>Total Products</h3>
-      <strong id="totalProducts">0</strong>
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-title">
+                Total Products
+            </div>
+
+            <div class="card-number" id="totalProducts">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                Total Stock
+            </div>
+
+            <div class="card-number" id="totalStock">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                Low Stock
+            </div>
+
+            <div class="card-number" id="lowStock">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                Out of Stock
+            </div>
+
+            <div class="card-number" id="zeroStock">
+                0
+            </div>
+        </div>
+
     </div>
 
-    <div class="card">
-      <h3>Total Stock</h3>
-      <strong id="totalStock">0</strong>
+
+    <div class="toolbar">
+
+        <input
+            id="search"
+            class="search"
+            type="text"
+            placeholder="Search product..."
+            oninput="renderProducts()"
+        >
+
+        <select
+            id="filter"
+            onchange="renderProducts()"
+        >
+
+            <option value="all">
+                All Stock
+            </option>
+
+            <option value="available">
+                Available
+            </option>
+
+            <option value="low">
+                Low Stock
+            </option>
+
+            <option value="out">
+                Out of Stock
+            </option>
+
+        </select>
+
+        <button
+            class="refresh"
+            onclick="loadProducts()"
+        >
+            ↻ Refresh
+        </button>
+
     </div>
 
-    <div class="card">
-      <h3>Low Stock</h3>
-      <strong id="lowStock">0</strong>
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Product</th>
+
+                    <th>Price</th>
+
+                    <th>Stock</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="stockBody">
+
+                <tr>
+                    <td colspan="6" class="loading">
+                        Loading stock...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
-
-    <div class="card">
-      <h3>Out of Stock</h3>
-      <strong id="zeroStock">0</strong>
-    </div>
-  </div>
-
-  <div class="toolbar">
-    <input
-      type="text"
-      id="search"
-      placeholder="Search product..."
-      oninput="renderStock()"
-    >
-
-    <select id="filter" onchange="renderStock()">
-      <option value="all">All Stock</option>
-      <option value="good">Available</option>
-      <option value="low">Low Stock</option>
-      <option value="zero">Out of Stock</option>
-    </select>
-
-    <button onclick="openStockModal('in')">＋ Stock In</button>
-    <button onclick="openStockModal('out')">− Stock Out</button>
-    <button onclick="loadProducts()">↻ Refresh</button>
-  </div>
-
-  <div class="tablebox">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Product</th>
-          <th>Stock</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="stockBody"></tbody>
-    </table>
-  </div>
 
 </div>
+
 
 <!-- STOCK MODAL -->
 
 <div class="modal" id="stockModal">
-  <div class="modalbox">
 
-    <h2 id="modalTitle">Stock In</h2>
+    <div class="modal-box">
 
-    <select id="productSelect"></select>
+        <h2 id="modalTitle">
+            Stock Update
+        </h2>
 
-    <input
-      type="number"
-      id="stockQty"
-      min="1"
-      placeholder="Enter quantity"
-    >
+        <div id="modalProduct"></div>
 
-    <div class="actions">
-      <button onclick="saveStock()">Save</button>
-      <button class="cancel" onclick="closeModal()">Cancel</button>
+        <label>
+            Quantity
+        </label>
+
+        <input
+            id="stockQuantity"
+            type="number"
+            min="1"
+            placeholder="Enter quantity"
+        >
+
+        <div class="modal-actions">
+
+            <button
+                class="save"
+                onclick="saveStock()"
+            >
+                Save
+            </button>
+
+            <button
+                class="cancel"
+                onclick="closeModal()"
+            >
+                Cancel
+            </button>
+
+        </div>
+
     </div>
 
-  </div>
 </div>
+
+
+<div class="toast" id="toast"></div>
+
 
 <script>
 
 /* =========================================================
-   STOCK MANAGEMENT
+   SUPABASE — SAME CONNECTION
 ========================================================= */
 
-let products = [];
+const SUPABASE_URL =
+"https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const PRODUCT_TABLE = "products";
+
+let allProducts = [];
+
+let selectedProduct = null;
+
 let stockMode = "in";
 
-/*
-  IMPORTANT:
 
-  Eh page kai common localStorage keys check karda.
-  Je tere existing system ch products ehna vicho kise key
-  te save ne, automatic load ho jaan ge.
-*/
+/* =========================================================
+   HELPERS
+========================================================= */
 
-const PRODUCT_KEYS = [
-  "products",
-  "Products",
-  "productData",
-  "productList",
-  "inventory",
-  "items"
-];
+function escapeHtml(value){
 
-function getStoredProducts(){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
-  for(const key of PRODUCT_KEYS){
+}
+
+
+function getProductName(product){
+
+    return (
+        product.product_name ??
+        product.name ??
+        product.productName ??
+        product.title ??
+        product.product ??
+        "Unnamed Product"
+    );
+
+}
+
+
+function getProductPrice(product){
+
+    return Number(
+        product.price ??
+        product.sale_price ??
+        product.selling_price ??
+        product.unit_price ??
+        0
+    ) || 0;
+
+}
+
+
+function getProductStock(product){
+
+    return Number(
+        product.stock ??
+        product.stock_quantity ??
+        product.quantity ??
+        product.qty ??
+        product.current_stock ??
+        0
+    ) || 0;
+
+}
+
+
+function getProductId(product){
+
+    return (
+        product.id ??
+        product.product_id ??
+        product.productId
+    );
+
+}
+
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.style.display = "block";
+
+    setTimeout(()=>{
+        toast.style.display = "none";
+    },2500);
+
+}
+
+
+/* =========================================================
+   LOAD PRODUCTS FROM SUPABASE
+========================================================= */
+
+async function loadProducts(){
+
+    const body =
+        document.getElementById("stockBody");
+
+    body.innerHTML = `
+        <tr>
+            <td colspan="6" class="loading">
+                Loading stock from Supabase...
+            </td>
+        </tr>
+    `;
 
     try{
 
-      const data = localStorage.getItem(key);
+        const { data, error } =
+            await supabaseClient
+                .from(PRODUCT_TABLE)
+                .select("*")
+                .order("id",{ascending:false});
 
-      if(!data) continue;
+        if(error){
 
-      const parsed = JSON.parse(data);
+            console.error(error);
 
-      if(Array.isArray(parsed)){
-        return parsed;
-      }
+            body.innerHTML = `
+                <tr>
+                    <td colspan="6" class="error">
+                        ${escapeHtml(error.message)}
+                    </td>
+                </tr>
+            `;
 
-      if(parsed && Array.isArray(parsed.products)){
-        return parsed.products;
-      }
-
-      if(parsed && Array.isArray(parsed.items)){
-        return parsed.items;
-      }
-
-    }catch(e){}
-
-  }
-
-  return [];
-}
-
-
-/* =========================================================
-   PRODUCT NAME
-========================================================= */
-
-function productName(product){
-
-  return (
-    product.name ||
-    product.productName ||
-    product.title ||
-    product.product ||
-    product.Name ||
-    "Unnamed Product"
-  );
-
-}
-
-
-/* =========================================================
-   STOCK VALUE
-========================================================= */
-
-function getStock(product){
-
-  let value =
-    product.stock ??
-    product.quantity ??
-    product.qty ??
-    product.Stock ??
-    product.currentStock ??
-    0;
-
-  value = Number(value);
-
-  if(isNaN(value)) value = 0;
-
-  return Math.max(0,value);
-
-}
-
-
-/* =========================================================
-   LOAD PRODUCTS
-========================================================= */
-
-function loadProducts(){
-
-  products = getStoredProducts();
-
-  /*
-    Je separate stock object pehlan ton exist karda,
-    ohnu product stock naal merge karan di koshish.
-  */
-
-  const savedStock = localStorage.getItem("stockData");
-
-  if(savedStock){
-
-    try{
-
-      const stockData = JSON.parse(savedStock);
-
-      products.forEach((p,i)=>{
-
-        const id =
-          p.id ??
-          p.productId ??
-          p.ID ??
-          i;
-
-        if(stockData[id] !== undefined){
-
-          p.stock = Number(stockData[id]) || 0;
-
+            return;
         }
 
-      });
 
-    }catch(e){}
+        allProducts = data || [];
 
-  }
+        renderProducts();
 
-  renderStock();
+    }catch(error){
 
-}
+        console.error(error);
 
-
-/* =========================================================
-   SAVE STOCK DATA
-========================================================= */
-
-function saveAllStock(){
-
-  const stockData = {};
-
-  products.forEach((p,i)=>{
-
-    const id =
-      p.id ??
-      p.productId ??
-      p.ID ??
-      i;
-
-    stockData[id] = getStock(p);
-
-  });
-
-  localStorage.setItem(
-    "stockData",
-    JSON.stringify(stockData)
-  );
-
-}
-
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function renderStock(){
-
-  const body =
-    document.getElementById("stockBody");
-
-  const search =
-    document.getElementById("search")
-      .value
-      .toLowerCase()
-      .trim();
-
-  const filter =
-    document.getElementById("filter").value;
-
-  body.innerHTML = "";
-
-  let totalStock = 0;
-  let low = 0;
-  let zero = 0;
-
-  products.forEach(p=>{
-
-    const stock = getStock(p);
-
-    totalStock += stock;
-
-    if(stock === 0) zero++;
-    else if(stock <= 5) low++;
-
-  });
-
-
-  document.getElementById("totalProducts")
-    .textContent = products.length;
-
-  document.getElementById("totalStock")
-    .textContent = totalStock;
-
-  document.getElementById("lowStock")
-    .textContent = low;
-
-  document.getElementById("zeroStock")
-    .textContent = zero;
-
-
-  let shown = 0;
-
-  products.forEach((product,index)=>{
-
-    const name = productName(product);
-    const stock = getStock(product);
-
-    const matchesSearch =
-      name.toLowerCase().includes(search);
-
-    if(!matchesSearch) return;
-
-
-    let status = "good";
-    let statusText = "Available";
-
-    if(stock === 0){
-
-      status = "zero";
-      statusText = "Out of Stock";
-
-    }else if(stock <= 5){
-
-      status = "low";
-      statusText = "Low Stock";
+        body.innerHTML = `
+            <tr>
+                <td colspan="6" class="error">
+                    Unable to load products.
+                </td>
+            </tr>
+        `;
 
     }
 
-
-    if(filter !== "all" && filter !== status)
-      return;
+}
 
 
-    shown++;
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
 
-    const row =
-      document.createElement("tr");
+function renderProducts(){
 
-    row.innerHTML = `
+    const body =
+        document.getElementById("stockBody");
 
-      <td>${index + 1}</td>
+    const search =
+        document
+            .getElementById("search")
+            .value
+            .toLowerCase()
+            .trim();
 
-      <td>
-        <strong>${escapeHTML(name)}</strong>
-      </td>
-
-      <td>
-        <strong>${stock}</strong>
-      </td>
-
-      <td>
-        <span class="status ${status}">
-          ${statusText}
-        </span>
-      </td>
-
-      <td>
-        <button
-          onclick="quickStock(${index},'in')">
-          + Add
-        </button>
-
-        <button
-          onclick="quickStock(${index},'out')">
-          − Remove
-        </button>
-      </td>
-
-    `;
-
-    body.appendChild(row);
-
-  });
+    const filter =
+        document
+            .getElementById("filter")
+            .value;
 
 
-  if(shown === 0){
+    body.innerHTML = "";
 
-    body.innerHTML = `
-      <tr>
-        <td colspan="5" class="empty">
-          No products found
-        </td>
-      </tr>
-    `;
 
-  }
+    let totalStock = 0;
+
+    let lowStock = 0;
+
+    let zeroStock = 0;
+
+
+    allProducts.forEach(product=>{
+
+        const stock =
+            getProductStock(product);
+
+        totalStock += stock;
+
+        if(stock === 0){
+
+            zeroStock++;
+
+        }else if(stock <= 5){
+
+            lowStock++;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "totalProducts"
+    ).textContent =
+        allProducts.length;
+
+
+    document.getElementById(
+        "totalStock"
+    ).textContent =
+        totalStock;
+
+
+    document.getElementById(
+        "lowStock"
+    ).textContent =
+        lowStock;
+
+
+    document.getElementById(
+        "zeroStock"
+    ).textContent =
+        zeroStock;
+
+
+    let shown = 0;
+
+
+    allProducts.forEach((product,index)=>{
+
+        const name =
+            getProductName(product);
+
+        const stock =
+            getProductStock(product);
+
+        const price =
+            getProductPrice(product);
+
+
+        if(
+            search &&
+            !name.toLowerCase().includes(search)
+        ){
+
+            return;
+
+        }
+
+
+        let status = "available";
+
+        let statusText = "Available";
+
+
+        if(stock <= 0){
+
+            status = "out";
+
+            statusText = "Out of Stock";
+
+        }else if(stock <= 5){
+
+            status = "low";
+
+            statusText = "Low Stock";
+
+        }
+
+
+        if(
+            filter !== "all" &&
+            filter !== status
+        ){
+
+            return;
+
+        }
+
+
+        shown++;
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${index + 1}
+            </td>
+
+            <td>
+                <div class="product-name">
+                    ${escapeHtml(name)}
+                </div>
+            </td>
+
+            <td>
+                ₹${price.toLocaleString("en-IN")}
+            </td>
+
+            <td>
+                <strong>
+                    ${stock}
+                </strong>
+            </td>
+
+            <td>
+                <span class="status ${status}">
+                    ${statusText}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    class="add"
+                    onclick="openStockModal(${index},'in')"
+                >
+                    + Add
+                </button>
+
+                <button
+                    class="remove"
+                    onclick="openStockModal(${index},'out')"
+                >
+                    − Remove
+                </button>
+
+            </td>
+
+        `;
+
+
+        body.appendChild(row);
+
+    });
+
+
+    if(shown === 0){
+
+        body.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    No products found.
+                </td>
+            </tr>
+        `;
+
+    }
 
 }
 
 
 /* =========================================================
-   ESCAPE HTML
+   OPEN STOCK MODAL
 ========================================================= */
 
-function escapeHTML(value){
+function openStockModal(index,mode){
 
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    selectedProduct =
+        allProducts[index];
 
-}
+    if(!selectedProduct) return;
 
 
-/* =========================================================
-   OPEN MODAL
-========================================================= */
-
-function openStockModal(mode){
-
-  if(products.length === 0){
-
-    alert("No products found.");
-
-    return;
-
-  }
-
-  stockMode = mode;
-
-  document.getElementById("modalTitle")
-    .textContent =
-    mode === "in"
-      ? "＋ Stock In"
-      : "− Stock Out";
+    stockMode = mode;
 
 
-  const select =
-    document.getElementById("productSelect");
-
-  select.innerHTML = "";
-
-  products.forEach((p,i)=>{
-
-    const option =
-      document.createElement("option");
-
-    option.value = i;
-
-    option.textContent =
-      productName(p) +
-      " — Stock: " +
-      getStock(p);
-
-    select.appendChild(option);
-
-  });
+    const name =
+        getProductName(selectedProduct);
 
 
-  document.getElementById("stockQty")
-    .value = "";
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        mode === "in"
+        ? "＋ Stock In"
+        : "− Stock Out";
 
-  document.getElementById("stockModal")
-    .style.display = "flex";
+
+    document.getElementById(
+        "modalProduct"
+    ).innerHTML = `
+
+        <div style="
+            background:#f5f6f8;
+            padding:12px;
+            border-radius:8px;
+        ">
+
+            <strong>
+                ${escapeHtml(name)}
+            </strong>
+
+            <br>
+
+            Current Stock:
+            <strong>
+                ${getProductStock(selectedProduct)}
+            </strong>
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "stockQuantity"
+    ).value = "";
+
+
+    document.getElementById(
+        "stockModal"
+    ).style.display = "flex";
 
 }
 
@@ -627,218 +950,259 @@ function openStockModal(mode){
 
 function closeModal(){
 
-  document.getElementById("stockModal")
-    .style.display = "none";
+    document.getElementById(
+        "stockModal"
+    ).style.display = "none";
+
+    selectedProduct = null;
 
 }
 
 
 /* =========================================================
-   SAVE STOCK
+   UPDATE SUPABASE STOCK
 ========================================================= */
 
-function saveStock(){
+async function saveStock(){
 
-  const index =
-    Number(
-      document.getElementById("productSelect").value
-    );
+    if(!selectedProduct){
 
-  const qty =
-    Number(
-      document.getElementById("stockQty").value
-    );
-
-  if(!qty || qty <= 0){
-
-    alert("Please enter valid quantity.");
-
-    return;
-
-  }
-
-  const product = products[index];
-
-  if(!product) return;
-
-  let current = getStock(product);
-
-  if(stockMode === "in"){
-
-    current += qty;
-
-  }else{
-
-    if(qty > current){
-
-      alert(
-        "Stock out quantity cannot be greater than current stock."
-      );
-
-      return;
+        return;
 
     }
 
-    current -= qty;
 
-  }
-
-
-  /*
-    Main product object ch stock update
-  */
-
-  product.stock = current;
+    const quantity =
+        Number(
+            document.getElementById(
+                "stockQuantity"
+            ).value
+        );
 
 
-  saveAllStock();
+    if(!quantity || quantity <= 0){
 
-  /*
-    Common localStorage product keys update
-  */
+        alert(
+            "Please enter a valid quantity."
+        );
 
-  PRODUCT_KEYS.forEach(key=>{
+        return;
 
-    try{
+    }
 
-      const existing =
-        localStorage.getItem(key);
 
-      if(!existing) return;
+    const currentStock =
+        getProductStock(selectedProduct);
 
-      const parsed =
-        JSON.parse(existing);
 
-      if(Array.isArray(parsed)){
+    let newStock;
 
-        /*
-          Sirf odo update karo jadon length
-          current products de barabar hove.
-        */
 
-        if(parsed.length === products.length){
+    if(stockMode === "in"){
 
-          localStorage.setItem(
-            key,
-            JSON.stringify(products)
-          );
+        newStock =
+            currentStock + quantity;
+
+    }else{
+
+        if(quantity > currentStock){
+
+            alert(
+                "Stock Out quantity cannot be greater than current stock."
+            );
+
+            return;
 
         }
 
-      }
-
-    }catch(e){}
-
-  });
-
-
-  closeModal();
-
-  renderStock();
-
-}
-
-
-/* =========================================================
-   QUICK STOCK
-========================================================= */
-
-function quickStock(index,mode){
-
-  const product = products[index];
-
-  if(!product) return;
-
-  const qty =
-    Number(
-      prompt(
-        mode === "in"
-          ? "Stock In quantity:"
-          : "Stock Out quantity:"
-      )
-    );
-
-  if(!qty || qty <= 0) return;
-
-  let current = getStock(product);
-
-
-  if(mode === "in"){
-
-    current += qty;
-
-  }else{
-
-    if(qty > current){
-
-      alert("Not enough stock.");
-
-      return;
+        newStock =
+            currentStock - quantity;
 
     }
 
-    current -= qty;
 
-  }
+    const productId =
+        getProductId(selectedProduct);
 
 
-  product.stock = current;
+    if(productId == null){
 
-  saveAllStock();
+        alert(
+            "Product ID not found."
+        );
 
-  PRODUCT_KEYS.forEach(key=>{
+        return;
+
+    }
+
+
+    /*
+      Existing stock column detect.
+    */
+
+    let stockColumn = null;
+
+
+    if(
+        Object.prototype.hasOwnProperty.call(
+            selectedProduct,
+            "stock"
+        )
+    ){
+
+        stockColumn = "stock";
+
+    }else if(
+        Object.prototype.hasOwnProperty.call(
+            selectedProduct,
+            "stock_quantity"
+        )
+    ){
+
+        stockColumn = "stock_quantity";
+
+    }else if(
+        Object.prototype.hasOwnProperty.call(
+            selectedProduct,
+            "current_stock"
+        )
+    ){
+
+        stockColumn = "current_stock";
+
+    }else if(
+        Object.prototype.hasOwnProperty.call(
+            selectedProduct,
+            "quantity"
+        )
+    ){
+
+        stockColumn = "quantity";
+
+    }else if(
+        Object.prototype.hasOwnProperty.call(
+            selectedProduct,
+            "qty"
+        )
+    ){
+
+        stockColumn = "qty";
+
+    }
+
+
+    if(!stockColumn){
+
+        alert(
+            "Stock column database vich identify nahi ho reha."
+        );
+
+        console.error(
+            "Product object:",
+            selectedProduct
+        );
+
+        return;
+
+    }
+
+
+    const updateData = {};
+
+    updateData[stockColumn] =
+        newStock;
+
 
     try{
 
-      const existing =
-        localStorage.getItem(key);
+        const { error } =
+            await supabaseClient
+                .from(PRODUCT_TABLE)
+                .update(updateData)
+                .eq("id",productId);
 
-      if(!existing) return;
 
-      const parsed =
-        JSON.parse(existing);
+        if(error){
 
-      if(
-        Array.isArray(parsed) &&
-        parsed.length === products.length
-      ){
+            console.error(error);
 
-        localStorage.setItem(
-          key,
-          JSON.stringify(products)
+            alert(
+                "Stock update failed: " +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        selectedProduct[stockColumn] =
+            newStock;
+
+
+        closeModal();
+
+        showToast(
+            stockMode === "in"
+            ? "Stock added successfully."
+            : "Stock removed successfully."
         );
 
-      }
 
-    }catch(e){}
+        renderProducts();
 
-  });
+    }catch(error){
 
+        console.error(error);
 
-  renderStock();
+        alert(
+            "Stock update failed."
+        );
+
+    }
 
 }
 
 
 /* =========================================================
-   AUTO REFRESH
+   SUPABASE REALTIME
 ========================================================= */
 
-window.addEventListener(
-  "storage",
-  function(){
+supabaseClient
+    .channel("stock-live")
+    .on(
+        "postgres_changes",
+        {
+            event:"*",
+            schema:"public",
+            table:PRODUCT_TABLE
+        },
+        function(payload){
 
-    loadProducts();
+            console.log(
+                "Stock/Product change:",
+                payload
+            );
 
-  }
-);
+            loadProducts();
+
+        }
+    )
+    .subscribe();
 
 
 /* =========================================================
    START
 ========================================================= */
 
-loadProducts();
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        loadProducts();
+
+    }
+);
 
 </script>
 
