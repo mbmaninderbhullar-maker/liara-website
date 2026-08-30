@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Liara Professional™ | Warehouse Stock</title>
+<title>Liara Professional™ | Stock</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
@@ -18,6 +22,8 @@ body{
     color:#222;
     font-weight:400;
 }
+
+/* ================= HEADER ================= */
 
 .header{
     background:#111827;
@@ -55,11 +61,15 @@ body{
     font-size:12px;
 }
 
+/* ================= CONTAINER ================= */
+
 .container{
     max-width:1200px;
     margin:18px auto;
     padding:0 15px;
 }
+
+/* ================= CARDS ================= */
 
 .cards{
     display:grid;
@@ -77,14 +87,16 @@ body{
 
 .card-title{
     color:#777;
-    font-size:12px;
+    font-size:11px;
     margin-bottom:6px;
 }
 
 .card-number{
-    font-size:22px;
+    font-size:21px;
     font-weight:400;
 }
+
+/* ================= TOOLBAR ================= */
 
 .toolbar{
     background:#fff;
@@ -99,7 +111,7 @@ body{
 
 .search{
     flex:1;
-    min-width:200px;
+    min-width:180px;
 }
 
 input,
@@ -126,36 +138,39 @@ button{
     color:#fff;
 }
 
+/* ================= TABLE ================= */
+
 .table-box{
     background:#fff;
     border-radius:10px;
-    overflow:auto;
+    overflow:hidden;
     box-shadow:0 2px 12px rgba(0,0,0,.05);
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:1250px;
+    table-layout:fixed;
 }
 
 th,
 td{
-    padding:11px;
+    padding:9px 6px;
     border-bottom:1px solid #eee;
     text-align:left;
-    font-size:12px;
+    font-size:11px;
     font-weight:400;
+    word-break:break-word;
 }
 
 th{
     background:#fafafa;
     color:#666;
-    font-size:11px;
+    font-size:10px;
 }
 
 .product-name{
-    font-weight:400;
+    font-weight:500;
 }
 
 .variant{
@@ -163,19 +178,22 @@ th{
 }
 
 .number-cell{
-    white-space:nowrap;
+    white-space:normal;
 }
 
 .unit{
     color:#777;
-    margin-left:3px;
+    margin-left:2px;
+    font-size:9px;
 }
+
+/* ================= STATUS ================= */
 
 .status{
     display:inline-block;
-    padding:4px 8px;
+    padding:4px 7px;
     border-radius:16px;
-    font-size:10px;
+    font-size:9px;
 }
 
 .available{
@@ -193,10 +211,16 @@ th{
     color:#991b1b;
 }
 
+/* ================= UPDATE BUTTON ================= */
+
 .update{
     background:#111827;
     color:#fff;
+    padding:7px 9px;
+    font-size:10px;
 }
+
+/* ================= STATES ================= */
 
 .loading,
 .empty,
@@ -209,6 +233,8 @@ th{
 .error{
     color:#991b1b;
 }
+
+/* ================= MODAL ================= */
 
 .modal{
     position:fixed;
@@ -255,9 +281,10 @@ th{
 }
 
 .modal-note{
-    font-size:11px;
+    font-size:10px;
     color:#777;
     margin-top:5px;
+    line-height:1.4;
 }
 
 .modal-actions{
@@ -280,6 +307,8 @@ th{
     color:#222;
 }
 
+/* ================= TOAST ================= */
+
 .toast{
     position:fixed;
     right:15px;
@@ -293,79 +322,215 @@ th{
     font-size:12px;
 }
 
+/* ================= TABLET ================= */
+
 @media(max-width:950px){
+
     .cards{
         grid-template-columns:repeat(3,1fr);
     }
+
+    th,
+    td{
+        padding:8px 5px;
+        font-size:10px;
+    }
+
 }
 
-@media(max-width:600px){
+/* ================= MOBILE ================= */
+
+@media(max-width:650px){
+
+    .container{
+        padding:0 8px;
+    }
+
     .cards{
         grid-template-columns:1fr 1fr;
+        gap:8px;
     }
 
     .card{
-        padding:12px;
+        padding:11px;
     }
 
     .card-number{
-        font-size:20px;
+        font-size:19px;
     }
+
+    .toolbar{
+        padding:8px;
+    }
+
+    .search{
+        min-width:100%;
+    }
+
+    th,
+    td{
+        padding:7px 3px;
+        font-size:9px;
+    }
+
+    th{
+        font-size:8px;
+    }
+
+    .update{
+        padding:6px 6px;
+        font-size:9px;
+    }
+
+    .status{
+        padding:3px 5px;
+        font-size:8px;
+    }
+
+    .unit{
+        font-size:8px;
+    }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- ================= HEADER ================= -->
+
 <div class="header">
+
     <div class="header-inner">
 
         <div>
-            <h1>Warehouse Stock</h1>
-            <p>Liara Professional™ — Product Stock Distribution</p>
+
+            <h1>
+                Warehouse Stock
+            </h1>
+
+            <p>
+                Liara Professional™ — Product Stock
+            </p>
+
         </div>
 
-        <a href="admin.html" class="back-btn">
+
+        <a
+            href="admin.html"
+            class="back-btn"
+        >
             ← Admin
         </a>
 
     </div>
+
 </div>
 
 
+
+<!-- ================= MAIN ================= -->
+
 <div class="container">
+
+
+    <!-- ================= SUMMARY ================= -->
 
     <div class="cards">
 
-        <div class="card">
-            <div class="card-title">Products</div>
-            <div class="card-number" id="totalProducts">0</div>
-        </div>
 
         <div class="card">
-            <div class="card-title">Warehouse</div>
-            <div class="card-number" id="totalStock">0</div>
+
+            <div class="card-title">
+                Products
+            </div>
+
+            <div
+                class="card-number"
+                id="totalProducts"
+            >
+                0
+            </div>
+
         </div>
 
-        <div class="card">
-            <div class="card-title">Online Given</div>
-            <div class="card-number" id="totalOnlineGiven">0</div>
-        </div>
 
         <div class="card">
-            <div class="card-title">Offline Given</div>
-            <div class="card-number" id="totalOfflineGiven">0</div>
+
+            <div class="card-title">
+                Warehouse
+            </div>
+
+            <div
+                class="card-number"
+                id="totalStock"
+            >
+                0
+            </div>
+
         </div>
 
+
         <div class="card">
-            <div class="card-title">Pending</div>
-            <div class="card-number" id="totalPending">0</div>
+
+            <div class="card-title">
+                Online Given
+            </div>
+
+            <div
+                class="card-number"
+                id="totalOnlineGiven"
+            >
+                0
+            </div>
+
         </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Offline Given
+            </div>
+
+            <div
+                class="card-number"
+                id="totalOfflineGiven"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Pending
+            </div>
+
+            <div
+                class="card-number"
+                id="totalPending"
+            >
+                0
+            </div>
+
+        </div>
+
 
     </div>
 
 
+
+    <!-- ================= TOOLBAR ================= -->
+
     <div class="toolbar">
+
 
         <input
             id="search"
@@ -375,17 +540,38 @@ th{
             oninput="renderProducts()"
         >
 
+
         <select
             id="unitFilter"
             onchange="renderProducts()"
         >
-            <option value="all">All Units</option>
-            <option value="pcs">PCS</option>
-            <option value="ml">ML</option>
-            <option value="ltr">Litre</option>
-            <option value="g">Gram</option>
-            <option value="kg">KG</option>
+
+            <option value="all">
+                All Units
+            </option>
+
+            <option value="pcs">
+                PCS
+            </option>
+
+            <option value="ml">
+                ML
+            </option>
+
+            <option value="ltr">
+                Litre
+            </option>
+
+            <option value="g">
+                Gram
+            </option>
+
+            <option value="kg">
+                KG
+            </option>
+
         </select>
+
 
         <button
             class="refresh"
@@ -394,56 +580,117 @@ th{
             Refresh
         </button>
 
+
     </div>
 
 
+
+    <!-- ================= TABLE ================= -->
+
     <div class="table-box">
+
 
         <table>
 
+
             <thead>
+
                 <tr>
-                    <th>#</th>
-                    <th>Product</th>
-                    <th>Size</th>
-                    <th>Unit</th>
-                    <th>Warehouse</th>
-                    <th>Online Given</th>
-                    <th>Online Sold</th>
-                    <th>Online Balance</th>
-                    <th>Offline Given</th>
-                    <th>Pending</th>
-                    <th>Status</th>
-                    <th>Action</th>
+
+                    <th>
+                        #
+                    </th>
+
+                    <th>
+                        Product
+                    </th>
+
+                    <th>
+                        Size
+                    </th>
+
+                    <th>
+                        Unit
+                    </th>
+
+                    <th>
+                        Warehouse
+                    </th>
+
+                    <th>
+                        Online Given
+                    </th>
+
+                    <th>
+                        Online Sold
+                    </th>
+
+                    <th>
+                        Online Balance
+                    </th>
+
+                    <th>
+                        Offline
+                    </th>
+
+                    <th>
+                        Pending
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
                 </tr>
+
             </thead>
+
 
             <tbody id="stockBody">
 
                 <tr>
-                    <td colspan="12" class="loading">
-                        Loading warehouse stock...
+
+                    <td
+                        colspan="12"
+                        class="loading"
+                    >
+                        Loading stock...
                     </td>
+
                 </tr>
 
             </tbody>
 
+
         </table>
 
+
     </div>
+
 
 </div>
 
 
-<!-- =========================================================
-     UPDATE STOCK MODAL
-========================================================= -->
 
-<div class="modal" id="stockModal">
+<!-- ================= MODAL ================= -->
+
+<div
+    class="modal"
+    id="stockModal"
+>
+
 
     <div class="modal-box">
 
-        <h2>Update Stock Distribution</h2>
+
+        <h2>
+            Update Stock
+        </h2>
+
 
         <div
             id="modalProduct"
@@ -451,102 +698,133 @@ th{
         ></div>
 
 
+
         <label>
             Size
         </label>
+
 
         <input
             id="stockSize"
             type="number"
             min="0"
             step="0.01"
-            placeholder="Example: 30"
+            placeholder="Example: 100"
         >
+
 
 
         <label>
             Unit
         </label>
 
+
         <select id="stockUnit">
 
-            <option value="pcs">Pieces</option>
-            <option value="ml">ML</option>
-            <option value="ltr">Litre</option>
-            <option value="g">Gram</option>
-            <option value="kg">KG</option>
+            <option value="pcs">
+                Pieces
+            </option>
+
+            <option value="ml">
+                ML
+            </option>
+
+            <option value="ltr">
+                Litre
+            </option>
+
+            <option value="g">
+                Gram
+            </option>
+
+            <option value="kg">
+                KG
+            </option>
 
         </select>
+
 
 
         <label>
             Warehouse Stock
         </label>
 
+
         <input
             id="stockQuantity"
             type="number"
             min="0"
             step="0.01"
-            placeholder="Total warehouse quantity"
+            placeholder="Example: 100"
         >
 
 
+
         <label>
-            Online Website — Given Stock
+            Online Website — Given
         </label>
+
 
         <input
             id="onlineGiven"
             type="number"
             min="0"
             step="0.01"
-            placeholder="Example: 60"
+            placeholder="Stock given to website"
         >
 
+
         <div class="modal-note">
-            Eh oh quantity aa jo tusi online website nu ditti.
+            Website nu kinne stock ditta gaya.
         </div>
+
 
 
         <label>
             Online Website — Sold
         </label>
 
+
         <input
             id="onlineSold"
             type="number"
             min="0"
             step="0.01"
-            placeholder="Example: 10"
+            placeholder="Online sold quantity"
         >
 
+
         <div class="modal-note">
-            Online balance automatically = Online Given − Online Sold.
+            Online Balance = Online Given − Online Sold.
         </div>
+
 
 
         <label>
             Offline Given
         </label>
 
+
         <input
             id="offlineGiven"
             type="number"
             min="0"
             step="0.01"
-            placeholder="Example: 20"
+            placeholder="Offline given quantity"
         >
+
 
 
         <div class="modal-actions">
 
+
             <button
                 class="save"
-                onclick="saveWarehouseStock()"
+                onclick="saveStock()"
             >
                 Save
             </button>
+
 
             <button
                 class="cancel"
@@ -555,17 +833,23 @@ th{
                 Cancel
             </button>
 
+
         </div>
+
 
     </div>
 
 </div>
 
 
+
+<!-- ================= TOAST ================= -->
+
 <div
     class="toast"
     id="toast"
 ></div>
+
 
 
 <script>
@@ -577,8 +861,10 @@ th{
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
 
+
 const SUPABASE_KEY =
 "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -605,7 +891,29 @@ let selectedProduct = null;
 
 
 /* =========================================================
-   HELPERS
+   NUMBER
+========================================================= */
+
+function num(value){
+
+    const n =
+        Number(value ?? 0);
+
+    if(
+        Number.isFinite(n)
+    ){
+
+        return n;
+
+    }
+
+    return 0;
+
+}
+
+
+/* =========================================================
+   ESCAPE
 ========================================================= */
 
 function escapeHtml(value){
@@ -620,17 +928,9 @@ function escapeHtml(value){
 }
 
 
-function num(value){
-
-    const n =
-        Number(value ?? 0);
-
-    return Number.isFinite(n)
-        ? n
-        : 0;
-
-}
-
+/* =========================================================
+   PRODUCT
+========================================================= */
 
 function getProductId(product){
 
@@ -649,6 +949,10 @@ function getProductName(product){
 
 }
 
+
+/* =========================================================
+   STOCK VALUES
+========================================================= */
 
 function getWarehouseStock(product){
 
@@ -686,15 +990,6 @@ function getOfflineGiven(product){
 }
 
 
-/* =========================================================
-   CALCULATIONS
-========================================================= */
-
-/*
-    Online Balance
-    = Online Given - Online Sold
-*/
-
 function getOnlineBalance(product){
 
     return Math.max(
@@ -706,13 +1001,6 @@ function getOnlineBalance(product){
 
 }
 
-
-/*
-    Pending Warehouse Stock
-    = Warehouse
-      - Online Given
-      - Offline Given
-*/
 
 function getPending(product){
 
@@ -727,6 +1015,10 @@ function getPending(product){
 
 }
 
+
+/* =========================================================
+   SIZE + UNIT
+========================================================= */
 
 function getSize(product){
 
@@ -746,6 +1038,10 @@ function getUnit(product){
 }
 
 
+/* =========================================================
+   TOAST
+========================================================= */
+
 function showToast(message){
 
     const toast =
@@ -753,18 +1049,24 @@ function showToast(message){
             "toast"
         );
 
+
     toast.textContent =
         message;
+
 
     toast.style.display =
         "block";
 
-    setTimeout(function(){
 
-        toast.style.display =
-            "none";
+    setTimeout(
+        function(){
 
-    },2500);
+            toast.style.display =
+                "none";
+
+        },
+        2500
+    );
 
 }
 
@@ -780,15 +1082,20 @@ async function loadProducts(){
             "stockBody"
         );
 
+
     body.innerHTML = `
+
         <tr>
+
             <td
                 colspan="12"
                 class="loading"
             >
-                Loading warehouse stock...
+                Loading stock...
             </td>
+
         </tr>
+
     `;
 
 
@@ -796,7 +1103,9 @@ async function loadProducts(){
 
         const result =
             await supabaseClient
-                .from(PRODUCT_TABLE)
+                .from(
+                    PRODUCT_TABLE
+                )
                 .select("*")
                 .order(
                     "id",
@@ -812,23 +1121,46 @@ async function loadProducts(){
                 result.error
             );
 
+
             body.innerHTML = `
+
                 <tr>
+
                     <td
                         colspan="12"
                         class="error"
                     >
+
                         ${escapeHtml(
                             result.error.message
                         )}
+
                     </td>
+
                 </tr>
+
             `;
+
 
             return;
 
         }
 
+
+        /*
+            IMPORTANT:
+
+            Every product row is kept separately
+            by its own Supabase ID.
+
+            So:
+
+            Soap 100g = ID A
+
+            Soap 125g = ID B
+
+            Updating ID A cannot update ID B.
+        */
 
         allProducts =
             result.data || [];
@@ -839,17 +1171,24 @@ async function loadProducts(){
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            error
+        );
+
 
         body.innerHTML = `
+
             <tr>
+
                 <td
                     colspan="12"
                     class="error"
                 >
                     Unable to load products.
                 </td>
+
             </tr>
+
         `;
 
     }
@@ -858,7 +1197,7 @@ async function loadProducts(){
 
 
 /* =========================================================
-   RENDER PRODUCTS
+   RENDER
 ========================================================= */
 
 function renderProducts(){
@@ -867,6 +1206,7 @@ function renderProducts(){
         document.getElementById(
             "stockBody"
         );
+
 
     const search =
         document
@@ -903,7 +1243,31 @@ function renderProducts(){
     allProducts.forEach(
         function(product){
 
-            const stock =
+            const id =
+                getProductId(
+                    product
+                );
+
+
+            const name =
+                getProductName(
+                    product
+                );
+
+
+            const size =
+                getSize(
+                    product
+                );
+
+
+            const unit =
+                getUnit(
+                    product
+                );
+
+
+            const warehouse =
                 getWarehouseStock(
                     product
                 );
@@ -927,7 +1291,7 @@ function renderProducts(){
                 );
 
 
-            const offlineGiven =
+            const offline =
                 getOfflineGiven(
                     product
                 );
@@ -939,20 +1303,8 @@ function renderProducts(){
                 );
 
 
-            const unit =
-                getUnit(
-                    product
-                );
-
-
-            const name =
-                getProductName(
-                    product
-                );
-
-
             totalStock +=
-                stock;
+                warehouse;
 
 
             totalOnlineGiven +=
@@ -960,7 +1312,7 @@ function renderProducts(){
 
 
             totalOfflineGiven +=
-                offlineGiven;
+                offline;
 
 
             totalPending +=
@@ -1000,19 +1352,25 @@ function renderProducts(){
                 "Available";
 
 
-            if(pending <= 0){
+            if(
+                pending <= 0
+            ){
 
                 status =
                     "out";
+
 
                 statusText =
                     "No Pending";
 
             }
-            else if(pending <= 5){
+            else if(
+                pending <= 5
+            ){
 
                 status =
                     "low";
+
 
                 statusText =
                     "Low Pending";
@@ -1034,19 +1392,23 @@ function renderProducts(){
 
 
                 <td>
+
                     <div class="product-name">
-                        ${escapeHtml(name)}
+
+                        ${escapeHtml(
+                            name
+                        )}
+
                     </div>
+
                 </td>
 
 
                 <td class="variant">
 
                     ${
-                        getSize(product) !== ""
-                        ? escapeHtml(
-                            getSize(product)
-                        )
+                        size !== ""
+                        ? escapeHtml(size)
                         : "—"
                     }
 
@@ -1054,13 +1416,17 @@ function renderProducts(){
 
 
                 <td>
-                    ${escapeHtml(unit)}
+
+                    ${escapeHtml(
+                        unit
+                    )}
+
                 </td>
 
 
                 <td class="number-cell">
 
-                    ${stock}
+                    ${warehouse}
 
                     <span class="unit">
                         ${escapeHtml(unit)}
@@ -1104,7 +1470,7 @@ function renderProducts(){
 
                 <td class="number-cell">
 
-                    ${offlineGiven}
+                    ${offline}
 
                     <span class="unit">
                         ${escapeHtml(unit)}
@@ -1139,7 +1505,7 @@ function renderProducts(){
 
                     <button
                         class="update"
-                        onclick="openStockModal(${product.id})"
+                        onclick="openStockModal(${id})"
                     >
                         Update
                     </button>
@@ -1149,7 +1515,9 @@ function renderProducts(){
             `;
 
 
-            body.appendChild(row);
+            body.appendChild(
+                row
+            );
 
         }
     );
@@ -1185,17 +1553,23 @@ function renderProducts(){
         totalPending;
 
 
-    if(shown === 0){
+    if(
+        shown === 0
+    ){
 
         body.innerHTML = `
+
             <tr>
+
                 <td
                     colspan="12"
                     class="empty"
                 >
                     No products found.
                 </td>
+
             </tr>
+
         `;
 
     }
@@ -1204,19 +1578,31 @@ function renderProducts(){
 
 
 /* =========================================================
-   OPEN MODAL
+   OPEN UPDATE MODAL
 ========================================================= */
 
 function openStockModal(productId){
+
+    /*
+        VERY IMPORTANT:
+
+        Product is found ONLY by its unique ID.
+
+        Therefore:
+
+        Soap 100g
+        and
+        Soap 125g
+
+        remain completely separate.
+    */
 
     selectedProduct =
         allProducts.find(
             function(product){
 
                 return String(
-                    getProductId(
-                        product
-                    )
+                    product.id
                 ) === String(
                     productId
                 );
@@ -1225,7 +1611,9 @@ function openStockModal(productId){
         );
 
 
-    if(!selectedProduct){
+    if(
+        !selectedProduct
+    ){
 
         return;
 
@@ -1238,25 +1626,36 @@ function openStockModal(productId){
         );
 
 
+    const name =
+        getProductName(
+            selectedProduct
+        );
+
+
     document.getElementById(
         "modalProduct"
     ).innerHTML = `
 
         <strong>
-            ${escapeHtml(
-                getProductName(
-                    selectedProduct
-                )
-            )}
+            ${escapeHtml(name)}
         </strong>
 
         <br>
 
-        Current Warehouse:
+        Size:
+        ${escapeHtml(
+            getSize(
+                selectedProduct
+            )
+        )}
+        ${escapeHtml(unit)}
+
+        <br>
+
+        Warehouse:
         ${getWarehouseStock(
             selectedProduct
         )}
-        ${escapeHtml(unit)}
 
         <br>
 
@@ -1264,7 +1663,6 @@ function openStockModal(productId){
         ${getOnlineBalance(
             selectedProduct
         )}
-        ${escapeHtml(unit)}
 
         <br>
 
@@ -1272,7 +1670,6 @@ function openStockModal(productId){
         ${getPending(
             selectedProduct
         )}
-        ${escapeHtml(unit)}
 
     `;
 
@@ -1350,12 +1747,14 @@ function closeModal(){
 
 
 /* =========================================================
-   SAVE STOCK
+   SAVE
 ========================================================= */
 
-async function saveWarehouseStock(){
+async function saveStock(){
 
-    if(!selectedProduct){
+    if(
+        !selectedProduct
+    ){
 
         return;
 
@@ -1406,9 +1805,7 @@ async function saveWarehouseStock(){
         );
 
 
-    /* =====================================================
-       VALIDATION
-    ===================================================== */
+    /* ================= VALIDATION ================= */
 
     if(
         sizeValue === "" ||
@@ -1432,7 +1829,7 @@ async function saveWarehouseStock(){
     ){
 
         alert(
-            "Stock quantities cannot be negative."
+            "Stock cannot be negative."
         );
 
         return;
@@ -1469,15 +1866,22 @@ async function saveWarehouseStock(){
     }
 
 
-    /* =====================================================
-       SAVE TO SUPABASE
-    ===================================================== */
-
     try{
 
-        const updateResult =
+        /*
+            IMPORTANT:
+
+            Update happens ONLY on selectedProduct.id.
+
+            This prevents 100g and 125g variants
+            from updating together.
+        */
+
+        const result =
             await supabaseClient
-                .from(PRODUCT_TABLE)
+                .from(
+                    PRODUCT_TABLE
+                )
                 .update({
 
                     size:
@@ -1506,34 +1910,36 @@ async function saveWarehouseStock(){
                 })
                 .eq(
                     "id",
-                    getProductId(
-                        selectedProduct
-                    )
+                    selectedProduct.id
                 );
 
 
-        if(updateResult.error){
+        if(
+            result.error
+        ){
 
             console.error(
-                updateResult.error
+                result.error
             );
+
 
             alert(
                 "Stock update failed: " +
-                updateResult.error.message
+                result.error.message
             );
+
 
             return;
 
         }
 
 
-        /* =================================================
-           UPDATE LOCAL DATA
-        ================================================= */
+        /* ================= LOCAL UPDATE ================= */
 
         selectedProduct.size =
-            num(sizeValue);
+            num(
+                sizeValue
+            );
 
 
         selectedProduct.unit =
@@ -1567,7 +1973,7 @@ async function saveWarehouseStock(){
 
 
         showToast(
-            "Stock distribution updated successfully."
+            "Stock updated successfully."
         );
 
 
@@ -1576,6 +1982,7 @@ async function saveWarehouseStock(){
         console.error(
             error
         );
+
 
         alert(
             "Stock update failed."
