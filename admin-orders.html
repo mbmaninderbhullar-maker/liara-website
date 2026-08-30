@@ -8134,6 +8134,45 @@ async function savePartySaleFromStock(partyId,productId,qty,bill,paid,note){
 function showPartyPaymentForm(id){ return addPartyPayment(id); }
 
 </script>
+<div class="admin-tools">
+    <a href="formula.html" class="admin-tool-btn">
+        🧪 Formula
+    </a>
 
+    <a href="stock.html" class="admin-tool-btn">
+        📦 Stock
+    </a>
+</div>
+
+<style>
+.admin-tools{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin:15px 0;
+}
+
+.admin-tool-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:11px 18px;
+    background:#111;
+    color:#fff;
+    text-decoration:none;
+    border-radius:9px;
+    font-size:14px;
+    font-weight:600;
+    border:1px solid #292929;
+    transition:all .2s ease;
+}
+
+.admin-tool-btn:hover{
+    background:#2a2a2a;
+    transform:translateY(-1px);
+}
+</style>
 </body>
 </html>
