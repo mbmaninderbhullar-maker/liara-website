@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,9 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
     margin:0;
@@ -23,7 +22,7 @@ body{
 .header{
     background:#111827;
     color:#fff;
-    padding:22px;
+    padding:18px;
 }
 
 .header-inner{
@@ -37,90 +36,87 @@ body{
 
 .header h1{
     margin:0;
-    font-size:24px;
+    font-size:22px;
 }
 
 .header p{
-    margin:5px 0 0;
+    margin:4px 0 0;
     opacity:.75;
+    font-size:13px;
 }
 
 .back-btn{
     background:#fff;
     color:#111827;
     text-decoration:none;
-    padding:10px 15px;
-    border-radius:8px;
+    padding:8px 12px;
+    border-radius:7px;
     font-weight:bold;
+    font-size:13px;
 }
 
 .container{
     max-width:1200px;
-    margin:25px auto;
+    margin:22px auto;
     padding:0 15px;
 }
 
 .cards{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:20px;
+    gap:12px;
+    margin-bottom:18px;
 }
 
 .card{
     background:#fff;
-    border-radius:14px;
-    padding:20px;
-    box-shadow:0 3px 15px rgba(0,0,0,.07);
+    border-radius:12px;
+    padding:17px;
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
 }
 
 .card-title{
     color:#777;
-    font-size:14px;
-    margin-bottom:8px;
+    font-size:13px;
+    margin-bottom:7px;
 }
 
 .card-number{
-    font-size:30px;
+    font-size:27px;
     font-weight:bold;
 }
 
 .toolbar{
     background:#fff;
-    padding:15px;
-    border-radius:14px;
+    padding:13px;
+    border-radius:12px;
     display:flex;
-    gap:10px;
+    gap:9px;
     flex-wrap:wrap;
-    margin-bottom:20px;
-    box-shadow:0 3px 15px rgba(0,0,0,.07);
+    margin-bottom:18px;
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
 }
 
 .search{
     flex:1;
-    min-width:220px;
+    min-width:200px;
 }
 
-input,
-select{
-    padding:12px;
+input,select{
+    padding:10px 11px;
     border:1px solid #ddd;
-    border-radius:8px;
-    font-size:14px;
+    border-radius:7px;
+    font-size:13px;
     outline:none;
-}
-
-input:focus,
-select:focus{
-    border-color:#111827;
 }
 
 button{
     border:0;
-    border-radius:8px;
-    padding:12px 16px;
+    border-radius:7px;
+    padding:10px 13px;
     cursor:pointer;
     font-weight:bold;
+    font-size:12px;
 }
 
 .refresh{
@@ -130,27 +126,26 @@ button{
 
 .table-box{
     background:#fff;
-    border-radius:14px;
+    border-radius:12px;
     overflow:auto;
-    box-shadow:0 3px 15px rgba(0,0,0,.07);
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:750px;
+    min-width:760px;
 }
 
-th,
-td{
-    padding:15px;
+th,td{
+    padding:13px;
     border-bottom:1px solid #eee;
     text-align:left;
 }
 
 th{
     background:#fafafa;
-    font-size:13px;
+    font-size:12px;
     color:#666;
 }
 
@@ -160,9 +155,9 @@ th{
 
 .status{
     display:inline-block;
-    padding:6px 11px;
-    border-radius:20px;
-    font-size:12px;
+    padding:5px 9px;
+    border-radius:18px;
+    font-size:11px;
     font-weight:bold;
 }
 
@@ -189,14 +184,24 @@ th{
 .remove{
     background:#991b1b;
     color:#fff;
-    margin-left:5px;
+    margin-left:4px;
+}
+
+.online{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.offline{
+    background:#ede9fe;
+    color:#6d28d9;
 }
 
 .loading,
 .empty,
 .error{
     text-align:center;
-    padding:40px;
+    padding:35px;
     color:#777;
 }
 
@@ -217,29 +222,38 @@ th{
 .modal-box{
     background:#fff;
     width:min(400px,92%);
-    border-radius:15px;
-    padding:25px;
+    border-radius:14px;
+    padding:22px;
 }
 
 .modal-box h2{
-    margin-top:0;
+    margin:0 0 15px;
+    font-size:20px;
 }
 
 .modal-box label{
     display:block;
-    margin:15px 0 6px;
-    font-size:13px;
+    margin:13px 0 6px;
+    font-size:12px;
     font-weight:bold;
 }
 
-.modal-box input{
+.modal-box input,
+.modal-box select{
     width:100%;
+}
+
+.product-info{
+    background:#f5f6f8;
+    padding:11px;
+    border-radius:8px;
+    font-size:13px;
 }
 
 .modal-actions{
     display:flex;
-    gap:10px;
-    margin-top:20px;
+    gap:8px;
+    margin-top:18px;
 }
 
 .modal-actions button{
@@ -256,248 +270,299 @@ th{
     color:#222;
 }
 
+.entry-type{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.entry-type label{
+    margin:0;
+    cursor:pointer;
+}
+
+.entry-type input{
+    display:none;
+}
+
+.entry-option{
+    display:block;
+    text-align:center;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.entry-type input:checked + .entry-option{
+    border-color:#111827;
+    background:#f1f5f9;
+}
+
 .toast{
     position:fixed;
-    right:20px;
-    bottom:20px;
+    right:15px;
+    bottom:15px;
     background:#111827;
     color:#fff;
-    padding:13px 18px;
-    border-radius:9px;
+    padding:11px 15px;
+    border-radius:8px;
     display:none;
     z-index:10000;
+    font-size:13px;
 }
 
 @media(max-width:800px){
-
     .cards{
         grid-template-columns:repeat(2,1fr);
     }
-
 }
 
 @media(max-width:500px){
-
     .cards{
-        grid-template-columns:1fr;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .card{
+        padding:13px;
+    }
+
+    .card-number{
+        font-size:23px;
     }
 
     .header-inner{
-        flex-direction:column;
         align-items:flex-start;
     }
-
 }
 </style>
+
 </head>
 
 <body>
 
 <div class="header">
-
     <div class="header-inner">
-
         <div>
             <h1>📦 Stock Management</h1>
             <p>Liara Professional™ — Live Supabase Stock</p>
         </div>
 
-        <a href="admin.html" class="back-btn">
-            ← Admin
-        </a>
+```
+    <a href="admin.html" class="back-btn">
+        ← Admin
+    </a>
+</div>
+```
 
+</div>
+
+<div class="container">
+
+```
+<div class="cards">
+
+    <div class="card">
+        <div class="card-title">Total Products</div>
+        <div class="card-number" id="totalProducts">0</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Total Stock</div>
+        <div class="card-number" id="totalStock">0</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Low Stock</div>
+        <div class="card-number" id="lowStock">0</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Out of Stock</div>
+        <div class="card-number" id="zeroStock">0</div>
     </div>
 
 </div>
 
 
-<div class="container">
+<div class="toolbar">
 
-    <div class="cards">
+    <input
+        id="search"
+        class="search"
+        type="text"
+        placeholder="Search product..."
+        oninput="renderProducts()"
+    >
 
-        <div class="card">
-            <div class="card-title">
-                Total Products
-            </div>
+    <select id="filter" onchange="renderProducts()">
 
-            <div class="card-number" id="totalProducts">
-                0
-            </div>
-        </div>
+        <option value="all">All Stock</option>
 
+        <option value="available">
+            Available
+        </option>
 
-        <div class="card">
-            <div class="card-title">
-                Total Stock
-            </div>
+        <option value="low">
+            Low Stock
+        </option>
 
-            <div class="card-number" id="totalStock">
-                0
-            </div>
-        </div>
+        <option value="out">
+            Out of Stock
+        </option>
 
+    </select>
 
-        <div class="card">
-            <div class="card-title">
-                Low Stock
-            </div>
+    <button
+        class="refresh"
+        onclick="loadProducts()"
+    >
+        ↻ Refresh
+    </button>
 
-            <div class="card-number" id="lowStock">
-                0
-            </div>
-        </div>
+</div>
 
 
-        <div class="card">
-            <div class="card-title">
-                Out of Stock
-            </div>
+<div class="table-box">
 
-            <div class="card-number" id="zeroStock">
-                0
-            </div>
-        </div>
+    <table>
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="stockBody">
+
+            <tr>
+                <td colspan="6" class="loading">
+                    Loading stock...
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+```
+
+</div>
+
+<!-- ================= STOCK MODAL ================= -->
+
+<div class="modal" id="stockModal">
+
+```
+<div class="modal-box">
+
+    <h2 id="modalTitle">
+        Stock Update
+    </h2>
+
+    <div
+        id="modalProduct"
+        class="product-info"
+    ></div>
+
+
+    <label>
+        Entry Type
+    </label>
+
+    <div class="entry-type">
+
+        <label>
+            <input
+                type="radio"
+                name="entrySource"
+                value="online"
+                checked
+            >
+
+            <span class="entry-option">
+                🌐 Online
+            </span>
+        </label>
+
+
+        <label>
+            <input
+                type="radio"
+                name="entrySource"
+                value="offline"
+            >
+
+            <span class="entry-option">
+                🏪 Offline
+            </span>
+        </label>
 
     </div>
 
 
-    <div class="toolbar">
+    <label>
+        Quantity
+    </label>
 
-        <input
-            id="search"
-            class="search"
-            type="text"
-            placeholder="Search product..."
-            oninput="renderProducts()"
-        >
+    <input
+        id="stockQuantity"
+        type="number"
+        min="1"
+        placeholder="Enter quantity"
+    >
 
-        <select
-            id="filter"
-            onchange="renderProducts()"
-        >
 
-            <option value="all">
-                All Stock
-            </option>
+    <label>
+        Note
+    </label>
 
-            <option value="available">
-                Available
-            </option>
+    <input
+        id="stockNote"
+        type="text"
+        placeholder="Optional note"
+    >
 
-            <option value="low">
-                Low Stock
-            </option>
 
-            <option value="out">
-                Out of Stock
-            </option>
-
-        </select>
+    <div class="modal-actions">
 
         <button
-            class="refresh"
-            onclick="loadProducts()"
+            class="save"
+            onclick="saveStock()"
         >
-            ↻ Refresh
+            Save Entry
+        </button>
+
+        <button
+            class="cancel"
+            onclick="closeModal()"
+        >
+            Cancel
         </button>
 
     </div>
 
-
-    <div class="table-box">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>#</th>
-
-                    <th>Product</th>
-
-                    <th>Price</th>
-
-                    <th>Stock</th>
-
-                    <th>Status</th>
-
-                    <th>Action</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="stockBody">
-
-                <tr>
-                    <td colspan="6" class="loading">
-                        Loading stock...
-                    </td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
+</div>
+```
 
 </div>
 
-
-<!-- STOCK MODAL -->
-
-<div class="modal" id="stockModal">
-
-    <div class="modal-box">
-
-        <h2 id="modalTitle">
-            Stock Update
-        </h2>
-
-        <div id="modalProduct"></div>
-
-        <label>
-            Quantity
-        </label>
-
-        <input
-            id="stockQuantity"
-            type="number"
-            min="1"
-            placeholder="Enter quantity"
-        >
-
-        <div class="modal-actions">
-
-            <button
-                class="save"
-                onclick="saveStock()"
-            >
-                Save
-            </button>
-
-            <button
-                class="cancel"
-                onclick="closeModal()"
-            >
-                Cancel
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<div class="toast" id="toast"></div>
-
+<div
+    class="toast"
+    id="toast"
+></div>
 
 <script>
 
 /* =========================================================
-   SUPABASE — SAME CONNECTION
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -514,10 +579,21 @@ window.supabase.createClient(
 
 
 /* =========================================================
-   SETTINGS
+   TABLES
 ========================================================= */
 
 const PRODUCT_TABLE = "products";
+
+/*
+  Online / Offline stock entries
+  are saved in this table.
+*/
+const STOCK_ENTRY_TABLE = "stock_entries";
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
 
 let allProducts = [];
 
@@ -603,15 +679,17 @@ function showToast(message){
 
     toast.style.display = "block";
 
-    setTimeout(()=>{
+    setTimeout(function(){
+
         toast.style.display = "none";
+
     },2500);
 
 }
 
 
 /* =========================================================
-   LOAD PRODUCTS FROM SUPABASE
+   LOAD PRODUCTS
 ========================================================= */
 
 async function loadProducts(){
@@ -627,13 +705,20 @@ async function loadProducts(){
         </tr>
     `;
 
+
     try{
 
-        const { data, error } =
+        const result =
             await supabaseClient
                 .from(PRODUCT_TABLE)
                 .select("*")
                 .order("id",{ascending:false});
+
+
+        const data = result.data;
+
+        const error = result.error;
+
 
         if(error){
 
@@ -648,12 +733,14 @@ async function loadProducts(){
             `;
 
             return;
+
         }
 
 
         allProducts = data || [];
 
         renderProducts();
+
 
     }catch(error){
 
@@ -681,12 +768,14 @@ function renderProducts(){
     const body =
         document.getElementById("stockBody");
 
+
     const search =
         document
             .getElementById("search")
             .value
             .toLowerCase()
             .trim();
+
 
     const filter =
         document
@@ -704,12 +793,14 @@ function renderProducts(){
     let zeroStock = 0;
 
 
-    allProducts.forEach(product=>{
+    allProducts.forEach(function(product){
 
         const stock =
             getProductStock(product);
 
+
         totalStock += stock;
+
 
         if(stock === 0){
 
@@ -751,7 +842,7 @@ function renderProducts(){
     let shown = 0;
 
 
-    allProducts.forEach((product,index)=>{
+    allProducts.forEach(function(product,index){
 
         const name =
             getProductName(product);
@@ -880,13 +971,14 @@ function renderProducts(){
 
 
 /* =========================================================
-   OPEN STOCK MODAL
+   OPEN MODAL
 ========================================================= */
 
 function openStockModal(index,mode){
 
     selectedProduct =
         allProducts[index];
+
 
     if(!selectedProduct) return;
 
@@ -910,24 +1002,16 @@ function openStockModal(index,mode){
         "modalProduct"
     ).innerHTML = `
 
-        <div style="
-            background:#f5f6f8;
-            padding:12px;
-            border-radius:8px;
-        ">
+        <strong>
+            ${escapeHtml(name)}
+        </strong>
 
-            <strong>
-                ${escapeHtml(name)}
-            </strong>
+        <br>
 
-            <br>
-
-            Current Stock:
-            <strong>
-                ${getProductStock(selectedProduct)}
-            </strong>
-
-        </div>
+        Current Stock:
+        <strong>
+            ${getProductStock(selectedProduct)}
+        </strong>
 
     `;
 
@@ -935,6 +1019,16 @@ function openStockModal(index,mode){
     document.getElementById(
         "stockQuantity"
     ).value = "";
+
+
+    document.getElementById(
+        "stockNote"
+    ).value = "";
+
+
+    document.querySelector(
+        'input[name="entrySource"][value="online"]'
+    ).checked = true;
 
 
     document.getElementById(
@@ -954,13 +1048,85 @@ function closeModal(){
         "stockModal"
     ).style.display = "none";
 
+
     selectedProduct = null;
 
 }
 
 
 /* =========================================================
-   UPDATE SUPABASE STOCK
+   FIND STOCK COLUMN
+========================================================= */
+
+function findStockColumn(product){
+
+    if(
+        Object.prototype.hasOwnProperty.call(
+            product,
+            "stock"
+        )
+    ){
+
+        return "stock";
+
+    }
+
+
+    if(
+        Object.prototype.hasOwnProperty.call(
+            product,
+            "stock_quantity"
+        )
+    ){
+
+        return "stock_quantity";
+
+    }
+
+
+    if(
+        Object.prototype.hasOwnProperty.call(
+            product,
+            "current_stock"
+        )
+    ){
+
+        return "current_stock";
+
+    }
+
+
+    if(
+        Object.prototype.hasOwnProperty.call(
+            product,
+            "quantity"
+        )
+    ){
+
+        return "quantity";
+
+    }
+
+
+    if(
+        Object.prototype.hasOwnProperty.call(
+            product,
+            "qty"
+        )
+    ){
+
+        return "qty";
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   SAVE STOCK ENTRY
 ========================================================= */
 
 async function saveStock(){
@@ -978,6 +1144,18 @@ async function saveStock(){
                 "stockQuantity"
             ).value
         );
+
+
+    const note =
+        document.getElementById(
+            "stockNote"
+        ).value.trim();
+
+
+    const source =
+        document.querySelector(
+            'input[name="entrySource"]:checked'
+        ).value;
 
 
     if(!quantity || quantity <= 0){
@@ -1015,6 +1193,7 @@ async function saveStock(){
 
         }
 
+
         newStock =
             currentStock - quantity;
 
@@ -1036,70 +1215,14 @@ async function saveStock(){
     }
 
 
-    /*
-      Existing stock column detect.
-    */
-
-    let stockColumn = null;
-
-
-    if(
-        Object.prototype.hasOwnProperty.call(
-            selectedProduct,
-            "stock"
-        )
-    ){
-
-        stockColumn = "stock";
-
-    }else if(
-        Object.prototype.hasOwnProperty.call(
-            selectedProduct,
-            "stock_quantity"
-        )
-    ){
-
-        stockColumn = "stock_quantity";
-
-    }else if(
-        Object.prototype.hasOwnProperty.call(
-            selectedProduct,
-            "current_stock"
-        )
-    ){
-
-        stockColumn = "current_stock";
-
-    }else if(
-        Object.prototype.hasOwnProperty.call(
-            selectedProduct,
-            "quantity"
-        )
-    ){
-
-        stockColumn = "quantity";
-
-    }else if(
-        Object.prototype.hasOwnProperty.call(
-            selectedProduct,
-            "qty"
-        )
-    ){
-
-        stockColumn = "qty";
-
-    }
+    const stockColumn =
+        findStockColumn(selectedProduct);
 
 
     if(!stockColumn){
 
         alert(
             "Stock column database vich identify nahi ho reha."
-        );
-
-        console.error(
-            "Product object:",
-            selectedProduct
         );
 
         return;
@@ -1115,23 +1238,93 @@ async function saveStock(){
 
     try{
 
-        const { error } =
+        /* =========================================
+           FIRST UPDATE PRODUCT STOCK
+        ========================================= */
+
+        const updateResult =
             await supabaseClient
                 .from(PRODUCT_TABLE)
                 .update(updateData)
                 .eq("id",productId);
 
 
-        if(error){
+        if(updateResult.error){
 
-            console.error(error);
+            console.error(
+                updateResult.error
+            );
 
             alert(
                 "Stock update failed: " +
-                error.message
+                updateResult.error.message
             );
 
             return;
+
+        }
+
+
+        /* =========================================
+           SAVE ONLINE / OFFLINE ENTRY
+        ========================================= */
+
+        const entryData = {
+
+            product_id: productId,
+
+            product_name:
+                getProductName(selectedProduct),
+
+            quantity: quantity,
+
+            type: stockMode,
+
+            source: source,
+
+            previous_stock: currentStock,
+
+            new_stock: newStock,
+
+            note: note || null
+
+        };
+
+
+        const entryResult =
+            await supabaseClient
+                .from(STOCK_ENTRY_TABLE)
+                .insert([entryData]);
+
+
+        /*
+          Product stock already updated.
+          If entry table does not exist, don't undo stock.
+        */
+
+        if(entryResult.error){
+
+            console.warn(
+                "Stock entry could not be saved:",
+                entryResult.error
+            );
+
+            showToast(
+                "Stock updated. Entry table not connected."
+            );
+
+        }else{
+
+            showToast(
+                source.toUpperCase() +
+                " " +
+                (
+                    stockMode === "in"
+                    ? "Stock In"
+                    : "Stock Out"
+                ) +
+                " saved."
+            );
 
         }
 
@@ -1142,14 +1335,8 @@ async function saveStock(){
 
         closeModal();
 
-        showToast(
-            stockMode === "in"
-            ? "Stock added successfully."
-            : "Stock removed successfully."
-        );
-
-
         renderProducts();
+
 
     }catch(error){
 
@@ -1165,7 +1352,7 @@ async function saveStock(){
 
 
 /* =========================================================
-   SUPABASE REALTIME
+   REALTIME PRODUCT STOCK
 ========================================================= */
 
 supabaseClient
@@ -1177,12 +1364,7 @@ supabaseClient
             schema:"public",
             table:PRODUCT_TABLE
         },
-        function(payload){
-
-            console.log(
-                "Stock/Product change:",
-                payload
-            );
+        function(){
 
             loadProducts();
 
