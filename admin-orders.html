@@ -4,6 +4,18 @@
   display:block!important;width:calc(100% - 16px)!important;
   margin:4px 8px!important;cursor:pointer!important;
 }
+
+/* ================= STOCK LOCATIONS ================= */
+.stock-location-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:8px;background:#faf8f5;border:1px solid #ebe6de;border-radius:12px;margin-bottom:20px}
+.stock-location-tab{border:0;background:transparent;color:#555;padding:11px 14px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:12px}
+.stock-location-tab:hover{background:#f0ebe2}.stock-location-tab.active{background:#ad8232;color:#fff}
+.stock-location-panel{display:none}.stock-location-panel.active{display:block}
+.stock-four-cards{grid-template-columns:repeat(4,1fr)}
+.stock-location-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.stock-location-head h3{margin:0 0 5px}.stock-location-head p{margin:0;color:#888;font-size:12px}
+.stock-transfer-box{background:#faf8f5;border:1px solid #e8e1d7;border-radius:13px;padding:20px;margin:0 0 20px}.stock-transfer-box h3{margin:0 0 18px}.stock-hint{display:block;color:#287a3e;font-size:11px;margin-top:6px;font-weight:bold}.party-create-box{border-color:#d9c39a}
+@media(max-width:1050px){.stock-four-cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.stock-four-cards{grid-template-columns:1fr}.stock-location-head{align-items:flex-start;flex-direction:column}.stock-location-tabs{display:grid;grid-template-columns:1fr 1fr}.stock-location-tab{text-align:center}}
+
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -1742,33 +1754,7 @@ function saveSettingsObject(settings){
 
 }
 
-async function loadSettingsFromDatabase(){
-    try{
-        const {data,error}=await supabaseClient
-            .from("admin_settings")
-            .select("settings")
-            .eq("id",1)
-            .maybeSingle();
-        if(error) throw error;
-        if(data?.settings){
-            saveSettingsObject(data.settings);
-            return getSettings();
-        }
-    }catch(error){
-        console.warn("Database settings load failed; using local settings.",error);
-    }
-    return getSettings();
-}
-
-async function persistSettingsToDatabase(settings){
-    const {data:{user}}=await supabaseClient.auth.getUser();
-    const {error}=await supabaseClient
-        .from("admin_settings")
-        .upsert({id:1,settings,updated_at:new Date().toISOString(),updated_by:user?.id||null},{onConflict:"id"});
-    if(error) throw error;
-}
-
-async function resetSettings(){
+function resetSettings(){
 
     const yes =
         confirm(
@@ -1778,7 +1764,6 @@ async function resetSettings(){
     if(!yes) return;
 
     localStorage.removeItem(SETTINGS_KEY);
-    try{ await supabaseClient.from("admin_settings").delete().eq("id",1); }catch(e){ console.warn(e); }
 
     loadSettings();
 
@@ -2945,604 +2930,200 @@ function renderSales(orders){
 }
 
 /* =========================================================
-   STOCK
+   STOCK — WAREHOUSE / ONLINE / PARTY
 ========================================================= */
 
 async function loadStock(){
-
     document.getElementById("other-content").innerHTML = `
-
     <div class="admin-box">
-
         <div class="admin-header">
-            <div>
-                <p>INVENTORY MANAGEMENT</p>
-                <h2>📦 Stock Management</h2>
-            </div>
-
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="btn" onclick="showStockReceiveForm()">
-                    ➕ Add New Stock
-                </button>
-                <button class="btn" onclick="showStockPartyForm()">
-                    📤 Give to Party
-                </button>
-            </div>
+            <div><p>INVENTORY MANAGEMENT</p><h2>📦 Stock Management</h2></div>
+            <button class="btn gray-btn" onclick="loadStock()">🔄 Refresh</button>
         </div>
 
-        <div class="stock-cards">
-
-            <div class="stock-card">
-                <span>Total Received</span>
-                <strong id="stockReceivedTotal">0</strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Online Sold</span>
-                <strong id="stockOnlineTotal">0</strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Offline Given</span>
-                <strong id="stockOfflineTotal">0</strong>
-            </div>
-
-            <div class="stock-card">
-                <span>Remaining</span>
-                <strong id="stockRemainingTotal">0</strong>
-            </div>
-
+        <div class="stock-location-tabs">
+            <button class="stock-location-tab active" onclick="switchStockLocation('overview',this)">📊 Overview</button>
+            <button class="stock-location-tab" onclick="switchStockLocation('warehouse',this)">🏭 Warehouse</button>
+            <button class="stock-location-tab" onclick="switchStockLocation('online',this)">🌐 Online Website</button>
+            <button class="stock-location-tab" onclick="switchStockLocation('party',this)">🤝 Party</button>
         </div>
 
-        <div id="stockReceiveForm"></div>
+        <div id="stockOverviewPanel" class="stock-location-panel active">
+            <div class="stock-cards stock-four-cards">
+                <div class="stock-card"><span>🏭 Warehouse</span><strong id="stockWarehouseTotal">0</strong><small>Available to send</small></div>
+                <div class="stock-card"><span>🌐 Online Available</span><strong id="stockOnlineAvailableTotal">0</strong><small>Given by warehouse − sold</small></div>
+                <div class="stock-card"><span>🤝 Party Given</span><strong id="stockPartyTotal">0</strong><small>Sent from warehouse</small></div>
+                <div class="stock-card"><span>📦 Total In System</span><strong id="stockSystemTotal">0</strong><small>Warehouse + allocated stock</small></div>
+            </div>
+            <div id="stockOverviewTable"><div class="message">Loading...</div></div>
+        </div>
 
-        <div id="stockTable">
-            <div class="message">Loading stock...</div>
+        <div id="stockWarehousePanel" class="stock-location-panel">
+            <div class="stock-location-head">
+                <div><h3>🏭 Warehouse Stock</h3><p>Add new stock here. This is the source for Online Website and Party.</p></div>
+                <button class="btn" onclick="showWarehouseAddForm()">➕ Add Stock</button>
+            </div>
+            <div id="warehouseAddForm"></div>
+            <div id="warehouseStockTable"><div class="message">Loading...</div></div>
+        </div>
+
+        <div id="stockOnlinePanel" class="stock-location-panel">
+            <div class="stock-location-head">
+                <div><h3>🌐 Online Website Stock</h3><p>Only stock sent from Warehouse can appear here.</p></div>
+                <button class="btn" onclick="showOnlineTransferForm()">➡️ Send from Warehouse</button>
+            </div>
+            <div id="onlineTransferForm"></div>
+            <div id="onlineStockTable"><div class="message">Loading...</div></div>
+        </div>
+
+        <div id="stockPartyPanel" class="stock-location-panel">
+            <div class="stock-location-head">
+                <div><h3>🤝 Party Stock</h3><p>Create a party and send stock from Warehouse in the same small box.</p></div>
+                <button class="btn" onclick="showWarehousePartyForm()">➕ Create Party + Give Stock</button>
+            </div>
+            <div id="warehousePartyForm"></div>
+            <div id="partyStockTable"><div class="message">Loading...</div></div>
         </div>
 
         <div style="margin-top:28px;">
             <h3>🧾 Stock Movement History</h3>
-            <div id="stockHistory">
-                <div class="message">Loading...</div>
-            </div>
+            <div id="stockHistory"><div class="message">Loading...</div></div>
         </div>
+    </div>`;
 
-    </div>
-    `;
-
-    const user = await checkAdmin();
-    if(!user) return;
-
-    const {data,error} =
-        await supabaseClient
-        .from("products")
-        .select("*")
-        .order("name",{ascending:true});
-
-    if(error){
-        document.getElementById("stockTable").innerHTML =
-            `<div class="message error">${escapeHtml(error.message)}</div>`;
-        return;
-    }
-
-    allProducts = data || [];
-
-    await renderStockLedger(allProducts);
+    const user=await checkAdmin(); if(!user)return;
+    const {data,error}=await supabaseClient.from("products").select("*").order("name",{ascending:true});
+    if(error){document.getElementById("stockOverviewTable").innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`;return;}
+    allProducts=data||[];
+    await renderNewStockLocations();
     await loadStockHistory();
 }
 
+function switchStockLocation(name,button){
+    document.querySelectorAll('.stock-location-panel').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.stock-location-tab').forEach(x=>x.classList.remove('active'));
+    const panel=document.getElementById('stock'+name.charAt(0).toUpperCase()+name.slice(1)+'Panel');
+    if(panel)panel.classList.add('active');
+    if(button)button.classList.add('active');
+}
 
-async function renderStockLedger(products){
+async function getStockTransactions(){
+    const ids=(allProducts||[]).map(p=>p.id);
+    if(!ids.length)return [];
+    const {data,error}=await supabaseClient.from('stock_transactions').select('*').in('product_id',ids).order('created_at',{ascending:false});
+    return error?[]:(data||[]);
+}
 
-    const ids = products.map(p=>p.id);
-    let transactions = [];
+function stockNumbers(product,transactions){
+    const rows=transactions.filter(t=>String(t.product_id)===String(product.id));
+    const warehouseAdded=rows.filter(t=>t.transaction_type==='purchase').reduce((s,t)=>s+Number(t.quantity||0),0)+Number(product.opening_stock||0);
+    const onlineGiven=rows.filter(t=>t.transaction_type==='online_transfer').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const onlineSold=rows.filter(t=>t.transaction_type==='sale').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const partyGiven=rows.filter(t=>t.transaction_type==='offline_out').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const adjustments=rows.filter(t=>t.transaction_type==='adjustment').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const hasLocationTransfers=rows.some(t=>t.transaction_type==='online_transfer'||(t.transaction_type==='offline_out'&&t.destination==='party'));
+    const legacyWarehouseBase=(product.warehouse_stock!==null && product.warehouse_stock!==undefined) ? Number(product.warehouse_stock||0) : Number(product.stock||0);
+    const warehouse=hasLocationTransfers || product.warehouse_stock!==null && product.warehouse_stock!==undefined ? Math.max(0,legacyWarehouseBase) : Math.max(0,Number(product.stock||0));
+    const onlineAvailable=Math.max(0,onlineGiven-onlineSold);
+    return {warehouse,onlineGiven,onlineSold,onlineAvailable,partyGiven,total:warehouse+onlineAvailable+partyGiven};
+}
 
-    if(ids.length){
+async function renderNewStockLocations(){
+    const tx=await getStockTransactions();
+    let warehouseTotal=0,onlineTotal=0,partyTotal=0,systemTotal=0;
+    (allProducts||[]).forEach(p=>{const n=stockNumbers(p,tx);warehouseTotal+=n.warehouse;onlineTotal+=n.onlineAvailable;partyTotal+=n.partyGiven;systemTotal+=n.total;});
+    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+    set('stockWarehouseTotal',warehouseTotal);set('stockOnlineAvailableTotal',onlineTotal);set('stockPartyTotal',partyTotal);set('stockSystemTotal',systemTotal);
 
-        const {data,error} =
-            await supabaseClient
-            .from("stock_transactions")
-            .select("*")
-            .in("product_id",ids);
-
-        if(!error) transactions = data || [];
-    }
-
-    let receivedTotal = 0;
-    let onlineTotal = 0;
-    let offlineTotal = 0;
-    let remainingTotal = 0;
-
-    products.forEach(product=>{
-
-        const rows =
-            transactions.filter(
-                t=>String(t.product_id) === String(product.id)
-            );
-
-        const opening = Number(product.opening_stock || 0);
-
-        const received =
-            opening +
-            rows
-            .filter(t=>t.transaction_type==="purchase")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        const online =
-            rows
-            .filter(t=>t.transaction_type==="sale")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        const offline =
-            rows
-            .filter(t=>t.transaction_type==="offline_out")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        const adjustments =
-            rows
-            .filter(t=>t.transaction_type==="adjustment")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        // One formula for the whole system:
-        // Remaining = Opening + Received - Online - Offline - Adjustments
-        const remaining =
-            Math.max(0, received - online - offline - adjustments);
-
-        receivedTotal += received;
-        onlineTotal += online;
-        offlineTotal += offline;
-        remainingTotal += remaining;
+    let overview='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PRODUCT</th><th>🏭 WAREHOUSE</th><th>🌐 ONLINE AVAILABLE</th><th>🛒 ONLINE SOLD</th><th>🤝 PARTY GIVEN</th><th>TOTAL ALLOCATED</th></tr></thead><tbody>';
+    let warehouse='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PRODUCT</th><th>WAREHOUSE</th><th>ONLINE GIVEN</th><th>PARTY GIVEN</th><th>ACTION</th></tr></thead><tbody>';
+    let online='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PRODUCT</th><th>GIVEN FROM WAREHOUSE</th><th>SOLD</th><th>ONLINE AVAILABLE</th><th>ACTION</th></tr></thead><tbody>';
+    (allProducts||[]).forEach(p=>{
+        const n=stockNumbers(p,tx);
+        overview+=`<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${n.warehouse}</td><td>${n.onlineAvailable}</td><td>${n.onlineSold}</td><td>${n.partyGiven}</td><td><strong>${n.warehouse+n.onlineAvailable+n.partyGiven}</strong></td></tr>`;
+        warehouse+=`<tr><td><strong>${escapeHtml(p.name)}</strong></td><td><strong>${n.warehouse}</strong></td><td>${n.onlineGiven}</td><td>${n.partyGiven}</td><td><button class="table-btn edit-btn" onclick="showWarehouseAddForm('${escapeHtml(String(p.id))}')">+ Stock</button> <button class="table-btn view-btn" onclick="showOnlineTransferForm('${escapeHtml(String(p.id))}')">Send Online</button></td></tr>`;
+        online+=`<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${n.onlineGiven}</td><td>${n.onlineSold}</td><td><strong>${n.onlineAvailable}</strong></td><td><button class="table-btn view-btn" onclick="showOnlineTransferForm('${escapeHtml(String(p.id))}')">Send More</button></td></tr>`;
     });
-
-    document.getElementById("stockReceivedTotal").innerText = receivedTotal;
-    document.getElementById("stockOnlineTotal").innerText = onlineTotal;
-    document.getElementById("stockOfflineTotal").innerText = offlineTotal;
-    document.getElementById("stockRemainingTotal").innerText = remainingTotal;
-
-
-    let html = `
-    <div class="table-wrapper">
-    <table class="data-table">
-    <thead>
-    <tr>
-        <th>PRODUCT</th>
-        <th>RECEIVED</th>
-        <th>ONLINE SOLD</th>
-        <th>OFFLINE GIVEN</th>
-        <th>REMAINING</th>
-        <th>STATUS</th>
-        <th>ACTION</th>
-    </tr>
-    </thead>
-    <tbody>
-    `;
-
-    products.forEach(product=>{
-
-        const rows =
-            transactions.filter(
-                t=>String(t.product_id) === String(product.id)
-            );
-
-        const received =
-            Number(product.opening_stock || 0) +
-            rows
-            .filter(t=>t.transaction_type==="purchase")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        const online =
-            rows
-            .filter(t=>t.transaction_type==="sale")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        const offline =
-            rows
-            .filter(t=>t.transaction_type==="offline_out")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        const adjustments =
-            rows
-            .filter(t=>t.transaction_type==="adjustment")
-            .reduce((s,t)=>s+Number(t.quantity||0),0);
-
-        const remaining =
-            Math.max(0, received-online-offline-adjustments);
-
-        const minimum =
-            Number(product.low_stock || 5);
-
-        let status = "In Stock";
-        let cls = "stock-ok";
-
-        if(remaining <= 0){
-            status = "Out of Stock";
-            cls = "stock-out";
-        }else if(remaining <= minimum){
-            status = "Low Stock";
-            cls = "stock-low";
-        }
-
-        html += `
-        <tr>
-            <td><strong>${escapeHtml(product.name)}</strong></td>
-            <td>${received}</td>
-            <td>${online}</td>
-            <td>${offline}</td>
-            <td><strong>${remaining}</strong></td>
-            <td class="${cls}">${status}</td>
-            <td>
-                <button class="table-btn edit-btn"
-                        onclick="showStockReceiveForm('${escapeHtml(String(product.id))}')">
-                    + Stock
-                </button>
-            </td>
-        </tr>
-        `;
-    });
-
-    html += `</tbody></table></div>`;
-    document.getElementById("stockTable").innerHTML = html;
+    overview+='</tbody></table></div>';warehouse+='</tbody></table></div>';online+='</tbody></table></div>';
+    document.getElementById('stockOverviewTable').innerHTML=overview;
+    document.getElementById('warehouseStockTable').innerHTML=warehouse;
+    document.getElementById('onlineStockTable').innerHTML=online;
+    await renderPartyStockTable();
 }
 
-
-async function showStockReceiveForm(productId=""){
-
-    const options =
-        (allProducts || [])
-        .map(p=>`
-            <option value="${p.id}"
-                ${String(p.id)===String(productId) ? "selected":""}>
-                ${escapeHtml(p.name)}
-            </option>
-        `)
-        .join("");
-
-    document.getElementById("stockReceiveForm").innerHTML = `
-
-    <div class="admin-box"
-         style="margin:20px 0;border:1px solid #ddd;">
-
-        <h3>📥 Add New Stock</h3>
-
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label>Product</label>
-
-                <select id="stockReceiveProduct">
-                    ${options}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Quantity Received</label>
-
-                <input
-                    id="stockReceiveQuantity"
-                    type="number"
-                    min="1"
-                    placeholder="e.g. 10">
-            </div>
-
-            <div class="form-group full">
-                <label>Note / Supplier</label>
-
-                <input
-                    id="stockReceiveNote"
-                    type="text"
-                    placeholder="e.g. New stock from supplier">
-            </div>
-
-        </div>
-
-        <div style="display:flex;gap:10px;margin-top:10px;">
-
-            <button class="btn"
-                    onclick="saveReceivedStock()">
-                💾 Add Stock
-            </button>
-
-            <button class="btn gray-btn"
-                    onclick="document.getElementById('stockReceiveForm').innerHTML=''">
-                Cancel
-            </button>
-
-        </div>
-
-    </div>
-    `;
+function productOptions(selected=''){
+    return (allProducts||[]).map(p=>`<option value="${p.id}" ${String(p.id)===String(selected)?'selected':''}>${escapeHtml(p.name)}</option>`).join('');
 }
 
-
-async function saveReceivedStock(){
-
-    const productId =
-        document.getElementById("stockReceiveProduct").value;
-
-    const quantity =
-        Number(document.getElementById("stockReceiveQuantity").value);
-
-    const note =
-        document.getElementById("stockReceiveNote").value.trim();
-
-    const product =
-        (allProducts || []).find(
-            p=>String(p.id) === String(productId)
-        );
-
-    if(!product){
-        alert("Product select karo.");
-        return;
-    }
-
-    if(!Number.isInteger(quantity) || quantity <= 0){
-        alert("Valid quantity pao.");
-        return;
-    }
-
-    const newStock =
-        Number(product.stock || 0) + quantity;
-
-    const {error:txError} =
-        await supabaseClient
-        .from("stock_transactions")
-        .insert({
-            product_id:product.id,
-            transaction_type:"purchase",
-            quantity:quantity,
-            note:note || "Stock received"
-        });
-
-    if(txError){
-        alert("Stock record failed:\n\n"+txError.message);
-        return;
-    }
-
-    const {error:updateError} =
-        await supabaseClient
-        .from("products")
-        .update({stock:newStock})
-        .eq("id",product.id);
-
-    if(updateError){
-        alert("Stock update failed:\n\n"+updateError.message);
-        return;
-    }
-
-    alert(
-        "Stock added successfully.\n\n" +
-        "Previous: " + Number(product.stock || 0) +
-        "\nAdded: " + quantity +
-        "\nRemaining: " + newStock
-    );
-
-    loadStock();
+function showWarehouseAddForm(productId=''){
+    document.getElementById('warehouseAddForm').innerHTML=`<div class="stock-transfer-box"><h3>📥 Add Stock to Warehouse</h3><div class="form-grid"><div class="form-group"><label>Product</label><select id="warehouseProduct">${productOptions(productId)}</select></div><div class="form-group"><label>Quantity</label><input id="warehouseQty" type="number" min="1" placeholder="e.g. 50"></div><div class="form-group full"><label>Note / Supplier</label><input id="warehouseNote" type="text" placeholder="New stock from supplier"></div></div><div class="settings-actions"><button class="btn" onclick="saveWarehouseStock()">💾 Add to Warehouse</button><button class="btn gray-btn" onclick="document.getElementById('warehouseAddForm').innerHTML=''">Cancel</button></div></div>`;
 }
 
+async function saveWarehouseStock(){
+    const id=document.getElementById('warehouseProduct').value, qty=Number(document.getElementById('warehouseQty').value), note=document.getElementById('warehouseNote').value.trim();
+    const p=allProducts.find(x=>String(x.id)===String(id)); if(!p||!Number.isInteger(qty)||qty<=0){alert('Product te valid quantity pao.');return;}
+    const {error}=await supabaseClient.from('stock_transactions').insert({product_id:p.id,transaction_type:'purchase',quantity:qty,source:'warehouse',destination:'warehouse',note:note||'Stock received in warehouse'});
+    if(error){alert('Warehouse stock save failed:\n\n'+error.message);return;}
+    const current=(p.warehouse_stock!==null && p.warehouse_stock!==undefined)?Number(p.warehouse_stock||0):Number(p.stock||0);
+    const {error:up}=await supabaseClient.from('products').update({warehouse_stock:current+qty}).eq('id',p.id);
+    if(up){alert('Warehouse stock update failed:\n\n'+up.message);return;}
+    alert(`Warehouse stock added.\n\nAdded: ${qty}\nWarehouse: ${current+qty}`);loadStock();
+}
+
+function showOnlineTransferForm(productId=''){
+    document.getElementById('onlineTransferForm').innerHTML=`<div class="stock-transfer-box"><h3>➡️ Send Stock from Warehouse to Online Website</h3><div class="form-grid"><div class="form-group"><label>Product</label><select id="onlineProduct" onchange="refreshOnlineAvailable()">${productOptions(productId)}</select></div><div class="form-group"><label>Quantity to Send</label><input id="onlineQty" type="number" min="1" placeholder="e.g. 10"><small id="onlineWarehouseHint" class="stock-hint"></small></div></div><div class="settings-actions"><button class="btn green-btn" onclick="saveOnlineTransfer()">➡️ Send to Website</button><button class="btn gray-btn" onclick="document.getElementById('onlineTransferForm').innerHTML=''">Cancel</button></div></div>`;
+    refreshOnlineAvailable();
+}
+async function refreshOnlineAvailable(){
+    const id=document.getElementById('onlineProduct')?.value,p=allProducts.find(x=>String(x.id)===String(id));if(!p)return;
+    const tx=await getStockTransactions(),n=stockNumbers(p,tx);const e=document.getElementById('onlineWarehouseHint');if(e)e.textContent=`Warehouse available: ${n.warehouse}`;
+}
+async function saveOnlineTransfer(){
+    const id=document.getElementById('onlineProduct').value,qty=Number(document.getElementById('onlineQty').value),p=allProducts.find(x=>String(x.id)===String(id));if(!p||!Number.isInteger(qty)||qty<=0){alert('Product te valid quantity pao.');return;}
+    const tx=await getStockTransactions(),n=stockNumbers(p,tx);if(qty>n.warehouse){alert(`Warehouse ch ena stock nahi aa.\n\nAvailable: ${n.warehouse}\nRequested: ${qty}`);return;}
+    const {error}=await supabaseClient.from('stock_transactions').insert({product_id:p.id,transaction_type:'online_transfer',quantity:qty,source:'warehouse',destination:'online',note:'Stock sent to online website'});if(error){alert(error.message);return;}
+    const {error:up}=await supabaseClient.from('products').update({warehouse_stock:Math.max(0,Number(p.warehouse_stock||0)-qty),stock:Number(p.stock||0)+qty,online_given:Number(p.online_given||0)+qty}).eq('id',p.id);if(up){alert(up.message);return;}
+    alert(`Stock sent to Online Website.\n\nSent: ${qty}\nWarehouse left: ${n.warehouse-qty}\nOnline available: ${n.onlineAvailable+qty}`);loadStock();
+}
+
+function showWarehousePartyForm(){
+    document.getElementById('warehousePartyForm').innerHTML=`<div class="stock-transfer-box party-create-box"><h3>🤝 Create Party + Give Stock</h3><div class="form-grid"><div class="form-group"><label>Party Name</label><input id="whPartyName" placeholder="e.g. ABC Medical Store"></div><div class="form-group"><label>Mobile</label><input id="whPartyPhone" type="tel" maxlength="10" placeholder="9876543210"></div><div class="form-group"><label>Product</label><select id="whPartyProduct" onchange="refreshPartyWarehouseAvailable()">${productOptions()}</select></div><div class="form-group"><label>Quantity from Warehouse</label><input id="whPartyQty" type="number" min="1" placeholder="e.g. 5"><small id="partyWarehouseHint" class="stock-hint"></small></div><div class="form-group"><label>Total Bill ₹</label><input id="whPartyBill" type="number" min="0" step="0.01" placeholder="e.g. 2500"></div><div class="form-group"><label>Paid Now ₹</label><input id="whPartyPaid" type="number" min="0" step="0.01" value="0"></div><div class="form-group full"><label>Address / Note</label><textarea id="whPartyNote" placeholder="Optional"></textarea></div></div><div class="settings-actions"><button class="btn green-btn" onclick="createPartyFromWarehouse()">💾 Create Party & Send Stock</button><button class="btn gray-btn" onclick="document.getElementById('warehousePartyForm').innerHTML=''">Cancel</button></div></div>`;
+    refreshPartyWarehouseAvailable();
+}
+async function refreshPartyWarehouseAvailable(){
+    const id=document.getElementById('whPartyProduct')?.value,p=allProducts.find(x=>String(x.id)===String(id));if(!p)return;const tx=await getStockTransactions(),n=stockNumbers(p,tx);const e=document.getElementById('partyWarehouseHint');if(e)e.textContent=`Warehouse available: ${n.warehouse}`;
+}
+async function createPartyFromWarehouse(){
+    const name=document.getElementById('whPartyName').value.trim(),phone=document.getElementById('whPartyPhone').value.trim(),productId=document.getElementById('whPartyProduct').value,qty=Number(document.getElementById('whPartyQty').value),bill=Number(document.getElementById('whPartyBill').value||0),paid=Number(document.getElementById('whPartyPaid').value||0),note=document.getElementById('whPartyNote').value.trim();
+    const p=allProducts.find(x=>String(x.id)===String(productId));if(!name||!p||!Number.isInteger(qty)||qty<=0){alert('Party, product te valid quantity pao.');return;}if(phone && !/^\d{10}$/.test(phone)){alert('Mobile 10 digits da hona chahida.');return;}if(paid<0||bill<0||paid>bill){alert('Paid/Bill amount check karo.');return;}
+    const tx=await getStockTransactions(),n=stockNumbers(p,tx);if(qty>n.warehouse){alert(`Warehouse ch ena stock nahi aa.\n\nAvailable: ${n.warehouse}\nRequested: ${qty}`);return;}
+    const {data:party,error:pe}=await supabaseClient.from('parties').insert({name,phone:phone||null,note:note||null,created_from:'warehouse',opening_balance:Math.max(0,bill-paid)}).select().single();if(pe){alert('Party create failed:\n\n'+pe.message);return;}
+    const {error:se}=await supabaseClient.from('stock_transactions').insert({product_id:p.id,transaction_type:'offline_out',quantity:qty,party_id:party.id,party_name:name,source:'warehouse',destination:'party',note:note||'Stock sent to party'});if(se){alert('Stock transfer failed:\n\n'+se.message);return;}
+    const {error:pt}=await supabaseClient.from('party_transactions').insert({party_id:party.id,product_id:p.id,transaction_type:'sale',quantity:qty,amount:bill,note:note||'Stock supplied from warehouse'});if(pt){alert('Party account entry failed:\n\n'+pt.message);return;}
+    if(paid>0){const {error:pay}=await supabaseClient.from('party_transactions').insert({party_id:party.id,transaction_type:'payment',amount:paid,note:'Payment received with warehouse stock'});if(pay){alert('Payment entry failed:\n\n'+pay.message);return;}}
+    const {error:up}=await supabaseClient.from('products').update({warehouse_stock:Math.max(0,Number(p.warehouse_stock||0)-qty),offline_given:Number(p.offline_given||0)+qty}).eq('id',p.id);if(up){alert('Warehouse update failed:\n\n'+up.message);return;}
+    alert(`Party created and stock sent.\n\nParty: ${name}\nQuantity: ${qty}\nWarehouse left: ${n.warehouse-qty}`);loadStock();
+}
+
+async function renderPartyStockTable(){
+    const box=document.getElementById('partyStockTable');if(!box)return;
+    const {data:parties,error}=await supabaseClient.from('parties').select('*').order('name',{ascending:true});if(error){box.innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`;return;}
+    const tx=await getStockTransactions();
+    let html='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PARTY</th><th>MOBILE</th><th>STOCK RECEIVED</th><th>BALANCE</th><th>ACTION</th></tr></thead><tbody>';
+    for(const party of (parties||[])){
+        const rows=tx.filter(t=>String(t.party_id)===String(party.id));const qty=rows.filter(t=>t.transaction_type==='offline_out').reduce((s,t)=>s+Number(t.quantity||0),0);
+        const {data:ptr}=await supabaseClient.from('party_transactions').select('transaction_type,amount').eq('party_id',party.id);const bill=(ptr||[]).filter(x=>x.transaction_type==='sale').reduce((s,x)=>s+Number(x.amount||0),0),paid=(ptr||[]).filter(x=>x.transaction_type==='payment').reduce((s,x)=>s+Number(x.amount||0),0),balance=bill-paid;
+        html+=`<tr><td><strong>${escapeHtml(party.name)}</strong></td><td>${escapeHtml(party.phone||'-')}</td><td>${qty}</td><td class="${balance>0?'stock-low':'stock-ok'}"><strong>${money(balance)}</strong></td><td><button class="table-btn view-btn" onclick="viewParty('${party.id}')">View</button></td></tr>`;
+    }
+    html+='</tbody></table></div>';box.innerHTML=html;
+}
 
 async function loadStockHistory(){
-
-    const box =
-        document.getElementById("stockHistory");
-
-    if(!box) return;
-
-    const {data,error} =
-        await supabaseClient
-        .from("stock_transactions")
-        .select("*")
-        .order("created_at",{ascending:false});
-
-    if(error){
-        box.innerHTML =
-            `<div class="message error">${escapeHtml(error.message)}</div>`;
-        return;
-    }
-
-    if(!data || !data.length){
-        box.innerHTML =
-            `<div class="message">No stock movement yet.</div>`;
-        return;
-    }
-
-    const productMap =
-        Object.fromEntries(
-            (allProducts || []).map(p=>[
-                String(p.id),p.name
-            ])
-        );
-
-    let html = `
-    <div class="table-wrapper">
-    <table class="data-table">
-    <thead>
-    <tr>
-        <th>DATE</th>
-        <th>PRODUCT</th>
-        <th>TYPE</th>
-        <th>QTY</th>
-        <th>PARTY</th>
-        <th>NOTE</th>
-    </tr>
-    </thead>
-    <tbody>
-    `;
-
-    data.forEach(row=>{
-
-        const type =
-            row.transaction_type==="purchase"
-            ? "📥 Stock In"
-            : row.transaction_type==="offline_out"
-            ? "📤 Offline"
-            : row.transaction_type==="sale"
-            ? "🛒 Online"
-            : "⚙️ Adjustment";
-
-        html += `
-        <tr>
-            <td>${escapeHtml(new Date(row.created_at).toLocaleString("en-IN"))}</td>
-            <td>${escapeHtml(productMap[String(row.product_id)] || "Product")}</td>
-            <td>${type}</td>
-            <td><strong>${Number(row.quantity || 0)}</strong></td>
-            <td>${escapeHtml(row.party_name || "-")}</td>
-            <td>${escapeHtml(row.note || "-")}</td>
-        </tr>
-        `;
-    });
-
-    html += `</tbody></table></div>`;
-
-    box.innerHTML = html;
-}
-
-
-async function saveOfflineStock(){
-
-    const productId =
-        document.getElementById("offlineProductInput").value;
-
-    const quantity =
-        Number(document.getElementById("offlineQuantityInput").value);
-
-    const party =
-        document.getElementById("offlinePartyInput").value.trim();
-
-    const note =
-        document.getElementById("offlineNoteInput").value.trim();
-
-    const product =
-        (allProducts || []).find(
-            p=>String(p.id)===String(productId)
-        );
-
-    if(!product){
-        alert("Product select karo.");
-        return;
-    }
-
-    if(!Number.isInteger(quantity) || quantity<=0){
-        alert("Valid quantity pao.");
-        return;
-    }
-
-    const current =
-        Number(product.stock || 0);
-
-    if(quantity > current){
-        alert(
-            "Stock available nahi hai.\n\n" +
-            "Available: " + current +
-            "\nRequested: " + quantity
-        );
-        return;
-    }
-
-    const {error:txError} =
-        await supabaseClient
-        .from("stock_transactions")
-        .insert({
-            product_id:product.id,
-            transaction_type:"offline_out",
-            quantity:quantity,
-            party_name:party || null,
-            note:note || null
-        });
-
-    if(txError){
-        alert("Offline stock record failed:\n\n"+txError.message);
-        return;
-    }
-
-    const newStock =
-        current - quantity;
-
-    const {error:updateError} =
-        await supabaseClient
-        .from("products")
-        .update({stock:newStock})
-        .eq("id",product.id);
-
-    if(updateError){
-        alert("Stock update failed:\n\n"+updateError.message);
-        return;
-    }
-
-    alert(
-        "Offline stock saved.\n\n" +
-        "Given: " + quantity +
-        "\nRemaining: " + newStock
-    );
-
-    loadStock();
-}
-
-
-async function updateStock(id){
-
-    const product =
-        (allProducts || []).find(
-            p=>String(p.id)===String(id)
-        );
-
-    if(!product) return;
-
-    const value =
-        prompt(
-            "Set current stock quantity:",
-            Number(product.stock || 0)
-        );
-
-    if(value===null) return;
-
-    const stock = Number(value);
-
-    if(!Number.isInteger(stock) || stock<0){
-        alert("Valid stock quantity pao.");
-        return;
-    }
-
-    const oldStock =
-        Number(product.stock || 0);
-
-    const difference =
-        stock-oldStock;
-
-    const {error} =
-        await supabaseClient
-        .from("products")
-        .update({stock:stock})
-        .eq("id",id);
-
-    if(error){
-        alert("Stock update failed:\n\n"+error.message);
-        return;
-    }
-
-    if(difference>0){
-
-        await supabaseClient
-        .from("stock_transactions")
-        .insert({
-            product_id:product.id,
-            transaction_type:"purchase",
-            quantity:difference,
-            note:"Stock added manually"
-        });
-
-    }else if(difference<0){
-
-        await supabaseClient
-        .from("stock_transactions")
-        .insert({
-            product_id:product.id,
-            transaction_type:"adjustment",
-            quantity:Math.abs(difference),
-            note:"Stock adjusted manually"
-        });
-    }
-
-    loadStock();
+    const box=document.getElementById('stockHistory');if(!box)return;
+    const {data,error}=await supabaseClient.from('stock_transactions').select('*').order('created_at',{ascending:false});if(error){box.innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`;return;}if(!data?.length){box.innerHTML='<div class="message">No stock movement yet.</div>';return;}
+    const productMap=Object.fromEntries((allProducts||[]).map(p=>[String(p.id),p.name]));let html='<div class="table-wrapper"><table class="data-table"><thead><tr><th>DATE</th><th>PRODUCT</th><th>FROM</th><th>TO</th><th>TYPE</th><th>QTY</th><th>PARTY</th><th>NOTE</th></tr></thead><tbody>';
+    data.forEach(row=>{const type=row.transaction_type==='purchase'?'📥 Stock In':row.transaction_type==='online_transfer'?'➡️ Online Transfer':row.transaction_type==='offline_out'?'🤝 Party':row.transaction_type==='sale'?'🛒 Online Sale':'⚙️ Adjustment';html+=`<tr><td>${escapeHtml(new Date(row.created_at).toLocaleString('en-IN'))}</td><td>${escapeHtml(productMap[String(row.product_id)]||'Product')}</td><td>${escapeHtml(row.source_location||row.source||'-')}</td><td>${escapeHtml(row.destination||'-')}</td><td>${type}</td><td><strong>${Number(row.quantity||0)}</strong></td><td>${escapeHtml(row.party_name||'-')}</td><td>${escapeHtml(row.note||'-')}</td></tr>`;});
+    html+='</tbody></table></div>';box.innerHTML=html;
 }
 
 /* =========================================================
@@ -5957,10 +5538,10 @@ async function loadNotifications(){
    SETTINGS MAIN
 ========================================================= */
 
-async function loadSettings(){
+function loadSettings(){
 
     const settings =
-        await loadSettingsFromDatabase();
+        getSettings();
 
     document.getElementById(
         "other-content"
@@ -7032,7 +6613,7 @@ function openSettingsTab(tab, button){
    SAVE ALL SETTINGS
 ========================================================= */
 
-async function saveAllSettings(){
+function saveAllSettings(){
 
     const old =
         getSettings();
@@ -7233,13 +6814,6 @@ async function saveAllSettings(){
 
     }
 
-    try{
-        await persistSettingsToDatabase(settings);
-    }catch(error){
-        console.error(error);
-        alert("Settings local save ho gayian, par database save nahi hoya: " + error.message);
-    }
-
 }
 
 function getValue(id,fallback){
@@ -7307,44 +6881,56 @@ async function createStaffLogin(){
     await loadStaffAccounts();
 }
 
-async async function loadStaffAccounts(){
+async function loadStaffAccounts(){
     const box=document.getElementById("staffAccountsList");
     if(!box) return;
     box.innerHTML='<div class="message">Loading staff accounts...</div>';
+
     const {data,error}=await supabaseClient
         .from("staff_profiles")
-        .select("id,name,email,phone,role,active,permissions,created_at")
+        .select("id,name,email,role,active,created_at")
         .order("created_at",{ascending:false});
-    if(error){box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>';return;}
-    if(!data?.length){box.innerHTML='<div class="message">No staff accounts created yet.</div>';return;}
-    const roleOptions=["Super Admin","Admin","Manager","Sales Manager","Sales Staff","Order Manager","Order Staff","Accounts Manager","Accounts Staff","Inventory Manager","Inventory Staff","Customer Manager","Customer Support","Delivery Manager","Delivery Staff","Purchase Manager","Purchase Staff","Report Manager","Viewer","Custom Role"];
-    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:1050px">
-    <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
-    <tbody>${data.map(s=>`<tr>
-      <td><strong>${escapeHtml(s.name||"")}</strong></td>
-      <td>${escapeHtml(s.email||"")}</td>
-      <td><select id="staffRole_${s.id}" style="padding:7px;border:1px solid #ddd;border-radius:7px;min-width:170px">${roleOptions.map(r=>`<option value="${escapeHtml(r)}" ${String(r).toLowerCase()===String(s.role||"").toLowerCase()?"selected":""}>${escapeHtml(r)}</option>`).join("")}</select></td>
-      <td><button type="button" class="table-btn ${s.active===false?'':'edit-btn'}" onclick="toggleStaffActive('${s.id}',${s.active===false})">${s.active===false?'Activate':'Deactivate'}</button></td>
-      <td>${s.created_at?new Date(s.created_at).toLocaleDateString():"—"}</td>
-      <td style="display:flex;gap:6px;flex-wrap:wrap"><button class="table-btn edit-btn" type="button" onclick="saveStaffRole('${s.id}')">💾 Save Role</button><button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">🔑 Password</button></td>
-    </tr>`).join("")}</tbody></table></div>`;
+
+    if(error){
+        box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>';
+        return;
+    }
+    if(!data?.length){
+        box.innerHTML='<div class="message">No staff accounts created yet.</div>';
+        return;
+    }
+
+    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:700px">
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+        <tbody>${data.map(s=>`<tr>
+            <td><strong>${escapeHtml(s.name || "")}</strong></td>
+            <td>${escapeHtml(s.email || "")}</td>
+            <td>${escapeHtml(s.role || "Staff")}</td>
+            <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
+            <td>${s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}</td>
+            <td><button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">Change Password</button></td>
+        </tr>`).join('')}</tbody></table></div>`;
 }
 
-async function saveStaffRole(id){
-    const role=document.getElementById("staffRole_"+id)?.value;
-    if(!role)return;
-    const {data,error}=await supabaseClient.rpc("admin_update_staff",{p_id:id,p_name:null,p_phone:null,p_role:role,p_permissions:null,p_active:null});
-    if(error){alert("Role save nahi hoya: "+error.message);return;}
-    alert("Staff role updated successfully: "+role);
-    await loadStaffAccounts();
-}
+async function changeStaffPassword(email){
+    const password=prompt("New password for " + email + " (minimum 8 characters):");
+    if(password===null) return;
+    if(password.length < 8){ alert("Password must be at least 8 characters."); return; }
 
-async function toggleStaffActive(id,newValue){
-    const {error}=await supabaseClient.rpc("admin_update_staff",{p_id:id,p_name:null,p_phone:null,p_role:null,p_permissions:null,p_active:newValue});
-    if(error){alert("Staff status update nahi hoya: "+error.message);return;}
-    await loadStaffAccounts();
-}
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(!session){ alert("Your admin session has expired. Please sign in again."); return; }
 
+    const {data,error}=await supabaseClient.functions.invoke("reset-staff-password",{
+        body:{email,password}
+    });
+
+    if(error){
+        alert(data?.error || error.message || "Unable to change staff password.");
+        return;
+    }
+    if(data?.error){ alert(data.error); return; }
+    alert("Staff password changed successfully.");
+}
 
 /* =========================================================
    PASSWORD CHANGE
