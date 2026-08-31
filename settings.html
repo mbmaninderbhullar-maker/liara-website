@@ -92,6 +92,7 @@ h1{margin:5px 0 0;font-size:30px}
 <button class="tab" onclick="openTab('parties',this)">👥 Parties / Ledger</button>
 <button class="tab" onclick="openTab('shipping',this)">🚚 Shipping / Shiprocket</button>
 <button class="tab" onclick="openTab('payment',this)">💳 Payment</button>
+<button class="tab" onclick="openTab('billing',this)">🧾 Sales Billing</button>
 <button class="tab" onclick="openTab('sales',this)">💰 Sales & GST</button>
 <button class="tab" onclick="openTab('reports',this)">📈 Reports</button>
 <button class="tab" onclick="openTab('audit',this)">📝 Activity / Audit Log</button>
@@ -279,6 +280,54 @@ h1{margin:5px 0 0;font-size:30px}
 <div class="note">This page's settings are stored locally. Database backups and Supabase recovery must be handled through protected server/database tooling.</div>
 </div></section>
 
+
+<section id="billing" class="section"><div class="card">
+<h2>🧾 Sales Billing</h2>
+<p>Professional billing controls for counter sales, party sales and online orders.</p>
+
+<div class="grid">
+<div class="field"><label>BILL / INVOICE PREFIX</label><input id="billPrefix" value="LIARA-BILL"></div>
+<div class="field"><label>NEXT BILL NUMBER</label><input id="nextBillNumber" type="number" min="1" value="1001"></div>
+<div class="field"><label>DEFAULT PAYMENT</label><select id="billPayment"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Credit</option><option>COD</option><option>Online Payment</option></select></div>
+<div class="field"><label>ROUNDING</label><select id="billRounding"><option>Nearest Rupee</option><option>Nearest 0.50</option><option>No Rounding</option></select></div>
+</div>
+
+<div class="row"><div><strong>Auto Generate Bill</strong><small>Create a bill automatically after a completed sale.</small></div><label class="switch"><input id="autoBill" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="row"><div><strong>Online Order Bill</strong><small>Generate a printable bill/proforma for online orders.</small></div><label class="switch"><input id="onlineBill" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="row"><div><strong>Party Sale Bill</strong><small>Generate a bill for offline/party sales.</small></div><label class="switch"><input id="partyBill" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="row"><div><strong>Stock Deduction on Billing</strong><small>Deduct sold quantity from the matching stock/variant when a sale is finalized.</small></div><label class="switch"><input id="billStockDeduct" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="row"><div><strong>Show GST on Bill</strong><small>Show tax rate and tax amount when applicable.</small></div><label class="switch"><input id="billGST" type="checkbox" checked><span class="slider"></span></label></div>
+<div class="row"><div><strong>Show Customer Details</strong><small>Include customer/party name, phone and address.</small></div><label class="switch"><input id="billCustomer" type="checkbox" checked><span class="slider"></span></label></div>
+
+<h3 style="margin-top:28px">Bill Output</h3>
+<div class="grid">
+<div class="field"><label>PAPER SIZE</label><select id="billPaper"><option>A4</option><option>A5</option><option>80mm Thermal</option><option>58mm Thermal</option></select></div>
+<div class="field"><label>PRINT COPIES</label><input id="billCopies" type="number" min="1" max="5" value="1"></div>
+<div class="field full"><label>TERMS & CONDITIONS</label><textarea id="billTerms" placeholder="Goods once sold are subject to company policy..."></textarea></div>
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
+<button class="btn" type="button" onclick="previewProforma()">👁 PREVIEW PROFORMA</button>
+<button class="btn light" type="button" onclick="printProforma()">🖨 PRINT PROFORMA</button>
+</div>
+
+<div id="proformaPreview" class="proforma" style="display:none">
+  <div class="proforma-head">
+    <div><b>LIARA PROFESSIONAL™</b><small>PROFORMA / SALES BILL</small></div>
+    <div id="pfNo">LIARA-BILL-1001</div>
+  </div>
+  <div class="pf-line"></div>
+  <div class="pf-grid">
+    <div><b>Bill To</b><br>Customer / Party Name<br>Phone: —<br>Address: —</div>
+    <div><b>Bill Details</b><br>Date: <span id="pfDate"></span><br>Payment: <span id="pfPayment"></span><br>Status: PROFORMA</div>
+  </div>
+  <table><thead><tr><th>Product</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+  <tbody><tr><td>Sample Product</td><td>1</td><td>₹0.00</td><td>₹0.00</td></tr></tbody></table>
+  <div class="pf-total">TOTAL: ₹0.00</div>
+  <div class="pf-terms" id="pfTerms"></div>
+</div>
+</div></section>
+
 <section id="sales" class="section"><div class="card">
 <h2>💰 Sales & GST</h2><p>Currency, GST, shipping and discount controls.</p>
 <div class="grid">
@@ -362,7 +411,8 @@ shipping:{defaultCourier:"Auto",pickupAddress:"",defaultWeight:0.5,packageSize:"
 payment:{razorpayMode:"Test",paymentTimeout:15,upiId:"",bankDetails:"",cod:true,razorpayEnabled:false,manualVerification:true,refundTracking:true},
 reports:{reportRange:"Last 30 Days",dateFormat:"DD MMM YYYY",salesReports:true,stockReports:true,partyReports:true,gstReports:true,excelExport:true,printReports:true},
 audit:{enabled:true,loginActivity:true,orderAudit:true,stockAudit:true,paymentAudit:true},
-backup:{backupReminder:"Monthly",dataRetention:"Keep Forever"}
+backup:{backupReminder:"Monthly",dataRetention:"Keep Forever"},
+billing:{billPrefix:"LIARA-BILL",nextBillNumber:1001,billPayment:"Cash",billRounding:"Nearest Rupee",autoBill:true,onlineBill:true,partyBill:true,billStockDeduct:true,billGST:true,billCustomer:true,billPaper:"A4",billCopies:1,billTerms:""}
 };
 
 const MODULES=[
@@ -430,6 +480,7 @@ function loadSettings(){
  setVal("reportRange",s.reports.reportRange);setVal("dateFormat",s.reports.dateFormat);setCheck("salesReports",s.reports.salesReports);setCheck("stockReports",s.reports.stockReports);setCheck("partyReports",s.reports.partyReports);setCheck("gstReports",s.reports.gstReports);setCheck("excelExport",s.reports.excelExport);setCheck("printReports",s.reports.printReports);
  setCheck("auditEnabled",s.audit.enabled);setCheck("loginActivity",s.audit.loginActivity);setCheck("orderAudit",s.audit.orderAudit);setCheck("stockAudit",s.audit.stockAudit);setCheck("paymentAudit",s.audit.paymentAudit);
  setVal("backupReminder",s.backup.backupReminder);setVal("dataRetention",s.backup.dataRetention);
+ setVal("billPrefix",s.billing.billPrefix);setVal("nextBillNumber",s.billing.nextBillNumber);setVal("billPayment",s.billing.billPayment);setVal("billRounding",s.billing.billRounding);setCheck("autoBill",s.billing.autoBill);setCheck("onlineBill",s.billing.onlineBill);setCheck("partyBill",s.billing.partyBill);setCheck("billStockDeduct",s.billing.billStockDeduct);setCheck("billGST",s.billing.billGST);setCheck("billCustomer",s.billing.billCustomer);setVal("billPaper",s.billing.billPaper);setVal("billCopies",s.billing.billCopies);setVal("billTerms",s.billing.billTerms);
 }
 
 function saveSettings(){
@@ -448,7 +499,8 @@ function saveSettings(){
  payment:{razorpayMode:val("razorpayMode"),paymentTimeout:Number(val("paymentTimeout")||15),upiId:val("upiId"),bankDetails:val("bankDetails"),cod:check("paymentCOD"),razorpayEnabled:check("razorpayEnabled"),manualVerification:check("manualVerification"),refundTracking:check("refundTracking")},
  reports:{reportRange:val("reportRange"),dateFormat:val("dateFormat"),salesReports:check("salesReports"),stockReports:check("stockReports"),partyReports:check("partyReports"),gstReports:check("gstReports"),excelExport:check("excelExport"),printReports:check("printReports")},
  audit:{enabled:check("auditEnabled"),loginActivity:check("loginActivity"),orderAudit:check("orderAudit"),stockAudit:check("stockAudit"),paymentAudit:check("paymentAudit")},
- backup:{backupReminder:val("backupReminder"),dataRetention:val("dataRetention")}
+ backup:{backupReminder:val("backupReminder"),dataRetention:val("dataRetention")},
+ billing:{billPrefix:val("billPrefix"),nextBillNumber:Number(val("nextBillNumber")||1),billPayment:val("billPayment"),billRounding:val("billRounding"),autoBill:check("autoBill"),onlineBill:check("onlineBill"),partyBill:check("partyBill"),billStockDeduct:check("billStockDeduct"),billGST:check("billGST"),billCustomer:check("billCustomer"),billPaper:val("billPaper"),billCopies:Number(val("billCopies")||1),billTerms:val("billTerms")}
  };
  localStorage.setItem(KEY,JSON.stringify(s));
  showNotice("Settings saved successfully.");
@@ -521,6 +573,20 @@ function importSettings(){
   }catch(e){alert("Invalid settings backup file.");}
  };
  input.click();
+}
+
+function previewProforma(){
+ const p=document.getElementById("proformaPreview");
+ document.getElementById("pfNo").textContent=(val("billPrefix")||"LIARA-BILL")+"-"+(val("nextBillNumber")||"1001");
+ document.getElementById("pfDate").textContent=new Date().toLocaleDateString("en-IN");
+ document.getElementById("pfPayment").textContent=val("billPayment")||"Cash";
+ document.getElementById("pfTerms").textContent=val("billTerms")||"";
+ p.style.display="block";
+ p.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function printProforma(){
+ previewProforma();
+ setTimeout(()=>window.print(),150);
 }
 
 function generatePassword(){
