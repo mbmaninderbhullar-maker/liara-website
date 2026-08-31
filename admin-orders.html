@@ -1362,8 +1362,8 @@ body{
 
         <button class="active" onclick="showSection('orders',this)">🛒 Orders</button>
         <button onclick="showSection('sales',this)">💰 Sales</button>
-        <button onclick="showSection('products',this)">🧴 Products</button>
-        <button onclick="showSection('add-product',this)">➕ Add Product</button>
+        <button onclick="window.location.href='products.html'">🧴 Products</button>
+        <button onclick="window.location.href='add-product.html'">➕ Add Product</button>
         <button onclick="showSection('customers',this)">👥 Customers</button>
         <button onclick="showSection('delivery',this)">🚚 Delivery</button>
         <button onclick="showSection('reports',this)">📊 Reports</button>
@@ -4092,7 +4092,7 @@ async function loadProducts(){
                 <h2>🧴 Products</h2>
             </div>
 
-            <button class="btn" onclick="showAddProduct()">
+            <button class="btn" onclick="window.location.href='add-product.html'">
                 ➕ Add Product
             </button>
 
