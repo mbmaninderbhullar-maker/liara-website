@@ -2473,6 +2473,14 @@ function getSelectedSize() {
     return el ? el.value : "";
 }
 
+// Variant buttons must remain clickable even when another UI layer is present.
+document.addEventListener("click", function(e) {
+    const button = e.target.closest(".liara-size-price-box .size-option");
+    if (!button || button.disabled) return;
+    const value = button.dataset.sizeValue;
+    if (value) selectProductSize(value, button);
+});
+
 function selectProductSize(value, button) {
     document.querySelectorAll(".size-option").forEach(btn => btn.classList.remove("active"));
     if (button) button.classList.add("active");
@@ -2554,7 +2562,8 @@ function renderSizeOptions(product) {
         return `
             <button type="button"
                     class="size-option ${option.value === firstPriced.value ? "active" : ""} ${selectable ? "" : "price-not-set"}"
-                    ${selectable ? `onclick="selectProductSize(${JSON.stringify(option.value)}, this)"` : "disabled"}
+                    data-size-value="${escapeHtml(option.value)}"
+                    ${selectable ? "" : "disabled"}
                     title="${selectable ? "Select " + escapeHtml(option.label) : disabledReason}">
                 <span>${escapeHtml(option.label)}</span>
                 <small>${hasPrice ? "₹" + Number(option.price).toLocaleString("en-IN") : "Set price"}${hasStockData && !inStock ? " · Out" : ""}</small>
