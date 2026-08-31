@@ -5,19 +5,30 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0">
 
-<title>Liara Professional™ | Order Label</title>
+<title>Liara Professional™ | Order Labels</title>
 
 
-<!-- SUPABASE -->
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- BARCODE -->
+
+<!-- =====================================================
+     BARCODE
+===================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
 
 <style>
+
+/* =====================================================
+   RESET
+===================================================== */
 
 *{
     box-sizing:border-box;
@@ -25,31 +36,33 @@
 
 
 body{
+
     margin:0;
-    background:#f3f1ed;
+
+    background:#f5f3ef;
+
     color:#171717;
-    font-family:Arial,Helvetica,sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
 
 /* =====================================================
-   MAIN
+   PAGE
 ===================================================== */
 
-.container{
+.page{
+
     width:100%;
-    max-width:650px;
-    margin:40px auto;
-    padding:20px;
-}
 
+    max-width:900px;
 
-.box{
-    background:#fff;
-    border:1px solid #ddd8d0;
-    border-radius:16px;
-    padding:25px;
-    box-shadow:0 10px 30px rgba(0,0,0,.07);
+    margin:0 auto;
+
+    padding:30px 20px 50px;
 }
 
 
@@ -58,12 +71,15 @@ body{
 ===================================================== */
 
 .header{
+
     text-align:center;
+
     margin-bottom:25px;
 }
 
 
 .header h1{
+
     margin:0;
 
     font-family:
@@ -71,102 +87,249 @@ body{
         "Times New Roman",
         serif;
 
-    font-size:29px;
+    font-size:32px;
 
-    letter-spacing:3px;
+    letter-spacing:4px;
 }
 
 
 .header p{
-    margin:5px 0 0;
+
+    margin:6px 0 0;
+
+    color:#777;
 
     font-size:10px;
 
     letter-spacing:2px;
-
-    color:#777;
 }
 
 
 /* =====================================================
-   SEARCH
+   CONTROL BOX
 ===================================================== */
 
-.search{
+.controls{
+
+    background:#fff;
+
+    border:1px solid #ddd8d0;
+
+    border-radius:15px;
+
+    padding:18px;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.06);
+}
+
+
+.search-row{
+
     display:flex;
+
     gap:10px;
 }
 
 
-.search input{
+.search-row input{
 
     flex:1;
 
-    height:48px;
+    height:46px;
 
     border:1px solid #ccc;
 
-    border-radius:9px;
+    border-radius:8px;
 
-    padding:0 14px;
+    padding:0 13px;
 
-    font-size:16px;
+    font-size:15px;
 
     outline:none;
 }
 
 
-.search input:focus{
-    border-color:#171717;
+.search-row input:focus{
+
+    border-color:#222;
 }
 
 
-.search button{
+.btn{
 
-    height:48px;
+    height:46px;
 
     border:0;
 
-    border-radius:9px;
+    border-radius:8px;
+
+    padding:0 18px;
 
     background:#171717;
 
     color:#fff;
 
-    padding:0 20px;
-
-    font-weight:bold;
+    font-weight:700;
 
     cursor:pointer;
 }
 
 
-.search button:hover{
+.btn:hover{
+
     opacity:.9;
 }
 
 
 /* =====================================================
-   MESSAGE
+   STATUS
 ===================================================== */
 
-.message{
-
-    margin:12px 2px;
+.status{
 
     min-height:20px;
 
-    font-size:13px;
+    margin-top:10px;
+
+    font-size:12px;
 }
 
 
-.error{
+.status.error{
+
     color:#b42318;
 }
 
 
-.success{
+.status.success{
+
     color:#16733c;
+}
+
+
+/* =====================================================
+   ORDERS
+===================================================== */
+
+.orders-title{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:20px 0 10px;
+}
+
+
+.orders-title strong{
+
+    font-size:14px;
+}
+
+
+.order-count{
+
+    color:#777;
+
+    font-size:12px;
+}
+
+
+.orders{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(250px,1fr));
+
+    gap:10px;
+
+    max-height:430px;
+
+    overflow:auto;
+
+    padding-right:3px;
+}
+
+
+.order-card{
+
+    background:#fff;
+
+    border:1px solid #ddd8d0;
+
+    border-radius:10px;
+
+    padding:13px;
+
+    cursor:pointer;
+
+    transition:.15s;
+}
+
+
+.order-card:hover{
+
+    border-color:#222;
+
+    transform:translateY(-1px);
+}
+
+
+.order-card.active{
+
+    border:2px solid #171717;
+
+    padding:12px;
+}
+
+
+.order-number{
+
+    font-size:14px;
+
+    font-weight:800;
+}
+
+
+.order-customer{
+
+    margin-top:4px;
+
+    font-size:13px;
+
+    font-weight:600;
+}
+
+
+.order-phone{
+
+    margin-top:3px;
+
+    color:#777;
+
+    font-size:11px;
+}
+
+
+.order-payment{
+
+    display:inline-block;
+
+    margin-top:8px;
+
+    padding:4px 7px;
+
+    border:1px solid #222;
+
+    border-radius:4px;
+
+    font-size:9px;
+
+    font-weight:800;
 }
 
 
@@ -174,36 +337,82 @@ body{
    LABEL AREA
 ===================================================== */
 
-.label-area{
+.label-section{
 
     display:none;
 
     margin-top:25px;
+
+    background:#fff;
+
+    border:1px solid #ddd8d0;
+
+    border-radius:15px;
+
+    padding:20px;
+}
+
+
+.label-heading{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:15px;
+}
+
+
+.label-heading strong{
+
+    font-size:14px;
+}
+
+
+.print-btn{
+
+    height:40px;
+
+    padding:0 17px;
+
+    border:0;
+
+    border-radius:8px;
+
+    background:#171717;
+
+    color:#fff;
+
+    font-weight:700;
+
+    cursor:pointer;
 }
 
 
 /* =====================================================
-   PRINT LABEL
+   LABEL
 ===================================================== */
 
 .label{
 
-    width:100%;
+    width:90mm;
 
-    max-width:400px;
-
-    margin:auto;
+    min-height:55mm;
 
     background:#fff;
 
     border:1.5px solid #111;
 
-    padding:15px;
+    padding:6mm;
+
+    margin:0 auto;
 }
 
 
 /* =====================================================
-   LABEL HEADER
+   LABEL TOP
 ===================================================== */
 
 .label-top{
@@ -214,9 +423,9 @@ body{
 
     align-items:flex-start;
 
-    gap:10px;
+    gap:8px;
 
-    padding-bottom:10px;
+    padding-bottom:7px;
 
     border-bottom:1.5px solid #111;
 }
@@ -229,9 +438,9 @@ body{
         "Times New Roman",
         serif;
 
-    font-size:20px;
+    font-size:18px;
 
-    font-weight:bold;
+    font-weight:700;
 
     letter-spacing:2px;
 }
@@ -248,65 +457,61 @@ body{
 
     font-size:7px;
 
-    letter-spacing:1.5px;
+    letter-spacing:1.3px;
 
     margin-top:2px;
 }
 
 
-/* =====================================================
-   PAYMENT
-===================================================== */
-
-.cod{
+.payment{
 
     border:1.5px solid #111;
 
-    padding:5px 8px;
-
     border-radius:4px;
 
-    font-size:9px;
+    padding:4px 6px;
 
-    font-weight:bold;
+    font-size:8px;
+
+    font-weight:800;
 
     white-space:nowrap;
 }
 
 
 /* =====================================================
-   SHIP TO
+   ADDRESS
 ===================================================== */
 
 .ship{
 
-    font-size:8px;
+    margin-top:8px;
 
-    font-weight:bold;
+    margin-bottom:3px;
 
-    letter-spacing:1.2px;
-
-    margin-top:12px;
-
-    margin-bottom:4px;
-}
-
-
-.name{
-
-    font-size:17px;
+    font-size:7px;
 
     font-weight:800;
 
-    margin-bottom:5px;
+    letter-spacing:1.2px;
+}
+
+
+.customer-name{
+
+    font-size:15px;
+
+    font-weight:800;
+
+    margin-bottom:4px;
 
     word-break:break-word;
 }
 
 
-.address{
+.customer-address{
 
-    font-size:12px;
+    font-size:10px;
 
     line-height:1.4;
 
@@ -314,21 +519,21 @@ body{
 }
 
 
-.mobile{
+.customer-phone{
 
-    font-size:11px;
+    margin-top:5px;
 
-    font-weight:bold;
+    font-size:9px;
 
-    margin-top:6px;
+    font-weight:700;
 }
 
 
 /* =====================================================
-   ORDER + BARCODE
+   BOTTOM
 ===================================================== */
 
-.bottom{
+.label-bottom{
 
     display:flex;
 
@@ -336,21 +541,21 @@ body{
 
     align-items:center;
 
-    gap:10px;
+    gap:8px;
 
-    border-top:1px solid #aaa;
+    margin-top:8px;
 
-    margin-top:11px;
+    padding-top:7px;
 
-    padding-top:9px;
+    border-top:1px solid #999;
 }
 
 
-.order{
+.label-order{
 
-    font-size:10px;
+    font-size:9px;
 
-    font-weight:bold;
+    font-weight:800;
 
     white-space:nowrap;
 }
@@ -358,63 +563,37 @@ body{
 
 .barcode{
 
-    width:145px;
+    width:125px;
 
-    height:45px;
+    height:38px;
 }
 
 
 /* =====================================================
-   PRINT BUTTON
+   LOADING
 ===================================================== */
 
-.print-box{
+.loading{
 
     text-align:center;
 
-    margin-top:15px;
+    padding:25px;
+
+    color:#777;
+
+    font-size:13px;
 }
 
 
-.print-btn{
+.empty{
 
-    width:150px;
+    text-align:center;
 
-    height:45px;
+    padding:25px;
 
-    border:0;
+    color:#777;
 
-    border-radius:8px;
-
-    background:#171717;
-
-    color:#fff;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-
-/* =====================================================
-   INFO
-===================================================== */
-
-.info{
-
-    margin-top:20px;
-
-    padding:12px;
-
-    border-radius:9px;
-
-    background:#f7f5f1;
-
-    color:#666;
-
-    font-size:11px;
-
-    line-height:1.5;
+    font-size:13px;
 }
 
 
@@ -422,37 +601,53 @@ body{
    MOBILE
 ===================================================== */
 
-@media(max-width:600px){
+@media(max-width:650px){
 
-    .container{
+    .page{
 
-        margin:10px auto;
-
-        padding:10px;
+        padding:15px 10px 40px;
     }
 
 
-    .box{
-
-        padding:17px;
-    }
-
-
-    .search{
+    .search-row{
 
         flex-direction:column;
     }
 
 
-    .search button{
+    .search-row .btn{
 
         width:100%;
     }
 
 
-    .label{
+    .orders{
 
-        max-width:360px;
+        grid-template-columns:1fr;
+
+        max-height:350px;
+    }
+
+
+    .label-section{
+
+        padding:12px;
+    }
+
+
+    .label-heading{
+
+        align-items:flex-start;
+
+        gap:10px;
+    }
+
+
+    .print-btn{
+
+        font-size:11px;
+
+        padding:0 12px;
     }
 
 }
@@ -478,7 +673,7 @@ body{
     }
 
 
-    .container{
+    .page{
 
         width:auto;
 
@@ -490,37 +685,33 @@ body{
     }
 
 
-    .box{
-
-        border:0;
-
-        box-shadow:none;
-
-        padding:0;
-    }
-
-
     .header,
-    .search,
-    .message,
-    .info,
-    .print-box{
+
+    .controls,
+
+    .orders-title,
+
+    .orders,
+
+    .label-heading{
 
         display:none !important;
     }
 
 
-    .label-area{
+    .label-section{
 
         display:block !important;
 
+        border:0;
+
+        padding:0;
+
         margin:0;
+
+        background:#fff;
     }
 
-
-    /*
-       SMALL 90MM LABEL
-    */
 
     .label{
 
@@ -539,80 +730,6 @@ body{
         page-break-inside:avoid;
     }
 
-
-    .label-top{
-
-        padding-bottom:6px;
-    }
-
-
-    .logo{
-
-        font-size:18px;
-    }
-
-
-    .cod{
-
-        font-size:8px;
-
-        padding:4px 6px;
-    }
-
-
-    .ship{
-
-        font-size:7px;
-
-        margin-top:8px;
-    }
-
-
-    .name{
-
-        font-size:15px;
-
-        margin-bottom:4px;
-    }
-
-
-    .address{
-
-        font-size:10px;
-
-        line-height:1.35;
-    }
-
-
-    .mobile{
-
-        font-size:9px;
-
-        margin-top:5px;
-    }
-
-
-    .bottom{
-
-        margin-top:8px;
-
-        padding-top:7px;
-    }
-
-
-    .order{
-
-        font-size:9px;
-    }
-
-
-    .barcode{
-
-        width:125px;
-
-        height:38px;
-    }
-
 }
 
 </style>
@@ -623,10 +740,7 @@ body{
 <body>
 
 
-<div class="container">
-
-
-<div class="box">
+<div class="page">
 
 
 <!-- =====================================================
@@ -638,7 +752,7 @@ body{
     <h1>LIARA</h1>
 
     <p>
-        PROFESSIONAL™ · ORDER LABEL
+        PROFESSIONAL™ · ORDER LABELS
     </p>
 
 </div>
@@ -646,32 +760,67 @@ body{
 
 
 <!-- =====================================================
-     SEARCH
+     CONTROLS
 ===================================================== -->
 
-<div class="search">
+<div class="controls">
 
-    <input
-        id="orderInput"
-        type="text"
-        placeholder="Enter Order Number"
-        autocomplete="off"
+
+    <div class="search-row">
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search Order Number / Customer Name / Mobile"
+            autocomplete="off"
+        >
+
+
+        <button
+            class="btn"
+            onclick="loadOrders()"
+        >
+            Search
+        </button>
+
+    </div>
+
+
+    <div
+        id="status"
+        class="status"
+    ></div>
+
+
+
+    <div class="orders-title">
+
+        <strong>
+            Orders
+        </strong>
+
+        <span
+            id="orderCount"
+            class="order-count"
+        >
+            0 orders
+        </span>
+
+    </div>
+
+
+    <div
+        id="orders"
+        class="orders"
     >
 
-    <button
-        onclick="findOrder()"
-    >
-        Find Order
-    </button>
+        <div class="loading">
+            Loading orders...
+        </div>
+
+    </div>
 
 </div>
-
-
-
-<div
-    id="message"
-    class="message"
-></div>
 
 
 
@@ -680,94 +829,112 @@ body{
 ===================================================== -->
 
 <div
-    id="labelArea"
-    class="label-area"
+    id="labelSection"
+    class="label-section"
 >
 
 
-<div class="label">
+    <div class="label-heading">
+
+        <strong>
+            Print Preview
+        </strong>
 
 
-    <!-- HEADER -->
+        <button
+            class="print-btn"
+            onclick="printLabel()"
+        >
+            🖨 Print Label
+        </button>
 
-    <div class="label-top">
+    </div>
 
 
-        <div class="logo">
 
-            LIARA
+    <div class="label">
 
-            <small>
-                PROFESSIONAL™
-            </small>
 
+        <!-- TOP -->
+
+        <div class="label-top">
+
+
+            <div class="logo">
+
+                LIARA
+
+                <small>
+                    PROFESSIONAL™
+                </small>
+
+            </div>
+
+
+            <div
+                id="payment"
+                class="payment"
+            >
+                PAYMENT: COD
+            </div>
+
+
+        </div>
+
+
+
+        <!-- SHIP TO -->
+
+        <div class="ship">
+            SHIP TO
         </div>
 
 
         <div
-            id="paymentBox"
-            class="cod"
+            id="customerName"
+            class="customer-name"
         >
-            PAYMENT: COD
+            —
         </div>
-
-
-    </div>
-
-
-
-    <!-- SHIP TO -->
-
-    <div class="ship">
-        SHIP TO
-    </div>
-
-
-
-    <div
-        id="customerName"
-        class="name"
-    >
-        —
-    </div>
-
-
-
-    <div
-        id="customerAddress"
-        class="address"
-    >
-        —
-    </div>
-
-
-
-    <div
-        id="customerMobile"
-        class="mobile"
-    >
-        Mobile: —
-    </div>
-
-
-
-    <!-- ORDER / BARCODE -->
-
-    <div class="bottom">
 
 
         <div
-            id="displayOrder"
-            class="order"
+            id="customerAddress"
+            class="customer-address"
         >
-            ORDER: —
+            —
         </div>
 
 
-        <svg
-            id="barcode"
-            class="barcode"
-        ></svg>
+        <div
+            id="customerPhone"
+            class="customer-phone"
+        >
+            Mobile: —
+        </div>
+
+
+
+        <!-- ORDER + BARCODE -->
+
+        <div class="label-bottom">
+
+
+            <div
+                id="labelOrder"
+                class="label-order"
+            >
+                ORDER: —
+            </div>
+
+
+            <svg
+                id="barcode"
+                class="barcode"
+            ></svg>
+
+
+        </div>
 
 
     </div>
@@ -775,38 +942,6 @@ body{
 
 </div>
 
-
-
-<!-- PRINT -->
-
-<div class="print-box">
-
-    <button
-        class="print-btn"
-        onclick="printLabel()"
-    >
-        🖨 PRINT LABEL
-    </button>
-
-</div>
-
-
-</div>
-
-
-
-<div class="info">
-
-    Enter the exact Order Number and click
-    <b>Find Order</b>.
-
-    Product details are intentionally hidden
-    from this label.
-
-</div>
-
-
-</div>
 
 </div>
 
@@ -815,86 +950,92 @@ body{
 <script>
 
 /* =====================================================
-   SUPABASE
+   SUPABASE CONFIG
 ===================================================== */
+
+
+/*
+   YOUR SUPABASE PROJECT URL
+*/
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
 
 
 /*
-   IMPORTANT:
-   Paste your EXISTING Supabase publishable/anon key here.
+   PASTE YOUR EXISTING PUBLISHABLE / ANON KEY HERE.
+
+   DO NOT USE SERVICE_ROLE KEY.
 */
 
 const SUPABASE_ANON_KEY =
-"PASTE_YOUR_EXISTING_SUPABASE_ANON_KEY_HERE";
+"PASTE_YOUR_EXISTING_ANON_OR_PUBLISHABLE_KEY_HERE";
 
+
+/*
+   CREATE CLIENT
+*/
 
 const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
 
 
 
 /* =====================================================
-   FIND ORDER
+   VARIABLES
 ===================================================== */
 
-async function findOrder(){
+let allOrders = [];
+
+let selectedOrderId = null;
 
 
-    const input =
+
+/* =====================================================
+   LOAD ORDERS
+===================================================== */
+
+async function loadOrders(){
+
+    const ordersBox =
         document.getElementById(
-            "orderInput"
+            "orders"
         );
 
 
-    const message =
+    const status =
         document.getElementById(
-            "message"
+            "status"
         );
 
 
-    const labelArea =
+    const search =
         document.getElementById(
-            "labelArea"
-        );
+            "searchInput"
+        )
+        .value
+        .trim()
+        .toLowerCase();
 
 
-    const entered =
-        input.value.trim();
+    status.className =
+        "status";
 
 
-    /* RESET */
-
-    labelArea.style.display =
-        "none";
-
-
-    message.className =
-        "message";
+    ordersBox.innerHTML =
+        `
+        <div class="loading">
+            Loading orders...
+        </div>
+        `;
 
 
-    /* EMPTY */
-
-    if(!entered){
-
-        message.textContent =
-            "Please enter an Order Number.";
-
-        message.classList.add(
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    /* KEY CHECK */
+    /*
+       Check key
+    */
 
     if(
         SUPABASE_ANON_KEY.includes(
@@ -902,35 +1043,42 @@ async function findOrder(){
         )
     ){
 
-        message.textContent =
-            "Supabase key is missing. Paste your existing anon/publishable key.";
+        status.textContent =
+            "Supabase publishable/anon key is required.";
 
-        message.classList.add(
+        status.classList.add(
             "error"
         );
+
+        ordersBox.innerHTML =
+            `
+            <div class="empty">
+                Add your existing Supabase
+                publishable/anon key in the code.
+            </div>
+            `;
 
         return;
 
     }
 
 
-    message.textContent =
-        "Finding order...";
-
-
     try{
 
 
-        /* =================================================
-           EXACT ORDERS TABLE
-        ================================================= */
+        /*
+           Fetch orders
+        */
 
-        const result =
-            await supabaseClient
+        const {
+            data,
+            error
+        } = await supabaseClient
 
             .from("orders")
 
             .select(`
+                id,
                 order_number,
                 customer_name,
                 phone,
@@ -941,74 +1089,110 @@ async function findOrder(){
                 state,
                 pincode,
                 payment_method,
-                shipping_address
+                shipping_address,
+                created_at
             `)
 
-            .eq(
-                "order_number",
-                entered
-            )
-
-            .maybeSingle();
-
-
-
-        /* SUPABASE ERROR */
-
-        if(result.error){
-
-            console.error(
-                result.error
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
             );
 
-            throw result.error;
+
+        if(error){
+
+            throw error;
 
         }
 
 
+        allOrders =
+            data || [];
 
-        /* NOT FOUND */
 
-        if(!result.data){
+        /*
+           Search
+        */
 
-            message.textContent =
-                "Order not found.";
+        let filtered =
+            allOrders;
 
-            message.classList.add(
-                "error"
-            );
 
-            return;
+        if(search){
+
+            filtered =
+                allOrders.filter(
+                    order => {
+
+                        const number =
+                            String(
+                                order.order_number || ""
+                            )
+                            .toLowerCase();
+
+
+                        const name =
+                            String(
+                                order.customer_name || ""
+                            )
+                            .toLowerCase();
+
+
+                        const phone =
+                            String(
+                                order.phone || ""
+                            )
+                            .toLowerCase();
+
+
+                        return (
+
+                            number.includes(search) ||
+
+                            name.includes(search) ||
+
+                            phone.includes(search)
+
+                        );
+
+                    }
+                );
 
         }
 
 
-
-        /* SHOW */
-
-        showLabel(
-            result.data
+        renderOrders(
+            filtered
         );
 
 
     }
-
     catch(error){
 
         console.error(
-            "Order Error:",
+            "Supabase Error:",
             error
         );
 
 
-        message.textContent =
-            "Could not fetch order. " +
+        status.textContent =
+            "Could not load orders: " +
             error.message;
 
 
-        message.classList.add(
+        status.classList.add(
             "error"
         );
+
+
+        ordersBox.innerHTML =
+            `
+            <div class="empty">
+                Orders could not be loaded.
+            </div>
+            `;
 
     }
 
@@ -1017,13 +1201,182 @@ async function findOrder(){
 
 
 /* =====================================================
-   SHOW LABEL
+   RENDER ORDERS
 ===================================================== */
 
-function showLabel(order){
+function renderOrders(orders){
+
+    const box =
+        document.getElementById(
+            "orders"
+        );
 
 
-    /* NAME */
+    const count =
+        document.getElementById(
+            "orderCount"
+        );
+
+
+    count.textContent =
+        orders.length +
+        (
+            orders.length === 1
+            ? " order"
+            : " orders"
+        );
+
+
+    if(!orders.length){
+
+        box.innerHTML =
+            `
+            <div class="empty">
+                No orders found.
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        "";
+
+
+    orders.forEach(
+        order => {
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "order-card";
+
+
+            card.dataset.id =
+                order.id;
+
+
+            const payment =
+                String(
+                    order.payment_method ||
+                    "COD"
+                )
+                .toUpperCase();
+
+
+            card.innerHTML =
+
+                `
+                <div class="order-number">
+                    ${escapeHTML(
+                        order.order_number || "—"
+                    )}
+                </div>
+
+                <div class="order-customer">
+                    ${escapeHTML(
+                        order.customer_name || "Customer"
+                    )}
+                </div>
+
+                <div class="order-phone">
+                    ${escapeHTML(
+                        order.phone || "—"
+                    )}
+                </div>
+
+                <div class="order-payment">
+                    PAYMENT:
+                    ${
+                        payment.includes("COD")
+                        ? "COD"
+                        : escapeHTML(payment)
+                    }
+                </div>
+                `;
+
+
+            card.addEventListener(
+                "click",
+                function(){
+
+                    selectOrder(
+                        order
+                    );
+
+                }
+            );
+
+
+            box.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   SELECT ORDER
+===================================================== */
+
+function selectOrder(order){
+
+    selectedOrderId =
+        order.id;
+
+
+    /*
+       Remove previous active
+    */
+
+    document
+        .querySelectorAll(
+            ".order-card"
+        )
+        .forEach(
+            card => {
+
+                card.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    /*
+       Active current
+    */
+
+    const active =
+        document.querySelector(
+            `.order-card[data-id="${CSS.escape(String(order.id))}"]`
+        );
+
+
+    if(active){
+
+        active.classList.add(
+            "active"
+        );
+
+    }
+
+
+    /*
+       Customer
+    */
 
     document
         .getElementById(
@@ -1034,12 +1387,13 @@ function showLabel(order){
             "Customer";
 
 
-
-    /* MOBILE */
+    /*
+       Mobile
+    */
 
     document
         .getElementById(
-            "customerMobile"
+            "customerPhone"
         )
         .textContent =
             "Mobile: " +
@@ -1049,87 +1403,14 @@ function showLabel(order){
             );
 
 
-
-    /* =================================================
-       ADDRESS
-    ================================================= */
-
-
-    let address = "";
-
-
     /*
-       First priority:
-       shipping_address
+       Address
     */
 
-    if(
-        order.shipping_address &&
-        order.shipping_address.trim()
-    ){
-
-        address =
-            order.shipping_address.trim();
-
-    }
-
-
-    /*
-       If no shipping_address,
-       build complete address.
-    */
-
-    if(!address){
-
-        const parts = [
-
-            order.house_no,
-
-            order.street,
-
-            order.city,
-
-            order.state,
-
-            order.pincode
-
-        ];
-
-
-        address =
-            parts
-
-            .filter(
-                value =>
-                    value !== null &&
-                    value !== undefined &&
-                    String(value).trim() !== ""
-            )
-
-            .map(
-                value =>
-                    String(value).trim()
-            )
-
-            .join(", ");
-
-    }
-
-
-    /*
-       Last fallback
-    */
-
-    if(
-        !address &&
-        order.address
-    ){
-
-        address =
-            order.address;
-
-    }
-
+    const address =
+        makeAddress(
+            order
+        );
 
 
     document
@@ -1141,35 +1422,27 @@ function showLabel(order){
             "Address not available";
 
 
-
-    /* =================================================
-       ORDER NUMBER
-    ================================================= */
+    /*
+       Order number
+    */
 
     const orderNumber =
         order.order_number ||
-        document
-            .getElementById(
-                "orderInput"
-            )
-            .value
-            .trim();
-
+        "—";
 
 
     document
         .getElementById(
-            "displayOrder"
+            "labelOrder"
         )
         .textContent =
             "ORDER: " +
             orderNumber;
 
 
-
-    /* =================================================
-       PAYMENT
-    ================================================= */
+    /*
+       Payment
+    */
 
     const payment =
         String(
@@ -1181,7 +1454,7 @@ function showLabel(order){
 
     document
         .getElementById(
-            "paymentBox"
+            "payment"
         )
         .textContent =
             "PAYMENT: " +
@@ -1192,15 +1465,24 @@ function showLabel(order){
             );
 
 
+    /*
+       Barcode
+    */
 
-    /* =================================================
-       BARCODE
-    ================================================= */
+    const barcode =
+        document.getElementById(
+            "barcode"
+        );
 
-    try{
+
+    barcode.innerHTML =
+        "";
+
+
+    if(orderNumber !== "—"){
 
         JsBarcode(
-            "#barcode",
+            barcode,
             orderNumber,
             {
 
@@ -1221,42 +1503,174 @@ function showLabel(order){
 
     }
 
-    catch(error){
 
-        console.error(
-            "Barcode error:",
-            error
+    /*
+       Show label
+    */
+
+    document
+        .getElementById(
+            "labelSection"
+        )
+        .style.display =
+            "block";
+
+
+    /*
+       Success message
+    */
+
+    const status =
+        document.getElementById(
+            "status"
         );
+
+
+    status.textContent =
+        "Order selected. Label ready.";
+
+    status.className =
+        "status success";
+
+
+    /*
+       Scroll
+    */
+
+    document
+        .getElementById(
+            "labelSection"
+        )
+        .scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+
+}
+
+
+
+/* =====================================================
+   ADDRESS BUILDER
+===================================================== */
+
+function makeAddress(order){
+
+    /*
+       First use shipping_address
+    */
+
+    if(
+        order.shipping_address &&
+        String(
+            order.shipping_address
+        ).trim()
+    ){
+
+        return String(
+            order.shipping_address
+        ).trim();
 
     }
 
 
+    /*
+       Build address from fields
+    */
 
-    /* =================================================
-       SHOW
-    ================================================= */
+    const parts = [
 
-    const message =
-        document.getElementById(
-            "message"
-        );
+        order.house_no,
 
+        order.street,
 
-    message.textContent =
-        "Order found — label ready to print.";
+        order.city,
 
+        order.state,
 
-    message.classList.add(
-        "success"
-    );
+        order.pincode
+
+    ];
 
 
-    document
-        .getElementById(
-            "labelArea"
+    const built =
+        parts
+
+        .filter(
+            value =>
+                value !== null &&
+                value !== undefined &&
+                String(value).trim() !== ""
         )
-        .style.display =
-            "block";
+
+        .map(
+            value =>
+                String(value).trim()
+        )
+
+        .join(", ");
+
+
+    if(built){
+
+        return built;
+
+    }
+
+
+    /*
+       Last fallback
+    */
+
+    if(order.address){
+
+        return String(
+            order.address
+        ).trim();
+
+    }
+
+
+    return "";
+
+}
+
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -1268,9 +1682,86 @@ function showLabel(order){
 
 function printLabel(){
 
+    if(!selectedOrderId){
+
+        alert(
+            "Please select an order first."
+        );
+
+        return;
+
+    }
+
+
     window.print();
 
 }
+
+
+
+/* =====================================================
+   SEARCH WHILE TYPING
+===================================================== */
+
+document
+    .getElementById(
+        "searchInput"
+    )
+    .addEventListener(
+        "input",
+        function(){
+
+            const search =
+                this.value
+                .trim()
+                .toLowerCase();
+
+
+            const filtered =
+                allOrders.filter(
+                    order => {
+
+                        const number =
+                            String(
+                                order.order_number || ""
+                            )
+                            .toLowerCase();
+
+
+                        const name =
+                            String(
+                                order.customer_name || ""
+                            )
+                            .toLowerCase();
+
+
+                        const phone =
+                            String(
+                                order.phone || ""
+                            )
+                            .toLowerCase();
+
+
+                        return (
+
+                            number.includes(search) ||
+
+                            name.includes(search) ||
+
+                            phone.includes(search)
+
+                        );
+
+                    }
+                );
+
+
+            renderOrders(
+                filtered
+            );
+
+        }
+    );
 
 
 
@@ -1280,7 +1771,7 @@ function printLabel(){
 
 document
     .getElementById(
-        "orderInput"
+        "searchInput"
     )
     .addEventListener(
         "keydown",
@@ -1290,12 +1781,20 @@ document
                 event.key === "Enter"
             ){
 
-                findOrder();
+                loadOrders();
 
             }
 
         }
     );
+
+
+
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+
+loadOrders();
 
 </script>
 
