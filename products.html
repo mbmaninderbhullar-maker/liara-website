@@ -1,112 +1,2330 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Liara Professional™ | Products</title>
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Liara Professional™ | Product</title>
+
+<link rel="stylesheet" href="style.css">
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f3ee;color:#222}
-header{height:76px;background:#fff;border-bottom:1px solid #eae7e1;display:flex;align-items:center;justify-content:space-between;padding:15px 30px;position:sticky;top:0;z-index:20}
-.logo{font-size:23px;font-weight:bold;letter-spacing:4px}.logo small{display:block;color:#ad8232;font-size:9px;letter-spacing:3px;margin-top:3px}
-.header-actions{display:flex;gap:8px;align-items:center}.admin-pill{background:#faf7f0;border:1px solid #eee5d5;border-radius:30px;padding:9px 14px;font-size:12px;color:#666}
-.btn{border:0;background:#ad8232;color:#fff;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:12px}.btn:hover{background:#886527}
-.gray-btn{background:#666}.red-btn{background:#a33}.green-btn{background:#287a3e}
-main{padding:30px 3%}.container{max-width:1600px;margin:auto}.box{background:#fff;border:1px solid #ece8e1;padding:28px;border-radius:18px;box-shadow:0 8px 35px rgba(30,25,20,.055)}
-.head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.head p{margin:0 0 5px;color:#ad8232;font-size:10px;font-weight:bold;letter-spacing:2px}.head h1{margin:0;font-size:26px}
-.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{border:1px solid #eee;border-radius:14px;overflow:hidden;background:#fff;transition:.2s}.card:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.08)}
-.card-image{width:100%;height:210px;object-fit:cover;background:#f5f2ed}.card-body{padding:16px}.card h3{margin:0 0 7px;font-size:16px}.desc{color:#777;font-size:12px;min-height:38px;margin-bottom:10px}.price{font-size:19px;font-weight:bold;color:#287a3e}.stock{margin-top:7px;font-size:12px}.ok{color:#287a3e;font-weight:bold}.low{color:#ad8232;font-weight:bold}.out{color:#b22;font-weight:bold}.actions{display:flex;gap:7px;margin-top:14px}.actions button{flex:1;border:0;padding:8px;border-radius:7px;cursor:pointer;font-weight:bold;font-size:11px}.edit{background:#e8f2e9;color:#287a3e}.delete{background:#f7dddd;color:#a33}.message{text-align:center;padding:55px 20px;color:#777;font-weight:bold}.error{color:#a33}
-@media(max-width:1100px){.product-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){header{padding:12px 16px}.admin-pill{display:none}main{padding:20px 12px}.box{padding:18px}.head{align-items:flex-start;flex-direction:column}.product-grid{grid-template-columns:1fr}}
+/* =====================================================
+   PRODUCT PAGE
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #faf8f5;
+    color: #222;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.product-page {
+    width: 92%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 45px 0 70px;
+}
+
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 30px;
+    color: #ad8232;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   PRODUCT DETAIL
+===================================================== */
+
+.product-detail {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.07);
+}
+
+
+/* =====================================================
+   PRODUCT IMAGE
+===================================================== */
+
+.product-photo {
+    width: 100%;
+    height: 450px;
+    background: #f5f1eb;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.product-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* =====================================================
+   PRODUCT INFO
+===================================================== */
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 10px;
+}
+
+.product-label {
+    color: #ad8232;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2.5px;
+    margin-bottom: 12px;
+}
+
+.product-info h1 {
+    font-size: 36px;
+    line-height: 1.2;
+    margin: 0 0 15px;
+    color: #222;
+}
+
+.product-price {
+    font-size: 30px;
+    font-weight: bold;
+    color: #ad8232;
+    margin: 5px 0 22px;
+}
+
+.product-description {
+    color: #666;
+    line-height: 1.8;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+
+/* =====================================================
+   KEY INGREDIENTS
+===================================================== */
+
+.ingredients-section {
+    margin: 5px 0 28px;
+    padding: 25px;
+    background: #faf8f5;
+    border: 1px solid #eee5d7;
+    border-radius: 16px;
+}
+
+.ingredients-title {
+    margin: 0 0 18px;
+    font-size: 22px;
+    color: #222;
+    font-weight: 700;
+}
+
+.ingredients-title span {
+    color: #ad8232;
+}
+
+.ingredients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.ingredient-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px 16px;
+    border: 1px solid #eee;
+}
+
+.ingredient-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ad8232;
+    margin-bottom: 5px;
+}
+
+.ingredient-benefit {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+}
+
+.no-ingredients {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   STOCK
+===================================================== */
+
+.stock-text {
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.in-stock {
+    color: #287a3e;
+}
+
+.out-stock {
+    color: #b22;
+}
+
+
+/* =====================================================
+   QUANTITY
+===================================================== */
+
+.quantity-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.quantity-box button {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 21px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.quantity-box button:hover {
+    background: #f5f1eb;
+    border-color: #ad8232;
+}
+
+.quantity-box input {
+    width: 65px;
+    height: 42px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #fff;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    border: none;
+    cursor: pointer;
+    padding: 15px 27px;
+    border-radius: 9px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.action-buttons button:hover {
+    transform: translateY(-2px);
+    opacity: .93;
+}
+
+.add-cart {
+    background: #ad8232;
+    color: white;
+}
+
+.buy-now {
+    background: #287a3e;
+    color: white;
+}
+
+
+/* =====================================================
+   LOADING / ERROR
+===================================================== */
+
+.message {
+    text-align: center;
+    padding: 100px 20px;
+    color: #777;
+}
+
+.error {
+    color: #a33;
+}
+
+.message a {
+    color: #ad8232;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+
+/* =====================================================
+   PURCHASE / DETAILS LAYOUT
+===================================================== */
+
+.purchase-area {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+}
+
+.product-info {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+}
+
+.product-detail .ingredients-section,
+.product-detail .product-detail-section {
+    grid-column: 1 / -1;
+}
+
+.purchase-area .stock-text {
+    margin: 0 0 14px;
+}
+
+.purchase-area .quantity-box {
+    margin: 0 0 14px;
+}
+
+.purchase-area .action-buttons {
+    width: 100%;
+}
+
+.purchase-area .action-buttons button {
+    flex: 1;
+}
+
+
+/* =====================================================
+   MOBILE PURCHASE ORDER
+===================================================== */
+
+@media(max-width: 900px) {
+
+    .product-info {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .purchase-area {
+        grid-column: auto;
+        grid-row: auto;
+        order: 3;
+    }
+
+    .product-detail .ingredients-section,
+    .product-detail .product-detail-section {
+        grid-column: auto;
+    }
+
+    .purchase-area .buy-now {
+        order: 1;
+    }
+
+    .purchase-area .add-cart {
+        order: 2;
+    }
+
+    .purchase-area .action-buttons {
+        flex-direction: column;
+    }
+
+    .purchase-area .action-buttons button {
+        width: 100%;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width: 900px) {
+
+    .product-detail {
+        grid-template-columns: 1fr;
+        padding: 25px;
+        gap: 35px;
+    }
+
+    .product-photo {
+        height: 450px;
+    }
+
+    .product-info h1 {
+        font-size: 34px;
+    }
+
+}
+
+
+@media(max-width: 600px) {
+
+    .product-page {
+        padding: 35px 15px 60px;
+    }
+
+    .product-detail {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .product-photo {
+        height: 360px;
+        border-radius: 15px;
+    }
+
+    .product-info h1 {
+        font-size: 29px;
+    }
+
+    .product-price {
+        font-size: 26px;
+    }
+
+    .ingredients-section {
+        padding: 18px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons button {
+        width: 100%;
+    }
+
+}
+
+
+/* =====================================================
+   PRODUCT PAGE - LAPTOP SIZE FIX
+   Only affects product.html
+===================================================== */
+
+@media (min-width: 901px) {
+
+    .product-page {
+        width: min(88vw, 810px) !important;
+        max-width: 810px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 35px 0 60px !important;
+    }
+
+    .product-detail {
+        width: 100% !important;
+        max-width: 810px !important;
+        padding: 22px !important;
+        gap: 22px !important;
+        border-radius: 18px !important;
+    }
+
+    .product-photo {
+        height: 325px !important;
+        max-height: 325px !important;
+    }
+
+    .product-info h1 {
+        font-size: 29px !important;
+        line-height: 1.18 !important;
+    }
+
+    .product-price {
+        font-size: 23px !important;
+    }
+}
+
+@media (min-width: 1400px) {
+
+    .product-page {
+        width: min(86vw, 840px) !important;
+        max-width: 840px !important;
+    }
+
+    .product-detail {
+        max-width: 840px !important;
+    }
+
+    .product-photo {
+        height: 340px !important;
+        max-height: 340px !important;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .product-page {
+        width: 92% !important;
+        max-width: none !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .product-detail {
+        width: 100% !important;
+    }
+}
+
+
+/* =====================================================
+   PRODUCT DETAIL SECTIONS
+===================================================== */
+
+.product-detail-section {
+    margin: 5px 0 24px;
+    padding: 22px;
+    background: #faf8f5;
+    border: 1px solid #eee5d7;
+    border-radius: 16px;
+}
+
+.product-detail-title {
+    margin: 0 0 14px;
+    font-size: 21px;
+    color: #222;
+    font-weight: 700;
+}
+
+.product-detail-title span {
+    margin-right: 6px;
+}
+
+.product-detail-content {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.75;
+}
+
+.detail-line {
+    margin-bottom: 7px;
+}
+
+.detail-line:last-child {
+    margin-bottom: 0;
+}
+
+@media(max-width:600px) {
+    .product-detail-section {
+        padding: 18px;
+    }
+
+    .product-detail-title {
+        font-size: 19px;
+    }
+}
+
+
+/* =====================================================
+   LIARA PREMIUM PRODUCT PAGE — FINAL VISUAL
+===================================================== */
+
+.product-page{
+    width:min(92vw, 1040px) !important;
+    max-width:1040px !important;
+    margin:0 auto !important;
+    padding:28px 0 60px !important;
+}
+
+.product-detail{
+    display:grid !important;
+    grid-template-columns:repeat(6,minmax(0,1fr)) !important;
+    gap:24px !important;
+    padding:22px !important;
+    border-radius:24px !important;
+    background:#fff !important;
+    box-shadow:0 18px 45px rgba(50,35,15,.08) !important;
+}
+
+/* Main product image */
+.product-photo{
+    grid-column:span 3 !important;
+    grid-row:1 !important;
+    height:405px !important;
+    border-radius:20px !important;
+    background:#f7f2ea !important;
+    box-shadow:inset 0 0 0 1px rgba(173,130,50,.08) !important;
+}
+
+.product-photo img{
+    object-fit:cover !important;
+}
+
+/* Product information */
+.product-info{
+    grid-column:span 3 !important;
+    grid-row:1 !important;
+    padding:12px 8px 0 !important;
+}
+
+.product-label{
+    font-size:12px !important;
+    letter-spacing:3px !important;
+    color:#ad8232 !important;
+    margin-bottom:12px !important;
+}
+
+.product-info h1{
+    font-size:34px !important;
+    line-height:1.14 !important;
+    letter-spacing:-.5px !important;
+    margin-bottom:16px !important;
+    color:#171717 !important;
+}
+
+.product-price{
+    font-size:28px !important;
+    color:#ad8232 !important;
+    margin:4px 0 16px !important;
+}
+
+.product-description{
+    font-size:15px !important;
+    line-height:1.65 !important;
+    color:#666 !important;
+    margin-bottom:18px !important;
+}
+
+/* Purchase block stays with product information */
+.purchase-area{
+    grid-column:span 3 !important;
+    grid-row:2 !important;
+    align-self:start !important;
+    padding:0 8px !important;
+}
+
+.purchase-area .stock-text{
+    display:flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    font-size:15px !important;
+    margin:0 0 14px !important;
+}
+
+.purchase-area .in-stock{
+    color:#287a3e !important;
+}
+
+.purchase-area .quantity-box{
+    width:max-content !important;
+    margin:0 0 14px !important;
+    gap:0 !important;
+    border:1px solid #e5ded3 !important;
+    border-radius:11px !important;
+    overflow:hidden !important;
+    background:#fff !important;
+}
+
+.purchase-area .quantity-box button{
+    width:42px !important;
+    height:40px !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:#fff !important;
+}
+
+.purchase-area .quantity-box input{
+    width:48px !important;
+    height:40px !important;
+    border:0 !important;
+    border-left:1px solid #eee7de !important;
+    border-right:1px solid #eee7de !important;
+    border-radius:0 !important;
+}
+
+.purchase-area .action-buttons{
+    display:flex !important;
+    gap:10px !important;
+    width:100% !important;
+}
+
+.purchase-area .action-buttons button{
+    min-height:48px !important;
+    padding:13px 18px !important;
+    border-radius:11px !important;
+    font-size:15px !important;
+}
+
+.purchase-area .buy-now{
+    background:#b88427 !important;
+    color:#fff !important;
+    box-shadow:0 8px 18px rgba(184,132,39,.20) !important;
+}
+
+.purchase-area .add-cart{
+    background:#fff !important;
+    color:#ad8232 !important;
+    border:1px solid #d9c39a !important;
+}
+
+/* Three information cards */
+.product-detail .ingredients-section,
+.product-detail .product-detail-section{
+    grid-column:span 2 !important;
+    grid-row:auto !important;
+    width:auto !important;
+    margin:0 !important;
+    padding:20px !important;
+    background:#fbf9f6 !important;
+    border:1px solid #eee5d7 !important;
+    border-radius:18px !important;
+    box-sizing:border-box !important;
+}
+
+.product-detail .ingredients-section{
+    grid-row:3 !important;
+}
+
+.product-detail .product-detail-section{
+    grid-row:3 !important;
+}
+
+.ingredients-title,
+.product-detail-title{
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
+    font-size:19px !important;
+    line-height:1.2 !important;
+    margin:0 0 15px !important;
+    color:#222 !important;
+}
+
+.ingredients-title span,
+.product-detail-title span{
+    font-size:22px !important;
+}
+
+.ingredients-list{
+    gap:9px !important;
+}
+
+.ingredient-item,
+.product-detail-content{
+    background:#fff !important;
+    border:1px solid #eee8df !important;
+    border-radius:12px !important;
+    padding:13px 14px !important;
+}
+
+.ingredient-name{
+    font-size:15px !important;
+    margin-bottom:4px !important;
+}
+
+.ingredient-benefit,
+.detail-line{
+    font-size:13px !important;
+    line-height:1.55 !important;
+    color:#666 !important;
+}
+
+.product-detail-content{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:8px !important;
+}
+
+.product-detail-section:nth-of-type(1){
+    /* keeps normal card styling */
+}
+
+/* Desktop: benefits cards are visually balanced */
+.product-detail .ingredients-section,
+.product-detail .product-detail-section{
+    min-height:145px !important;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:900px){
+
+    .product-page{
+        width:92% !important;
+        max-width:none !important;
+        padding:18px 0 40px !important;
+    }
+
+    .product-detail{
+        grid-template-columns:1fr !important;
+        gap:18px !important;
+        padding:14px !important;
+        border-radius:20px !important;
+    }
+
+    .product-photo{
+        grid-column:1 !important;
+        grid-row:auto !important;
+        height:340px !important;
+        border-radius:16px !important;
+    }
+
+    .product-info{
+        grid-column:1 !important;
+        grid-row:auto !important;
+        padding:2px 5px 0 !important;
+    }
+
+    .product-info h1{
+        font-size:29px !important;
+    }
+
+    .product-price{
+        font-size:25px !important;
+    }
+
+    .product-description{
+        font-size:14px !important;
+        margin-bottom:5px !important;
+    }
+
+    .purchase-area{
+        grid-column:1 !important;
+        grid-row:auto !important;
+        padding:0 5px !important;
+        order:3 !important;
+    }
+
+    .purchase-area .action-buttons{
+        flex-direction:column !important;
+    }
+
+    .purchase-area .action-buttons button{
+        width:100% !important;
+    }
+
+    .purchase-area .buy-now{
+        order:1 !important;
+    }
+
+    .purchase-area .add-cart{
+        order:2 !important;
+    }
+
+    .product-detail .ingredients-section,
+    .product-detail .product-detail-section{
+        grid-column:1 !important;
+        grid-row:auto !important;
+        min-height:0 !important;
+        padding:17px !important;
+    }
+}
+
+@media(max-width:480px){
+    .product-photo{
+        height:300px !important;
+    }
+
+    .product-info h1{
+        font-size:27px !important;
+    }
+}
+
+
+/* =====================================================
+   PURCHASE SECTION BESIDE PRODUCT PHOTO
+   Price → Description → Stock → Quantity → Buttons
+===================================================== */
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info .purchase-area {
+    width: 100%;
+    margin-top: 22px;
+}
+
+.product-info .purchase-area .stock-text {
+    margin: 0 0 12px;
+}
+
+.product-info .purchase-area .quantity-box {
+    margin: 0 0 14px;
+}
+
+.product-info .purchase-area .action-buttons {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.product-info .purchase-area .action-buttons button {
+    flex: 1;
+}
+
+/* Mobile: same clean order, one column */
+@media (max-width: 900px) {
+    .product-info .purchase-area {
+        margin-top: 18px;
+    }
+
+    .product-info .purchase-area .action-buttons {
+        flex-direction: column;
+    }
+
+    .product-info .purchase-area .action-buttons button {
+        width: 100%;
+    }
+}
+
+
+
+/* =====================================================
+   PRODUCT SIZE / UNIT OPTIONS
+===================================================== */
+.size-selection {
+    margin: 0 0 14px;
+}
+.size-selection-label {
+    display:block;
+    margin:0 0 8px;
+    font-size:14px;
+    font-weight:700;
+    color:#333;
+}
+.size-options {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+.size-option {
+    min-width:72px;
+    padding:10px 13px;
+    border:1px solid #ddd5c9;
+    border-radius:10px;
+    background:#fff;
+    color:#555;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    transition:.2s;
+}
+.size-option:hover,
+.size-option.active {
+    border-color:#b88427;
+    background:#b88427;
+    color:#fff;
+}
+.size-option:disabled {
+    opacity:.45;
+    cursor:not-allowed;
+    background:#f5f3ef;
+}
+.selected-size-text {
+    margin:8px 0 0;
+    font-size:13px;
+    color:#777;
+}
+@media(max-width:600px){
+    .size-options{gap:7px;}
+    .size-option{flex:1 1 70px;}
+}
+
+
+/* PRODUCT SIZE / VARIANT SELECTOR */
+.size-selection{margin:18px 0 20px;padding:15px 16px;background:#fbf9f6;border:1px solid #eee5d7;border-radius:14px;}
+.size-selection-label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:10px;}
+.size-options{display:flex;flex-wrap:wrap;gap:8px;}
+.size-option{min-width:78px;padding:10px 12px;border:1px solid #ddd3c4;border-radius:10px;background:#fff;color:#333;font-weight:700;cursor:pointer;transition:.2s;}
+.size-option small{display:block;margin-top:3px;color:#ad8232;font-size:12px;}
+.size-option.active{border-color:#ad8232;background:#fff8eb;color:#ad8232;box-shadow:0 3px 10px rgba(173,130,50,.12);}
+.selected-size-text{margin-top:9px;font-size:12px;color:#777;}
+@media(max-width:600px){.size-options{gap:7px}.size-option{flex:1;min-width:70px}.size-selection{padding:13px}}
+
 </style>
+
+
+<style id="liara-unit-visible-css">
+/* =====================================================
+   LIARA UNIT SELECTOR — VISIBLE BESIDE PRODUCT PHOTO
+===================================================== */
+.product-photo{
+    position:relative !important;
+    overflow:visible !important;
+}
+.liara-unit-side{
+    position:absolute !important;
+    top:50% !important;
+    right:-92px !important;
+    transform:translateY(-50%) !important;
+    z-index:999 !important;
+    width:78px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:7px !important;
+    padding:10px 8px !important;
+    background:#fff !important;
+    border:1px solid #e2d7c7 !important;
+    border-radius:13px !important;
+    box-shadow:0 8px 24px rgba(40,30,15,.14) !important;
+}
+.liara-unit-side-title{
+    display:block !important;
+    text-align:center !important;
+    font-size:11px !important;
+    font-weight:800 !important;
+    color:#555 !important;
+    margin:0 0 2px !important;
+}
+.liara-unit-btn{
+    display:block !important;
+    width:100% !important;
+    min-height:38px !important;
+    padding:7px 5px !important;
+    border:1px solid #d9c39a !important;
+    background:#fff !important;
+    color:#8f6823 !important;
+    border-radius:8px !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+    cursor:pointer !important;
+}
+.liara-unit-btn.active{
+    background:#b88427 !important;
+    color:#fff !important;
+    border-color:#b88427 !important;
+}
+@media(max-width:900px){
+    .liara-unit-side{
+        right:10px !important;
+        top:auto !important;
+        bottom:10px !important;
+        transform:none !important;
+        width:auto !important;
+        flex-direction:row !important;
+        align-items:center !important;
+        padding:7px !important;
+    }
+    .liara-unit-side-title{
+        margin:0 2px 0 0 !important;
+    }
+    .liara-unit-btn{
+        width:auto !important;
+        min-width:44px !important;
+    }
+}
+</style>
+
 </head>
+
+
 <body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header>
-  <div class="logo">LIARA<small>PROFESSIONAL™</small></div>
-  <div class="header-actions">
-    <div class="admin-pill">👤 Company Admin</div>
-    <button class="btn" onclick="location.href='add-product.html'">➕ Add Product</button>
-    <button class="btn gray-btn" onclick="logoutAdmin()">Logout</button>
-  </div>
+
+<a href="index.html" class="logo">
+
+    <span>
+        LIARA
+    </span>
+
+    <small>
+        PROFESSIONAL™
+    </small>
+
+</a>
+
+
+<nav>
+
+    <a href="index.html">
+        Home
+    </a>
+
+    <a href="index.html#products">
+        Products
+    </a>
+
+    <a href="account.html">
+        My Account
+    </a>
+
+    <a href="cart.html">
+        Cart 🛒
+    </a>
+
+</nav>
+
 </header>
 
-<main><div class="container"><div class="box">
-  <div class="head">
-    <div><p>PRODUCT MANAGEMENT</p><h1>🧴 Products</h1></div>
-    <button class="btn gray-btn" onclick="loadProducts()">🔄 Refresh</button>
-  </div>
-  <div id="productsList"><div class="message">Loading products...</div></div>
-</div></div></main>
+
+
+<!-- =====================================================
+     MAIN PRODUCT PAGE
+===================================================== -->
+
+<main class="product-page">
+
+
+<a
+    href="index.html#products"
+    class="back-link">
+
+    ← Back to Products
+
+</a>
+
+
+<div id="productContainer">
+
+    <div class="message">
+
+        Loading product...
+
+    </div>
+
+</div>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
-const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
-const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const ADMIN_EMAIL="info@liara.co.in";
 
-function escapeHtml(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function money(v){return "₹"+Number(v||0).toLocaleString("en-IN")}
+/* =====================================================
+   SUPABASE CONNECTION
+===================================================== */
 
-async function checkAdmin(){
-  const {data,error}=await supabaseClient.auth.getUser();
-  if(error||!data?.user||String(data.user.email||"").toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
-    location.href="company-login.html"; return null;
-  }
-  return data.user;
+const SUPABASE_URL =
+"https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function showProductMessage(message) {
+    const box = document.getElementById("productContainer");
+    if (box) {
+        box.innerHTML = `<div class="message">${escapeHtml(message)}</div>`;
+    }
 }
-async function logoutAdmin(){await supabaseClient.auth.signOut();location.href="company-login.html"}
 
-let allProducts=[];
-async function loadProducts(){
-  const box=document.getElementById("productsList");
-  box.innerHTML='<div class="message">Loading products...</div>';
-  const user=await checkAdmin(); if(!user)return;
-  const {data,error}=await supabaseClient.from("products").select("*").order("created_at",{ascending:false});
-  if(error){box.innerHTML='<div class="message error">'+escapeHtml(error.message)+'</div>';return}
-  allProducts=data||[]; renderProducts(allProducts);
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
 }
-function renderProducts(products){
-  const box=document.getElementById("productsList");
-  if(!products.length){box.innerHTML='<div class="message">No products added yet.</div>';return}
-  let html='<div class="product-grid">';
-  products.forEach(p=>{
-    const stock=Number(p.stock||0), lowLimit=Number(p.low_stock||5);
-    const stockText=stock<=0?"Out of Stock":stock<=lowLimit?"Low Stock: "+stock:"Stock: "+stock;
-    const cls=stock<=0?"out":stock<=lowLimit?"low":"ok";
-    const image=p.image_url||"";
-    html+=`<div class="card">
-      ${image?`<img class="card-image" src="${escapeHtml(image)}" alt="${escapeHtml(p.name)}">`:`<div class="card-image" style="display:flex;align-items:center;justify-content:center;font-size:50px">🧴</div>`}
-      <div class="card-body">
-        <h3>${escapeHtml(p.name)}</h3>
-        <div class="desc">${escapeHtml(p.description||"")}</div>
-        <div class="price">${money(p.price)}</div>
-        <div class="stock ${cls}">${stockText}</div>
-        <div class="actions">
-          <button class="edit" onclick="location.href='add-product.html?id=${encodeURIComponent(p.id)}'">✏️ Edit</button>
-          <button class="edit" onclick="editStock('${escapeHtml(String(p.id))}')">📦 Stock</button>
-          <button class="delete" onclick="deleteProduct('${escapeHtml(String(p.id))}')">🗑 Delete</button>
+
+
+/* =====================================================
+   PRODUCT ID
+===================================================== */
+
+const productId =
+localStorage.getItem(
+    "selectedProductId"
+);
+
+
+/* =====================================================
+   INGREDIENT PARSER
+===================================================== */
+
+function parseIngredients(value) {
+
+    if(!value) {
+
+        return [];
+
+    }
+
+
+    /*
+       Try JSON first.
+    */
+
+    try {
+
+        const parsed =
+            JSON.parse(value);
+
+        if(Array.isArray(parsed)) {
+
+            return parsed;
+
+        }
+
+    }
+
+    catch(error) {
+
+        /*
+           Normal text format will
+           continue below.
+        */
+
+    }
+
+
+    /*
+       Normal text format:
+
+       Niacinamide — Brightening
+       Aloe Vera — Hydration
+       Vitamin E — Moisturising
+    */
+
+    const lines =
+        String(value)
+        .split(/\r?\n/)
+        .map(function(line) {
+
+            return line.trim();
+
+        })
+        .filter(Boolean);
+
+
+    return lines.map(function(line) {
+
+        let parts;
+
+
+        if(line.includes("—")) {
+
+            parts =
+                line.split("—");
+
+        }
+
+        else if(line.includes("|")) {
+
+            parts =
+                line.split("|");
+
+        }
+
+        else if(line.includes(":")) {
+
+            parts =
+                line.split(":");
+
+        }
+
+        else {
+
+            return {
+
+                name: line,
+                benefit: ""
+
+            };
+
+        }
+
+
+        return {
+
+            name:
+                parts.shift().trim(),
+
+            benefit:
+                parts.join("—").trim()
+
+        };
+
+    });
+
+}
+
+
+/* =====================================================
+   RENDER INGREDIENTS
+===================================================== */
+
+function renderIngredients(value) {
+
+    const ingredients =
+        parseIngredients(value);
+
+
+    if(!ingredients.length) {
+
+        return `
+
+            <div class="ingredients-section">
+
+                <h2 class="ingredients-title">
+
+                    <span>🌿</span>
+                    Key Ingredients
+
+                </h2>
+
+                <div class="no-ingredients">
+
+                    Key ingredients information
+                    will be updated soon.
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    let html = "";
+
+
+    ingredients.forEach(function(item) {
+
+        const name =
+            item.name ||
+            item.ingredient ||
+            "Key Ingredient";
+
+
+        const benefit =
+            item.benefit ||
+            item.description ||
+            item.benefits ||
+            "";
+
+
+        html += `
+
+            <div class="ingredient-item">
+
+                <div class="ingredient-name">
+
+                    🌿
+                    ${escapeHtml(name)}
+
+                </div>
+
+
+                ${
+                    benefit
+
+                    ?
+
+                    `
+
+                    <div class="ingredient-benefit">
+
+                        ${escapeHtml(benefit)}
+
+                    </div>
+
+                    `
+
+                    :
+
+                    ""
+
+                }
+
+            </div>
+
+        `;
+
+    });
+
+
+    return `
+
+        <div class="ingredients-section">
+
+            <h2 class="ingredients-title">
+
+                <span>🌿</span>
+                Key Ingredients
+
+            </h2>
+
+
+            <div class="ingredients-list">
+
+                ${html}
+
+            </div>
+
         </div>
-      </div>
-    </div>`;
-  });
-  html+="</div>";box.innerHTML=html;
+
+    `;
+
 }
-async function editStock(id){
-  const p=allProducts.find(x=>String(x.id)===String(id)); if(!p)return;
-  const value=prompt("New stock quantity:",p.stock||0); if(value===null)return;
-  const stock=Number(value);
-  if(!Number.isInteger(stock)||stock<0){alert("Valid stock quantity pao.");return}
-  const {error}=await supabaseClient.from("products").update({stock}).eq("id",id);
-  if(error){alert("Stock update failed:\n\n"+error.message);return}
-  loadProducts();
+
+
+
+/* =====================================================
+   RENDER PRODUCT DETAILS
+===================================================== */
+
+function renderTextSection(title, icon, value) {
+    const text = String(value || "").trim();
+    if (!text) return "";
+
+    const items = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+
+    const content = items.map(item =>
+        `<div class="detail-line">${escapeHtml(item)}</div>`
+    ).join("");
+
+    return `
+        <div class="product-detail-section">
+            <h2 class="product-detail-title">
+                <span>${icon}</span>
+                ${title}
+            </h2>
+            <div class="product-detail-content">
+                ${content}
+            </div>
+        </div>
+    `;
 }
-async function deleteProduct(id){
-  const p=allProducts.find(x=>String(x.id)===String(id)); if(!p)return;
-  if(!confirm('Delete "'+p.name+'"?'))return;
-  const {error}=await supabaseClient.from("products").delete().eq("id",id);
-  if(error){alert("Product delete failed:\n\n"+error.message);return}
-  alert("Product deleted successfully.");loadProducts();
+
+/* =====================================================
+   PRODUCT SIZE / UNIT HELPERS
+===================================================== */
+function parseSizeOptions(product) {
+    const candidates = [
+        product.size_options,
+        product.sizes,
+        product.product_sizes,
+        product.variants
+    ];
+
+    for (const value of candidates) {
+        if (Array.isArray(value) && value.length) return normalizeSizeOptions(value);
+        if (typeof value === "string" && value.trim()) {
+            try {
+                const parsed = JSON.parse(value);
+                if (Array.isArray(parsed) && parsed.length) return normalizeSizeOptions(parsed);
+            } catch(e) {}
+            const parts = value.split(/[,\n|]+/).map(v => v.trim()).filter(Boolean);
+            if (parts.length) return normalizeSizeOptions(parts);
+        }
+    }
+
+    const singleSize = product.size || product.volume || product.weight || product.quantity_size || "";
+    const singleUnit = product.unit || product.size_unit || product.volume_unit || product.weight_unit || "";
+    if (singleSize) return normalizeSizeOptions([{ size: singleSize, unit: singleUnit }]);
+
+    return [];
 }
-checkAdmin().then(u=>{if(u)loadProducts()});
+
+function normalizeSizeOptions(list) {
+    return list.map((item, index) => {
+        if (typeof item === "number") return { value:String(item), label:String(item), price:null, stock:null, unit:"" };
+        if (typeof item === "string") {
+            const raw=item.trim();
+            const match=raw.match(/^([0-9]+(?:\.[0-9]+)?)\s*(g|gram|grams|kg|ml|millilitre|milliliter|l|ltr|litre|liter|litres|liters)$/i);
+            if(match){ const n=match[1], u=normalizeUnit(match[2]); return {value:n+u,label:n+" "+u,price:null,stock:null,unit:u}; }
+            return {value:raw,label:raw,price:null,stock:null,unit:""};
+        }
+        const size=String(item?.label ?? item?.size ?? item?.value ?? item?.quantity ?? item?.weight ?? item?.volume ?? "").trim();
+        const unit=normalizeUnit(item?.unit ?? item?.size_unit ?? item?.volume_unit ?? item?.weight_unit ?? "");
+        const label=size+(unit?" "+unit:"");
+        return { value:label || ("Option "+(index+1)), label:label || ("Option "+(index+1)), price:item?.price != null ? Number(item.price) : null, stock:item?.stock != null ? Number(item.stock) : null, unit:unit };
+    }).filter(x=>x.label);
+}
+
+function normalizeUnit(unit) {
+    const u=String(unit||"").trim().toLowerCase();
+    if(["g","gram","grams"].includes(u)) return "g";
+    if(["kg","kilogram","kilograms"].includes(u)) return "kg";
+    if(["ml","millilitre","milliliter","millilitres","milliliters"].includes(u)) return "ml";
+    if(["l","ltr","litre","liter","litres","liters"].includes(u)) return "L";
+    return String(unit||"").trim();
+}
+
+let currentSizeOptions=[];
+let selectedProductVariant=null;
+
+function getSelectedSize() {
+    const el=document.getElementById("productSize");
+    return el ? el.value : "";
+}
+
+function applyProductVariant(option) {
+    selectedProductVariant=option || null;
+    const priceEl=document.querySelector(".product-price");
+    if(priceEl && option && option.price != null) priceEl.textContent="₹"+Number(option.price).toLocaleString("en-IN");
+    const stockEl=document.querySelector(".purchase-area .stock-text");
+    const qty=document.getElementById("quantity");
+    const stock=option && option.stock != null ? Number(option.stock) : null;
+    if(stockEl && stock !== null){
+        stockEl.className="stock-text "+(stock>0?"in-stock":"out-stock");
+        stockEl.textContent=stock>0?"✓ In Stock":"✕ Out of Stock";
+    }
+    if(qty && stock !== null){ qty.max=Math.max(1,stock); if(Number(qty.value)>stock) qty.value=Math.max(1,stock); }
+}
+
+function selectProductSize(value, button) {
+    document.querySelectorAll(".size-option").forEach(btn=>btn.classList.remove("active"));
+    if(button) button.classList.add("active");
+    const input=document.getElementById("productSize");
+    if(input) input.value=value;
+    const option=currentSizeOptions.find(x=>String(x.value)===String(value));
+    const text=document.getElementById("selectedSizeText");
+    if(text) text.textContent=option ? "Selected: "+option.label : "";
+    applyProductVariant(option);
+}
+
+function renderSizeOptionsFromCurrentOptions() {
+    const options = currentSizeOptions;
+    if (!options.length) return "";
+    const first = options[0];
+    const buttons = options.map((option,index) => `<button type="button" class="size-option ${index===0?"active":""}" onclick="selectProductSize(${JSON.stringify(option.value)}, this)">${escapeHtml(option.label)}${option.price!=null?`<small>₹${Number(option.price).toLocaleString("en-IN")}</small>`:""}</button>`).join("");
+    setTimeout(()=>applyProductVariant(first),0);
+    return `<div class="size-selection"><label class="size-selection-label">Choose Size</label><div class="size-options">${buttons}</div><input type="hidden" id="productSize" value="${escapeHtml(first.value)}"><div class="selected-size-text" id="selectedSizeText">Selected: ${escapeHtml(first.label)}</div></div>`;
+}
+
+function renderSizeOptions(product) {
+    const options=parseSizeOptions(product);
+    currentSizeOptions=options;
+    if(!options.length) return "";
+    const first=options[0];
+    const buttons=options.map((option,index)=>`<button type="button" class="size-option ${index===0?"active":""}" onclick="selectProductSize(${JSON.stringify(option.value)}, this)">${escapeHtml(option.label)}${option.price!=null?`<small>₹${Number(option.price).toLocaleString("en-IN")}</small>`:""}</button>`).join("");
+    setTimeout(()=>applyProductVariant(first),0);
+    return `<div class="size-selection"><label class="size-selection-label">Choose Size</label><div class="size-options">${buttons}</div><input type="hidden" id="productSize" value="${escapeHtml(first.value)}"><div class="selected-size-text" id="selectedSizeText">Selected: ${escapeHtml(first.label)}</div></div>`;
+}
+
+/* =====================================================
+   LOAD PRODUCT
+===================================================== */
+
+async function loadProduct() {
+
+    const container =
+        document.getElementById(
+            "productContainer"
+        );
+
+
+    if(!productId) {
+
+        container.innerHTML = `
+
+            <div class="message error">
+
+                Product not selected.
+
+                <br><br>
+
+                <a href="index.html#products">
+
+                    Go Back to Products
+
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const {
+        data: product,
+        error
+    } =
+    await supabaseClient
+        .from("products")
+        .select("*")
+        .eq("id", productId)
+        .single();
+
+
+    if(error || !product) {
+
+        console.error(
+            "Product loading error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="message error">
+
+                Product could not be found.
+
+                <br><br>
+
+                <a href="index.html#products">
+
+                    Go Back to Products
+
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* =================================================
+       PRODUCT DATA
+    ================================================= */
+
+    const name =
+        product.name ||
+        product.product_name ||
+        "Liara Product";
+
+
+    const description =
+        product.description ||
+        "Premium beauty and personal care product.";
+
+
+    const price =
+        Number(
+            product.price || 0
+        );
+
+    /* ONLINE WEBSITE STOCK: only stock transferred from Warehouse */
+    let onlineVariants = [];
+    try {
+        const { data: dbVariants, error: variantError } = await supabaseClient
+            .from("product_stock_variants")
+            .select("id,size,unit,online_given,online_sold")
+            .eq("product_id", productId);
+        if (!variantError && Array.isArray(dbVariants)) onlineVariants = dbVariants;
+    } catch(e) { console.warn("Online stock loading failed:", e); }
+
+    let rawPrices = product.variants || product.size_options || product.sizes || [];
+    if (typeof rawPrices === "string") { try { rawPrices = JSON.parse(rawPrices); } catch(e) { rawPrices = []; } }
+    if (!Array.isArray(rawPrices)) rawPrices = [];
+
+    currentSizeOptions = onlineVariants.map(v => {
+        const size = Number(v.size), unit = normalizeUnit(v.unit);
+        const match = rawPrices.find(x =>
+            Number(x?.size ?? x?.value ?? x?.quantity ?? x?.weight ?? x?.volume) === size &&
+            normalizeUnit(x?.unit ?? x?.size_unit ?? x?.volume_unit ?? x?.weight_unit ?? "") === unit
+        );
+        return {
+            value: String(size) + unit,
+            label: String(size) + (unit ? " " + unit : ""),
+            price: match?.price != null ? Number(match.price) : price,
+            stock: Math.max(0, Number(v.online_given || 0) - Number(v.online_sold || 0)),
+            unit
+        };
+    });
+
+    const stock = currentSizeOptions.length
+        ? Number(currentSizeOptions[0].stock || 0)
+        : 0;
+
+
+    const image =
+        product.image_url ||
+        product.photo_url ||
+        product.image ||
+        product.photo ||
+        "facewash.jpg";
+
+
+    /*
+       KEY INGREDIENTS
+    */
+
+    const keyIngredients =
+        product.key_ingredients ||
+        "";
+
+    const howToUse =
+        product.how_to_use ||
+        "";
+
+    const benefits =
+        product.benefits ||
+        "";
+
+
+    document.title =
+        name +
+        " | Liara Professional™";
+
+
+    /* =================================================
+       DISPLAY PRODUCT
+    ================================================= */
+
+    container.innerHTML = `
+
+        <div class="product-detail">
+
+
+            <!-- PRODUCT IMAGE -->
+
+            <div class="product-photo">
+
+                <img
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(name)}"
+                    onerror="this.src='facewash.jpg'"
+                >
+
+            </div>
+
+
+            <!-- PRODUCT INFORMATION -->
+
+            <div class="product-info">
+
+                <div class="product-label">
+                    LIARA PROFESSIONAL™
+                </div>
+
+                <h1>
+                    ${escapeHtml(name)}
+                </h1>
+
+                <div class="product-price">
+                    ₹${price.toLocaleString("en-IN")}
+                </div>
+
+                <div class="product-description">
+                    ${escapeHtml(description)}
+                </div>
+
+                ${currentSizeOptions.length ? renderSizeOptionsFromCurrentOptions() : ""}
+
+<!-- PURCHASE AREA
+                 Desktop: under product photo
+                 Mobile: above detail sections
+            -->
+
+            <div class="purchase-area">
+
+                ${
+                    stock > 0
+                    ?
+                    `
+
+                    <div class="stock-text in-stock">
+                        ✓ In Stock
+                    </div>
+
+                    <div class="quantity-box">
+
+                        <button
+                            type="button"
+                            onclick="decreaseQuantity()">
+                            −
+                        </button>
+
+                        <input
+                            type="number"
+                            id="quantity"
+                            value="1"
+                            min="1"
+                            max="${stock}"
+                            readonly
+                        >
+
+                        <button
+                            type="button"
+                            onclick="increaseQuantity(${stock})">
+                            +
+                        </button>
+
+                    </div>
+
+                    <div class="action-buttons">
+
+                        <button
+                            type="button"
+                            class="add-cart"
+                            onclick="addToCart()">
+                            🛒 Add to Cart
+                        </button>
+
+                        <button
+                            type="button"
+                            class="buy-now"
+                            onclick="buyNow()">
+                            ⚡ Buy Now
+                        </button>
+
+                    </div>
+
+                    `
+                    :
+                    `
+
+                    <div class="stock-text out-stock">
+                        ✕ Out of Stock
+                    </div>
+
+                    `
+                }
+
+            </div>
+
+
+
+            </div>
+
+
+            <!-- KEY INGREDIENTS -->
+
+            ${renderIngredients(keyIngredients)}
+
+
+            <!-- HOW TO USE -->
+
+            ${renderTextSection(
+                "How to Use",
+                "🧴",
+                howToUse
+            )}
+
+
+            <!-- BENEFITS -->
+
+            ${renderTextSection(
+                "Benefits",
+                "✨",
+                benefits
+            )}
+
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   QUANTITY +
+===================================================== */
+
+function increaseQuantity(maxStock) {
+
+    const input =
+        document.getElementById(
+            "quantity"
+        );
+
+
+    if(!input) {
+
+        return;
+
+    }
+
+
+    let quantity =
+        Number(
+            input.value
+        );
+
+
+    if(quantity < maxStock) {
+
+        quantity++;
+
+        input.value =
+            quantity;
+
+    }
+
+}
+
+
+/* =====================================================
+   QUANTITY -
+===================================================== */
+
+function decreaseQuantity() {
+
+    const input =
+        document.getElementById(
+            "quantity"
+        );
+
+
+    if(!input) {
+
+        return;
+
+    }
+
+
+    let quantity =
+        Number(
+            input.value
+        );
+
+
+    if(quantity > 1) {
+
+        quantity--;
+
+        input.value =
+            quantity;
+
+    }
+
+}
+
+
+/* =====================================================
+   GET CURRENT PRODUCT
+===================================================== */
+
+async function getCurrentProduct() {
+
+    if(!productId) {
+
+        return null;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+        .from("products")
+        .select("*")
+        .eq("id", productId)
+        .single();
+
+
+    if(error) {
+
+        console.error(
+            "Product error:",
+            error
+        );
+
+        return null;
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =====================================================
+   ADD TO CART
+===================================================== */
+
+async function addToCart() {
+
+    const product =
+        await getCurrentProduct();
+
+
+    if(!product) {
+
+        alert(
+            "Product could not be loaded."
+        );
+
+        return;
+
+    }
+
+
+    const quantityInput =
+        document.getElementById(
+            "quantity"
+        );
+
+
+    const quantity =
+        Number(
+            quantityInput?.value || 1
+        );
+
+
+    if(quantity < 1) {
+
+        alert(
+            "Please select a valid quantity."
+        );
+
+        return;
+
+    }
+
+
+    const stock =
+        selectedProductVariant && selectedProductVariant.stock != null
+        ? Number(selectedProductVariant.stock)
+        : Number(product.stock || 0);
+
+
+    if(stock < quantity) {
+
+        alert(
+            "Not enough stock available."
+        );
+
+        return;
+
+    }
+
+
+    let cart = [];
+
+
+    try {
+
+        cart =
+            JSON.parse(
+                localStorage.getItem(
+                    "liaraCart"
+                ) || "[]"
+            );
+
+    }
+
+    catch(error) {
+
+        cart = [];
+
+    }
+
+
+    const selectedSize = getSelectedSize();
+
+    const existing =
+        cart.find(function(item) {
+
+            return String(item.id) === String(product.id) &&
+                   String(item.size || "") === String(selectedSize || "");
+
+        });
+
+
+    if(existing) {
+
+        const newQuantity =
+            Number(
+                existing.quantity || 0
+            ) +
+            quantity;
+
+
+        if(newQuantity > stock) {
+
+            alert(
+                "You cannot add more than available stock."
+            );
+
+            return;
+
+        }
+
+
+        existing.quantity =
+            newQuantity;
+
+    }
+
+    else {
+
+        cart.push({
+
+            id:
+                product.id,
+
+            name:
+                product.name ||
+                product.product_name ||
+                "Liara Product",
+
+            price:
+                selectedProductVariant && selectedProductVariant.price != null
+                ? Number(selectedProductVariant.price)
+                : Number(product.price || 0),
+
+            image:
+                product.image_url ||
+                product.photo_url ||
+                product.image ||
+                product.photo ||
+                "facewash.jpg",
+
+            quantity:
+                quantity,
+
+            size:
+                getSelectedSize(),
+
+            unit:
+                selectedProductVariant?.unit || ""
+
+        });
+
+    }
+
+
+    localStorage.setItem(
+        "liaraCart",
+        JSON.stringify(cart)
+    );
+
+
+    alert(
+        "Product added to cart successfully."
+    );
+
+
+    window.location.href =
+        "cart.html";
+
+}
+
+
+/* =====================================================
+   BUY NOW
+===================================================== */
+
+async function buyNow() {
+
+    const product =
+        await getCurrentProduct();
+
+
+    if(!product) {
+
+        alert(
+            "Product could not be loaded."
+        );
+
+        return;
+
+    }
+
+
+    const quantityInput =
+        document.getElementById(
+            "quantity"
+        );
+
+
+    const quantity =
+        Number(
+            quantityInput?.value || 1
+        );
+
+
+    if(quantity < 1) {
+
+        alert(
+            "Please select a valid quantity."
+        );
+
+        return;
+
+    }
+
+
+    const stock =
+        Number(
+            product.stock || 0
+        );
+
+
+    if(stock < quantity) {
+
+        alert(
+            "Not enough stock available."
+        );
+
+        return;
+
+    }
+
+
+    const buyNowItem = {
+
+        id:
+            product.id,
+
+        name:
+            product.name ||
+            product.product_name ||
+            "Liara Product",
+
+        price:
+            Number(
+                product.price || 0
+            ),
+
+        image:
+            product.image_url ||
+            product.photo_url ||
+            product.image ||
+            product.photo ||
+            "facewash.jpg",
+
+        quantity:
+            quantity,
+
+        size:
+            getSelectedSize(),
+
+        unit:
+            selectedProductVariant?.unit || ""
+
+    };
+
+
+    localStorage.setItem(
+        "liaraBuyNow",
+        JSON.stringify(
+            buyNowItem
+        )
+    );
+
+
+    localStorage.setItem(
+        "liaraCheckoutMode",
+        "buyNow"
+    );
+
+
+    window.location.href =
+        "checkout.html";
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadProduct();
+
 </script>
+
+
+<script id="liara-unit-visible-js">
+let liaraSelectedUnit = localStorage.getItem("liaraSelectedUnit") || "g";
+
+function selectLiaraUnit(unit, button){
+    liaraSelectedUnit = unit;
+    localStorage.setItem("liaraSelectedUnit", unit);
+
+    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
+        btn.classList.toggle("active", btn.dataset.unit === unit);
+    });
+
+    const sizeInput = document.getElementById("productSize");
+    if(sizeInput){
+        const raw = String(sizeInput.value || "").trim();
+        const numberOnly = raw.match(/^[0-9]+(?:\.[0-9]+)?/);
+        if(numberOnly){
+            sizeInput.value = numberOnly[0] + " " + unit;
+        }
+    }
+
+    const selectedText = document.getElementById("selectedSizeText");
+    if(selectedText && sizeInput && sizeInput.value){
+        selectedText.textContent = "Selected size: " + sizeInput.value;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll(".liara-unit-btn").forEach(function(btn){
+        btn.classList.toggle("active", btn.dataset.unit === liaraSelectedUnit);
+    });
+});
+</script>
+
 </body>
+
 </html>
+```
