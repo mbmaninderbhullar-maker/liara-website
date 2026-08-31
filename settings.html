@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Liara Professional™ | Settings</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7f3eb;color:#171717}
+header{background:#fff;border-bottom:1px solid #e8e1d5;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-family:Georgia,serif;font-size:25px;font-weight:700;letter-spacing:5px}
+header a{color:#444;text-decoration:none;font-size:11px;font-weight:bold}
+.page{max-width:1250px;margin:30px auto;padding:0 20px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.top h1{margin:2px 0 0;font-size:30px}
+.top p{margin:0;color:#b58a3c;font-size:10px;font-weight:bold;letter-spacing:3px}
+.actions{display:flex;gap:8px}
+button{border:1px solid #191919;background:#191919;color:#fff;padding:11px 15px;font-size:11px;font-weight:bold;cursor:pointer}
+button:hover{background:#b58a3c;border-color:#b58a3c}
+.outline{background:#fff;color:#191919}
+.layout{display:grid;grid-template-columns:230px 1fr;gap:18px}
+.nav{background:#fff;border:1px solid #e8e1d5;padding:10px;height:max-content;position:sticky;top:15px}
+.nav button{display:block;width:100%;text-align:left;background:transparent;color:#444;border:0;border-bottom:1px solid #eee;padding:13px 12px;font-size:11px}
+.nav button.active,.nav button:hover{background:#f7f3eb;color:#b58a3c}
+.panel{display:none}.panel.active{display:block}
+.card{background:#fff;border:1px solid #e8e1d5;padding:25px;margin-bottom:15px}
+.card h2{font-size:18px;margin:0 0 7px}.card p{color:#777;font-size:12px;line-height:1.6;margin:0 0 20px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field label{display:block;font-size:9px;font-weight:bold;letter-spacing:1.5px;margin-bottom:6px;color:#555}
+.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #d8d0c2;outline:none;font:inherit;font-size:13px;background:#fff}
+.field textarea{min-height:90px;resize:vertical}.full{grid-column:1/-1}
+.row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 0;border-top:1px solid #eee}
+.row strong{font-size:12px}.row small{display:block;color:#888;margin-top:4px;font-size:10px}
+.switch{position:relative;width:42px;height:23px;flex:0 0 auto}.switch input{display:none}
+.slider{position:absolute;inset:0;background:#ccc;border-radius:20px;cursor:pointer}
+.slider:before{content:"";position:absolute;width:17px;height:17px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+.slider{background:#b58a3c}.switch input:checked+.slider:before{transform:translateX(19px)}
+.status{display:none;padding:12px;background:#edf7ef;border:1px solid #cfe5d2;color:#287a3e;font-size:11px;margin-top:12px}
+.danger{background:#fff5f5;border:1px solid #e5caca;padding:13px;color:#9b2c2c;font-size:11px}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{padding:11px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.nav{position:static;display:grid;grid-template-columns:1fr 1fr}.top{align-items:flex-start;flex-direction:column}.form{grid-template-columns:1fr}.full{grid-column:auto}}
+@media(max-width:480px){.nav{grid-template-columns:1fr}.actions{width:100%}.actions button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">LIARA</div>
+  <a href="admin.html">← BACK TO ADMIN</a>
+</header>
+
+<div class="page">
+  <div class="top">
+    <div><p>LIARA PROFESSIONAL™</p><h1>⚙️ Settings & Control Panel</h1></div>
+    <div class="actions">
+      <button class="outline" onclick="resetSettings()">↩ Reset</button>
+      <button onclick="saveAllSettings()">💾 Save Settings</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="nav">
+      <button class="active" onclick="tab('profile',this)">👤 Profile</button>
+      <button onclick="tab('security',this)">🔐 Security</button>
+      <button onclick="tab('staff',this)">👥 Staff Management</button>
+      <button onclick="tab('company',this)">🏢 Company</button>
+      <button onclick="tab('orders',this)">📦 Orders</button>
+      <button onclick="tab('sales',this)">💰 Sales & GST</button>
+      <button onclick="tab('notifications',this)">🔔 Notifications</button>
+      <button onclick="tab('website',this)">🎨 Website</button>
+      <button onclick="tab('checkout',this)">🛒 Checkout</button>
+      <button onclick="tab('invoice',this)">🧾 Invoice</button>
+      <button onclick="tab('system',this)">🗄️ System</button>
+    </aside>
+
+    <main>
+      <section id="profile" class="panel active">
+        <div class="card"><h2>👤 Profile Settings</h2><p>Dashboard administrator di basic information.</p>
+          <div class="form">
+            <div class="field"><label>ADMIN NAME</label><input id="setProfileName"></div>
+            <div class="field"><label>ROLE</label><input id="setProfileRole"></div>
+            <div class="field"><label>ADMIN EMAIL</label><input id="setProfileEmail" value="info@liara.co.in" readonly></div>
+            <div class="field"><label>PHONE</label><input id="setProfilePhone" inputmode="tel"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="security" class="panel">
+        <div class="card"><h2>🔐 Security</h2><p>Admin account security controls.</p>
+          <div class="form">
+            <div class="field"><label>NEW PASSWORD</label><input id="newPassword" type="password" minlength="6" placeholder="Minimum 6 characters"></div>
+            <div class="field"><label>CONFIRM PASSWORD</label><input id="confirmPassword" type="password" minlength="6"></div>
+          </div>
+          <div style="margin-top:15px"><button onclick="changePassword()">🔑 Change Password</button></div>
+          <div id="securityStatus" class="status"></div>
+        </div>
+      </section>
+
+      <section id="staff" class="panel">
+        <div class="card"><h2>👥 Staff Management</h2><p>Create staff logins and manage existing staff accounts.</p>
+          <div class="form">
+            <div class="field"><label>STAFF NAME</label><input id="staffName" placeholder="Staff name"></div>
+            <div class="field"><label>STAFF EMAIL</label><input id="staffEmail" type="email" placeholder="staff@example.com"></div>
+            <div class="field"><label>STAFF PASSWORD</label><input id="staffPassword" type="password" minlength="8" placeholder="Minimum 8 characters"></div>
+            <div class="field"><label>ROLE</label><select id="staffRole">
+              <option>Super Admin</option><option>Admin</option><option>Manager</option><option>Sales Manager</option><option>Sales Staff</option>
+              <option>Order Manager</option><option>Order Staff</option><option>Accounts Manager</option><option>Accounts Staff</option>
+              <option>Inventory Manager</option><option>Inventory Staff</option><option>Customer Manager</option><option>Customer Support</option>
+              <option>Delivery Manager</option><option>Delivery Staff</option><option>Purchase Manager</option><option>Purchase Staff</option>
+              <option>Report Manager</option><option>Viewer</option><option>Custom Role</option>
+            </select></div>
+          </div>
+          <div style="margin-top:15px"><button onclick="generatePassword()" class="outline">🔐 Generate</button> <button onclick="createStaff()">Create Staff Login</button></div>
+          <div id="staffStatus" class="status"></div>
+        </div>
+        <div class="card"><h2>Staff Accounts</h2><p>Existing staff accounts can be loaded from Supabase when the staff edge functions are enabled.</p><div id="staffList" class="danger">Staff list is kept separate from local settings. Connect the existing <b>create-staff</b> and <b>reset-staff-password</b> functions here when required.</div></div>
+      </section>
+
+      <section id="company" class="panel">
+        <div class="card"><h2>🏢 Company Settings</h2><p>Company information used across admin, orders and invoices.</p>
+          <div class="form">
+            <div class="field"><label>COMPANY NAME</label><input id="setCompanyName"></div>
+            <div class="field"><label>BRAND NAME</label><input id="setCompanyBrand"></div>
+            <div class="field"><label>GST NUMBER</label><input id="setCompanyGST"></div>
+            <div class="field"><label>EMAIL</label><input id="setCompanyEmail"></div>
+            <div class="field"><label>PHONE</label><input id="setCompanyPhone"></div>
+            <div class="field"><label>WEBSITE</label><input id="setCompanyWebsite"></div>
+            <div class="field full"><label>ADDRESS</label><textarea id="setCompanyAddress"></textarea></div>
+            <div class="field"><label>CITY</label><input id="setCompanyCity"></div>
+            <div class="field"><label>STATE</label><input id="setCompanyState"></div>
+            <div class="field"><label>PINCODE</label><input id="setCompanyPincode" inputmode="numeric"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="orders" class="panel">
+        <div class="card"><h2>📦 Order Settings</h2><p>Order numbering and customer order controls.</p>
+          <div class="form">
+            <div class="field"><label>ORDER PREFIX</label><input id="setOrderPrefix"></div>
+            <div class="field"><label>AUTO STATUS</label><select id="setOrderStatus"><option>Pending</option><option>Confirmed</option><option>Packed</option><option>Shipped</option></select></div>
+            <div class="field"><label>DEFAULT PAYMENT</label><select id="setDefaultPayment"><option>COD</option><option>Online Payment</option><option>UPI</option><option>Bank Transfer</option></select></div>
+            <div class="field full"><label>ORDER NOTES</label><textarea id="setOrderNotes"></textarea></div>
+          </div>
+          <div class="row"><div><strong>Allow Order Cancellation</strong><small>Customer cancellation option.</small></div><label class="switch"><input id="setAllowCancel" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Allow Returns</strong><small>Return request option.</small></div><label class="switch"><input id="setAllowReturn" type="checkbox"><span class="slider"></span></label></div>
+        </div>
+      </section>
+
+      <section id="sales" class="panel">
+        <div class="card"><h2>💰 Sales & GST</h2><p>Currency, GST, discount and shipping configuration.</p>
+          <div class="form">
+            <div class="field"><label>CURRENCY</label><select id="setCurrency"><option>INR</option></select></div>
+            <div class="field"><label>GST RATE (%)</label><input id="setGSTRate" type="number" min="0" max="100"></div>
+            <div class="field"><label>SHIPPING CHARGE (₹)</label><input id="setShippingCharge" type="number" min="0"></div>
+            <div class="field"><label>FREE SHIPPING ABOVE (₹)</label><input id="setFreeShipping" type="number" min="0"></div>
+          </div>
+          <div class="row"><div><strong>GST / Tax Enabled</strong><small>Apply GST configuration to sales.</small></div><label class="switch"><input id="setTaxEnabled" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Discount Enabled</strong><small>Allow discounts in checkout.</small></div><label class="switch"><input id="setDiscountEnabled" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Shipping Enabled</strong><small>Enable shipping charge rules.</small></div><label class="switch"><input id="setShippingEnabled" type="checkbox"><span class="slider"></span></label></div>
+        </div>
+      </section>
+
+      <section id="notifications" class="panel">
+        <div class="card"><h2>🔔 Notifications</h2><p>Business alert preferences.</p>
+          <div class="row"><div><strong>New Order</strong><small>Alert when a new customer order arrives.</small></div><label class="switch"><input id="setNewOrder" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Low Stock</strong><small>Show low stock alerts.</small></div><label class="switch"><input id="setLowStock" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Cancelled Order</strong><small>Alert when an order is cancelled.</small></div><label class="switch"><input id="setCancelledOrder" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Delivered Order</strong><small>Track delivered order alerts.</small></div><label class="switch"><input id="setDeliveredOrder" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Payment Notifications</strong><small>Show payment-related notifications.</small></div><label class="switch"><input id="setPaymentNotification" type="checkbox"><span class="slider"></span></label></div>
+        </div>
+      </section>
+
+      <section id="website" class="panel">
+        <div class="card"><h2>🎨 Website Settings</h2><p>Store branding and customer support information.</p>
+          <div class="form">
+            <div class="field"><label>STORE NAME</label><input id="setStoreName"></div>
+            <div class="field"><label>TAGLINE</label><input id="setStoreTagline"></div>
+            <div class="field"><label>SUPPORT EMAIL</label><input id="setSupportEmail"></div>
+            <div class="field"><label>SUPPORT PHONE</label><input id="setSupportPhone"></div>
+          </div>
+          <div class="row"><div><strong>Maintenance Mode</strong><small>Website maintenance flag. Enable only when required.</small></div><label class="switch"><input id="setMaintenance" type="checkbox"><span class="slider"></span></label></div>
+        </div>
+      </section>
+
+      <section id="checkout" class="panel">
+        <div class="card"><h2>🛒 Cart & Checkout</h2><p>Customer checkout and payment controls.</p>
+          <div class="field"><label>MINIMUM ORDER VALUE (₹)</label><input id="setMinimumOrder" type="number" min="0"></div>
+          <div class="row"><div><strong>Guest Checkout</strong><small>Customers can checkout without creating an account.</small></div><label class="switch"><input id="setGuestCheckout" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Cash on Delivery</strong><small>Enable COD option.</small></div><label class="switch"><input id="setCOD" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Online Payment</strong><small>Enable online payment option when configured.</small></div><label class="switch"><input id="setOnlinePayment" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Phone Required</strong><small>Require customer mobile number.</small></div><label class="switch"><input id="setRequirePhone" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Address Required</strong><small>Require delivery address.</small></div><label class="switch"><input id="setRequireAddress" type="checkbox"><span class="slider"></span></label></div>
+        </div>
+      </section>
+
+      <section id="invoice" class="panel">
+        <div class="card"><h2>🧾 Invoice Settings</h2><p>A4 invoice and order document configuration.</p>
+          <div class="form">
+            <div class="field"><label>INVOICE PREFIX</label><input id="setInvoicePrefix"></div>
+            <div class="field"><label>FORMAT</label><input value="A4 Print" readonly></div>
+            <div class="field full"><label>INVOICE FOOTER</label><textarea id="setInvoiceFooter"></textarea></div>
+          </div>
+          <div class="row"><div><strong>Show GST Details</strong><small>Display GST information on invoice.</small></div><label class="switch"><input id="setShowGST" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Show Company Address</strong><small>Display company address on invoice.</small></div><label class="switch"><input id="setShowCompanyAddress" type="checkbox"><span class="slider"></span></label></div>
+          <div class="row"><div><strong>Show Payment Details</strong><small>Display payment method/status.</small></div><label class="switch"><input id="setShowPayment" type="checkbox"><span class="slider"></span></label></div>
+        </div>
+      </section>
+
+      <section id="system" class="panel">
+        <div class="card"><h2>🗄️ System & Supabase</h2><p>Existing database connection is not changed by this settings page.</p>
+          <div class="row"><div><strong>Settings Storage</strong><small>Browser localStorage key: liara_professional_admin_settings</small></div><strong id="storageStatus">READY</strong></div>
+          <div class="row"><div><strong>Supabase Project</strong><small>oinafbuicwhleudztzyz</small></div><strong>CONNECTED IN OTHER ADMIN PAGES</strong></div>
+          <div class="danger">This page deliberately does not expose the Supabase service-role key. Staff creation/reset remains protected through your existing server-side Edge Functions.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const KEY="liara_professional_admin_settings";
+const DEFAULT={
+ profile:{name:"Company Admin",phone:"",role:"Company Administrator"},
+ company:{name:"Liara Group Private Limited",brand:"Liara Professional™",gst:"",email:"info@liara.co.in",phone:"",website:"liara.co.in",address:"",city:"",state:"Punjab",pincode:""},
+ orders:{prefix:"LIARA",autoStatus:"Pending",allowCancel:true,allowReturn:true,orderNotes:"",defaultPayment:"COD"},
+ sales:{currency:"INR",taxEnabled:true,gstRate:18,discountEnabled:true,shippingEnabled:true,shippingCharge:0,freeShippingAbove:0},
+ notifications:{newOrder:true,lowStock:true,cancelledOrder:true,deliveredOrder:true,payment:true},
+ website:{storeName:"Liara Professional™",tagline:"Beauty • Skincare • Personal Care",supportEmail:"info@liara.co.in",supportPhone:"",maintenance:false},
+ checkout:{guestCheckout:true,cod:true,onlinePayment:false,minimumOrder:0,requirePhone:true,requireAddress:true},
+ invoice:{prefix:"LIARA-INV",footer:"Thank you for choosing Liara Professional™.",showGST:true,showCompanyAddress:true,showPayment:true}
+};
+function merge(a,b){if(!b)return a;Object.keys(b).forEach(k=>{if(b[k]&&typeof b[k]==="object"&&!Array.isArray(b[k])&&a[k])merge(a[k],b[k]);else a[k]=b[k]});return a}
+function settings(){try{return merge(JSON.parse(JSON.stringify(DEFAULT)),JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){return JSON.parse(JSON.stringify(DEFAULT))}}
+function val(id,fallback){const e=document.getElementById(id);return e?e.value:fallback}
+function checked(id,fallback){const e=document.getElementById(id);return e?e.checked:fallback}
+function set(id,v){const e=document.getElementById(id);if(!e)return;if(e.type==="checkbox")e.checked=!!v;else e.value=v??""}
+function load(){const s=settings();
+set("setProfileName",s.profile.name);set("setProfileRole",s.profile.role);set("setProfilePhone",s.profile.phone);
+set("setCompanyName",s.company.name);set("setCompanyBrand",s.company.brand);set("setCompanyGST",s.company.gst);set("setCompanyEmail",s.company.email);set("setCompanyPhone",s.company.phone);set("setCompanyWebsite",s.company.website);set("setCompanyAddress",s.company.address);set("setCompanyCity",s.company.city);set("setCompanyState",s.company.state);set("setCompanyPincode",s.company.pincode);
+set("setOrderPrefix",s.orders.prefix);set("setOrderStatus",s.orders.autoStatus);set("setDefaultPayment",s.orders.defaultPayment);set("setOrderNotes",s.orders.orderNotes);set("setAllowCancel",s.orders.allowCancel);set("setAllowReturn",s.orders.allowReturn);
+set("setCurrency",s.sales.currency);set("setGSTRate",s.sales.gstRate);set("setShippingCharge",s.sales.shippingCharge);set("setFreeShipping",s.sales.freeShippingAbove);set("setTaxEnabled",s.sales.taxEnabled);set("setDiscountEnabled",s.sales.discountEnabled);set("setShippingEnabled",s.sales.shippingEnabled);
+set("setNewOrder",s.notifications.newOrder);set("setLowStock",s.notifications.lowStock);set("setCancelledOrder",s.notifications.cancelledOrder);set("setDeliveredOrder",s.notifications.deliveredOrder);set("setPaymentNotification",s.notifications.payment);
+set("setStoreName",s.website.storeName);set("setStoreTagline",s.website.tagline);set("setSupportEmail",s.website.supportEmail);set("setSupportPhone",s.website.supportPhone);set("setMaintenance",s.website.maintenance);
+set("setMinimumOrder",s.checkout.minimumOrder);set("setGuestCheckout",s.checkout.guestCheckout);set("setCOD",s.checkout.cod);set("setOnlinePayment",s.checkout.onlinePayment);set("setRequirePhone",s.checkout.requirePhone);set("setRequireAddress",s.checkout.requireAddress);
+set("setInvoicePrefix",s.invoice.prefix);set("setInvoiceFooter",s.invoice.footer);set("setShowGST",s.invoice.showGST);set("setShowCompanyAddress",s.invoice.showCompanyAddress);set("setShowPayment",s.invoice.showPayment);
+}
+function saveAllSettings(){const o=settings();const s={
+profile:{name:val("setProfileName",o.profile.name),phone:val("setProfilePhone",o.profile.phone),role:val("setProfileRole",o.profile.role)},
+company:{name:val("setCompanyName",o.company.name),brand:val("setCompanyBrand",o.company.brand),gst:val("setCompanyGST",o.company.gst),email:val("setCompanyEmail",o.company.email),phone:val("setCompanyPhone",o.company.phone),website:val("setCompanyWebsite",o.company.website),address:val("setCompanyAddress",o.company.address),city:val("setCompanyCity",o.company.city),state:val("setCompanyState",o.company.state),pincode:val("setCompanyPincode",o.company.pincode)},
+orders:{prefix:val("setOrderPrefix",o.orders.prefix),autoStatus:val("setOrderStatus",o.orders.autoStatus),defaultPayment:val("setDefaultPayment",o.orders.defaultPayment),orderNotes:val("setOrderNotes",o.orders.orderNotes),allowCancel:checked("setAllowCancel",o.orders.allowCancel),allowReturn:checked("setAllowReturn",o.orders.allowReturn)},
+sales:{currency:val("setCurrency",o.sales.currency),taxEnabled:checked("setTaxEnabled",o.sales.taxEnabled),gstRate:Number(val("setGSTRate",o.sales.gstRate)),discountEnabled:checked("setDiscountEnabled",o.sales.discountEnabled),shippingEnabled:checked("setShippingEnabled",o.sales.shippingEnabled),shippingCharge:Number(val("setShippingCharge",o.sales.shippingCharge)),freeShippingAbove:Number(val("setFreeShipping",o.sales.freeShippingAbove))},
+notifications:{newOrder:checked("setNewOrder",o.notifications.newOrder),lowStock:checked("setLowStock",o.notifications.lowStock),cancelledOrder:checked("setCancelledOrder",o.notifications.cancelledOrder),deliveredOrder:checked("setDeliveredOrder",o.notifications.deliveredOrder),payment:checked("setPaymentNotification",o.notifications.payment)},
+website:{storeName:val("setStoreName",o.website.storeName),tagline:val("setStoreTagline",o.website.tagline),supportEmail:val("setSupportEmail",o.website.supportEmail),supportPhone:val("setSupportPhone",o.website.supportPhone),maintenance:checked("setMaintenance",o.website.maintenance)},
+checkout:{guestCheckout:checked("setGuestCheckout",o.checkout.guestCheckout),cod:checked("setCOD",o.checkout.cod),onlinePayment:checked("setOnlinePayment",o.checkout.onlinePayment),minimumOrder:Number(val("setMinimumOrder",o.checkout.minimumOrder)),requirePhone:checked("setRequirePhone",o.checkout.requirePhone),requireAddress:checked("setRequireAddress",o.checkout.requireAddress)},
+invoice:{prefix:val("setInvoicePrefix",o.invoice.prefix),footer:val("setInvoiceFooter",o.invoice.footer),showGST:checked("setShowGST",o.invoice.showGST),showCompanyAddress:checked("setShowCompanyAddress",o.invoice.showCompanyAddress),showPayment:checked("setShowPayment",o.invoice.showPayment)}
+};localStorage.setItem(KEY,JSON.stringify(s));alert("Settings saved successfully.");}
+function resetSettings(){if(!confirm("Reset all settings to default?"))return;localStorage.removeItem(KEY);load();alert("Settings reset successfully.");}
+function tab(id,b){document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");b.classList.add("active");}
+function generatePassword(){const c="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";const a=new Uint32Array(16);crypto.getRandomValues(a);let p="";a.forEach(x=>p+=c[x%c.length]);document.getElementById("staffPassword").value=p;document.getElementById("staffPassword").type="text";}
+async function changePassword(){alert("For security, password changes continue through the existing Supabase admin-auth flow. Keep the existing admin login/security handler connected when you deploy this page.");}
+function createStaff(){alert("Staff creation uses the existing protected create-staff Edge Function. Connect that existing function to this standalone page before enabling staff creation here.");}
+load();
+</script>
+</body>
+</html>
