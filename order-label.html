@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-
 
 <style>
 
@@ -33,10 +33,7 @@ body{
     padding:25px 18px 50px;
 }
 
-
-/* =====================================================
-   HEADER
-===================================================== */
+/* HEADER */
 
 .header{
     text-align:center;
@@ -57,10 +54,7 @@ body{
     letter-spacing:2px;
 }
 
-
-/* =====================================================
-   SEARCH
-===================================================== */
+/* SEARCH */
 
 .search-box{
     background:#fff;
@@ -100,10 +94,7 @@ body{
     cursor:pointer;
 }
 
-
-/* =====================================================
-   STATUS
-===================================================== */
+/* STATUS */
 
 .status{
     min-height:18px;
@@ -119,10 +110,7 @@ body{
     color:#16733c;
 }
 
-
-/* =====================================================
-   ORDERS
-===================================================== */
+/* ORDERS */
 
 .orders-head{
     display:flex;
@@ -193,10 +181,7 @@ body{
     font-weight:800;
 }
 
-
-/* =====================================================
-   LABEL PREVIEW
-===================================================== */
+/* LABEL PREVIEW */
 
 .preview{
     display:none;
@@ -230,9 +215,8 @@ body{
     cursor:pointer;
 }
 
-
 /* =====================================================
-   SMALL LABEL
+   90MM LABEL
 ===================================================== */
 
 .label{
@@ -242,12 +226,10 @@ body{
     padding:6mm;
     background:#fff;
     border:1.5px solid #111;
+    overflow:hidden;
 }
 
-
-/* =====================================================
-   LABEL TOP
-===================================================== */
+/* LABEL TOP */
 
 .label-top{
     display:flex;
@@ -282,10 +264,7 @@ body{
     white-space:nowrap;
 }
 
-
-/* =====================================================
-   CUSTOMER
-===================================================== */
+/* CUSTOMER */
 
 .ship{
     margin-top:8px;
@@ -314,9 +293,8 @@ body{
     font-weight:700;
 }
 
-
 /* =====================================================
-   BOTTOM
+   BARCODE AREA
 ===================================================== */
 
 .label-bottom{
@@ -333,17 +311,24 @@ body{
     font-size:9px;
     font-weight:800;
     white-space:nowrap;
+    max-width:27mm;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
+
+/*
+   BIG SCANNER-FRIENDLY BARCODE
+*/
 
 .barcode{
-    width:125px;
-    height:38px;
+    width:180px;
+    height:55px;
+    max-width:54mm;
+    display:block;
+    flex-shrink:0;
 }
 
-
-/* =====================================================
-   LOADING
-===================================================== */
+/* LOADING */
 
 .loading,
 .empty{
@@ -356,10 +341,7 @@ body{
     font-size:12px;
 }
 
-
-/* =====================================================
-   MOBILE
-===================================================== */
+/* MOBILE */
 
 @media(max-width:600px){
 
@@ -390,7 +372,6 @@ body{
 
 }
 
-
 /* =====================================================
    PRINT
 ===================================================== */
@@ -398,11 +379,16 @@ body{
 @media print{
 
     @page{
-        size:A4;
-        margin:10mm;
+        size:90mm 55mm;
+        margin:0;
     }
 
+    html,
     body{
+        width:90mm;
+        height:55mm;
+        margin:0;
+        padding:0;
         background:#fff;
     }
 
@@ -431,12 +417,14 @@ body{
 
     .label{
         width:90mm;
-        max-width:90mm;
+        height:55mm;
         min-height:55mm;
+        max-height:55mm;
         margin:0;
         padding:6mm;
         border:1.5px solid #111;
         page-break-inside:avoid;
+        overflow:hidden;
     }
 
 }
@@ -445,16 +433,11 @@ body{
 
 </head>
 
-
 <body>
-
 
 <div class="page">
 
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
+<!-- HEADER -->
 
 <div class="header">
 
@@ -466,11 +449,7 @@ body{
 
 </div>
 
-
-
-<!-- =====================================================
-     SEARCH
-===================================================== -->
+<!-- SEARCH -->
 
 <div class="search-box">
 
@@ -493,12 +472,10 @@ body{
 
     </div>
 
-
     <div
         id="status"
         class="status"
     ></div>
-
 
     <div class="orders-head">
 
@@ -515,7 +492,6 @@ body{
 
     </div>
 
-
     <div
         id="orders"
         class="orders"
@@ -529,24 +505,18 @@ body{
 
 </div>
 
-
-
-<!-- =====================================================
-     LABEL PREVIEW
-===================================================== -->
+<!-- LABEL PREVIEW -->
 
 <div
     id="preview"
     class="preview"
 >
 
-
     <div class="preview-head">
 
         <strong>
             Label Preview
         </strong>
-
 
         <button
             class="print-btn"
@@ -557,15 +527,11 @@ body{
 
     </div>
 
-
-
     <div class="label">
-
 
         <!-- TOP -->
 
         <div class="label-top">
-
 
             <div class="logo">
 
@@ -577,7 +543,6 @@ body{
 
             </div>
 
-
             <div
                 id="payment"
                 class="payment"
@@ -585,17 +550,13 @@ body{
                 PAYMENT: COD
             </div>
 
-
         </div>
-
-
 
         <!-- CUSTOMER -->
 
         <div class="ship">
             SHIP TO
         </div>
-
 
         <div
             id="customerName"
@@ -604,14 +565,12 @@ body{
             —
         </div>
 
-
         <div
             id="customerAddress"
             class="customer-address"
         >
             —
         </div>
-
 
         <div
             id="customerPhone"
@@ -620,12 +579,9 @@ body{
             Mobile: —
         </div>
 
-
-
-        <!-- ORDER -->
+        <!-- BARCODE -->
 
         <div class="label-bottom">
-
 
             <div
                 id="labelOrder"
@@ -634,39 +590,30 @@ body{
                 ORDER: —
             </div>
 
-
             <svg
                 id="barcode"
                 class="barcode"
             ></svg>
 
-
         </div>
-
 
     </div>
 
-
 </div>
 
-
 </div>
-
-
 
 <script>
 
 /* =====================================================
-   SUPABASE — SAME AS ADMIN ORDERS
+   SUPABASE
 ===================================================== */
 
 const SUPABASE_URL =
     "https://oinafbuicwhleudztzyz.supabase.co";
 
-
 const SUPABASE_KEY =
     "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
-
 
 const supabaseClient =
     window.supabase.createClient(
@@ -674,23 +621,16 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
-
 const ADMIN_EMAIL =
     "info@liara.co.in";
 
-
-/* =====================================================
-   VARIABLES
-===================================================== */
+/* VARIABLES */
 
 let allOrders = [];
 
 let selectedOrder = null;
 
-
-/* =====================================================
-   ADMIN CHECK
-===================================================== */
+/* ADMIN CHECK */
 
 async function checkAdmin(){
 
@@ -704,7 +644,6 @@ async function checkAdmin(){
             .auth
             .getUser();
 
-
         if(
             error ||
             !data ||
@@ -717,7 +656,6 @@ async function checkAdmin(){
             return false;
 
         }
-
 
         if(
             !data.user.email ||
@@ -733,16 +671,13 @@ async function checkAdmin(){
 
         }
 
-
         return true;
 
     }
 
     catch(error){
 
-        console.error(
-            error
-        );
+        console.error(error);
 
         window.location.href =
             "company-login.html";
@@ -753,24 +688,15 @@ async function checkAdmin(){
 
 }
 
-
-/* =====================================================
-   LOAD ORDERS
-===================================================== */
+/* LOAD ORDERS */
 
 async function loadOrders(){
 
     const ordersBox =
-        document.getElementById(
-            "orders"
-        );
-
+        document.getElementById("orders");
 
     const status =
-        document.getElementById(
-            "status"
-        );
-
+        document.getElementById("status");
 
     ordersBox.innerHTML =
         `
@@ -779,24 +705,16 @@ async function loadOrders(){
         </div>
         `;
 
-
-    status.textContent =
-        "";
-
+    status.textContent = "";
 
     const allowed =
         await checkAdmin();
 
-
     if(!allowed){
-
         return;
-
     }
 
-
     try{
-
 
         const {
             data,
@@ -815,22 +733,16 @@ async function loadOrders(){
                 }
             );
 
-
         if(error){
-
             throw error;
-
         }
-
 
         allOrders =
             data || [];
 
-
         renderOrders(
             allOrders
         );
-
 
     }
 
@@ -841,14 +753,12 @@ async function loadOrders(){
             error
         );
 
-
         ordersBox.innerHTML =
             `
             <div class="empty">
                 Unable to load orders.
             </div>
             `;
-
 
         status.textContent =
             error.message ||
@@ -861,24 +771,15 @@ async function loadOrders(){
 
 }
 
-
-/* =====================================================
-   RENDER ORDERS
-===================================================== */
+/* RENDER ORDERS */
 
 function renderOrders(orders){
 
     const box =
-        document.getElementById(
-            "orders"
-        );
-
+        document.getElementById("orders");
 
     const count =
-        document.getElementById(
-            "orderCount"
-        );
-
+        document.getElementById("orderCount");
 
     count.textContent =
         orders.length +
@@ -887,7 +788,6 @@ function renderOrders(orders){
             ? " order"
             : " orders"
         );
-
 
     if(!orders.length){
 
@@ -902,23 +802,16 @@ function renderOrders(orders){
 
     }
 
-
-    box.innerHTML =
-        "";
-
+    box.innerHTML = "";
 
     orders.forEach(
         function(order){
 
             const card =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             card.className =
                 "order-card";
-
 
             if(
                 selectedOrder &&
@@ -932,7 +825,6 @@ function renderOrders(orders){
                 );
 
             }
-
 
             card.innerHTML = `
 
@@ -963,7 +855,6 @@ function renderOrders(orders){
 
             `;
 
-
             card.addEventListener(
                 "click",
                 function(){
@@ -975,32 +866,23 @@ function renderOrders(orders){
                 }
             );
 
-
-            box.appendChild(
-                card
-            );
+            box.appendChild(card);
 
         }
     );
 
 }
 
-
-/* =====================================================
-   SEARCH
-===================================================== */
+/* SEARCH */
 
 function searchOrders(){
 
     const value =
         document
-            .getElementById(
-                "searchInput"
-            )
+            .getElementById("searchInput")
             .value
             .trim()
             .toLowerCase();
-
 
     if(!value){
 
@@ -1012,7 +894,6 @@ function searchOrders(){
 
     }
 
-
     const filtered =
         allOrders.filter(
             function(order){
@@ -1023,13 +904,11 @@ function searchOrders(){
                     )
                     .toLowerCase();
 
-
                 const name =
                     String(
                         order.customer_name || ""
                     )
                     .toLowerCase();
-
 
                 const phone =
                     String(
@@ -1037,20 +916,14 @@ function searchOrders(){
                     )
                     .toLowerCase();
 
-
                 return (
-
                     number.includes(value) ||
-
                     name.includes(value) ||
-
                     phone.includes(value)
-
                 );
 
             }
         );
-
 
     renderOrders(
         filtered
@@ -1058,25 +931,17 @@ function searchOrders(){
 
 }
 
-
-/* =====================================================
-   LIVE SEARCH
-===================================================== */
+/* LIVE SEARCH */
 
 document
-    .getElementById(
-        "searchInput"
-    )
+    .getElementById("searchInput")
     .addEventListener(
         "input",
         searchOrders
     );
 
-
 document
-    .getElementById(
-        "searchInput"
-    )
+    .getElementById("searchInput")
     .addEventListener(
         "keydown",
         function(event){
@@ -1092,39 +957,29 @@ document
         }
     );
 
-
-/* =====================================================
-   SELECT ORDER
-===================================================== */
+/* SELECT ORDER */
 
 function selectOrder(order){
 
     selectedOrder =
         order;
 
-
     renderOrders(
         getFilteredOrders()
     );
 
-
     /* NAME */
 
     document
-        .getElementById(
-            "customerName"
-        )
+        .getElementById("customerName")
         .textContent =
             order.customer_name ||
             "Customer";
 
-
     /* PHONE */
 
     document
-        .getElementById(
-            "customerPhone"
-        )
+        .getElementById("customerPhone")
         .textContent =
             "Mobile: " +
             (
@@ -1132,19 +987,13 @@ function selectOrder(order){
                 "—"
             );
 
-
     /* ADDRESS */
 
     document
-        .getElementById(
-            "customerAddress"
-        )
+        .getElementById("customerAddress")
         .textContent =
-            buildAddress(
-                order
-            ) ||
+            buildAddress(order) ||
             "Address not available";
-
 
     /* ORDER NUMBER */
 
@@ -1152,40 +1001,26 @@ function selectOrder(order){
         order.order_number ||
         "-";
 
-
     document
-        .getElementById(
-            "labelOrder"
-        )
+        .getElementById("labelOrder")
         .textContent =
             "ORDER: " +
             orderNumber;
 
-
     /* PAYMENT */
 
     document
-        .getElementById(
-            "payment"
-        )
+        .getElementById("payment")
         .textContent =
             "PAYMENT: " +
-            paymentText(
-                order
-            );
-
+            paymentText(order);
 
     /* BARCODE */
 
     const barcode =
-        document.getElementById(
-            "barcode"
-        );
+        document.getElementById("barcode");
 
-
-    barcode.innerHTML =
-        "";
-
+    barcode.innerHTML = "";
 
     if(orderNumber !== "-"){
 
@@ -1196,37 +1031,42 @@ function selectOrder(order){
 
                 format:"CODE128",
 
-                width:2,
+                /*
+                   Wider bars for easier scanning
+                */
+                width:2.2,
 
-                height:38,
+                /*
+                   Bigger barcode height
+                */
+                height:55,
 
                 displayValue:true,
 
-                fontSize:10,
+                fontSize:11,
 
-                margin:0
+                fontOptions:"bold",
+
+                textMargin:2,
+
+                margin:0,
+
+                flat:false
 
             }
         );
 
     }
 
-
-    /* SHOW */
+    /* SHOW PREVIEW */
 
     document
-        .getElementById(
-            "preview"
-        )
+        .getElementById("preview")
         .style.display =
             "block";
 
-
     const status =
-        document.getElementById(
-            "status"
-        );
-
+        document.getElementById("status");
 
     status.textContent =
         "Order selected — label ready.";
@@ -1234,11 +1074,8 @@ function selectOrder(order){
     status.className =
         "status success";
 
-
     document
-        .getElementById(
-            "preview"
-        )
+        .getElementById("preview")
         .scrollIntoView({
             behavior:"smooth",
             block:"start"
@@ -1246,29 +1083,20 @@ function selectOrder(order){
 
 }
 
-
-/* =====================================================
-   FILTERED ORDERS
-===================================================== */
+/* FILTER */
 
 function getFilteredOrders(){
 
     const value =
         document
-            .getElementById(
-                "searchInput"
-            )
+            .getElementById("searchInput")
             .value
             .trim()
             .toLowerCase();
 
-
     if(!value){
-
         return allOrders;
-
     }
-
 
     return allOrders.filter(
         function(order){
@@ -1304,10 +1132,7 @@ function getFilteredOrders(){
 
 }
 
-
-/* =====================================================
-   PAYMENT
-===================================================== */
+/* PAYMENT */
 
 function paymentText(order){
 
@@ -1317,14 +1142,10 @@ function paymentText(order){
         order.payment ||
         "COD";
 
-
     const value =
-        String(
-            payment
-        )
-        .trim()
-        .toUpperCase();
-
+        String(payment)
+            .trim()
+            .toUpperCase();
 
     if(
         value.includes("COD") ||
@@ -1335,21 +1156,13 @@ function paymentText(order){
 
     }
 
-
     return value || "COD";
 
 }
 
-
-/* =====================================================
-   ADDRESS
-===================================================== */
+/* ADDRESS */
 
 function buildAddress(order){
-
-    /*
-       Use address first
-    */
 
     if(
         order.address &&
@@ -1364,11 +1177,6 @@ function buildAddress(order){
 
     }
 
-
-    /*
-       Then shipping address
-    */
-
     if(
         order.shipping_address &&
         String(
@@ -1381,11 +1189,6 @@ function buildAddress(order){
         ).trim();
 
     }
-
-
-    /*
-       Build from checkout fields
-    */
 
     return [
 
@@ -1427,10 +1230,7 @@ function buildAddress(order){
 
 }
 
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
+/* ESCAPE */
 
 function escapeHTML(value){
 
@@ -1465,10 +1265,7 @@ function escapeHTML(value){
 
 }
 
-
-/* =====================================================
-   PRINT
-===================================================== */
+/* PRINT */
 
 function printLabel(){
 
@@ -1482,20 +1279,16 @@ function printLabel(){
 
     }
 
-
     window.print();
 
 }
 
-
-/* =====================================================
-   START
-===================================================== */
+/* START */
 
 loadOrders();
 
 </script>
 
-
 </body>
 </html>
+```
