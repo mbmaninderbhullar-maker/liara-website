@@ -1362,8 +1362,8 @@ body{
 
         <button class="active" onclick="showSection('orders',this)">🛒 Orders</button>
         <button onclick="showSection('sales',this)">💰 Sales</button>
-        <button onclick="window.location.href='products.html'">🧴 Products</button>
-        <button onclick="window.location.href='add-product.html'">➕ Add Product</button>
+        <button onclick="showSection('products',this)">🧴 Products</button>
+        <button onclick="showSection('add-product',this)">➕ Add Product</button>
         <button onclick="showSection('customers',this)">👥 Customers</button>
         <button onclick="showSection('delivery',this)">🚚 Delivery</button>
         <button onclick="showSection('reports',this)">📊 Reports</button>
@@ -1742,7 +1742,33 @@ function saveSettingsObject(settings){
 
 }
 
-function resetSettings(){
+async function loadSettingsFromDatabase(){
+    try{
+        const {data,error}=await supabaseClient
+            .from("admin_settings")
+            .select("settings")
+            .eq("id",1)
+            .maybeSingle();
+        if(error) throw error;
+        if(data?.settings){
+            saveSettingsObject(data.settings);
+            return getSettings();
+        }
+    }catch(error){
+        console.warn("Database settings load failed; using local settings.",error);
+    }
+    return getSettings();
+}
+
+async function persistSettingsToDatabase(settings){
+    const {data:{user}}=await supabaseClient.auth.getUser();
+    const {error}=await supabaseClient
+        .from("admin_settings")
+        .upsert({id:1,settings,updated_at:new Date().toISOString(),updated_by:user?.id||null},{onConflict:"id"});
+    if(error) throw error;
+}
+
+async function resetSettings(){
 
     const yes =
         confirm(
@@ -1752,6 +1778,7 @@ function resetSettings(){
     if(!yes) return;
 
     localStorage.removeItem(SETTINGS_KEY);
+    try{ await supabaseClient.from("admin_settings").delete().eq("id",1); }catch(e){ console.warn(e); }
 
     loadSettings();
 
@@ -4092,7 +4119,7 @@ async function loadProducts(){
                 <h2>🧴 Products</h2>
             </div>
 
-            <button class="btn" onclick="window.location.href='add-product.html'">
+            <button class="btn" onclick="showAddProduct()">
                 ➕ Add Product
             </button>
 
@@ -5930,10 +5957,10 @@ async function loadNotifications(){
    SETTINGS MAIN
 ========================================================= */
 
-function loadSettings(){
+async function loadSettings(){
 
     const settings =
-        getSettings();
+        await loadSettingsFromDatabase();
 
     document.getElementById(
         "other-content"
@@ -7005,7 +7032,7 @@ function openSettingsTab(tab, button){
    SAVE ALL SETTINGS
 ========================================================= */
 
-function saveAllSettings(){
+async function saveAllSettings(){
 
     const old =
         getSettings();
@@ -7206,6 +7233,13 @@ function saveAllSettings(){
 
     }
 
+    try{
+        await persistSettingsToDatabase(settings);
+    }catch(error){
+        console.error(error);
+        alert("Settings local save ho gayian, par database save nahi hoya: " + error.message);
+    }
+
 }
 
 function getValue(id,fallback){
@@ -7273,56 +7307,44 @@ async function createStaffLogin(){
     await loadStaffAccounts();
 }
 
-async function loadStaffAccounts(){
+async async function loadStaffAccounts(){
     const box=document.getElementById("staffAccountsList");
     if(!box) return;
     box.innerHTML='<div class="message">Loading staff accounts...</div>';
-
     const {data,error}=await supabaseClient
         .from("staff_profiles")
-        .select("id,name,email,role,active,created_at")
+        .select("id,name,email,phone,role,active,permissions,created_at")
         .order("created_at",{ascending:false});
-
-    if(error){
-        box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>';
-        return;
-    }
-    if(!data?.length){
-        box.innerHTML='<div class="message">No staff accounts created yet.</div>';
-        return;
-    }
-
-    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:700px">
-        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
-        <tbody>${data.map(s=>`<tr>
-            <td><strong>${escapeHtml(s.name || "")}</strong></td>
-            <td>${escapeHtml(s.email || "")}</td>
-            <td>${escapeHtml(s.role || "Staff")}</td>
-            <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
-            <td>${s.created_at ? new Date(s.created_at).toLocaleDateString() : '—'}</td>
-            <td><button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">Change Password</button></td>
-        </tr>`).join('')}</tbody></table></div>`;
+    if(error){box.innerHTML='<div class="message error">Unable to load staff accounts: '+escapeHtml(error.message)+'</div>';return;}
+    if(!data?.length){box.innerHTML='<div class="message">No staff accounts created yet.</div>';return;}
+    const roleOptions=["Super Admin","Admin","Manager","Sales Manager","Sales Staff","Order Manager","Order Staff","Accounts Manager","Accounts Staff","Inventory Manager","Inventory Staff","Customer Manager","Customer Support","Delivery Manager","Delivery Staff","Purchase Manager","Purchase Staff","Report Manager","Viewer","Custom Role"];
+    box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:1050px">
+    <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+    <tbody>${data.map(s=>`<tr>
+      <td><strong>${escapeHtml(s.name||"")}</strong></td>
+      <td>${escapeHtml(s.email||"")}</td>
+      <td><select id="staffRole_${s.id}" style="padding:7px;border:1px solid #ddd;border-radius:7px;min-width:170px">${roleOptions.map(r=>`<option value="${escapeHtml(r)}" ${String(r).toLowerCase()===String(s.role||"").toLowerCase()?"selected":""}>${escapeHtml(r)}</option>`).join("")}</select></td>
+      <td><button type="button" class="table-btn ${s.active===false?'':'edit-btn'}" onclick="toggleStaffActive('${s.id}',${s.active===false})">${s.active===false?'Activate':'Deactivate'}</button></td>
+      <td>${s.created_at?new Date(s.created_at).toLocaleDateString():"—"}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap"><button class="table-btn edit-btn" type="button" onclick="saveStaffRole('${s.id}')">💾 Save Role</button><button class="table-btn edit-btn" type="button" onclick="changeStaffPassword('${String(s.email||'').replace(/'/g,"\\'")}')">🔑 Password</button></td>
+    </tr>`).join("")}</tbody></table></div>`;
 }
 
-async function changeStaffPassword(email){
-    const password=prompt("New password for " + email + " (minimum 8 characters):");
-    if(password===null) return;
-    if(password.length < 8){ alert("Password must be at least 8 characters."); return; }
-
-    const {data:{session}}=await supabaseClient.auth.getSession();
-    if(!session){ alert("Your admin session has expired. Please sign in again."); return; }
-
-    const {data,error}=await supabaseClient.functions.invoke("reset-staff-password",{
-        body:{email,password}
-    });
-
-    if(error){
-        alert(data?.error || error.message || "Unable to change staff password.");
-        return;
-    }
-    if(data?.error){ alert(data.error); return; }
-    alert("Staff password changed successfully.");
+async function saveStaffRole(id){
+    const role=document.getElementById("staffRole_"+id)?.value;
+    if(!role)return;
+    const {data,error}=await supabaseClient.rpc("admin_update_staff",{p_id:id,p_name:null,p_phone:null,p_role:role,p_permissions:null,p_active:null});
+    if(error){alert("Role save nahi hoya: "+error.message);return;}
+    alert("Staff role updated successfully: "+role);
+    await loadStaffAccounts();
 }
+
+async function toggleStaffActive(id,newValue){
+    const {error}=await supabaseClient.rpc("admin_update_staff",{p_id:id,p_name:null,p_phone:null,p_role:null,p_permissions:null,p_active:newValue});
+    if(error){alert("Staff status update nahi hoya: "+error.message);return;}
+    await loadStaffAccounts();
+}
+
 
 /* =========================================================
    PASSWORD CHANGE
