@@ -2406,9 +2406,13 @@ function stockVariantKey(size, unit) {
 function getSelectedStock(product) {
     // Customer-facing stock follows product_stock_variants, exactly like Admin Stock Management.
     // Website availability = Online Given - Online Sold for the selected size/unit.
+    // IMPORTANT: on the first page render #productSize does not exist yet because the
+    // size selector is created later inside the template. In that case use the first
+    // configured size/unit instead of accidentally falling back to product.stock.
     if (product && product._liaraLiveVariantStocks) {
-        const options = window.liaraUnitPriceOptions || [];
-        const selectedValue = document.getElementById("productSize")?.value || options[0]?.value || "";
+        const domValue = document.getElementById("productSize")?.value || "";
+        const options = window.liaraUnitPriceOptions || parseUnitPriceOptions(product) || [];
+        const selectedValue = domValue || options[0]?.value || "";
         const match = String(selectedValue).match(/^([0-9]+(?:\.[0-9]+)?)\s*(.*)$/);
         if (match) {
             const key = stockVariantKey(match[1], match[2]);
