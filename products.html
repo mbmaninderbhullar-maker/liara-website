@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liara Professional™ | Products</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f3ee;color:#222}
+header{height:76px;background:#fff;border-bottom:1px solid #eae7e1;display:flex;align-items:center;justify-content:space-between;padding:15px 30px;position:sticky;top:0;z-index:20}
+.logo{font-size:23px;font-weight:bold;letter-spacing:4px}.logo small{display:block;color:#ad8232;font-size:9px;letter-spacing:3px;margin-top:3px}
+.header-actions{display:flex;gap:8px;align-items:center}.admin-pill{background:#faf7f0;border:1px solid #eee5d5;border-radius:30px;padding:9px 14px;font-size:12px;color:#666}
+.btn{border:0;background:#ad8232;color:#fff;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:12px}.btn:hover{background:#886527}
+.gray-btn{background:#666}.red-btn{background:#a33}.green-btn{background:#287a3e}
+main{padding:30px 3%}.container{max-width:1600px;margin:auto}.box{background:#fff;border:1px solid #ece8e1;padding:28px;border-radius:18px;box-shadow:0 8px 35px rgba(30,25,20,.055)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.head p{margin:0 0 5px;color:#ad8232;font-size:10px;font-weight:bold;letter-spacing:2px}.head h1{margin:0;font-size:26px}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{border:1px solid #eee;border-radius:14px;overflow:hidden;background:#fff;transition:.2s}.card:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.08)}
+.card-image{width:100%;height:210px;object-fit:cover;background:#f5f2ed}.card-body{padding:16px}.card h3{margin:0 0 7px;font-size:16px}.desc{color:#777;font-size:12px;min-height:38px;margin-bottom:10px}.price{font-size:19px;font-weight:bold;color:#287a3e}.stock{margin-top:7px;font-size:12px}.ok{color:#287a3e;font-weight:bold}.low{color:#ad8232;font-weight:bold}.out{color:#b22;font-weight:bold}.actions{display:flex;gap:7px;margin-top:14px}.actions button{flex:1;border:0;padding:8px;border-radius:7px;cursor:pointer;font-weight:bold;font-size:11px}.edit{background:#e8f2e9;color:#287a3e}.delete{background:#f7dddd;color:#a33}.message{text-align:center;padding:55px 20px;color:#777;font-weight:bold}.error{color:#a33}
+@media(max-width:1100px){.product-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){header{padding:12px 16px}.admin-pill{display:none}main{padding:20px 12px}.box{padding:18px}.head{align-items:flex-start;flex-direction:column}.product-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">LIARA<small>PROFESSIONAL™</small></div>
+  <div class="header-actions">
+    <div class="admin-pill">👤 Company Admin</div>
+    <button class="btn" onclick="location.href='add-product.html'">➕ Add Product</button>
+    <button class="btn gray-btn" onclick="logoutAdmin()">Logout</button>
+  </div>
+</header>
+
+<main><div class="container"><div class="box">
+  <div class="head">
+    <div><p>PRODUCT MANAGEMENT</p><h1>🧴 Products</h1></div>
+    <button class="btn gray-btn" onclick="loadProducts()">🔄 Refresh</button>
+  </div>
+  <div id="productsList"><div class="message">Loading products...</div></div>
+</div></div></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
+const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const ADMIN_EMAIL="info@liara.co.in";
+
+function escapeHtml(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function money(v){return "₹"+Number(v||0).toLocaleString("en-IN")}
+
+async function checkAdmin(){
+  const {data,error}=await supabaseClient.auth.getUser();
+  if(error||!data?.user||String(data.user.email||"").toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+    location.href="company-login.html"; return null;
+  }
+  return data.user;
+}
+async function logoutAdmin(){await supabaseClient.auth.signOut();location.href="company-login.html"}
+
+let allProducts=[];
+async function loadProducts(){
+  const box=document.getElementById("productsList");
+  box.innerHTML='<div class="message">Loading products...</div>';
+  const user=await checkAdmin(); if(!user)return;
+  const {data,error}=await supabaseClient.from("products").select("*").order("created_at",{ascending:false});
+  if(error){box.innerHTML='<div class="message error">'+escapeHtml(error.message)+'</div>';return}
+  allProducts=data||[]; renderProducts(allProducts);
+}
+function renderProducts(products){
+  const box=document.getElementById("productsList");
+  if(!products.length){box.innerHTML='<div class="message">No products added yet.</div>';return}
+  let html='<div class="product-grid">';
+  products.forEach(p=>{
+    const stock=Number(p.stock||0), lowLimit=Number(p.low_stock||5);
+    const stockText=stock<=0?"Out of Stock":stock<=lowLimit?"Low Stock: "+stock:"Stock: "+stock;
+    const cls=stock<=0?"out":stock<=lowLimit?"low":"ok";
+    const image=p.image_url||"";
+    html+=`<div class="card">
+      ${image?`<img class="card-image" src="${escapeHtml(image)}" alt="${escapeHtml(p.name)}">`:`<div class="card-image" style="display:flex;align-items:center;justify-content:center;font-size:50px">🧴</div>`}
+      <div class="card-body">
+        <h3>${escapeHtml(p.name)}</h3>
+        <div class="desc">${escapeHtml(p.description||"")}</div>
+        <div class="price">${money(p.price)}</div>
+        <div class="stock ${cls}">${stockText}</div>
+        <div class="actions">
+          <button class="edit" onclick="location.href='add-product.html?id=${encodeURIComponent(p.id)}'">✏️ Edit</button>
+          <button class="edit" onclick="editStock('${escapeHtml(String(p.id))}')">📦 Stock</button>
+          <button class="delete" onclick="deleteProduct('${escapeHtml(String(p.id))}')">🗑 Delete</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  html+="</div>";box.innerHTML=html;
+}
+async function editStock(id){
+  const p=allProducts.find(x=>String(x.id)===String(id)); if(!p)return;
+  const value=prompt("New stock quantity:",p.stock||0); if(value===null)return;
+  const stock=Number(value);
+  if(!Number.isInteger(stock)||stock<0){alert("Valid stock quantity pao.");return}
+  const {error}=await supabaseClient.from("products").update({stock}).eq("id",id);
+  if(error){alert("Stock update failed:\n\n"+error.message);return}
+  loadProducts();
+}
+async function deleteProduct(id){
+  const p=allProducts.find(x=>String(x.id)===String(id)); if(!p)return;
+  if(!confirm('Delete "'+p.name+'"?'))return;
+  const {error}=await supabaseClient.from("products").delete().eq("id",id);
+  if(error){alert("Product delete failed:\n\n"+error.message);return}
+  alert("Product deleted successfully.");loadProducts();
+}
+checkAdmin().then(u=>{if(u)loadProducts()});
+</script>
+</body>
+</html>
