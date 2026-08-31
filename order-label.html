@@ -1,440 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Liara Professional™ | Order Label</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-
-<style>
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  background:#f3f1ed;
-  color:#171717;
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-.container{
-  max-width:650px;
-  margin:40px auto;
-  padding:20px;
-}
-
-.box{
-  background:#fff;
-  border:1px solid #ddd8d0;
-  border-radius:16px;
-  padding:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,.07);
-}
-
-.header{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.header h1{
-  margin:0;
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:28px;
-  letter-spacing:3px;
-}
-
-.header p{
-  margin:5px 0 0;
-  font-size:10px;
-  letter-spacing:2px;
-  color:#777;
-}
-
-.search{
-  display:flex;
-  gap:10px;
-}
-
-.search input{
-  flex:1;
-  height:48px;
-  border:1px solid #ccc;
-  border-radius:9px;
-  padding:0 14px;
-  font-size:16px;
-}
-
-.search button,
-.print-btn{
-  height:48px;
-  border:0;
-  border-radius:9px;
-  background:#171717;
-  color:#fff;
-  padding:0 20px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.message{
-  margin:12px 2px;
-  min-height:20px;
-  font-size:13px;
-}
-
-.error{
-  color:#b42318;
-}
-
-.success{
-  color:#16733c;
-}
-
-
-/* =====================================================
-   SMALL PRINT LABEL
-===================================================== */
-
-.label-area{
-  display:none;
-  margin-top:25px;
-}
-
-.label{
-  width:100%;
-  max-width:400px;
-  margin:auto;
-  background:#fff;
-  border:1.5px solid #111;
-  padding:15px;
-}
-
-.label-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-  padding-bottom:10px;
-  border-bottom:1.5px solid #111;
-}
-
-.logo{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:20px;
-  font-weight:bold;
-  letter-spacing:2px;
-}
-
-.logo small{
-  display:block;
-  font-family:Arial,Helvetica,sans-serif;
-  font-size:7px;
-  letter-spacing:1.5px;
-  margin-top:2px;
-}
-
-.cod{
-  border:1.5px solid #111;
-  padding:5px 8px;
-  border-radius:4px;
-  font-size:9px;
-  font-weight:bold;
-  white-space:nowrap;
-}
-
-.ship{
-  font-size:8px;
-  font-weight:bold;
-  letter-spacing:1.2px;
-  margin-top:12px;
-  margin-bottom:4px;
-}
-
-.name{
-  font-size:17px;
-  font-weight:800;
-  margin-bottom:5px;
-}
-
-.address{
-  font-size:12px;
-  line-height:1.4;
-  word-break:break-word;
-}
-
-.mobile{
-  font-size:11px;
-  font-weight:bold;
-  margin-top:6px;
-}
-
-.bottom{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  border-top:1px solid #aaa;
-  margin-top:11px;
-  padding-top:9px;
-}
-
-.order{
-  font-size:10px;
-  font-weight:bold;
-  white-space:nowrap;
-}
-
-.barcode{
-  width:145px;
-  height:45px;
-}
-
-.print-box{
-  text-align:center;
-  margin-top:15px;
-}
-
-.print-btn{
-  width:150px;
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media(max-width:600px){
-
-  .container{
-    margin:10px auto;
-    padding:10px;
-  }
-
-  .box{
-    padding:17px;
-  }
-
-  .search{
-    flex-direction:column;
-  }
-
-  .search button{
-    width:100%;
-  }
-
-  .label{
-    max-width:360px;
-  }
-}
-
-
-/* =====================================================
-   PRINT
-===================================================== */
-
-@media print{
-
-  @page{
-    size:A4;
-    margin:10mm;
-  }
-
-  body{
-    background:#fff;
-  }
-
-  .container{
-    margin:0;
-    padding:0;
-    max-width:none;
-  }
-
-  .box{
-    border:0;
-    box-shadow:none;
-    padding:0;
-  }
-
-  .header,
-  .search,
-  .message,
-  .print-box{
-    display:none !important;
-  }
-
-  .label-area{
-    display:block !important;
-    margin:0;
-  }
-
-  .label{
-    width:90mm;
-    max-width:90mm;
-    padding:10mm;
-    margin:0;
-    border:1.5px solid #111;
-  }
-
-  .name{
-    font-size:16px;
-  }
-
-  .address{
-    font-size:11px;
-  }
-
-  .mobile{
-    font-size:10px;
-  }
-
-  .barcode{
-    width:130px;
-    height:40px;
-  }
-}
-</style>
-</head>
-
-
-<body>
-
-<div class="container">
-
-<div class="box">
-
-<div class="header">
-  <h1>LIARA</h1>
-  <p>PROFESSIONAL™ · ORDER LABEL</p>
-</div>
-
-
-<div class="search">
-
-  <input
-    id="orderInput"
-    type="text"
-    placeholder="Enter Order Number"
-    autocomplete="off"
-  >
-
-  <button onclick="findOrder()">
-    Find Order
-  </button>
-
-</div>
-
-
-<div id="message" class="message"></div>
-
-
-<!-- =====================================================
-     LABEL
-===================================================== -->
-
-<div id="labelArea" class="label-area">
-
-<div class="label">
-
-  <div class="label-top">
-
-    <div class="logo">
-      LIARA
-      <small>PROFESSIONAL™</small>
-    </div>
-
-    <div class="cod">
-      PAYMENT: COD
-    </div>
-
-  </div>
-
-
-  <div class="ship">
-    SHIP TO
-  </div>
-
-
-  <div
-    id="customerName"
-    class="name"
-  >
-    —
-  </div>
-
-
-  <div
-    id="customerAddress"
-    class="address"
-  >
-    —
-  </div>
-
-
-  <div
-    id="customerMobile"
-    class="mobile"
-  >
-    Mobile: —
-  </div>
-
-
-  <div class="bottom">
-
-    <div
-      id="displayOrder"
-      class="order"
-    >
-      ORDER: —
-    </div>
-
-    <svg
-      id="barcode"
-      class="barcode"
-    ></svg>
-
-  </div>
-
-</div>
-
-
-<div class="print-box">
-
-  <button
-    class="print-btn"
-    onclick="printLabel()"
-  >
-    🖨 PRINT LABEL
-  </button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
 <script>
 
 /* =====================================================
-   SUPABASE SETTINGS
-=====================================================
-
-   APNE EXISTING ADMIN / CHECKOUT FILE WICHON
-   EH 2 VALUES COPY KARKE ETHHE PASTE KARO.
-
+   LIARA SUPABASE CONNECTION
 ===================================================== */
 
 const SUPABASE_URL =
-"PASTE_YOUR_SUPABASE_URL_HERE";
+"https://oinafbuicwhleudztzyz.supabase.co";
 
 const SUPABASE_ANON_KEY =
-"PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pbmFmYnVpY3dobGV1ZHp0enl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcyOTg1NjksImV4cCI6MjEwMjg3NDU2OX0.pod7G6u-eDu3Frgn9NF5C5WORULvG7SiTtER_KbCOIU";
 
 
 const supabaseClient =
@@ -445,209 +19,16 @@ window.supabase.createClient(
 
 
 /* =====================================================
-   ORDERS TABLE
-===================================================== */
-
-const ORDERS_TABLE = "orders";
-
-
-/* =====================================================
-   HELPER
-===================================================== */
-
-function clean(value){
-
-  if(
-    value === null ||
-    value === undefined
-  ){
-    return "";
-  }
-
-  return String(value).trim();
-
-}
-
-
-function getFirst(row, fields){
-
-  for(
-    const field of fields
-  ){
-
-    if(
-      row[field] !== undefined &&
-      row[field] !== null &&
-      clean(row[field]) !== ""
-    ){
-
-      return clean(row[field]);
-
-    }
-
-  }
-
-  return "";
-
-}
-
-
-/* =====================================================
-   ORDER DATA
-===================================================== */
-
-function getOrderData(row){
-
-  const name =
-    getFirst(
-      row,
-      [
-        "full_name",
-        "customer_name",
-        "name",
-        "fullname",
-        "customerName"
-      ]
-    );
-
-
-  const mobile =
-    getFirst(
-      row,
-      [
-        "mobile",
-        "phone",
-        "phone_number",
-        "customer_mobile",
-        "customer_phone"
-      ]
-    );
-
-
-  const house =
-    getFirst(
-      row,
-      [
-        "house",
-        "house_no",
-        "house_number",
-        "flat",
-        "flat_no",
-        "address_line1"
-      ]
-    );
-
-
-  const street =
-    getFirst(
-      row,
-      [
-        "street",
-        "street_area",
-        "area",
-        "address_line2"
-      ]
-    );
-
-
-  const city =
-    getFirst(
-      row,
-      [
-        "city"
-      ]
-    );
-
-
-  const state =
-    getFirst(
-      row,
-      [
-        "state"
-      ]
-    );
-
-
-  const pin =
-    getFirst(
-      row,
-      [
-        "pin",
-        "pincode",
-        "pin_code",
-        "postal_code",
-        "zip"
-      ]
-    );
-
-
-  const completeAddress =
-    getFirst(
-      row,
-      [
-        "delivery_address",
-        "shipping_address",
-        "full_address",
-        "address_full"
-      ]
-    );
-
-
-  const addressParts =
-    [
-      house,
-      street,
-      city,
-      state,
-      pin
-    ].filter(Boolean);
-
-
-  const address =
-    completeAddress ||
-    addressParts.join(", ");
-
-
-  const orderNumber =
-    getFirst(
-      row,
-      [
-        "order_number",
-        "order_no",
-        "order_id",
-        "orderId",
-        "order"
-      ]
-    );
-
-
-  return {
-
-    name:name,
-
-    mobile:mobile,
-
-    address:address,
-
-    orderNumber:orderNumber
-
-  };
-
-}
-
-
-/* =====================================================
    FIND ORDER
 ===================================================== */
 
 async function findOrder(){
 
   const entered =
-    clean(
-      document
-      .getElementById("orderInput")
-      .value
-    );
+    document
+    .getElementById("orderInput")
+    .value
+    .trim();
 
 
   const message =
@@ -658,12 +39,10 @@ async function findOrder(){
     document.getElementById("labelArea");
 
 
-  labelArea.style.display =
-    "none";
+  labelArea.style.display = "none";
 
 
-  message.className =
-    "message";
+  message.className = "message";
 
 
   if(!entered){
@@ -678,70 +57,45 @@ async function findOrder(){
   }
 
 
-  if(
-    SUPABASE_URL.includes("PASTE_") ||
-    SUPABASE_ANON_KEY.includes("PASTE_")
-  ){
-
-    message.textContent =
-      "Supabase URL and anon key are not set.";
-
-    message.classList.add("error");
-
-    return;
-
-  }
-
-
   message.textContent =
     "Finding order...";
 
 
   try{
 
-    let result =
+    const { data, error } =
       await supabaseClient
-      .from(ORDERS_TABLE)
-      .select("*")
+      .from("orders")
+      .select(`
+        order_number,
+        customer_name,
+        phone,
+        address,
+        house_no,
+        street,
+        city,
+        state,
+        pincode,
+        payment_method,
+        shipping_address
+      `)
       .eq(
         "order_number",
         entered
       )
-      .limit(1);
+      .maybeSingle();
 
 
-    /* fallback */
+    if(error){
 
-    if(
-      result.error ||
-      !result.data ||
-      result.data.length === 0
-    ){
+      console.error(error);
 
-      result =
-        await supabaseClient
-        .from(ORDERS_TABLE)
-        .select("*")
-        .eq(
-          "order_id",
-          entered
-        )
-        .limit(1);
+      throw error;
 
     }
 
 
-    if(result.error){
-
-      throw result.error;
-
-    }
-
-
-    if(
-      !result.data ||
-      result.data.length === 0
-    ){
+    if(!data){
 
       message.textContent =
         "Order not found.";
@@ -753,21 +107,20 @@ async function findOrder(){
     }
 
 
-    const order =
-      getOrderData(
-        result.data[0]
-      );
-
-
-    showLabel(order);
+    showLabel(data);
 
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "ORDER ERROR:",
+      error
+    );
+
 
     message.textContent =
-      "Order fetch failed. Check Supabase table/column names.";
+      "Order fetch failed: " +
+      error.message;
 
     message.classList.add("error");
 
@@ -782,35 +135,112 @@ async function findOrder(){
 
 function showLabel(order){
 
+  const customerName =
+    order.customer_name ||
+    "Customer";
+
+
+  const mobile =
+    order.phone ||
+    "—";
+
+
+  /*
+     Address priority:
+
+     shipping_address
+     ↓
+     individual address fields
+     ↓
+     address
+  */
+
+  let address = "";
+
+
+  if(
+    order.shipping_address &&
+    order.shipping_address.trim()
+  ){
+
+    address =
+      order.shipping_address.trim();
+
+  }else{
+
+    const parts = [
+
+      order.house_no,
+
+      order.street,
+
+      order.city,
+
+      order.state,
+
+      order.pincode
+
+    ];
+
+
+    address =
+      parts
+      .filter(
+        value =>
+        value &&
+        String(value).trim()
+      )
+      .join(", ");
+
+
+    if(
+      !address &&
+      order.address
+    ){
+
+      address =
+        order.address;
+
+    }
+
+  }
+
+
+  const orderNumber =
+    order.order_number ||
+    document
+    .getElementById("orderInput")
+    .value
+    .trim();
+
+
+  /* CUSTOMER */
+
   document
   .getElementById("customerName")
   .textContent =
-    order.name || "Customer";
+    customerName;
 
+
+  /* ADDRESS */
 
   document
   .getElementById("customerAddress")
   .textContent =
-    order.address ||
+    address ||
     "Address not available";
 
+
+  /* MOBILE */
 
   document
   .getElementById("customerMobile")
   .textContent =
     "Mobile: " +
-    (
-      order.mobile ||
-      "—"
-    );
+    mobile;
 
 
-  const orderNumber =
-    order.orderNumber ||
-    document
-    .getElementById("orderInput")
-    .value;
-
+  /* ORDER NUMBER */
 
   document
   .getElementById("displayOrder")
@@ -819,28 +249,55 @@ function showLabel(order){
     orderNumber;
 
 
-  /* BARCODE */
+  /* =================================================
+     PAYMENT
+  ================================================= */
+
+  const payment =
+    String(
+      order.payment_method || "COD"
+    ).toUpperCase();
+
+
+  document
+  .querySelector(".cod")
+  .textContent =
+    "PAYMENT: " +
+    (
+      payment.includes("COD")
+      ? "COD"
+      : payment
+    );
+
+
+  /* =================================================
+     BARCODE
+  ================================================= */
 
   JsBarcode(
     "#barcode",
     orderNumber,
     {
 
-      format:"CODE128",
+      format: "CODE128",
 
-      width:2,
+      width: 2,
 
-      height:40,
+      height: 40,
 
-      displayValue:true,
+      displayValue: true,
 
-      fontSize:10,
+      fontSize: 10,
 
-      margin:0
+      margin: 0
 
     }
   );
 
+
+  /* =================================================
+     SHOW
+  ================================================= */
 
   document
   .getElementById("message")
@@ -893,6 +350,3 @@ document
 );
 
 </script>
-
-</body>
-</html>
