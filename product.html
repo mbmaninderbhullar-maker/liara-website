@@ -2388,10 +2388,40 @@ function getSelectedVariant() {
     return options.find(o => String(o.value) === String(value)) || null;
 }
 
+function normalizeStockUnit(value) {
+    const unit = String(value || "").trim().toLowerCase();
+    if (unit === "gram" || unit === "grams") return "g";
+    if (unit === "kilogram" || unit === "kilograms") return "kg";
+    if (unit === "millilitre" || unit === "milliliter" || unit === "millilitres" || unit === "milliliters") return "ml";
+    if (unit === "l" || unit === "ltr" || unit === "litre" || unit === "liter" || unit === "litres" || unit === "liters") return "l";
+    return unit;
+}
+
+function stockVariantKey(size, unit) {
+    const n = Number(size);
+    const sizeKey = Number.isFinite(n) ? String(n) : String(size || "").trim().toLowerCase();
+    return sizeKey + "|" + normalizeStockUnit(unit);
+}
+
 function getSelectedStock(product) {
-    // Customer-facing stock now follows the same stock ledger used by Admin.
-    if (product && Number.isFinite(Number(product._liaraLiveStock))) {
-        return Math.max(0, Number(product._liaraLiveStock));
+    // Customer-facing stock follows product_stock_variants, exactly like Admin Stock Management.
+    // Website availability = Online Given - Online Sold for the selected size/unit.
+    if (product && product._liaraLiveVariantStocks) {
+        const options = window.liaraUnitPriceOptions || [];
+        const selectedValue = document.getElementById("productSize")?.value || options[0]?.value || "";
+        const match = String(selectedValue).match(/^([0-9]+(?:\.[0-9]+)?)\s*(.*)$/);
+        if (match) {
+            const key = stockVariantKey(match[1], match[2]);
+            if (Object.prototype.hasOwnProperty.call(product._liaraLiveVariantStocks, key)) {
+                return Math.max(0, Number(product._liaraLiveVariantStocks[key]) || 0);
+            }
+        }
+    }
+
+    // Fallback for products that do not yet have a product_stock_variants row.
+    const selected = getSelectedVariant();
+    if (selected && selected.stock !== null && selected.stock !== undefined) {
+        return Math.max(0, Number(selected.stock) || 0);
     }
     return Math.max(0, Number(product?.stock || 0));
 }
@@ -2399,32 +2429,31 @@ function getSelectedStock(product) {
 async function getLiveAdminStock(product) {
     if (!product?.id) return null;
 
-    const { data: transactions, error } = await supabaseClient
-        .from("stock_transactions")
-        .select("transaction_type, quantity")
+    // This is the same source used by stock.html: product_stock_variants.
+    const { data: variants, error } = await supabaseClient
+        .from("product_stock_variants")
+        .select("size, unit, online_given, online_sold")
         .eq("product_id", product.id);
 
     if (error) {
-        console.error("Live admin stock loading error:", error);
+        console.error("Live product stock loading error:", error);
         return null;
     }
 
-    const rows = Array.isArray(transactions) ? transactions : [];
-    const opening = Number(product.opening_stock || 0);
-    const received = opening + rows
-        .filter(t => t.transaction_type === "purchase")
-        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
-    const online = rows
-        .filter(t => t.transaction_type === "sale")
-        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
-    const offline = rows
-        .filter(t => t.transaction_type === "offline_out")
-        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
-    const adjustments = rows
-        .filter(t => t.transaction_type === "adjustment")
-        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
+    const rows = Array.isArray(variants) ? variants : [];
+    const variantStocks = {};
+    let totalOnlineAvailable = 0;
 
-    return Math.max(0, received - online - offline - adjustments);
+    rows.forEach(v => {
+        const available = Math.max(0, Number(v.online_given || 0) - Number(v.online_sold || 0));
+        variantStocks[stockVariantKey(v.size, v.unit)] = available;
+        totalOnlineAvailable += available;
+    });
+
+    return {
+        total: totalOnlineAvailable,
+        variants: variantStocks
+    };
 }
 
 function updateDisplayedPrice() {
@@ -2682,10 +2711,11 @@ async function loadProduct() {
 
     }
 
-    // Same formula as Admin Stock Management: remaining stock from the ledger.
+    // Same source as Admin Stock Management: product_stock_variants.
     const liveAdminStock = await getLiveAdminStock(product);
     if (liveAdminStock !== null) {
-        product._liaraLiveStock = liveAdminStock;
+        product._liaraLiveStock = liveAdminStock.total;
+        product._liaraLiveVariantStocks = liveAdminStock.variants;
     }
 
 
@@ -3320,7 +3350,8 @@ async function getCurrentProduct() {
 
     const liveAdminStock = await getLiveAdminStock(data);
     if (liveAdminStock !== null) {
-        data._liaraLiveStock = liveAdminStock;
+        data._liaraLiveStock = liveAdminStock.total;
+        data._liaraLiveVariantStocks = liveAdminStock.variants;
     }
 
     return data;
