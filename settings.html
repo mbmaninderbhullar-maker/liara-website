@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Liara Professional™ | Settings</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 
 #staffManagementNavBtn{
@@ -25,50 +26,78 @@
 
 
 
+.permissions-card{overflow:hidden}
+.permission-toolbar{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px;background:#faf8f5;border:1px solid #ece8e1;border-radius:10px;margin-bottom:15px}
+.permission-toolbar strong{display:block;font-size:12px}
+.permission-toolbar small{display:block;color:#888;font-size:10px;margin-top:4px}
+.permission-actions{display:flex;gap:7px;flex-wrap:wrap}
+.permission-actions .btn{padding:9px 11px;font-size:10px}
+.permission-table-wrap{overflow:auto;border:1px solid #e5e0d7;border-radius:10px}
+.permission-table{width:100%;min-width:850px;border-collapse:collapse;background:#fff;font-size:10px}
+.permission-table th,.permission-table td{border-bottom:1px solid #eee;border-right:1px solid #eee;padding:9px;text-align:center}
+.permission-table th{background:#f7f3eb;color:#555;font-size:9px;letter-spacing:.7px;position:sticky;top:0;z-index:1}
+.permission-table th:first-child,.permission-table td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:2;min-width:210px}
+.permission-table th:first-child{background:#f7f3eb;z-index:3}
+.permission-module{font-weight:bold;color:#222}
+.permission-module small{display:block;color:#999;font-weight:normal;margin-top:3px}
+.permission-check{width:17px;height:17px;accent-color:#ad8232;cursor:pointer}
+.permission-note{margin-top:12px;padding:12px;background:#f7f3eb;border:1px solid #e8e1d5;border-radius:9px;color:#666;font-size:10px;line-height:1.6}
+@media(max-width:700px){.permission-toolbar{align-items:flex-start;flex-direction:column}.permission-actions{width:100%}}
 
-body{margin:0;background:#f7f3eb;}
+body{margin:0;background:#f7f3eb}
 .settings-standalone-header{
-    background:#fff;
-    border-bottom:1px solid #e8e1d5;
-    padding:18px 5%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
+    background:#fff;border-bottom:1px solid #e8e1d5;padding:18px 5%;
+    display:flex;align-items:center;justify-content:space-between;gap:15px
 }
-.settings-standalone-logo{
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:25px;
-    font-weight:700;
-    letter-spacing:5px;
-}
-.settings-standalone-back{
-    color:#555;
-    text-decoration:none;
-    font-size:11px;
-    font-weight:bold;
-}
+.settings-standalone-logo{font-family:Georgia,"Times New Roman",serif;font-size:25px;font-weight:700;letter-spacing:5px}
+.settings-standalone-back{color:#555;text-decoration:none;font-size:11px;font-weight:bold}
 .settings-standalone-back:hover{color:#ad8232}
 #other-content{max-width:1250px;margin:25px auto;padding:0 20px}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
 <header class="settings-standalone-header">
     <a href="admin-orders.html" class="settings-standalone-back">← BACK TO ADMIN</a>
     <div class="settings-standalone-logo">LIARA</div>
     <a href="admin-orders.html" class="settings-standalone-back">ADMIN DASHBOARD →</a>
 </header>
-
 <div id="other-content"></div>
 
 <script>
-const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
-const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+const SUPABASE_URL =
+"https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const ADMIN_EMAIL =
+"info@liara.co.in";
+
+const IMAGE_BUCKET =
+"product-images";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const ADMIN_EMAIL="info@liara.co.in";
-const IMAGE_BUCKET="product-images";
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   SETTINGS STORAGE
+========================================================= */
 
 const SETTINGS_KEY = "liara_professional_admin_settings";
 
@@ -301,62 +330,3698 @@ function payment(order){
 
 }
 
+/* =========================================================
+   MENU
+========================================================= */
 
+function showSection(section,button){
 
+    document.querySelectorAll(
+        ".side-menu button"
+    ).forEach(btn=>{
+        btn.classList.remove("active");
+    });
 
-function escapeHtml(value){
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    if(button){
+        button.classList.add("active");
+    }
+
+    document.getElementById(
+        "orders-section"
+    ).style.display =
+        section === "orders"
+        ? "block"
+        : "none";
+
+    document.getElementById(
+        "other-section"
+    ).style.display =
+        section === "orders"
+        ? "none"
+        : "block";
+
+    const emailPanel = document.getElementById("emailPanel");
+    if(emailPanel){
+        emailPanel.style.display = section === "email" ? "block" : "none";
+    }
+
+    if(section === "orders") loadOrders();
+    else if(section === "sales") loadSales();
+    else if(section === "products") loadProducts();
+    else if(section === "add-product") showAddProduct();
+    else if(section === "customers") loadCustomers();
+    else if(section === "delivery") loadDelivery();
+    else if(section === "reports") loadReports();
+    else if(section === "notifications") loadNotifications();
+    else if(section === "parties") loadParties();
+    else if(section === "settings") loadSettings();
+
+    closeSidebar();
+
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+function openSidebar(){
+
+    document.getElementById("sidebar")
+        .classList.add("open");
+
+    document.getElementById("sidebarOverlay")
+        .classList.add("show");
+
+}
+
+function closeSidebar(){
+
+    document.getElementById("sidebar")
+        .classList.remove("open");
+
+    document.getElementById("sidebarOverlay")
+        .classList.remove("show");
+
+}
+
+/* =========================================================
+   ADMIN CHECK
+========================================================= */
 
 async function checkAdmin(){
-    try{
-        const {data,error}=await supabaseClient.auth.getUser();
-        if(error || !data?.user){
-            alert("Admin session expired. Please sign in again.");
-            window.location.href="company-login.html";
-            return null;
-        }
-        return data.user;
-    }catch(e){
-        alert("Unable to verify admin session.");
+
+    const {data,error} =
+        await supabaseClient
+        .auth
+        .getUser();
+
+    if(error || !data || !data.user){
+
+        window.location.href =
+            "company-login.html";
+
         return null;
+
     }
+
+    if(
+        !data.user.email ||
+        data.user.email.toLowerCase()
+        !== ADMIN_EMAIL.toLowerCase()
+    ){
+
+        window.location.href =
+            "company-login.html";
+
+        return null;
+
+    }
+
+    return data.user;
+
 }
 
-function toggleStaffPassword(){
-    const el=document.getElementById("staffPassword");
-    if(!el)return;
-    el.type=el.type==="password"?"text":"password";
+/* =========================================================
+   ORDERS
+========================================================= */
+
+async function loadOrders(){
+
+    const box =
+        document.getElementById("orders");
+
+    box.innerHTML = `
+        <div class="message">
+            Loading customer orders...
+        </div>
+    `;
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+    if(error){
+
+        box.innerHTML = `
+            <div class="message error">
+                Unable to load orders.
+                <br><br>
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    allOrders = data || [];
+
+    updateOrderSummary(allOrders);
+    renderOrders(allOrders);
+
 }
 
-function generateStaffPassword(){
-    const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
-    const a=new Uint32Array(16);
-    crypto.getRandomValues(a);
-    let p="";
-    a.forEach(x=>p+=chars[x%chars.length]);
-    const el=document.getElementById("staffPassword");
-    if(el){el.value=p;el.type="text";}
+function updateOrderSummary(orders){
+
+    let sales = 0;
+    let active = 0;
+    let delivered = 0;
+
+    orders.forEach(order=>{
+
+        sales += Number(order.total || 0);
+
+        const status =
+            String(
+                order.status || "Pending"
+            ).toLowerCase();
+
+        if(status === "delivered"){
+            delivered++;
+        }
+
+        if([
+            "pending",
+            "confirmed",
+            "packed",
+            "shipped",
+            "order received"
+        ].includes(status)){
+
+            active++;
+
+        }
+
+    });
+
+    document.getElementById("totalOrders").innerText =
+        orders.length;
+
+    document.getElementById("totalSales").innerText =
+        money(sales);
+
+    document.getElementById("pendingOrders").innerText =
+        active;
+
+    document.getElementById("deliveredOrders").innerText =
+        delivered;
+
 }
 
-async function copyStaffPassword(){
-    const el=document.getElementById("staffPassword");
-    if(!el || !el.value){alert("Generate or enter a password first.");return;}
+/* =========================================================
+   ORDER FILTER
+========================================================= */
+
+function applyOrderFilters(){
+
+    const search =
+        document.getElementById(
+            "orderSearch"
+        ).value
+        .toLowerCase()
+        .trim();
+
+    const status =
+        document.getElementById(
+            "orderStatusFilter"
+        ).value
+        .toLowerCase();
+
+    const from =
+        document.getElementById("orderFrom").value;
+
+    const to =
+        document.getElementById("orderTo").value;
+
+    let filtered = [...allOrders];
+
+    filtered = filtered.filter(order=>{
+
+        const text =
+            [
+                order.customer_name,
+                order.name,
+                order.phone,
+                order.mobile,
+                productName(order),
+                shortOrderId(order.id)
+            ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+        if(search && !text.includes(search)){
+            return false;
+        }
+
+        const orderStatus =
+            String(
+                order.status || "pending"
+            ).toLowerCase();
+
+        if(status && orderStatus !== status){
+            return false;
+        }
+
+        if(from && order.created_at){
+
+            if(
+                new Date(order.created_at)
+                <
+                new Date(from+"T00:00:00")
+            ){
+                return false;
+            }
+
+        }
+
+        if(to && order.created_at){
+
+            if(
+                new Date(order.created_at)
+                >
+                new Date(to+"T23:59:59")
+            ){
+                return false;
+            }
+
+        }
+
+        return true;
+
+    });
+
+    renderOrders(filtered);
+
+}
+
+function clearOrderFilters(){
+
+    document.getElementById("orderSearch").value = "";
+    document.getElementById("orderStatusFilter").value = "";
+    document.getElementById("orderFrom").value = "";
+    document.getElementById("orderTo").value = "";
+
+    renderOrders(allOrders);
+
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function statusBadge(status){
+
+    const s =
+        String(status || "Pending");
+
+    const lower =
+        s.toLowerCase();
+
+    let cls = "badge-gold";
+
+    if(lower === "delivered"){
+        cls = "badge-green";
+    }
+    else if(lower === "cancelled"){
+        cls = "badge-red";
+    }
+    else if(
+        lower === "shipped" ||
+        lower === "packed"
+    ){
+        cls = "badge-blue";
+    }
+
+    return `
+        <span class="badge ${cls}">
+            ${escapeHtml(s)}
+        </span>
+    `;
+
+}
+
+/* =========================================================
+   RENDER ORDERS
+========================================================= */
+
+function renderOrders(orders){
+
+    const box =
+        document.getElementById("orders");
+
+    if(!orders.length){
+
+        box.innerHTML = `
+            <div class="message">
+                No orders found.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    let html = `
+    <div class="table-wrapper">
+    <table class="data-table">
+    <thead>
+    <tr>
+        <th>ORDER ID</th>
+        <th>DATE</th>
+        <th>CUSTOMER</th>
+        <th>MOBILE</th>
+        <th>PRODUCT</th>
+        <th>QTY</th>
+        <th>AMOUNT</th>
+        <th>PAYMENT</th>
+        <th>STATUS</th>
+        <th>ACTION</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    orders.forEach(order=>{
+
+        const date =
+            order.created_at
+            ? new Date(
+                order.created_at
+              ).toLocaleString("en-IN")
+            : "-";
+
+        const customer =
+            order.customer_name ||
+            order.name ||
+            "-";
+
+        const phone =
+            order.phone ||
+            order.mobile ||
+            "-";
+
+        const qty =
+            Number(order.quantity || 1);
+
+        const total =
+            Number(order.total || 0);
+
+        const status =
+            order.status || "Pending";
+
+        html += `
+        <tr>
+
+            <td>
+                <strong>
+                    ${escapeHtml(
+                        shortOrderId(order.id)
+                    )}
+                </strong>
+            </td>
+
+            <td>${escapeHtml(date)}</td>
+
+            <td>${escapeHtml(customer)}</td>
+
+            <td>${escapeHtml(phone)}</td>
+
+            <td class="product-name">
+                ${escapeHtml(productName(order))}
+            </td>
+
+            <td>${qty}</td>
+
+            <td class="total">${money(total)}</td>
+
+            <td>
+                <span class="payment-badge">
+                    ${escapeHtml(payment(order))}
+                </span>
+            </td>
+
+            <td>
+
+                <select
+                    class="status-select"
+                    onchange="updateOrderStatus(
+                        '${escapeHtml(String(order.id))}',
+                        this.value
+                    )">
+
+                    ${statusOptions(status)}
+
+                </select>
+
+            </td>
+
+            <td>
+
+                <button
+                    class="table-btn view-btn"
+                    onclick="viewOrder(
+                        '${escapeHtml(String(order.id))}'
+                    )">
+                    👁 View
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    `;
+
+    box.innerHTML = html;
+
+}
+
+function statusOptions(current){
+
+    const statuses = [
+        "Pending",
+        "Confirmed",
+        "Packed",
+        "Shipped",
+        "Delivered",
+        "Cancelled"
+    ];
+
+    return statuses.map(status=>`
+
+        <option
+            value="${status}"
+            ${
+                String(current).toLowerCase()
+                === status.toLowerCase()
+                ? "selected"
+                : ""
+            }>
+
+            ${status}
+
+        </option>
+
+    `).join("");
+
+}
+
+/* =========================================================
+   UPDATE ORDER STATUS
+========================================================= */
+
+async function updateOrderStatus(id,status){
+
+    const yes =
+        confirm(
+            "Change order status to " +
+            status +
+            "?"
+        );
+
+    if(!yes){
+
+        renderOrders(allOrders);
+
+        return;
+
+    }
+
+    const {error} =
+        await supabaseClient
+        .from("orders")
+        .update({
+            status:status
+        })
+        .eq("id",id);
+
+    if(error){
+
+        alert(
+            "Status update failed:\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+    const found =
+        allOrders.find(
+            order =>
+            String(order.id)
+            === String(id)
+        );
+
+    if(found){
+        found.status = status;
+    }
+
+    updateOrderSummary(allOrders);
+    applyOrderFilters();
+
+    alert(
+        "Order status updated successfully."
+    );
+
+}
+
+/* =========================================================
+   VIEW ORDER
+========================================================= */
+
+function viewOrder(id){
+
+    const order =
+        allOrders.find(
+            x =>
+            String(x.id)
+            === String(id)
+        );
+
+    if(!order){
+
+        alert("Order not found.");
+        return;
+
+    }
+
+    currentOrder = order;
+
+    const date =
+        order.created_at
+        ? new Date(
+            order.created_at
+          ).toLocaleString("en-IN")
+        : "-";
+
+    const customer =
+        order.customer_name ||
+        order.name ||
+        "-";
+
+    const phone =
+        order.phone ||
+        order.mobile ||
+        "-";
+
+    const address =
+        order.address ||
+        order.shipping_address ||
+        order.delivery_address ||
+        "-";
+
+    const product =
+        productName(order);
+
+    const qty =
+        Number(order.quantity || 1);
+
+    const price =
+        productPrice(order);
+
+    const total =
+        Number(order.total || 0);
+
+    const pay =
+        payment(order);
+
+    const status =
+        order.status || "Pending";
+
+    document.getElementById(
+        "orderDetailContent"
+    ).innerHTML = `
+
+    <div class="detail-header">
+
+        <div>
+
+            <div class="detail-company">
+                LIARA GROUP
+            </div>
+
+            <small>
+                PRIVATE LIMITED
+            </small>
+
+        </div>
+
+        <div style="text-align:right">
+
+            <strong>ORDER</strong>
+
+            <br>
+
+            <span style="color:#ad8232;font-weight:bold">
+                ${escapeHtml(
+                    shortOrderId(order.id)
+                )}
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="detail-grid">
+
+        <div class="detail-item">
+            <span>ORDER DATE</span>
+            <strong>${escapeHtml(date)}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>ORDER STATUS</span>
+            <strong>${statusBadge(status)}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>CUSTOMER NAME</span>
+            <strong>${escapeHtml(customer)}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>MOBILE</span>
+            <strong>${escapeHtml(phone)}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>PAYMENT</span>
+            <strong>${escapeHtml(pay)}</strong>
+        </div>
+
+        <div class="detail-item">
+            <span>DELIVERY ADDRESS</span>
+            <strong>${escapeHtml(address)}</strong>
+        </div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+    <table class="data-table">
+
+        <thead>
+            <tr>
+                <th>PRODUCT</th>
+                <th>QTY</th>
+                <th>PRICE</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td class="product-name">
+                    ${escapeHtml(product)}
+                </td>
+
+                <td>${qty}</td>
+
+                <td>${money(price)}</td>
+
+                <td class="total">
+                    ${money(total)}
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    </div>
+
+    <div class="detail-total">
+
+        <span>Grand Total:</span>
+
+        <strong>${money(total)}</strong>
+
+    </div>
+    `;
+
+    document.getElementById(
+        "orderModal"
+    ).style.display = "flex";
+
+}
+
+function closeOrderModal(){
+
+    document.getElementById(
+        "orderModal"
+    ).style.display = "none";
+
+}
+
+/* =========================================================
+   SALES
+========================================================= */
+
+async function loadSales(){
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="admin-header">
+
+            <div>
+                <p>LIARA PROFESSIONAL™</p>
+                <h2>💰 Sales Management</h2>
+            </div>
+
+            <button class="btn" onclick="loadSales()">
+                🔄 Refresh
+            </button>
+
+        </div>
+
+        <div class="summary-grid">
+
+            <div class="summary-card sales">
+                <span>Total Sales</span>
+                <strong id="salesTotal">₹0</strong>
+                <small>Selected period</small>
+            </div>
+
+            <div class="summary-card">
+                <span>Total Orders</span>
+                <strong id="salesOrders">0</strong>
+                <small>Sales orders</small>
+            </div>
+
+            <div class="summary-card delivered">
+                <span>Delivered</span>
+                <strong id="salesDelivered">0</strong>
+                <small>Completed</small>
+            </div>
+
+            <div class="summary-card cancelled">
+                <span>Cancelled</span>
+                <strong id="salesCancelled">0</strong>
+                <small>Cancelled orders</small>
+            </div>
+
+        </div>
+
+        <div class="filter-panel">
+
+            <div class="filter-field">
+                <label>FROM DATE</label>
+                <input type="date" id="salesFrom">
+            </div>
+
+            <div class="filter-field">
+                <label>TO DATE</label>
+                <input type="date" id="salesTo">
+            </div>
+
+            <button class="btn" onclick="filterSalesByDate()">
+                🔍 Apply Filter
+            </button>
+
+            <button class="btn gray-btn" onclick="clearSalesFilter()">
+                All Sales
+            </button>
+
+        </div>
+
+        <div id="salesTable">
+            <div class="message">Loading sales...</div>
+        </div>
+
+    </div>
+    `;
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+    if(error){
+
+        document.getElementById(
+            "salesTable"
+        ).innerHTML = `
+            <div class="message error">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    allOrders = data || [];
+
+    renderSales(allOrders);
+
+}
+
+function filterSalesByDate(){
+
+    const from =
+        document.getElementById("salesFrom").value;
+
+    const to =
+        document.getElementById("salesTo").value;
+
+    let filtered = [...allOrders];
+
+    if(from){
+
+        filtered =
+            filtered.filter(order=>{
+
+                if(!order.created_at)
+                    return false;
+
+                return new Date(
+                    order.created_at
+                ) >=
+                new Date(
+                    from+"T00:00:00"
+                );
+
+            });
+
+    }
+
+    if(to){
+
+        filtered =
+            filtered.filter(order=>{
+
+                if(!order.created_at)
+                    return false;
+
+                return new Date(
+                    order.created_at
+                ) <=
+                new Date(
+                    to+"T23:59:59"
+                );
+
+            });
+
+    }
+
+    renderSales(filtered);
+
+}
+
+function clearSalesFilter(){
+
+    document.getElementById("salesFrom").value = "";
+    document.getElementById("salesTo").value = "";
+
+    renderSales(allOrders);
+
+}
+
+function renderSales(orders){
+
+    let total = 0;
+    let delivered = 0;
+    let cancelled = 0;
+
+    orders.forEach(order=>{
+
+        const status =
+            String(
+                order.status || "Pending"
+            ).toLowerCase();
+
+        if(status !== "cancelled"){
+            total += Number(order.total || 0);
+        }
+
+        if(status === "delivered") delivered++;
+        if(status === "cancelled") cancelled++;
+
+    });
+
+    document.getElementById("salesTotal").innerText =
+        money(total);
+
+    document.getElementById("salesOrders").innerText =
+        orders.length;
+
+    document.getElementById("salesDelivered").innerText =
+        delivered;
+
+    document.getElementById("salesCancelled").innerText =
+        cancelled;
+
+    const box =
+        document.getElementById("salesTable");
+
+    if(!orders.length){
+
+        box.innerHTML = `
+            <div class="message">
+                No sales found.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    let html = `
+    <div class="table-wrapper">
+    <table class="data-table">
+    <thead>
+    <tr>
+        <th>DATE</th>
+        <th>ORDER ID</th>
+        <th>CUSTOMER</th>
+        <th>PRODUCT</th>
+        <th>QTY</th>
+        <th>AMOUNT</th>
+        <th>PAYMENT</th>
+        <th>STATUS</th>
+        <th>ACTION</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    orders.forEach(order=>{
+
+        const date =
+            order.created_at
+            ? new Date(
+                order.created_at
+              ).toLocaleDateString("en-IN")
+            : "-";
+
+        html += `
+        <tr>
+
+            <td>${escapeHtml(date)}</td>
+
+            <td>
+                <strong>
+                    ${escapeHtml(
+                        shortOrderId(order.id)
+                    )}
+                </strong>
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    order.customer_name ||
+                    order.name ||
+                    "-"
+                )}
+            </td>
+
+            <td class="product-name">
+                ${escapeHtml(productName(order))}
+            </td>
+
+            <td>
+                ${Number(order.quantity || 1)}
+            </td>
+
+            <td class="total">
+                ${money(order.total)}
+            </td>
+
+            <td>
+                <span class="payment-badge">
+                    ${escapeHtml(payment(order))}
+                </span>
+            </td>
+
+            <td>${statusBadge(order.status)}</td>
+
+            <td>
+                <button
+                    class="table-btn view-btn"
+                    onclick="viewOrder(
+                        '${escapeHtml(String(order.id))}'
+                    )">
+                    View
+                </button>
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    `;
+
+    box.innerHTML = html;
+
+}
+
+/* =========================================================
+   STOCK — WAREHOUSE / ONLINE / PARTY
+========================================================= */
+
+async function loadStock(){
+    document.getElementById("other-content").innerHTML = `
+    <div class="admin-box">
+        <div class="admin-header">
+            <div><p>INVENTORY MANAGEMENT</p><h2>📦 Stock Management</h2></div>
+            <button class="btn gray-btn" onclick="loadStock()">🔄 Refresh</button>
+        </div>
+
+        <div class="stock-location-tabs">
+            <button class="stock-location-tab active" onclick="switchStockLocation('overview',this)">📊 Overview</button>
+            <button class="stock-location-tab" onclick="switchStockLocation('warehouse',this)">🏭 Warehouse</button>
+            <button class="stock-location-tab" onclick="switchStockLocation('online',this)">🌐 Online Website</button>
+            <button class="stock-location-tab" onclick="switchStockLocation('party',this)">🤝 Party</button>
+        </div>
+
+        <div id="stockOverviewPanel" class="stock-location-panel active">
+            <div class="stock-cards stock-four-cards">
+                <div class="stock-card"><span>🏭 Warehouse</span><strong id="stockWarehouseTotal">0</strong><small>Available to send</small></div>
+                <div class="stock-card"><span>🌐 Online Available</span><strong id="stockOnlineAvailableTotal">0</strong><small>Given by warehouse − sold</small></div>
+                <div class="stock-card"><span>🤝 Party Given</span><strong id="stockPartyTotal">0</strong><small>Sent from warehouse</small></div>
+                <div class="stock-card"><span>📦 Total In System</span><strong id="stockSystemTotal">0</strong><small>Warehouse + allocated stock</small></div>
+            </div>
+            <div id="stockOverviewTable"><div class="message">Loading...</div></div>
+        </div>
+
+        <div id="stockWarehousePanel" class="stock-location-panel">
+            <div class="stock-location-head">
+                <div><h3>🏭 Warehouse Stock</h3><p>Add new stock here. This is the source for Online Website and Party.</p></div>
+                <button class="btn" onclick="showWarehouseAddForm()">➕ Add Stock</button>
+            </div>
+            <div id="warehouseAddForm"></div>
+            <div id="warehouseStockTable"><div class="message">Loading...</div></div>
+        </div>
+
+        <div id="stockOnlinePanel" class="stock-location-panel">
+            <div class="stock-location-head">
+                <div><h3>🌐 Online Website Stock</h3><p>Only stock sent from Warehouse can appear here.</p></div>
+                <button class="btn" onclick="showOnlineTransferForm()">➡️ Send from Warehouse</button>
+            </div>
+            <div id="onlineTransferForm"></div>
+            <div id="onlineStockTable"><div class="message">Loading...</div></div>
+        </div>
+
+        <div id="stockPartyPanel" class="stock-location-panel">
+            <div class="stock-location-head">
+                <div><h3>🤝 Party Stock</h3><p>Create a party and send stock from Warehouse in the same small box.</p></div>
+                <button class="btn" onclick="showWarehousePartyForm()">➕ Create Party + Give Stock</button>
+            </div>
+            <div id="warehousePartyForm"></div>
+            <div id="partyStockTable"><div class="message">Loading...</div></div>
+        </div>
+
+        <div style="margin-top:28px;">
+            <h3>🧾 Stock Movement History</h3>
+            <div id="stockHistory"><div class="message">Loading...</div></div>
+        </div>
+    </div>`;
+
+    const user=await checkAdmin(); if(!user)return;
+    const {data,error}=await supabaseClient.from("products").select("*").order("name",{ascending:true});
+    if(error){document.getElementById("stockOverviewTable").innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`;return;}
+    allProducts=data||[];
+    await renderNewStockLocations();
+    await loadStockHistory();
+}
+
+function switchStockLocation(name,button){
+    document.querySelectorAll('.stock-location-panel').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.stock-location-tab').forEach(x=>x.classList.remove('active'));
+    const panel=document.getElementById('stock'+name.charAt(0).toUpperCase()+name.slice(1)+'Panel');
+    if(panel)panel.classList.add('active');
+    if(button)button.classList.add('active');
+}
+
+async function getStockTransactions(){
+    const ids=(allProducts||[]).map(p=>p.id);
+    if(!ids.length)return [];
+    const {data,error}=await supabaseClient.from('stock_transactions').select('*').in('product_id',ids).order('created_at',{ascending:false});
+    return error?[]:(data||[]);
+}
+
+function stockNumbers(product,transactions){
+    const rows=transactions.filter(t=>String(t.product_id)===String(product.id));
+    const warehouseAdded=rows.filter(t=>t.transaction_type==='purchase').reduce((s,t)=>s+Number(t.quantity||0),0)+Number(product.opening_stock||0);
+    const onlineGiven=rows.filter(t=>t.transaction_type==='online_transfer').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const onlineSold=rows.filter(t=>t.transaction_type==='sale').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const partyGiven=rows.filter(t=>t.transaction_type==='offline_out').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const adjustments=rows.filter(t=>t.transaction_type==='adjustment').reduce((s,t)=>s+Number(t.quantity||0),0);
+    const hasLocationTransfers=rows.some(t=>t.transaction_type==='online_transfer'||(t.transaction_type==='offline_out'&&t.destination==='party'));
+    const legacyWarehouseBase=(product.warehouse_stock!==null && product.warehouse_stock!==undefined) ? Number(product.warehouse_stock||0) : Number(product.stock||0);
+    const warehouse=hasLocationTransfers || product.warehouse_stock!==null && product.warehouse_stock!==undefined ? Math.max(0,legacyWarehouseBase) : Math.max(0,Number(product.stock||0));
+    const onlineAvailable=Math.max(0,onlineGiven-onlineSold);
+    return {warehouse,onlineGiven,onlineSold,onlineAvailable,partyGiven,total:warehouse+onlineAvailable+partyGiven};
+}
+
+async function renderNewStockLocations(){
+    const tx=await getStockTransactions();
+    let warehouseTotal=0,onlineTotal=0,partyTotal=0,systemTotal=0;
+    (allProducts||[]).forEach(p=>{const n=stockNumbers(p,tx);warehouseTotal+=n.warehouse;onlineTotal+=n.onlineAvailable;partyTotal+=n.partyGiven;systemTotal+=n.total;});
+    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+    set('stockWarehouseTotal',warehouseTotal);set('stockOnlineAvailableTotal',onlineTotal);set('stockPartyTotal',partyTotal);set('stockSystemTotal',systemTotal);
+
+    let overview='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PRODUCT</th><th>🏭 WAREHOUSE</th><th>🌐 ONLINE AVAILABLE</th><th>🛒 ONLINE SOLD</th><th>🤝 PARTY GIVEN</th><th>TOTAL ALLOCATED</th></tr></thead><tbody>';
+    let warehouse='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PRODUCT</th><th>WAREHOUSE</th><th>ONLINE GIVEN</th><th>PARTY GIVEN</th><th>ACTION</th></tr></thead><tbody>';
+    let online='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PRODUCT</th><th>GIVEN FROM WAREHOUSE</th><th>SOLD</th><th>ONLINE AVAILABLE</th><th>ACTION</th></tr></thead><tbody>';
+    (allProducts||[]).forEach(p=>{
+        const n=stockNumbers(p,tx);
+        overview+=`<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${n.warehouse}</td><td>${n.onlineAvailable}</td><td>${n.onlineSold}</td><td>${n.partyGiven}</td><td><strong>${n.warehouse+n.onlineAvailable+n.partyGiven}</strong></td></tr>`;
+        warehouse+=`<tr><td><strong>${escapeHtml(p.name)}</strong></td><td><strong>${n.warehouse}</strong></td><td>${n.onlineGiven}</td><td>${n.partyGiven}</td><td><button class="table-btn edit-btn" onclick="showWarehouseAddForm('${escapeHtml(String(p.id))}')">+ Stock</button> <button class="table-btn view-btn" onclick="showOnlineTransferForm('${escapeHtml(String(p.id))}')">Send Online</button></td></tr>`;
+        online+=`<tr><td><strong>${escapeHtml(p.name)}</strong></td><td>${n.onlineGiven}</td><td>${n.onlineSold}</td><td><strong>${n.onlineAvailable}</strong></td><td><button class="table-btn view-btn" onclick="showOnlineTransferForm('${escapeHtml(String(p.id))}')">Send More</button></td></tr>`;
+    });
+    overview+='</tbody></table></div>';warehouse+='</tbody></table></div>';online+='</tbody></table></div>';
+    document.getElementById('stockOverviewTable').innerHTML=overview;
+    document.getElementById('warehouseStockTable').innerHTML=warehouse;
+    document.getElementById('onlineStockTable').innerHTML=online;
+    await renderPartyStockTable();
+}
+
+function productOptions(selected=''){
+    return (allProducts||[]).map(p=>`<option value="${p.id}" ${String(p.id)===String(selected)?'selected':''}>${escapeHtml(p.name)}</option>`).join('');
+}
+
+function showWarehouseAddForm(productId=''){
+    document.getElementById('warehouseAddForm').innerHTML=`<div class="stock-transfer-box"><h3>📥 Add Stock to Warehouse</h3><div class="form-grid"><div class="form-group"><label>Product</label><select id="warehouseProduct">${productOptions(productId)}</select></div><div class="form-group"><label>Quantity</label><input id="warehouseQty" type="number" min="1" placeholder="e.g. 50"></div><div class="form-group full"><label>Note / Supplier</label><input id="warehouseNote" type="text" placeholder="New stock from supplier"></div></div><div class="settings-actions"><button class="btn" onclick="saveWarehouseStock()">💾 Add to Warehouse</button><button class="btn gray-btn" onclick="document.getElementById('warehouseAddForm').innerHTML=''">Cancel</button></div></div>`;
+}
+
+async function saveWarehouseStock(){
+    const id=document.getElementById('warehouseProduct').value, qty=Number(document.getElementById('warehouseQty').value), note=document.getElementById('warehouseNote').value.trim();
+    const p=allProducts.find(x=>String(x.id)===String(id)); if(!p||!Number.isInteger(qty)||qty<=0){alert('Product te valid quantity pao.');return;}
+    const {error}=await supabaseClient.from('stock_transactions').insert({product_id:p.id,transaction_type:'purchase',quantity:qty,source:'warehouse',destination:'warehouse',note:note||'Stock received in warehouse'});
+    if(error){alert('Warehouse stock save failed:\n\n'+error.message);return;}
+    const current=(p.warehouse_stock!==null && p.warehouse_stock!==undefined)?Number(p.warehouse_stock||0):Number(p.stock||0);
+    const {error:up}=await supabaseClient.from('products').update({warehouse_stock:current+qty}).eq('id',p.id);
+    if(up){alert('Warehouse stock update failed:\n\n'+up.message);return;}
+    alert(`Warehouse stock added.\n\nAdded: ${qty}\nWarehouse: ${current+qty}`);loadStock();
+}
+
+function showOnlineTransferForm(productId=''){
+    document.getElementById('onlineTransferForm').innerHTML=`<div class="stock-transfer-box"><h3>➡️ Send Stock from Warehouse to Online Website</h3><div class="form-grid"><div class="form-group"><label>Product</label><select id="onlineProduct" onchange="refreshOnlineAvailable()">${productOptions(productId)}</select></div><div class="form-group"><label>Quantity to Send</label><input id="onlineQty" type="number" min="1" placeholder="e.g. 10"><small id="onlineWarehouseHint" class="stock-hint"></small></div></div><div class="settings-actions"><button class="btn green-btn" onclick="saveOnlineTransfer()">➡️ Send to Website</button><button class="btn gray-btn" onclick="document.getElementById('onlineTransferForm').innerHTML=''">Cancel</button></div></div>`;
+    refreshOnlineAvailable();
+}
+async function refreshOnlineAvailable(){
+    const id=document.getElementById('onlineProduct')?.value,p=allProducts.find(x=>String(x.id)===String(id));if(!p)return;
+    const tx=await getStockTransactions(),n=stockNumbers(p,tx);const e=document.getElementById('onlineWarehouseHint');if(e)e.textContent=`Warehouse available: ${n.warehouse}`;
+}
+async function saveOnlineTransfer(){
+    const id=document.getElementById('onlineProduct').value,qty=Number(document.getElementById('onlineQty').value),p=allProducts.find(x=>String(x.id)===String(id));if(!p||!Number.isInteger(qty)||qty<=0){alert('Product te valid quantity pao.');return;}
+    const tx=await getStockTransactions(),n=stockNumbers(p,tx);if(qty>n.warehouse){alert(`Warehouse ch ena stock nahi aa.\n\nAvailable: ${n.warehouse}\nRequested: ${qty}`);return;}
+    const {error}=await supabaseClient.from('stock_transactions').insert({product_id:p.id,transaction_type:'online_transfer',quantity:qty,source:'warehouse',destination:'online',note:'Stock sent to online website'});if(error){alert(error.message);return;}
+    const {error:up}=await supabaseClient.from('products').update({warehouse_stock:Math.max(0,Number(p.warehouse_stock||0)-qty),stock:Number(p.stock||0)+qty,online_given:Number(p.online_given||0)+qty}).eq('id',p.id);if(up){alert(up.message);return;}
+    alert(`Stock sent to Online Website.\n\nSent: ${qty}\nWarehouse left: ${n.warehouse-qty}\nOnline available: ${n.onlineAvailable+qty}`);loadStock();
+}
+
+function showWarehousePartyForm(){
+    document.getElementById('warehousePartyForm').innerHTML=`<div class="stock-transfer-box party-create-box"><h3>🤝 Create Party + Give Stock</h3><div class="form-grid"><div class="form-group"><label>Party Name</label><input id="whPartyName" placeholder="e.g. ABC Medical Store"></div><div class="form-group"><label>Mobile</label><input id="whPartyPhone" type="tel" maxlength="10" placeholder="9876543210"></div><div class="form-group"><label>Product</label><select id="whPartyProduct" onchange="refreshPartyWarehouseAvailable()">${productOptions()}</select></div><div class="form-group"><label>Quantity from Warehouse</label><input id="whPartyQty" type="number" min="1" placeholder="e.g. 5"><small id="partyWarehouseHint" class="stock-hint"></small></div><div class="form-group"><label>Total Bill ₹</label><input id="whPartyBill" type="number" min="0" step="0.01" placeholder="e.g. 2500"></div><div class="form-group"><label>Paid Now ₹</label><input id="whPartyPaid" type="number" min="0" step="0.01" value="0"></div><div class="form-group full"><label>Address / Note</label><textarea id="whPartyNote" placeholder="Optional"></textarea></div></div><div class="settings-actions"><button class="btn green-btn" onclick="createPartyFromWarehouse()">💾 Create Party & Send Stock</button><button class="btn gray-btn" onclick="document.getElementById('warehousePartyForm').innerHTML=''">Cancel</button></div></div>`;
+    refreshPartyWarehouseAvailable();
+}
+async function refreshPartyWarehouseAvailable(){
+    const id=document.getElementById('whPartyProduct')?.value,p=allProducts.find(x=>String(x.id)===String(id));if(!p)return;const tx=await getStockTransactions(),n=stockNumbers(p,tx);const e=document.getElementById('partyWarehouseHint');if(e)e.textContent=`Warehouse available: ${n.warehouse}`;
+}
+async function createPartyFromWarehouse(){
+    const name=document.getElementById('whPartyName').value.trim(),phone=document.getElementById('whPartyPhone').value.trim(),productId=document.getElementById('whPartyProduct').value,qty=Number(document.getElementById('whPartyQty').value),bill=Number(document.getElementById('whPartyBill').value||0),paid=Number(document.getElementById('whPartyPaid').value||0),note=document.getElementById('whPartyNote').value.trim();
+    const p=allProducts.find(x=>String(x.id)===String(productId));if(!name||!p||!Number.isInteger(qty)||qty<=0){alert('Party, product te valid quantity pao.');return;}if(phone && !/^\d{10}$/.test(phone)){alert('Mobile 10 digits da hona chahida.');return;}if(paid<0||bill<0||paid>bill){alert('Paid/Bill amount check karo.');return;}
+    const tx=await getStockTransactions(),n=stockNumbers(p,tx);if(qty>n.warehouse){alert(`Warehouse ch ena stock nahi aa.\n\nAvailable: ${n.warehouse}\nRequested: ${qty}`);return;}
+    const {data:party,error:pe}=await supabaseClient.from('parties').insert({name,phone:phone||null,note:note||null,created_from:'warehouse',opening_balance:Math.max(0,bill-paid)}).select().single();if(pe){alert('Party create failed:\n\n'+pe.message);return;}
+    const {error:se}=await supabaseClient.from('stock_transactions').insert({product_id:p.id,transaction_type:'offline_out',quantity:qty,party_id:party.id,party_name:name,source:'warehouse',destination:'party',note:note||'Stock sent to party'});if(se){alert('Stock transfer failed:\n\n'+se.message);return;}
+    const {error:pt}=await supabaseClient.from('party_transactions').insert({party_id:party.id,product_id:p.id,transaction_type:'sale',quantity:qty,amount:bill,note:note||'Stock supplied from warehouse'});if(pt){alert('Party account entry failed:\n\n'+pt.message);return;}
+    if(paid>0){const {error:pay}=await supabaseClient.from('party_transactions').insert({party_id:party.id,transaction_type:'payment',amount:paid,note:'Payment received with warehouse stock'});if(pay){alert('Payment entry failed:\n\n'+pay.message);return;}}
+    const {error:up}=await supabaseClient.from('products').update({warehouse_stock:Math.max(0,Number(p.warehouse_stock||0)-qty),offline_given:Number(p.offline_given||0)+qty}).eq('id',p.id);if(up){alert('Warehouse update failed:\n\n'+up.message);return;}
+    alert(`Party created and stock sent.\n\nParty: ${name}\nQuantity: ${qty}\nWarehouse left: ${n.warehouse-qty}`);loadStock();
+}
+
+async function renderPartyStockTable(){
+    const box=document.getElementById('partyStockTable');if(!box)return;
+    const {data:parties,error}=await supabaseClient.from('parties').select('*').order('name',{ascending:true});if(error){box.innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`;return;}
+    const tx=await getStockTransactions();
+    let html='<div class="table-wrapper"><table class="data-table"><thead><tr><th>PARTY</th><th>MOBILE</th><th>STOCK RECEIVED</th><th>BALANCE</th><th>ACTION</th></tr></thead><tbody>';
+    for(const party of (parties||[])){
+        const rows=tx.filter(t=>String(t.party_id)===String(party.id));const qty=rows.filter(t=>t.transaction_type==='offline_out').reduce((s,t)=>s+Number(t.quantity||0),0);
+        const {data:ptr}=await supabaseClient.from('party_transactions').select('transaction_type,amount').eq('party_id',party.id);const bill=(ptr||[]).filter(x=>x.transaction_type==='sale').reduce((s,x)=>s+Number(x.amount||0),0),paid=(ptr||[]).filter(x=>x.transaction_type==='payment').reduce((s,x)=>s+Number(x.amount||0),0),balance=bill-paid;
+        html+=`<tr><td><strong>${escapeHtml(party.name)}</strong></td><td>${escapeHtml(party.phone||'-')}</td><td>${qty}</td><td class="${balance>0?'stock-low':'stock-ok'}"><strong>${money(balance)}</strong></td><td><button class="table-btn view-btn" onclick="viewParty('${party.id}')">View</button></td></tr>`;
+    }
+    html+='</tbody></table></div>';box.innerHTML=html;
+}
+
+async function loadStockHistory(){
+    const box=document.getElementById('stockHistory');if(!box)return;
+    const {data,error}=await supabaseClient.from('stock_transactions').select('*').order('created_at',{ascending:false});if(error){box.innerHTML=`<div class="message error">${escapeHtml(error.message)}</div>`;return;}if(!data?.length){box.innerHTML='<div class="message">No stock movement yet.</div>';return;}
+    const productMap=Object.fromEntries((allProducts||[]).map(p=>[String(p.id),p.name]));let html='<div class="table-wrapper"><table class="data-table"><thead><tr><th>DATE</th><th>PRODUCT</th><th>FROM</th><th>TO</th><th>TYPE</th><th>QTY</th><th>PARTY</th><th>NOTE</th></tr></thead><tbody>';
+    data.forEach(row=>{const type=row.transaction_type==='purchase'?'📥 Stock In':row.transaction_type==='online_transfer'?'➡️ Online Transfer':row.transaction_type==='offline_out'?'🤝 Party':row.transaction_type==='sale'?'🛒 Online Sale':'⚙️ Adjustment';html+=`<tr><td>${escapeHtml(new Date(row.created_at).toLocaleString('en-IN'))}</td><td>${escapeHtml(productMap[String(row.product_id)]||'Product')}</td><td>${escapeHtml(row.source_location||row.source||'-')}</td><td>${escapeHtml(row.destination||'-')}</td><td>${type}</td><td><strong>${Number(row.quantity||0)}</strong></td><td>${escapeHtml(row.party_name||'-')}</td><td>${escapeHtml(row.note||'-')}</td></tr>`;});
+    html+='</tbody></table></div>';box.innerHTML=html;
+}
+
+/* =========================================================
+   PARTIES / OFFLINE ACCOUNTS
+========================================================= */
+
+async function loadParties(){
+
+    document.getElementById("other-content").innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="admin-header">
+            <div>
+                <p>OFFLINE BUSINESS</p>
+                <h2>👥 Parties</h2>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn" onclick="showAddPartyForm()">
+                    ➕ Add Party
+                </button>
+
+                <button class="btn" onclick="loadParties()">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+
+        <div id="partyForm"></div>
+        <div id="partiesList">
+            <div class="message">Loading parties...</div>
+        </div>
+
+    </div>
+    `;
+
+    await renderParties();
+}
+
+
+function showAddPartyForm(){
+
+    document.getElementById("partyForm").innerHTML = `
+
+    <div class="admin-box"
+         style="margin:20px 0;border:1px solid #ddd;">
+
+        <h3>➕ Add New Party</h3>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Party Name</label>
+                <input id="partyNameInput"
+                       type="text"
+                       placeholder="e.g. ABC Medical Store">
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <input id="partyPhoneInput"
+                       type="tel"
+                       placeholder="e.g. 9876543210">
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>
+                <input id="partyAddressInput"
+                       type="text"
+                       placeholder="Optional">
+            </div>
+
+            <div class="form-group full">
+                <label>Note</label>
+                <textarea id="partyNoteInput"
+                          placeholder="Optional note"></textarea>
+            </div>
+
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn" onclick="saveParty()">
+                💾 Save Party
+            </button>
+
+            <button class="btn gray-btn"
+                    onclick="document.getElementById('partyForm').innerHTML=''">
+                Cancel
+            </button>
+        </div>
+
+    </div>
+    `;
+}
+
+
+async function saveParty(){
+
+    const name =
+        document.getElementById("partyNameInput").value.trim();
+
+    const phone =
+        document.getElementById("partyPhoneInput").value.trim();
+
+    const address =
+        document.getElementById("partyAddressInput").value.trim();
+
+    const note =
+        document.getElementById("partyNoteInput").value.trim();
+
+    if(!name){
+        alert("Please enter the party name.");
+        return;
+    }
+
+    const {error} =
+        await supabaseClient
+        .from("parties")
+        .insert({
+            name:name,
+            phone:phone || null,
+            address:address || null,
+            note:note || null
+        });
+
+    if(error){
+        alert("Party save failed:\n\n" + error.message);
+        return;
+    }
+
+    alert("Party saved successfully.");
+    loadParties();
+}
+
+
+async function renderParties(){
+
+    const box =
+        document.getElementById("partiesList");
+
+    const {data:parties,error} =
+        await supabaseClient
+        .from("parties")
+        .select("*")
+        .order("name",{ascending:true});
+
+    if(error){
+        box.innerHTML =
+            `<div class="message error">${escapeHtml(error.message)}</div>`;
+        return;
+    }
+
+    if(!parties || !parties.length){
+        box.innerHTML =
+            `<div class="message">No parties added yet.</div>`;
+        return;
+    }
+
+    const {data:tx,error:txError} =
+        await supabaseClient
+        .from("party_transactions")
+        .select("*")
+        .order("created_at",{ascending:false});
+
+    if(txError){
+        box.innerHTML =
+            `<div class="message error">${escapeHtml(txError.message)}</div>`;
+        return;
+    }
+
+    const transactions = tx || [];
+
+    let html = `
+    <div class="table-wrapper">
+    <table class="data-table">
+    <thead>
+    <tr>
+        <th>PARTY</th>
+        <th>MOBILE</th>
+        <th>TOTAL BILL</th>
+        <th>PAID</th>
+        <th>BAKI</th>
+        <th>ACTION</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    parties.forEach(party=>{
+
+        const rows =
+            transactions.filter(
+                t=>String(t.party_id) === String(party.id)
+            );
+
+        const bill =
+            rows
+            .filter(t=>t.transaction_type==="sale")
+            .reduce((sum,t)=>sum + Number(t.amount || 0),0);
+
+        const paid =
+            rows
+            .filter(t=>t.transaction_type==="payment")
+            .reduce((sum,t)=>sum + Number(t.amount || 0),0);
+
+        const balance =
+            bill - paid;
+
+        html += `
+        <tr>
+
+            <td>
+                <strong>${escapeHtml(party.name)}</strong>
+            </td>
+
+            <td>${escapeHtml(party.phone || "-")}</td>
+
+            <td>${money(bill)}</td>
+
+            <td>${money(paid)}</td>
+
+            <td class="${balance > 0 ? "stock-low" : "stock-ok"}">
+                <strong>${money(balance)}</strong>
+            </td>
+
+            <td>
+                <button class="table-btn view-btn"
+                        onclick="viewParty('${escapeHtml(String(party.id))}')">
+                    View
+                </button>
+
+                <button class="table-btn edit-btn"
+                        onclick="showPartySaleForm('${escapeHtml(String(party.id))}')">
+                    📦 Give Stock
+                </button>
+
+                <button class="table-btn edit-btn"
+                        onclick="addPartyPayment('${escapeHtml(String(party.id))}')">
+                    + Payment
+                </button>
+            </td>
+
+        </tr>
+        `;
+    });
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    `;
+
+    box.innerHTML = html;
+}
+
+
+async function viewParty(id){
+
+    const {data:party,error:partyError} =
+        await supabaseClient
+        .from("parties")
+        .select("*")
+        .eq("id",id)
+        .single();
+
+    if(partyError){
+        alert(partyError.message);
+        return;
+    }
+
+    const {data:rows,error} =
+        await supabaseClient
+        .from("party_transactions")
+        .select("*")
+        .eq("party_id",id)
+        .order("created_at",{ascending:false});
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    const transactions = rows || [];
+
+    const productIds =
+        [...new Set(
+            transactions
+            .filter(t=>t.product_id)
+            .map(t=>t.product_id)
+        )];
+
+    let products = [];
+
+    if(productIds.length){
+        const result =
+            await supabaseClient
+            .from("products")
+            .select("id,name")
+            .in("id",productIds);
+
+        if(!result.error) products = result.data || [];
+    }
+
+    const productMap =
+        Object.fromEntries(
+            products.map(p=>[String(p.id),p.name])
+        );
+
+    const bill =
+        transactions
+        .filter(t=>t.transaction_type==="sale")
+        .reduce((s,t)=>s+Number(t.amount||0),0);
+
+    const paid =
+        transactions
+        .filter(t=>t.transaction_type==="payment")
+        .reduce((s,t)=>s+Number(t.amount||0),0);
+
+    const balance = bill-paid;
+
+    const pieces =
+        transactions
+        .filter(t=>t.transaction_type==="sale")
+        .reduce((s,t)=>s+Number(t.quantity||0),0);
+
+    let history = transactions.map(t=>{
+
+        const type =
+            t.transaction_type==="sale"
+            ? "🧾 SALE"
+            : t.transaction_type==="payment"
+            ? "💵 PAYMENT"
+            : "⚙️ ADJUSTMENT";
+
+        const product =
+            t.product_id
+            ? (productMap[String(t.product_id)] || "Product")
+            : "-";
+
+        const qty =
+            t.transaction_type==="sale"
+            ? Number(t.quantity||0)
+            : "-";
+
+        const amount =
+            Number(t.amount||0);
+
+        return `
+        <tr>
+            <td>${escapeHtml(new Date(t.created_at).toLocaleString("en-IN"))}</td>
+            <td><strong>${type}</strong></td>
+            <td>${escapeHtml(product)}</td>
+            <td>${qty}</td>
+            <td>₹${amount.toLocaleString("en-IN",{minimumFractionDigits:2})}</td>
+            <td>${escapeHtml(t.note || "-")}</td>
+        </tr>
+        `;
+
+    }).join("");
+
+    document.getElementById("other-content").innerHTML = `
+
+    <div class="admin-box" id="partyPrintArea">
+
+        <div class="admin-header">
+
+            <div>
+                <p>PARTY ACCOUNT</p>
+                <h2>👤 ${escapeHtml(party.name)}</h2>
+
+                <div style="color:#777;margin-top:5px;">
+                    📞 ${escapeHtml(party.phone || "No mobile number")}
+                    ${party.address ? " · 📍 "+escapeHtml(party.address) : ""}
+                </div>
+            </div>
+
+            <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;">
+
+                <button class="btn"
+                        onclick="addPartyPayment('${escapeHtml(String(id))}')">
+                    💵 Add Payment
+                </button>
+
+                <button class="btn"
+                        onclick="printPartyAccount()">
+                    🖨️ Print Account
+                </button>
+
+                <button class="btn"
+                        onclick="loadParties()">
+                    ← Back
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="stock-cards party-compact-summary">
+
+            <div class="stock-card">
+                <span>Total Pieces</span>
+                <strong>${pieces}</strong>
+            </div>
+
+            <div class="stock-card">
+                <span>Total Bill</span>
+                <strong>₹${bill.toLocaleString("en-IN",{minimumFractionDigits:2})}</strong>
+            </div>
+
+            <div class="stock-card">
+                <span>Total Paid / Received</span>
+                <strong>₹${paid.toLocaleString("en-IN",{minimumFractionDigits:2})}</strong>
+            </div>
+
+            <div class="stock-card">
+                <span>Balance Due</span>
+                <strong>${balance > 0 ? "₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2}) : "₹0.00"}</strong>
+            </div>
+
+        </div>
+
+        <div style="margin:20px 0;padding:14px;border:1px solid #ddd;border-radius:10px;">
+            <strong>Account Summary</strong>
+            <div style="margin-top:7px;color:#666;">
+                ${balance > 0
+                    ? "🔴 Balance due: ₹"+balance.toLocaleString("en-IN",{minimumFractionDigits:2})+" "
+                    : "🟢 Account settled — no balance due."}
+            </div>
+        </div>
+
+        <h3>🧾 Complete Account History</h3>
+
+        <div class="table-wrapper">
+        <table class="data-table print-table">
+        <thead>
+        <tr>
+            <th>DATE</th>
+            <th>TYPE</th>
+            <th>PRODUCT</th>
+            <th>QTY</th>
+            <th>AMOUNT</th>
+            <th>NOTE</th>
+        </tr>
+        </thead>
+
+        <tbody>
+            ${history || `
+                <tr>
+                    <td colspan="6">No transactions yet.</td>
+                </tr>
+            `}
+        </tbody>
+
+        </table>
+        </div>
+
+        <div class="no-print"
+             style="margin-top:20px;color:#777;">
+            Tip: Use Print Account to print or save the complete party statement.
+        </div>
+
+    </div>
+    `;
+}
+
+
+function printPartyAccount(){
+    window.print();
+}
+
+
+async function addPartyPayment(id){
+
+    const amountRaw =
+        prompt("Payment received: ₹:", "");
+
+    if(amountRaw === null) return;
+
+    const amount = Number(amountRaw);
+
+    if(!Number.isFinite(amount) || amount <= 0){
+        alert("Please enter a valid payment amount.");
+        return;
+    }
+
+    const note =
+        prompt("Payment note (optional):","") || null;
+
+    const {error} =
+        await supabaseClient
+        .from("party_transactions")
+        .insert({
+            party_id:id,
+            transaction_type:"payment",
+            quantity:null,
+            amount:amount,
+            note:note
+        });
+
+    if(error){
+        alert(
+            "Payment could not be saved:\n\n" +
+            error.message
+        );
+        return;
+    }
+
+    alert(
+        "Payment received: ₹" +
+        amount.toLocaleString("en-IN") +
+        " successfully."
+    );
+
+    await viewParty(id);
+}
+
+
+async function addPartySale(partyId, productId, quantity, amount, note){
+
+    if(!partyId || !productId) return;
+
+    const qty = Number(quantity);
+    const total = Number(amount);
+
+    if(!Number.isInteger(qty) || qty <= 0){
+        alert("Valid quantity pao.");
+        return;
+    }
+
+    if(!Number.isFinite(total) || total < 0){
+        alert("Valid sale amount pao.");
+        return;
+    }
+
+    const {error} =
+        await supabaseClient
+        .from("party_transactions")
+        .insert({
+            party_id:partyId,
+            product_id:productId,
+            transaction_type:"sale",
+            quantity:qty,
+            amount:total,
+            note:note || null
+        });
+
+    if(error){
+        alert("Party sale save failed:\n\n" + error.message);
+        return;
+    }
+
+    alert("Party sale added.");
+    viewParty(partyId);
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+async function loadProducts(){
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="admin-header">
+
+            <div>
+                <p>PRODUCT MANAGEMENT</p>
+                <h2>🧴 Products</h2>
+            </div>
+
+            <button class="btn" onclick="showAddProduct()">
+                ➕ Add Product
+            </button>
+
+        </div>
+
+        <div id="productsList">
+            <div class="message">Loading products...</div>
+        </div>
+
+    </div>
+    `;
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+    if(error){
+
+        document.getElementById(
+            "productsList"
+        ).innerHTML = `
+            <div class="message error">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    allProducts = data || [];
+
+    renderProducts(allProducts);
+
+}
+
+function renderProducts(products){
+
+    const box =
+        document.getElementById("productsList");
+
+    if(!products.length){
+
+        box.innerHTML = `
+            <div class="message">
+                No products added yet.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    let html = `<div class="product-grid">`;
+
+    products.forEach(product=>{
+
+        const stock =
+            Number(product.stock || 0);
+
+        let stockText =
+            "Stock: " + stock;
+
+        let stockClass =
+            "stock-ok";
+
+        if(stock <= 0){
+
+            stockText = "Out of Stock";
+            stockClass = "stock-out";
+
+        }
+        else if(
+            stock <= Number(product.low_stock || 5)
+        ){
+
+            stockText = "Low Stock: " + stock;
+            stockClass = "stock-low";
+
+        }
+
+        const image =
+            product.image_url || "";
+
+        html += `
+
+        <div class="product-card">
+
+            ${
+                image
+                ?
+                `<img
+                    class="product-card-image"
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(product.name)}">`
+                :
+                `<div
+                    class="product-card-image"
+                    style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:50px;">
+                    🧴
+                </div>`
+            }
+
+            <div class="product-card-body">
+
+                <h3>
+                    ${escapeHtml(product.name)}
+                </h3>
+
+                <div class="product-description">
+                    ${escapeHtml(product.description || "")}
+                </div>
+
+                <div class="product-price">
+                    ${money(product.price)}
+                </div>
+
+                <div class="product-stock ${stockClass}">
+                    ${stockText}
+                </div>
+
+                <div class="product-card-actions">
+
+                    <button
+                        class="edit-btn"
+                        onclick="editProduct(
+                            '${escapeHtml(String(product.id))}'
+                        )">
+                        ✏️ Edit
+                    </button>
+
+                    <button
+                        class="edit-btn"
+                        onclick="editProductStock(
+                            '${escapeHtml(String(product.id))}'
+                        )">
+                        📦 Stock
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteProduct(
+                            '${escapeHtml(String(product.id))}'
+                        )">
+                        🗑 Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+        `;
+
+    });
+
+    html += "</div>";
+
+    box.innerHTML = html;
+
+}
+
+async function editProductStock(id){
+
+    const product =
+        allProducts.find(
+            p =>
+            String(p.id)
+            === String(id)
+        );
+
+    if(!product) return;
+
+    const value =
+        prompt(
+            "New stock quantity:",
+            product.stock || 0
+        );
+
+    if(value === null) return;
+
+    const stock =
+        Number(value);
+
+    if(
+        !Number.isInteger(stock) ||
+        stock < 0
+    ){
+
+        alert("Valid stock quantity pao.");
+        return;
+
+    }
+
+    const {error} =
+        await supabaseClient
+        .from("products")
+        .update({
+            stock:stock
+        })
+        .eq("id",id);
+
+    if(error){
+
+        alert(
+            "Stock update failed:\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+    loadProducts();
+
+}
+
+async function editProduct(id){
+
+    const product =
+        allProducts.find(
+            p =>
+            String(p.id)
+            === String(id)
+        );
+
+    if(!product){
+        alert("Product not found.");
+        return;
+    }
+
+    document.getElementById("other-content").innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="form-title">
+            <p>PRODUCT MANAGEMENT</p>
+            <h2>✏️ Edit Product</h2>
+        </div>
+
+        <br>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Product Name</label>
+                <input
+                    id="editProductNameInput"
+                    type="text"
+                    value="${escapeHtml(product.name || "")}"
+                    placeholder="Product name">
+            </div>
+
+            <div class="form-group">
+                <label>Price (₹)</label>
+                <input
+                    id="editProductPriceInput"
+                    type="number"
+                    min="0"
+                    value="${Number(product.price || 0)}">
+            </div>
+
+            <div class="form-group">
+                <label>Stock</label>
+                <input
+                    id="editProductStockInput"
+                    type="number"
+                    min="0"
+                    value="${Number(product.stock || 0)}">
+            </div>
+
+            <div class="form-group">
+                <label>Low Stock Alert</label>
+                <input
+                    id="editProductLowStockInput"
+                    type="number"
+                    min="0"
+                    value="${Number(product.low_stock || 5)}">
+            </div>
+
+            <div class="form-group full">
+                <label>Description</label>
+                <textarea
+                    id="editProductDescriptionInput"
+                    placeholder="Write product description...">${escapeHtml(product.description || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
+            <!-- SIZE / ML + PRICE -->
+<div class="form-group full">
+    <div class="admin-box" id="sizePriceManager">
+
+        <div class="form-title">
+            <p>PRODUCT MANAGEMENT</p>
+            <h2>📏 Size / ML & Price</h2>
+        </div>
+
+        <div id="variantList"></div>
+
+        <button
+            type="button"
+            class="btn"
+            onclick="addVariantRow()">
+            ＋ Add Size
+        </button>
+
+    </div>
+</div>
+                <label>🌿 Key Ingredients</label>
+                <textarea
+                    id="editProductKeyIngredientsInput"
+                    placeholder="Example:
+Niacinamide — Supports the skin barrier
+Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredients || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>🧴 How to Use</label>
+                <textarea
+                    id="editProductHowToUseInput"
+                    placeholder="Write simple usage instructions...">${escapeHtml(product.how_to_use || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>✨ Benefits</label>
+                <textarea
+                    id="editProductBenefitsInput"
+                    placeholder="Write the main product benefits...">${escapeHtml(product.benefits || "")}</textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>📷 Product Photos (Up to 4)</label>
+                <div class="upload-box">
+                    <strong>Replace Product Photos (Optional)</strong>
+                    <br>
+                    <input
+                        id="editProductPhotoInput"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onchange="previewEditPhoto(event)">
+
+                    <div
+                        id="editPhotoPreview"
+                        style="margin-top:15px;">
+                        ${product.image_url ? `<img src="${escapeHtml(product.image_url)}" alt="Current Product" style="width:170px;height:170px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">` : ""}
+                    </div>
+
+                    <div
+                        id="editUploadStatus"
+                        style="margin-top:10px;color:#287a3e;font-size:12px;">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+            <button
+                class="btn green-btn"
+                onclick="saveEditedProduct('${escapeHtml(String(product.id))}')">
+                💾 Save Changes
+            </button>
+
+            <button
+                class="btn gray-btn"
+                onclick="loadProducts()">
+                Cancel
+            </button>
+        </div>
+
+    </div>
+    `;
+
+    // SIZE / ML + PRICE: load existing variants (additive only)
+    renderProductVariants(product.variants || []);
+}
+
+function previewEditPhoto(event){
+
+    const files = [...(event.target.files || [])];
+    if(files.length > 4){
+        alert("Maximum 4 photos upload karo.");
+        event.target.value = "";
+        return;
+    }
+
+    const preview = document.getElementById("editPhotoPreview");
+    if(!preview) return;
+
+    preview.innerHTML = files.map((file,i)=>`
+        <img src="${URL.createObjectURL(file)}" alt="New Product Photo ${i+1}" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">
+    `).join("");
+}
+
+async function uploadAdditionalProductPhotos(files){
+    const urls = [];
+    for(const file of [...files].slice(0,4)){
+        const extension = file.name.split(".").pop().toLowerCase();
+        const filePath = "products/" + Date.now() + "-" + Math.random().toString(36).substring(2) + "." + extension;
+        const upload = await supabaseClient.storage.from(IMAGE_BUCKET).upload(filePath,file,{cacheControl:"3600",upsert:false});
+        if(upload.error) throw new Error(upload.error.message);
+        urls.push(supabaseClient.storage.from(IMAGE_BUCKET).getPublicUrl(filePath).data.publicUrl);
+    }
+    return urls;
+}
+
+async function saveEditedProduct(id){
+
+    const name = document.getElementById("editProductNameInput").value.trim();
+    const price = Number(document.getElementById("editProductPriceInput").value);
+    const stock = Number(document.getElementById("editProductStockInput").value || 0);
+    const lowStock = Number(document.getElementById("editProductLowStockInput").value || 5);
+    const description = document.getElementById("editProductDescriptionInput").value.trim();
+    const keyIngredients = document.getElementById("editProductKeyIngredientsInput").value.trim();
+    const howToUse = document.getElementById("editProductHowToUseInput").value.trim();
+    const benefits = document.getElementById("editProductBenefitsInput").value.trim();
+    const files = document.getElementById("editProductPhotoInput").files;
+    const file = files[0];
+    const status = document.getElementById("editUploadStatus");
+
+    if(!name){
+        alert("Product name pao.");
+        return;
+    }
+
+    if(!Number.isFinite(price) || price < 0){
+        alert("Valid price pao.");
+        return;
+    }
+
+    if(!Number.isInteger(stock) || stock < 0){
+        alert("Valid stock quantity pao.");
+        return;
+    }
+
+    if(!Number.isInteger(lowStock) || lowStock < 0){
+        alert("Valid low stock value pao.");
+        return;
+    }
+
+    const user = await checkAdmin();
+    if(!user) return;
+
+    const oldProduct = allProducts.find(
+        p => String(p.id) === String(id)
+    );
+
+    if(!oldProduct){
+        alert("Product not found.");
+        return;
+    }
+
+    const variants = collectProductVariants();
+    if(variants === null) return;
+
     try{
-        await navigator.clipboard.writeText(el.value);
-        alert("Password copied.");
-    }catch(e){
-        el.select();
-        document.execCommand("copy");
-        alert("Password copied.");
+
+        let imageUrl = oldProduct.image_url || null;
+
+        if(file){
+
+            status.innerText = "Uploading new photo...";
+
+            const extension =
+                file.name.split(".").pop().toLowerCase();
+
+            const fileName =
+                Date.now() +
+                "-" +
+                Math.random().toString(36).substring(2) +
+                "." + extension;
+
+            const filePath = "products/" + fileName;
+
+            const upload =
+                await supabaseClient
+                .storage
+                .from(IMAGE_BUCKET)
+                .upload(filePath, file, {
+                    cacheControl:"3600",
+                    upsert:false
+                });
+
+            if(upload.error){
+                alert("Photo upload failed:\n\n" + upload.error.message);
+                return;
+            }
+
+            imageUrl =
+                supabaseClient
+                .storage
+                .from(IMAGE_BUCKET)
+                .getPublicUrl(filePath)
+                .data.publicUrl;
+        }
+
+        if(files.length > 4){
+            alert("Maximum 4 photos upload karo.");
+            return;
+        }
+
+        const extraPhotoUrls = files.length > 1
+            ? await uploadAdditionalProductPhotos(files.slice(1))
+            : [];
+
+        status.innerText = "Saving changes...";
+
+        const updateData = {
+            name:name,
+            price:price,
+            stock:stock,
+            low_stock:lowStock,
+            description:description,
+            key_ingredients:keyIngredients,
+            how_to_use:howToUse,
+            benefits:benefits,
+            image_url:imageUrl,
+            image_url_2:extraPhotoUrls[0] || oldProduct.image_url_2 || null,
+            image_url_3:extraPhotoUrls[1] || oldProduct.image_url_3 || null,
+            image_url_4:extraPhotoUrls[2] || oldProduct.image_url_4 || null,
+            variants:variants
+        };
+
+        const {error} =
+            await supabaseClient
+            .from("products")
+            .update(updateData)
+            .eq("id",id);
+
+        if(error){
+            alert("Product update failed:\n\n" + error.message);
+            return;
+        }
+
+        alert("Product updated successfully.");
+        loadProducts();
+
+    }catch(error){
+        alert("Something went wrong:\n\n" + error.message);
     }
 }
 
+
+/* =========================================================
+   SIZE / ML + PRICE MANAGER
+   Additive only - existing code preserved
+========================================================= */
+function renderProductVariants(variants){
+    const list = document.getElementById("variantList");
+    if(!list) return;
+    let data = variants;
+    if(typeof data === "string"){
+        try{ data = JSON.parse(data); }catch(e){ data = []; }
+    }
+    if(!Array.isArray(data)) data = [];
+    list.innerHTML = "";
+    if(data.length){
+        data.forEach(v => addVariantRow(v));
+    }else{
+        addVariantRow();
+    }
+}
+
+function addVariantRow(variant){
+    const list = document.getElementById("variantList");
+    if(!list) return;
+    variant = variant || {};
+    const row = document.createElement("div");
+    row.className = "variant-row";
+    row.innerHTML = `
+        <div class="variant-field">
+            <label>SIZE / ML</label>
+            <input type="number" min="0" step="any" class="variant-size" value="${escapeHtml(String(variant.size ?? ""))}" placeholder="e.g. 100">
+        </div>
+        <div class="variant-field">
+            <label>UNIT</label>
+            <select class="variant-unit">
+                <option value="ML">ML</option>
+                <option value="G">G</option>
+                <option value="L">L</option>
+                <option value="KG">KG</option>
+            </select>
+        </div>
+        <div class="variant-field">
+            <label>PRICE (₹)</label>
+            <input type="number" min="0" step="0.01" class="variant-price" value="${escapeHtml(String(variant.price ?? ""))}" placeholder="e.g. 499">
+        </div>
+        <div class="variant-field">
+            <label>STOCK</label>
+            <input type="number" min="0" step="1" class="variant-stock" value="${escapeHtml(String(variant.stock ?? ""))}" placeholder="e.g. 20">
+        </div>
+        <button type="button" class="variant-remove" onclick="this.closest('.variant-row').remove()">✕ Remove</button>
+    `;
+    list.appendChild(row);
+    const unit = row.querySelector(".variant-unit");
+    if(variant.unit) unit.value = String(variant.unit).toUpperCase();
+}
+
+function collectProductVariants(){
+    const list = document.getElementById("variantList");
+    if(!list) return [];
+    const rows = [...list.querySelectorAll(".variant-row")];
+    const variants = [];
+    for(const row of rows){
+        const sizeEl = row.querySelector(".variant-size");
+        const unitEl = row.querySelector(".variant-unit");
+        const priceEl = row.querySelector(".variant-price");
+        const stockEl = row.querySelector(".variant-stock");
+        const sizeText = (sizeEl?.value || "").trim();
+        const priceText = (priceEl?.value || "").trim();
+        const stockText = (stockEl?.value || "").trim();
+        if(!sizeText && !priceText && !stockText) continue;
+        const size = Number(sizeText);
+        const price = Number(priceText);
+        const stock = stockText === "" ? 0 : Number(stockText);
+        if(!Number.isFinite(size) || size <= 0){ alert("Har Size / ML valid pao."); return null; }
+        if(!Number.isFinite(price) || price < 0){ alert("Har Size da valid price pao."); return null; }
+        if(!Number.isInteger(stock) || stock < 0){ alert("Har Size da valid stock pao."); return null; }
+        variants.push({size:size,unit:(unitEl?.value || "ML").toUpperCase(),price:price,stock:stock});
+    }
+    return variants;
+}
+
+async function deleteProduct(id){
+
+    const product =
+        allProducts.find(
+            p =>
+            String(p.id)
+            === String(id)
+        );
+
+    if(!product) return;
+
+    const yes =
+        confirm(
+            'Delete "' +
+            product.name +
+            '"?'
+        );
+
+    if(!yes) return;
+
+    const {error} =
+        await supabaseClient
+        .from("products")
+        .delete()
+        .eq("id",id);
+
+    if(error){
+
+        alert(
+            "Product delete failed:\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+    alert("Product deleted successfully.");
+
+    loadProducts();
+
+}
+
+/* =========================================================
+   ADD PRODUCT
+========================================================= */
+
+function showAddProduct(){
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="form-title">
+
+            <p>PRODUCT MANAGEMENT</p>
+
+            <h2>➕ Add New Product</h2>
+
+        </div>
+
+        <br>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>Product Name</label>
+
+                <input
+                    id="productNameInput"
+                    type="text"
+                    placeholder="e.g. Herbal Face Wash">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Price (₹)</label>
+
+                <input
+                    id="productPriceInput"
+                    type="number"
+                    min="0"
+                    placeholder="299">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Stock</label>
+
+                <input
+                    id="productStockInput"
+                    type="number"
+                    min="0"
+                    value="0">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Low Stock Alert</label>
+
+                <input
+                    id="productLowStockInput"
+                    type="number"
+                    min="0"
+                    value="5">
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>Description</label>
+
+                <textarea
+                    id="productDescriptionInput"
+                    placeholder="Write product description..."></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>🌿 Key Ingredients</label>
+
+                <textarea
+                    id="productKeyIngredientsInput"
+                    placeholder="Example:
+Niacinamide — Supports the skin barrier
+Hyaluronic Acid — Helps maintain hydration"></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>🧴 How to Use</label>
+
+                <textarea
+                    id="productHowToUseInput"
+                    placeholder="Write simple usage instructions..."></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>✨ Benefits</label>
+
+                <textarea
+                    id="productBenefitsInput"
+                    placeholder="Write the main product benefits..."></textarea>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>📷 Product Photos (Up to 4)</label>
+
+                <div class="upload-box">
+
+                    <strong>Upload Product Photos</strong>
+
+                    <br>
+
+                    <input
+                        id="productPhotoInput"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onchange="previewPhoto(event)">
+
+                    <div
+                        class="photo-preview"
+                        id="photoPreview">
+
+                        <img
+                            id="previewImage"
+                            src=""
+                            alt="Preview">
+
+                    </div>
+
+                    <div
+                        id="uploadStatus"
+                        style="
+                            margin-top:10px;
+                            color:#287a3e;
+                            font-size:12px;">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div
+            style="
+                display:flex;
+                gap:10px;
+                margin-top:10px;">
+
+            <button
+                class="btn"
+                onclick="saveProduct()">
+                💾 Save Product
+            </button>
+
+            <button
+                class="btn gray-btn"
+                onclick="clearProductForm()">
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+    `;
+
+}
+
+function previewPhoto(event){
+
+    const files = [...(event.target.files || [])];
+    if(files.length > 4){
+        alert("Maximum 4 photos upload karo.");
+        event.target.value = "";
+        return;
+    }
+
+    const preview = document.getElementById("photoPreview");
+    if(!preview) return;
+
+    preview.innerHTML = files.map((file,i)=>`
+        <img src="${URL.createObjectURL(file)}" alt="Preview ${i+1}" style="width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">
+    `).join("");
+
+}
+
+async function saveProduct(){
+
+    const name =
+        document.getElementById(
+            "productNameInput"
+        ).value.trim();
+
+    const price =
+        Number(
+            document.getElementById(
+                "productPriceInput"
+            ).value
+        );
+
+    const stock =
+        Number(
+            document.getElementById(
+                "productStockInput"
+            ).value || 0
+        );
+
+    const lowStock =
+        Number(
+            document.getElementById(
+                "productLowStockInput"
+            ).value || 5
+        );
+
+    const description =
+        document.getElementById(
+            "productDescriptionInput"
+        ).value.trim();
+
+    const keyIngredients =
+        document.getElementById(
+            "productKeyIngredientsInput"
+        ).value.trim();
+
+    const howToUse =
+        document.getElementById(
+            "productHowToUseInput"
+        ).value.trim();
+
+    const benefits =
+        document.getElementById(
+            "productBenefitsInput"
+        ).value.trim();
+
+    const files =
+        document.getElementById(
+            "productPhotoInput"
+        ).files;
+
+    if(files.length > 4){
+        alert("Maximum 4 photos upload karo.");
+        return;
+    }
+
+    const file = files[0];
+
+    const status =
+        document.getElementById(
+            "uploadStatus"
+        );
+
+    if(!name){
+
+        alert("Product name pao.");
+        return;
+
+    }
+
+    if(price < 0){
+
+        alert("Valid price pao.");
+        return;
+
+    }
+
+    if(!file){
+
+        alert("Product photo upload karo.");
+        return;
+
+    }
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    status.innerText =
+        "Uploading photo...";
+
+    try{
+
+        const extension =
+            file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+        const fileName =
+            Date.now() +
+            "-" +
+            Math.random()
+            .toString(36)
+            .substring(2) +
+            "." +
+            extension;
+
+        const filePath =
+            "products/" +
+            fileName;
+
+        const upload =
+            await supabaseClient
+            .storage
+            .from(IMAGE_BUCKET)
+            .upload(
+                filePath,
+                file,
+                {
+                    cacheControl:"3600",
+                    upsert:false
+                }
+            );
+
+        if(upload.error){
+
+            alert(
+                "Photo upload failed:\n\n" +
+                upload.error.message
+            );
+
+            return;
+
+        }
+
+        status.innerText =
+            "Saving product...";
+
+        const publicData =
+            supabaseClient
+            .storage
+            .from(IMAGE_BUCKET)
+            .getPublicUrl(filePath);
+
+        const imageUrl =
+            publicData.data.publicUrl;
+
+        const extraPhotoUrls = files.length > 1
+            ? await uploadAdditionalProductPhotos(files.slice(1))
+            : [];
+
+        const insert =
+            await supabaseClient
+            .from("products")
+            .insert({
+
+                name:name,
+                price:price,
+                stock:stock,
+                low_stock:lowStock,
+                description:description,
+                key_ingredients:keyIngredients,
+                how_to_use:howToUse,
+                benefits:benefits,
+                image_url:imageUrl,
+                image_url_2:extraPhotoUrls[0] || null,
+                image_url_3:extraPhotoUrls[1] || null,
+                image_url_4:extraPhotoUrls[2] || null
+
+            });
+
+        if(insert.error){
+
+            alert(
+                "Product save failed:\n\n" +
+                insert.error.message
+            );
+
+            return;
+
+        }
+
+        alert(
+            "Product successfully add ho gaya."
+        );
+
+        clearProductForm();
+
+    }
+    catch(error){
+
+        alert(
+            "Something went wrong:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+function clearProductForm(){
+
+    [
+        "productNameInput",
+        "productPriceInput",
+        "productDescriptionInput"
+    ].forEach(id=>{
+
+        const el =
+            document.getElementById(id);
+
+        if(el) el.value = "";
+
+    });
+
+    const stock =
+        document.getElementById(
+            "productStockInput"
+        );
+
+    if(stock) stock.value = "0";
+
+    const low =
+        document.getElementById(
+            "productLowStockInput"
+        );
+
+    if(low) low.value = "5";
+
+    const photo =
+        document.getElementById(
+            "productPhotoInput"
+        );
+
+    if(photo) photo.value = "";
+
+    const preview =
+        document.getElementById(
+            "photoPreview"
+        );
+
+    if(preview)
+        preview.style.display = "none";
+
+    const status =
+        document.getElementById(
+            "uploadStatus"
+        );
+
+    if(status)
+        status.innerText = "";
+
+}
+
+/* =========================================================
+   CUSTOMERS
+========================================================= */
+
+async function loadCustomers(){
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="admin-header">
+
+            <div>
+                <p>CUSTOMER MANAGEMENT</p>
+                <h2>👥 Customers</h2>
+            </div>
+
+            <button class="btn" onclick="loadCustomers()">
+                🔄 Refresh
+            </button>
+
+        </div>
+
+        <div id="customersTable">
+            <div class="message">Loading customers...</div>
+        </div>
+
+    </div>
+    `;
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+    if(error){
+
+        document.getElementById(
+            "customersTable"
+        ).innerHTML = `
+            <div class="message error">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    const customers = {};
+
+    (data || []).forEach(order=>{
+
+        const name =
+            order.customer_name ||
+            order.name ||
+            "Unknown Customer";
+
+        const phone =
+            order.phone ||
+            order.mobile ||
+            "-";
+
+        const key =
+            phone !== "-"
+            ? phone
+            : name;
+
+        if(!customers[key]){
+
+            customers[key] = {
+                name:name,
+                phone:phone,
+                orders:0,
+                total:0,
+                last:order.created_at
+            };
+
+        }
+
+        customers[key].orders++;
+
+        customers[key].total +=
+            Number(order.total || 0);
+
+    });
+
+    const list =
+        Object.values(customers);
+
+    if(!list.length){
+
+        document.getElementById(
+            "customersTable"
+        ).innerHTML = `
+            <div class="message">
+                No customers yet.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    let html = `
+    <div class="table-wrapper">
+    <table class="data-table">
+    <thead>
+    <tr>
+        <th>CUSTOMER</th>
+        <th>MOBILE</th>
+        <th>ORDERS</th>
+        <th>TOTAL SPENDING</th>
+        <th>LAST ORDER</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    list.forEach(customer=>{
+
+        html += `
+        <tr>
+
+            <td>
+                <strong>
+                    ${escapeHtml(customer.name)}
+                </strong>
+            </td>
+
+            <td>${escapeHtml(customer.phone)}</td>
+
+            <td>${customer.orders}</td>
+
+            <td class="total">
+                ${money(customer.total)}
+            </td>
+
+            <td>
+                ${
+                    customer.last
+                    ? new Date(
+                        customer.last
+                      ).toLocaleDateString("en-IN")
+                    : "-"
+                }
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    `;
+
+    document.getElementById(
+        "customersTable"
+    ).innerHTML = html;
+
+}
+
+/* =========================================================
+   DELIVERY
+========================================================= */
+
+async function loadDelivery(){
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="admin-header">
+
+            <div>
+                <p>DELIVERY MANAGEMENT</p>
+                <h2>🚚 Delivery Tracking</h2>
+            </div>
+
+            <button class="btn" onclick="loadDelivery()">
+                🔄 Refresh
+            </button>
+
+        </div>
+
+        <div id="deliveryTable">
+            <div class="message">
+                Loading delivery orders...
+            </div>
+        </div>
+
+    </div>
+    `;
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*")
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+    if(error){
+
+        document.getElementById(
+            "deliveryTable"
+        ).innerHTML = `
+            <div class="message error">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    const deliveryOrders =
+        (data || []).filter(order=>{
+
+            const status =
+                String(
+                    order.status || "Pending"
+                ).toLowerCase();
+
+            return status !== "delivered" &&
+                   status !== "cancelled";
+
+        });
+
+    if(!deliveryOrders.length){
+
+        document.getElementById(
+            "deliveryTable"
+        ).innerHTML = `
+            <div class="message">
+                No active delivery orders.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    let html = `
+    <div class="table-wrapper">
+    <table class="data-table">
+    <thead>
+    <tr>
+        <th>ORDER ID</th>
+        <th>CUSTOMER</th>
+        <th>MOBILE</th>
+        <th>PRODUCT</th>
+        <th>ADDRESS</th>
+        <th>STATUS</th>
+        <th>ACTION</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+
+    deliveryOrders.forEach(order=>{
+
+        const address =
+            order.address ||
+            order.shipping_address ||
+            order.delivery_address ||
+            "-";
+
+        html += `
+        <tr>
+
+            <td>
+                <strong>
+                    ${escapeHtml(
+                        shortOrderId(order.id)
+                    )}
+                </strong>
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    order.customer_name ||
+                    order.name ||
+                    "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHtml(
+                    order.phone ||
+                    order.mobile ||
+                    "-"
+                )}
+            </td>
+
+            <td class="product-name">
+                ${escapeHtml(productName(order))}
+            </td>
+
+            <td>${escapeHtml(address)}</td>
+
+            <td>${statusBadge(order.status)}</td>
+
+            <td>
+                <button
+                    class="table-btn view-btn"
+                    onclick="viewOrder(
+                        '${escapeHtml(String(order.id))}'
+                    )">
+                    View
+                </button>
+            </td>
+
+        </tr>
+        `;
+
+    });
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    `;
+
+    document.getElementById(
+        "deliveryTable"
+    ).innerHTML = html;
+
+}
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+async function loadReports(){
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="admin-header">
+
+            <div>
+                <p>BUSINESS ANALYTICS</p>
+                <h2>📊 Reports</h2>
+            </div>
+
+            <button class="btn" onclick="loadReports()">
+                🔄 Refresh
+            </button>
+
+        </div>
+
+        <div id="reportsContent">
+            <div class="message">Loading reports...</div>
+        </div>
+
+    </div>
+    `;
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("orders")
+        .select("*");
+
+    if(error){
+
+        document.getElementById(
+            "reportsContent"
+        ).innerHTML = `
+            <div class="message error">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    const orders =
+        data || [];
+
+    let totalSales = 0;
+    let delivered = 0;
+    let pending = 0;
+    let cancelled = 0;
+
+    const productSales = {};
+
+    orders.forEach(order=>{
+
+        const status =
+            String(
+                order.status || "Pending"
+            ).toLowerCase();
+
+        if(status !== "cancelled"){
+            totalSales += Number(order.total || 0);
+        }
+
+        if(status === "delivered"){
+            delivered++;
+        }
+        else if(status === "cancelled"){
+            cancelled++;
+        }
+        else{
+            pending++;
+        }
+
+        const product =
+            productName(order);
+
+        if(!productSales[product]){
+
+            productSales[product] = {
+                qty:0,
+                amount:0
+            };
+
+        }
+
+        productSales[product].qty +=
+            Number(order.quantity || 1);
+
+        productSales[product].amount +=
+            Number(order.total || 0);
+
+    });
+
+    const topProducts =
+        Object.entries(productSales)
+        .sort(
+            (a,b)=>
+            b[1].amount-a[1].amount
+        )
+        .slice(0,10);
+
+    let productRows = "";
+
+    topProducts.forEach(item=>{
+
+        productRows += `
+
+        <div class="stat-row">
+
+            <strong>
+                ${escapeHtml(item[0])}
+            </strong>
+
+            <span>
+                ${item[1].qty} units ·
+                ${money(item[1].amount)}
+            </span>
+
+        </div>
+        `;
+
+    });
+
+    document.getElementById(
+        "reportsContent"
+    ).innerHTML = `
+
+    <div class="summary-grid">
+
+        <div class="summary-card sales">
+            <span>Total Sales</span>
+            <strong>${money(totalSales)}</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Total Orders</span>
+            <strong>${orders.length}</strong>
+        </div>
+
+        <div class="summary-card delivered">
+            <span>Delivered</span>
+            <strong>${delivered}</strong>
+        </div>
+
+        <div class="summary-card cancelled">
+            <span>Cancelled</span>
+            <strong>${cancelled}</strong>
+        </div>
+
+    </div>
+
+    <div class="analytics-grid">
+
+        <div class="analytics-card">
+
+            <h3>📦 Order Status</h3>
+
+            <div class="stat-row">
+                <span>Delivered</span>
+                <strong>${delivered}</strong>
+            </div>
+
+            <div class="stat-row">
+                <span>Active / Pending</span>
+                <strong>${pending}</strong>
+            </div>
+
+            <div class="stat-row">
+                <span>Cancelled</span>
+                <strong>${cancelled}</strong>
+            </div>
+
+        </div>
+
+        <div class="analytics-card">
+
+            <h3>🏆 Top Products</h3>
+
+            ${
+                productRows ||
+                `<div class="message">
+                    No product sales yet.
+                </div>`
+            }
+
+        </div>
+
+    </div>
+    `;
+
+}
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+async function loadNotifications(){
+
+    document.getElementById(
+        "other-content"
+    ).innerHTML = `
+
+    <div class="admin-box">
+
+        <div class="admin-header">
+
+            <div>
+                <p>BUSINESS ALERTS</p>
+                <h2>🔔 Notifications</h2>
+            </div>
+
+            <button class="btn" onclick="loadNotifications()">
+                🔄 Refresh
+            </button>
+
+        </div>
+
+        <div id="notificationContent">
+            <div class="message">Loading alerts...</div>
+        </div>
+
+    </div>
+    `;
+
+    const user =
+        await checkAdmin();
+
+    if(!user) return;
+
+    const {data,error} =
+        await supabaseClient
+        .from("products")
+        .select("*");
+
+    if(error){
+
+        document.getElementById(
+            "notificationContent"
+        ).innerHTML = `
+            <div class="message error">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+    const low =
+        (data || []).filter(product=>{
+
+            return Number(product.stock || 0)
+                <=
+                Number(product.low_stock || 5);
+
+        });
+
+    if(!low.length){
+
+        document.getElementById(
+            "notificationContent"
+        ).innerHTML = `
+
+        <div
+            class="analytics-card"
+            style="text-align:center">
+
+            <div style="font-size:45px">✅</div>
+
+            <h3>Everything looks good</h3>
+
+            <p style="color:#777">
+                No low-stock products right now.
+            </p>
+
+        </div>
+        `;
+
+        return;
+
+    }
+
+    let html = `
+
+    <div class="analytics-card">
+
+        <h3>⚠️ Low Stock Alerts</h3>
+    `;
+
+    low.forEach(product=>{
+
+        const stock =
+            Number(product.stock || 0);
+
+        html += `
+
+        <div class="stat-row">
+
+            <span>
+                ${escapeHtml(product.name)}
+            </span>
+
+            <strong
+                class="${
+                    stock <= 0
+                    ? "stock-out"
+                    : "stock-low"
+                }">
+
+                ${
+                    stock <= 0
+                    ? "OUT OF STOCK"
+                    : "Only " + stock + " left"
+                }
+
+            </strong>
+
+        </div>
+        `;
+
+    });
+
+    html += "</div>";
+
+    document.getElementById(
+        "notificationContent"
+    ).innerHTML = html;
+
+}
+
+/* =========================================================
+   SETTINGS MAIN
+========================================================= */
 
 function loadSettings(){
 
@@ -597,6 +4262,45 @@ function loadSettings(){
                         </div>
                     </div>
 
+
+                        <div class="settings-card permissions-card">
+                            <h3>🔐 Staff Rights & Permissions</h3>
+                            <p>Bank-system style permission matrix. Har staff member nu role de hisaab naal exact modules da access ditta ja sakda hai.</p>
+
+                            <div class="permission-toolbar">
+                                <div>
+                                    <strong>Permission Matrix</strong>
+                                    <small>Select the rights that this staff member should receive.</small>
+                                </div>
+                                <div class="permission-actions">
+                                    <button class="btn outline-btn" type="button" onclick="setAllPermissions(true)">✓ All</button>
+                                    <button class="btn gray-btn" type="button" onclick="setAllPermissions(false)">Clear</button>
+                                    <button class="btn outline-btn" type="button" onclick="applyRolePermissions()">Apply Role</button>
+                                </div>
+                            </div>
+
+                            <div class="permission-table-wrap">
+                                <table class="permission-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ROLE / MODULE</th>
+                                            <th>VIEW</th>
+                                            <th>ADD</th>
+                                            <th>EDIT</th>
+                                            <th>DELETE</th>
+                                            <th>APPROVE</th>
+                                            <th>EXPORT / PRINT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="permissionMatrixBody"></tbody>
+                                </table>
+                            </div>
+
+                            <div class="permission-note">
+                                <strong>Recommended:</strong> Sales Staff nu Orders/Sales tak, Inventory Staff nu Stock/Products tak,
+                                Accounts Staff nu Sales/GST/Invoice tak, te Viewer nu sirf View access.
+                            </div>
+                        </div>
                 </div>
 
                 <!-- SECURITY -->
@@ -1685,7 +5389,7 @@ async function createStaffLogin(){
 
     staffStatus("Creating staff login...", true);
     const {data,error}=await supabaseClient.functions.invoke("create-staff",{
-        body:{name,email,password,role,phone:"",permissions:{}}
+        body:{name,email,password,role,phone:"",permissions:collectPermissions()}
     });
 
     if(error){
@@ -1922,8 +5626,135 @@ async function checkSystemStatus(){
 
 
 
+const PERMISSION_MODULES = [
+  ["dashboard","Dashboard"],
+  ["orders","Orders"],
+  ["stock","Stock / Inventory"],
+  ["parties","Parties / Offline Accounts"],
+  ["sales","Sales & GST"],
+  ["products","Products"],
+  ["customers","Customers"],
+  ["delivery","Delivery / Shiprocket"],
+  ["reports","Reports"],
+  ["invoice","Invoice / Print"],
+  ["website","Website"],
+  ["settings","Settings"],
+  ["staff","Staff Management"],
+  ["company","Company"]
+];
+
+const PERMISSION_ACTIONS = ["view","add","edit","delete","approve","export"];
+
+const ROLE_PERMISSION_PRESETS = {
+  "Super Admin":"all",
+  "Admin":"all",
+  "Manager":["dashboard","orders","stock","parties","sales","products","customers","delivery","reports","invoice","company"],
+  "Sales Manager":["dashboard","orders","sales","customers","invoice","reports"],
+  "Sales Staff":["dashboard","orders","sales","customers","invoice"],
+  "Order Manager":["dashboard","orders","customers","delivery","invoice"],
+  "Order Staff":["dashboard","orders","customers","delivery"],
+  "Accounts Manager":["dashboard","sales","invoice","reports","company"],
+  "Accounts Staff":["dashboard","sales","invoice","reports"],
+  "Inventory Manager":["dashboard","stock","products","purchase","reports"],
+  "Inventory Staff":["dashboard","stock","products"],
+  "Customer Manager":["dashboard","customers","orders","reports"],
+  "Customer Support":["dashboard","customers","orders"],
+  "Delivery Manager":["dashboard","delivery","orders","reports"],
+  "Delivery Staff":["dashboard","delivery","orders"],
+  "Purchase Manager":["dashboard","stock","products","reports"],
+  "Purchase Staff":["dashboard","stock","products"],
+  "Report Manager":["dashboard","reports","sales","orders","stock"],
+  "Viewer":"viewOnly",
+  "Custom Role":[]
+};
+
+function renderPermissionMatrix(){
+    const body=document.getElementById("permissionMatrixBody");
+    if(!body) return;
+
+    body.innerHTML=PERMISSION_MODULES.map(([key,label])=>`
+        <tr>
+            <td>
+                <div class="permission-module">${escapeHtml(label)}</div>
+                <small>${escapeHtml(key)}</small>
+            </td>
+            ${PERMISSION_ACTIONS.map(action=>`
+                <td>
+                    <input class="permission-check"
+                           type="checkbox"
+                           data-module="${escapeHtml(key)}"
+                           data-action="${escapeHtml(action)}"
+                           aria-label="${escapeHtml(label)} ${escapeHtml(action)}">
+                </td>
+            `).join("")}
+        </tr>
+    `).join("");
+
+    applyRolePermissions();
+}
+
+function setAllPermissions(value){
+    document.querySelectorAll(".permission-check").forEach(x=>x.checked=!!value);
+}
+
+function applyRolePermissions(){
+    const role=document.getElementById("staffRole")?.value || "Custom Role";
+    setAllPermissions(false);
+
+    const preset=ROLE_PERMISSION_PRESETS[role];
+
+    document.querySelectorAll(".permission-check").forEach(cb=>{
+        const module=cb.dataset.module;
+        const action=cb.dataset.action;
+
+        if(preset==="all"){
+            cb.checked=true;
+            return;
+        }
+
+        if(preset==="viewOnly"){
+            cb.checked=(action==="view");
+            return;
+        }
+
+        if(Array.isArray(preset) && preset.includes(module)){
+            cb.checked = (
+                action==="view" ||
+                action==="add" ||
+                action==="edit"
+            );
+
+            // Higher-risk actions stay off by default.
+            if(["delete","approve"].includes(action)) cb.checked=false;
+            if(action==="export" && ["reports","sales","invoice","orders","stock"].includes(module)) cb.checked=true;
+        }
+    });
+}
+
+function collectPermissions(){
+    const permissions={};
+    PERMISSION_MODULES.forEach(([module])=>{
+        permissions[module]={};
+        PERMISSION_ACTIONS.forEach(action=>{
+            const cb=document.querySelector(`.permission-check[data-module="${module}"][data-action="${action}"]`);
+            permissions[module][action]=!!cb?.checked;
+        });
+    });
+    return permissions;
+}
+
+document.addEventListener("change",function(e){
+    if(e.target && e.target.id==="staffRole") applyRolePermissions();
+});
+
+document.addEventListener("DOMContentLoaded",function(){
+    renderPermissionMatrix();
+});
+
+
 document.addEventListener("DOMContentLoaded",function(){
     loadSettings();
+    setTimeout(renderPermissionMatrix,50);
 });
 </script>
 </body>
