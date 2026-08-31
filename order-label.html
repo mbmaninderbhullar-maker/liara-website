@@ -5,64 +5,32 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+      content="width=device-width,initial-scale=1.0">
 
-<title>Liara Professional™ | Order Labels</title>
-
-
-<!-- =====================================================
-     SUPABASE
-===================================================== -->
+<title>Liara Professional™ | Order Label</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-<!-- =====================================================
-     BARCODE
-===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
 
 <style>
 
-/* =====================================================
-   RESET
-===================================================== */
-
 *{
     box-sizing:border-box;
 }
 
-
 body{
-
     margin:0;
-
-    background:#f5f3ef;
-
+    background:#f4f2ee;
     color:#171717;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
-
-/* =====================================================
-   PAGE
-===================================================== */
-
 .page{
-
-    width:100%;
-
     max-width:900px;
-
-    margin:0 auto;
-
-    padding:30px 20px 50px;
+    margin:auto;
+    padding:25px 18px 50px;
 }
 
 
@@ -71,114 +39,65 @@ body{
 ===================================================== */
 
 .header{
-
     text-align:center;
-
-    margin-bottom:25px;
+    margin-bottom:20px;
 }
 
-
 .header h1{
-
     margin:0;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size:32px;
-
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:30px;
     letter-spacing:4px;
 }
 
-
 .header p{
-
-    margin:6px 0 0;
-
+    margin:5px 0 0;
+    font-size:9px;
     color:#777;
-
-    font-size:10px;
-
     letter-spacing:2px;
 }
 
 
 /* =====================================================
-   CONTROL BOX
+   SEARCH
 ===================================================== */
 
-.controls{
-
+.search-box{
     background:#fff;
-
     border:1px solid #ddd8d0;
-
-    border-radius:15px;
-
-    padding:18px;
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,.06);
+    border-radius:13px;
+    padding:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
 }
-
 
 .search-row{
-
     display:flex;
-
-    gap:10px;
+    gap:8px;
 }
 
-
-.search-row input{
-
+.search-input{
     flex:1;
-
-    height:46px;
-
+    height:44px;
     border:1px solid #ccc;
-
     border-radius:8px;
-
-    padding:0 13px;
-
-    font-size:15px;
-
+    padding:0 12px;
+    font-size:14px;
     outline:none;
 }
 
-
-.search-row input:focus{
-
+.search-input:focus{
     border-color:#222;
 }
 
-
-.btn{
-
-    height:46px;
-
+.search-btn{
+    height:44px;
     border:0;
-
     border-radius:8px;
-
-    padding:0 18px;
-
+    padding:0 17px;
     background:#171717;
-
     color:#fff;
-
     font-weight:700;
-
     cursor:pointer;
-}
-
-
-.btn:hover{
-
-    opacity:.9;
 }
 
 
@@ -187,23 +106,16 @@ body{
 ===================================================== */
 
 .status{
-
-    min-height:20px;
-
-    margin-top:10px;
-
-    font-size:12px;
+    min-height:18px;
+    margin-top:8px;
+    font-size:11px;
 }
 
-
 .status.error{
-
     color:#b42318;
 }
 
-
 .status.success{
-
     color:#16733c;
 }
 
@@ -212,202 +124,124 @@ body{
    ORDERS
 ===================================================== */
 
-.orders-title{
-
+.orders-head{
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
-    margin:20px 0 10px;
+    margin:18px 2px 9px;
 }
 
-
-.orders-title strong{
-
-    font-size:14px;
+.orders-head strong{
+    font-size:13px;
 }
-
 
 .order-count{
-
     color:#777;
-
-    font-size:12px;
-}
-
-
-.orders{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(auto-fill,minmax(250px,1fr));
-
-    gap:10px;
-
-    max-height:430px;
-
-    overflow:auto;
-
-    padding-right:3px;
-}
-
-
-.order-card{
-
-    background:#fff;
-
-    border:1px solid #ddd8d0;
-
-    border-radius:10px;
-
-    padding:13px;
-
-    cursor:pointer;
-
-    transition:.15s;
-}
-
-
-.order-card:hover{
-
-    border-color:#222;
-
-    transform:translateY(-1px);
-}
-
-
-.order-card.active{
-
-    border:2px solid #171717;
-
-    padding:12px;
-}
-
-
-.order-number{
-
-    font-size:14px;
-
-    font-weight:800;
-}
-
-
-.order-customer{
-
-    margin-top:4px;
-
-    font-size:13px;
-
-    font-weight:600;
-}
-
-
-.order-phone{
-
-    margin-top:3px;
-
-    color:#777;
-
     font-size:11px;
 }
 
+.orders{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:9px;
+    max-height:430px;
+    overflow:auto;
+}
+
+.order-card{
+    background:#fff;
+    border:1px solid #ddd8d0;
+    border-radius:9px;
+    padding:12px;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.order-card:hover{
+    border-color:#222;
+}
+
+.order-card.active{
+    border:2px solid #171717;
+    padding:11px;
+}
+
+.order-number{
+    font-size:13px;
+    font-weight:800;
+}
+
+.order-name{
+    margin-top:4px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.order-phone{
+    margin-top:3px;
+    font-size:10px;
+    color:#777;
+}
 
 .order-payment{
-
     display:inline-block;
-
-    margin-top:8px;
-
-    padding:4px 7px;
-
+    margin-top:7px;
+    padding:3px 6px;
     border:1px solid #222;
-
     border-radius:4px;
-
-    font-size:9px;
-
+    font-size:8px;
     font-weight:800;
 }
 
 
 /* =====================================================
-   LABEL AREA
+   LABEL PREVIEW
 ===================================================== */
 
-.label-section{
-
+.preview{
     display:none;
-
-    margin-top:25px;
-
+    margin-top:22px;
     background:#fff;
-
     border:1px solid #ddd8d0;
-
-    border-radius:15px;
-
-    padding:20px;
+    border-radius:13px;
+    padding:15px;
 }
 
-
-.label-heading{
-
+.preview-head{
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
-    margin-bottom:15px;
+    margin-bottom:13px;
 }
 
-
-.label-heading strong{
-
-    font-size:14px;
+.preview-head strong{
+    font-size:13px;
 }
-
 
 .print-btn{
-
-    height:40px;
-
-    padding:0 17px;
-
+    height:38px;
     border:0;
-
-    border-radius:8px;
-
+    border-radius:7px;
+    padding:0 15px;
     background:#171717;
-
     color:#fff;
-
+    font-size:11px;
     font-weight:700;
-
     cursor:pointer;
 }
 
 
 /* =====================================================
-   LABEL
+   SMALL LABEL
 ===================================================== */
 
 .label{
-
     width:90mm;
-
     min-height:55mm;
-
-    background:#fff;
-
-    border:1.5px solid #111;
-
-    padding:6mm;
-
     margin:0 auto;
+    padding:6mm;
+    background:#fff;
+    border:1.5px solid #111;
 }
 
 
@@ -416,115 +250,67 @@ body{
 ===================================================== */
 
 .label-top{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:flex-start;
-
     gap:8px;
-
     padding-bottom:7px;
-
     border-bottom:1.5px solid #111;
 }
 
-
 .logo{
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
+    font-family:Georgia,"Times New Roman",serif;
     font-size:18px;
-
     font-weight:700;
-
     letter-spacing:2px;
 }
 
-
 .logo small{
-
     display:block;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-    font-size:7px;
-
-    letter-spacing:1.3px;
-
     margin-top:2px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:7px;
+    letter-spacing:1.2px;
 }
 
-
 .payment{
-
     border:1.5px solid #111;
-
     border-radius:4px;
-
     padding:4px 6px;
-
     font-size:8px;
-
     font-weight:800;
-
     white-space:nowrap;
 }
 
 
 /* =====================================================
-   ADDRESS
+   CUSTOMER
 ===================================================== */
 
 .ship{
-
     margin-top:8px;
-
     margin-bottom:3px;
-
     font-size:7px;
-
     font-weight:800;
-
     letter-spacing:1.2px;
 }
 
-
 .customer-name{
-
     font-size:15px;
-
     font-weight:800;
-
     margin-bottom:4px;
-
     word-break:break-word;
 }
-
 
 .customer-address{
-
     font-size:10px;
-
     line-height:1.4;
-
     word-break:break-word;
 }
 
-
 .customer-phone{
-
     margin-top:5px;
-
     font-size:9px;
-
     font-weight:700;
 }
 
@@ -534,37 +320,23 @@ body{
 ===================================================== */
 
 .label-bottom{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     gap:8px;
-
     margin-top:8px;
-
     padding-top:7px;
-
     border-top:1px solid #999;
 }
 
-
 .label-order{
-
     font-size:9px;
-
     font-weight:800;
-
     white-space:nowrap;
 }
 
-
 .barcode{
-
     width:125px;
-
     height:38px;
 }
 
@@ -573,27 +345,15 @@ body{
    LOADING
 ===================================================== */
 
-.loading{
-
-    text-align:center;
-
-    padding:25px;
-
-    color:#777;
-
-    font-size:13px;
-}
-
-
+.loading,
 .empty{
-
+    background:#fff;
+    border:1px solid #ddd8d0;
+    border-radius:9px;
+    padding:20px;
     text-align:center;
-
-    padding:25px;
-
     color:#777;
-
-    font-size:13px;
+    font-size:12px;
 }
 
 
@@ -601,53 +361,31 @@ body{
    MOBILE
 ===================================================== */
 
-@media(max-width:650px){
+@media(max-width:600px){
 
     .page{
-
-        padding:15px 10px 40px;
+        padding:12px 9px 35px;
     }
 
-
     .search-row{
-
         flex-direction:column;
     }
 
-
-    .search-row .btn{
-
+    .search-btn{
         width:100%;
     }
 
-
     .orders{
-
         grid-template-columns:1fr;
-
         max-height:350px;
     }
 
-
-    .label-section{
-
-        padding:12px;
+    .preview{
+        padding:10px;
     }
 
-
-    .label-heading{
-
-        align-items:flex-start;
-
-        gap:10px;
-    }
-
-
-    .print-btn{
-
-        font-size:11px;
-
-        padding:0 12px;
+    .preview-head{
+        gap:8px;
     }
 
 }
@@ -660,73 +398,44 @@ body{
 @media print{
 
     @page{
-
         size:A4;
-
         margin:10mm;
     }
 
-
     body{
-
         background:#fff;
     }
 
-
     .page{
-
-        width:auto;
-
         max-width:none;
-
         margin:0;
-
         padding:0;
     }
 
-
     .header,
-
-    .controls,
-
-    .orders-title,
-
+    .search-box,
+    .orders-head,
     .orders,
-
-    .label-heading{
-
+    .preview-head,
+    .status{
         display:none !important;
     }
 
-
-    .label-section{
-
+    .preview{
         display:block !important;
-
         border:0;
-
         padding:0;
-
         margin:0;
-
         background:#fff;
     }
 
-
     .label{
-
         width:90mm;
-
         max-width:90mm;
-
         min-height:55mm;
-
         margin:0;
-
         padding:6mm;
-
         border:1.5px solid #111;
-
         page-break-inside:avoid;
     }
 
@@ -752,7 +461,7 @@ body{
     <h1>LIARA</h1>
 
     <p>
-        PROFESSIONAL™ · ORDER LABELS
+        PROFESSIONAL™ · ORDER LABEL
     </p>
 
 </div>
@@ -760,25 +469,24 @@ body{
 
 
 <!-- =====================================================
-     CONTROLS
+     SEARCH
 ===================================================== -->
 
-<div class="controls">
-
+<div class="search-box">
 
     <div class="search-row">
 
         <input
             id="searchInput"
+            class="search-input"
             type="text"
-            placeholder="Search Order Number / Customer Name / Mobile"
+            placeholder="Search order number / customer / mobile"
             autocomplete="off"
         >
 
-
         <button
-            class="btn"
-            onclick="loadOrders()"
+            class="search-btn"
+            onclick="searchOrders()"
         >
             Search
         </button>
@@ -792,8 +500,7 @@ body{
     ></div>
 
 
-
-    <div class="orders-title">
+    <div class="orders-head">
 
         <strong>
             Orders
@@ -825,19 +532,19 @@ body{
 
 
 <!-- =====================================================
-     LABEL
+     LABEL PREVIEW
 ===================================================== -->
 
 <div
-    id="labelSection"
-    class="label-section"
+    id="preview"
+    class="preview"
 >
 
 
-    <div class="label-heading">
+    <div class="preview-head">
 
         <strong>
-            Print Preview
+            Label Preview
         </strong>
 
 
@@ -883,7 +590,7 @@ body{
 
 
 
-        <!-- SHIP TO -->
+        <!-- CUSTOMER -->
 
         <div class="ship">
             SHIP TO
@@ -915,7 +622,7 @@ body{
 
 
 
-        <!-- ORDER + BARCODE -->
+        <!-- ORDER -->
 
         <div class="label-bottom">
 
@@ -950,38 +657,26 @@ body{
 <script>
 
 /* =====================================================
-   SUPABASE CONFIG
+   SUPABASE — SAME AS ADMIN ORDERS
 ===================================================== */
 
-
-/*
-   YOUR SUPABASE PROJECT URL
-*/
-
 const SUPABASE_URL =
-"https://oinafbuicwhleudztzyz.supabase.co";
+    "https://oinafbuicwhleudztzyz.supabase.co";
 
 
-/*
-   PASTE YOUR EXISTING PUBLISHABLE / ANON KEY HERE.
+const SUPABASE_KEY =
+    "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
-   DO NOT USE SERVICE_ROLE KEY.
-*/
-
-const SUPABASE_ANON_KEY =
-"PASTE_YOUR_EXISTING_ANON_OR_PUBLISHABLE_KEY_HERE";
-
-
-/*
-   CREATE CLIENT
-*/
 
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
-        SUPABASE_ANON_KEY
+        SUPABASE_KEY
     );
 
+
+const ADMIN_EMAIL =
+    "info@liara.co.in";
 
 
 /* =====================================================
@@ -990,8 +685,73 @@ const supabaseClient =
 
 let allOrders = [];
 
-let selectedOrderId = null;
+let selectedOrder = null;
 
+
+/* =====================================================
+   ADMIN CHECK
+===================================================== */
+
+async function checkAdmin(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+        if(
+            error ||
+            !data ||
+            !data.user
+        ){
+
+            window.location.href =
+                "company-login.html";
+
+            return false;
+
+        }
+
+
+        if(
+            !data.user.email ||
+            data.user.email.toLowerCase()
+            !==
+            ADMIN_EMAIL.toLowerCase()
+        ){
+
+            window.location.href =
+                "company-login.html";
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+        window.location.href =
+            "company-login.html";
+
+        return false;
+
+    }
+
+}
 
 
 /* =====================================================
@@ -1012,51 +772,23 @@ async function loadOrders(){
         );
 
 
-    const search =
-        document.getElementById(
-            "searchInput"
-        )
-        .value
-        .trim()
-        .toLowerCase();
-
-
-    status.className =
-        "status";
-
-
     ordersBox.innerHTML =
         `
         <div class="loading">
-            Loading orders...
+            Loading customer orders...
         </div>
         `;
 
 
-    /*
-       Check key
-    */
+    status.textContent =
+        "";
 
-    if(
-        SUPABASE_ANON_KEY.includes(
-            "PASTE_"
-        )
-    ){
 
-        status.textContent =
-            "Supabase publishable/anon key is required.";
+    const allowed =
+        await checkAdmin();
 
-        status.classList.add(
-            "error"
-        );
 
-        ordersBox.innerHTML =
-            `
-            <div class="empty">
-                Add your existing Supabase
-                publishable/anon key in the code.
-            </div>
-            `;
+    if(!allowed){
 
         return;
 
@@ -1066,32 +798,15 @@ async function loadOrders(){
     try{
 
 
-        /*
-           Fetch orders
-        */
-
         const {
             data,
             error
-        } = await supabaseClient
+        } =
+        await supabaseClient
 
             .from("orders")
 
-            .select(`
-                id,
-                order_number,
-                customer_name,
-                phone,
-                address,
-                house_no,
-                street,
-                city,
-                state,
-                pincode,
-                payment_method,
-                shipping_address,
-                created_at
-            `)
+            .select("*")
 
             .order(
                 "created_at",
@@ -1112,92 +827,39 @@ async function loadOrders(){
             data || [];
 
 
-        /*
-           Search
-        */
-
-        let filtered =
-            allOrders;
-
-
-        if(search){
-
-            filtered =
-                allOrders.filter(
-                    order => {
-
-                        const number =
-                            String(
-                                order.order_number || ""
-                            )
-                            .toLowerCase();
-
-
-                        const name =
-                            String(
-                                order.customer_name || ""
-                            )
-                            .toLowerCase();
-
-
-                        const phone =
-                            String(
-                                order.phone || ""
-                            )
-                            .toLowerCase();
-
-
-                        return (
-
-                            number.includes(search) ||
-
-                            name.includes(search) ||
-
-                            phone.includes(search)
-
-                        );
-
-                    }
-                );
-
-        }
-
-
         renderOrders(
-            filtered
+            allOrders
         );
 
 
     }
+
     catch(error){
 
         console.error(
-            "Supabase Error:",
+            "ORDER LOAD ERROR:",
             error
-        );
-
-
-        status.textContent =
-            "Could not load orders: " +
-            error.message;
-
-
-        status.classList.add(
-            "error"
         );
 
 
         ordersBox.innerHTML =
             `
             <div class="empty">
-                Orders could not be loaded.
+                Unable to load orders.
             </div>
             `;
+
+
+        status.textContent =
+            error.message ||
+            "Unable to load orders.";
+
+        status.className =
+            "status error";
 
     }
 
 }
-
 
 
 /* =====================================================
@@ -1246,8 +908,7 @@ function renderOrders(orders){
 
 
     orders.forEach(
-        order => {
-
+        function(order){
 
             const card =
                 document.createElement(
@@ -1259,28 +920,29 @@ function renderOrders(orders){
                 "order-card";
 
 
-            card.dataset.id =
-                order.id;
+            if(
+                selectedOrder &&
+                String(selectedOrder.id)
+                ===
+                String(order.id)
+            ){
+
+                card.classList.add(
+                    "active"
+                );
+
+            }
 
 
-            const payment =
-                String(
-                    order.payment_method ||
-                    "COD"
-                )
-                .toUpperCase();
+            card.innerHTML = `
 
-
-            card.innerHTML =
-
-                `
                 <div class="order-number">
                     ${escapeHTML(
-                        order.order_number || "—"
+                        order.order_number || "-"
                     )}
                 </div>
 
-                <div class="order-customer">
+                <div class="order-name">
                     ${escapeHTML(
                         order.customer_name || "Customer"
                     )}
@@ -1288,19 +950,18 @@ function renderOrders(orders){
 
                 <div class="order-phone">
                     ${escapeHTML(
-                        order.phone || "—"
+                        order.phone || "-"
                     )}
                 </div>
 
                 <div class="order-payment">
                     PAYMENT:
-                    ${
-                        payment.includes("COD")
-                        ? "COD"
-                        : escapeHTML(payment)
-                    }
+                    ${escapeHTML(
+                        paymentText(order)
+                    )}
                 </div>
-                `;
+
+            `;
 
 
             card.addEventListener(
@@ -1325,6 +986,112 @@ function renderOrders(orders){
 }
 
 
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchOrders(){
+
+    const value =
+        document
+            .getElementById(
+                "searchInput"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    if(!value){
+
+        renderOrders(
+            allOrders
+        );
+
+        return;
+
+    }
+
+
+    const filtered =
+        allOrders.filter(
+            function(order){
+
+                const number =
+                    String(
+                        order.order_number || ""
+                    )
+                    .toLowerCase();
+
+
+                const name =
+                    String(
+                        order.customer_name || ""
+                    )
+                    .toLowerCase();
+
+
+                const phone =
+                    String(
+                        order.phone || ""
+                    )
+                    .toLowerCase();
+
+
+                return (
+
+                    number.includes(value) ||
+
+                    name.includes(value) ||
+
+                    phone.includes(value)
+
+                );
+
+            }
+        );
+
+
+    renderOrders(
+        filtered
+    );
+
+}
+
+
+/* =====================================================
+   LIVE SEARCH
+===================================================== */
+
+document
+    .getElementById(
+        "searchInput"
+    )
+    .addEventListener(
+        "input",
+        searchOrders
+    );
+
+
+document
+    .getElementById(
+        "searchInput"
+    )
+    .addEventListener(
+        "keydown",
+        function(event){
+
+            if(
+                event.key === "Enter"
+            ){
+
+                searchOrders();
+
+            }
+
+        }
+    );
+
 
 /* =====================================================
    SELECT ORDER
@@ -1332,51 +1099,16 @@ function renderOrders(orders){
 
 function selectOrder(order){
 
-    selectedOrderId =
-        order.id;
+    selectedOrder =
+        order;
 
 
-    /*
-       Remove previous active
-    */
-
-    document
-        .querySelectorAll(
-            ".order-card"
-        )
-        .forEach(
-            card => {
-
-                card.classList.remove(
-                    "active"
-                );
-
-            }
-        );
+    renderOrders(
+        getFilteredOrders()
+    );
 
 
-    /*
-       Active current
-    */
-
-    const active =
-        document.querySelector(
-            `.order-card[data-id="${CSS.escape(String(order.id))}"]`
-        );
-
-
-    if(active){
-
-        active.classList.add(
-            "active"
-        );
-
-    }
-
-
-    /*
-       Customer
-    */
+    /* NAME */
 
     document
         .getElementById(
@@ -1387,9 +1119,7 @@ function selectOrder(order){
             "Customer";
 
 
-    /*
-       Mobile
-    */
+    /* PHONE */
 
     document
         .getElementById(
@@ -1403,32 +1133,24 @@ function selectOrder(order){
             );
 
 
-    /*
-       Address
-    */
-
-    const address =
-        makeAddress(
-            order
-        );
-
+    /* ADDRESS */
 
     document
         .getElementById(
             "customerAddress"
         )
         .textContent =
-            address ||
+            buildAddress(
+                order
+            ) ||
             "Address not available";
 
 
-    /*
-       Order number
-    */
+    /* ORDER NUMBER */
 
     const orderNumber =
         order.order_number ||
-        "—";
+        "-";
 
 
     document
@@ -1440,17 +1162,7 @@ function selectOrder(order){
             orderNumber;
 
 
-    /*
-       Payment
-    */
-
-    const payment =
-        String(
-            order.payment_method ||
-            "COD"
-        )
-        .toUpperCase();
-
+    /* PAYMENT */
 
     document
         .getElementById(
@@ -1458,16 +1170,12 @@ function selectOrder(order){
         )
         .textContent =
             "PAYMENT: " +
-            (
-                payment.includes("COD")
-                ? "COD"
-                : payment
+            paymentText(
+                order
             );
 
 
-    /*
-       Barcode
-    */
+    /* BARCODE */
 
     const barcode =
         document.getElementById(
@@ -1479,7 +1187,7 @@ function selectOrder(order){
         "";
 
 
-    if(orderNumber !== "—"){
+    if(orderNumber !== "-"){
 
         JsBarcode(
             barcode,
@@ -1504,21 +1212,15 @@ function selectOrder(order){
     }
 
 
-    /*
-       Show label
-    */
+    /* SHOW */
 
     document
         .getElementById(
-            "labelSection"
+            "preview"
         )
         .style.display =
             "block";
 
-
-    /*
-       Success message
-    */
 
     const status =
         document.getElementById(
@@ -1527,19 +1229,15 @@ function selectOrder(order){
 
 
     status.textContent =
-        "Order selected. Label ready.";
+        "Order selected — label ready.";
 
     status.className =
         "status success";
 
 
-    /*
-       Scroll
-    */
-
     document
         .getElementById(
-            "labelSection"
+            "preview"
         )
         .scrollIntoView({
             behavior:"smooth",
@@ -1549,15 +1247,126 @@ function selectOrder(order){
 }
 
 
-
 /* =====================================================
-   ADDRESS BUILDER
+   FILTERED ORDERS
 ===================================================== */
 
-function makeAddress(order){
+function getFilteredOrders(){
+
+    const value =
+        document
+            .getElementById(
+                "searchInput"
+            )
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    if(!value){
+
+        return allOrders;
+
+    }
+
+
+    return allOrders.filter(
+        function(order){
+
+            return (
+
+                String(
+                    order.order_number || ""
+                )
+                .toLowerCase()
+                .includes(value)
+
+                ||
+
+                String(
+                    order.customer_name || ""
+                )
+                .toLowerCase()
+                .includes(value)
+
+                ||
+
+                String(
+                    order.phone || ""
+                )
+                .toLowerCase()
+                .includes(value)
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   PAYMENT
+===================================================== */
+
+function paymentText(order){
+
+    const payment =
+        order.payment_method ||
+        order.payment_status ||
+        order.payment ||
+        "COD";
+
+
+    const value =
+        String(
+            payment
+        )
+        .trim()
+        .toUpperCase();
+
+
+    if(
+        value.includes("COD") ||
+        value === "CASH ON DELIVERY"
+    ){
+
+        return "COD";
+
+    }
+
+
+    return value || "COD";
+
+}
+
+
+/* =====================================================
+   ADDRESS
+===================================================== */
+
+function buildAddress(order){
 
     /*
-       First use shipping_address
+       Use address first
+    */
+
+    if(
+        order.address &&
+        String(
+            order.address
+        ).trim()
+    ){
+
+        return String(
+            order.address
+        ).trim();
+
+    }
+
+
+    /*
+       Then shipping address
     */
 
     if(
@@ -1575,10 +1384,10 @@ function makeAddress(order){
 
 
     /*
-       Build address from fields
+       Build from checkout fields
     */
 
-    const parts = [
+    return [
 
         order.house_no,
 
@@ -1590,51 +1399,33 @@ function makeAddress(order){
 
         order.pincode
 
-    ];
+    ]
 
+    .filter(
+        function(value){
 
-    const built =
-        parts
-
-        .filter(
-            value =>
+            return (
                 value !== null &&
                 value !== undefined &&
                 String(value).trim() !== ""
-        )
+            );
 
-        .map(
-            value =>
-                String(value).trim()
-        )
+        }
+    )
 
-        .join(", ");
+    .map(
+        function(value){
 
+            return String(
+                value
+            ).trim();
 
-    if(built){
+        }
+    )
 
-        return built;
-
-    }
-
-
-    /*
-       Last fallback
-    */
-
-    if(order.address){
-
-        return String(
-            order.address
-        ).trim();
-
-    }
-
-
-    return "";
+    .join(", ");
 
 }
-
 
 
 /* =====================================================
@@ -1675,14 +1466,13 @@ function escapeHTML(value){
 }
 
 
-
 /* =====================================================
    PRINT
 ===================================================== */
 
 function printLabel(){
 
-    if(!selectedOrderId){
+    if(!selectedOrder){
 
         alert(
             "Please select an order first."
@@ -1698,100 +1488,8 @@ function printLabel(){
 }
 
 
-
 /* =====================================================
-   SEARCH WHILE TYPING
-===================================================== */
-
-document
-    .getElementById(
-        "searchInput"
-    )
-    .addEventListener(
-        "input",
-        function(){
-
-            const search =
-                this.value
-                .trim()
-                .toLowerCase();
-
-
-            const filtered =
-                allOrders.filter(
-                    order => {
-
-                        const number =
-                            String(
-                                order.order_number || ""
-                            )
-                            .toLowerCase();
-
-
-                        const name =
-                            String(
-                                order.customer_name || ""
-                            )
-                            .toLowerCase();
-
-
-                        const phone =
-                            String(
-                                order.phone || ""
-                            )
-                            .toLowerCase();
-
-
-                        return (
-
-                            number.includes(search) ||
-
-                            name.includes(search) ||
-
-                            phone.includes(search)
-
-                        );
-
-                    }
-                );
-
-
-            renderOrders(
-                filtered
-            );
-
-        }
-    );
-
-
-
-/* =====================================================
-   ENTER KEY
-===================================================== */
-
-document
-    .getElementById(
-        "searchInput"
-    )
-    .addEventListener(
-        "keydown",
-        function(event){
-
-            if(
-                event.key === "Enter"
-            ){
-
-                loadOrders();
-
-            }
-
-        }
-    );
-
-
-
-/* =====================================================
-   INITIAL LOAD
+   START
 ===================================================== */
 
 loadOrders();
