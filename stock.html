@@ -1,590 +1,2429 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>Liara Professional™ | Stock Management</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#171717}
+.header{background:#111827;color:#fff;padding:18px 16px}
+.header-inner{max-width:1250px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo-title{font-size:21px;font-weight:500}.logo-sub{margin-top:4px;font-size:11px;color:#aeb5c1}
+.back-btn{text-decoration:none;color:#111827;background:#fff;padding:9px 13px;border-radius:8px;font-size:12px}
+.container{max-width:1250px;margin:20px auto;padding:0 15px}
 
-*{
-    box-sizing:border-box;
-}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:16px}
+.card{background:#fff;border:1px solid #e9ebef;border-radius:12px;padding:15px;box-shadow:0 3px 15px rgba(0,0,0,.04)}
+.card-title{font-size:10px;color:#7b8088;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+.card-number{font-size:22px;font-weight:500}
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f6f8;
-    color:#171717;
-}
+.toolbar,.party-toolbar{background:#fff;border:1px solid #e9ebef;border-radius:12px;padding:11px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;box-shadow:0 3px 15px rgba(0,0,0,.04)}
+.search,.party-search{flex:1;min-width:200px}
+input,select,textarea{border:1px solid #dfe2e7;background:#fff;border-radius:8px;padding:9px 11px;outline:none;font-size:12px}
+input:focus,select:focus,textarea:focus{border-color:#111827}
+button{border:0;border-radius:8px;padding:9px 13px;cursor:pointer;font-size:12px}
+.dark-btn{background:#111827;color:#fff}.light-btn{background:#eef0f3;color:#222}
 
-.header{
-    background:#111827;
-    color:#fff;
-    padding:18px 16px;
-}
+.table-box,.party-table-wrap{background:#fff;border:1px solid #e9ebef;border-radius:12px;overflow:auto;box-shadow:0 3px 15px rgba(0,0,0,.04)}
+table{width:100%;border-collapse:collapse}
+th{background:#fafafa;color:#70757d;text-align:left;padding:12px 9px;font-size:10px;font-weight:500;border-bottom:1px solid #e9ebef}
+td{padding:12px 9px;border-bottom:1px solid #f0f1f3;font-size:11px;vertical-align:middle}
+tr:last-child td{border-bottom:0}
 
-.header-inner{
-    max-width:1200px;
-    margin:auto;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-}
+.status{display:inline-block;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:700}
+.status.ok{background:#dcfce7;color:#166534}
+.status.low{background:#fef3c7;color:#92400e}
+.status.out{background:#fee2e2;color:#991b1b}
 
-.logo-title{
-    font-size:21px;
-    font-weight:500;
-    letter-spacing:.2px;
-}
+.loading,.empty,.error{text-align:center;padding:35px;color:#777}.error{color:#991b1b}
 
-.logo-sub{
-    margin-top:4px;
-    font-size:11px;
-    color:#aeb5c1;
-}
+.stock-tabs{display:flex;gap:8px;margin:22px 0;flex-wrap:wrap}
+.tab{border:1px solid #dfe3e8;background:#fff;padding:11px 16px;border-radius:9px;cursor:pointer;font-weight:700;color:#4b5563}
+.tab.active{background:#111827;color:#fff}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-.back-btn{
-    text-decoration:none;
-    color:#111827;
-    background:#fff;
-    padding:9px 13px;
-    border-radius:8px;
-    font-size:12px;
-}
+.section-head{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;margin-bottom:14px}
+.section-head h2{margin:0 0 5px;font-size:20px}.section-head p{margin:0;color:#6b7280;font-size:12px}
 
-.container{
-    max-width:1200px;
-    margin:20px auto;
-    padding:0 15px;
-}
+.mini-action{border:0;background:#111827;color:#fff;padding:7px 9px;border-radius:7px;cursor:pointer;font-size:11px}
+.mini-action.party{background:#7c4a03}
 
-/* CARDS */
+.party-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.party-stat{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:15px}
+.party-stat small{display:block;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.45px;margin-bottom:7px}
+.party-stat strong{font-size:22px}.party-stat.due strong{color:#b45309}
 
-.cards{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:11px;
-    margin-bottom:16px;
-}
+.party-table{min-width:1050px}
+.party-avatar{width:34px;height:34px;border-radius:10px;background:#111827;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-right:8px}
+.party-name-cell{display:flex;align-items:center}.party-meta{font-size:9px;color:#8a8f98;margin-top:2px}
+.money-due{color:#b45309;font-weight:700}.money-clear{color:#166534;font-weight:700}
+.party-actions{display:flex;gap:5px;flex-wrap:wrap}
+.party-action{padding:7px 9px;font-size:10px;background:#111827;color:#fff}
+.party-action.light{background:#eef0f3;color:#222}.party-action.pay{background:#166534}
+.party-action.delete{background:#fee2e2;color:#991b1b}
+.party-empty{background:#fff;border:1px dashed #d6d9de;border-radius:14px;padding:38px;text-align:center}
+.party-empty h3{margin:8px 0 6px}.party-empty p{margin:0 0 15px;color:#6b7280;font-size:12px}
 
-.card{
-    background:#fff;
-    border:1px solid #e9ebef;
-    border-radius:12px;
-    padding:15px;
-    box-shadow:0 3px 15px rgba(0,0,0,.04);
-}
+.ledger-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.ledger-card{background:#f6f7f9;border-radius:10px;padding:10px}
+.ledger-card small{display:block;color:#777;font-size:9px;margin-bottom:4px}
+.ledger-card strong{font-size:17px}
+.ledger-card.debit strong{color:#b45309}.ledger-card.credit strong{color:#166534}
 
-.card-title{
-    font-size:10px;
-    color:#7b8088;
-    margin-bottom:7px;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-}
+.ledger-list{border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+.ledger-row{display:grid;grid-template-columns:115px 1fr 130px 110px;gap:8px;padding:10px;border-bottom:1px solid #eef0f2;font-size:10px;align-items:center}
+.ledger-row:last-child{border-bottom:0}
+.ledger-type{font-weight:700}.ledger-sale{color:#b45309}.ledger-payment{color:#166534}
+.ledger-note{color:#777;margin-top:3px}
+.running-due{font-weight:700;color:#b45309}.running-clear{font-weight:700;color:#166534}
 
-.card-number{
-    font-size:22px;
-    font-weight:500;
-}
+.party-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px}
+.party-detail-head h3{margin:0 0 4px}.party-detail-head p{margin:0;color:#777;font-size:10px}
+.party-balance-badge{padding:8px 11px;border-radius:10px;background:#fef3c7;color:#92400e;font-weight:700;font-size:11px}
+.party-balance-badge.clear{background:#dcfce7;color:#166534}
 
-/* TOOLBAR */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.58);display:none;align-items:center;justify-content:center;z-index:9999;padding:15px}
+.modal-box{background:#fff;width:450px;max-width:100%;max-height:92vh;overflow:auto;border-radius:14px;padding:20px;box-shadow:0 15px 50px rgba(0,0,0,.2)}
+.modal-title{font-size:19px;font-weight:500;margin-bottom:15px}
+.modal-info{background:#f5f6f8;padding:11px;border-radius:9px;font-size:11px;line-height:1.7;margin-bottom:15px}
+.modal-box label{display:block;font-size:11px;margin:12px 0 6px;color:#555}
+.modal-box input,.modal-box select,.modal-box textarea{width:100%}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.modal-actions{display:flex;gap:8px;margin-top:18px}.modal-actions button{flex:1}
+.save-btn{background:#111827;color:#fff}.cancel-btn{background:#e5e7eb;color:#222}
+.print-btn{background:#fff;border:1px solid #dfe2e7;color:#222}
+.help-text{font-size:9px;color:#888;margin-top:4px}
 
-.toolbar{
-    background:#fff;
-    border:1px solid #e9ebef;
-    border-radius:12px;
-    padding:11px;
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-bottom:16px;
-    box-shadow:0 3px 15px rgba(0,0,0,.04);
-}
-
-.search{
-    flex:1;
-    min-width:200px;
-}
-
-input,
-select{
-    border:1px solid #dfe2e7;
-    background:#fff;
-    border-radius:8px;
-    padding:9px 11px;
-    outline:none;
-    font-size:12px;
-}
-
-input:focus,
-select:focus{
-    border-color:#111827;
-}
-
-button{
-    border:0;
-    border-radius:8px;
-    padding:9px 13px;
-    cursor:pointer;
-    font-size:12px;
-}
-
-.dark-btn{
-    background:#111827;
-    color:#fff;
-}
-
-.light-btn{
-    background:#eef0f3;
-    color:#222;
-}
-
-/* TABLE */
-
-.table-box{
-    background:#fff;
-    border:1px solid #e9ebef;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 3px 15px rgba(0,0,0,.04);
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th{
-    background:#fafafa;
-    color:#70757d;
-    text-align:left;
-    padding:12px 9px;
-    font-size:10px;
-    font-weight:500;
-    border-bottom:1px solid #e9ebef;
-}
-
-td{
-    padding:12px 9px;
-    border-bottom:1px solid #f0f1f3;
-    font-size:11px;
-    vertical-align:middle;
-}
-
-tr:last-child td{
-    border-bottom:0;
-}
-
-.product-name{
-    font-weight:500;
-}
-
-.variant-box{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    background:#f1f3f5;
-    border-radius:7px;
-    padding:5px 7px;
-    font-weight:500;
-}
-
-.stock-main{
-    font-size:14px;
-    font-weight:500;
-}
-
-.stock-unit{
-    color:#777;
-    font-size:9px;
-    margin-left:3px;
-}
-
-.muted{
-    color:#777;
-}
-
-.status{
-    display:inline-block;
-    padding:5px 8px;
-    border-radius:20px;
-    font-size:9px;
-}
-
-.status-good{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.status-low{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.status-out{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.update-btn{
-    background:#111827;
-    color:#fff;
-    padding:7px 10px;
-    font-size:10px;
-}
-
-.loading,
-.empty,
-.error{
-    text-align:center;
-    padding:35px;
-    color:#777;
-}
-
-.error{
-    color:#991b1b;
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.58);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-    padding:15px;
-}
-
-.modal-box{
-    background:#fff;
-    width:420px;
-    max-width:100%;
-    max-height:90vh;
-    overflow:auto;
-    border-radius:14px;
-    padding:20px;
-    box-shadow:0 15px 50px rgba(0,0,0,.2);
-}
-
-.modal-title{
-    font-size:19px;
-    font-weight:500;
-    margin-bottom:15px;
-}
-
-.modal-info{
-    background:#f5f6f8;
-    padding:11px;
-    border-radius:9px;
-    font-size:11px;
-    line-height:1.7;
-    margin-bottom:15px;
-}
-
-.modal-box label{
-    display:block;
-    font-size:11px;
-    margin:12px 0 6px;
-    color:#555;
-}
-
-.modal-box input,
-.modal-box select{
-    width:100%;
-}
-
-.form-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:9px;
-}
-
-.modal-actions{
-    display:flex;
-    gap:8px;
-    margin-top:18px;
-}
-
-.modal-actions button{
-    flex:1;
-}
-
-.save-btn{
-    background:#111827;
-    color:#fff;
-}
-
-.cancel-btn{
-    background:#e5e7eb;
-    color:#222;
-}
-
-.help-text{
-    font-size:9px;
-    color:#888;
-    margin-top:4px;
-}
-
-/* TOAST */
-
-.toast{
-    position:fixed;
-    right:15px;
-    bottom:15px;
-    background:#111827;
-    color:#fff;
-    padding:11px 15px;
-    border-radius:9px;
-    font-size:11px;
-    display:none;
-    z-index:10000;
-}
-
-/* MOBILE */
+.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;padding:12px 16px;border-radius:8px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:10000}
+.toast.show{opacity:1;transform:translateY(0)}
 
 @media(max-width:900px){
-
-    .cards{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-    .table-box{
-        overflow-x:auto;
-    }
-
-    table{
-        min-width:900px;
-    }
-
+.cards{grid-template-columns:repeat(3,1fr)}
+.party-dashboard{grid-template-columns:repeat(2,1fr)}
+.table-box{overflow-x:auto}table{min-width:950px}
 }
-
-@media(max-width:600px){
-
-    .container{
-        padding:0 9px;
-    }
-
-    .cards{
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-    }
-
-    .card{
-        padding:12px;
-    }
-
-    .card-number{
-        font-size:19px;
-    }
-
-    .search{
-        min-width:100%;
-    }
-
+@media(max-width:650px){
+.container{padding:0 9px}.cards{grid-template-columns:1fr 1fr}
+.card{padding:12px}.card-number{font-size:19px}
+.search{min-width:100%}.section-head{flex-direction:column;align-items:flex-start;gap:12px}
+.stock-tabs{overflow:auto;flex-wrap:nowrap}.tab{white-space:nowrap}
+.party-toolbar{flex-direction:column}.party-search{width:100%;min-width:0}
+.ledger-summary{grid-template-columns:1fr 1fr}
+.ledger-row{grid-template-columns:1fr 1fr}
 }
-
 @media(max-width:430px){
-
-    .header{
-        padding:15px 10px;
-    }
-
-    .logo-title{
-        font-size:18px;
-    }
-
-    .back-btn{
-        padding:8px 10px;
-    }
-
-    .form-row{
-        grid-template-columns:1fr;
-    }
-
+.header{padding:15px 10px}.logo-title{font-size:18px}.back-btn{padding:8px 10px}
+.form-row{grid-template-columns:1fr}.party-dashboard{grid-template-columns:1fr 1fr}
 }
-
-
-.stock-tabs{display:flex;gap:8px;margin:22px 0;flex-wrap:wrap}.tab{border:1px solid #dfe3e8;background:#fff;padding:11px 16px;border-radius:9px;cursor:pointer;font-weight:700;color:#4b5563}.tab.active{background:#111827;color:#fff}.tab-panel{display:none}.tab-panel.active{display:block}.section-head{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;margin-bottom:14px}.section-head h2{margin:0 0 5px;font-size:20px}.section-head p{margin:0;color:#6b7280;font-size:12px}.mini-action{border:0;background:#111827;color:#fff;padding:7px 9px;border-radius:7px;cursor:pointer;font-size:11px}.mini-action.party{background:#7c4a03}.status{display:inline-block;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:700}.status.ok{background:#dcfce7;color:#166534}.status.low{background:#fef3c7;color:#92400e}.status.out{background:#fee2e2;color:#991b1b}.party-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.party-card,.empty-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:17px}.party-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.party-top h3{margin:0 0 4px}.party-top span{font-weight:800}.party-note{font-size:11px;color:#777;margin:10px 0}.party-items>div{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee;font-size:11px}.mini-btn{margin:-2px 0 10px;border:1px solid #ddd;background:#fff;padding:7px 10px;border-radius:7px;cursor:pointer}.modal textarea{width:100%;min-height:70px;padding:10px;border:1px solid #ddd;border-radius:8px;resize:vertical}.modal input,.modal select{margin-bottom:12px}.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;padding:12px 16px;border-radius:8px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:100}.toast.show{opacity:1;transform:translateY(0)}
-@media(max-width:900px){.party-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.section-head{flex-direction:column;align-items:flex-start;gap:12px}.party-grid{grid-template-columns:1fr}.stock-tabs{overflow:auto;flex-wrap:nowrap}.tab{white-space:nowrap}}
-.party-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}.party-stat{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:15px}.party-stat small{display:block;color:#6b7280;font-size:10px;text-transform:uppercase;letter-spacing:.45px;margin-bottom:7px}.party-stat strong{font-size:22px}.party-stat.due strong{color:#b45309}.party-toolbar{display:flex;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px;margin-bottom:14px}.party-search{flex:1;min-width:220px}.party-table-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:14px;overflow:auto}.party-table{min-width:980px}.party-avatar{width:34px;height:34px;border-radius:10px;background:#111827;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-right:8px}.party-name-cell{display:flex;align-items:center}.party-meta{font-size:9px;color:#8a8f98;margin-top:2px}.money-due{color:#b45309;font-weight:700}.money-clear{color:#166534;font-weight:700}.party-actions{display:flex;gap:5px;flex-wrap:wrap}.party-action{padding:7px 9px;font-size:10px;background:#111827;color:#fff}.party-action.light{background:#eef0f3;color:#222}.party-action.pay{background:#166534}.party-empty{background:#fff;border:1px dashed #d6d9de;border-radius:14px;padding:38px;text-align:center}.party-empty h3{margin:8px 0 6px}.party-empty p{margin:0 0 15px;color:#6b7280;font-size:12px}.ledger-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.ledger-card{background:#f6f7f9;border-radius:10px;padding:10px}.ledger-card small{display:block;color:#777;font-size:9px;margin-bottom:4px}.ledger-card strong{font-size:17px}.ledger-list{border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}.ledger-row{display:grid;grid-template-columns:100px 1fr 150px;gap:8px;padding:10px;border-bottom:1px solid #eef0f2;font-size:10px;align-items:center}.ledger-row:last-child{border-bottom:0}.ledger-type{font-weight:700}.ledger-sale{color:#b45309}.ledger-payment{color:#166534}.ledger-note{color:#777}.party-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px}.party-detail-head h3{margin:0 0 4px}.party-detail-head p{margin:0;color:#777;font-size:10px}.party-balance-badge{padding:8px 11px;border-radius:10px;background:#fef3c7;color:#92400e;font-weight:700;font-size:11px}.party-balance-badge.clear{background:#dcfce7;color:#166534}.print-btn{background:#fff;border:1px solid #dfe2e7;color:#222}@media(max-width:900px){.party-dashboard{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.party-dashboard{grid-template-columns:1fr 1fr}.ledger-summary{grid-template-columns:1fr}.party-toolbar{flex-direction:column}.party-search{width:100%;min-width:0}}
-
 </style>
+
 </head>
 
 <body>
-<div class="header"><div class="header-inner">
-  <div><div class="logo-title">Stock Management</div><div class="logo-sub">Liara Professional™ • Warehouse → Online / Party</div></div>
-  <a href="admin.html" class="back-btn">← Admin</a>
-</div></div>
 
-<div class="container">
-  <div class="cards">
-    <div class="card"><div class="card-title">Products / Variants</div><div class="card-number" id="totalVariants">0</div></div>
-    <div class="card"><div class="card-title">🏭 Warehouse</div><div class="card-number" id="totalWarehouse">0</div></div>
-    <div class="card"><div class="card-title">🌐 Online Available</div><div class="card-number" id="totalOnlineBalance">0</div></div>
-    <div class="card"><div class="card-title">🤝 Party Given</div><div class="card-number" id="totalPartyGiven">0</div></div>
-    <div class="card"><div class="card-title">Total Out</div><div class="card-number" id="totalOut">0</div></div>
-  </div>
-
-  <div class="stock-tabs">
-    <button class="tab active" data-tab="overview" onclick="switchTab('overview')">📊 Overview</button>
-    <button class="tab" data-tab="warehouse" onclick="switchTab('warehouse')">🏭 Warehouse</button>
-    <button class="tab" data-tab="online" onclick="switchTab('online')">🌐 Online Website</button>
-    <button class="tab" data-tab="party" onclick="switchTab('party')">🤝 Party</button>
-  </div>
-
-  <div id="overview" class="tab-panel active">
-    <div class="toolbar"><input id="search" class="search" type="text" placeholder="Search product..." oninput="render()"><select id="unitFilter" onchange="render()"><option value="all">All Units</option><option value="g">Gram</option><option value="kg">KG</option><option value="ml">ML</option><option value="ltr">Litre</option><option value="pcs">PCS</option></select><button class="dark-btn" onclick="openAddStock()">+ Add Warehouse Stock</button><button class="light-btn" onclick="loadData()">Refresh</button></div>
-    <div class="table-box"><table><thead><tr><th>#</th><th>Product</th><th>Size</th><th>Warehouse</th><th>Online Given</th><th>Online Sold</th><th>Online Balance</th><th>Party Given</th><th>Total Available</th><th>Status</th></tr></thead><tbody id="stockBody"><tr><td colspan="10" class="loading">Loading stock...</td></tr></tbody></table></div>
-  </div>
-
-  <div id="warehouse" class="tab-panel">
-    <div class="section-head"><div><h2>🏭 Warehouse</h2><p>All fresh stock enters here first. Warehouse is the source for every transfer.</p></div><button class="dark-btn" onclick="openAddStock()">+ Add Stock</button></div>
-    <div class="table-box"><table><thead><tr><th>Product</th><th>Size</th><th>Warehouse Stock</th><th>Online Sent</th><th>Party Sent</th><th>Remaining Warehouse</th><th>Action</th></tr></thead><tbody id="warehouseBody"></tbody></table></div>
-  </div>
-
-  <div id="online" class="tab-panel">
-    <div class="section-head"><div><h2>🌐 Online Website</h2><p>Online stock can only be sent from available Warehouse stock.</p></div></div>
-    <div class="table-box"><table><thead><tr><th>Product</th><th>Size</th><th>Sent from Warehouse</th><th>Sold Online</th><th>Website Balance</th><th>Action</th></tr></thead><tbody id="onlineBody"></tbody></table></div>
-  </div>
-
-  <div id="party" class="tab-panel">
-    <div class="section-head"><div><h2>🤝 Party Accounts</h2><p>Professional party ledger — stock given, billing, payments and outstanding balance.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="light-btn" onclick="loadParties()">↻ Refresh</button><button class="dark-btn" onclick="openPartyCreateOnly()">＋ New Party</button><button class="dark-btn" onclick="openPartyModal()">📦 Create & Give Stock</button></div></div>
-    <div class="party-dashboard"><div class="party-stat"><small>Total Parties</small><strong id="partyCount">0</strong></div><div class="party-stat"><small>Stock With Parties</small><strong id="partyStockTotal">0 PCS</strong></div><div class="party-stat"><small>Total Billing</small><strong id="partyBillingTotal">₹0</strong></div><div class="party-stat due"><small>Outstanding</small><strong id="partyDueTotal">₹0</strong></div></div>
-    <div class="party-toolbar"><input id="partySearch" class="party-search" type="text" placeholder="Search party name or mobile..." oninput="renderParties()"><select id="partyStatusFilter" onchange="renderParties()"><option value="all">All Accounts</option><option value="due">Outstanding</option><option value="clear">Settled</option></select></div>
-    <div id="partyList"></div>
-  </div>
+<div class="header">
+<div class="header-inner">
+<div>
+<div class="logo-title">Stock Management</div>
+<div class="logo-sub">Liara Professional™ • Warehouse → Online / Party</div>
+</div>
+<a href="admin.html" class="back-btn">← Admin</a>
+</div>
 </div>
 
-<div class="modal" id="stockModal"><div class="modal-box">
-  <div class="modal-title" id="stockModalTitle">Add Warehouse Stock</div><div class="modal-info">Stock is added to Warehouse first. You can then send it to Online or Party.</div>
-  <label>Product</label><select id="productSelect"></select>
-  <div class="form-row"><div><label>Size</label><input id="sizeInput" type="number" min="0" step="0.01" placeholder="100"></div><div><label>Unit</label><select id="unitInput"><option value="g">Gram (g)</option><option value="kg">KG</option><option value="ml">ML</option><option value="ltr">Litre</option><option value="pcs">PCS</option></select></div></div>
-  <label>Quantity to Add — PCS</label><input id="warehouseAddInput" type="number" min="1" step="1" placeholder="20">
-  <div class="modal-actions"><button class="save-btn" onclick="saveWarehouseStock()">Save Stock</button><button class="cancel-btn" onclick="closeModal('stockModal')">Cancel</button></div>
-</div></div>
+<div class="container">
 
-<div class="modal" id="transferModal"><div class="modal-box">
-  <div class="modal-title" id="transferTitle">Send Stock</div><div class="modal-info" id="transferInfo"></div>
-  <input type="hidden" id="transferVariantId"><input type="hidden" id="transferType">
-  <div id="partyPickerWrap"><label>Party</label><select id="partySelect"></select><button class="mini-btn" onclick="openPartyCreateOnly()">＋ New Party</button></div>
-  <label>Quantity — PCS</label><input id="transferQty" type="number" min="1" step="1" placeholder="1">
-  <div class="modal-actions"><button class="save-btn" onclick="saveTransfer()">Send from Warehouse</button><button class="cancel-btn" onclick="closeModal('transferModal')">Cancel</button></div>
-</div></div>
+<div class="cards">
+<div class="card"><div class="card-title">Products / Variants</div><div class="card-number" id="totalVariants">0</div></div>
+<div class="card"><div class="card-title">🏭 Warehouse</div><div class="card-number" id="totalWarehouse">0</div></div>
+<div class="card"><div class="card-title">🌐 Online Available</div><div class="card-number" id="totalOnlineBalance">0</div></div>
+<div class="card"><div class="card-title">🤝 Party Given</div><div class="card-number" id="totalPartyGiven">0</div></div>
+<div class="card"><div class="card-title">Total Out</div><div class="card-number" id="totalOut">0</div></div>
+</div>
 
-<div class="modal" id="partyModal"><div class="modal-box">
-  <div class="modal-title">Create Party & Give Stock</div><div class="modal-info">The quantity will be deducted from Warehouse immediately.</div>
-  <label>Party Name</label><input id="partyName" type="text" placeholder="Party name">
-  <label>Mobile</label><input id="partyPhone" type="text" maxlength="15" placeholder="Mobile number">
-  <label>Address / Note</label><textarea id="partyNote" placeholder="Optional"></textarea>
-  <label>Product</label><select id="partyProductSelect"></select>
-  <div class="form-row"><div><label>Size</label><select id="partyVariantSelect"></select></div><div><label>Quantity — PCS</label><input id="partyQty" type="number" min="1" step="1" placeholder="1"></div></div>
-  <div class="modal-actions"><button class="save-btn" onclick="createPartyAndGive()">Create & Give Stock</button><button class="cancel-btn" onclick="closeModal('partyModal')">Cancel</button></div>
-</div></div>
+<div class="stock-tabs">
+<button class="tab active" data-tab="overview" onclick="switchTab('overview')">📊 Overview</button>
+<button class="tab" data-tab="warehouse" onclick="switchTab('warehouse')">🏭 Warehouse</button>
+<button class="tab" data-tab="online" onclick="switchTab('online')">🌐 Online Website</button>
+<button class="tab" data-tab="party" onclick="switchTab('party')">🤝 Party Accounts</button>
+</div>
 
-<div class="modal" id="partyCreateOnlyModal"><div class="modal-box">
-  <div class="modal-title">Create Party</div><label>Party Name</label><input id="partyOnlyName" type="text" placeholder="Party name"><label>Mobile</label><input id="partyOnlyPhone" type="text" placeholder="Mobile number"><label>Address / Note</label><textarea id="partyOnlyNote"></textarea>
-  <div class="modal-actions"><button class="save-btn" onclick="createPartyOnly()">Create Party</button><button class="cancel-btn" onclick="closeModal('partyCreateOnlyModal')">Cancel</button></div>
-</div></div>
+<div id="overview" class="tab-panel active">
+<div class="toolbar">
+<input id="search" class="search" type="text" placeholder="Search product..." oninput="render()">
+<select id="unitFilter" onchange="render()">
+<option value="all">All Units</option>
+<option value="g">Gram</option>
+<option value="kg">KG</option>
+<option value="ml">ML</option>
+<option value="ltr">Litre</option>
+<option value="pcs">PCS</option>
+</select>
+<button class="dark-btn" onclick="openAddStock()">+ Add Warehouse Stock</button>
+<button class="light-btn" onclick="loadData()">Refresh</button>
+</div>
 
-<div class="modal" id="partyDetailModal"><div class="modal-box" style="width:720px"><div id="partyDetailContent"></div></div></div>
-<div class="modal" id="partyPaymentModal"><div class="modal-box"><div class="modal-title">💳 Record Payment</div><div class="modal-info" id="paymentPartyInfo"></div><input type="hidden" id="paymentPartyId"><label>Amount Received — ₹</label><input id="paymentAmount" type="number" min="0.01" step="0.01" placeholder="0.00"><label>Payment Note</label><textarea id="paymentNote" placeholder="Cash / UPI / Bank transfer / other note"></textarea><div class="modal-actions"><button class="save-btn" onclick="savePartyPayment()">Save Payment</button><button class="cancel-btn" onclick="closeModal('partyPaymentModal')">Cancel</button></div></div></div>
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>#</th><th>Product</th><th>Size</th><th>Warehouse</th>
+<th>Online Given</th><th>Online Sold</th><th>Online Balance</th>
+<th>Party Given</th><th>Total Available</th><th>Status</th>
+</tr>
+</thead>
+<tbody id="stockBody">
+<tr><td colspan="10" class="loading">Loading stock...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="warehouse" class="tab-panel">
+<div class="section-head">
+<div><h2>🏭 Warehouse</h2><p>All fresh stock enters here first.</p></div>
+<button class="dark-btn" onclick="openAddStock()">+ Add Stock</button>
+</div>
+
+<div class="table-box">
+<table>
+<thead><tr>
+<th>Product</th><th>Size</th><th>Warehouse Stock</th>
+<th>Online Sent</th><th>Party Sent</th><th>Remaining Warehouse</th><th>Action</th>
+</tr></thead>
+<tbody id="warehouseBody"></tbody>
+</table>
+</div>
+</div>
+
+<div id="online" class="tab-panel">
+<div class="section-head">
+<div><h2>🌐 Online Website</h2><p>Online stock is transferred from Warehouse.</p></div>
+</div>
+
+<div class="table-box">
+<table>
+<thead><tr>
+<th>Product</th><th>Size</th><th>Sent from Warehouse</th>
+<th>Sold Online</th><th>Website Balance</th><th>Action</th>
+</tr></thead>
+<tbody id="onlineBody"></tbody>
+</table>
+</div>
+</div>
+
+<div id="party" class="tab-panel">
+
+<div class="section-head">
+<div>
+<h2>🤝 Party Accounts</h2>
+<p>Bank-style party ledger — stock, billing, payments and outstanding balance.</p>
+</div>
+
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="light-btn" onclick="loadParties()">↻ Refresh</button>
+<button class="dark-btn" onclick="openPartyCreateOnly()">＋ New Party</button>
+<button class="dark-btn" onclick="openPartyModal()">📦 Create & Give Stock</button>
+</div>
+</div>
+
+<div class="party-dashboard">
+<div class="party-stat">
+<small>Total Parties</small>
+<strong id="partyCount">0</strong>
+</div>
+
+<div class="party-stat">
+<small>Stock With Parties</small>
+<strong id="partyStockTotal">0 PCS</strong>
+</div>
+
+<div class="party-stat">
+<small>Total Billing</small>
+<strong id="partyBillingTotal">₹0</strong>
+</div>
+
+<div class="party-stat due">
+<small>Outstanding</small>
+<strong id="partyDueTotal">₹0</strong>
+</div>
+</div>
+
+<div class="party-toolbar">
+<input id="partySearch" class="party-search" type="text" placeholder="Search party name or mobile..." oninput="renderParties()">
+<select id="partyStatusFilter" onchange="renderParties()">
+<option value="all">All Accounts</option>
+<option value="due">Outstanding</option>
+<option value="clear">Settled</option>
+</select>
+</div>
+
+<div id="partyList"></div>
+</div>
+
+</div>
+
+<!-- ADD STOCK -->
+
+<div class="modal" id="stockModal">
+<div class="modal-box">
+<div class="modal-title">Add Warehouse Stock</div>
+<div class="modal-info">Fresh stock is added to Warehouse first.</div>
+
+<label>Product</label> <select id="productSelect"></select>
+
+<div class="form-row">
+<div>
+<label>Size</label>
+<input id="sizeInput" type="number" min="0" step="0.01" placeholder="100">
+</div>
+<div>
+<label>Unit</label>
+<select id="unitInput">
+<option value="g">Gram (g)</option>
+<option value="kg">KG</option>
+<option value="ml">ML</option>
+<option value="ltr">Litre</option>
+<option value="pcs">PCS</option>
+</select>
+</div>
+</div>
+
+<label>Quantity to Add — PCS</label> <input id="warehouseAddInput" type="number" min="1" step="1" placeholder="20">
+
+<div class="modal-actions">
+<button class="save-btn" onclick="saveWarehouseStock()">Save Stock</button>
+<button class="cancel-btn" onclick="closeModal('stockModal')">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- TRANSFER -->
+
+<div class="modal" id="transferModal">
+<div class="modal-box">
+<div class="modal-title" id="transferTitle">Send Stock</div>
+<div class="modal-info" id="transferInfo"></div>
+
+<input type="hidden" id="transferVariantId">
+<input type="hidden" id="transferType">
+
+<div id="partyPickerWrap">
+<label>Party</label>
+<select id="partySelect"></select>
+<button class="mini-action" onclick="openPartyCreateOnly()">＋ New Party</button>
+</div>
+
+<div id="partyBillingFields">
+<label>Bill Amount — ₹</label>
+<input id="partyBillAmount" type="number" min="0" step="0.01" placeholder="0">
+
+<label>Paid Now — ₹</label> <input id="partyPaidAmount" type="number" min="0" step="0.01" placeholder="0">
+
+<label>Billing Note</label>
+
+<textarea id="partyBillingNote" placeholder="Sale / invoice / note"></textarea>
+
+<div class="help-text">
+Bill = party da debit. Paid = party ton received payment.
+</div>
+</div>
+
+<label>Quantity — PCS</label> <input id="transferQty" type="number" min="1" step="1" placeholder="1">
+
+<div class="modal-actions">
+<button class="save-btn" onclick="saveTransfer()">Save Transfer</button>
+<button class="cancel-btn" onclick="closeModal('transferModal')">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- CREATE PARTY + STOCK -->
+
+<div class="modal" id="partyModal">
+<div class="modal-box">
+<div class="modal-title">Create Party & Give Stock</div>
+<div class="modal-info">Party account will be created and stock deducted from Warehouse.</div>
+
+<label>Party Name</label> <input id="partyName" type="text" placeholder="Party name">
+
+<label>Mobile</label> <input id="partyPhone" type="text" maxlength="15" placeholder="Mobile number">
+
+<label>Address / Note</label>
+
+<textarea id="partyNote" placeholder="Optional"></textarea>
+
+<label>Product</label> <select id="partyProductSelect"></select>
+
+<div class="form-row">
+<div>
+<label>Size</label>
+<select id="partyVariantSelect"></select>
+</div>
+
+<div>
+<label>Quantity — PCS</label>
+<input id="partyQty" type="number" min="1" step="1" placeholder="1">
+</div>
+</div>
+
+<label>Bill Amount — ₹</label> <input id="partyInitialBill" type="number" min="0" step="0.01" placeholder="0">
+
+<label>Paid Now — ₹</label> <input id="partyInitialPaid" type="number" min="0" step="0.01" placeholder="0">
+
+<label>Note</label>
+
+<textarea id="partyInitialNote" placeholder="Invoice / sale note"></textarea>
+
+<div class="modal-actions">
+<button class="save-btn" onclick="createPartyAndGive()">Create & Give Stock</button>
+<button class="cancel-btn" onclick="closeModal('partyModal')">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- CREATE PARTY ONLY -->
+
+<div class="modal" id="partyCreateOnlyModal">
+<div class="modal-box">
+<div class="modal-title">Create Party Account</div>
+
+<label>Party Name</label> <input id="partyOnlyName" type="text" placeholder="Party name">
+
+<label>Mobile</label> <input id="partyOnlyPhone" type="text" placeholder="Mobile number">
+
+<label>Address / Note</label>
+
+<textarea id="partyOnlyNote"></textarea>
+
+<label>Opening Balance — ₹</label> <input id="partyOpeningBalance" type="number" min="0" step="0.01" placeholder="0">
+
+<div class="modal-actions">
+<button class="save-btn" onclick="createPartyOnly()">Create Party</button>
+<button class="cancel-btn" onclick="closeModal('partyCreateOnlyModal')">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- PARTY DETAIL -->
+
+<div class="modal" id="partyDetailModal">
+<div class="modal-box" style="width:850px">
+<div id="partyDetailContent"></div>
+</div>
+</div>
+
+<!-- PAYMENT -->
+
+<div class="modal" id="partyPaymentModal">
+<div class="modal-box">
+<div class="modal-title">💳 Record Payment</div>
+<div class="modal-info" id="paymentPartyInfo"></div>
+
+<input type="hidden" id="paymentPartyId">
+
+<label>Amount Received — ₹</label> <input id="paymentAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+
+<label>Payment Method</label> <select id="paymentMethod">
+
+<option>Cash</option>
+<option>UPI</option>
+<option>Bank Transfer</option>
+<option>Cheque</option>
+<option>Other</option>
+</select>
+
+<label>Payment Note</label>
+
+<textarea id="paymentNote" placeholder="Payment details"></textarea>
+
+<div class="modal-actions">
+<button class="save-btn" onclick="savePartyPayment()">Save Payment</button>
+<button class="cancel-btn" onclick="closeModal('partyPaymentModal')">Cancel</button>
+</div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
 const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const PRODUCT_TABLE="products", VARIANT_TABLE="product_stock_variants";
-let products=[],variants=[],parties=[],activeTab="overview";
-function number(v){const n=Number(v);return Number.isFinite(n)?n:0}
-function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function getName(p){return p?.name||p?.product_name||"Product"}
-function websiteBalance(v){return Math.max(0,number(v.online_given)-number(v.online_sold))}
-function partyGiven(v){return number(v.offline_given)}
-function totalAvailable(v){return Math.max(0,number(v.warehouse_stock))}
-function toast(msg){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2500)}
-function switchTab(tab){activeTab=tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.toggle('active',x.id===tab));if(tab==='party')loadParties();render()}
+
+const supabaseClient=window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+const PRODUCT_TABLE="products";
+const VARIANT_TABLE="product_stock_variants";
+
+let products=[];
+let variants=[];
+let parties=[];
+let activeTab="overview";
+
+function number(v){
+const n=Number(v);
+return Number.isFinite(n)?n:0;
+}
+
+function safe(v){
+return String(v??"").replace(/[&<>"']/g,c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#039;'
+}[c]));
+}
+
+function getName(p){
+return p?.name||p?.product_name||"Product";
+}
+
+function money(v){
+return "₹"+number(v).toLocaleString("en-IN",{
+minimumFractionDigits:0,
+maximumFractionDigits:2
+});
+}
+
+function websiteBalance(v){
+return Math.max(
+0,
+number(v.online_given)-number(v.online_sold)
+);
+}
+
+function partyGiven(v){
+return number(v.offline_given);
+}
+
+function toast(msg){
+const e=document.getElementById("toast");
+e.textContent=msg;
+e.classList.add("show");
+setTimeout(()=>e.classList.remove("show"),2500);
+}
+
+function closeModal(id){
+document.getElementById(id).style.display="none";
+}
+
+function productFor(v){
+return products.find(
+p=>String(p.id)===String(v.product_id)
+);
+}
+
+function label(v){
+const p=productFor(v);
+return `${getName(p)} • ${number(v.size)} ${safe(v.unit||"pcs")}`;
+}
+
+function switchTab(tab){
+activeTab=tab;
+
+document.querySelectorAll(".tab").forEach(x=>{
+x.classList.toggle(
+"active",
+x.dataset.tab===tab
+);
+});
+
+document.querySelectorAll(".tab-panel").forEach(x=>{
+x.classList.toggle(
+"active",
+x.id===tab
+);
+});
+
+if(tab==="party"){
+loadParties();
+}
+
+render();
+}
+
 async function loadData(){
- const body=document.getElementById('stockBody');body.innerHTML='<tr><td colspan="10" class="loading">Loading stock...</td></tr>';
- try{
-  const [p,v]=await Promise.all([supabaseClient.from(PRODUCT_TABLE).select('*').order('id',{ascending:false}),supabaseClient.from(VARIANT_TABLE).select('*').order('id',{ascending:false})]);
-  if(p.error)throw p.error;if(v.error)throw v.error;products=p.data||[];variants=v.data||[];
-  await loadParties();render();
- }catch(e){body.innerHTML='<tr><td colspan="10" class="error">'+safe(e.message||'Unable to load stock.')+'</td></tr>'}
+
+const body=document.getElementById("stockBody");
+
+body.innerHTML=
+'<tr><td colspan="10" class="loading">Loading stock...</td></tr>';
+
+try{
+
+const [p,v]=await Promise.all([
+
+supabaseClient
+.from(PRODUCT_TABLE)
+.select("*")
+.order("id",{ascending:false}),
+
+supabaseClient
+.from(VARIANT_TABLE)
+.select("*")
+.order("id",{ascending:false})
+
+]);
+
+if(p.error)throw p.error;
+if(v.error)throw v.error;
+
+products=p.data||[];
+variants=v.data||[];
+
+render();
+
+await loadParties();
+
+}catch(e){
+
+body.innerHTML=
+'<tr><td colspan="10" class="error">'+
+safe(e.message||"Unable to load stock.")+
+"</td></tr>";
+
 }
-function productFor(v){return products.find(p=>String(p.id)===String(v.product_id))}
-function label(v){const p=productFor(v);return `${getName(p)} • ${number(v.size)} ${safe(v.unit||'pcs')}`}
+}
+
 function render(){
- const q=(document.getElementById('search')?.value||'').toLowerCase().trim(), uf=document.getElementById('unitFilter')?.value||'all';
- const filtered=variants.filter(v=>{const p=productFor(v);return (!q||getName(p).toLowerCase().includes(q))&&(uf==='all'||String(v.unit||'').toLowerCase()===uf)});
- let html='', wh='', on='';let wt=0,og=0,os=0,pg=0,out=0;
- filtered.forEach((v,i)=>{const w=number(v.warehouse_stock),g=number(v.online_given),s=number(v.online_sold),b=websiteBalance(v),pgv=partyGiven(v);wt+=w;og+=g;os+=s;pg+=pgv;out+=s+pgv;const status=w<=0?'Out':w<5?'Low':'OK';
- html+=`<tr><td>${i+1}</td><td><strong>${safe(getName(productFor(v)))}</strong></td><td>${number(v.size)} ${safe(v.unit||'')}</td><td><strong>${w}</strong> PCS</td><td>${g} PCS</td><td>${s} PCS</td><td><strong>${b}</strong> PCS</td><td>${pgv} PCS</td><td>${w} PCS</td><td><span class="status ${status.toLowerCase()}">${status}</span></td></tr>`;
- wh+=`<tr><td>${safe(getName(productFor(v)))}</td><td>${number(v.size)} ${safe(v.unit||'')}</td><td><strong>${w}</strong> PCS</td><td>${g} PCS</td><td>${pgv} PCS</td><td><strong>${w}</strong> PCS</td><td><button class="mini-action" onclick="openTransfer(${v.id},'online')">Send Online</button> <button class="mini-action party" onclick="openTransfer(${v.id},'party')">Send Party</button></td></tr>`;
- on+=`<tr><td>${safe(getName(productFor(v)))}</td><td>${number(v.size)} ${safe(v.unit||'')}</td><td>${g} PCS</td><td>${s} PCS</td><td><strong>${b}</strong> PCS</td><td><button class="mini-action" onclick="markOnlineSold(${v.id})">Mark Sale</button></td></tr>`;
- });
- document.getElementById('stockBody').innerHTML=html||'<tr><td colspan="10" class="empty">No variants found.</td></tr>';
- document.getElementById('warehouseBody').innerHTML=wh||'<tr><td colspan="7" class="empty">No stock variants.</td></tr>';
- document.getElementById('onlineBody').innerHTML=on||'<tr><td colspan="6" class="empty">No online stock.</td></tr>';
- document.getElementById('totalVariants').textContent=filtered.length;document.getElementById('totalWarehouse').textContent=wt;document.getElementById('totalOnlineBalance').textContent=Math.max(0,og-os);document.getElementById('totalPartyGiven').textContent=pg;document.getElementById('totalOut').textContent=out;
+
+const q=
+(document.getElementById("search")?.value||"")
+.toLowerCase()
+.trim();
+
+const uf=
+document.getElementById("unitFilter")?.value||"all";
+
+const filtered=variants.filter(v=>{
+
+const p=productFor(v);
+
+return(
+(!q||getName(p).toLowerCase().includes(q))&&
+(uf==="all"||
+String(v.unit||"").toLowerCase()===uf)
+);
+
+});
+
+let html="";
+let wh="";
+let on="";
+
+let wt=0;
+let og=0;
+let os=0;
+let pg=0;
+let out=0;
+
+filtered.forEach((v,i)=>{
+
+const w=number(v.warehouse_stock);
+const g=number(v.online_given);
+const s=number(v.online_sold);
+const b=websiteBalance(v);
+const pgv=partyGiven(v);
+
+wt+=w;
+og+=g;
+os+=s;
+pg+=pgv;
+out+=s+pgv;
+
+const status=
+w<=0
+?"Out"
+:w<5
+?"Low"
+:"OK";
+
+html+=`
+<tr>
+<td>${i+1}</td>
+<td><strong>${safe(getName(productFor(v)))}</strong></td>
+<td>${number(v.size)} ${safe(v.unit||"")}</td>
+<td><strong>${w}</strong> PCS</td>
+<td>${g} PCS</td>
+<td>${s} PCS</td>
+<td><strong>${b}</strong> PCS</td>
+<td>${pgv} PCS</td>
+<td><strong>${w}</strong> PCS</td>
+<td>
+<span class="status ${status.toLowerCase()}">
+${status}
+</span>
+</td>
+</tr>`;
+
+wh+=`
+<tr>
+<td>${safe(getName(productFor(v)))}</td>
+<td>${number(v.size)} ${safe(v.unit||"")}</td>
+<td><strong>${w}</strong> PCS</td>
+<td>${g} PCS</td>
+<td>${pgv} PCS</td>
+<td><strong>${w}</strong> PCS</td>
+<td>
+<button class="mini-action"
+onclick="openTransfer(${v.id},'online')">
+Send Online
+</button>
+
+<button class="mini-action party"
+onclick="openTransfer(${v.id},'party')">
+Send Party
+</button>
+</td>
+</tr>`;
+
+on+=`
+<tr>
+<td>${safe(getName(productFor(v)))}</td>
+<td>${number(v.size)} ${safe(v.unit||"")}</td>
+<td>${g} PCS</td>
+<td>${s} PCS</td>
+<td><strong>${b}</strong> PCS</td>
+<td>
+<button class="mini-action"
+onclick="markOnlineSold(${v.id})">
+Mark Sale
+</button>
+</td>
+</tr>`;
+
+});
+
+document.getElementById("stockBody").innerHTML=
+html||
+'<tr><td colspan="10" class="empty">No variants found.</td></tr>';
+
+document.getElementById("warehouseBody").innerHTML=
+wh||
+'<tr><td colspan="7" class="empty">No stock variants.</td></tr>';
+
+document.getElementById("onlineBody").innerHTML=
+on||
+'<tr><td colspan="6" class="empty">No online stock.</td></tr>';
+
+document.getElementById("totalVariants").textContent=
+filtered.length;
+
+document.getElementById("totalWarehouse").textContent=wt;
+
+document.getElementById("totalOnlineBalance").textContent=
+Math.max(0,og-os);
+
+document.getElementById("totalPartyGiven").textContent=pg;
+
+document.getElementById("totalOut").textContent=out;
 }
-function fillProductSelect(id='productSelect'){const s=document.getElementById(id);s.innerHTML=products.map(p=>`<option value="${p.id}">${safe(getName(p))}</option>`).join('')}
-function openAddStock(){fillProductSelect();document.getElementById('stockModalTitle').textContent='Add Warehouse Stock';document.getElementById('warehouseAddInput').value='';document.getElementById('sizeInput').value='';document.getElementById('unitInput').value='g';document.getElementById('stockModal').style.display='flex'}
-async function saveWarehouseStock(){const productId=document.getElementById('productSelect').value,size=number(document.getElementById('sizeInput').value),unit=document.getElementById('unitInput').value,qty=number(document.getElementById('warehouseAddInput').value);if(!productId||size<=0||!Number.isInteger(qty)||qty<=0){alert('Product, valid size and quantity required.');return}try{let v=variants.find(x=>String(x.product_id)===String(productId)&&number(x.size)===size&&String(x.unit).toLowerCase()===unit.toLowerCase());let prev=number(v?.warehouse_stock);if(v){const r=await supabaseClient.from(VARIANT_TABLE).update({warehouse_stock:prev+qty}).eq('id',v.id);if(r.error)throw r.error;await addEntry(productId,qty,unit,'warehouse_add',null,prev,prev+qty,'Warehouse stock added')}else{const r=await supabaseClient.from(VARIANT_TABLE).insert({product_id:Number(productId),size,unit,warehouse_stock:qty,online_given:0,online_sold:0,offline_given:0}).select().single();if(r.error)throw r.error;await addEntry(productId,qty,unit,'warehouse_add',null,0,qty,'Warehouse stock added')}closeModal('stockModal');toast('Warehouse stock added.');await loadData()}catch(e){alert('Save failed: '+e.message)}}
-async function addEntry(productId,qty,unit,type,partyId,prev,newStock,note){const p=products.find(x=>String(x.id)===String(productId));const payload={product_id:Number(productId),product_name:getName(p),quantity:qty,unit,type,source:'warehouse',party_id:partyId||null,party_name:partyId?(parties.find(x=>String(x.id)===String(partyId))?.name||null):null,previous_stock:prev,new_stock:newStock,note,destination:type==='send_online'?'online':type==='send_party'?'party':null,source_location:'warehouse'};const r=await supabaseClient.from('stock_entries').insert(payload);if(r.error)console.warn('Stock history insert failed',r.error.message)}
-function openTransfer(id,type){const v=variants.find(x=>String(x.id)===String(id));if(!v)return;document.getElementById('transferVariantId').value=id;document.getElementById('transferType').value=type;document.getElementById('transferQty').value='';document.getElementById('transferInfo').textContent=label(v)+' • Warehouse available: '+number(v.warehouse_stock)+' PCS';document.getElementById('transferTitle').textContent=type==='online'?'Send to Online Website':'Send to Party';document.getElementById('partyPickerWrap').style.display=type==='party'?'block':'none';document.getElementById('partyBillingFields').style.display=type==='party'?'block':'none';document.getElementById('partyBillAmount').value='';document.getElementById('partyPaidAmount').value='';if(type==='party')fillPartySelect();document.getElementById('transferModal').style.display='flex'}
-function fillPartySelect(){const s=document.getElementById('partySelect');s.innerHTML=parties.map(p=>`<option value="${p.id}">${safe(p.name)}${p.phone?' • '+safe(p.phone):''}</option>`).join('')||'<option value="">No party — create one</option>'}
-async function saveTransfer(){const id=document.getElementById('transferVariantId').value,type=document.getElementById('transferType').value,qty=number(document.getElementById('transferQty').value),partyId=document.getElementById('partySelect').value,bill=number(document.getElementById('partyBillAmount')?.value),paid=number(document.getElementById('partyPaidAmount')?.value);const v=variants.find(x=>String(x.id)===String(id));if(!v||!Number.isInteger(qty)||qty<=0){alert('Valid quantity required.');return}if(qty>number(v.warehouse_stock)){alert('Warehouse ch ena stock nahi hai. Sirf available warehouse stock hi send ho sakda.');return}if(type==='party'&&!partyId){alert('Pehla party create karo.');return}if(type==='party'&&paid>bill){alert('Paid amount bill ton zyada nahi ho sakda.');return}try{const update={warehouse_stock:number(v.warehouse_stock)-qty};if(type==='online')update.online_given=number(v.online_given)+qty;else update.offline_given=number(v.offline_given)+qty;const r=await supabaseClient.from(VARIANT_TABLE).update(update).eq('id',v.id);if(r.error)throw r.error;await addEntry(v.product_id,qty,v.unit,type==='online'?'send_online':'send_party',type==='party'?Number(partyId):null,number(v.warehouse_stock),update.warehouse_stock,type==='online'?'Sent to Online Website':'Sent to Party');if(type==='party'&&bill>0){const sr=await supabaseClient.from('party_transactions').insert({party_id:Number(partyId),product_id:Number(v.product_id),transaction_type:'sale',quantity:qty,amount:bill,note:'Party stock billing'});if(sr.error)throw sr.error;if(paid>0){const pr=await supabaseClient.from('party_transactions').insert({party_id:Number(partyId),product_id:Number(v.product_id),transaction_type:'payment',quantity:null,amount:paid,note:'Payment received with party stock'});if(pr.error)throw pr.error}}closeModal('transferModal');toast(type==='online'?'Stock sent to Online.':'Party stock saved successfully.');await loadData()}catch(e){alert('Transfer failed: '+e.message)}}
-async function markOnlineSold(id){const v=variants.find(x=>String(x.id)===String(id));if(!v)return;const qty=number(prompt('Online sale quantity:',1));if(!Number.isInteger(qty)||qty<=0)return;if(qty>websiteBalance(v)){alert('Website balance ton zyada sale nahi ho sakdi.');return}const r=await supabaseClient.from(VARIANT_TABLE).update({online_sold:number(v.online_sold)+qty}).eq('id',id);if(r.error)alert(r.error.message);else{toast('Online sale recorded.');await loadData()}}
+
+function fillProductSelect(id="productSelect"){
+
+const s=document.getElementById(id);
+
+s.innerHTML=products.map(p=>`
+<option value="${p.id}">
+${safe(getName(p))}
+</option>
+`).join("");
+}
+
+function openAddStock(){
+
+fillProductSelect();
+
+document.getElementById("sizeInput").value="";
+document.getElementById("warehouseAddInput").value="";
+document.getElementById("unitInput").value="g";
+
+document.getElementById("stockModal").style.display="flex";
+}
+
+async function saveWarehouseStock(){
+
+const productId=
+document.getElementById("productSelect").value;
+
+const size=
+number(document.getElementById("sizeInput").value);
+
+const unit=
+document.getElementById("unitInput").value;
+
+const qty=
+number(document.getElementById("warehouseAddInput").value);
+
+if(
+!productId||
+size<=0||
+!Number.isInteger(qty)||
+qty<=0
+){
+alert("Product, valid size and quantity required.");
+return;
+}
+
+try{
+
+let v=variants.find(x=>
+String(x.product_id)===String(productId)&&
+number(x.size)===size&&
+String(x.unit).toLowerCase()===unit.toLowerCase()
+);
+
+const prev=number(v?.warehouse_stock);
+
+if(v){
+
+const r=
+await supabaseClient
+.from(VARIANT_TABLE)
+.update({
+warehouse_stock:prev+qty
+})
+.eq("id",v.id);
+
+if(r.error)throw r.error;
+
+await addStockEntry({
+productId,
+qty,
+unit,
+type:"warehouse_add",
+partyId:null,
+prev,
+newStock:prev+qty,
+note:"Warehouse stock added"
+});
+
+}else{
+
+const r=
+await supabaseClient
+.from(VARIANT_TABLE)
+.insert({
+product_id:Number(productId),
+size,
+unit,
+warehouse_stock:qty,
+online_given:0,
+online_sold:0,
+offline_given:0
+})
+.select()
+.single();
+
+if(r.error)throw r.error;
+
+await addStockEntry({
+productId,
+qty,
+unit,
+type:"warehouse_add",
+partyId:null,
+prev:0,
+newStock:qty,
+note:"Warehouse stock added"
+});
+
+}
+
+closeModal("stockModal");
+
+toast("Warehouse stock added.");
+
+await loadData();
+
+}catch(e){
+
+alert("Save failed: "+e.message);
+
+}
+}
+
+async function addStockEntry({
+productId,
+qty,
+unit,
+type,
+partyId,
+prev,
+newStock,
+note
+}){
+
+const p=
+products.find(
+x=>String(x.id)===String(productId)
+);
+
+const party=
+partyId
+?parties.find(x=>String(x.id)===String(partyId))
+:null;
+
+const payload={
+product_id:Number(productId),
+product_name:getName(p),
+quantity:qty,
+unit,
+type,
+source:"warehouse",
+party_id:partyId||null,
+party_name:party?.name||null,
+previous_stock:prev,
+new_stock:newStock,
+note,
+destination:
+type==="send_online"
+?"online"
+:type==="send_party"
+?"party"
+:null,
+source_location:"warehouse"
+};
+
+const r=
+await supabaseClient
+.from("stock_entries")
+.insert(payload);
+
+if(r.error){
+console.warn(
+"Stock history insert failed:",
+r.error.message
+);
+}
+}
+
+function openTransfer(id,type){
+
+const v=variants.find(
+x=>String(x.id)===String(id)
+);
+
+if(!v)return;
+
+document.getElementById("transferVariantId").value=id;
+document.getElementById("transferType").value=type;
+document.getElementById("transferQty").value="";
+
+document.getElementById("transferInfo").textContent=
+label(v)+
+" • Warehouse available: "+
+number(v.warehouse_stock)+
+" PCS";
+
+document.getElementById("transferTitle").textContent=
+type==="online"
+?"Send to Online Website"
+:"Send to Party";
+
+document.getElementById("partyPickerWrap").style.display=
+type==="party"?"block":"none";
+
+document.getElementById("partyBillingFields").style.display=
+type==="party"?"block":"none";
+
+document.getElementById("partyBillAmount").value="";
+document.getElementById("partyPaidAmount").value="";
+document.getElementById("partyBillingNote").value="";
+
+if(type==="party"){
+fillPartySelect();
+}
+
+document.getElementById("transferModal").style.display="flex";
+}
+
+function fillPartySelect(){
+
+const s=document.getElementById("partySelect");
+
+s.innerHTML=
+parties.map(p=>`
+<option value="${p.id}">
+${safe(p.name)}
+${p.phone?" • "+safe(p.phone):""}
+</option>
+`).join("")||
+'<option value="">No party — create one</option>';
+}
+
+async function saveTransfer(){
+
+const id=
+document.getElementById("transferVariantId").value;
+
+const type=
+document.getElementById("transferType").value;
+
+const qty=
+number(document.getElementById("transferQty").value);
+
+const partyId=
+document.getElementById("partySelect").value;
+
+const bill=
+number(document.getElementById("partyBillAmount").value);
+
+const paid=
+number(document.getElementById("partyPaidAmount").value);
+
+const note=
+document.getElementById("partyBillingNote").value.trim()||
+"Party stock sale";
+
+const v=variants.find(
+x=>String(x.id)===String(id)
+);
+
+if(
+!v||
+!Number.isInteger(qty)||
+qty<=0
+){
+alert("Valid quantity required.");
+return;
+}
+
+if(qty>number(v.warehouse_stock)){
+alert("Warehouse ch ena stock nahi hai.");
+return;
+}
+
+if(type==="party"&&!partyId){
+alert("Pehla party create karo.");
+return;
+}
+
+if(type==="party"&&paid>bill){
+alert("Paid amount bill ton zyada nahi ho sakda.");
+return;
+}
+
+try{
+
+const oldStock=number(v.warehouse_stock);
+
+const update={
+warehouse_stock:oldStock-qty
+};
+
+if(type==="online"){
+update.online_given=
+number(v.online_given)+qty;
+}else{
+update.offline_given=
+number(v.offline_given)+qty;
+}
+
+const r=
+await supabaseClient
+.from(VARIANT_TABLE)
+.update(update)
+.eq("id",v.id);
+
+if(r.error)throw r.error;
+
+await addStockEntry({
+productId:v.product_id,
+qty,
+unit:v.unit,
+type:
+type==="online"
+?"send_online"
+:"send_party",
+partyId:
+type==="party"
+?Number(partyId)
+:null,
+prev:oldStock,
+newStock:update.warehouse_stock,
+note:
+type==="online"
+?"Sent to Online Website"
+:"Sent to Party"
+});
+
+if(type==="party"&&bill>0){
+
+const sale=
+await supabaseClient
+.from("party_transactions")
+.insert({
+party_id:Number(partyId),
+product_id:Number(v.product_id),
+transaction_type:"sale",
+quantity:qty,
+amount:bill,
+note
+});
+
+if(sale.error)throw sale.error;
+
+if(paid>0){
+
+const payment=
+await supabaseClient
+.from("party_transactions")
+.insert({
+party_id:Number(partyId),
+product_id:Number(v.product_id),
+transaction_type:"payment",
+quantity:null,
+amount:paid,
+note:"Payment received — "+note
+});
+
+if(payment.error)throw payment.error;
+
+}
+
+}
+
+closeModal("transferModal");
+
+toast(
+type==="online"
+?"Stock sent to Online."
+:"Party account updated successfully."
+);
+
+await loadData();
+
+}catch(e){
+
+alert("Transfer failed: "+e.message);
+
+}
+}
+
+async function markOnlineSold(id){
+
+const v=variants.find(
+x=>String(x.id)===String(id)
+);
+
+if(!v)return;
+
+const qty=number(
+prompt("Online sale quantity:",1)
+);
+
+if(!Number.isInteger(qty)||qty<=0)return;
+
+if(qty>websiteBalance(v)){
+alert("Website balance ton zyada sale nahi ho sakdi.");
+return;
+}
+
+const r=
+await supabaseClient
+.from(VARIANT_TABLE)
+.update({
+online_sold:
+number(v.online_sold)+qty
+})
+.eq("id",id);
+
+if(r.error){
+
+alert(r.error.message);
+
+}else{
+
+toast("Online sale recorded.");
+
+await loadData();
+
+}
+}
+
 async function loadParties(){
-  const r=await supabaseClient.from('parties').select('*').order('id',{ascending:false});
-  if(r.error){console.warn('Party load failed:',r.error.message);const box=document.getElementById('partyList');if(box)box.innerHTML='<div class="party-empty"><h3>Party data could not be loaded</h3><p>'+safe(r.error.message)+'</p></div>';return;}
-  parties=r.data||[]; await renderParties();
+
+const r=
+await supabaseClient
+.from("parties")
+.select("*")
+.order("id",{ascending:false});
+
+if(r.error){
+
+console.warn(
+"Party load failed:",
+r.error.message
+);
+
+const box=document.getElementById("partyList");
+
+if(box){
+
+box.innerHTML=`
+<div class="party-empty">
+<h3>Party data could not be loaded</h3>
+<p>${safe(r.error.message)}</p>
+</div>`;
 }
+
+return;
+}
+
+parties=r.data||[];
+
+await renderParties();
+}
+
 async function getPartyAccounts(){
-  const [tx,entries]=await Promise.all([supabaseClient.from('party_transactions').select('*').order('id',{ascending:false}),supabaseClient.from('stock_entries').select('*').eq('destination','party').order('id',{ascending:false})]);
-  return {tx:tx.data||[],entries:entries.data||[],error:tx.error||entries.error};
+
+const [tx,entries]=await Promise.all([
+
+supabaseClient
+.from("party_transactions")
+.select("*")
+.order("id",{ascending:false}),
+
+supabaseClient
+.from("stock_entries")
+.select("*")
+.eq("destination","party")
+.order("id",{ascending:false})
+
+]);
+
+return{
+tx:tx.data||[],
+entries:entries.data||[],
+error:tx.error||entries.error
+};
 }
+
 function partyLedger(rows,p){
-  const opening=number(p?.opening_balance); let bills=opening,paid=0;
-  rows.forEach(t=>{if(String(t.transaction_type).toLowerCase()==='payment'||String(t.transaction_type).toLowerCase()==='credit') paid+=number(t.amount); else bills+=number(t.amount)});
-  return {opening,bills,paid,balance:bills-paid};
+
+let opening=number(p?.opening_balance);
+let bills=opening;
+let paid=0;
+
+rows.forEach(t=>{
+
+const type=
+String(t.transaction_type||"")
+.toLowerCase();
+
+if(
+type==="payment"||
+type==="credit"
+){
+
+paid+=number(t.amount);
+
+}else{
+
+bills+=number(t.amount);
+
 }
-function money(v){return '₹'+number(v).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2})}
+
+});
+
+return{
+opening,
+bills,
+paid,
+balance:bills-paid
+};
+}
+
 async function renderParties(){
- const box=document.getElementById('partyList'); if(!box)return;
- const {tx,entries,error}=await getPartyAccounts(); if(error){box.innerHTML='<div class="party-empty"><h3>Unable to load party accounts</h3><p>'+safe(error.message)+'</p></div>';return;}
- const q=(document.getElementById('partySearch')?.value||'').trim().toLowerCase(), filter=document.getElementById('partyStatusFilter')?.value||'all';
- let totalStock=0,totalBill=0,totalDue=0;
- const models=parties.map(p=>{const rows=tx.filter(t=>String(t.party_id)===String(p.id)), stockRows=entries.filter(x=>String(x.party_id)===String(p.id)); const stock=stockRows.reduce((a,x)=>a+number(x.quantity),0), l=partyLedger(rows,p); totalStock+=stock;totalBill+=l.bills;totalDue+=Math.max(0,l.balance);return {p,rows,stockRows,stock,l};}).filter(m=>{const match=!q||((m.p.name||'')+' '+(m.p.phone||'')).toLowerCase().includes(q);const st=m.l.balance>0.009?'due':'clear';return match&&(filter==='all'||filter===st)});
- document.getElementById('partyCount').textContent=parties.length;document.getElementById('partyStockTotal').textContent=totalStock+' PCS';document.getElementById('partyBillingTotal').textContent=money(totalBill);document.getElementById('partyDueTotal').textContent=money(totalDue);
- if(!models.length){box.innerHTML='<div class="party-empty"><div style="font-size:34px">🤝</div><h3>'+(parties.length?'No matching party':'No party accounts yet')+'</h3><p>'+(parties.length?'Try another search or filter.':'Create a party account to start tracking stock and payments.')+'</p><button class="dark-btn" onclick="openPartyCreateOnly()">＋ Add Party</button></div>';return;}
- let html='<div class="party-table-wrap"><table class="party-table"><thead><tr><th>PARTY</th><th>STOCK</th><th>BILLING</th><th>PAID</th><th>OUTSTANDING</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody>';
- models.forEach(m=>{const due=m.l.balance>0.009,initial=(m.p.name||'P').trim().charAt(0).toUpperCase();html+=`<tr><td><div class="party-name-cell"><span class="party-avatar">${safe(initial)}</span><div><strong>${safe(m.p.name)}</strong><div class="party-meta">${safe(m.p.phone||'No mobile')}</div></div></div></td><td><strong>${m.stock}</strong> PCS</td><td>${money(m.l.bills)}</td><td>${money(m.l.paid)}</td><td class="${due?'money-due':'money-clear'}">${money(Math.max(0,m.l.balance))}</td><td><span class="status ${due?'low':'ok'}">${due?'OUTSTANDING':'SETTLED'}</span></td><td><div class="party-actions"><button class="party-action" onclick="viewPartyAccount(${m.p.id})">View</button><button class="party-action light" onclick="openTransferForParty(${m.p.id})">📦 Stock</button><button class="party-action pay" onclick="openPartyPayment(${m.p.id})">＋ Pay</button></div></td></tr>`});
- html+='</tbody></table></div>';box.innerHTML=html;
+
+const box=document.getElementById("partyList");
+
+if(!box)return;
+
+const {
+tx,
+entries,
+error
+}=await getPartyAccounts();
+
+if(error){
+
+box.innerHTML=`
+<div class="party-empty">
+<h3>Unable to load party accounts</h3>
+<p>${safe(error.message)}</p>
+</div>`;
+
+return;
 }
-function openPartyModal(){fillProductSelect('partyProductSelect');updatePartyVariants();document.getElementById('partyName').value='';document.getElementById('partyPhone').value='';document.getElementById('partyNote').value='';document.getElementById('partyQty').value='';document.getElementById('partyModal').style.display='flex'}
-function updatePartyVariants(){const pid=document.getElementById('partyProductSelect').value,s=document.getElementById('partyVariantSelect');s.innerHTML=variants.filter(v=>String(v.product_id)===String(pid)).map(v=>`<option value="${v.id}">${number(v.size)} ${safe(v.unit||'')} • Warehouse ${number(v.warehouse_stock)} PCS</option>`).join('')||'<option value="">No stock variant</option>'}
-async function createPartyAndGive(){const name=document.getElementById('partyName').value.trim(),phone=document.getElementById('partyPhone').value.trim(),note=document.getElementById('partyNote').value.trim(),vid=document.getElementById('partyVariantSelect').value,qty=number(document.getElementById('partyQty').value);if(!name){alert('Party name required.');return}if(!vid||!Number.isInteger(qty)||qty<=0){alert('Select stock variant and valid quantity.');return}const v=variants.find(x=>String(x.id)===String(vid));if(!v||qty>number(v.warehouse_stock)){alert('Warehouse ch ena stock nahi hai.');return}try{const ins=await supabaseClient.from('parties').insert({name,phone,note,created_from:'warehouse',opening_balance:0}).select().single();if(ins.error)throw ins.error;const r=await supabaseClient.from(VARIANT_TABLE).update({warehouse_stock:number(v.warehouse_stock)-qty,offline_given:number(v.offline_given)+qty}).eq('id',v.id);if(r.error)throw r.error;parties.unshift(ins.data);await addEntry(v.product_id,qty,v.unit,'send_party',ins.data.id,number(v.warehouse_stock),number(v.warehouse_stock)-qty,'Initial stock given while creating party');closeModal('partyModal');toast('Party created and stock given from Warehouse.');await loadData()}catch(e){alert('Party create failed: '+e.message)}}
-function openPartyCreateOnly(){closeModal('transferModal');document.getElementById('partyOnlyName').value='';document.getElementById('partyOnlyPhone').value='';document.getElementById('partyOnlyNote').value='';document.getElementById('partyCreateOnlyModal').style.display='flex'}
-async function createPartyOnly(){const name=document.getElementById('partyOnlyName').value.trim(),phone=document.getElementById('partyOnlyPhone').value.trim(),note=document.getElementById('partyOnlyNote').value.trim();if(!name){alert('Party name required.');return}try{const r=await supabaseClient.from('parties').insert({name,phone,note,created_from:'warehouse',opening_balance:0}).select().single();if(r.error)throw r.error;closeModal('partyCreateOnlyModal');toast('Party created successfully.');await loadParties()}catch(e){alert('Party create failed: '+e.message)}}
-function openPartyPayment(id){const p=parties.find(x=>String(x.id)===String(id));if(!p)return;document.getElementById('paymentPartyId').value=id;document.getElementById('paymentAmount').value='';document.getElementById('paymentNote').value='';document.getElementById('paymentPartyInfo').textContent='Party: '+p.name+(p.phone?' • '+p.phone:'');closeModal('partyDetailModal');document.getElementById('partyPaymentModal').style.display='flex'}
-async function savePartyPayment(){const id=document.getElementById('paymentPartyId').value,amount=number(document.getElementById('paymentAmount').value),note=document.getElementById('paymentNote').value.trim()||'Payment received';if(!id||amount<=0){alert('Valid payment amount required.');return}const r=await supabaseClient.from('party_transactions').insert({party_id:Number(id),product_id:null,transaction_type:'payment',quantity:null,amount,note});if(r.error){alert('Payment save failed: '+r.error.message);return}closeModal('partyPaymentModal');toast('Payment recorded successfully.');await loadParties()}
-function openTransferForParty(id){switchTab('warehouse');setTimeout(()=>{const v=variants.find(x=>number(x.warehouse_stock)>0);if(!v){alert('No warehouse stock available.');return}openTransfer(v.id,'party');document.getElementById('partySelect').value=String(id)},80)}
-async function viewPartyAccount(id){const p=parties.find(x=>String(x.id)===String(id));if(!p)return;const {tx,entries,error}=await getPartyAccounts();if(error){alert(error.message);return}const rows=tx.filter(t=>String(t.party_id)===String(id)),stockRows=entries.filter(x=>String(x.party_id)===String(id)),l=partyLedger(rows,p),due=l.balance>0.009;const ledger=rows.map(t=>`<div class="ledger-row"><div class="ledger-type ${String(t.transaction_type).toLowerCase()==='payment'?'ledger-payment':'ledger-sale'}">${String(t.transaction_type).toLowerCase()==='payment'?'PAYMENT':'SALE'}</div><div><strong>${money(t.amount)}</strong><div class="ledger-note">${safe(t.note||'')}</div></div><div>${new Date(t.created_at).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})}</div></div>`).join('')||'<div class="empty">No billing/payment entries yet.</div>';const stockHtml=stockRows.map(x=>`<div class="ledger-row"><div class="ledger-type">STOCK</div><div><strong>${safe(x.product_name||'Product')}</strong> • ${safe(x.unit||'')}<div class="ledger-note">${number(x.quantity)} PCS sent from Warehouse</div></div><div>${new Date(x.created_at).toLocaleDateString('en-IN')}</div></div>`).join('')||'<div class="empty">No stock transfers recorded.</div>';document.getElementById('partyDetailContent').innerHTML=`<div class="party-detail-head"><div><h3>🤝 ${safe(p.name)}</h3><p>${safe(p.phone||'No mobile')} ${p.address?' • '+safe(p.address):safe(p.note||'')}</p></div><span class="party-balance-badge ${due?'':'clear'}">${due?'Due '+money(l.balance):'Account Settled'}</span></div><div class="ledger-summary"><div class="ledger-card"><small>Billing</small><strong>${money(l.bills)}</strong></div><div class="ledger-card"><small>Paid</small><strong>${money(l.paid)}</strong></div><div class="ledger-card"><small>Outstanding</small><strong>${money(Math.max(0,l.balance))}</strong></div></div><h4>Account Ledger</h4><div class="ledger-list">${ledger}</div><h4 style="margin-top:16px">Stock Given</h4><div class="ledger-list">${stockHtml}</div><div class="modal-actions"><button class="save-btn" onclick="openPartyPayment(${p.id})">＋ Record Payment</button><button class="print-btn" onclick="printPartyAccount(${p.id})">🖨 Print Account</button><button class="cancel-btn" onclick="closeModal('partyDetailModal')">Close</button></div>`;document.getElementById('partyDetailModal').style.display='flex'}
-async function printPartyAccount(id){const p=parties.find(x=>String(x.id)===String(id));if(!p)return;const {tx,entries,error}=await getPartyAccounts();if(error){alert(error.message);return}const rows=tx.filter(t=>String(t.party_id)===String(id)),stockRows=entries.filter(x=>String(x.party_id)===String(id)),l=partyLedger(rows,p),due=Math.max(0,l.balance),fmt=n=>money(n),date=x=>new Date(x).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});const ledger=rows.map(t=>`<tr><td>${date(t.created_at)}</td><td>${String(t.transaction_type).toLowerCase()==='payment'?'Payment':'Sale'}</td><td>${safe(t.note||'')}</td><td>${fmt(t.amount)}</td></tr>`).join('')||'<tr><td colspan="4">No billing/payment entries.</td></tr>';const stock=stockRows.map(x=>`<tr><td>${date(x.created_at)}</td><td>${safe(x.product_name||'Product')}</td><td>${number(x.quantity)} PCS</td><td>${safe(x.unit||'')}</td></tr>`).join('')||'<tr><td colspan="4">No stock given.</td></tr>';const w=window.open('','_blank','width=1000,height=800');if(!w){alert('Please allow pop-ups for printing the party account.');return}w.document.write(`<!doctype html><html><head><title>Party Account - ${safe(p.name)}</title><style>body{font-family:Arial;color:#111;margin:0;padding:35px}h1{font-size:24px;margin:0 0 5px}h2{font-size:15px;margin:28px 0 10px}.muted{color:#666;font-size:12px}.head{display:flex;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:18px}.badge{padding:8px 12px;border-radius:8px;background:${due>0?'#fef3c7':'#dcfce7'};font-weight:700}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.card{border:1px solid #ddd;border-radius:8px;padding:12px}.card small{display:block;color:#666;font-size:10px}.card strong{font-size:18px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px;border-bottom:1px solid #ddd;font-size:11px}th{background:#f5f5f5}.footer{margin-top:35px;font-size:10px;color:#777}@media print{body{padding:15px}}</style></head><body><div class="head"><div><h1>🤝 ${safe(p.name)}</h1><div class="muted">Mobile: ${safe(p.phone||'—')}</div><div class="muted">${safe(p.address||p.note||'')}</div></div><div class="badge">${due>0?'Outstanding '+fmt(due):'Account Settled'}</div></div><div class="summary"><div class="card"><small>Opening Balance</small><strong>${fmt(l.opening)}</strong></div><div class="card"><small>Total Billing</small><strong>${fmt(l.bills)}</strong></div><div class="card"><small>Total Paid</small><strong>${fmt(l.paid)}</strong></div><div class="card"><small>Outstanding</small><strong>${fmt(due)}</strong></div></div><h2>Account Ledger</h2><table><thead><tr><th>Date</th><th>Type</th><th>Note</th><th>Amount</th></tr></thead><tbody>${ledger}</tbody></table><h2>Stock Given</h2><table><thead><tr><th>Date</th><th>Product</th><th>Quantity</th><th>Unit</th></tr></thead><tbody>${stock}</tbody></table><div class="footer">Liara Professional™ • Party Account Statement • Printed ${date(new Date())}</div></body></html>`);w.document.close();w.focus();setTimeout(()=>w.print(),350)}
-function closeModal(id){document.getElementById(id).style.display='none'}
-document.addEventListener('DOMContentLoaded',()=>document.getElementById('partyProductSelect')?.addEventListener('change',updatePartyVariants));
-supabaseClient.channel('stock-page-live').on('postgres_changes',{event:'*',schema:'public',table:VARIANT_TABLE},()=>loadData()).subscribe();
-document.addEventListener('DOMContentLoaded',loadData);
-</script></body></html>
+
+const q=
+(document.getElementById("partySearch")?.value||"")
+.trim()
+.toLowerCase();
+
+const filter=
+document.getElementById("partyStatusFilter")?.value||
+"all";
+
+let totalStock=0;
+let totalBill=0;
+let totalDue=0;
+
+const models=parties.map(p=>{
+
+const rows=
+tx.filter(
+t=>String(t.party_id)===String(p.id)
+);
+
+const stockRows=
+entries.filter(
+x=>String(x.party_id)===String(p.id)
+);
+
+const stock=
+stockRows.reduce(
+(a,x)=>a+number(x.quantity),
+0
+);
+
+const l=partyLedger(rows,p);
+
+totalStock+=stock;
+totalBill+=l.bills;
+totalDue+=Math.max(0,l.balance);
+
+return{
+p,
+rows,
+stockRows,
+stock,
+l
+};
+
+}).filter(m=>{
+
+const match=
+!q||
+(
+(m.p.name||"")+" "+
+(m.p.phone||"")
+).toLowerCase().includes(q);
+
+const st=
+m.l.balance>0.009
+?"due"
+:"clear";
+
+return(
+match&&
+(filter==="all"||filter===st)
+);
+
+});
+
+document.getElementById("partyCount").textContent=
+parties.length;
+
+document.getElementById("partyStockTotal").textContent=
+totalStock+" PCS";
+
+document.getElementById("partyBillingTotal").textContent=
+money(totalBill);
+
+document.getElementById("partyDueTotal").textContent=
+money(totalDue);
+
+if(!models.length){
+
+box.innerHTML=`
+<div class="party-empty">
+<div style="font-size:34px">🤝</div>
+<h3>${parties.length?"No matching party":"No party accounts yet"}</h3>
+<p>
+${parties.length
+?"Try another search or filter."
+:"Create a party account to start tracking stock and payments."}
+</p>
+<button class="dark-btn"
+onclick="openPartyCreateOnly()">
+＋ Add Party
+</button>
+</div>`;
+
+return;
+}
+
+let html=`
+<div class="party-table-wrap">
+<table class="party-table">
+<thead>
+<tr>
+<th>PARTY</th>
+<th>STOCK</th>
+<th>BILLING</th>
+<th>PAID</th>
+<th>OUTSTANDING</th>
+<th>STATUS</th>
+<th>ACTIONS</th>
+</tr>
+</thead>
+<tbody>`;
+
+models.forEach(m=>{
+
+const due=m.l.balance>0.009;
+
+const initial=
+(m.p.name||"P")
+.trim()
+.charAt(0)
+.toUpperCase();
+
+html+=`
+<tr>
+
+<td>
+<div class="party-name-cell">
+<span class="party-avatar">
+${safe(initial)}
+</span>
+
+<div>
+<strong>${safe(m.p.name)}</strong>
+<div class="party-meta">
+${safe(m.p.phone||"No mobile")}
+</div>
+</div>
+</div>
+</td>
+
+<td><strong>${m.stock}</strong> PCS</td>
+
+<td>${money(m.l.bills)}</td>
+
+<td class="money-clear">
+${money(m.l.paid)}
+</td>
+
+<td class="${due?"money-due":"money-clear"}">
+${money(Math.max(0,m.l.balance))}
+</td>
+
+<td>
+<span class="status ${due?"low":"ok"}">
+${due?"OUTSTANDING":"SETTLED"}
+</span>
+</td>
+
+<td>
+<div class="party-actions">
+
+<button class="party-action"
+onclick="viewPartyAccount(${m.p.id})">
+View Ledger
+</button>
+
+<button class="party-action light"
+onclick="openTransferForParty(${m.p.id})">
+📦 Stock
+</button>
+
+<button class="party-action pay"
+onclick="openPartyPayment(${m.p.id})">
+＋ Pay
+</button>
+
+</div>
+</td>
+
+</tr>`;
+});
+
+html+=`
+</tbody>
+</table>
+</div>`;
+
+box.innerHTML=html;
+}
+
+function openPartyModal(){
+
+fillProductSelect("partyProductSelect");
+
+updatePartyVariants();
+
+document.getElementById("partyName").value="";
+document.getElementById("partyPhone").value="";
+document.getElementById("partyNote").value="";
+document.getElementById("partyQty").value="";
+document.getElementById("partyInitialBill").value="";
+document.getElementById("partyInitialPaid").value="";
+document.getElementById("partyInitialNote").value="";
+
+document.getElementById("partyModal").style.display="flex";
+}
+
+function updatePartyVariants(){
+
+const pid=
+document.getElementById("partyProductSelect").value;
+
+const s=
+document.getElementById("partyVariantSelect");
+
+s.innerHTML=
+variants
+.filter(v=>String(v.product_id)===String(pid))
+.map(v=>`
+<option value="${v.id}">
+${number(v.size)}
+${safe(v.unit||"")}
+ • Warehouse
+${number(v.warehouse_stock)} PCS
+</option>
+`)
+.join("")||
+'<option value="">No stock variant</option>';
+}
+
+async function createPartyAndGive(){
+
+const name=
+document.getElementById("partyName").value.trim();
+
+const phone=
+document.getElementById("partyPhone").value.trim();
+
+const note=
+document.getElementById("partyNote").value.trim();
+
+const vid=
+document.getElementById("partyVariantSelect").value;
+
+const qty=
+number(document.getElementById("partyQty").value);
+
+const bill=
+number(document.getElementById("partyInitialBill").value);
+
+const paid=
+number(document.getElementById("partyInitialPaid").value);
+
+const billNote=
+document.getElementById("partyInitialNote").value.trim()||
+"Initial party stock sale";
+
+if(!name){
+alert("Party name required.");
+return;
+}
+
+if(!vid||!Number.isInteger(qty)||qty<=0){
+alert("Select stock variant and valid quantity.");
+return;
+}
+
+if(paid>bill){
+alert("Paid amount bill ton zyada nahi ho sakda.");
+return;
+}
+
+const v=variants.find(
+x=>String(x.id)===String(vid)
+);
+
+if(!v||qty>number(v.warehouse_stock)){
+alert("Warehouse ch ena stock nahi hai.");
+return;
+}
+
+try{
+
+const ins=
+await supabaseClient
+.from("parties")
+.insert({
+name,
+phone,
+note,
+created_from:"warehouse",
+opening_balance:0
+})
+.select()
+.single();
+
+if(ins.error)throw ins.error;
+
+const oldStock=
+number(v.warehouse_stock);
+
+const newStock=
+oldStock-qty;
+
+const r=
+await supabaseClient
+.from(VARIANT_TABLE)
+.update({
+warehouse_stock:newStock,
+offline_given:
+number(v.offline_given)+qty
+})
+.eq("id",v.id);
+
+if(r.error)throw r.error;
+
+parties.unshift(ins.data);
+
+await addStockEntry({
+productId:v.product_id,
+qty,
+unit:v.unit,
+type:"send_party",
+partyId:ins.data.id,
+prev:oldStock,
+newStock,
+note:"Initial stock given while creating party"
+});
+
+if(bill>0){
+
+const sale=
+await supabaseClient
+.from("party_transactions")
+.insert({
+party_id:ins.data.id,
+product_id:Number(v.product_id),
+transaction_type:"sale",
+quantity:qty,
+amount:bill,
+note:billNote
+});
+
+if(sale.error)throw sale.error;
+
+if(paid>0){
+
+const payment=
+await supabaseClient
+.from("party_transactions")
+.insert({
+party_id:ins.data.id,
+product_id:Number(v.product_id),
+transaction_type:"payment",
+quantity:null,
+amount:paid,
+note:"Payment received — "+billNote
+});
+
+if(payment.error)throw payment.error;
+
+}
+
+}
+
+closeModal("partyModal");
+
+toast("Party created & stock given.");
+
+await loadData();
+
+}catch(e){
+
+alert("Party create failed: "+e.message);
+
+}
+}
+
+function openPartyCreateOnly(){
+
+closeModal("transferModal");
+
+document.getElementById("partyOnlyName").value="";
+document.getElementById("partyOnlyPhone").value="";
+document.getElementById("partyOnlyNote").value="";
+document.getElementById("partyOpeningBalance").value="";
+
+document.getElementById("partyCreateOnlyModal").style.display="flex";
+}
+
+async function createPartyOnly(){
+
+const name=
+document.getElementById("partyOnlyName").value.trim();
+
+const phone=
+document.getElementById("partyOnlyPhone").value.trim();
+
+const note=
+document.getElementById("partyOnlyNote").value.trim();
+
+const opening=
+number(
+document.getElementById("partyOpeningBalance").value
+);
+
+if(!name){
+alert("Party name required.");
+return;
+}
+
+try{
+
+const r=
+await supabaseClient
+.from("parties")
+.insert({
+name,
+phone,
+note,
+created_from:"warehouse",
+opening_balance:opening
+})
+.select()
+.single();
+
+if(r.error)throw r.error;
+
+if(opening>0){
+
+const tx=
+await supabaseClient
+.from("party_transactions")
+.insert({
+party_id:r.data.id,
+product_id:null,
+transaction_type:"opening",
+quantity:null,
+amount:opening,
+note:"Opening balance"
+});
+
+if(tx.error)throw tx.error;
+
+}
+
+closeModal("partyCreateOnlyModal");
+
+toast("Party account created.");
+
+await loadParties();
+
+}catch(e){
+
+alert("Party create failed: "+e.message);
+
+}
+}
+
+function openPartyPayment(id){
+
+const p=
+parties.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+document.getElementById("paymentPartyId").value=id;
+
+document.getElementById("paymentAmount").value="";
+document.getElementById("paymentNote").value="";
+document.getElementById("paymentMethod").value="Cash";
+
+document.getElementById("paymentPartyInfo").textContent=
+"Party: "+
+p.name+
+(p.phone?" • "+p.phone:"");
+
+closeModal("partyDetailModal");
+
+document.getElementById("partyPaymentModal").style.display="flex";
+}
+
+async function savePartyPayment(){
+
+const id=
+document.getElementById("paymentPartyId").value;
+
+const amount=
+number(
+document.getElementById("paymentAmount").value
+);
+
+const method=
+document.getElementById("paymentMethod").value;
+
+const note=
+document.getElementById("paymentNote").value.trim()||
+"Payment received";
+
+if(!id||amount<=0){
+alert("Valid payment amount required.");
+return;
+}
+
+const r=
+await supabaseClient
+.from("party_transactions")
+.insert({
+party_id:Number(id),
+product_id:null,
+transaction_type:"payment",
+quantity:null,
+amount,
+note:method+" — "+note
+});
+
+if(r.error){
+
+alert(
+"Payment save failed: "+
+r.error.message
+);
+
+return;
+}
+
+closeModal("partyPaymentModal");
+
+toast("Payment recorded successfully.");
+
+await loadParties();
+}
+
+function openTransferForParty(id){
+
+switchTab("warehouse");
+
+setTimeout(()=>{
+
+const v=
+variants.find(
+x=>number(x.warehouse_stock)>0
+);
+
+if(!v){
+
+alert("No warehouse stock available.");
+
+return;
+}
+
+openTransfer(v.id,"party");
+
+document.getElementById("partySelect").value=
+String(id);
+
+},100);
+
+}
+
+async function viewPartyAccount(id){
+
+const p=
+parties.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+const {
+tx,
+entries,
+error
+}=await getPartyAccounts();
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+const rows=
+tx.filter(
+t=>String(t.party_id)===String(id)
+);
+
+const stockRows=
+entries.filter(
+x=>String(x.party_id)===String(id)
+);
+
+const l=
+partyLedger(rows,p);
+
+const due=l.balance>0.009;
+
+let running=l.opening;
+
+const ledger=
+rows
+.slice()
+.reverse()
+.map(t=>{
+
+const type=
+String(t.transaction_type||"")
+.toLowerCase();
+
+const isPayment=
+type==="payment"||
+type==="credit";
+
+if(isPayment){
+running-=number(t.amount);
+}else{
+running+=number(t.amount);
+}
+
+return`
+<div class="ledger-row">
+
+<div class="ledger-type ${isPayment?"ledger-payment":"ledger-sale"}">
+${isPayment?"CREDIT":"DEBIT"}
+</div>
+
+<div>
+<strong>
+${isPayment?"Payment":"Sale / Billing"}
+</strong>
+
+<div class="ledger-note">
+${safe(t.note||"")}
+</div>
+</div>
+
+<div>
+${new Date(t.created_at)
+.toLocaleString("en-IN",{
+dateStyle:"medium",
+timeStyle:"short"
+})}
+</div>
+
+<div class="${running>0.009?"running-due":"running-clear"}">
+${money(Math.max(0,running))}
+</div>
+
+</div>`;
+})
+.join("")||
+'<div class="empty">No billing/payment entries yet.</div>';
+
+const stockHtml=
+stockRows
+.map(x=>`
+<div class="ledger-row">
+
+<div class="ledger-type">
+STOCK
+</div>
+
+<div>
+<strong>
+${safe(x.product_name||"Product")}
+</strong>
+ • ${safe(x.unit||"")}
+
+<div class="ledger-note">
+${number(x.quantity)} PCS sent from Warehouse
+</div>
+</div>
+
+<div>
+${new Date(x.created_at)
+.toLocaleDateString("en-IN")}
+</div>
+
+<div>
+—
+</div>
+
+</div>
+`)
+.join("")||
+'<div class="empty">No stock transfers recorded.</div>';
+
+document.getElementById("partyDetailContent").innerHTML=`
+
+<div class="party-detail-head">
+
+<div>
+<h3>🤝 ${safe(p.name)}</h3>
+
+<p>
+${safe(p.phone||"No mobile")}
+${p.address
+?" • "+safe(p.address)
+:p.note
+?" • "+safe(p.note)
+:""}
+</p>
+</div>
+
+<span class="party-balance-badge ${due?"":"clear"}">
+${due
+?"Outstanding "+money(l.balance)
+:"Account Settled"}
+</span>
+
+</div>
+
+<div class="ledger-summary">
+
+<div class="ledger-card">
+<small>Opening</small>
+<strong>${money(l.opening)}</strong>
+</div>
+
+<div class="ledger-card debit">
+<small>Total Billing</small>
+<strong>${money(l.bills)}</strong>
+</div>
+
+<div class="ledger-card credit">
+<small>Total Paid</small>
+<strong>${money(l.paid)}</strong>
+</div>
+
+<div class="ledger-card ${due?"debit":"credit"}">
+<small>Outstanding</small>
+<strong>${money(Math.max(0,l.balance))}</strong>
+</div>
+
+</div>
+
+<h4>Account Ledger</h4>
+
+<div class="ledger-list">
+
+<div class="ledger-row"
+style="background:#fafafa;font-weight:700">
+
+<div>TYPE</div>
+<div>DETAIL</div>
+<div>DATE</div>
+<div>BALANCE</div>
+
+</div>
+
+${ledger}
+
+</div>
+
+<h4 style="margin-top:18px">
+Stock Given
+</h4>
+
+<div class="ledger-list">
+${stockHtml}
+</div>
+
+<div class="modal-actions">
+
+<button class="save-btn"
+onclick="openPartyPayment(${p.id})">
+＋ Record Payment
+</button>
+
+<button class="print-btn"
+onclick="printPartyAccount(${p.id})">
+🖨 Print Statement
+</button>
+
+<button class="cancel-btn"
+onclick="closeModal('partyDetailModal')">
+Close
+</button>
+
+</div>
+`;
+
+document.getElementById("partyDetailModal").style.display="flex";
+}
+
+async function printPartyAccount(id){
+
+const p=
+parties.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+const {
+tx,
+entries,
+error
+}=await getPartyAccounts();
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+const rows=
+tx.filter(
+t=>String(t.party_id)===String(id)
+);
+
+const stockRows=
+entries.filter(
+x=>String(x.party_id)===String(id)
+);
+
+const l=partyLedger(rows,p);
+
+const due=Math.max(0,l.balance);
+
+const fmt=n=>money(n);
+
+const date=x=>
+new Date(x).toLocaleString(
+"en-IN",
+{
+dateStyle:"medium",
+timeStyle:"short"
+}
+);
+
+let running=l.opening;
+
+const ledger=
+rows
+.slice()
+.reverse()
+.map(t=>{
+
+const type=
+String(t.transaction_type||"")
+.toLowerCase();
+
+const payment=
+type==="payment"||
+type==="credit";
+
+if(payment){
+running-=number(t.amount);
+}else{
+running+=number(t.amount);
+}
+
+return`
+<tr>
+<td>${date(t.created_at)}</td>
+<td>${payment?"Credit / Payment":"Debit / Sale"}</td>
+<td>${safe(t.note||"")}</td>
+<td>${fmt(t.amount)}</td>
+<td>${fmt(Math.max(0,running))}</td>
+</tr>`;
+})
+.join("")||
+'<tr><td colspan="5">No transactions.</td></tr>';
+
+const stock=
+stockRows
+.map(x=>`
+<tr>
+<td>${date(x.created_at)}</td>
+<td>${safe(x.product_name||"Product")}</td>
+<td>${number(x.quantity)} PCS</td>
+<td>${safe(x.unit||"")}</td>
+<td>${safe(x.note||"")}</td>
+</tr>
+`)
+.join("")||
+'<tr><td colspan="5">No stock given.</td></tr>';
+
+const w=
+window.open(
+"",
+"_blank",
+"width=1100,height=850"
+);
+
+if(!w){
+
+alert(
+"Please allow pop-ups for printing the party statement."
+);
+
+return;
+}
+
+w.document.write(`
+
+<!doctype html>
+
+<html>
+
+<head>
+
+<title>
+Party Ledger - ${safe(p.name)}
+</title>
+
+<style>
+
+body{
+font-family:Arial;
+color:#111;
+margin:0;
+padding:35px;
+}
+
+h1{
+font-size:25px;
+margin:0 0 5px;
+}
+
+h2{
+font-size:16px;
+margin:28px 0 10px;
+}
+
+.muted{
+color:#666;
+font-size:12px;
+margin-top:4px;
+}
+
+.head{
+display:flex;
+justify-content:space-between;
+border-bottom:2px solid #111;
+padding-bottom:18px;
+}
+
+.badge{
+padding:8px 12px;
+border-radius:8px;
+background:${due>0?"#fef3c7":"#dcfce7"};
+font-weight:700;
+height:max-content;
+}
+
+.summary{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin:20px 0;
+}
+
+.card{
+border:1px solid #ddd;
+border-radius:8px;
+padding:12px;
+}
+
+.card small{
+display:block;
+color:#666;
+font-size:10px;
+}
+
+.card strong{
+font-size:18px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+text-align:left;
+padding:9px;
+border-bottom:1px solid #ddd;
+font-size:11px;
+}
+
+th{
+background:#f5f5f5;
+}
+
+.footer{
+margin-top:35px;
+font-size:10px;
+color:#777;
+}
+
+@media print{
+body{padding:15px}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="head">
+
+<div>
+
+<h1>🤝 ${safe(p.name)}</h1>
+
+<div class="muted">
+Mobile: ${safe(p.phone||"—")}
+</div>
+
+<div class="muted">
+${safe(p.address||p.note||"")}
+</div>
+
+</div>
+
+<div class="badge">
+${due>0
+?"Outstanding "+fmt(due)
+:"Account Settled"}
+</div>
+
+</div>
+
+<div class="summary">
+
+<div class="card">
+<small>Opening Balance</small>
+<strong>${fmt(l.opening)}</strong>
+</div>
+
+<div class="card">
+<small>Total Billing</small>
+<strong>${fmt(l.bills)}</strong>
+</div>
+
+<div class="card">
+<small>Total Paid</small>
+<strong>${fmt(l.paid)}</strong>
+</div>
+
+<div class="card">
+<small>Outstanding</small>
+<strong>${fmt(due)}</strong>
+</div>
+
+</div>
+
+<h2>Account Ledger</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Date</th>
+<th>Type</th>
+<th>Details</th>
+<th>Amount</th>
+<th>Running Balance</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${ledger}
+
+</tbody>
+
+</table>
+
+<h2>Stock Given</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Date</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Unit</th>
+<th>Note</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${stock}
+
+</tbody>
+
+</table>
+
+<div class="footer">
+
+Liara Professional™ • Party Account Statement
+• Printed ${date(new Date())}
+
+</div>
+
+</body>
+
+</html>
+`);
+
+w.document.close();
+w.focus();
+
+setTimeout(
+()=>w.print(),
+350
+);
+}
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+const partyProduct=
+document.getElementById("partyProductSelect");
+
+if(partyProduct){
+partyProduct.addEventListener(
+"change",
+updatePartyVariants
+);
+}
+
+loadData();
+
+}
+);
+
+supabaseClient
+.channel("stock-page-live")
+.on(
+"postgres_changes",
+{
+event:"*",
+schema:"public",
+table:VARIANT_TABLE
+},
+()=>loadData()
+)
+.subscribe();
+
+</script>
+
+</body>
+</html>
