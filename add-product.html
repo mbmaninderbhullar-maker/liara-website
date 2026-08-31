@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liara Professional™ | Add Product</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f3ee;color:#222}
+header{height:76px;background:#fff;border-bottom:1px solid #eae7e1;display:flex;align-items:center;justify-content:space-between;padding:15px 30px;position:sticky;top:0;z-index:20}
+.logo{font-size:23px;font-weight:bold;letter-spacing:4px}.logo small{display:block;color:#ad8232;font-size:9px;letter-spacing:3px;margin-top:3px}
+.header-actions{display:flex;gap:8px;align-items:center}.btn{border:0;background:#ad8232;color:#fff;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:12px}.btn:hover{background:#886527}.gray-btn{background:#666}.green-btn{background:#287a3e}
+main{padding:30px 3%}.container{max-width:1100px;margin:auto}.box{background:#fff;border:1px solid #ece8e1;padding:28px;border-radius:18px;box-shadow:0 8px 35px rgba(30,25,20,.055)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.head p{margin:0 0 5px;color:#ad8232;font-size:10px;font-weight:bold;letter-spacing:2px}.head h1{margin:0;font-size:26px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.group{margin-bottom:2px}.full{grid-column:1/-1}.group label{display:block;margin-bottom:6px;font-weight:bold;font-size:13px}.group input,.group textarea,.group select{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;outline:none;font-family:inherit}.group textarea{min-height:110px;resize:vertical}
+.upload{border:2px dashed #d2b477;border-radius:12px;padding:24px;text-align:center;background:#fffdf9}.upload input{margin-top:12px}.preview{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.preview img{width:120px;height:120px;object-fit:cover;border-radius:12px;border:1px solid #ddd}
+.variant-row{display:grid;grid-template-columns:1.2fr .9fr 1fr 1fr auto;gap:10px;align-items:end;padding:12px;margin-bottom:10px;border:1px solid #e8e2d8;border-radius:10px;background:#faf8f5}.variant-field{display:flex;flex-direction:column;gap:5px}.variant-field label{font-size:10px;font-weight:700;color:#777}.variant-field input,.variant-field select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;outline:none}.remove{background:#a33;color:#fff;border:0;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.status{font-size:12px;color:#287a3e;margin-top:10px;font-weight:bold}
+@media(max-width:700px){header{padding:12px 16px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.variant-row{grid-template-columns:1fr 1fr}.variant-row .remove{grid-column:1/-1}main{padding:20px 12px}.box{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">LIARA<small>PROFESSIONAL™</small></div>
+  <div class="header-actions">
+    <button class="btn gray-btn" onclick="location.href='products.html'">← Products</button>
+    <button class="btn gray-btn" onclick="logoutAdmin()">Logout</button>
+  </div>
+</header>
+
+<main><div class="container"><div class="box">
+  <div class="head">
+    <div><p>PRODUCT MANAGEMENT</p><h1 id="pageTitle">➕ Add New Product</h1></div>
+  </div>
+
+  <div class="form-grid">
+    <div class="group"><label>Product Name</label><input id="productNameInput" type="text" placeholder="e.g. Herbal Face Wash"></div>
+    <div class="group"><label>Price (₹)</label><input id="productPriceInput" type="number" min="0" placeholder="299"></div>
+    <div class="group"><label>Stock</label><input id="productStockInput" type="number" min="0" value="0"></div>
+    <div class="group"><label>Low Stock Alert</label><input id="productLowStockInput" type="number" min="0" value="5"></div>
+    <div class="group full"><label>Description</label><textarea id="productDescriptionInput" placeholder="Write product description..."></textarea></div>
+
+    <div class="group full">
+      <label>📏 Size / ML & Price</label>
+      <div id="variantList"></div>
+      <button type="button" class="btn" onclick="addVariantRow()">＋ Add Size</button>
+    </div>
+
+    <div class="group full"><label>🌿 Key Ingredients</label><textarea id="productKeyIngredientsInput" placeholder="Example:
+Niacinamide — Supports the skin barrier
+Hyaluronic Acid — Helps maintain hydration"></textarea></div>
+    <div class="group full"><label>🧴 How to Use</label><textarea id="productHowToUseInput" placeholder="Write simple usage instructions..."></textarea></div>
+    <div class="group full"><label>✨ Benefits</label><textarea id="productBenefitsInput" placeholder="Write the main product benefits..."></textarea></div>
+
+    <div class="group full"><label>📷 Product Photos (Up to 4)</label>
+      <div class="upload">
+        <strong>Upload Product Photos</strong><br>
+        <input id="productPhotoInput" type="file" accept="image/*" multiple onchange="previewPhoto(event)">
+        <div class="preview" id="photoPreview"></div>
+        <div id="uploadStatus" class="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn green-btn" id="saveBtn" onclick="saveProduct()">💾 Save Product</button>
+    <button class="btn gray-btn" onclick="clearProductForm()">Clear</button>
+  </div>
+</div></div></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
+const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const ADMIN_EMAIL="info@liara.co.in", IMAGE_BUCKET="product-images";
+let editId=new URLSearchParams(location.search).get("id"), editProductData=null;
+
+function escapeHtml(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+async function checkAdmin(){
+  const {data,error}=await supabaseClient.auth.getUser();
+  if(error||!data?.user||String(data.user.email||"").toLowerCase()!==ADMIN_EMAIL.toLowerCase()){location.href="company-login.html";return null}
+  return data.user;
+}
+async function logoutAdmin(){await supabaseClient.auth.signOut();location.href="company-login.html"}
+
+function addVariantRow(v={}){
+  const list=document.getElementById("variantList"), row=document.createElement("div"); if(!list)return;
+  row.className="variant-row";
+  row.innerHTML=`<div class="variant-field"><label>SIZE / ML</label><input type="number" min="0" step="any" class="variant-size" value="${escapeHtml(v.size??"")}" placeholder="e.g. 100"></div>
+  <div class="variant-field"><label>UNIT</label><select class="variant-unit"><option value="ML">ML</option><option value="G">G</option><option value="L">L</option><option value="KG">KG</option></select></div>
+  <div class="variant-field"><label>PRICE (₹)</label><input type="number" min="0" step="0.01" class="variant-price" value="${escapeHtml(v.price??"")}" placeholder="e.g. 499"></div>
+  <div class="variant-field"><label>STOCK</label><input type="number" min="0" step="1" class="variant-stock" value="${escapeHtml(v.stock??"")}" placeholder="e.g. 20"></div>
+  <button type="button" class="remove" onclick="this.closest('.variant-row').remove()">✕ Remove</button>`;
+  list.appendChild(row); if(v.unit)row.querySelector(".variant-unit").value=String(v.unit).toUpperCase();
+}
+function renderVariants(data){
+  const list=document.getElementById("variantList");list.innerHTML="";
+  if(typeof data==="string"){try{data=JSON.parse(data)}catch(e){data=[]}}
+  if(!Array.isArray(data)||!data.length)addVariantRow();else data.forEach(addVariantRow);
+}
+function collectVariants(){
+  const rows=[...document.querySelectorAll(".variant-row")], out=[];
+  for(const row of rows){
+    const s=(row.querySelector(".variant-size")?.value||"").trim(), p=(row.querySelector(".variant-price")?.value||"").trim(), st=(row.querySelector(".variant-stock")?.value||"").trim();
+    if(!s&&!p&&!st)continue;
+    const size=Number(s),price=Number(p),stock=st===""?0:Number(st);
+    if(!Number.isFinite(size)||size<=0){alert("Har Size / ML valid pao.");return null}
+    if(!Number.isFinite(price)||price<0){alert("Har Size da valid price pao.");return null}
+    if(!Number.isInteger(stock)||stock<0){alert("Har Size da valid stock pao.");return null}
+    out.push({size,unit:(row.querySelector(".variant-unit")?.value||"ML").toUpperCase(),price,stock});
+  } return out;
+}
+function previewPhoto(e){
+  const files=[...(e.target.files||[])];if(files.length>4){alert("Maximum 4 photos upload karo.");e.target.value="";return}
+  document.getElementById("photoPreview").innerHTML=files.map((f,i)=>`<img src="${URL.createObjectURL(f)}" alt="Preview ${i+1}">`).join("");
+}
+async function uploadPhotos(files){
+  const urls=[];
+  for(const file of [...files].slice(0,4)){
+    const ext=file.name.split(".").pop().toLowerCase(), path="products/"+Date.now()+"-"+Math.random().toString(36).slice(2)+"."+ext;
+    const {error}=await supabaseClient.storage.from(IMAGE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false});
+    if(error)throw new Error(error.message);
+    urls.push(supabaseClient.storage.from(IMAGE_BUCKET).getPublicUrl(path).data.publicUrl);
+  } return urls;
+}
+async function loadEditProduct(){
+  if(!editId){renderVariants([]);return}
+  document.getElementById("pageTitle").textContent="✏️ Edit Product";
+  document.getElementById("saveBtn").textContent="💾 Save Changes";
+  const {data,error}=await supabaseClient.from("products").select("*").eq("id",editId).single();
+  if(error||!data){alert("Product not found.");location.href="products.html";return}
+  editProductData=data;
+  document.getElementById("productNameInput").value=data.name||"";
+  document.getElementById("productPriceInput").value=Number(data.price||0);
+  document.getElementById("productStockInput").value=Number(data.stock||0);
+  document.getElementById("productLowStockInput").value=Number(data.low_stock||5);
+  document.getElementById("productDescriptionInput").value=data.description||"";
+  document.getElementById("productKeyIngredientsInput").value=data.key_ingredients||"";
+  document.getElementById("productHowToUseInput").value=data.how_to_use||"";
+  document.getElementById("productBenefitsInput").value=data.benefits||"";
+  document.getElementById("photoPreview").innerHTML=data.image_url?`<img src="${escapeHtml(data.image_url)}" alt="Current Product">`:"";
+  renderVariants(data.variants||[]);
+}
+async function saveProduct(){
+  const name=document.getElementById("productNameInput").value.trim();
+  const price=Number(document.getElementById("productPriceInput").value);
+  const stock=Number(document.getElementById("productStockInput").value||0);
+  const lowStock=Number(document.getElementById("productLowStockInput").value||5);
+  const description=document.getElementById("productDescriptionInput").value.trim();
+  const keyIngredients=document.getElementById("productKeyIngredientsInput").value.trim();
+  const howToUse=document.getElementById("productHowToUseInput").value.trim();
+  const benefits=document.getElementById("productBenefitsInput").value.trim();
+  const files=document.getElementById("productPhotoInput").files, status=document.getElementById("uploadStatus");
+  if(!name){alert("Product name pao.");return} if(!Number.isFinite(price)||price<0){alert("Valid price pao.");return}
+  if(!Number.isInteger(stock)||stock<0){alert("Valid stock quantity pao.");return} if(!Number.isInteger(lowStock)||lowStock<0){alert("Valid low stock value pao.");return}
+  if(files.length>4){alert("Maximum 4 photos upload karo.");return}
+  const user=await checkAdmin();if(!user)return;
+  const variants=collectVariants();if(variants===null)return;
+  try{
+    status.textContent="Saving product...";
+    let imageUrl=editProductData?.image_url||null, extra=[];
+    if(files.length){
+      status.textContent="Uploading photos...";
+      extra=await uploadPhotos(files);imageUrl=extra.shift()||imageUrl;
+    }
+    const payload={name,price,stock,low_stock:lowStock,description,key_ingredients:keyIngredients,how_to_use:howToUse,benefits,image_url:imageUrl,variants};
+    if(files.length){payload.image_url_2=extra[0]||null;payload.image_url_3=extra[1]||null;payload.image_url_4=extra[2]||null}
+    else if(editProductData){payload.image_url_2=editProductData.image_url_2||null;payload.image_url_3=editProductData.image_url_3||null;payload.image_url_4=editProductData.image_url_4||null}
+    const result=editId?await supabaseClient.from("products").update(payload).eq("id",editId):await supabaseClient.from("products").insert(payload);
+    if(result.error)throw new Error(result.error.message);
+    alert(editId?"Product updated successfully.":"Product successfully add ho gaya.");
+    location.href="products.html";
+  }catch(err){status.textContent="";alert("Something went wrong:\n\n"+err.message)}
+}
+function clearProductForm(){
+  ["productNameInput","productPriceInput","productDescriptionInput","productKeyIngredientsInput","productHowToUseInput","productBenefitsInput"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});
+  document.getElementById("productStockInput").value="0";document.getElementById("productLowStockInput").value="5";document.getElementById("productPhotoInput").value="";document.getElementById("photoPreview").innerHTML="";document.getElementById("uploadStatus").textContent="";renderVariants([]);
+}
+checkAdmin().then(async u=>{if(u)await loadEditProduct()});
+</script>
+</body>
+</html>
