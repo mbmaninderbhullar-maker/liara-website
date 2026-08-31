@@ -2389,17 +2389,42 @@ function getSelectedVariant() {
 }
 
 function getSelectedStock(product) {
-    const selected = getSelectedVariant();
+    // Customer-facing stock now follows the same stock ledger used by Admin.
+    if (product && Number.isFinite(Number(product._liaraLiveStock))) {
+        return Math.max(0, Number(product._liaraLiveStock));
+    }
+    return Math.max(0, Number(product?.stock || 0));
+}
 
-    // When a size/unit is selected, use that option's own stock.
-    // This keeps each size independently purchasable.
-    if (selected && selected.stock !== null && selected.stock !== undefined) {
-        return Math.max(0, Number(selected.stock || 0));
+async function getLiveAdminStock(product) {
+    if (!product?.id) return null;
+
+    const { data: transactions, error } = await supabaseClient
+        .from("stock_transactions")
+        .select("transaction_type, quantity")
+        .eq("product_id", product.id);
+
+    if (error) {
+        console.error("Live admin stock loading error:", error);
+        return null;
     }
 
-    // If the product has unit/size options but the selected option has no
-    // stock field, fall back to the master product stock.
-    return Math.max(0, Number(product?.stock || 0));
+    const rows = Array.isArray(transactions) ? transactions : [];
+    const opening = Number(product.opening_stock || 0);
+    const received = opening + rows
+        .filter(t => t.transaction_type === "purchase")
+        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
+    const online = rows
+        .filter(t => t.transaction_type === "sale")
+        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
+    const offline = rows
+        .filter(t => t.transaction_type === "offline_out")
+        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
+    const adjustments = rows
+        .filter(t => t.transaction_type === "adjustment")
+        .reduce((sum, t) => sum + Number(t.quantity || 0), 0);
+
+    return Math.max(0, received - online - offline - adjustments);
 }
 
 function updateDisplayedPrice() {
@@ -2573,19 +2598,14 @@ function renderSideSizePriceOptions(product) {
     const options = window.liaraUnitPriceOptions || [];
     if (!target || !options.length) return;
 
-    target.innerHTML = options.map((option, index) => {
-        const hasPrice = Number(option.price) > 0;
-        const hasStockData = option.stock !== null && option.stock !== undefined;
-        const inStock = !hasStockData || Number(option.stock) > 0;
-        const selectable = hasPrice && inStock;
-        return `
-            <button type="button"
-                    class="size-option ${index === 0 && selectable ? "active" : ""} ${selectable ? "" : "price-not-set"}"
-                    ${selectable ? `onclick="selectProductSize(${JSON.stringify(option.value)}, this)"` : "disabled"}>
-                ${escapeHtml(option.label)}
-                <small>${hasPrice ? "₹" + Number(option.price).toLocaleString("en-IN") : "Set price"}${hasStockData && !inStock ? " · Out" : ""}</small>
-            </button>`;
-    }).join("");
+    target.innerHTML = options.map((option, index) => `
+        <button type="button"
+                class="size-option ${index === 0 ? "active" : ""}"
+                onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
+            ${escapeHtml(option.label)}
+            <small>₹${option.price.toLocaleString("en-IN")}</small>
+        </button>
+    `).join("");
 }
 
 async function loadProduct() {
@@ -2660,6 +2680,12 @@ async function loadProduct() {
 
         return;
 
+    }
+
+    // Same formula as Admin Stock Management: remaining stock from the ledger.
+    const liveAdminStock = await getLiveAdminStock(product);
+    if (liveAdminStock !== null) {
+        product._liaraLiveStock = liveAdminStock;
     }
 
 
@@ -3292,6 +3318,10 @@ async function getCurrentProduct() {
 
     }
 
+    const liveAdminStock = await getLiveAdminStock(data);
+    if (liveAdminStock !== null) {
+        data._liaraLiveStock = liveAdminStock;
+    }
 
     return data;
 
