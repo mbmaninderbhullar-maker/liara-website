@@ -88,7 +88,14 @@ h1{margin:5px 0 0;font-size:30px}
 <button class="tab" onclick="openTab('staff',this)">👥 Staff Management</button>
 <button class="tab" onclick="openTab('company',this)">🏢 Company</button>
 <button class="tab" onclick="openTab('orders',this)">📦 Orders</button>
+<button class="tab" onclick="openTab('inventory',this)">📊 Inventory / Stock</button>
+<button class="tab" onclick="openTab('parties',this)">👥 Parties / Ledger</button>
+<button class="tab" onclick="openTab('shipping',this)">🚚 Shipping / Shiprocket</button>
+<button class="tab" onclick="openTab('payment',this)">💳 Payment</button>
 <button class="tab" onclick="openTab('sales',this)">💰 Sales & GST</button>
+<button class="tab" onclick="openTab('reports',this)">📈 Reports</button>
+<button class="tab" onclick="openTab('audit',this)">📝 Activity / Audit Log</button>
+<button class="tab" onclick="openTab('backup',this)">💾 Backup & Data</button>
 <button class="tab" onclick="openTab('notifications',this)">🔔 Notifications</button>
 <button class="tab" onclick="openTab('website',this)">🎨 Website</button>
 <button class="tab" onclick="openTab('checkout',this)">🛒 Checkout</button>
@@ -178,6 +185,100 @@ h1{margin:5px 0 0;font-size:30px}
 <div class="row"><div><strong>Allow Returns</strong><small>Return request option.</small></div><label class="switch"><input id="allowReturn" type="checkbox"><span class="slider"></span></label></div>
 </div></section>
 
+
+<section id="inventory" class="section"><div class="card">
+<h2>📊 Inventory / Stock</h2><p>Online sales, offline stock and variant inventory controls.</p>
+<div class="grid">
+<div class="field"><label>LOW STOCK ALERT AT</label><input id="lowStockLimit" type="number" min="0"></div>
+<div class="field"><label>DEFAULT STOCK LOCATION</label><input id="stockLocation"></div>
+<div class="field"><label>STOCK UNIT</label><select id="stockUnit"><option>Piece</option><option>Gram</option><option>Kg</option><option>ml</option><option>Litre</option></select></div>
+<div class="field"><label>OUT OF STOCK DISPLAY</label><select id="outOfStockDisplay"><option>Out of Stock</option><option>Hide Product</option><option>Show Notify Me</option></select></div>
+</div>
+<div class="row"><div><strong>Auto Deduct Online Sale</strong><small>Automatically reduce the matching product/variant stock after a successful online order.</small></div><label class="switch"><input id="autoDeductOnline" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Prevent Negative Stock</strong><small>Do not allow stock to go below zero.</small></div><label class="switch"><input id="preventNegativeStock" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Variant-wise Stock</strong><small>Keep 100g, 125g and other variants as separate stock quantities.</small></div><label class="switch"><input id="variantStock" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Keep Stock History</strong><small>Record every stock adjustment and reason.</small></div><label class="switch"><input id="stockHistory" type="checkbox"><span class="slider"></span></label></div>
+</div></section>
+
+<section id="parties" class="section"><div class="card">
+<h2>👥 Parties / Ledger</h2><p>Professional party accounts, credit and statement controls.</p>
+<div class="grid">
+<div class="field"><label>DEFAULT CREDIT LIMIT (₹)</label><input id="partyCreditLimit" type="number" min="0"></div>
+<div class="field"><label>PAYMENT TERMS (DAYS)</label><input id="paymentTerms" type="number" min="0"></div>
+<div class="field"><label>STATEMENT FORMAT</label><select id="statementFormat"><option>Detailed</option><option>Summary</option></select></div>
+<div class="field"><label>DEFAULT PARTY TYPE</label><select id="partyType"><option>Retailer</option><option>Distributor</option><option>Wholesaler</option><option>Other</option></select></div>
+</div>
+<div class="row"><div><strong>Allow Credit Sales</strong><small>Allow party sales with pending balance.</small></div><label class="switch"><input id="creditSales" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Due Date Reminders</strong><small>Enable pending payment reminder workflow.</small></div><label class="switch"><input id="dueReminders" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Opening Balance</strong><small>Allow opening debit/credit balance for a party.</small></div><label class="switch"><input id="openingBalance" type="checkbox"><span class="slider"></span></label></div>
+<div class="note">Party statements should support <b>Print</b>, <b>PDF</b> and <b>Excel (.xlsx)</b> export from the Party/Statement page.</div>
+</div></section>
+
+<section id="shipping" class="section"><div class="card">
+<h2>🚚 Shipping / Shiprocket</h2><p>Shipment creation, courier and tracking preferences.</p>
+<div class="grid">
+<div class="field"><label>DEFAULT COURIER</label><input id="defaultCourier" placeholder="Auto / preferred courier"></div>
+<div class="field"><label>PICKUP ADDRESS</label><input id="pickupAddress"></div>
+<div class="field"><label>DEFAULT DEAD WEIGHT (KG)</label><input id="defaultWeight" type="number" step="0.01" min="0"></div>
+<div class="field"><label>DEFAULT PACKAGE SIZE</label><input id="packageSize" placeholder="10 × 10 × 10 cm"></div>
+</div>
+<div class="row"><div><strong>Auto Create Shiprocket Shipment</strong><small>Create shipment automatically after an eligible order is confirmed.</small></div><label class="switch"><input id="autoShipment" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Auto Fetch AWB</strong><small>Save AWB/courier information after shipment creation.</small></div><label class="switch"><input id="autoAWB" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Enable Customer Tracking</strong><small>Allow customers to track Order ID or AWB.</small></div><label class="switch"><input id="customerTracking" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Shipment Notifications</strong><small>Enable shipment status notification workflow.</small></div><label class="switch"><input id="shipmentNotifications" type="checkbox"><span class="slider"></span></label></div>
+<div class="note">Keep Shiprocket API credentials inside protected Edge Functions. Never place a private token in this browser page.</div>
+</div></section>
+
+<section id="payment" class="section"><div class="card">
+<h2>💳 Payment</h2><p>Payment methods and payment verification preferences.</p>
+<div class="grid">
+<div class="field"><label>RAZORPAY MODE</label><select id="razorpayMode"><option>Test</option><option>Live</option></select></div>
+<div class="field"><label>PAYMENT TIMEOUT (MINUTES)</label><input id="paymentTimeout" type="number" min="1"></div>
+<div class="field full"><label>UPI ID</label><input id="upiId" placeholder="business@upi"></div>
+<div class="field full"><label>BANK PAYMENT DETAILS</label><textarea id="bankDetails" placeholder="Account / IFSC / payment instructions"></textarea></div>
+</div>
+<div class="row"><div><strong>COD Enabled</strong><small>Accept Cash on Delivery orders.</small></div><label class="switch"><input id="paymentCOD" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Razorpay Enabled</strong><small>Accept online payments when the gateway is configured.</small></div><label class="switch"><input id="razorpayEnabled" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Manual Payment Verification</strong><small>Require verification for manual payment entries.</small></div><label class="switch"><input id="manualVerification" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Refund Tracking</strong><small>Keep refund status with the order/payment record.</small></div><label class="switch"><input id="refundTracking" type="checkbox"><span class="slider"></span></label></div>
+</div></section>
+
+<section id="reports" class="section"><div class="card">
+<h2>📈 Reports</h2><p>Business report and export preferences.</p>
+<div class="grid">
+<div class="field"><label>DEFAULT REPORT RANGE</label><select id="reportRange"><option>Last 30 Days</option><option>This Month</option><option>This Year</option><option>Custom</option></select></div>
+<div class="field"><label>DATE FORMAT</label><select id="dateFormat"><option>DD MMM YYYY</option><option>DD/MM/YYYY</option><option>YYYY-MM-DD</option></select></div>
+</div>
+<div class="row"><div><strong>Sales Reports</strong><small>Sales totals and order performance.</small></div><label class="switch"><input id="salesReports" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Stock Reports</strong><small>Stock movement and remaining inventory.</small></div><label class="switch"><input id="stockReports" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Party Ledger Reports</strong><small>Receivable/payable and statement reports.</small></div><label class="switch"><input id="partyReports" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>GST Reports</strong><small>GST/tax summary reports.</small></div><label class="switch"><input id="gstReports" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Excel Export</strong><small>Allow report data export to Excel.</small></div><label class="switch"><input id="excelExport" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Print / PDF</strong><small>Allow printable report output.</small></div><label class="switch"><input id="printReports" type="checkbox"><span class="slider"></span></label></div>
+</div></section>
+
+<section id="audit" class="section"><div class="card">
+<h2>📝 Activity / Audit Log</h2><p>Track important staff and admin actions for accountability.</p>
+<div class="row"><div><strong>Enable Audit Log</strong><small>Record important business changes.</small></div><label class="switch"><input id="auditEnabled" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Track Login Activity</strong><small>Record successful login/logout events.</small></div><label class="switch"><input id="loginActivity" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Track Order Changes</strong><small>Record order status and edits.</small></div><label class="switch"><input id="orderAudit" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Track Stock Changes</strong><small>Record stock adjustments.</small></div><label class="switch"><input id="stockAudit" type="checkbox"><span class="slider"></span></label></div>
+<div class="row"><div><strong>Track Payment Changes</strong><small>Record payment/ledger changes.</small></div><label class="switch"><input id="paymentAudit" type="checkbox"><span class="slider"></span></label></div>
+</div></section>
+
+<section id="backup" class="section"><div class="card">
+<h2>💾 Backup & Data</h2><p>Data export and recovery controls.</p>
+<div class="grid">
+<div class="field"><label>BACKUP REMINDER</label><select id="backupReminder"><option>Never</option><option>Weekly</option><option>Monthly</option></select></div>
+<div class="field"><label>DATA RETENTION</label><select id="dataRetention"><option>Keep Forever</option><option>1 Year</option><option>3 Years</option><option>5 Years</option></select></div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+<button class="btn light" type="button" onclick="exportSettings()">⬇ EXPORT SETTINGS</button>
+<button class="btn light" type="button" onclick="importSettings()">⬆ IMPORT SETTINGS</button>
+</div>
+<div class="note">This page's settings are stored locally. Database backups and Supabase recovery must be handled through protected server/database tooling.</div>
+</div></section>
+
 <section id="sales" class="section"><div class="card">
 <h2>💰 Sales & GST</h2><p>Currency, GST, shipping and discount controls.</p>
 <div class="grid">
@@ -254,7 +355,14 @@ sales:{currency:"INR",taxEnabled:true,gstRate:18,discountEnabled:true,shippingEn
 notifications:{newOrder:true,lowStock:true,cancelledOrder:true,deliveredOrder:true,payment:true},
 website:{storeName:"Liara Professional™",tagline:"Beauty • Skincare • Personal Care",supportEmail:"info@liara.co.in",supportPhone:"",maintenance:false},
 checkout:{guestCheckout:true,cod:true,onlinePayment:false,minimumOrder:0,requirePhone:true,requireAddress:true},
-invoice:{prefix:"LIARA-INV",footer:"Thank you for choosing Liara Professional™.",showGST:true,showCompanyAddress:true,showPayment:true}
+invoice:{prefix:"LIARA-INV",footer:"Thank you for choosing Liara Professional™.",showGST:true,showCompanyAddress:true,showPayment:true},
+inventory:{lowStockLimit:5,stockLocation:"Main Store",stockUnit:"Piece",outOfStockDisplay:"Out of Stock",autoDeductOnline:true,preventNegativeStock:true,variantStock:true,stockHistory:true},
+parties:{creditLimit:0,paymentTerms:30,statementFormat:"Detailed",partyType:"Retailer",creditSales:true,dueReminders:true,openingBalance:true},
+shipping:{defaultCourier:"Auto",pickupAddress:"",defaultWeight:0.5,packageSize:"10 × 10 × 10 cm",autoShipment:true,autoAWB:true,customerTracking:true,shipmentNotifications:true},
+payment:{razorpayMode:"Test",paymentTimeout:15,upiId:"",bankDetails:"",cod:true,razorpayEnabled:false,manualVerification:true,refundTracking:true},
+reports:{reportRange:"Last 30 Days",dateFormat:"DD MMM YYYY",salesReports:true,stockReports:true,partyReports:true,gstReports:true,excelExport:true,printReports:true},
+audit:{enabled:true,loginActivity:true,orderAudit:true,stockAudit:true,paymentAudit:true},
+backup:{backupReminder:"Monthly",dataRetention:"Keep Forever"}
 };
 
 const MODULES=[
@@ -315,6 +423,13 @@ function loadSettings(){
  setVal("storeName",s.website.storeName);setVal("storeTagline",s.website.tagline);setVal("supportEmail",s.website.supportEmail);setVal("supportPhone",s.website.supportPhone);setCheck("maintenance",s.website.maintenance);
  setVal("minimumOrder",s.checkout.minimumOrder);setCheck("guestCheckout",s.checkout.guestCheckout);setCheck("cod",s.checkout.cod);setCheck("onlinePayment",s.checkout.onlinePayment);setCheck("requirePhone",s.checkout.requirePhone);setCheck("requireAddress",s.checkout.requireAddress);
  setVal("invoicePrefix",s.invoice.prefix);setVal("invoiceFooter",s.invoice.footer);setCheck("showGST",s.invoice.showGST);setCheck("showCompanyAddress",s.invoice.showCompanyAddress);setCheck("showPayment",s.invoice.showPayment);
+ setVal("lowStockLimit",s.inventory.lowStockLimit);setVal("stockLocation",s.inventory.stockLocation);setVal("stockUnit",s.inventory.stockUnit);setVal("outOfStockDisplay",s.inventory.outOfStockDisplay);setCheck("autoDeductOnline",s.inventory.autoDeductOnline);setCheck("preventNegativeStock",s.inventory.preventNegativeStock);setCheck("variantStock",s.inventory.variantStock);setCheck("stockHistory",s.inventory.stockHistory);
+ setVal("partyCreditLimit",s.parties.creditLimit);setVal("paymentTerms",s.parties.paymentTerms);setVal("statementFormat",s.parties.statementFormat);setVal("partyType",s.parties.partyType);setCheck("creditSales",s.parties.creditSales);setCheck("dueReminders",s.parties.dueReminders);setCheck("openingBalance",s.parties.openingBalance);
+ setVal("defaultCourier",s.shipping.defaultCourier);setVal("pickupAddress",s.shipping.pickupAddress);setVal("defaultWeight",s.shipping.defaultWeight);setVal("packageSize",s.shipping.packageSize);setCheck("autoShipment",s.shipping.autoShipment);setCheck("autoAWB",s.shipping.autoAWB);setCheck("customerTracking",s.shipping.customerTracking);setCheck("shipmentNotifications",s.shipping.shipmentNotifications);
+ setVal("razorpayMode",s.payment.razorpayMode);setVal("paymentTimeout",s.payment.paymentTimeout);setVal("upiId",s.payment.upiId);setVal("bankDetails",s.payment.bankDetails);setCheck("paymentCOD",s.payment.cod);setCheck("razorpayEnabled",s.payment.razorpayEnabled);setCheck("manualVerification",s.payment.manualVerification);setCheck("refundTracking",s.payment.refundTracking);
+ setVal("reportRange",s.reports.reportRange);setVal("dateFormat",s.reports.dateFormat);setCheck("salesReports",s.reports.salesReports);setCheck("stockReports",s.reports.stockReports);setCheck("partyReports",s.reports.partyReports);setCheck("gstReports",s.reports.gstReports);setCheck("excelExport",s.reports.excelExport);setCheck("printReports",s.reports.printReports);
+ setCheck("auditEnabled",s.audit.enabled);setCheck("loginActivity",s.audit.loginActivity);setCheck("orderAudit",s.audit.orderAudit);setCheck("stockAudit",s.audit.stockAudit);setCheck("paymentAudit",s.audit.paymentAudit);
+ setVal("backupReminder",s.backup.backupReminder);setVal("dataRetention",s.backup.dataRetention);
 }
 
 function saveSettings(){
@@ -326,7 +441,14 @@ function saveSettings(){
  notifications:{newOrder:check("newOrder"),lowStock:check("lowStock"),cancelledOrder:check("cancelledOrder"),deliveredOrder:check("deliveredOrder"),payment:check("paymentNotification")},
  website:{storeName:val("storeName"),tagline:val("storeTagline"),supportEmail:val("supportEmail"),supportPhone:val("supportPhone"),maintenance:check("maintenance")},
  checkout:{guestCheckout:check("guestCheckout"),cod:check("cod"),onlinePayment:check("onlinePayment"),minimumOrder:Number(val("minimumOrder")||0),requirePhone:check("requirePhone"),requireAddress:check("requireAddress")},
- invoice:{prefix:val("invoicePrefix"),footer:val("invoiceFooter"),showGST:check("showGST"),showCompanyAddress:check("showCompanyAddress"),showPayment:check("showPayment")}
+ invoice:{prefix:val("invoicePrefix"),footer:val("invoiceFooter"),showGST:check("showGST"),showCompanyAddress:check("showCompanyAddress"),showPayment:check("showPayment")},
+ inventory:{lowStockLimit:Number(val("lowStockLimit")||0),stockLocation:val("stockLocation"),stockUnit:val("stockUnit"),outOfStockDisplay:val("outOfStockDisplay"),autoDeductOnline:check("autoDeductOnline"),preventNegativeStock:check("preventNegativeStock"),variantStock:check("variantStock"),stockHistory:check("stockHistory")},
+ parties:{creditLimit:Number(val("partyCreditLimit")||0),paymentTerms:Number(val("paymentTerms")||0),statementFormat:val("statementFormat"),partyType:val("partyType"),creditSales:check("creditSales"),dueReminders:check("dueReminders"),openingBalance:check("openingBalance")},
+ shipping:{defaultCourier:val("defaultCourier"),pickupAddress:val("pickupAddress"),defaultWeight:Number(val("defaultWeight")||0),packageSize:val("packageSize"),autoShipment:check("autoShipment"),autoAWB:check("autoAWB"),customerTracking:check("customerTracking"),shipmentNotifications:check("shipmentNotifications")},
+ payment:{razorpayMode:val("razorpayMode"),paymentTimeout:Number(val("paymentTimeout")||15),upiId:val("upiId"),bankDetails:val("bankDetails"),cod:check("paymentCOD"),razorpayEnabled:check("razorpayEnabled"),manualVerification:check("manualVerification"),refundTracking:check("refundTracking")},
+ reports:{reportRange:val("reportRange"),dateFormat:val("dateFormat"),salesReports:check("salesReports"),stockReports:check("stockReports"),partyReports:check("partyReports"),gstReports:check("gstReports"),excelExport:check("excelExport"),printReports:check("printReports")},
+ audit:{enabled:check("auditEnabled"),loginActivity:check("loginActivity"),orderAudit:check("orderAudit"),stockAudit:check("stockAudit"),paymentAudit:check("paymentAudit")},
+ backup:{backupReminder:val("backupReminder"),dataRetention:val("dataRetention")}
  };
  localStorage.setItem(KEY,JSON.stringify(s));
  showNotice("Settings saved successfully.");
@@ -381,6 +503,24 @@ function collectPermissions(){
   });
  });
  return out;
+}
+
+function exportSettings(){
+ const blob=new Blob([JSON.stringify(getSettings(),null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+ a.download="liara-settings-backup.json";a.click();URL.revokeObjectURL(a.href);
+}
+function importSettings(){
+ const input=document.createElement("input");input.type="file";input.accept=".json,application/json";
+ input.onchange=async()=>{
+  const file=input.files?.[0];if(!file)return;
+  try{
+   const data=JSON.parse(await file.text());
+   localStorage.setItem(KEY,JSON.stringify(deepMerge(clone(DEFAULTS),data)));
+   loadSettings();showNotice("Settings imported successfully.");
+  }catch(e){alert("Invalid settings backup file.");}
+ };
+ input.click();
 }
 
 function generatePassword(){
