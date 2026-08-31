@@ -2389,9 +2389,16 @@ function getSelectedVariant() {
 }
 
 function getSelectedStock(product) {
-    // Main product stock is the master stock status.
-    // If products.stock is 0, the product must show Out of Stock
-    // even when an old size/ML variant still contains a stock value.
+    const selected = getSelectedVariant();
+
+    // When a size/unit is selected, use that option's own stock.
+    // This keeps each size independently purchasable.
+    if (selected && selected.stock !== null && selected.stock !== undefined) {
+        return Math.max(0, Number(selected.stock || 0));
+    }
+
+    // If the product has unit/size options but the selected option has no
+    // stock field, fall back to the master product stock.
     return Math.max(0, Number(product?.stock || 0));
 }
 
@@ -2566,14 +2573,19 @@ function renderSideSizePriceOptions(product) {
     const options = window.liaraUnitPriceOptions || [];
     if (!target || !options.length) return;
 
-    target.innerHTML = options.map((option, index) => `
-        <button type="button"
-                class="size-option ${index === 0 ? "active" : ""}"
-                onclick="selectProductSize(${JSON.stringify(option.value)}, this)">
-            ${escapeHtml(option.label)}
-            <small>₹${option.price.toLocaleString("en-IN")}</small>
-        </button>
-    `).join("");
+    target.innerHTML = options.map((option, index) => {
+        const hasPrice = Number(option.price) > 0;
+        const hasStockData = option.stock !== null && option.stock !== undefined;
+        const inStock = !hasStockData || Number(option.stock) > 0;
+        const selectable = hasPrice && inStock;
+        return `
+            <button type="button"
+                    class="size-option ${index === 0 && selectable ? "active" : ""} ${selectable ? "" : "price-not-set"}"
+                    ${selectable ? `onclick="selectProductSize(${JSON.stringify(option.value)}, this)"` : "disabled"}>
+                ${escapeHtml(option.label)}
+                <small>${hasPrice ? "₹" + Number(option.price).toLocaleString("en-IN") : "Set price"}${hasStockData && !inStock ? " · Out" : ""}</small>
+            </button>`;
+    }).join("");
 }
 
 async function loadProduct() {
