@@ -155,7 +155,7 @@ button:disabled{
 
 table{
     width:100%;
-    min-width:1100px;
+    min-width:1300px;
     border-collapse:collapse;
 }
 
@@ -205,6 +205,28 @@ th{
 
 .inactive{
     color:#a33;
+    font-weight:bold;
+}
+
+.sale-badge{
+    display:inline-block;
+    margin-top:5px;
+    padding:4px 8px;
+    border-radius:20px;
+    background:#fff0f0;
+    color:#a33;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.tax-badge{
+    display:inline-block;
+    margin-top:5px;
+    padding:4px 8px;
+    border-radius:20px;
+    background:#f7f1e7;
+    color:#765a20;
+    font-size:11px;
     font-weight:bold;
 }
 
@@ -283,6 +305,51 @@ th{
 .form-group textarea{
     min-height:100px;
     resize:vertical;
+}
+
+/* PRICING / SALE / GST */
+
+.pricing-tax-manager{
+    margin-top:20px;
+    padding:20px;
+    border:1px solid #eee5d7;
+    border-radius:14px;
+    background:#faf8f5;
+}
+
+.pricing-tax-manager h4{
+    margin:0 0 5px;
+    font-size:18px;
+}
+
+.pricing-tax-help{
+    color:#777;
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+.pricing-note{
+    display:block;
+    margin-top:6px;
+    color:#777;
+    font-size:12px;
+}
+
+.sale-preview{
+    margin-top:10px;
+    padding:12px;
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:9px;
+    font-size:14px;
+}
+
+.sale-preview strong{
+    color:#287a3e;
+}
+
+.sale-preview s{
+    color:#888;
 }
 
 /* VARIANTS */
@@ -587,15 +654,122 @@ All Rights Reserved.
 
 <div class="form-group">
 
-<label>Base Selling Price (₹)</label>
+<label>Base Selling Price / Regular Price (₹)</label>
 
 <input
     type="number"
     id="productPrice"
     min="0"
     step="0.01"
-    placeholder="299"
+    placeholder="999"
     required>
+
+</div>
+
+
+<!-- PRICING / SALE / GST -->
+
+<div class="pricing-tax-manager">
+
+<h4>Pricing, Sale & GST</h4>
+
+<div class="pricing-tax-help">
+Set sale price, discount, HSN code and GST for this product.
+</div>
+
+
+<div class="form-group">
+
+<label>Sale Status</label>
+
+<select id="saleActive">
+
+<option value="false">
+Regular Price
+</option>
+
+<option value="true">
+Sale Active
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Sale Price (₹)</label>
+
+<input
+    type="number"
+    id="salePrice"
+    min="0"
+    step="0.01"
+    placeholder="799">
+
+<small class="pricing-note">
+Sale Price must be lower than Regular Price.
+</small>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Discount (%)</label>
+
+<input
+    type="number"
+    id="discountPercent"
+    min="0"
+    max="100"
+    step="0.01"
+    placeholder="20"
+    readonly>
+
+<small class="pricing-note">
+Automatically calculated from Regular Price and Sale Price.
+</small>
+
+</div>
+
+
+<div
+    id="salePreview"
+    class="sale-preview">
+
+Regular Price:
+<strong>₹0</strong>
+
+</div>
+
+
+<div class="form-group">
+
+<label>HSN Code</label>
+
+<input
+    type="text"
+    id="hsnCode"
+    placeholder="Enter HSN Code">
+
+</div>
+
+
+<div class="form-group">
+
+<label>GST Rate (%)</label>
+
+<input
+    type="number"
+    id="gstRate"
+    min="0"
+    max="100"
+    step="0.01"
+    placeholder="Enter GST %">
+
+</div>
 
 </div>
 
@@ -690,7 +864,7 @@ Add separate size, unit, price and stock. Example: 100 ml, 250 ml, 500 ml, 1 L, 
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
 
 <script>
 
@@ -899,6 +1073,51 @@ function renderVariantBadges(variants){
 
 
 /* =========================================
+   PRICE DISPLAY
+========================================= */
+
+function getSaleData(product){
+
+    const regular =
+        Number(product.price || 0);
+
+    const salePrice =
+        product.sale_price === null ||
+        product.sale_price === undefined ||
+        product.sale_price === ""
+        ? null
+        : Number(product.sale_price);
+
+    const saleActive =
+        product.sale_active === true &&
+        salePrice !== null &&
+        salePrice > 0 &&
+        salePrice < regular;
+
+    let discount = 0;
+
+    if(saleActive && regular > 0){
+
+        discount =
+        Number(
+            (
+                ((regular - salePrice) / regular) * 100
+            ).toFixed(2)
+        );
+
+    }
+
+    return {
+        regular:regular,
+        salePrice:salePrice,
+        saleActive:saleActive,
+        discount:discount
+    };
+
+}
+
+
+/* =========================================
    LOAD PRODUCTS
 ========================================= */
 
@@ -991,7 +1210,8 @@ async function loadProducts(){
         <tr>
             <th>Image</th>
             <th>Product</th>
-            <th>Base Price</th>
+            <th>Regular / Sale</th>
+            <th>GST / HSN</th>
             <th>Base Stock</th>
             <th>Variants</th>
             <th>Stock Status</th>
@@ -1074,6 +1294,50 @@ async function loadProducts(){
             `No Image`;
 
 
+            const sale =
+            getSaleData(product);
+
+
+            let priceHTML = `
+                ₹${sale.regular.toLocaleString("en-IN")}
+            `;
+
+
+            if(sale.saleActive){
+
+                priceHTML = `
+                    <s style="color:#888;">
+                        ₹${sale.regular.toLocaleString("en-IN")}
+                    </s>
+                    <br>
+                    <strong class="green">
+                        ₹${sale.salePrice.toLocaleString("en-IN")}
+                    </strong>
+                    <br>
+                    <span class="sale-badge">
+                        SALE ${sale.discount}%
+                    </span>
+                `;
+
+            }
+
+
+            const taxHTML = `
+                <span class="tax-badge">
+                    GST ${Number(
+                        product.gst_rate || 0
+                    )}%
+                </span>
+                <br>
+                <small>
+                    HSN:
+                    ${escapeHtml(
+                        product.hsn_code || "Not set"
+                    )}
+                </small>
+            `;
+
+
             html += `
 
             <tr>
@@ -1101,9 +1365,12 @@ async function loadProducts(){
 
 
                 <td>
-                    ₹${Number(
-                        product.price || 0
-                    ).toLocaleString("en-IN")}
+                    ${priceHTML}
+                </td>
+
+
+                <td>
+                    ${taxHTML}
                 </td>
 
 
@@ -1256,6 +1523,128 @@ function updateSummary(products){
     outStock;
 
 }
+
+
+/* =========================================
+   SALE CALCULATOR
+========================================= */
+
+function updateSalePreview(){
+
+    const regular =
+    Number(
+        document.getElementById(
+            "productPrice"
+        ).value || 0
+    );
+
+
+    const sale =
+    Number(
+        document.getElementById(
+            "salePrice"
+        ).value || 0
+    );
+
+
+    const saleActive =
+    document.getElementById(
+        "saleActive"
+    ).value === "true";
+
+
+    const discountInput =
+    document.getElementById(
+        "discountPercent"
+    );
+
+
+    const preview =
+    document.getElementById(
+        "salePreview"
+    );
+
+
+    if(
+        saleActive &&
+        regular > 0 &&
+        sale > 0 &&
+        sale < regular
+    ){
+
+        const discount =
+        Number(
+            (
+                ((regular - sale) / regular) * 100
+            ).toFixed(2)
+        );
+
+
+        discountInput.value =
+        discount;
+
+
+        preview.innerHTML = `
+            <s>
+                Regular Price:
+                ₹${regular.toLocaleString("en-IN")}
+            </s>
+            <br>
+            <strong>
+                Sale Price:
+                ₹${sale.toLocaleString("en-IN")}
+            </strong>
+            <br>
+            <span style="color:#a33;font-weight:bold;">
+                SALE — ${discount}% OFF
+            </span>
+        `;
+
+    }
+    else{
+
+        discountInput.value =
+        "0";
+
+
+        preview.innerHTML = `
+            Regular Price:
+            <strong>
+                ₹${regular.toLocaleString("en-IN")}
+            </strong>
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   SALE EVENTS
+========================================= */
+
+document.getElementById(
+    "productPrice"
+).addEventListener(
+    "input",
+    updateSalePreview
+);
+
+
+document.getElementById(
+    "salePrice"
+).addEventListener(
+    "input",
+    updateSalePreview
+);
+
+
+document.getElementById(
+    "saleActive"
+).addEventListener(
+    "change",
+    updateSalePreview
+);
 
 
 /* =========================================
@@ -1535,6 +1924,39 @@ function openAddProduct(){
     "true";
 
 
+    document.getElementById(
+        "saleActive"
+    ).value =
+    "false";
+
+
+    document.getElementById(
+        "salePrice"
+    ).value =
+    "";
+
+
+    document.getElementById(
+        "discountPercent"
+    ).value =
+    "0";
+
+
+    document.getElementById(
+        "hsnCode"
+    ).value =
+    "";
+
+
+    document.getElementById(
+        "gstRate"
+    ).value =
+    "0";
+
+
+    updateSalePreview();
+
+
     renderVariants([]);
 
 
@@ -1599,6 +2021,38 @@ function editProduct(id){
 
 
     document.getElementById(
+        "saleActive"
+    ).value =
+    product.sale_active
+    ? "true"
+    : "false";
+
+
+    document.getElementById(
+        "salePrice"
+    ).value =
+    product.sale_price ?? "";
+
+
+    document.getElementById(
+        "discountPercent"
+    ).value =
+    product.discount_percent ?? 0;
+
+
+    document.getElementById(
+        "hsnCode"
+    ).value =
+    product.hsn_code || "";
+
+
+    document.getElementById(
+        "gstRate"
+    ).value =
+    product.gst_rate ?? 0;
+
+
+    document.getElementById(
         "productStock"
     ).value =
     product.stock ?? 0;
@@ -1629,6 +2083,9 @@ function editProduct(id){
     renderVariants(
         product.variants
     );
+
+
+    updateSalePreview();
 
 
     document.getElementById(
@@ -1703,11 +2160,114 @@ async function saveProduct(event){
     "true";
 
 
+    const saleActive =
+    document.getElementById(
+        "saleActive"
+    ).value ===
+    "true";
+
+
+    const salePriceInput =
+    document.getElementById(
+        "salePrice"
+    ).value.trim();
+
+
+    const salePrice =
+    salePriceInput === ""
+    ? null
+    : Number(salePriceInput);
+
+
+    const hsnCode =
+    document.getElementById(
+        "hsnCode"
+    ).value.trim();
+
+
+    const gstRate =
+    Number(
+        document.getElementById(
+            "gstRate"
+        ).value || 0
+    );
+
+
+    let discountPercent = 0;
+
+
+    /* SALE VALIDATION */
+
+    if(saleActive){
+
+        if(
+            salePrice === null ||
+            salePrice <= 0
+        ){
+
+            alert(
+                "Please enter a valid Sale Price."
+            );
+
+            return;
+
+        }
+
+
+        if(price <= 0){
+
+            alert(
+                "Regular Price must be greater than 0."
+            );
+
+            return;
+
+        }
+
+
+        if(salePrice >= price){
+
+            alert(
+                "Sale Price must be lower than Regular Price."
+            );
+
+            return;
+
+        }
+
+
+        discountPercent =
+        Number(
+            (
+                ((price - salePrice) / price) *
+                100
+            ).toFixed(2)
+        );
+
+    }
+
+
+    /* GST VALIDATION */
+
+    if(
+        gstRate < 0 ||
+        gstRate > 100
+    ){
+
+        alert(
+            "GST Rate must be between 0% and 100%."
+        );
+
+        return;
+
+    }
+
+
     const variants =
     getVariants();
 
 
-    /* Validate variants */
+    /* VALIDATE VARIANTS */
 
     for(
         let i = 0;
@@ -1760,7 +2320,24 @@ async function saveProduct(event){
 
         active:active,
 
-        variants:variants
+        variants:variants,
+
+        sale_active:
+        saleActive,
+
+        sale_price:
+        saleActive
+        ? salePrice
+        : null,
+
+        discount_percent:
+        discountPercent,
+
+        hsn_code:
+        hsnCode || null,
+
+        gst_rate:
+        gstRate
 
     };
 
