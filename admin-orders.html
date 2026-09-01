@@ -1355,6 +1355,13 @@ body{
 .variant-remove{background:#a33!important;color:#fff!important;border:0;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700}
 @media(max-width:700px){.variant-row{grid-template-columns:1fr 1fr}.variant-row .variant-remove{grid-column:1/-1}}
 </style>
+<style id="liara-price-gst-hsn-settings">
+.price-sale-settings{grid-column:1/-1;background:#faf8f5;border:1px solid #e8e1d7;border-radius:12px;padding:18px;margin-top:4px}
+.price-sale-settings h3{margin:0 0 5px;font-size:16px}.price-sale-settings>p{margin:0 0 15px;color:#888;font-size:11px}
+.price-sale-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.price-sale-field{display:flex;flex-direction:column;gap:6px}.price-sale-field label{font-size:11px;color:#666;font-weight:700}.price-sale-field input{width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;outline:none}
+.sale-preview{grid-column:1/-1;padding:12px 14px;background:#fff;border:1px dashed #d8c8a9;border-radius:9px;font-size:14px}.mrp-cut{text-decoration:line-through;color:#888}.sale-label{font-weight:800;color:#287a3e;margin-left:8px}.discount-label{font-weight:800;color:#ad8232;margin-left:8px}
+@media(max-width:900px){.price-sale-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.price-sale-grid{grid-template-columns:1fr}}
+</style>
 </head>
 
 <body>
@@ -3829,7 +3836,9 @@ function renderProducts(products){
                 </div>
 
                 <div class="product-price">
-                    ${money(product.price)}
+                    ${product.sale_active && Number(product.sale_price) > 0 && Number(product.sale_price) < Number(product.price)
+                        ? `<span class="mrp-cut">${money(product.price)}</span> <span class="sale-label">SALE ${money(product.sale_price)}</span>${Number(product.discount_percent||0)>0 ? `<span class="discount-label">${Number(product.discount_percent)}% OFF</span>` : ""}`
+                        : money(product.price)}
                 </div>
 
                 <div class="product-stock ${stockClass}">
@@ -3969,12 +3978,26 @@ async function editProduct(id){
             </div>
 
             <div class="form-group">
-                <label>Price (₹)</label>
+                <label>MRP (₹)</label>
                 <input
                     id="editProductPriceInput"
                     type="number"
                     min="0"
-                    value="${Number(product.price || 0)}">
+                    step="0.01"
+                    value="${Number(product.price || 0)}"
+                    oninput="syncPriceFields('edit')">
+            </div>
+
+            <div class="price-sale-settings">
+                <h3>💰 Sale, GST & HSN</h3>
+                <p>MRP is crossed out when a valid Sale Price is active.</p>
+                <div class="price-sale-grid">
+                    <div class="price-sale-field"><label>SALE PRICE (₹)</label><input id="editProductSalePriceInput" type="number" min="0" step="0.01" value="${product.sale_price != null ? Number(product.sale_price) : ''}" placeholder="699" oninput="syncPriceFields('edit','sale')"></div>
+                    <div class="price-sale-field"><label>DISCOUNT (%)</label><input id="editProductDiscountInput" type="number" min="0" max="100" step="0.01" value="${Number(product.discount_percent || 0)}" placeholder="30" oninput="syncPriceFields('edit','discount')"></div>
+                    <div class="price-sale-field"><label>GST (%)</label><input id="editProductGstRateInput" type="number" min="0" max="100" step="0.01" value="${product.gst_rate != null ? Number(product.gst_rate) : Number(getSettings().sales.gstRate || 0)}"></div>
+                    <div class="price-sale-field"><label>HSN CODE</label><input id="editProductHsnCodeInput" type="text" maxlength="20" value="${escapeHtml(product.hsn_code || '')}" placeholder="e.g. 330499"></div>
+                    <div class="sale-preview" id="editPricePreview"></div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -4091,6 +4114,7 @@ Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredien
 
     // SIZE / ML + PRICE: load existing variants (additive only)
     renderProductVariants(product.variants || []);
+    syncPriceFields("edit");
 }
 
 function previewEditPhoto(event){
@@ -4126,6 +4150,12 @@ async function saveEditedProduct(id){
 
     const name = document.getElementById("editProductNameInput").value.trim();
     const price = Number(document.getElementById("editProductPriceInput").value);
+    const salePriceRaw = document.getElementById("editProductSalePriceInput")?.value.trim() || "";
+    const salePrice = salePriceRaw === "" ? null : Number(salePriceRaw);
+    const discount = Number(document.getElementById("editProductDiscountInput")?.value || 0);
+    const gstRate = Number(document.getElementById("editProductGstRateInput")?.value || 0);
+    const hsnCode = (document.getElementById("editProductHsnCodeInput")?.value || "").trim();
+    const saleActive = salePrice !== null && salePrice > 0 && salePrice < price;
     const stock = Number(document.getElementById("editProductStockInput").value || 0);
     const lowStock = Number(document.getElementById("editProductLowStockInput").value || 5);
     const description = document.getElementById("editProductDescriptionInput").value.trim();
@@ -4145,6 +4175,10 @@ async function saveEditedProduct(id){
         alert("Valid price pao.");
         return;
     }
+
+    if(salePrice !== null && (!Number.isFinite(salePrice) || salePrice <= 0 || salePrice >= price)){ alert("Sale price MRP ton ghatt te 0 ton vadh honi chahidi hai."); return; }
+    if(!Number.isFinite(discount) || discount < 0 || discount > 100){ alert("Valid discount pao."); return; }
+    if(!Number.isFinite(gstRate) || gstRate < 0 || gstRate > 100){ alert("Valid GST rate pao."); return; }
 
     if(!Number.isInteger(stock) || stock < 0){
         alert("Valid stock quantity pao.");
@@ -4226,6 +4260,11 @@ async function saveEditedProduct(id){
         const updateData = {
             name:name,
             price:price,
+            sale_active:saleActive,
+            sale_price:salePrice,
+            discount_percent:discount,
+            hsn_code:hsnCode || null,
+            gst_rate:gstRate,
             stock:stock,
             low_stock:lowStock,
             description:description,
@@ -4419,14 +4458,28 @@ function showAddProduct(){
 
             <div class="form-group">
 
-                <label>Price (₹)</label>
+                <label>MRP (₹)</label>
 
                 <input
                     id="productPriceInput"
                     type="number"
                     min="0"
-                    placeholder="299">
+                    step="0.01"
+                    placeholder="999"
+                    oninput="syncPriceFields('product')">
 
+            </div>
+
+            <div class="price-sale-settings">
+                <h3>💰 Sale, GST & HSN</h3>
+                <p>MRP is the original price. Sale price and discount stay connected automatically.</p>
+                <div class="price-sale-grid">
+                    <div class="price-sale-field"><label>SALE PRICE (₹)</label><input id="productSalePriceInput" type="number" min="0" step="0.01" placeholder="699" oninput="syncPriceFields('product','sale')"></div>
+                    <div class="price-sale-field"><label>DISCOUNT (%)</label><input id="productDiscountInput" type="number" min="0" max="100" step="0.01" placeholder="30" oninput="syncPriceFields('product','discount')"></div>
+                    <div class="price-sale-field"><label>GST (%)</label><input id="productGstRateInput" type="number" min="0" max="100" step="0.01" value="${Number(getSettings().sales.gstRate || 0)}"></div>
+                    <div class="price-sale-field"><label>HSN CODE</label><input id="productHsnCodeInput" type="text" maxlength="20" placeholder="e.g. 330499"></div>
+                    <div class="sale-preview" id="productPricePreview">Enter MRP and Sale Price</div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -4580,6 +4633,28 @@ function previewPhoto(event){
 
 }
 
+function syncPriceFields(mode, changed){
+    const isEdit = mode === "edit";
+    const mrp = Number(document.getElementById(isEdit ? "editProductPriceInput" : "productPriceInput")?.value || 0);
+    const saleEl = document.getElementById(isEdit ? "editProductSalePriceInput" : "productSalePriceInput");
+    const discEl = document.getElementById(isEdit ? "editProductDiscountInput" : "productDiscountInput");
+    const preview = document.getElementById(isEdit ? "editPricePreview" : "productPricePreview");
+    if(changed === "discount" && Number.isFinite(mrp) && mrp > 0 && discEl && saleEl){
+        const d=Math.min(100,Math.max(0,Number(discEl.value||0)));
+        if(d > 0){ saleEl.value=(mrp*(1-d/100)).toFixed(2).replace(/\.00$/,""); }
+    }else if(changed === "sale" && Number.isFinite(mrp) && mrp > 0 && saleEl && discEl){
+        const sp=Number(saleEl.value||0);
+        if(sp > 0 && sp < mrp){ discEl.value=((mrp-sp)/mrp*100).toFixed(2).replace(/\.00$/,""); }
+        else if(sp >= mrp){ discEl.value="0"; }
+    }
+    const sale=Number(saleEl?.value||0), d=Number(discEl?.value||0);
+    if(preview){
+        preview.innerHTML = (mrp>0 && sale>0 && sale<mrp)
+            ? `<span class="mrp-cut">MRP ${money(mrp)}</span> <span class="sale-label">SALE ${money(sale)}</span> <span class="discount-label">${d.toFixed(2).replace(/\.00$/,"")}% OFF</span>`
+            : (mrp>0 ? `MRP ${money(mrp)} — no active sale price` : "Enter MRP and Sale Price");
+    }
+}
+
 async function saveProduct(){
 
     const name =
@@ -4593,6 +4668,13 @@ async function saveProduct(){
                 "productPriceInput"
             ).value
         );
+
+    const salePriceRaw = document.getElementById("productSalePriceInput")?.value.trim() || "";
+    const salePrice = salePriceRaw === "" ? null : Number(salePriceRaw);
+    const discount = Number(document.getElementById("productDiscountInput")?.value || 0);
+    const gstRate = Number(document.getElementById("productGstRateInput")?.value || 0);
+    const hsnCode = (document.getElementById("productHsnCodeInput")?.value || "").trim();
+    const saleActive = salePrice !== null && salePrice > 0 && salePrice < price;
 
     const stock =
         Number(
@@ -4658,6 +4740,13 @@ async function saveProduct(){
         return;
 
     }
+
+    if(salePrice !== null && (!Number.isFinite(salePrice) || salePrice <= 0 || salePrice >= price)){
+        alert("Sale price MRP ton ghatt te 0 ton vadh honi chahidi hai.");
+        return;
+    }
+    if(!Number.isFinite(discount) || discount < 0 || discount > 100){ alert("Valid discount pao."); return; }
+    if(!Number.isFinite(gstRate) || gstRate < 0 || gstRate > 100){ alert("Valid GST rate pao."); return; }
 
     if(!file){
 
@@ -4742,6 +4831,11 @@ async function saveProduct(){
 
                 name:name,
                 price:price,
+                sale_active:saleActive,
+                sale_price:salePrice,
+                discount_percent:discount,
+                hsn_code:hsnCode || null,
+                gst_rate:gstRate,
                 stock:stock,
                 low_stock:lowStock,
                 description:description,
@@ -4789,6 +4883,9 @@ function clearProductForm(){
     [
         "productNameInput",
         "productPriceInput",
+        "productSalePriceInput",
+        "productDiscountInput",
+        "productHsnCodeInput",
         "productDescriptionInput"
     ].forEach(id=>{
 
@@ -4812,6 +4909,9 @@ function clearProductForm(){
         );
 
     if(low) low.value = "5";
+
+    const gst = document.getElementById("productGstRateInput");
+    if(gst) gst.value = Number(getSettings().sales.gstRate || 0);
 
     const photo =
         document.getElementById(
