@@ -66,6 +66,40 @@ nav a:hover{color:var(--gold)}nav a:hover:after{right:0}
 .sale-label{display:inline-flex;align-items:center;padding:3px 7px;background:#191919;color:#fff;border-radius:3px;font-size:8px;font-weight:800;letter-spacing:1px}
 .sale-price{color:var(--gold);font-size:18px;font-weight:800}
 .discount-badge{color:#388044;font-size:9px;font-weight:800;letter-spacing:.3px}
+
+/* LIARA VARIANT SALE DISPLAY */
+.variant-sale-list{
+  margin-top:8px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+.variant-sale-item{
+  font-size:9px;
+  color:#555;
+  line-height:1.45;
+}
+.variant-sale-item s{
+  color:#999;
+  margin-right:4px;
+}
+.variant-sale-item .sale-tag{
+  display:inline-block;
+  background:#191919;
+  color:#fff;
+  padding:2px 5px;
+  border-radius:2px;
+  font-size:7px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-right:4px;
+}
+.variant-sale-item strong{
+  color:var(--gold);
+  font-weight:800;
+  margin-right:4px;
+}
+
 .product-card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:11px;transition:.3s;overflow:hidden}
 .product-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:#ddd2bd}
 .product-image{width:100%;height:275px;background:linear-gradient(145deg,#f7f3eb,#eee7da);border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
@@ -249,6 +283,126 @@ async function addToCart(product){
 }
 function buyNow(product){const id=product.id||"";localStorage.setItem("selectedProductId",id);window.location.href="product.html"}
 
+
+function getProductVariants(product){
+
+  let variants =
+    product.variants ??
+    product.product_variants ??
+    product.sizes ??
+    [];
+
+  if(Array.isArray(variants)){
+    return variants;
+  }
+
+  if(typeof variants === "string"){
+    try{
+      const parsed = JSON.parse(variants);
+      return Array.isArray(parsed) ? parsed : [];
+    }catch(e){
+      return [];
+    }
+  }
+
+  return [];
+}
+
+
+function getVariantSaleRows(product){
+
+  const variants =
+    getProductVariants(product);
+
+  if(!variants.length){
+    return [];
+  }
+
+  return variants.map((variant,index)=>{
+
+    const regular =
+      Number(
+        variant.mrp ??
+        variant.price ??
+        variant.regular_price ??
+        variant.original_price ??
+        0
+      );
+
+    const sale =
+      Number(
+        variant.sale_price ??
+        variant.selling_price ??
+        variant.price ??
+        0
+      );
+
+    if(
+      !Number.isFinite(regular) ||
+      !Number.isFinite(sale) ||
+      regular <= 0 ||
+      sale <= 0 ||
+      sale >= regular
+    ){
+      return "";
+    }
+
+    const label =
+      variant.name ??
+      variant.size ??
+      variant.variant ??
+      variant.weight ??
+      variant.title ??
+      ("Option " + (index + 1));
+
+    const off =
+      ((regular - sale) / regular) * 100;
+
+    return `
+      <div class="variant-sale-item">
+        ${escapeHtml(label)}:
+        <s>₹${regular.toLocaleString("en-IN")}</s>
+        <span class="sale-tag">SALE</span>
+        <strong>₹${sale.toLocaleString("en-IN")}</strong>
+        <strong>${off.toFixed(0)}% OFF</strong>
+      </div>
+    `;
+  }).filter(Boolean);
+}
+
+
+function getIndexDisplayPrice(product){
+
+  const variants =
+    getProductVariants(product);
+
+  if(variants.length){
+
+    const valid =
+      variants
+        .map(v => {
+
+          const sale =
+            Number(
+              v.sale_price ??
+              v.selling_price ??
+              v.price ??
+              0
+            );
+
+          return sale > 0 ? sale : 0;
+        })
+        .filter(v => v > 0);
+
+    if(valid.length){
+      return Math.min(...valid);
+    }
+  }
+
+  return getProductPrice(product);
+}
+
+
 async function loadHomepageProducts(){
  const box=document.getElementById("dynamicProducts"),count=document.getElementById("productCount");
  try{
@@ -264,7 +418,10 @@ async function loadHomepageProducts(){
  hasSale
  ? `<span class="product-price-box"><span class="mrp-price">₹${mrp.toLocaleString("en-IN")}</span><span class="sale-label">SALE</span><span class="sale-price">₹${price.toLocaleString("en-IN")}</span><span class="discount-badge">${discount.toFixed(0)}% OFF</span></span>`
  : `<span class="product-price-box"><span class="sale-price">₹${price.toLocaleString("en-IN")}</span></span>`
-}</span><span class="stock ${stock>0?"":"out"}">${stock>0?"IN STOCK":"OUT OF STOCK"}</span></div>${stock>0?`<div class="product-actions"><button class="outline" type="button">ADD TO CART</button><button type="button">BUY NOW</button></div>`:""}</div>`;
+}</span><span class="stock ${stock>0?"":"out"}">${stock>0?"IN STOCK":"OUT OF STOCK"}</span></div>${stock>0?`
+              ${getVariantSaleRows(product).join("")}
+
+<div class="product-actions"><button class="outline" type="button">ADD TO CART</button><button type="button">BUY NOW</button></div>`:""}</div>`;
    if(stock>0){const buttons=card.querySelectorAll("button");buttons[0].addEventListener("click",()=>addToCart(product));buttons[1].addEventListener("click",()=>buyNow(product))}
    card.querySelector(".product-image").addEventListener("click",()=>openProduct(id));box.appendChild(card);
   });
