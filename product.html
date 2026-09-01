@@ -2372,13 +2372,18 @@ function normalizeUnitPriceOptions(list) {
         if (!item || typeof item !== "object") return null;
         const size = item.size ?? item.value ?? item.quantity ?? item.weight ?? item.volume ?? "";
         const unit = normalizeUnit(item.unit ?? item.size_unit ?? item.volume_unit ?? item.weight_unit ?? "");
-        const price = parsePriceNumber(item.price ?? item.rate ?? item.amount ?? item.sale_price);
+        const mrp = parsePriceNumber(item.mrp ?? item.price ?? item.regular_price ?? item.original_price ?? item.rate ?? item.amount);
+        const salePriceRaw = item.sale_price ?? item.selling_price ?? item.sale ?? null;
+        const salePrice = salePriceRaw !== null && salePriceRaw !== undefined && String(salePriceRaw).trim() !== ""
+            ? parsePriceNumber(salePriceRaw)
+            : mrp;
+        const price = mrp;
         const stockRaw = item.stock ?? item.inventory ?? item.available_stock ?? item.stock_quantity ?? item.quantity_available;
         const hasStock = stockRaw !== undefined && stockRaw !== null && String(stockRaw).trim() !== "";
         const stock = hasStock ? Math.max(0, Number(stockRaw) || 0) : null;
         if (size === "" || price <= 0) return null;
         const label = String(size).trim() + (unit ? " " + unit : "");
-        return { value: label, label, price, stock };
+        return { value: label, label, price, mrp, sale_price: salePrice > 0 && salePrice < mrp ? salePrice : null, stock };
     }).filter(Boolean);
 }
 
@@ -2462,9 +2467,25 @@ async function getLiveAdminStock(product) {
 
 function updateDisplayedPrice() {
     const priceEl = document.getElementById("productPrice");
+    if (!priceEl) return;
+
+    const product = window.liaraCurrentProduct || {};
     const variant = getSelectedVariant();
-    if (priceEl && variant) {
-        priceEl.textContent = "₹" + variant.price.toLocaleString("en-IN");
+
+    const mrp = Number(variant?.mrp ?? variant?.price ?? product.mrp ?? product.price ?? 0);
+    const sale = Number(variant?.sale_price ?? product.sale_price ?? product.selling_price ?? 0);
+    const finalPrice = sale > 0 && mrp > 0 && sale < mrp ? sale : (Number(variant?.price ?? product.price ?? 0));
+
+    if (!(finalPrice > 0)) return;
+
+    if (mrp > finalPrice) {
+        priceEl.innerHTML = `
+            <span class="product-mrp-cut">₹${mrp.toLocaleString("en-IN")}</span>
+            <span class="product-sale-label">SALE</span>
+            <span class="product-sale-price">₹${finalPrice.toLocaleString("en-IN")}</span>
+        `;
+    } else {
+        priceEl.innerHTML = `<span class="product-sale-price">₹${finalPrice.toLocaleString("en-IN")}</span>`;
     }
 }
 
@@ -3523,9 +3544,13 @@ async function addToCart() {
                 "Liara Product",
 
             price:
-                Number(
-                    getSelectedVariant()?.price ?? product.price ?? 0
-                ),
+                Number(selectedVariant?.sale_price ?? selectedVariant?.price ?? product.sale_price ?? product.price ?? 0),
+
+            mrp:
+                Number(selectedVariant?.mrp ?? selectedVariant?.price ?? product.mrp ?? product.price ?? 0),
+
+            sale_price:
+                Number(selectedVariant?.sale_price ?? product.sale_price ?? 0) || null,
 
             image:
                 product.image_url ||
@@ -3538,13 +3563,7 @@ async function addToCart() {
                 quantity,
 
             size:
-                getSelectedSize(),
-
-            variant_size:
-                getSelectedVariant()?.size ?? null,
-
-            variant_unit:
-                getSelectedVariant()?.unit ?? null
+                getSelectedSize()
 
         });
 
@@ -3638,9 +3657,13 @@ async function buyNow() {
             "Liara Product",
 
         price:
-            Number(
-                selectedVariant?.price ?? product.price ?? 0
-            ),
+            Number(selectedVariant?.sale_price ?? selectedVariant?.price ?? product.sale_price ?? product.price ?? 0),
+
+        mrp:
+            Number(selectedVariant?.mrp ?? selectedVariant?.price ?? product.mrp ?? product.price ?? 0),
+
+        sale_price:
+            Number(selectedVariant?.sale_price ?? product.sale_price ?? 0) || null,
 
         image:
             product.image_url ||
@@ -3744,6 +3767,78 @@ document.addEventListener("DOMContentLoaded", function(){
 }
 </style>
 
+
+
+<style id="liara-final-sale-price-compact">
+/* Final product-page sale price: compact, clear and tied to selected size */
+.product-price{
+    display:flex !important;
+    align-items:center !important;
+    flex-wrap:wrap !important;
+    gap:8px !important;
+    font-size:24px !important;
+    line-height:1.1 !important;
+    margin:4px 0 14px !important;
+}
+.product-mrp-cut{
+    color:#999 !important;
+    font-size:15px !important;
+    font-weight:600 !important;
+    text-decoration:line-through !important;
+    text-decoration-thickness:1.5px !important;
+}
+.product-sale-label{
+    display:inline-flex !important;
+    align-items:center !important;
+    padding:4px 7px !important;
+    border-radius:5px !important;
+    background:#b88427 !important;
+    color:#fff !important;
+    font-size:9px !important;
+    font-weight:800 !important;
+    letter-spacing:.8px !important;
+}
+.product-sale-price{
+    color:#ad8232 !important;
+    font-size:24px !important;
+    font-weight:800 !important;
+}
+
+/* Make the complete desktop product card smaller without changing functionality */
+@media(min-width:901px){
+    .product-page{
+        width:min(88vw,900px) !important;
+        max-width:900px !important;
+        padding:22px 0 45px !important;
+    }
+    .product-detail{
+        max-width:900px !important;
+        padding:18px !important;
+        gap:18px !important;
+        border-radius:19px !important;
+    }
+    .product-photo{
+        height:350px !important;
+        max-height:350px !important;
+        border-radius:16px !important;
+    }
+    .product-info{padding:8px 5px 0 !important;}
+    .product-label{font-size:10px !important; margin-bottom:8px !important;}
+    .product-info h1{font-size:29px !important; margin-bottom:10px !important;}
+    .product-description{font-size:14px !important; line-height:1.55 !important; margin-bottom:12px !important;}
+    .purchase-area{padding:0 5px !important;}
+    .size-option{padding:8px 10px !important; font-size:12px !important;}
+    .purchase-area .action-buttons button{min-height:43px !important; padding:10px 14px !important; font-size:13px !important;}
+    .product-detail .ingredients-section,.product-detail .product-detail-section{padding:16px !important; border-radius:15px !important;}
+}
+
+@media(max-width:600px){
+    .product-price{font-size:21px !important; gap:6px !important;}
+    .product-mrp-cut{font-size:13px !important;}
+    .product-sale-label{font-size:8px !important; padding:3px 6px !important;}
+    .product-sale-price{font-size:21px !important;}
+}
+</style>
 
 </body>
 
