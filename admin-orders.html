@@ -16,6 +16,8 @@
 @media(max-width:1050px){.stock-four-cards{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.stock-four-cards{grid-template-columns:1fr}.stock-location-head{align-items:flex-start;flex-direction:column}.stock-location-tabs{display:grid;grid-template-columns:1fr 1fr}.stock-location-tab{text-align:center}}
 
+
+.existing-photo-grid{display:grid;grid-template-columns:repeat(4,minmax(90px,1fr));gap:10px;margin-top:12px}.existing-photo-item{border:1px solid #eee;border-radius:10px;padding:7px;background:#faf8f5;text-align:center}.existing-photo-item img{width:100%;height:105px;object-fit:cover;border-radius:8px;display:block}.existing-photo-item span{display:block;font-size:10px;color:#777;margin-top:5px}.variant-row{display:grid;grid-template-columns:1fr .8fr 1fr 1fr .9fr 1fr;gap:10px;align-items:end;padding:14px;border:1px solid #eee5d5;border-radius:12px;background:#fffdf9;margin-bottom:10px}.variant-field label{display:block;font-size:10px;font-weight:bold;color:#666;margin-bottom:5px}.variant-field input,.variant-field select{width:100%;padding:9px;border:1px solid #ddd;border-radius:7px;background:#fff}.variant-sale-preview{grid-column:1/-1;font-size:12px;min-height:18px}.variant-remove{border:0;background:#f7dddd;color:#a33;padding:9px 10px;border-radius:7px;cursor:pointer;font-weight:bold}@media(max-width:900px){.variant-row{grid-template-columns:1fr 1fr}.existing-photo-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -4083,7 +4085,7 @@ Hyaluronic Acid — Helps maintain hydration">${escapeHtml(product.key_ingredien
                     <div
                         id="editPhotoPreview"
                         style="margin-top:15px;">
-                        ${product.image_url ? `<img src="${escapeHtml(product.image_url)}" alt="Current Product" style="width:170px;height:170px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">` : ""}
+                        <div class="existing-photo-grid">${[product.image_url,product.image_url_2,product.image_url_3,product.image_url_4].filter(Boolean).map((url,i)=>`<div class="existing-photo-item"><img src="${escapeHtml(url)}" alt="Product Photo ${i+1}"><span>Photo ${i+1}</span></div>`).join("")}</div>
                     </div>
 
                     <div
@@ -4322,58 +4324,49 @@ function addVariantRow(variant){
     const list = document.getElementById("variantList");
     if(!list) return;
     variant = variant || {};
+    const mrp = Number(variant.price ?? 0);
+    const sale = variant.sale_price != null ? Number(variant.sale_price) : 0;
+    const discount = Number(variant.discount_percent || (mrp > 0 && sale > 0 && sale < mrp ? ((mrp-sale)/mrp*100) : 0));
     const row = document.createElement("div");
     row.className = "variant-row";
     row.innerHTML = `
-        <div class="variant-field">
-            <label>SIZE / ML</label>
-            <input type="number" min="0" step="any" class="variant-size" value="${escapeHtml(String(variant.size ?? ""))}" placeholder="e.g. 100">
-        </div>
-        <div class="variant-field">
-            <label>UNIT</label>
-            <select class="variant-unit">
-                <option value="ML">ML</option>
-                <option value="G">G</option>
-                <option value="L">L</option>
-                <option value="KG">KG</option>
-            </select>
-        </div>
-        <div class="variant-field">
-            <label>PRICE (₹)</label>
-            <input type="number" min="0" step="0.01" class="variant-price" value="${escapeHtml(String(variant.price ?? ""))}" placeholder="e.g. 499">
-        </div>
-        <div class="variant-field">
-            <label>STOCK</label>
-            <input type="number" min="0" step="1" class="variant-stock" value="${escapeHtml(String(variant.stock ?? ""))}" placeholder="e.g. 20">
-        </div>
+        <div class="variant-field"><label>SIZE / ML</label><input type="number" min="0" step="any" class="variant-size" value="${escapeHtml(String(variant.size ?? ""))}" placeholder="e.g. 100"></div>
+        <div class="variant-field"><label>UNIT</label><select class="variant-unit"><option value="ML">ML</option><option value="G">G</option><option value="L">L</option><option value="KG">KG</option></select></div>
+        <div class="variant-field"><label>MRP (₹)</label><input type="number" min="0" step="0.01" class="variant-price" value="${escapeHtml(String(variant.price ?? ""))}" placeholder="e.g. 140" oninput="syncVariantSale(this)"></div>
+        <div class="variant-field"><label>SALE PRICE (₹)</label><input type="number" min="0" step="0.01" class="variant-sale-price" value="${sale || ""}" placeholder="e.g. 119" oninput="syncVariantSale(this,'sale')"></div>
+        <div class="variant-field"><label>DISCOUNT (%)</label><input type="number" min="0" max="100" step="0.01" class="variant-discount" value="${discount || ""}" placeholder="e.g. 15" oninput="syncVariantSale(this,'discount')"></div>
+        <div class="variant-field"><label>STOCK</label><input type="number" min="0" step="1" class="variant-stock" value="${escapeHtml(String(variant.stock ?? ""))}" placeholder="e.g. 20"></div>
+        <div class="variant-sale-preview"></div>
         <button type="button" class="variant-remove" onclick="this.closest('.variant-row').remove()">✕ Remove</button>
     `;
     list.appendChild(row);
     const unit = row.querySelector(".variant-unit");
     if(variant.unit) unit.value = String(variant.unit).toUpperCase();
+    syncVariantSale(row.querySelector('.variant-price'));
+}
+
+function syncVariantSale(input, changed){
+    const row = input?.closest('.variant-row'); if(!row) return;
+    const mrp=Number(row.querySelector('.variant-price')?.value||0), saleEl=row.querySelector('.variant-sale-price'), discEl=row.querySelector('.variant-discount');
+    if(changed==='discount' && mrp>0){ const d=Math.min(100,Math.max(0,Number(discEl.value||0))); saleEl.value=d>0?(mrp*(1-d/100)).toFixed(2).replace(/\.00$/,''):''; }
+    else if(changed==='sale' && mrp>0){ const sp=Number(saleEl.value||0); discEl.value=(sp>0&&sp<mrp)?((mrp-sp)/mrp*100).toFixed(2).replace(/\.00$/,''):''; }
+    const sale=Number(saleEl?.value||0), d=Number(discEl?.value||0), preview=row.querySelector('.variant-sale-preview');
+    if(preview) preview.innerHTML=(mrp>0&&sale>0&&sale<mrp)?`<span class="mrp-cut">MRP ${money(mrp)}</span> <span class="sale-label">SALE ${money(sale)}</span> <span class="discount-label">${d.toFixed(2).replace(/\.00$/,'')}% OFF</span>`:(mrp>0?`MRP ${money(mrp)} — No Sale`:``);
 }
 
 function collectProductVariants(){
-    const list = document.getElementById("variantList");
-    if(!list) return [];
-    const rows = [...list.querySelectorAll(".variant-row")];
-    const variants = [];
+    const list=document.getElementById("variantList"); if(!list) return [];
+    const rows=[...list.querySelectorAll('.variant-row')], variants=[];
     for(const row of rows){
-        const sizeEl = row.querySelector(".variant-size");
-        const unitEl = row.querySelector(".variant-unit");
-        const priceEl = row.querySelector(".variant-price");
-        const stockEl = row.querySelector(".variant-stock");
-        const sizeText = (sizeEl?.value || "").trim();
-        const priceText = (priceEl?.value || "").trim();
-        const stockText = (stockEl?.value || "").trim();
-        if(!sizeText && !priceText && !stockText) continue;
-        const size = Number(sizeText);
-        const price = Number(priceText);
-        const stock = stockText === "" ? 0 : Number(stockText);
-        if(!Number.isFinite(size) || size <= 0){ alert("Har Size / ML valid pao."); return null; }
-        if(!Number.isFinite(price) || price < 0){ alert("Har Size da valid price pao."); return null; }
-        if(!Number.isInteger(stock) || stock < 0){ alert("Har Size da valid stock pao."); return null; }
-        variants.push({size:size,unit:(unitEl?.value || "ML").toUpperCase(),price:price,stock:stock});
+        const sizeText=(row.querySelector('.variant-size')?.value||'').trim(), priceText=(row.querySelector('.variant-price')?.value||'').trim(), saleText=(row.querySelector('.variant-sale-price')?.value||'').trim(), stockText=(row.querySelector('.variant-stock')?.value||'').trim();
+        if(!sizeText&&!priceText&&!saleText&&!stockText) continue;
+        const size=Number(sizeText), price=Number(priceText), salePrice=saleText===''?null:Number(saleText), discount=Number(row.querySelector('.variant-discount')?.value||0), stock=stockText===''?0:Number(stockText);
+        if(!Number.isFinite(size)||size<=0){alert('Har Size / ML valid pao.');return null;}
+        if(!Number.isFinite(price)||price<0){alert('Har Size da valid MRP pao.');return null;}
+        if(salePrice!==null&&(!Number.isFinite(salePrice)||salePrice<=0||salePrice>=price)){alert('Variant Sale Price MRP ton ghatt te 0 ton vadh honi chahidi hai.');return null;}
+        if(!Number.isFinite(discount)||discount<0||discount>100){alert('Variant discount 0-100 de vich pao.');return null;}
+        if(!Number.isInteger(stock)||stock<0){alert('Har Size da valid stock pao.');return null;}
+        variants.push({size:size,unit:(row.querySelector('.variant-unit')?.value||'ML').toUpperCase(),price:price,sale_price:salePrice,discount_percent:discount,stock:stock});
     }
     return variants;
 }
@@ -4548,6 +4541,8 @@ Hyaluronic Acid — Helps maintain hydration"></textarea>
 
             </div>
 
+            <div class="form-group full"><div class="admin-box"><div class="form-title"><p>VARIANT SALE MANAGEMENT</p><h2>📏 Size / ML, MRP & Individual Sale</h2></div><div id="variantList"></div><button type="button" class="btn" onclick="addVariantRow()">＋ Add Size / Variant</button><p style="margin:10px 0 0;color:#888;font-size:11px;">Har size di sale alag set ho sakdi aa. Example: ₹110 → ₹99, ₹140 → ₹119.</p></div></div>
+
             <div class="form-group full">
 
                 <label>📷 Product Photos (Up to 4)</label>
@@ -4612,6 +4607,8 @@ Hyaluronic Acid — Helps maintain hydration"></textarea>
 
     </div>
     `;
+
+    addVariantRow();
 
 }
 
@@ -4714,6 +4711,9 @@ async function saveProduct(){
         document.getElementById(
             "productPhotoInput"
         ).files;
+
+    const variants = collectProductVariants();
+    if(variants === null) return;
 
     if(files.length > 4){
         alert("Maximum 4 photos upload karo.");
@@ -4845,7 +4845,8 @@ async function saveProduct(){
                 image_url:imageUrl,
                 image_url_2:extraPhotoUrls[0] || null,
                 image_url_3:extraPhotoUrls[1] || null,
-                image_url_4:extraPhotoUrls[2] || null
+                image_url_4:extraPhotoUrls[2] || null,
+                variants:variants
 
             });
 
