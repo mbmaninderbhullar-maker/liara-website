@@ -202,6 +202,54 @@
     font-weight: bold;
 }
 
+
+.price-line{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:6px;
+}
+.mrp-cut{
+    color:#999;
+    text-decoration:line-through;
+    font-size:13px;
+}
+.sale-label{
+    color:#ad8232;
+    font-weight:800;
+    font-size:12px;
+    letter-spacing:.5px;
+}
+.sale-price{
+    font-weight:800;
+    font-size:15px;
+}
+.discount-badge{
+    color:#287a3e;
+    font-size:12px;
+    font-weight:700;
+}
+.hsn-line{
+    color:#777;
+    font-size:11px;
+    margin-top:5px;
+}
+.tax-summary{
+    margin-top:20px;
+    padding-top:15px;
+    border-top:1px solid #eee;
+}
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin:8px 0;
+    color:#555;
+    font-size:14px;
+}
+.summary-row.discount-row{color:#287a3e}
+
 @media (max-width: 800px) {
 
     .checkout-container {
@@ -323,6 +371,30 @@
 
             </div>
 
+
+            <div class="tax-summary">
+
+                <div class="summary-row">
+                    <span>MRP Total</span>
+                    <span>₹<span id="checkout-mrp-total">0</span></span>
+                </div>
+
+                <div class="summary-row discount-row">
+                    <span>Discount</span>
+                    <span>- ₹<span id="checkout-discount">0</span></span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Sale Subtotal</span>
+                    <span>₹<span id="checkout-subtotal">0</span></span>
+                </div>
+
+                <div class="summary-row">
+                    <span>GST</span>
+                    <span>₹<span id="checkout-gst">0</span></span>
+                </div>
+
+            </div>
 
             <div class="total-box">
 
@@ -746,19 +818,95 @@ else {
 ===================================================== */
 
 let total = 0;
+let mrpTotal = 0;
+let discountTotal = 0;
+let subtotal = 0;
+let gstTotal = 0;
+
+function money(value){
+    return Number(value || 0).toLocaleString("en-IN", {
+        maximumFractionDigits: 2
+    });
+}
+
+function getProductSalePrice(product){
+    const sale = Number(product.sale_price);
+    if(Number.isFinite(sale) && sale > 0) return sale;
+
+    return Number(product.price || 0);
+}
+
+function getProductMRP(product){
+    const mrp = Number(product.mrp);
+    const sale = getProductSalePrice(product);
+
+    if(Number.isFinite(mrp) && mrp > 0) return mrp;
+    return sale;
+}
+
+function getProductDiscount(product, mrp, sale){
+    const supplied = Number(product.discount_percent);
+
+    if(Number.isFinite(supplied) && supplied > 0){
+        return Math.min(100, supplied);
+    }
+
+    if(mrp > sale && mrp > 0){
+        return ((mrp - sale) / mrp) * 100;
+    }
+
+    return 0;
+}
+
+function getProductGST(product){
+    const gst = Number(product.gst_rate ?? product.gst ?? 0);
+    return Number.isFinite(gst) && gst > 0 ? gst : 0;
+}
+
+function calculateCheckoutTotals(){
+    mrpTotal = 0;
+    discountTotal = 0;
+    subtotal = 0;
+    gstTotal = 0;
+
+    (checkoutItems || []).forEach(function(product){
+        const qty = Number(product.quantity) || 1;
+        const mrp = getProductMRP(product);
+        const sale = getProductSalePrice(product);
+        const discount = Math.max(0, mrp - sale);
+        const gstRate = getProductGST(product);
+
+        mrpTotal += mrp * qty;
+        discountTotal += discount * qty;
+        subtotal += sale * qty;
+
+        // GST is calculated on the actual sale price.
+        gstTotal += (sale * qty) * (gstRate / 100);
+    });
+
+    total = subtotal + gstTotal;
+
+    const mrpEl = document.getElementById("checkout-mrp-total");
+    const discountEl = document.getElementById("checkout-discount");
+    const subtotalEl = document.getElementById("checkout-subtotal");
+    const gstEl = document.getElementById("checkout-gst");
+
+    if(mrpEl) mrpEl.innerText = money(mrpTotal);
+    if(discountEl) discountEl.innerText = money(discountTotal);
+    if(subtotalEl) subtotalEl.innerText = money(subtotal);
+    if(gstEl) gstEl.innerText = money(gstTotal);
+    totalElement.innerText = money(total);
+}
 
 if (!checkoutItems || checkoutItems.length === 0) {
 
     orderItems.innerHTML = `
         <div class="empty-checkout">
             <p>Your order is empty.</p>
-
             <a
                 href="index.html#products"
                 class="back-shopping">
-
                 ← Continue Shopping
-
             </a>
         </div>
     `;
@@ -769,42 +917,50 @@ if (!checkoutItems || checkoutItems.length === 0) {
 
     checkoutItems.forEach(function(product) {
 
-        const productPrice =
-            Number(product.price) || 0;
-
-        const productQuantity =
-            Number(product.quantity) || 1;
-
-        total +=
-            productPrice * productQuantity;
-
+        const productPrice = getProductSalePrice(product);
+        const productMRP = getProductMRP(product);
+        const productQuantity = Number(product.quantity) || 1;
+        const discountPercent = getProductDiscount(product, productMRP, productPrice);
+        const gstRate = getProductGST(product);
+        const hsnCode = product.hsn_code || product.hsn || "";
 
         orderHTML += `
             <div class="order-item">
 
                 <img
-                    src="${escapeHtml(
-                        product.image || "facewash.jpg"
-                    )}"
-                    alt="${escapeHtml(
-                        product.name || "Product"
-                    )}"
+                    src="${escapeHtml(product.image || "facewash.jpg")}"
+                    alt="${escapeHtml(product.name || "Product")}"
                     onerror="this.src='facewash.jpg'"
                 >
 
-                <div>
+                <div style="flex:1;">
 
                     <h4>
-                        ${escapeHtml(
-                            product.name || "Product"
-                        )}
+                        ${escapeHtml(product.name || "Product")}
                     </h4>
 
+                    <div class="price-line">
+                        ${productMRP > productPrice
+                            ? `<span class="mrp-cut">MRP ₹${money(productMRP)}</span>`
+                            : `<span class="mrp-cut" style="display:none;">MRP ₹${money(productMRP)}</span>`
+                        }
+                        <span class="sale-label">SALE</span>
+                        <span class="sale-price">₹${money(productPrice)}</span>
+                        ${discountPercent > 0
+                            ? `<span class="discount-badge">${money(discountPercent)}% OFF</span>`
+                            : ""
+                        }
+                    </div>
+
                     <p>
-                        ₹${productPrice.toLocaleString("en-IN")}
-                        ×
-                        ${productQuantity}
+                        Qty ${productQuantity}
+                        ${gstRate > 0 ? ` • GST ${money(gstRate)}%` : ""}
                     </p>
+
+                    ${hsnCode
+                        ? `<div class="hsn-line">HSN Code: ${escapeHtml(hsnCode)}</div>`
+                        : ""
+                    }
 
                 </div>
 
@@ -814,11 +970,9 @@ if (!checkoutItems || checkoutItems.length === 0) {
     });
 
     orderItems.innerHTML = orderHTML;
+    calculateCheckoutTotals();
 }
 
-
-totalElement.innerText =
-    total.toLocaleString("en-IN");
 /* =====================================================
    RESTORE CHECKOUT AFTER GOOGLE LOGIN
 ===================================================== */
@@ -1493,12 +1647,21 @@ async function saveOrderToDatabase(statusText) {
         const quantity =
             Number(product.quantity || 1);
 
+        const salePrice = getProductSalePrice(product);
+        const mrpPrice = getProductMRP(product);
+        const gstRate = getProductGST(product);
+        const hsnCode = product.hsn_code || product.hsn || "";
+
         productNames +=
             (typeof getProductDisplayName === "function"
                 ? getProductDisplayName(product)
                 : (product.name || "Product")) +
             " × " +
             quantity +
+            " | MRP ₹" + mrpPrice +
+            " | SALE ₹" + salePrice +
+            (gstRate > 0 ? " | GST " + gstRate + "%" : "") +
+            (hsnCode ? " | HSN " + hsnCode : "") +
             ", ";
 
         totalQuantity += quantity;
@@ -1634,7 +1797,16 @@ async function verifyRazorpayPayment(response) {
     let items = checkoutItems.map(function(product) {
         return {
             name: product.name || "Product",
-            quantity: Number(product.quantity || 1)
+            quantity: Number(product.quantity || 1),
+            mrp: getProductMRP(product),
+            sale_price: getProductSalePrice(product),
+            discount_percent: getProductDiscount(
+                product,
+                getProductMRP(product),
+                getProductSalePrice(product)
+            ),
+            gst_rate: getProductGST(product),
+            hsn_code: product.hsn_code || product.hsn || ""
         };
     });
 
