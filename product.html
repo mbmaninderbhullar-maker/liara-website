@@ -3538,7 +3538,13 @@ async function addToCart() {
                 quantity,
 
             size:
-                getSelectedSize()
+                getSelectedSize(),
+
+            variant_size:
+                getSelectedVariant()?.size ?? null,
+
+            variant_unit:
+                getSelectedVariant()?.unit ?? null
 
         });
 
