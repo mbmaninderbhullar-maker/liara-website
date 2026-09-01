@@ -414,13 +414,27 @@ async function loadHomepageProducts(){
    const id=product.id||"",name=getProductName(product),desc=getProductDescription(product),price=getProductPrice(product),mrp=getProductMRP(product),discount=getProductDiscount(product,mrp,price),hasSale=(mrp>0&&price>0&&price<mrp),stock=getProductStock(product),image=getProductImage(product);
    const card=document.createElement("article");card.className="product-card";
    const imageHtml=image?`<img src="${escapeHtml(image)}" alt="${escapeHtml(name)}" onerror="this.onerror=null;this.style.display='none';">`:`<div class="hero-product-placeholder"><span>LIARA</span></div>`;
-   card.innerHTML=`<div class="product-image">${imageHtml}</div><div class="product-info"><div class="product-name">${escapeHtml(name)}</div><div class="product-desc">${escapeHtml(desc)}</div><div class="product-meta"><span class="price">${
- hasSale
- ? `<span class="product-price-box"><span class="mrp-price">₹${mrp.toLocaleString("en-IN")}</span><span class="sale-label">SALE</span><span class="sale-price">₹${price.toLocaleString("en-IN")}</span><span class="discount-badge">${discount.toFixed(0)}% OFF</span></span>`
+   card.innerHTML=`<div class="product-image">${imageHtml}</div><div class="product-info"><div class="product-name">${escapeHtml(name)}</div><div class="product-desc">${escapeHtml(desc)}</div><div class="product-meta"><span class="price">
+              ${(() => {
+                const variants = getProductVariants(product);
+                const rows = variants.map(v => {
+                  const sale = Number(v.sale_price ?? v.price ?? v.selling_price ?? 0);
+                  const mrp = Number(v.mrp ?? v.price ?? v.regular_price ?? v.original_price ?? sale);
+                  return sale > 0 ? {sale, mrp} : null;
+                }).filter(Boolean);
+                const best = rows.length
+                  ? rows.reduce((a,b) => b.sale < a.sale ? b : a)
+                  : {sale: price, mrp: mrp};
+                const off = best.mrp > 0 && best.sale < best.mrp
+                  ? ((best.mrp - best.sale) / best.mrp) * 100
+                  : 0;
+                return best.mrp > best.sale
+                  ? `<span class="product-price-box"><span class="mrp-price">₹${best.mrp.toLocaleString("en-IN")}</span><span class="sale-label">SALE</span><span class="sale-price">₹${best.sale.toLocaleString("en-IN")}</span><span class="discount-badge">${off.toFixed(0)}% OFF</span></span>`
+                  : `<span class="product-price-box"><span class="sale-price">₹${best.sale.toLocaleString("en-IN")}</span></span>`;
+              })()}
+            </span><span class="sale-label">SALE</span><span class="sale-price">₹${price.toLocaleString("en-IN")}</span><span class="discount-badge">${discount.toFixed(0)}% OFF</span></span>`
  : `<span class="product-price-box"><span class="sale-price">₹${price.toLocaleString("en-IN")}</span></span>`
 }</span><span class="stock ${stock>0?"":"out"}">${stock>0?"IN STOCK":"OUT OF STOCK"}</span></div>${stock>0?`
-              ${getVariantSaleRows(product).join("")}
-
 <div class="product-actions"><button class="outline" type="button">ADD TO CART</button><button type="button">BUY NOW</button></div>`:""}</div>`;
    if(stock>0){const buttons=card.querySelectorAll("button");buttons[0].addEventListener("click",()=>addToCart(product));buttons[1].addEventListener("click",()=>buyNow(product))}
    card.querySelector(".product-image").addEventListener("click",()=>openProduct(id));box.appendChild(card);
