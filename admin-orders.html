@@ -55,6 +55,32 @@
  .variant-remove{width:100%}
  .photo-preview,.existing-photo-grid{grid-template-columns:repeat(2,1fr)!important}
 }
+
+<style>
+.shipway-status-cell{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    align-items:flex-start;
+}
+.shipway-awb{
+    font-size:10px;
+    color:#777;
+    white-space:nowrap;
+}
+.shipway-live-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 10px;
+    border:1px solid #d8eadb;
+    border-radius:8px;
+    background:#f3fbf4;
+    color:#287a3e;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.3px;
+}
+</style>
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -1520,7 +1546,6 @@ body{
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
         <button type="button" onclick="showSection('parties',this)">👥 Parties</button>
             <button type="button" onclick="showSection('email',this)">📧 Email</button>
-            <button type="button" onclick="window.location.href='account.html'">👤 My Account</button>
             <button type="button" onclick="window.location.href='settings.html'">⚙️ Settings</button>
 
         <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
@@ -2099,7 +2124,7 @@ async function checkAdmin(){
    ORDERS
 ========================================================= */
 
-async function loadOrders(){
+async function loadOrders(runShipwaySync=true){
 
     const box =
         document.getElementById("orders");
@@ -2142,6 +2167,14 @@ async function loadOrders(){
 
     updateOrderSummary(allOrders);
     renderOrders(allOrders);
+
+    if(runShipwaySync){
+        setTimeout(()=>{
+            syncShipwayStatuses({
+                refresh:true
+            });
+        },300);
+    }
 
 }
 
@@ -2359,7 +2392,7 @@ function renderOrders(orders){
         <th>QTY</th>
         <th>AMOUNT</th>
         <th>PAYMENT</th>
-        <th>STATUS</th>
+        <th>SHIPWAY STATUS</th>
         <th>ACTION</th>
     </tr>
     </thead>
@@ -2426,18 +2459,12 @@ function renderOrders(orders){
             </td>
 
             <td>
-
-                <select
-                    class="status-select"
-                    onchange="updateOrderStatus(
-                        '${escapeHtml(String(order.id))}',
-                        this.value
-                    )">
-
-                    ${statusOptions(status)}
-
-                </select>
-
+                <div class="shipway-status-cell">
+                    ${statusBadge(status)}
+                    ${order.awb || order.tracking_number
+                        ? `<small class="shipway-awb">AWB: ${escapeHtml(order.awb || order.tracking_number)}</small>`
+                        : `<small class="shipway-awb">Shipway tracking</small>`}
+                </div>
             </td>
 
             <td>
@@ -2467,95 +2494,109 @@ function renderOrders(orders){
 
 }
 
-function statusOptions(current){
-
-    const statuses = [
-        "Pending",
-        "Confirmed",
-        "Packed",
-        "Shipped",
-        "Delivered",
-        "Cancelled"
-    ];
-
-    return statuses.map(status=>`
-
-        <option
-            value="${status}"
-            ${
-                String(current).toLowerCase()
-                === status.toLowerCase()
-                ? "selected"
-                : ""
-            }>
-
-            ${status}
-
-        </option>
-
-    `).join("");
-
-}
-
 /* =========================================================
-   UPDATE ORDER STATUS
+   SHIPWAY AUTO STATUS SYNC
 ========================================================= */
 
-async function updateOrderStatus(id,status){
+let shipwaySyncBusy = false;
+let shipwayAutoSyncTimer = null;
 
-    const yes =
-        confirm(
-            "Change order status to " +
-            status +
-            "?"
-        );
-
-    if(!yes){
-
-        renderOrders(allOrders);
-
-        return;
-
-    }
-
-    const {error} =
-        await supabaseClient
-        .from("orders")
-        .update({
-            status:status
-        })
-        .eq("id",id);
-
-    if(error){
-
-        alert(
-            "Status update failed:\n\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-    const found =
-        allOrders.find(
-            order =>
-            String(order.id)
-            === String(id)
-        );
-
-    if(found){
-        found.status = status;
-    }
-
-    updateOrderSummary(allOrders);
-    applyOrderFilters();
-
-    alert(
-        "Order status updated successfully."
-    );
-
+function shipwayFunctionUrl(){
+    return SUPABASE_URL + "/functions/v1/shipway-track-order";
 }
+
+async function syncOneOrderWithShipway(order){
+    if(!order || shipwaySyncBusy) return null;
+
+    const id =
+        order.order_number ||
+        order.id;
+
+    if(!id) return null;
+
+    try{
+        const {data,error} =
+            await supabaseClient.functions.invoke(
+                "shipway-track-order",
+                {
+                    body:{
+                        order_id:id
+                    }
+                }
+            );
+
+        if(error) return null;
+
+        if(data?.success){
+            return data;
+        }
+    }catch(error){
+        console.warn("Shipway sync failed:", error);
+    }
+
+    return null;
+}
+
+async function syncShipwayStatuses(options={}){
+    if(shipwaySyncBusy) return;
+
+    shipwaySyncBusy = true;
+
+    try{
+        const {data,error} =
+            await supabaseClient
+            .from("orders")
+            .select("*")
+            .not("status","eq","Cancelled")
+            .order("created_at",{ascending:false});
+
+        if(error){
+            console.warn("Unable to load orders for Shipway sync:",error);
+            return;
+        }
+
+        const orders =
+            (data || []).filter(order=>{
+                const s =
+                    String(
+                        order.status || ""
+                    ).toLowerCase();
+
+                return s !== "delivered" &&
+                       s !== "cancelled";
+            });
+
+        for(const order of orders){
+            await syncOneOrderWithShipway(order);
+        }
+
+        if(options.refresh !== false){
+            await loadOrders(false);
+        }
+    }finally{
+        shipwaySyncBusy = false;
+    }
+}
+
+function startShipwayAutoSync(){
+    if(shipwayAutoSyncTimer){
+        clearInterval(shipwayAutoSyncTimer);
+    }
+
+    /*
+      Browser-side safety refresh every 2 minutes.
+      The actual Shipway credentials remain server-side
+      inside the Supabase Edge Function.
+    */
+    shipwayAutoSyncTimer =
+        setInterval(()=>{
+            syncShipwayStatuses({
+                refresh:true
+            });
+        },120000);
+}
+
+startShipwayAutoSync();
 
 /* =========================================================
    VIEW ORDER
@@ -2986,7 +3027,7 @@ function renderSales(orders){
         <th>QTY</th>
         <th>AMOUNT</th>
         <th>PAYMENT</th>
-        <th>STATUS</th>
+        <th>SHIPWAY STATUS</th>
         <th>ACTION</th>
     </tr>
     </thead>
@@ -5314,9 +5355,15 @@ async function loadDelivery(){
                 <h2>🚚 Delivery Tracking</h2>
             </div>
 
-            <button class="btn" onclick="loadDelivery()">
-                🔄 Refresh
-            </button>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <span class="shipway-live-badge">🟢 SHIPWAY AUTO SYNC</span>
+                <button class="btn" onclick="syncShipwayStatuses({refresh:true})">
+                    🔄 Sync Now
+                </button>
+                <button class="btn" onclick="loadDelivery()">
+                    Refresh
+                </button>
+            </div>
 
         </div>
 
@@ -5468,6 +5515,15 @@ async function loadDelivery(){
     document.getElementById(
         "deliveryTable"
     ).innerHTML = html;
+
+    // Keep Delivery section aligned with Shipway.
+    setTimeout(()=>{
+        syncShipwayStatuses({
+            refresh:false
+        }).then(()=>{
+            loadDelivery();
+        });
+    },300);
 
 }
 
