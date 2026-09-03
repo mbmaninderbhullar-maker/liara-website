@@ -128,6 +128,14 @@
             padding: 60px 20px;
         }
 
+        .free-shipping-msg {
+            margin-top: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: #f5f5f5;
+            font-size: 14px;
+        }
+
         @media (max-width: 700px) {
 
             .cart-section {
@@ -161,8 +169,6 @@
 
 <body>
 
-
-<!-- HEADER -->
 
 <header>
 
@@ -214,8 +220,6 @@
 
 
 
-<!-- CART -->
-
 <section class="cart-section">
 
 
@@ -246,8 +250,6 @@
 
 
 
-<!-- FOOTER -->
-
 <footer>
 
     <div class="footer-brand">
@@ -274,25 +276,72 @@
 
 <script>
 
-
-let cart =
-    JSON.parse(
-        localStorage.getItem("liaraCart")
-    ) || [];
+const FREE_SHIPPING_THRESHOLD = 499;
+const SHIPPING_CHARGE = 49;
 
 
+/* =========================
+   LOAD CART SAFELY
+========================= */
+
+function loadCart() {
+
+    try {
+
+        const saved =
+            localStorage.getItem("liaraCart");
+
+        if (!saved) {
+            return [];
+        }
+
+        const parsed = JSON.parse(saved);
+
+        if (Array.isArray(parsed)) {
+            return parsed;
+        }
+
+        /* If accidentally saved as one object */
+        if (parsed && typeof parsed === "object") {
+            return [parsed];
+        }
+
+        return [];
+
+    } catch (error) {
+
+        console.error(
+            "Cart loading error:",
+            error
+        );
+
+        return [];
+
+    }
+
+}
+
+
+let cart = loadCart();
+
+
+
+/* =========================
+   DISPLAY CART
+========================= */
 
 function displayCart() {
 
+    const cartBox =
+        document.getElementById("cart-box");
 
-    let cartBox =
-        document.getElementById(
-            "cart-box"
-        );
+
+    if (!Array.isArray(cart)) {
+        cart = [];
+    }
 
 
     if (cart.length === 0) {
-
 
         cartBox.innerHTML = `
 
@@ -328,116 +377,168 @@ function displayCart() {
 
     let html = "";
 
-    let total = 0;
+    let subtotal = 0;
 
 
-    cart.forEach(
-        function(product, index) {
+    cart.forEach(function(product, index) {
+
+        const quantity =
+            Math.max(
+                1,
+                Number(product.quantity) || 1
+            );
 
 
-            let itemTotal =
-                product.price *
-                product.quantity;
+        const price =
+            Math.max(
+                0,
+                Number(product.price) || 0
+            );
 
 
-            total += itemTotal;
+        const itemTotal =
+            price * quantity;
 
 
-            html += `
-
-                <div class="cart-item">
+        subtotal += itemTotal;
 
 
-                    <img
-                        src="${product.image}"
-                        alt="${product.name}"
-                    >
+        html += `
+
+            <div class="cart-item">
 
 
-                    <div class="cart-info">
+                <img
+                    src="${product.image || ''}"
+                    alt="${product.name || 'Product'}"
+                    onerror="this.style.visibility='hidden';"
+                >
 
 
-                        <h3>
-                            ${product.name}
-                        </h3>
+                <div class="cart-info">
 
 
-                        <div class="cart-price">
-
-                            ₹${product.price}
-
-                        </div>
+                    <h3>
+                        ${product.name || 'Product'}
+                    </h3>
 
 
-                        <div class="quantity-box">
+                    <div class="cart-price">
+
+                        ₹${price.toFixed(2)}
+
+                    </div>
 
 
-                            <button
-                                onclick="decreaseQuantity(${index})">
-
-                                −
-
-                            </button>
+                    <div class="quantity-box">
 
 
-                            <span class="quantity">
+                        <button
+                            type="button"
+                            onclick="decreaseQuantity(${index})">
 
-                                ${product.quantity}
+                            −
 
-                            </span>
-
-
-                            <button
-                                onclick="increaseQuantity(${index})">
-
-                                +
-
-                            </button>
+                        </button>
 
 
-                        </div>
+                        <span class="quantity">
+
+                            ${quantity}
+
+                        </span>
 
 
-                        <div class="cart-actions">
+                        <button
+                            type="button"
+                            onclick="increaseQuantity(${index})">
 
+                            +
 
-                            <button
-                                class="remove-btn"
-                                onclick="removeProduct(${index})">
-
-                                Remove
-
-                            </button>
-
-
-                            <button
-                                class="btn buy-btn"
-                                onclick="buyThisProduct(${index})">
-
-                                Buy Now
-
-                            </button>
-
-
-                        </div>
+                        </button>
 
 
                     </div>
 
 
-                    <div class="item-total">
+                    <div class="cart-actions">
 
-                        ₹${itemTotal}
+
+                        <button
+                            type="button"
+                            class="remove-btn"
+                            onclick="removeProduct(${index})">
+
+                            Remove
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="btn buy-btn"
+                            onclick="buyThisProduct(${index})">
+
+                            Buy Now
+
+                        </button>
+
 
                     </div>
 
 
                 </div>
 
-            `;
 
-        }
-    );
+                <div class="item-total">
+
+                    ₹${itemTotal.toFixed(2)}
+
+                </div>
+
+
+            </div>
+
+        `;
+
+    });
+
+
+    let shippingMessage = "";
+
+
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+
+        shippingMessage = `
+
+            <div class="free-shipping-msg">
+
+                🎉 You qualify for
+                <strong>FREE SHIPPING</strong>!
+
+            </div>
+
+        `;
+
+    } else {
+
+        const remaining =
+            FREE_SHIPPING_THRESHOLD - subtotal;
+
+
+        shippingMessage = `
+
+            <div class="free-shipping-msg">
+
+                Add ₹${remaining.toFixed(2)}
+                more to get
+                <strong>FREE SHIPPING</strong>.
+
+            </div>
+
+        `;
+
+    }
 
 
     html += `
@@ -445,20 +546,27 @@ function displayCart() {
         <div class="cart-bottom">
 
 
-            <div class="cart-total">
+            <div>
 
-                Total: ₹${total}
+                <div class="cart-total">
+
+                    Total: ₹${subtotal.toFixed(2)}
+
+                </div>
+
+                ${shippingMessage}
 
             </div>
 
 
-            <a
-                href="checkout.html"
-                class="btn">
+            <button
+                type="button"
+                class="btn"
+                onclick="proceedToCheckout()">
 
                 Proceed to Checkout →
 
-            </a>
+            </button>
 
 
         </div>
@@ -472,33 +580,76 @@ function displayCart() {
 
 
 
+/* =========================
+   INCREASE
+========================= */
+
 function increaseQuantity(index) {
 
-    cart[index].quantity++;
+    if (!cart[index]) {
+        return;
+    }
+
+
+    const current =
+        Number(cart[index].quantity) || 1;
+
+
+    cart[index].quantity =
+        current + 1;
+
 
     saveCart();
 
 }
 
 
+
+/* =========================
+   DECREASE
+========================= */
 
 function decreaseQuantity(index) {
 
-    if (cart[index].quantity > 1) {
+    if (!cart[index]) {
+        return;
+    }
 
-        cart[index].quantity--;
+
+    const current =
+        Number(cart[index].quantity) || 1;
+
+
+    if (current > 1) {
+
+        cart[index].quantity =
+            current - 1;
 
     }
 
+
     saveCart();
 
 }
 
 
+
+/* =========================
+   REMOVE
+========================= */
 
 function removeProduct(index) {
 
+    if (
+        index < 0 ||
+        index >= cart.length
+    ) {
+        return;
+    }
+
+
     cart.splice(index, 1);
+
 
     saveCart();
 
@@ -506,38 +657,135 @@ function removeProduct(index) {
 
 
 
+/* =========================
+   BUY ONE PRODUCT
+========================= */
+
 function buyThisProduct(index) {
+
+    if (!cart[index]) {
+        return;
+    }
+
 
     const product = cart[index];
 
+
+    const buyNowProduct = {
+
+        ...product,
+
+        quantity:
+            Math.max(
+                1,
+                Number(product.quantity) || 1
+            )
+
+    };
+
+
     localStorage.setItem(
         "liaraBuyNow",
-        JSON.stringify({
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            quantity: product.quantity
-        })
+        JSON.stringify(buyNowProduct)
     );
+
 
     localStorage.setItem(
         "liaraCheckoutMode",
         "buyNow"
     );
 
-    window.location.href = "checkout.html";
+
+    window.location.href =
+        "checkout.html";
+
 }
 
 
 
+/* =========================
+   PROCEED WITH FULL CART
+========================= */
+
+function proceedToCheckout() {
+
+    if (
+        !Array.isArray(cart) ||
+        cart.length === 0
+    ) {
+
+        alert(
+            "Your cart is empty."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       IMPORTANT:
+       Always save the COMPLETE cart
+       before going to checkout.
+    */
+
+    localStorage.setItem(
+        "liaraCart",
+        JSON.stringify(cart)
+    );
+
+
+    /*
+       IMPORTANT:
+       Force checkout mode to CART.
+       This prevents an old "buyNow"
+       value from showing only one product.
+    */
+
+    localStorage.setItem(
+        "liaraCheckoutMode",
+        "cart"
+    );
+
+
+    /*
+       Remove old Buy Now data so it
+       cannot interfere with cart checkout.
+    */
+
+    localStorage.removeItem(
+        "liaraBuyNow"
+    );
+
+
+    window.location.href =
+        "checkout.html";
+
+}
+
+
+
+/* =========================
+   SAVE CART
+========================= */
+
 function saveCart() {
 
     localStorage.setItem(
-
         "liaraCart",
-
         JSON.stringify(cart)
+    );
 
+
+    /*
+       Cart changes should always remain
+       in CART mode unless user explicitly
+       clicks Buy Now.
+    */
+
+    localStorage.setItem(
+        "liaraCheckoutMode",
+        "cart"
     );
 
 
@@ -547,8 +795,11 @@ function saveCart() {
 
 
 
-displayCart();
+/* =========================
+   INITIAL DISPLAY
+========================= */
 
+displayCart();
 
 </script>
 
