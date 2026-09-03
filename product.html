@@ -2778,12 +2778,9 @@ async function loadProduct() {
     const selectedVariant = getSelectedVariant();
 
 
-    const image =
-        product.image_url ||
-        product.photo_url ||
-        product.image ||
-        product.photo ||
-        "facewash.jpg";
+    const productImages = getProductImages(product);
+    if(!productImages.length) productImages.push("facewash.jpg");
+    const image = productImages[0];
 
 
     /*
@@ -2824,13 +2821,19 @@ async function loadProduct() {
             <!-- PRODUCT IMAGE -->
 
             <div class="product-photo">
-
-                <img
-                    src="${escapeHtml(image)}"
-                    alt="${escapeHtml(name)}"
-                    onerror="this.src='facewash.jpg'"
-                >
-
+                <div class="liara-product-gallery">
+                    <div class="liara-product-main-photo" id="liaraMainPhoto">
+                        <img id="liaraMainProductImage" src="${escapeHtml(image)}" alt="${escapeHtml(name)}" onerror="this.onerror=null;this.src='facewash.jpg'">
+                        ${productImages.length > 1 ? `
+                        <button type="button" class="liara-gallery-arrow liara-gallery-prev" id="liaraGalleryPrev" aria-label="Previous photo">‹</button>
+                        <button type="button" class="liara-gallery-arrow liara-gallery-next" id="liaraGalleryNext" aria-label="Next photo">›</button>
+                        <span class="liara-gallery-count" id="liaraGalleryCount">1 / ${productImages.length}</span>` : ''}
+                    </div>
+                    ${productImages.length > 1 ? `
+                    <div class="liara-product-thumbs">
+                        ${productImages.map((img,i)=>`<button type="button" class="liara-product-thumb ${i===0?'active':''}" data-index="${i}" aria-label="Photo ${i+1}"><img src="${escapeHtml(img)}" alt="${escapeHtml(name)} photo ${i+1}" onerror="this.style.opacity='0'"></button>`).join('')}
+                    </div>` : ''}
+                </div>
             </div>
 
 
@@ -2972,6 +2975,34 @@ async function loadProduct() {
     </section>
 
     `;
+
+    /* 4-PHOTO GALLERY CONTROLS */
+    (function(){
+        const galleryImages=productImages;
+        if(galleryImages.length<=1) return;
+        const mainImg=document.getElementById("liaraMainProductImage");
+        const prev=document.getElementById("liaraGalleryPrev");
+        const next=document.getElementById("liaraGalleryNext");
+        const count=document.getElementById("liaraGalleryCount");
+        const mainPhoto=document.getElementById("liaraMainPhoto");
+        const thumbs=document.querySelectorAll(".liara-product-thumb");
+        let current=0;
+        function showPhoto(index){
+            current=(index+galleryImages.length)%galleryImages.length;
+            mainImg.src=galleryImages[current];
+            mainImg.alt=name+" photo "+(current+1);
+            if(count) count.textContent=(current+1)+" / "+galleryImages.length;
+            thumbs.forEach((t,i)=>t.classList.toggle("active",i===current));
+        }
+        if(prev) prev.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();showPhoto(current-1);});
+        if(next) next.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();showPhoto(current+1);});
+        thumbs.forEach(t=>t.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();showPhoto(Number(t.dataset.index||0));}));
+        if(mainPhoto){
+            let startX=0;
+            mainPhoto.addEventListener("touchstart",e=>{startX=e.changedTouches[0].screenX;},{passive:true});
+            mainPhoto.addEventListener("touchend",e=>{const dx=e.changedTouches[0].screenX-startX;if(Math.abs(dx)>=45)showPhoto(dx<0?current+1:current-1);},{passive:true});
+        }
+    })();
 
     loadLiaraRelatedProducts();
     updateDisplayedPrice();
@@ -3838,6 +3869,24 @@ document.addEventListener("DOMContentLoaded", function(){
     .product-sale-label{font-size:8px !important; padding:3px 6px !important;}
     .product-sale-price{font-size:21px !important;}
 }
+
+/* LIARA 4-PHOTO PRODUCT GALLERY */
+.product-photo{padding:0 !important;}
+.liara-product-gallery{width:100%;height:100%;display:flex;flex-direction:column;gap:7px;}
+.liara-product-main-photo{position:relative;flex:1;min-height:0;overflow:hidden;background:#f5f1eb;border-radius:inherit;display:flex;align-items:center;justify-content:center;touch-action:pan-y;}
+.liara-product-main-photo img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-drag:none;}
+.liara-gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:58px;border:0;border-radius:7px;background:rgba(17,17,17,.68);color:#fff;font-size:34px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;opacity:0;transition:.2s ease;padding:0 0 4px;}
+.liara-product-main-photo:hover .liara-gallery-arrow{opacity:1;}
+.liara-gallery-arrow:hover{background:#ad8232;}
+.liara-gallery-prev{left:10px}.liara-gallery-next{right:10px}
+.liara-gallery-count{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:rgba(17,17,17,.72);color:#fff;padding:4px 9px;border-radius:20px;font-size:11px;line-height:1;z-index:4;pointer-events:none;}
+.liara-product-thumbs{height:58px;flex:0 0 58px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.liara-product-thumb{width:100%;height:58px;padding:0;border:1px solid #e3ddd3;border-radius:7px;overflow:hidden;background:#f5f1eb;cursor:pointer;transition:.2s ease;}
+.liara-product-thumb.active{border-color:#ad8232;box-shadow:0 0 0 1px #ad8232;}
+.liara-product-thumb:hover{border-color:#ad8232;}
+.liara-product-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+@media(max-width:900px){.liara-gallery-arrow{opacity:1;width:34px;height:48px;font-size:29px;}}
+@media(max-width:600px){.liara-product-thumbs{height:50px;flex-basis:50px;gap:5px}.liara-product-thumb{height:50px;border-radius:6px}.liara-gallery-arrow{width:32px;height:44px;font-size:27px}.liara-gallery-prev{left:7px}.liara-gallery-next{right:7px}}
 </style>
 
 </body>
