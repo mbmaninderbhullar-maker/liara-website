@@ -2257,15 +2257,15 @@ async function verifyRazorpayPayment(response) {
 }
 
 
-async function createShiprocketShipment(orderId) {
+async function createShipwayOrder(orderId) {
 
     if (!orderId) {
-        throw new Error("Order ID is missing for Shiprocket shipment.");
+        throw new Error("Order ID is missing for Shipway booking.");
     }
 
     const { data, error } =
         await supabaseClient.functions.invoke(
-            "shiprocket-create-shipment",
+            "shipway-create-order",
             {
                 body: {
                     order_id: orderId
@@ -2276,20 +2276,19 @@ async function createShiprocketShipment(orderId) {
     if (error) {
         throw new Error(
             error.message ||
-            "Shiprocket shipment could not be created."
+            "Shipway order could not be created."
         );
     }
 
     if (!data || !data.success) {
         throw new Error(
             data?.error ||
-            "Shiprocket shipment could not be created."
+            "Shipway order could not be created."
         );
     }
 
     return data;
 }
-
 
 async function getLatestCustomerOrder() {
 
@@ -2494,13 +2493,13 @@ async function openRazorpayPayment(button) {
                 await verifyRazorpayPayment(response);
 
                 showMessage(
-                    "Payment verified. Creating delivery shipment..."
+                    "Payment verified. Creating Shipway delivery..."
                 );
 
                 const savedOrderId =
                     await getLatestCustomerOrder();
 
-                await createShiprocketShipment(
+                await createShipwayOrder(
                     savedOrderId
                 );
 
@@ -2777,10 +2776,10 @@ document.getElementById(
                     );
 
                 showMessage(
-                    "Order received. Creating delivery shipment..."
+                    "Order received. Creating Shipway delivery..."
                 );
 
-                await createShiprocketShipment(
+                await createShipwayOrder(
                     savedOrderId
                 );
 
