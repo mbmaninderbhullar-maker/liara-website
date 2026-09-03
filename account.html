@@ -339,10 +339,10 @@ function openInvoice(index){
   const parsedSubtotal=parseOrderAmount(raw,"SALE SUBTOTAL");
   const parsedShipping=parseOrderShipping(raw);
 
-  const gst=Number(o.gst_amount ?? p.gst_total ?? parsedGst ?? 0);
-  const discount=Number(o.discount ?? p.discount_total ?? parsedDiscount ?? 0);
-  const subtotal=Number(o.subtotal ?? p.sale_subtotal ?? parsedSubtotal ?? 0);
-  const shipping=Number(p.shipping ?? parsedShipping ?? 0);
+  const gst=Number(o.gst_amount || p.gst_total || parsedGst || 0);
+  const discount=Number(o.discount || p.discount_total || parsedDiscount || 0);
+  const subtotal=Number(o.subtotal || p.sale_subtotal || parsedSubtotal || 0);
+  const shipping=Number(p.shipping || parsedShipping || 0);
   const hsn=o.hsn_code||"";
   const customer=o.customer_name||"Customer";
   const address=o.shipping_address || [o.house_no,o.street,o.city,o.state,o.pincode].filter(Boolean).join(", ");
@@ -391,9 +391,9 @@ function shareOrderWhatsApp(index){
 
   const raw=o.product||"";
   const p=o.pricing||{};
-  const subtotal=Number(o.subtotal ?? p.sale_subtotal ?? parseOrderAmount(raw,"SALE SUBTOTAL") ?? 0);
-  const gst=Number(o.gst_amount ?? p.gst_total ?? parseOrderAmount(raw,"GST") ?? 0);
-  const shipping=Number(p.shipping ?? parseOrderShipping(raw) ?? 0);
+  const subtotal=Number(o.subtotal || p.sale_subtotal || parseOrderAmount(raw,"SALE SUBTOTAL") || 0);
+  const gst=Number(o.gst_amount || p.gst_total || parseOrderAmount(raw,"GST") || 0);
+  const shipping=Number(p.shipping || parseOrderShipping(raw) || 0);
 
   lines.push("");
   lines.push("Sale Subtotal: "+money(subtotal));
