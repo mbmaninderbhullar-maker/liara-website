@@ -546,9 +546,91 @@ body{
     box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
 
+.product-card-media{
+    position:relative;
+    width:100%;
+    height:250px;
+    overflow:hidden;
+    background:#f5f2ed;
+}
+.product-card-slider{
+    display:flex;
+    width:100%;
+    height:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+}
+.product-card-slider::-webkit-scrollbar{display:none}
+.product-card-slide{
+    min-width:100%;
+    width:100%;
+    height:100%;
+    flex:0 0 100%;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    object-fit:cover;
+    background:#f5f2ed;
+}
+.product-card-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:32px;
+    height:32px;
+    border:1px solid rgba(255,255,255,.75);
+    border-radius:50%;
+    background:rgba(20,18,15,.58);
+    color:#fff;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    z-index:4;
+    font-size:18px;
+    line-height:1;
+    backdrop-filter:blur(4px);
+}
+.product-card-arrow.prev{left:9px}
+.product-card-arrow.next{right:9px}
+.product-card-arrow:hover{background:rgba(20,18,15,.82)}
+.product-card-dots{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:10px;
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    z-index:4;
+    pointer-events:none;
+}
+.product-card-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:rgba(255,255,255,.55);
+    box-shadow:0 1px 4px rgba(0,0,0,.25);
+}
+.product-card-dot.active{background:#fff;transform:scale(1.15)}
+.product-card-photo-count{
+    position:absolute;
+    top:9px;
+    right:9px;
+    z-index:4;
+    padding:5px 8px;
+    border-radius:20px;
+    background:rgba(20,18,15,.62);
+    color:#fff;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:.4px;
+    backdrop-filter:blur(4px);
+}
 .product-card-image{
     width:100%;
-    height:210px;
+    height:100%;
     object-fit:cover;
     background:#f5f2ed;
 }
@@ -1400,6 +1482,16 @@ body{
 .price-sale-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.price-sale-field{display:flex;flex-direction:column;gap:6px}.price-sale-field label{font-size:11px;color:#666;font-weight:700}.price-sale-field input{width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;outline:none}
 .sale-preview{grid-column:1/-1;padding:12px 14px;background:#fff;border:1px dashed #d8c8a9;border-radius:9px;font-size:14px}.mrp-cut{text-decoration:line-through;color:#888}.sale-label{font-weight:800;color:#287a3e;margin-left:8px}.discount-label{font-weight:800;color:#ad8232;margin-left:8px}
 @media(max-width:900px){.price-sale-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.price-sale-grid{grid-template-columns:1fr}}
+
+/* ================= PRODUCT PHOTO CAROUSEL ================= */
+.product-card-media .product-card-slider img{
+    user-select:none;
+    -webkit-user-drag:none;
+}
+@media(max-width:600px){
+    .product-card-media{height:270px}
+    .product-card-arrow{width:30px;height:30px}
+}
 </style>
 </head>
 
@@ -1428,6 +1520,7 @@ body{
         <button onclick="showSection('notifications',this)">🔔 Notifications</button>
         <button type="button" onclick="showSection('parties',this)">👥 Parties</button>
             <button type="button" onclick="showSection('email',this)">📧 Email</button>
+            <button type="button" onclick="window.location.href='account.html'">👤 My Account</button>
             <button type="button" onclick="window.location.href='settings.html'">⚙️ Settings</button>
 
         <button class="logout-side" onclick="logoutAdmin()">🚪 Logout</button>
@@ -3838,31 +3931,84 @@ function renderProducts(products){
 
         }
 
-        const image =
-            product.image_url || "";
+        const images = [
+            product.image_url,
+            product.image_url_2,
+            product.image_url_3,
+            product.image_url_4
+        ].filter(Boolean);
+
+        const safeImages = images.length ? images : [""];
+        const sliderId = "productSlider-" + String(product.id).replace(/[^a-zA-Z0-9_-]/g,"");
 
         html += `
 
         <div class="product-card">
 
-            ${
-                image
-                ?
-                `<img
-                    class="product-card-image"
-                    src="${escapeHtml(image)}"
-                    alt="${escapeHtml(product.name)}">`
-                :
-                `<div
-                    class="product-card-image"
-                    style="
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-size:50px;">
-                    🧴
-                </div>`
-            }
+            <div class="product-card-media">
+
+                ${
+                    safeImages[0]
+                    ?
+                    `<div
+                        class="product-card-slider"
+                        id="${sliderId}"
+                        data-index="0"
+                        onscroll="updateProductCarouselDots(this)">
+                        ${safeImages.map((url,i)=>`
+                            <img
+                                class="product-card-slide"
+                                src="${escapeHtml(url)}"
+                                alt="${escapeHtml(product.name)} Photo ${i+1}"
+                                loading="${i===0 ? "eager" : "lazy"}">
+                        `).join("")}
+                    </div>`
+                    :
+                    `<div
+                        class="product-card-image"
+                        style="
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:50px;">
+                        🧴
+                    </div>`
+                }
+
+                ${
+                    safeImages.length > 1
+                    ?
+                    `
+                    <button
+                        type="button"
+                        class="product-card-arrow prev"
+                        aria-label="Previous product photo"
+                        onclick="scrollProductPhoto('${sliderId}',-1,event)">
+                        ‹
+                    </button>
+
+                    <button
+                        type="button"
+                        class="product-card-arrow next"
+                        aria-label="Next product photo"
+                        onclick="scrollProductPhoto('${sliderId}',1,event)">
+                        ›
+                    </button>
+
+                    <div class="product-card-dots" id="${sliderId}-dots">
+                        ${safeImages.map((_,i)=>`
+                            <span class="product-card-dot ${i===0 ? "active" : ""}"></span>
+                        `).join("")}
+                    </div>
+
+                    <div class="product-card-photo-count">
+                        ${safeImages.length}/4 PHOTOS
+                    </div>
+                    `
+                    : ""
+                }
+
+            </div>
 
             <div class="product-card-body">
 
@@ -3923,6 +4069,54 @@ function renderProducts(products){
 
     box.innerHTML = html;
 
+}
+
+function scrollProductPhoto(sliderId, direction, event){
+    if(event) event.stopPropagation();
+
+    const slider = document.getElementById(sliderId);
+    if(!slider) return;
+
+    const slideWidth = slider.clientWidth || 1;
+    const maxIndex = Math.max(0, slider.children.length - 1);
+
+    let current = Number(slider.dataset.index || 0);
+    current += Number(direction || 0);
+
+    if(current < 0) current = maxIndex;
+    if(current > maxIndex) current = 0;
+
+    slider.dataset.index = String(current);
+
+    slider.scrollTo({
+        left: slideWidth * current,
+        behavior: "smooth"
+    });
+
+    updateProductCarouselDots(slider);
+}
+
+function updateProductCarouselDots(slider){
+    if(!slider || !slider.children.length) return;
+
+    const width = slider.clientWidth || 1;
+    const index = Math.max(
+        0,
+        Math.min(
+            slider.children.length - 1,
+            Math.round(slider.scrollLeft / width)
+        )
+    );
+
+    slider.dataset.index = String(index);
+
+    const dots = document.querySelectorAll(
+        "#" + CSS.escape(slider.id) + "-dots .product-card-dot"
+    );
+
+    dots.forEach((dot,i)=>{
+        dot.classList.toggle("active", i === index);
+    });
 }
 
 async function editProductStock(id){
@@ -4247,53 +4441,29 @@ async function saveEditedProduct(id){
 
     try{
 
-        let imageUrl = oldProduct.image_url || null;
-
-        if(file){
-
-            status.innerText = "Uploading new photo...";
-
-            const extension =
-                file.name.split(".").pop().toLowerCase();
-
-            const fileName =
-                Date.now() +
-                "-" +
-                Math.random().toString(36).substring(2) +
-                "." + extension;
-
-            const filePath = "products/" + fileName;
-
-            const upload =
-                await supabaseClient
-                .storage
-                .from(IMAGE_BUCKET)
-                .upload(filePath, file, {
-                    cacheControl:"3600",
-                    upsert:false
-                });
-
-            if(upload.error){
-                alert("Photo upload failed:\n\n" + upload.error.message);
-                return;
-            }
-
-            imageUrl =
-                supabaseClient
-                .storage
-                .from(IMAGE_BUCKET)
-                .getPublicUrl(filePath)
-                .data.publicUrl;
-        }
-
         if(files.length > 4){
             alert("Maximum 4 photos upload karo.");
             return;
         }
 
-        const extraPhotoUrls = files.length > 1
-            ? await uploadAdditionalProductPhotos(files.slice(1))
-            : [];
+        let selectedPhotoUrls = [];
+
+        if(files.length){
+
+            status.innerText = "Uploading product photos...";
+
+            selectedPhotoUrls = await uploadAdditionalProductPhotos(files);
+
+            if(selectedPhotoUrls.length !== files.length){
+                alert("All selected photos upload nahi ho payian.");
+                return;
+            }
+        }
+
+        const imageUrl = selectedPhotoUrls[0] || oldProduct.image_url || null;
+        const imageUrl2 = selectedPhotoUrls[1] || oldProduct.image_url_2 || null;
+        const imageUrl3 = selectedPhotoUrls[2] || oldProduct.image_url_3 || null;
+        const imageUrl4 = selectedPhotoUrls[3] || oldProduct.image_url_4 || null;
 
         status.innerText = "Saving changes...";
 
@@ -4312,9 +4482,9 @@ async function saveEditedProduct(id){
             how_to_use:howToUse,
             benefits:benefits,
             image_url:imageUrl,
-            image_url_2:extraPhotoUrls[0] || oldProduct.image_url_2 || null,
-            image_url_3:extraPhotoUrls[1] || oldProduct.image_url_3 || null,
-            image_url_4:extraPhotoUrls[2] || oldProduct.image_url_4 || null,
+            image_url_2:imageUrl2,
+            image_url_3:imageUrl3,
+            image_url_4:imageUrl4,
             variants:variants
         };
 
@@ -4601,12 +4771,6 @@ Hyaluronic Acid — Helps maintain hydration"></textarea>
                     <div
                         class="photo-preview"
                         id="photoPreview">
-
-                        <img
-                            id="previewImage"
-                            src=""
-                            alt="Preview">
-
                     </div>
 
                     <div
