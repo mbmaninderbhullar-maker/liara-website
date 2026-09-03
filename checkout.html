@@ -2024,7 +2024,8 @@ async function saveOrderToDatabase(statusText) {
         " | DISCOUNT ₹" + discountTotal +
         " | SALE SUBTOTAL ₹" + subtotal +
         " | GST ₹" + gstTotal +
-        " | SHIPPING ₹" + shippingTotal;
+        " | SHIPPING ₹" + shippingTotal +
+        (shippingIsFree ? " (FREE)" : "");
 
 
     /* =====================================================
@@ -2113,6 +2114,13 @@ async function saveOrderToDatabase(statusText) {
 
 
 async function createRazorpayOrder() {
+
+    /* =====================================================
+       FINAL TOTAL RE-CALCULATION
+       Keep checkout, bill and Razorpay on the same amount.
+       Shipping from Admin Settings is included here.
+    ===================================================== */
+    calculateCheckoutTotals();
 
     const { data, error } =
         await supabaseClient.functions.invoke(
@@ -2479,6 +2487,12 @@ document.getElementById(
         event.preventDefault();
 
 
+        /* =====================================================
+           ALWAYS LOCK THE FINAL CHECKOUT TOTAL
+           Includes Admin shipping charge/free-shipping rule.
+        ===================================================== */
+        calculateCheckoutTotals();
+
         /* CHECK ORDER */
 
         if(!checkoutItems || checkoutItems.length === 0) {
@@ -2651,6 +2665,11 @@ document.getElementById(
             ===================================================== */
 
             if(payment === "Cash on Delivery") {
+
+                /* Recalculate once more so the saved order/bill
+                   receives the exact same shipping amount shown
+                   on checkout. */
+                calculateCheckoutTotals();
 
                 button.innerText =
                     "Placing Order...";
