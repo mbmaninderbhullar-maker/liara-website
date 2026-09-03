@@ -86,6 +86,8 @@ footer{background:#111;color:#aaa;text-align:center;padding:34px 20px;font-size:
 .total-line{display:flex;justify-content:space-between;padding:6px 0}
 .grand{border-top:2px solid #111;font-weight:700;font-size:15px;margin-top:5px;padding-top:10px}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+
+.login-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px;z-index:200}.login-modal.show{display:flex}.login-card{width:min(430px,100%);background:#fff;border-radius:22px;padding:30px;box-shadow:0 25px 80px rgba(0,0,0,.25)}.login-card h2{font:28px Georgia,serif;margin:0 0 7px;text-align:center}.login-card p{text-align:center;color:#777;font-size:13px;margin:0 0 22px}.login-card input{width:100%;padding:13px 14px;margin:0 0 12px;border:1px solid #ddd;border-radius:10px;font-size:14px}.login-submit{width:100%;padding:13px;border:0;border-radius:30px;background:var(--gold);font-weight:700;cursor:pointer}.login-links{text-align:center;margin-top:16px;font-size:13px}.login-links a{color:#9a7028;font-weight:700;cursor:pointer}.login-msg{text-align:center;margin-top:12px;font-size:12px;min-height:18px}
 @media(max-width:760px){
  .topbar{padding:0 18px;height:66px}.nav{display:none}
  .hero{padding:38px 20px 62px}.hero h1{font-size:34px}
@@ -97,19 +99,6 @@ footer{background:#111;color:#aaa;text-align:center;padding:34px 20px;font-size:
  body{background:#fff}.topbar,.hero,.wrap,.modal-actions,footer{display:none!important}
  .modal{position:static;display:block;background:#fff;padding:0}.invoice{box-shadow:none;width:100%;max-height:none}
 }
-
-.login-modal{position:fixed;inset:0;background:rgba(15,15,15,.65);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
-.login-modal.show{display:flex}
-.login-card{width:min(420px,100%);background:#fff;border-radius:22px;padding:32px;box-shadow:0 25px 80px rgba(0,0,0,.25);position:relative}
-.login-close{position:absolute;right:15px;top:10px;border:0;background:transparent;font-size:28px;color:#777;cursor:pointer}
-.login-eyebrow{font-size:11px;letter-spacing:2px;color:#b48732;font-weight:800;margin-bottom:8px}
-.login-card h2{margin:0 0 8px;font-size:28px}
-.login-card p{color:#777;font-size:13px;line-height:1.5;margin:0 0 22px}
-.login-card input{width:100%;padding:13px 14px;border:1px solid #ddd;border-radius:10px;margin-bottom:12px;font-size:14px;outline:none}
-.login-card input:focus{border-color:#b48732}
-.login-submit{width:100%;border:0;border-radius:10px;padding:13px;background:#171717;color:#fff;font-weight:800;cursor:pointer}
-.login-message{min-height:20px;text-align:center;font-size:12px;font-weight:700;margin-top:12px}
-.login-note{font-size:11px;color:#999;text-align:center;margin-top:12px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -173,20 +162,7 @@ footer{background:#111;color:#aaa;text-align:center;padding:34px 20px;font-size:
   </div>
 </div>
 
-<div class="login-modal" id="loginModal">
-  <div class="login-card">
-    <button class="login-close" onclick="closeLogin()">×</button>
-    <div class="login-eyebrow">LIARA PROFESSIONAL™</div>
-    <h2>Customer Login</h2>
-    <p>Sign in to view your orders, invoices and shipment details.</p>
-    <input id="loginEmail" type="email" placeholder="Email address" autocomplete="email">
-    <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
-    <button class="login-submit" onclick="customerLogin()">Sign In</button>
-    <div id="loginMessage" class="login-message"></div>
-    <div class="login-note">Use the same email and password you registered with on Liara.</div>
-  </div>
-</div>
-
+<div class="login-modal" id="loginModal"><div class="login-card"><h2>Customer Login</h2><p>Login to your Liara Professional™ account</p><input id="loginEmail" type="email" placeholder="Email Address" autocomplete="email"><input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password"><button class="login-submit" onclick="customerLogin()">Login</button><div class="login-links"><a href="login.html">Create New Account</a> &nbsp;·&nbsp; <a href="login.html">Forgot Password?</a></div><div class="login-links"><a onclick="closeLogin()">Cancel</a></div><div class="login-msg" id="loginMessage"></div></div></div>
 <script>
 const SUPABASE_URL = "https://oinafbuicwhleudztzyz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
@@ -231,15 +207,14 @@ function isActive(order){
 
 async function init(){
   const {data,error}=await supabaseClient.auth.getUser();
-  const authButton=document.getElementById("authButton");
   if(error || !data?.user){
-    if(authButton) authButton.textContent="Login";
+    document.getElementById("authButton").textContent="Login";
     document.getElementById("orders").innerHTML =
-      '<div class="error"><b>Welcome to My Account</b><br><br>Please sign in to view your orders, invoices and shipment details.<br><br><button class="btn btn-gold" type="button" onclick="openLogin()">Sign In</button></div>';
+      '<div class="error"><h3>Welcome to My Account</h3><p>Please sign in to view your orders, invoices and shipment details.</p><button class="btn btn-gold" onclick="openLogin()">Login</button></div>';
     document.getElementById("welcome").textContent="Please sign in to view your orders.";
     return;
   }
-  if(authButton) authButton.textContent="Sign Out";
+  document.getElementById("authButton").textContent="Sign Out";
 
   const user=data.user;
   document.getElementById("welcome").textContent =
@@ -323,14 +298,56 @@ function trackByAwb(awb){
   window.open("https://app.shipway.com/track/"+q,"_blank","noopener");
 }
 
+function parseOrderAmount(text, label){
+  const re = new RegExp(label + "\\s*₹?\\s*([0-9]+(?:\\.[0-9]+)?)", "i");
+  const m = String(text || "").match(re);
+  return m ? Number(m[1]) : 0;
+}
+
+function parseOrderShipping(text){
+  const m = String(text || "").match(/SHIPPING\\s*₹?\\s*([0-9]+(?:\\.[0-9]+)?)/i);
+  return m ? Number(m[1]) : 0;
+}
+
+function parseOrderGstRate(text){
+  const m = String(text || "").match(/GST\\s+([0-9]+(?:\\.[0-9]+)?)%/i);
+  return m ? Number(m[1]) : 0;
+}
+
+function getInvoiceItems(order){
+  if(Array.isArray(order.items) && order.items.length) return order.items;
+
+  const raw=String(order.product||"");
+  const first=raw.split(" | MRP TOTAL")[0].trim();
+  const qtyMatch=first.match(/×\\s*(\\d+)/);
+  const saleMatch=first.match(/SALE\\s*₹\\s*([0-9]+(?:\\.[0-9]+)?)/i);
+  const hsnMatch=first.match(/HSN\\s*([A-Za-z0-9.-]+)/i);
+  const name=(first.split(" × ")[0] || "Liara Product").trim();
+
+  return [{
+    name,
+    quantity: qtyMatch ? Number(qtyMatch[1]) : Number(order.quantity||1),
+    sale_price: saleMatch ? Number(saleMatch[1]) : 0,
+    gst_rate: parseOrderGstRate(first),
+    hsn_code: hsnMatch ? hsnMatch[1] : (order.hsn_code||"")
+  }];
+}
+
 function openInvoice(index){
   const o=customerOrders[index];
-  const items=getItems(o);
+  const items=getInvoiceItems(o);
   const p=o.pricing||{};
-  const gst=Number(o.gst_amount ?? p.gst_total ?? 0);
-  const discount=Number(o.discount ?? p.discount_total ?? 0);
-  const subtotal=Number(o.subtotal ?? p.sale_subtotal ?? 0);
-  const shipping=Number(p.shipping ?? 0);
+  const raw=o.product||"";
+
+  const parsedGst=parseOrderAmount(raw,"GST");
+  const parsedDiscount=parseOrderAmount(raw,"DISCOUNT");
+  const parsedSubtotal=parseOrderAmount(raw,"SALE SUBTOTAL");
+  const parsedShipping=parseOrderShipping(raw);
+
+  const gst=Number(o.gst_amount || p.gst_total || parsedGst || 0);
+  const discount=Number(o.discount || p.discount_total || parsedDiscount || 0);
+  const subtotal=Number(o.subtotal || p.sale_subtotal || parsedSubtotal || 0);
+  const shipping=Number(p.shipping || parsedShipping || 0);
   const hsn=o.hsn_code||"";
   const customer=o.customer_name||"Customer";
   const address=o.shipping_address || [o.house_no,o.street,o.city,o.state,o.pincode].filter(Boolean).join(", ");
@@ -356,37 +373,61 @@ function openInvoice(index){
       <div class="total-line"><span>Shipping</span><b>${shipping?money(shipping):"FREE"}</b></div>
       <div class="total-line grand"><span>Total</span><b>${money(o.total)}</b></div>
     </div>
-    <p style="font-size:10px;color:#777;margin-top:28px">This invoice is generated from the order information stored with Liara Professional™.</p>`;
+    <p style="font-size:10px;color:#777;margin-top:28px">This invoice is generated from the order information stored with Liara Professional™.</p>
+    <button class="btn btn-gold" style="margin-top:12px" onclick="shareOrderWhatsApp(${index})">💬 Share Order on WhatsApp</button>`;
   document.getElementById("invoiceModal").classList.add("show");
 }
+function shareOrderWhatsApp(index){
+  const o=customerOrders[index];
+  const items=getInvoiceItems(o);
+  const lines=[
+    "LIARA PROFESSIONAL™",
+    "",
+    "Order: "+(o.order_number||"LIARA ORDER"),
+    "Customer: "+(o.customer_name||"Customer"),
+    ""
+  ];
+
+  items.forEach(it=>{
+    const qty=Number(it.quantity||it.product_quantity||1);
+    const price=Number(it.sale_price||it.price||0);
+    lines.push((it.name||it.product||"Liara Product")+" × "+qty+" — "+money(price*qty));
+  });
+
+  const raw=o.product||"";
+  const p=o.pricing||{};
+  const subtotal=Number(o.subtotal || p.sale_subtotal || parseOrderAmount(raw,"SALE SUBTOTAL") || 0);
+  const gst=Number(o.gst_amount || p.gst_total || parseOrderAmount(raw,"GST") || 0);
+  const shipping=Number(p.shipping || parseOrderShipping(raw) || 0);
+
+  lines.push("");
+  lines.push("Sale Subtotal: "+money(subtotal));
+  lines.push("GST: "+money(gst));
+  lines.push("Shipping: "+(shipping ? money(shipping) : "FREE"));
+  lines.push("Total: "+money(o.total));
+  lines.push("");
+  lines.push("Thank you for shopping with Liara Professional™.");
+
+  window.open(
+    "https://wa.me/?text="+encodeURIComponent(lines.join("\n")),
+    "_blank",
+    "noopener"
+  );
+}
+
 function closeInvoice(){document.getElementById("invoiceModal").classList.remove("show")}
 document.getElementById("invoiceModal").addEventListener("click",e=>{if(e.target.id==="invoiceModal")closeInvoice()});
 
-function openLogin(){
-  document.getElementById("loginModal").classList.add("show");
-  setTimeout(()=>document.getElementById("loginEmail")?.focus(),100);
-}
-function closeLogin(){document.getElementById("loginModal").classList.remove("show");}
-function handleAuthButton(){
-  const text=document.getElementById("authButton")?.textContent.trim();
-  if(text==="Sign Out") logout(); else openLogin();
-}
-async function customerLogin(){
-  const email=document.getElementById("loginEmail").value.trim().toLowerCase();
-  const password=document.getElementById("loginPassword").value;
-  const msg=document.getElementById("loginMessage");
-  if(!email || !password){msg.textContent="Please enter email and password.";msg.style.color="#b33";return;}
-  msg.textContent="Signing in...";msg.style.color="#9a7028";
-  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error){msg.textContent=error.message||"Login failed.";msg.style.color="#b33";return;}
-  msg.textContent="Login successful.";msg.style.color="#287a3e";
-  setTimeout(()=>location.reload(),500);
-}
+function openLogin(){document.getElementById("loginModal").classList.add("show");setTimeout(()=>document.getElementById("loginEmail")?.focus(),100)}
+function closeLogin(){document.getElementById("loginModal").classList.remove("show")}
+function handleAuthButton(){if(document.getElementById("authButton")?.textContent.trim()==="Sign Out") logout();else openLogin()}
+async function customerLogin(){const email=document.getElementById("loginEmail").value.trim().toLowerCase();const password=document.getElementById("loginPassword").value;const msg=document.getElementById("loginMessage");if(!email||!password){msg.textContent="Please enter email and password.";msg.style.color="#b33";return}msg.textContent="Signing in...";msg.style.color="#9a7028";const {error}=await supabaseClient.auth.signInWithPassword({email,password});if(error){msg.textContent=error.message||"Login failed.";msg.style.color="#b33";return}msg.textContent="Login successful.";msg.style.color="#287a3e";setTimeout(()=>location.reload(),500)}
+document.getElementById("loginModal").addEventListener("click",e=>{if(e.target.id==="loginModal")closeLogin()})
 async function logout(){
   await supabaseClient.auth.signOut();
-  location.reload();
+  window.location.href="index.html";
 }
-document.getElementById("loginModal")?.addEventListener("click",e=>{if(e.target.id==="loginModal")closeLogin()});
+
 init();
 </script>
 </body>
