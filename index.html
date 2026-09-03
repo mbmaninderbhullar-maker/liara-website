@@ -2086,9 +2086,13 @@ function getSalePrice(p){
 
   const value =
     p.sale_price ??
+    p.salePrice ??
     p.discount_price ??
+    p.discountPrice ??
     p.discounted_price ??
+    p.discountedPrice ??
     p.selling_price ??
+    p.sellingPrice ??
     p.price ??
     0;
 
@@ -2110,12 +2114,16 @@ function getOriginalPrice(p){
 
   const value =
     p.original_price ??
-    p.mrp ??
-    p.compare_at_price ??
-    p.regular_price ??
-    p.old_price ??
     p.originalPrice ??
+    p.mrp ??
+    p.MRP ??
+    p.compare_at_price ??
+    p.compareAtPrice ??
+    p.regular_price ??
+    p.regularPrice ??
+    p.old_price ??
     p.mrp_price ??
+    p.mrpPrice ??
     0;
 
   const directOriginal =
@@ -2149,9 +2157,13 @@ function getOriginalPrice(p){
         const variantSale =
           toNumber(
             v.sale_price ??
+            v.salePrice ??
             v.discount_price ??
+            v.discountPrice ??
             v.discounted_price ??
+            v.discountedPrice ??
             v.selling_price ??
+            v.sellingPrice ??
             0
           );
 
@@ -2159,8 +2171,11 @@ function getOriginalPrice(p){
           toNumber(
             v.price ??
             v.original_price ??
+            v.originalPrice ??
             v.mrp ??
+            v.MRP ??
             v.compare_at_price ??
+            v.compareAtPrice ??
             0
           );
 
@@ -2176,8 +2191,11 @@ function getOriginalPrice(p){
       return toNumber(
         matchedVariant.price ??
         matchedVariant.original_price ??
+        matchedVariant.originalPrice ??
         matchedVariant.mrp ??
+        matchedVariant.MRP ??
         matchedVariant.compare_at_price ??
+        matchedVariant.compareAtPrice ??
         0
       );
 
