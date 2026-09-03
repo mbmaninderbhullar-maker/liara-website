@@ -659,14 +659,18 @@ nav a:hover{
 .price-box{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:7px;
   flex-wrap:wrap;
+  min-width:0;
 }
 
-.sale-price{
-  font-size:18px;
-  color:var(--gold);
-  font-weight:bold;
+.original-price{
+  font-size:12px;
+  color:#999;
+  font-weight:500;
+  text-decoration:line-through;
+  text-decoration-thickness:1px;
+  text-decoration-color:#999;
   white-space:nowrap;
 }
 
@@ -685,20 +689,25 @@ nav a:hover{
   white-space:nowrap;
 }
 
-.original-price{
-  font-size:12px;
-  color:#999;
-  font-weight:500;
-  text-decoration:line-through;
-  text-decoration-thickness:1px;
-  text-decoration-color:#999;
+.sale-price{
+  font-size:18px;
+  color:var(--gold);
+  font-weight:bold;
   white-space:nowrap;
 }
 
-.sale-off{
-  font-size:9px;
-  color:#388044;
+.discount-label{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:4px 6px;
+  background:#f2ead8;
+  color:#8b6a2f;
+  font-size:8px;
   font-weight:700;
+  letter-spacing:.5px;
+  line-height:1;
+  border-radius:2px;
   white-space:nowrap;
 }
 
@@ -2096,6 +2105,9 @@ function getOriginalPrice(p){
 
   if(!p) return 0;
 
+  const salePrice =
+    getSalePrice(p);
+
   const value =
     p.original_price ??
     p.mrp ??
@@ -2106,7 +2118,74 @@ function getOriginalPrice(p){
     p.mrp_price ??
     0;
 
-  return toNumber(value);
+  const directOriginal =
+    toNumber(value);
+
+  /*
+    First use a normal product-level MRP.
+  */
+  if(
+    directOriginal > salePrice &&
+    salePrice > 0
+  ){
+    return directOriginal;
+  }
+
+  /*
+    Some Liara products keep sale/MRP inside variants.
+    If the current sale price matches a variant sale price,
+    use that variant's price as the original MRP.
+  */
+  if(
+    Array.isArray(p.variants) &&
+    salePrice > 0
+  ){
+
+    const matchedVariant =
+      p.variants.find(v => {
+
+        if(!v) return false;
+
+        const variantSale =
+          toNumber(
+            v.sale_price ??
+            v.discount_price ??
+            v.discounted_price ??
+            v.selling_price ??
+            0
+          );
+
+        const variantOriginal =
+          toNumber(
+            v.price ??
+            v.original_price ??
+            v.mrp ??
+            v.compare_at_price ??
+            0
+          );
+
+        return (
+          variantSale === salePrice &&
+          variantOriginal > variantSale
+        );
+
+      });
+
+    if(matchedVariant){
+
+      return toNumber(
+        matchedVariant.price ??
+        matchedVariant.original_price ??
+        matchedVariant.mrp ??
+        matchedVariant.compare_at_price ??
+        0
+      );
+
+    }
+
+  }
+
+  return 0;
 
 }
 
@@ -2155,9 +2234,8 @@ function getProductPriceHtml(product){
 
 
   /*
-    Original MRP → SALE → Sale Price → XX% OFF
-    only when original price is
-    higher than sale price.
+    SALE display:
+    ₹Original MRP (line-through) → SALE → ₹Sale Price → XX% OFF
   */
 
   if(
@@ -2186,7 +2264,7 @@ function getProductPriceHtml(product){
           ${saleText}
         </span>
 
-        <span class="sale-off">
+        <span class="discount-label">
           ${discountPercent}% OFF
         </span>
 
