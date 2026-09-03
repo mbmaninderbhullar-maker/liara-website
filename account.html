@@ -293,14 +293,56 @@ function trackByAwb(awb){
   window.open("https://app.shipway.com/track/"+q,"_blank","noopener");
 }
 
+function parseOrderAmount(text, label){
+  const re = new RegExp(label + "\\s*₹?\\s*([0-9]+(?:\\.[0-9]+)?)", "i");
+  const m = String(text || "").match(re);
+  return m ? Number(m[1]) : 0;
+}
+
+function parseOrderShipping(text){
+  const m = String(text || "").match(/SHIPPING\\s*₹?\\s*([0-9]+(?:\\.[0-9]+)?)/i);
+  return m ? Number(m[1]) : 0;
+}
+
+function parseOrderGstRate(text){
+  const m = String(text || "").match(/GST\\s+([0-9]+(?:\\.[0-9]+)?)%/i);
+  return m ? Number(m[1]) : 0;
+}
+
+function getInvoiceItems(order){
+  if(Array.isArray(order.items) && order.items.length) return order.items;
+
+  const raw=String(order.product||"");
+  const first=raw.split(" | MRP TOTAL")[0].trim();
+  const qtyMatch=first.match(/×\\s*(\\d+)/);
+  const saleMatch=first.match(/SALE\\s*₹\\s*([0-9]+(?:\\.[0-9]+)?)/i);
+  const hsnMatch=first.match(/HSN\\s*([A-Za-z0-9.-]+)/i);
+  const name=(first.split(" × ")[0] || "Liara Product").trim();
+
+  return [{
+    name,
+    quantity: qtyMatch ? Number(qtyMatch[1]) : Number(order.quantity||1),
+    sale_price: saleMatch ? Number(saleMatch[1]) : 0,
+    gst_rate: parseOrderGstRate(first),
+    hsn_code: hsnMatch ? hsnMatch[1] : (order.hsn_code||"")
+  }];
+}
+
 function openInvoice(index){
   const o=customerOrders[index];
-  const items=getItems(o);
+  const items=getInvoiceItems(o);
   const p=o.pricing||{};
-  const gst=Number(o.gst_amount ?? p.gst_total ?? 0);
-  const discount=Number(o.discount ?? p.discount_total ?? 0);
-  const subtotal=Number(o.subtotal ?? p.sale_subtotal ?? 0);
-  const shipping=Number(p.shipping ?? 0);
+  const raw=o.product||"";
+
+  const parsedGst=parseOrderAmount(raw,"GST");
+  const parsedDiscount=parseOrderAmount(raw,"DISCOUNT");
+  const parsedSubtotal=parseOrderAmount(raw,"SALE SUBTOTAL");
+  const parsedShipping=parseOrderShipping(raw);
+
+  const gst=Number(o.gst_amount ?? p.gst_total ?? parsedGst ?? 0);
+  const discount=Number(o.discount ?? p.discount_total ?? parsedDiscount ?? 0);
+  const subtotal=Number(o.subtotal ?? p.sale_subtotal ?? parsedSubtotal ?? 0);
+  const shipping=Number(p.shipping ?? parsedShipping ?? 0);
   const hsn=o.hsn_code||"";
   const customer=o.customer_name||"Customer";
   const address=o.shipping_address || [o.house_no,o.street,o.city,o.state,o.pincode].filter(Boolean).join(", ");
@@ -326,9 +368,48 @@ function openInvoice(index){
       <div class="total-line"><span>Shipping</span><b>${shipping?money(shipping):"FREE"}</b></div>
       <div class="total-line grand"><span>Total</span><b>${money(o.total)}</b></div>
     </div>
-    <p style="font-size:10px;color:#777;margin-top:28px">This invoice is generated from the order information stored with Liara Professional™.</p>`;
+    <p style="font-size:10px;color:#777;margin-top:28px">This invoice is generated from the order information stored with Liara Professional™.</p>
+    <button class="btn btn-gold" style="margin-top:12px" onclick="shareOrderWhatsApp(${index})">💬 Share Order on WhatsApp</button>`;
   document.getElementById("invoiceModal").classList.add("show");
 }
+function shareOrderWhatsApp(index){
+  const o=customerOrders[index];
+  const items=getInvoiceItems(o);
+  const lines=[
+    "LIARA PROFESSIONAL™",
+    "",
+    "Order: "+(o.order_number||"LIARA ORDER"),
+    "Customer: "+(o.customer_name||"Customer"),
+    ""
+  ];
+
+  items.forEach(it=>{
+    const qty=Number(it.quantity||it.product_quantity||1);
+    const price=Number(it.sale_price||it.price||0);
+    lines.push((it.name||it.product||"Liara Product")+" × "+qty+" — "+money(price*qty));
+  });
+
+  const raw=o.product||"";
+  const p=o.pricing||{};
+  const subtotal=Number(o.subtotal ?? p.sale_subtotal ?? parseOrderAmount(raw,"SALE SUBTOTAL") ?? 0);
+  const gst=Number(o.gst_amount ?? p.gst_total ?? parseOrderAmount(raw,"GST") ?? 0);
+  const shipping=Number(p.shipping ?? parseOrderShipping(raw) ?? 0);
+
+  lines.push("");
+  lines.push("Sale Subtotal: "+money(subtotal));
+  lines.push("GST: "+money(gst));
+  lines.push("Shipping: "+(shipping ? money(shipping) : "FREE"));
+  lines.push("Total: "+money(o.total));
+  lines.push("");
+  lines.push("Thank you for shopping with Liara Professional™.");
+
+  window.open(
+    "https://wa.me/?text="+encodeURIComponent(lines.join("\n")),
+    "_blank",
+    "noopener"
+  );
+}
+
 function closeInvoice(){document.getElementById("invoiceModal").classList.remove("show")}
 document.getElementById("invoiceModal").addEventListener("click",e=>{if(e.target.id==="invoiceModal")closeInvoice()});
 
