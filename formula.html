@@ -1,891 +1,10 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Liara Professional™ | Formula Manager</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f4f6f8;
-color:#1f2937
-}
-
-header{
-background:#173b2d;
-color:white;
-padding:18px 24px;
-display:flex;
-justify-content:space-between;
-align-items:center
-}
-
-.logo{
-font-family:Georgia,"Times New Roman",serif;
-font-size:25px;
-font-weight:bold
-}
-
-.logo small{
-display:block;
-font-family:Arial,sans-serif;
-font-size:11px;
-letter-spacing:2px;
-opacity:.85;
-margin-top:3px
-}
-
-.badge{
-background:#d7eadf;
-color:#173b2d;
-padding:6px 10px;
-border-radius:20px;
-font-size:12px;
-font-weight:bold
-}
-
-.container{
-max-width:1200px;
-margin:24px auto;
-padding:0 16px
-}
-
-.tabs{
-display:flex;
-gap:10px;
-margin-bottom:18px;
-flex-wrap:wrap
-}
-
-.tab{
-border:0;
-padding:12px 20px;
-border-radius:8px;
-background:#ddd;
-cursor:pointer;
-font-weight:bold
-}
-
-.tab.active{
-background:#173b2d;
-color:white
-}
-
-.panel{
-display:none;
-background:white;
-border-radius:12px;
-padding:20px;
-box-shadow:0 2px 10px #00000012
-}
-
-.panel.active{
-display:block
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:14px
-}
-
-.field label{
-display:block;
-font-size:12px;
-font-weight:bold;
-margin-bottom:6px
-}
-
-input,select,textarea{
-width:100%;
-padding:10px;
-border:1px solid #d5d9de;
-border-radius:7px;
-font-size:14px
-}
-
-textarea{
-min-height:90px;
-resize:vertical
-}
-
-.full{
-grid-column:1/-1
-}
-
-.actions{
-display:flex;
-gap:9px;
-flex-wrap:wrap;
-margin-top:18px
-}
-
-button{
-border:0;
-border-radius:7px;
-padding:10px 15px;
-cursor:pointer;
-font-weight:bold
-}
-
-button:active{
-transform:scale(.98)
-}
-
-.primary{
-background:#173b2d;
-color:white
-}
-
-.secondary{
-background:#e9eef0;
-color:#1f2937
-}
-
-.danger{
-background:#c0392b;
-color:white
-}
-
-.searchbar{
-display:flex;
-gap:10px;
-margin-bottom:15px
-}
-
-.searchbar input{
-flex:1
-}
-
-table{
-width:100%;
-border-collapse:collapse
-}
-
-th,td{
-padding:11px 9px;
-border-bottom:1px solid #e7e9eb;
-text-align:left;
-font-size:13px;
-vertical-align:top
-}
-
-th{
-background:#f5f7f8
-}
-
-.empty{
-text-align:center;
-padding:35px;
-color:#777
-}
-
-.ingredients{
-overflow:auto;
-margin-top:10px
-}
-
-.ing-head,
-.ing-row{
-display:grid;
-grid-template-columns:2fr 1fr 1fr 1fr auto;
-gap:8px;
-margin-bottom:8px
-}
-
-.ing-head{
-font-size:12px;
-font-weight:bold
-}
-
-.ing-row > div{
-min-width:0
-}
-
-.total{
-text-align:right;
-font-weight:bold;
-margin-top:8px
-}
-
-.card{
-border:1px solid #e1e5e8;
-border-radius:10px;
-padding:14px;
-margin-top:15px
-}
-
-.status{
-font-size:12px;
-margin-bottom:14px;
-padding:8px;
-border-radius:7px;
-background:#eef5f1
-}
-
-.status.error{
-background:#fdecec;
-color:#9b2226
-}
-
-/* SETTINGS */
-
-.settings-button{
-position:fixed;
-right:18px;
-top:88px;
-z-index:1000;
-background:#173b2d;
-color:white;
-box-shadow:0 4px 14px #0002
-}
-
-.settings-panel{
-position:fixed;
-right:18px;
-top:135px;
-width:390px;
-max-width:calc(100vw - 30px);
-max-height:80vh;
-overflow:auto;
-background:white;
-border-radius:12px;
-padding:18px;
-box-shadow:0 8px 30px #0003;
-z-index:999;
-display:none
-}
-
-.settings-panel.open{
-display:block
-}
-
-.settings-title{
-font-family:Georgia,"Times New Roman",serif;
-font-size:20px;
-font-weight:bold;
-color:#173b2d;
-margin-bottom:4px
-}
-
-.settings-sub{
-font-size:12px;
-color:#777;
-margin-bottom:15px
-}
-
-.ing-category{
-border:1px solid #e0e4e7;
-border-radius:10px;
-padding:12px;
-margin-top:12px
-}
-
-.ing-category h4{
-margin:0 0 10px;
-color:#173b2d
-}
-
-.ing-add{
-display:grid;
-grid-template-columns:1fr auto;
-gap:7px
-}
-
-.master-item{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:7px 0;
-border-bottom:1px solid #eee;
-font-size:13px;
-gap:10px
-}
-
-.master-item:last-child{
-border-bottom:0
-}
-
-.small-btn{
-padding:5px 9px;
-font-size:11px
-}
-
-.custom-ingredient{
-display:none;
-margin-top:7px
-}
-
-/* PRINT */
-
-.brand-print{
-font-family:Georgia,"Times New Roman",serif;
-font-size:26px;
-font-weight:bold;
-color:#173b2d
-}
-
-.brand-line{
-font-size:10px;
-letter-spacing:3px;
-margin-top:3px;
-color:#173b2d
-}
-
-.print-head{
-border-bottom:2px solid #173b2d;
-padding-bottom:12px;
-margin-bottom:18px
-}
-
-.print-footer{
-border-top:1px solid #999;
-padding-top:8px;
-margin-top:25px;
-text-align:center;
-font-size:10px;
-color:#666
-}
-
-@media(max-width:800px){
-
-.grid{
-grid-template-columns:1fr 1fr
-}
-
-.ing-head,
-.ing-row{
-grid-template-columns:1fr 1fr
-}
-
-}
-
-@media(max-width:520px){
-
-.grid{
-grid-template-columns:1fr
-}
-
-header{
-padding:15px
-}
-
-.logo{
-font-size:20px
-}
-
-.settings-panel{
-right:10px;
-width:calc(100vw - 20px)
-}
-
-.settings-button{
-right:10px
-}
-
-.searchbar{
-flex-direction:column
-}
-
-}
-
-/* PRINT */
-
-@media print{
-
-body{
-background:white
-}
-
-header,
-.tabs,
-.no-print,
-.settings-button,
-.settings-panel,
-#seen,
-#edit{
-display:none!important
-}
-
-#printArea{
-display:block!important;
-padding:15px
-}
-
-.print-table{
-width:100%;
-border-collapse:collapse
-}
-
-.print-table th,
-.print-table td{
-border:1px solid #999;
-padding:7px
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<header>
-
-<div class="logo">
-Liara Professional™
-<small>ADVANCED HERBAL</small>
-</div>
-
-<span class="badge">
-☁ Online Formula
-</span>
-
-</header>
-
-
-<!-- SETTINGS BUTTON -->
-
-<button
-id="settingsButton"
-class="settings-button no-print"
-type="button">
-
-⚙️ Settings
-
-</button>
-
-
-<!-- SETTINGS PANEL -->
-
-<div
-id="settingsPanel"
-class="settings-panel no-print">
-
-<div class="settings-title">
-Liara Professional™
-</div>
-
-<div class="settings-sub">
-Ingredient Management • Advanced Herbal
-</div>
-
-
-<!-- SCIENCE -->
-
-<div class="ing-category">
-
-<h4>
-🧪 Science Ingredients
-</h4>
-
-<div class="ing-add">
-
-<input
-id="scienceInput"
-placeholder="Add science ingredient...">
-
-<button
-id="scienceAddBtn"
-class="primary"
-type="button">
-
-+ Add
-
-</button>
-
-</div>
-
-<div
-id="scienceList"
-style="margin-top:10px">
-
-</div>
-
-</div>
-
-
-<!-- NATURAL -->
-
-<div class="ing-category">
-
-<h4>
-🌿 Natural / Herbal Ingredients
-</h4>
-
-<div class="ing-add">
-
-<input
-id="naturalInput"
-placeholder="Add natural ingredient...">
-
-<button
-id="naturalAddBtn"
-class="primary"
-type="button">
-
-+ Add
-
-</button>
-
-</div>
-
-<div
-id="naturalList"
-style="margin-top:10px">
-
-</div>
-
-</div>
-
-
-<div
-style="
-font-size:11px;
-color:#777;
-margin-top:14px;
-line-height:1.5;
-">
-
-Ingredients added here are saved in this browser.
-Your existing Supabase formula data is not changed.
-
-</div>
-
-</div>
-
-
-<div class="container">
-
-
-<div class="tabs no-print">
-
-<button
-id="seenTab"
-type="button"
-class="tab active">
-
-👁 Formula Seen
-
-</button>
-
-
-<button
-id="editTab"
-type="button"
-class="tab">
-
-➕ Add / Edit Formula
-
-</button>
-
-</div>
-
-
-<div
-id="status"
-class="status no-print">
-
-☁ Connecting to Supabase...
-
-</div>
-
-
-<!-- FORMULA SEEN -->
-
-<section
-id="seen"
-class="panel active">
-
-<div class="searchbar no-print">
-
-<input
-id="search"
-placeholder="Search product, formula no. or formula name...">
-
-
-<button
-id="newTopBtn"
-type="button"
-class="secondary">
-
-➕ New
-
-</button>
-
-</div>
-
-
-<div id="formulaList">
-
-<div class="empty">
-Loading formulas...
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ADD / EDIT -->
-
-<section
-id="edit"
-class="panel">
-
-<div class="grid">
-
-
-<div class="field">
-
-<label>Formula No.</label>
-
-<input
-id="formulaNo"
-placeholder="e.g. LP-F-001">
-
-</div>
-
-
-<div class="field">
-
-<label>Product Name *</label>
-
-<input
-id="productName"
-placeholder="Product name">
-
-</div>
-
-
-<div class="field">
-
-<label>Formula Name</label>
-
-<input
-id="formulaName"
-placeholder="Formula name">
-
-</div>
-
-
-<div class="field">
-
-<label>Version</label>
-
-<input
-id="version"
-placeholder="e.g. V1.0">
-
-</div>
-
-
-<div class="field">
-
-<label>Date</label>
-
-<input
-id="date"
-type="date">
-
-</div>
-
-
-<div class="field">
-
-<label>Batch Size</label>
-
-<input
-id="batchSize"
-type="number"
-min="0"
-step="any"
-placeholder="e.g. 1000">
-
-</div>
-
-
-<div class="field">
-
-<label>Batch Unit</label>
-
-<select id="batchUnit">
-
-<option value="g">g</option>
-<option value="kg">kg</option>
-<option value="ml">ml</option>
-<option value="L">L</option>
-
-</select>
-
-</div>
-
-
-<div class="field">
-
-<label>Total %</label>
-
-<input
-id="totalPercent"
-readonly
-value="0%">
-
-</div>
-
-</div>
-
-
-<!-- INGREDIENTS -->
-
-<div class="card">
-
-<b>Ingredients</b>
-
-<div class="ingredients">
-
-<div class="ing-head">
-
-<span>Ingredient</span>
-<span>Quantity</span>
-<span>Unit</span>
-<span>%</span>
-<span></span>
-
-</div>
-
-<div id="ingredients"></div>
-
-</div>
-
-
-<div class="total">
-
-Total Quantity:
-<span id="totalQty">0</span>
-
-&nbsp; | &nbsp;
-
-Total:
-<span id="totalPct">0%</span>
-
-</div>
-
-
-<button
-id="addIngredientBtn"
-type="button"
-class="secondary no-print"
-style="margin-top:10px">
-
-+ Add Ingredient
-
-</button>
-
-</div>
-
-
-<!-- OTHER DETAILS -->
-
-<div
-class="grid"
-style="margin-top:15px">
-
-
-<div class="field full">
-
-<label>Preparation Method</label>
-
-<textarea
-id="method"
-placeholder="Write preparation / manufacturing method..."></textarea>
-
-</div>
-
-
-<div class="field full">
-
-<label>Result</label>
-
-<textarea
-id="result"
-placeholder="Final result / observation, colour, texture, pH, fragrance, etc."></textarea>
-
-</div>
-
-
-<div class="field full">
-
-<label>Notes</label>
-
-<textarea
-id="notes"
-placeholder="Additional notes..."></textarea>
-
-</div>
-
-</div>
-
-
-<div class="actions no-print">
-
-<button
-id="saveBtn"
-type="button"
-class="primary">
-
-💾 Save Formula
-
-</button>
-
-
-<button
-id="clearBtn"
-type="button"
-class="secondary">
-
-Clear
-
-</button>
-
-
-<button
-id="deleteBtn"
-type="button"
-class="danger"
-style="display:none">
-
-🗑 Delete
-
-</button>
-
-</div>
-
-</section>
-
-
-<!-- PRINT -->
-
-<section
-id="printArea"
-style="display:none">
-
-</section>
-
-
-</div>
-
-
 <script>
 
-/* =========================================
-   SUPABASE
-========================================= */
+/* =========================================================
+   LIARA PROFESSIONAL™
+   FORMULA MANAGER
+   SUPABASE VERSION
+========================================================= */
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
@@ -895,2790 +14,3397 @@ const SUPABASE_KEY =
 
 let supabaseClient = null;
 
-try{
+try {
 
-if(
-window.supabase &&
-typeof window.supabase.createClient === "function"
-){
+  if (
+    window.supabase &&
+    typeof window.supabase.createClient === "function"
+  ) {
 
-supabaseClient =
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
 
-}else{
+  } else {
 
-throw new Error(
-"Supabase library failed to load."
-);
+    throw new Error(
+      "Supabase library failed to load."
+    );
+
+  }
+
+} catch (error) {
+
+  console.error(error);
 
 }
 
-}catch(error){
 
-console.error(error);
-
-}
-
-
-/* =========================================
+/* =========================================================
    VARIABLES
-========================================= */
+========================================================= */
 
 let formulas = [];
 
 let editingId = null;
 
-
-/* =========================================
-   BATCH SCALING VARIABLES
-========================================= */
-
-/*
-Stores the last committed batch size.
-
-Example:
-200 g -> 500 g
-Scale = 500 / 200 = 2.5
-
-Percentages are never changed.
-Only ingredient quantities are scaled.
-*/
-
 let lastBatchSize = 0;
 
 
-/* =========================================
+/* =========================================================
    SHORTCUT
-========================================= */
+========================================================= */
 
-function $(id){
+function $(id) {
 
-return document.getElementById(id);
+  return document.getElementById(id);
 
 }
 
 
-/* =========================================
+/* =========================================================
    STATUS
-========================================= */
+========================================================= */
 
-function setStatus(
-message,
-error=false
-){
+function setStatus(message, error = false) {
 
-const box = $("status");
+  const box = $("status");
 
-if(!box)
-return;
+  if (!box) return;
 
-box.textContent = message;
+  box.textContent = message;
 
-box.className =
-error
-? "status error no-print"
-: "status no-print";
+  box.className =
+    error
+      ? "status error no-print"
+      : "status no-print";
 
 }
 
 
-/* =========================================
+/* =========================================================
    ESCAPE
-========================================= */
+========================================================= */
 
-function esc(value){
+function esc(value) {
 
-return String(value ?? "")
-.replace(
-/[&<>"']/g,
-function(m){
+  return String(value ?? "")
+    .replace(
+      /[&<>"']/g,
+      function(m) {
 
-return {
+        return {
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          '"':"&quot;",
+          "'":"&#39;"
+        }[m];
 
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#39;"
-
-}[m];
-
-});
-
-}
-
-
-function nl(value){
-
-return esc(value)
-.replace(/\n/g,"<br>");
+      }
+    );
 
 }
 
 
-/* =========================================
+function nl(value) {
+
+  return esc(value)
+    .replace(/\n/g, "<br>");
+
+}
+
+
+/* =========================================================
    DATE
-========================================= */
+========================================================= */
 
-function today(){
+function today() {
 
-const d = new Date();
+  const d = new Date();
 
-const year =
-d.getFullYear();
+  const year =
+    d.getFullYear();
 
-const month =
-String(
-d.getMonth()+1
-).padStart(2,"0");
+  const month =
+    String(d.getMonth() + 1)
+      .padStart(2, "0");
 
-const day =
-String(
-d.getDate()
-).padStart(2,"0");
+  const day =
+    String(d.getDate())
+      .padStart(2, "0");
 
-return year+"-"+month+"-"+day;
+  return year + "-" + month + "-" + day;
 
 }
 
 
-/* =========================================
+/* =========================================================
    TAB
-========================================= */
+========================================================= */
 
-function showTab(id){
+function showTab(id) {
 
-document
-.querySelectorAll(".panel")
-.forEach(
-p =>
-p.classList.remove("active")
-);
+  document
+    .querySelectorAll(".panel")
+    .forEach(
+      p =>
+        p.classList.remove("active")
+    );
 
-const panel = $(id);
+  const panel = $(id);
 
-if(panel)
-panel.classList.add("active");
+  if (panel)
+    panel.classList.add("active");
 
 
-document
-.querySelectorAll(".tab")
-.forEach(
-b =>
-b.classList.remove("active")
-);
+  document
+    .querySelectorAll(".tab")
+    .forEach(
+      b =>
+        b.classList.remove("active")
+    );
 
-if(id === "seen"){
 
-$("seenTab")
-.classList.add("active");
+  if (id === "seen") {
 
-}else{
+    $("seenTab")
+      .classList.add("active");
 
-$("editTab")
-.classList.add("active");
+  } else {
+
+    $("editTab")
+      .classList.add("active");
+
+  }
 
 }
 
-}
 
-
-/* =========================================
+/* =========================================================
    SETTINGS
-========================================= */
+========================================================= */
 
-function toggleSettings(){
+function toggleSettings() {
 
-const panel =
-$("settingsPanel");
+  const panel =
+    $("settingsPanel");
 
-panel.classList.toggle("open");
+  if (!panel) return;
 
-renderMasterLists();
+  panel.classList.toggle("open");
+
+  loadMasterIngredients();
 
 }
 
 
-/* =========================================
-   MASTER INGREDIENT DATA
-========================================= */
+/* =========================================================
+   MASTER INGREDIENTS
+   SUPABASE TABLE: ingredients
+========================================================= */
 
-function getMasterIngredients(){
+let masterIngredients = {
 
-try{
-
-const saved =
-localStorage.getItem(
-"liara_formula_ingredients"
-);
-
-if(saved){
-
-const data =
-JSON.parse(saved);
-
-return {
-
-science:
-Array.isArray(data.science)
-? data.science
-: [],
-
-natural:
-Array.isArray(data.natural)
-? data.natural
-: []
+  science: [],
+  natural: []
 
 };
 
+
+/* =========================================================
+   LOAD MASTER INGREDIENTS
+========================================================= */
+
+async function loadMasterIngredients() {
+
+  if (!supabaseClient) {
+
+    setStatus(
+      "❌ Supabase is not connected.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("ingredients")
+        .select("*")
+        .order("name", {
+          ascending: true
+        });
+
+
+    if (error)
+      throw error;
+
+
+    const rows =
+      Array.isArray(data)
+        ? data
+        : [];
+
+
+    masterIngredients = {
+
+      science:
+        rows
+          .filter(
+            x =>
+              x.category === "science"
+          )
+          .map(
+            x => x.name
+          ),
+
+      natural:
+        rows
+          .filter(
+            x =>
+              x.category === "natural"
+          )
+          .map(
+            x => x.name
+          )
+
+    };
+
+
+    renderMasterLists();
+
+    refreshIngredientDropdowns();
+
+
+  } catch (error) {
+
+    console.error(
+      "Master ingredient load error:",
+      error
+    );
+
+
+    /*
+      If ingredients table doesn't exist,
+      tell the user clearly.
+    */
+
+    setStatus(
+      "⚠️ Ingredient master table error: " +
+      (error.message || error),
+      true
+    );
+
+
+    renderMasterLists();
+
+  }
+
 }
 
-}catch(error){
 
-console.error(
-"Ingredient storage error:",
-error
-);
-
-}
-
-return {
-
-science:[],
-
-natural:[]
-
-};
-
-}
-
-
-/* =========================================
-   SAVE MASTER DATA
-========================================= */
-
-function saveMasterIngredients(data){
-
-try{
-
-localStorage.setItem(
-"liara_formula_ingredients",
-JSON.stringify(data)
-);
-
-}catch(error){
-
-alert(
-"Could not save ingredient list: "
-+
-error.message
-);
-
-return;
-
-}
-
-renderMasterLists();
-
-}
-
-
-/* =========================================
+/* =========================================================
    ADD MASTER INGREDIENT
-========================================= */
+========================================================= */
 
-function addMasterIngredient(type){
+async function addMasterIngredient(type) {
 
-const input =
-$(type+"Input");
+  const input =
+    $(type + "Input");
 
-if(!input)
-return;
-
-const value =
-input.value.trim();
-
-if(!value)
-return;
+  if (!input)
+    return;
 
 
-const data =
-getMasterIngredients();
+  const value =
+    input.value.trim();
 
 
-const exists =
-data[type].some(
-x =>
-String(x).toLowerCase() ===
-value.toLowerCase()
-);
+  if (!value) {
+
+    alert(
+      "Please enter ingredient name."
+    );
+
+    input.focus();
+
+    return;
+
+  }
 
 
-if(!exists){
+  if (
+    type !== "science" &&
+    type !== "natural"
+  ) {
 
-data[type].push(value);
+    return;
 
-data[type].sort(
-(a,b) =>
-a.localeCompare(b)
-);
+  }
 
-saveMasterIngredients(data);
+
+  if (!supabaseClient) {
+
+    alert(
+      "Supabase is not connected."
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    /*
+      Check duplicate
+    */
+
+    const {
+      data: existing,
+      error: checkError
+    } =
+      await supabaseClient
+        .from("ingredients")
+        .select("id,name")
+        .ilike(
+          "name",
+          value
+        )
+        .limit(1);
+
+
+    if (checkError)
+      throw checkError;
+
+
+    if (
+      existing &&
+      existing.length
+    ) {
+
+      alert(
+        "This ingredient already exists."
+      );
+
+      input.select();
+
+      return;
+
+    }
+
+
+    /*
+      Insert new ingredient
+    */
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("ingredients")
+        .insert({
+
+          name: value,
+
+          category: type,
+
+          updated_at:
+            new Date().toISOString()
+
+        });
+
+
+    if (error)
+      throw error;
+
+
+    input.value = "";
+
+
+    await loadMasterIngredients();
+
+
+    input.focus();
+
+
+    setStatus(
+      "☁ Ingredient saved: " + value
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Add ingredient error:",
+      error
+    );
+
+
+    alert(
+      "Ingredient save error:\n\n" +
+      (error.message || error)
+    );
+
+  }
 
 }
 
 
-input.value = "";
-
-input.focus();
-
-
-/*
-Refresh open ingredient dropdowns
-without changing saved formula data.
-*/
-
-refreshIngredientDropdowns();
-
-}
-
-
-/* =========================================
+/* =========================================================
    DELETE MASTER INGREDIENT
-========================================= */
+========================================================= */
 
-function deleteMasterIngredient(
-type,
-index
-){
+async function deleteMasterIngredient(
+  name,
+  type
+) {
 
-const data =
-getMasterIngredients();
-
-
-if(
-!confirm(
-"Delete this ingredient from the list?"
-)
-)
-return;
+  if (!name)
+    return;
 
 
-data[type].splice(
-index,
-1
-);
+  if (
+    !confirm(
+      "Delete \"" +
+      name +
+      "\" from master ingredient list?"
+    )
+  ) {
 
-saveMasterIngredients(data);
+    return;
 
-refreshIngredientDropdowns();
+  }
+
+
+  if (!supabaseClient) {
+
+    alert(
+      "Supabase is not connected."
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("ingredients")
+        .delete()
+        .eq(
+          "name",
+          name
+        )
+        .eq(
+          "category",
+          type
+        );
+
+
+    if (error)
+      throw error;
+
+
+    await loadMasterIngredients();
+
+
+    refreshIngredientDropdowns();
+
+
+    setStatus(
+      "☁ Ingredient deleted: " +
+      name
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Delete ingredient error:",
+      error
+    );
+
+
+    alert(
+      "Ingredient delete error:\n\n" +
+      (error.message || error)
+    );
+
+  }
 
 }
 
 
-/* =========================================
+/* =========================================================
    RENDER MASTER LISTS
-========================================= */
+========================================================= */
 
-function renderMasterLists(){
+function renderMasterLists() {
 
-const data =
-getMasterIngredients();
+  renderMasterList(
+    "science",
+    masterIngredients.science
+  );
 
-renderMasterList(
-"science",
-data.science
-);
 
-renderMasterList(
-"natural",
-data.natural
-);
+  renderMasterList(
+    "natural",
+    masterIngredients.natural
+  );
 
 }
 
 
-/* =========================================
-   RENDER MASTER LIST
-========================================= */
+/* =========================================================
+   RENDER ONE MASTER LIST
+========================================================= */
 
 function renderMasterList(
-type,
-list
-){
+  type,
+  list
+) {
 
-const box =
-$(type+"List");
+  const box =
+    $(type + "List");
 
-if(!box)
-return;
+  if (!box)
+    return;
 
 
-if(!list.length){
+  if (!list || !list.length) {
 
-box.innerHTML =
-`
-<div style="font-size:12px;color:#999">
-No ingredients added yet.
-</div>
-`;
+    box.innerHTML = `
+      <div style="
+        font-size:12px;
+        color:#999;
+        padding:5px 0;
+      ">
+        No ingredients added yet.
+      </div>
+    `;
 
-return;
+    return;
+
+  }
+
+
+  box.innerHTML =
+    list
+      .map(
+        item => `
+
+          <div class="master-item">
+
+            <span>
+              ${esc(item)}
+            </span>
+
+            <button
+              type="button"
+              class="danger small-btn"
+              data-delete-name="${esc(item)}"
+              data-delete-type="${esc(type)}">
+
+              × Delete
+
+            </button>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+
+  box
+    .querySelectorAll(
+      "button[data-delete-name]"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            deleteMasterIngredient(
+              this.dataset.deleteName,
+              this.dataset.deleteType
+            );
+
+          }
+        );
+
+      }
+    );
 
 }
 
 
-box.innerHTML =
-list
-.map(
-(item,index) =>
-`
-
-<div class="master-item">
-
-<span>
-${esc(item)}
-</span>
-
-<button
-type="button"
-class="danger small-btn"
-data-master-type="${esc(type)}"
-data-master-index="${index}">
-
-× Delete
-
-</button>
-
-</div>
-
-`
-)
-.join("");
-
-
-box
-.querySelectorAll(
-"button[data-master-type]"
-)
-.forEach(
-button => {
-
-button.addEventListener(
-"click",
-function(){
-
-deleteMasterIngredient(
-this.dataset.masterType,
-Number(
-this.dataset.masterIndex
-)
-);
-
-}
-);
-
-}
-);
-
-}
-
-
-/* =========================================
+/* =========================================================
    INGREDIENT OPTIONS
-========================================= */
+========================================================= */
 
 function getIngredientOptions(
-selected=""
-){
+  selected = ""
+) {
 
-const data =
-getMasterIngredients();
+  const natural =
+    masterIngredients.natural || [];
 
+  const science =
+    masterIngredients.science || [];
 
-let html =
-`
-<option value="">
-Select ingredient...
-</option>
-`;
 
+  let html = `
+    <option value="">
+      Select ingredient...
+    </option>
+  `;
 
-if(data.natural.length){
 
-html +=
-`
-<optgroup label="🌿 Natural / Herbal">
-`;
+  if (natural.length) {
 
-data.natural.forEach(
-item => {
+    html += `
+      <optgroup label="🌿 Natural / Herbal">
+    `;
 
-html +=
-`
-<option
-value="${esc(item)}"
-${item === selected ? "selected" : ""}>
-${esc(item)}
-</option>
-`;
 
-});
+    natural.forEach(
+      item => {
 
-html +=
-`
-</optgroup>
-`;
+        html += `
+          <option
+            value="${esc(item)}"
+            ${item === selected
+              ? "selected"
+              : ""}>
+            ${esc(item)}
+          </option>
+        `;
 
-}
-
-
-if(data.science.length){
-
-html +=
-`
-<optgroup label="🧪 Science">
-`;
-
-data.science.forEach(
-item => {
-
-html +=
-`
-<option
-value="${esc(item)}"
-${item === selected ? "selected" : ""}>
-${esc(item)}
-</option>
-`;
-
-});
-
-html +=
-`
-</optgroup>
-`;
-
-}
-
-
-html +=
-`
-<option value="__custom__">
-✏️ Other / Type Manually
-</option>
-`;
-
-
-return html;
-
-}
-
-
-/* =========================================
-   REFRESH INGREDIENT DROPDOWNS
-========================================= */
-
-function refreshIngredientDropdowns(){
-
-document
-.querySelectorAll(
-"#ingredients .ing-row"
-)
-.forEach(
-row => {
-
-const select =
-row.querySelector(
-".iname-select"
-);
-
-if(!select)
-return;
-
-let current = "";
-
-if(
-select.value &&
-select.value !==
-"__custom__"
-){
-
-current =
-select.value;
-
-}else{
-
-const custom =
-row.querySelector(
-".custom-ingredient"
-);
-
-if(custom)
-current =
-custom.value.trim();
-
-}
-
-
-select.innerHTML =
-getIngredientOptions(
-current
-);
-
-}
-);
-
-}
-
-
-/* =========================================
-   NEW FORMULA
-========================================= */
-
-function newFormula(){
-
-editingId = null;
-
-lastBatchSize = 0;
-
-
-[
-"formulaNo",
-"productName",
-"formulaName",
-"version",
-"method",
-"result",
-"notes",
-"batchSize"
-]
-.forEach(
-id => {
-
-if($(id))
-$(id).value = "";
-
-}
-);
-
-
-$("date").value =
-today();
-
-$("batchUnit").value =
-"g";
-
-
-$("ingredients").innerHTML =
-"";
-
-
-addIngredient();
-
-
-$("deleteBtn").style.display =
-"none";
-
-
-showTab("edit");
-
-
-$("formulaNo").focus();
-
-}
-
-
-/* =========================================
-   ADD INGREDIENT
-========================================= */
-
-function addIngredient(
-data={}
-){
-
-const row =
-document.createElement("div");
-
-row.className =
-"ing-row";
-
-
-const safeName =
-String(
-data.name || ""
-);
-
-
-row.innerHTML =
-`
-
-<div>
-
-<select
-class="iname-select">
-
-${getIngredientOptions(
-safeName
-)}
-
-</select>
-
-<input
-class="iname custom-ingredient"
-type="text"
-placeholder="Type ingredient name"
-value="${esc(safeName)}">
-
-</div>
-
-
-<input
-class="iqty"
-type="number"
-min="0"
-step="any"
-placeholder="Qty"
-value="${esc(data.qty ?? "")}">
-
-
-<select class="iunit">
-
-<option value="g">g</option>
-<option value="kg">kg</option>
-<option value="ml">ml</option>
-<option value="L">L</option>
-
-</select>
-
-
-<input
-class="ipct"
-type="number"
-min="0"
-step="any"
-placeholder="%"
-value="${esc(data.pct ?? "")}">
-
-
-<button
-type="button"
-class="danger ingredient-delete">
-
-×
-
-</button>
-
-`;
-
-
-$("ingredients")
-.appendChild(row);
-
-
-const unit =
-row.querySelector(
-".iunit"
-);
-
-if(data.unit)
-unit.value =
-data.unit;
-
-
-const select =
-row.querySelector(
-".iname-select"
-);
-
-const custom =
-row.querySelector(
-".custom-ingredient"
-);
-
-
-const all =
-getMasterIngredients();
-
-
-const exists =
-[
-...all.natural,
-...all.science
-]
-.some(
-x =>
-x === safeName
-);
-
-
-if(
-safeName &&
-!exists
-){
-
-select.value =
-"__custom__";
-
-custom.style.display =
-"block";
-
-}else{
-
-custom.style.display =
-"none";
-
-}
-
-
-select.addEventListener(
-"change",
-function(){
-
-ingredientSelectChanged(
-this
-);
-
-}
-);
-
-
-custom.addEventListener(
-"input",
-function(){
-
-calcTotals();
-
-}
-);
-
-
-row.querySelector(
-".iqty"
-)
-.addEventListener(
-"input",
-calcTotals
-);
-
-
-row.querySelector(
-".ipct"
-)
-.addEventListener(
-"input",
-calcTotals
-);
-
-
-row.querySelector(
-".ingredient-delete"
-)
-.addEventListener(
-"click",
-function(){
-
-row.remove();
-
-calcTotals();
-
-}
-);
-
-
-calcTotals();
-
-}
-
-
-/* =========================================
-   INGREDIENT SELECT
-========================================= */
-
-function ingredientSelectChanged(
-select
-){
-
-const row =
-select.closest(".ing-row");
-
-if(!row)
-return;
-
-
-const custom =
-row.querySelector(
-".custom-ingredient"
-);
-
-
-if(
-select.value ===
-"__custom__"
-){
-
-custom.style.display =
-"block";
-
-custom.focus();
-
-}else{
-
-custom.style.display =
-"none";
-
-custom.value =
-select.value;
-
-}
-
-calcTotals();
-
-}
-
-
-/* =========================================
-   TOTALS
-========================================= */
-
-function calcTotals(){
-
-let q = 0;
-
-let p = 0;
-
-
-document
-.querySelectorAll(".iqty")
-.forEach(
-x =>
-q +=
-Number(x.value) || 0
-);
-
-
-document
-.querySelectorAll(".ipct")
-.forEach(
-x =>
-p +=
-Number(x.value) || 0
-);
-
-
-$("totalQty").textContent =
-q.toFixed(2)
-.replace(/\.00$/,"");
-
-
-$("totalPct").textContent =
-p.toFixed(2)
-.replace(/\.00$/,"")
-+
-"%";
-
-
-$("totalPercent").value =
-p.toFixed(2)
-.replace(/\.00$/,"")
-+
-"%";
-
-}
-
-
-/* =========================================
-   BATCH SIZE SCALING
-========================================= */
-
-/*
-IMPORTANT:
-
-This runs on the batchSize "change" event.
-
-That means typing:
-200 -> 500
-
-does NOT continuously modify quantities.
-
-Only after the user leaves the field
-or presses Tab will the quantities scale.
-
-Percentages are never touched.
-
-Example:
-
-Old batch = 200
-New batch = 500
-Scale = 500 / 200 = 2.5
-
-40 g -> 100 g
-20 g -> 50 g
-10 g -> 25 g
-*/
-
-function scaleIngredientsForBatch(){
-
-const batchField =
-$("batchSize");
-
-if(!batchField)
-return;
-
-
-const newBatch =
-Number(batchField.value);
-
-
-if(
-!Number.isFinite(newBatch) ||
-newBatch <= 0
-){
-
-return;
-
-}
-
-
-/*
-If there is no previous batch size,
-just remember this batch size.
-
-This prevents the first batch entry from
-unexpectedly changing ingredient quantities.
-*/
-
-if(
-!lastBatchSize ||
-lastBatchSize <= 0
-){
-
-lastBatchSize =
-newBatch;
-
-return;
-
-}
-
-
-/*
-Same batch size = nothing to scale.
-*/
-
-if(
-Math.abs(newBatch - lastBatchSize)
-< 0.0000001
-){
-
-return;
-
-}
-
-
-const multiplier =
-newBatch / lastBatchSize;
-
-
-document
-.querySelectorAll(
-"#ingredients .ing-row"
-)
-.forEach(
-row => {
-
-const qty =
-row.querySelector(".iqty");
-
-if(!qty)
-return;
-
-
-const oldQty =
-Number(qty.value);
-
-
-if(
-!Number.isFinite(oldQty)
-){
-
-return;
-
-}
-
-
-const newQty =
-oldQty * multiplier;
-
-
-qty.value =
-newQty
-.toFixed(6)
-.replace(/\.?0+$/,"");
-
-}
-);
-
-
-/*
-Only update the remembered batch size
-after the scaling has completed.
-*/
-
-lastBatchSize =
-newBatch;
-
-
-calcTotals();
-
-}
-
-
-/* =========================================
-   GET INGREDIENTS
-========================================= */
-
-function getIngredients(){
-
-return [
-
-...
-document.querySelectorAll(
-"#ingredients .ing-row"
-)
-
-]
-.map(
-row => {
-
-const select =
-row.querySelector(
-".iname-select"
-);
-
-const custom =
-row.querySelector(
-".custom-ingredient"
-);
-
-let name = "";
-
-
-if(
-select &&
-select.value ===
-"__custom__"
-){
-
-name =
-custom
-? custom.value.trim()
-: "";
-
-}else{
-
-name =
-select
-? select.value.trim()
-: "";
-
-}
-
-
-return {
-
-name:name,
-
-qty:
-row.querySelector(
-".iqty"
-).value,
-
-unit:
-row.querySelector(
-".iunit"
-).value,
-
-pct:
-row.querySelector(
-".ipct"
-).value
-
-};
-
-}
-)
-.filter(
-x =>
-x.name ||
-x.qty ||
-x.pct
-);
-
-}
-
-
-/* =========================================
-   SAVE FORMULA
-========================================= */
-
-async function saveFormula(){
-
-if(!supabaseClient){
-
-alert(
-"Supabase is not connected."
-);
-
-return;
-
-}
-
-
-const product =
-$("productName")
-.value
-.trim();
-
-
-if(!product){
-
-alert(
-"Product Name is required."
-);
-
-$("productName").focus();
-
-return;
-
-}
-
-
-const item = {
-
-formula_no:
-$("formulaNo")
-.value
-.trim(),
-
-product_name:
-product,
-
-formula_name:
-$("formulaName")
-.value
-.trim(),
-
-version:
-$("version")
-.value
-.trim(),
-
-formula_date:
-$("date")
-.value ||
-today(),
-
-batch_size:
-$("batchSize")
-.value
-?
-Number(
-$("batchSize").value
-)
-:
-null,
-
-batch_unit:
-$("batchUnit")
-.value,
-
-preparation_method:
-$("method")
-.value
-.trim(),
-
-result:
-$("result")
-.value
-.trim(),
-
-notes:
-$("notes")
-.value
-.trim(),
-
-updated_at:
-new Date()
-.toISOString()
-
-};
-
-
-try{
-
-let formulaId =
-editingId;
-
-
-/* UPDATE */
-
-if(editingId){
-
-const {
-error
-} =
-await supabaseClient
-.from("formulas")
-.update(item)
-.eq(
-"id",
-editingId
-);
-
-if(error)
-throw error;
-
-
-const {
-error:deleteError
-} =
-await supabaseClient
-.from("formula_ingredients")
-.delete()
-.eq(
-"formula_id",
-editingId
-);
-
-if(deleteError)
-throw deleteError;
-
-}
-
-
-/* INSERT */
-
-else{
-
-const {
-data,
-error
-} =
-await supabaseClient
-.from("formulas")
-.insert(item)
-.select("id")
-.single();
-
-
-if(error)
-throw error;
-
-
-formulaId =
-data.id;
-
-}
-
-
-/* INGREDIENTS */
-
-const ingredients =
-getIngredients()
-.map(
-x => ({
-
-formula_id:
-formulaId,
-
-ingredient_name:
-x.name,
-
-quantity:
-x.qty
-?
-Number(x.qty)
-:
-null,
-
-unit:
-x.unit,
-
-percentage:
-x.pct
-?
-Number(x.pct)
-:
-null
-
-})
-);
-
-
-if(
-ingredients.length
-){
-
-const {
-error
-} =
-await supabaseClient
-.from("formula_ingredients")
-.insert(
-ingredients
-);
-
-if(error)
-throw error;
-
-}
-
-
-alert(
-editingId
-?
-"Formula updated successfully."
-:
-"Formula saved successfully."
-);
-
-
-await loadFormulas();
-
-editFormula(formulaId);
-
-}
-
-catch(error){
-
-console.error(
-"Save formula error:",
-error
-);
-
-alert(
-"Supabase error: "
-+
-(error.message || error)
-);
-
-}
-
-}
-
-
-/* =========================================
-   LOAD FORMULAS
-========================================= */
-
-async function loadFormulas(){
-
-setStatus("☁ Loading formulas...");
-
-try{
-
-let rows = [];
-
-/* First try the Supabase JS client. */
-if(supabaseClient){
-  const result = await supabaseClient
-    .from("formulas")
-    .select("*")
-    .order("created_at",{ascending:false});
-
-  if(result.error) throw result.error;
-  rows = result.data || [];
-}
-
-/* If the client is unavailable or returned no usable data, use the REST API directly. */
-if(!rows.length){
-  const response = await fetch(
-    SUPABASE_URL + "/rest/v1/formulas?select=*&order=created_at.desc",
-    {
-      method:"GET",
-      headers:{
-        "apikey":SUPABASE_KEY,
-        "Authorization":"Bearer " + SUPABASE_KEY,
-        "Accept":"application/json"
       }
+    );
+
+
+    html += `
+      </optgroup>
+    `;
+
+  }
+
+
+  if (science.length) {
+
+    html += `
+      <optgroup label="🧪 Science">
+    `;
+
+
+    science.forEach(
+      item => {
+
+        html += `
+          <option
+            value="${esc(item)}"
+            ${item === selected
+              ? "selected"
+              : ""}>
+            ${esc(item)}
+          </option>
+        `;
+
+      }
+    );
+
+
+    html += `
+      </optgroup>
+    `;
+
+  }
+
+
+  html += `
+    <option value="__custom__">
+      ✏️ Other / Type Manually
+    </option>
+  `;
+
+
+  return html;
+
+}
+
+
+/* =========================================================
+   REFRESH OPEN DROPDOWNS
+========================================================= */
+
+function refreshIngredientDropdowns() {
+
+  document
+    .querySelectorAll(
+      "#ingredients .ing-row"
+    )
+    .forEach(
+      row => {
+
+        const select =
+          row.querySelector(
+            ".iname-select"
+          );
+
+        if (!select)
+          return;
+
+
+        const custom =
+          row.querySelector(
+            ".custom-ingredient"
+          );
+
+
+        let current = "";
+
+
+        if (
+          select.value &&
+          select.value !== "__custom__"
+        ) {
+
+          current =
+            select.value;
+
+        } else if (custom) {
+
+          current =
+            custom.value.trim();
+
+        }
+
+
+        select.innerHTML =
+          getIngredientOptions(
+            current
+          );
+
+
+        if (
+          current &&
+          select.querySelector(
+            `option[value="${CSS.escape(current)}"]`
+          )
+        ) {
+
+          select.value =
+            current;
+
+          custom.style.display =
+            "none";
+
+        }
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   NEW FORMULA
+========================================================= */
+
+function newFormula() {
+
+  editingId = null;
+
+  lastBatchSize = 0;
+
+
+  [
+    "formulaNo",
+    "productName",
+    "formulaName",
+    "version",
+    "method",
+    "result",
+    "notes",
+    "batchSize"
+  ]
+  .forEach(
+    id => {
+
+      if ($(id))
+        $(id).value = "";
+
     }
   );
 
-  if(!response.ok){
-    const text = await response.text();
-    throw new Error("Formula API " + response.status + ": " + text);
-  }
 
-  rows = await response.json();
+  $("date").value =
+    today();
+
+
+  $("batchUnit").value =
+    "g";
+
+
+  $("ingredients").innerHTML =
+    "";
+
+
+  addIngredient();
+
+
+  $("deleteBtn")
+    .style.display =
+    "none";
+
+
+  showTab("edit");
+
+
+  $("formulaNo").focus();
+
 }
 
-/* Load ingredients separately. A missing ingredient query must NOT hide formulas. */
-let ingredientRows = [];
 
-if(rows.length){
-  const ids = rows.map(f => f.id).filter(Boolean);
+/* =========================================================
+   ADD INGREDIENT ROW
+========================================================= */
 
-  if(supabaseClient && ids.length){
-    const result = await supabaseClient
-      .from("formula_ingredients")
-      .select("*")
-      .in("formula_id",ids);
+function addIngredient(data = {}) {
 
-    if(!result.error) ingredientRows = result.data || [];
-  }
+  const row =
+    document.createElement("div");
 
-  if(!ingredientRows.length && ids.length){
-    const url = SUPABASE_URL + "/rest/v1/formula_ingredients?select=*&formula_id=in.(" + ids.join(",") + ")";
-    const response = await fetch(url,{
-      headers:{
-        "apikey":SUPABASE_KEY,
-        "Authorization":"Bearer " + SUPABASE_KEY,
-        "Accept":"application/json"
-      }
-    });
+  row.className =
+    "ing-row";
 
-    if(response.ok){
-      ingredientRows = await response.json();
-    }
-  }
-}
 
-const ingredientMap = {};
+  const safeName =
+    String(
+      data.name || ""
+    );
 
-(ingredientRows || []).forEach(ingredient => {
-  const key = String(ingredient.formula_id);
-  if(!ingredientMap[key]) ingredientMap[key] = [];
-  ingredientMap[key].push(ingredient);
-});
 
-formulas = rows.map(formula => ({
-  ...formula,
-  formula_ingredients: ingredientMap[String(formula.id)] || []
-}));
+  row.innerHTML = `
 
-setStatus("☁ Connected • " + formulas.length + " formula(s) online");
-renderList();
+    <div>
 
-}catch(error){
+      <select
+        class="iname-select">
 
-console.error("Load formulas error:",error);
+        ${getIngredientOptions(
+          safeName
+        )}
 
-setStatus("❌ " + (error.message || error),true);
+      </select>
 
-const box = $("formulaList");
-if(box){
-  box.innerHTML = `
-    <div class="empty error">
-      Formula load failed.<br><br>
-      <small>${esc(error.message || error)}</small>
+
+      <input
+        class="iname custom-ingredient"
+        type="text"
+        placeholder="Type ingredient name"
+        value="${esc(safeName)}">
+
     </div>
+
+
+    <input
+      class="iqty"
+      type="number"
+      min="0"
+      step="any"
+      placeholder="Qty"
+      value="${esc(
+        data.qty ?? ""
+      )}">
+
+
+    <select
+      class="iunit">
+
+      <option value="g">g</option>
+      <option value="kg">kg</option>
+      <option value="ml">ml</option>
+      <option value="L">L</option>
+
+    </select>
+
+
+    <input
+      class="ipct"
+      type="number"
+      min="0"
+      step="any"
+      placeholder="%"
+      value="${esc(
+        data.pct ?? ""
+      )}">
+
+
+    <button
+      type="button"
+      class="danger ingredient-delete">
+
+      ×
+
+    </button>
+
   `;
-}
+
+
+  $("ingredients")
+    .appendChild(row);
+
+
+  const unit =
+    row.querySelector(
+      ".iunit"
+    );
+
+
+  if (data.unit)
+    unit.value =
+      data.unit;
+
+
+  const select =
+    row.querySelector(
+      ".iname-select"
+    );
+
+
+  const custom =
+    row.querySelector(
+      ".custom-ingredient"
+    );
+
+
+  const allNames = [
+
+    ...(masterIngredients.natural || []),
+
+    ...(masterIngredients.science || [])
+
+  ];
+
+
+  const exists =
+    allNames.some(
+      x =>
+        x.toLowerCase() ===
+        safeName.toLowerCase()
+    );
+
+
+  if (
+    safeName &&
+    !exists
+  ) {
+
+    select.value =
+      "__custom__";
+
+    custom.style.display =
+      "block";
+
+  } else {
+
+    custom.style.display =
+      "none";
+
+  }
+
+
+  select.addEventListener(
+    "change",
+    function() {
+
+      ingredientSelectChanged(
+        this
+      );
+
+    }
+  );
+
+
+  custom.addEventListener(
+    "input",
+    calcTotals
+  );
+
+
+  row
+    .querySelector(".iqty")
+    .addEventListener(
+      "input",
+      calcTotals
+    );
+
+
+  row
+    .querySelector(".ipct")
+    .addEventListener(
+      "input",
+      calcTotals
+    );
+
+
+  row
+    .querySelector(
+      ".ingredient-delete"
+    )
+    .addEventListener(
+      "click",
+      function() {
+
+        row.remove();
+
+        calcTotals();
+
+      }
+    );
+
+
+  calcTotals();
 
 }
-}
 
-/* =========================================
-   LIST
-========================================= */
 
-function renderList(){
+/* =========================================================
+   INGREDIENT SELECT CHANGE
+========================================================= */
 
-const input =
-$("search");
+function ingredientSelectChanged(
+  select
+) {
 
-const q =
-input
-? input.value
-.toLowerCase()
-.trim()
-: "";
+  const row =
+    select.closest(
+      ".ing-row"
+    );
 
 
-const list =
-formulas.filter(
-f =>
-(
-(f.product_name || "")
-+
-" "
-+
-(f.formula_no || "")
-+
-" "
-+
-(f.formula_name || "")
-)
-.toLowerCase()
-.includes(q)
-);
+  if (!row)
+    return;
 
 
-if(!list.length){
+  const custom =
+    row.querySelector(
+      ".custom-ingredient"
+    );
 
-$("formulaList")
-.innerHTML =
-`
 
-<div class="empty">
+  if (
+    select.value ===
+    "__custom__"
+  ) {
 
-No formulas found.
+    custom.style.display =
+      "block";
 
-<br><br>
+    custom.focus();
 
-Click <b>New</b>
-to add one.
+  } else {
 
-</div>
+    custom.style.display =
+      "none";
 
-`;
+    custom.value =
+      select.value;
 
-return;
+  }
 
-}
 
-
-$("formulaList")
-.innerHTML =
-`
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Formula No.</th>
-<th>Product</th>
-<th>Formula</th>
-<th>Version</th>
-<th>Date</th>
-<th class="no-print">
-Action
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-${
-list
-.map(
-f =>
-`
-
-<tr>
-
-<td>
-${esc(
-f.formula_no || "-"
-)}
-</td>
-
-<td>
-<b>
-${esc(
-f.product_name
-)}
-</b>
-</td>
-
-<td>
-${esc(
-f.formula_name || "-"
-)}
-</td>
-
-<td>
-${esc(
-f.version || "-"
-)}
-</td>
-
-<td>
-${esc(
-f.formula_date || "-"
-)}
-</td>
-
-<td class="no-print">
-
-<button
-type="button"
-class="secondary view-btn"
-data-id="${esc(f.id)}">
-
-👁 View
-
-</button>
-
-
-<button
-type="button"
-class="secondary edit-btn"
-data-id="${esc(f.id)}">
-
-✏️ Edit
-
-</button>
-
-
-<button
-type="button"
-class="secondary print-btn"
-data-id="${esc(f.id)}">
-
-🖨️ Print
-
-</button>
-
-</td>
-
-</tr>
-
-`
-)
-.join("")
-}
-
-</tbody>
-
-</table>
-
-`;
-
-
-/* Attach events after rendering */
-
-$("formulaList")
-.querySelectorAll(".view-btn")
-.forEach(
-button => {
-
-button.addEventListener(
-"click",
-function(){
-
-viewFormula(
-this.dataset.id
-);
-
-}
-);
-
-}
-);
-
-
-$("formulaList")
-.querySelectorAll(".edit-btn")
-.forEach(
-button => {
-
-button.addEventListener(
-"click",
-function(){
-
-editFormula(
-this.dataset.id
-);
-
-}
-);
-
-}
-);
-
-
-$("formulaList")
-.querySelectorAll(".print-btn")
-.forEach(
-button => {
-
-button.addEventListener(
-"click",
-function(){
-
-printFormula(
-this.dataset.id
-);
-
-}
-);
-
-}
-);
+  calcTotals();
 
 }
 
 
-/* =========================================
-   EDIT
-========================================= */
+/* =========================================================
+   TOTALS
+========================================================= */
 
-function editFormula(id){
+function calcTotals() {
 
-const f =
-formulas.find(
-x =>
-String(x.id) ===
-String(id)
-);
+  let q = 0;
+
+  let p = 0;
 
 
-if(!f){
+  document
+    .querySelectorAll(
+      "#ingredients .iqty"
+    )
+    .forEach(
+      x => {
 
-alert(
-"Formula not found."
-);
+        q +=
+          Number(x.value) || 0;
 
-return;
-
-}
-
-
-editingId =
-f.id;
-
-
-$("formulaNo").value =
-f.formula_no || "";
+      }
+    );
 
 
-$("productName").value =
-f.product_name || "";
+  document
+    .querySelectorAll(
+      "#ingredients .ipct"
+    )
+    .forEach(
+      x => {
+
+        p +=
+          Number(x.value) || 0;
+
+      }
+    );
 
 
-$("formulaName").value =
-f.formula_name || "";
+  $("totalQty")
+    .textContent =
+      q.toFixed(2)
+        .replace(/\.00$/, "");
 
 
-$("version").value =
-f.version || "";
+  $("totalPct")
+    .textContent =
+      p.toFixed(2)
+        .replace(/\.00$/, "")
+      + "%";
 
 
-$("date").value =
-f.formula_date ||
-today();
-
-
-$("batchSize").value =
-f.batch_size ?? "";
-
-
-$("batchUnit").value =
-f.batch_unit ||
-"g";
-
-
-/*
-Remember the saved batch size.
-
-This is the baseline for future scaling.
-*/
-
-lastBatchSize =
-Number(f.batch_size) || 0;
-
-
-$("method").value =
-f.preparation_method || "";
-
-
-$("result").value =
-f.result || "";
-
-
-$("notes").value =
-f.notes || "";
-
-
-$("ingredients").innerHTML =
-"";
-
-
-const ingredients =
-f.formula_ingredients || [];
-
-
-if(ingredients.length){
-
-ingredients.forEach(
-x =>
-addIngredient({
-
-name:
-x.ingredient_name,
-
-qty:
-x.quantity,
-
-unit:
-x.unit,
-
-pct:
-x.percentage
-
-})
-);
-
-}else{
-
-addIngredient();
+  $("totalPercent")
+    .value =
+      p.toFixed(2)
+        .replace(/\.00$/, "")
+      + "%";
 
 }
 
 
-$("deleteBtn")
-.style.display =
-"inline-block";
+/* =========================================================
+   BATCH SIZE SCALING
+========================================================= */
+
+function scaleIngredientsForBatch() {
+
+  const batchField =
+    $("batchSize");
 
 
-calcTotals();
+  if (!batchField)
+    return;
 
-showTab("edit");
+
+  const newBatch =
+    Number(
+      batchField.value
+    );
+
+
+  if (
+    !Number.isFinite(newBatch) ||
+    newBatch <= 0
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    !lastBatchSize ||
+    lastBatchSize <= 0
+  ) {
+
+    lastBatchSize =
+      newBatch;
+
+    return;
+
+  }
+
+
+  if (
+    Math.abs(
+      newBatch -
+      lastBatchSize
+    ) < 0.0000001
+  ) {
+
+    return;
+
+  }
+
+
+  const multiplier =
+    newBatch /
+    lastBatchSize;
+
+
+  document
+    .querySelectorAll(
+      "#ingredients .ing-row"
+    )
+    .forEach(
+      row => {
+
+        const qty =
+          row.querySelector(
+            ".iqty"
+          );
+
+
+        if (!qty)
+          return;
+
+
+        const oldQty =
+          Number(
+            qty.value
+          );
+
+
+        if (
+          !Number.isFinite(
+            oldQty
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        const newQty =
+          oldQty *
+          multiplier;
+
+
+        qty.value =
+          newQty
+            .toFixed(6)
+            .replace(
+              /\.?0+$/,
+              ""
+            );
+
+      }
+    );
+
+
+  lastBatchSize =
+    newBatch;
+
+
+  calcTotals();
 
 }
 
 
-/* =========================================
-   VIEW
-========================================= */
+/* =========================================================
+   GET INGREDIENTS
+   FIXED — NO INVALID SPREAD SYNTAX
+========================================================= */
 
-function viewFormula(id){
+function getIngredients() {
 
-const f =
-formulas.find(
-x =>
-String(x.id) ===
-String(id)
-);
+  return Array.from(
+    document.querySelectorAll(
+      "#ingredients .ing-row"
+    )
+  )
+  .map(
+    row => {
+
+      const select =
+        row.querySelector(
+          ".iname-select"
+        );
 
 
-if(!f){
+      const custom =
+        row.querySelector(
+          ".custom-ingredient"
+        );
 
-alert(
-"Formula not found."
-);
 
-return;
+      let name = "";
+
+
+      if (
+        select &&
+        select.value ===
+        "__custom__"
+      ) {
+
+        name =
+          custom
+            ? custom.value.trim()
+            : "";
+
+      } else {
+
+        name =
+          select
+            ? select.value.trim()
+            : "";
+
+      }
+
+
+      return {
+
+        name,
+
+        qty:
+          row.querySelector(
+            ".iqty"
+          ).value,
+
+        unit:
+          row.querySelector(
+            ".iunit"
+          ).value,
+
+        pct:
+          row.querySelector(
+            ".ipct"
+          ).value
+
+      };
+
+    }
+  )
+  .filter(
+    x =>
+      x.name ||
+      x.qty ||
+      x.pct
+  );
 
 }
 
 
-const ingredients =
-f.formula_ingredients || [];
+/* =========================================================
+   SAVE FORMULA
+========================================================= */
+
+async function saveFormula() {
+
+  if (!supabaseClient) {
+
+    alert(
+      "Supabase is not connected."
+    );
+
+    return;
+
+  }
 
 
-const ing =
-ingredients
-.map(
-x =>
-`
-
-<tr>
-
-<td>
-${esc(
-x.ingredient_name
-)}
-</td>
-
-<td>
-${esc(
-x.quantity ?? ""
-)}
-</td>
-
-<td>
-${esc(
-x.unit || ""
-)}
-</td>
-
-<td>
-${esc(
-x.percentage ?? ""
-)}
-</td>
-
-</tr>
-
-`
-)
-.join("");
+  const product =
+    $("productName")
+      .value
+      .trim();
 
 
-$("formulaList")
-.innerHTML =
-`
+  if (!product) {
 
-<div class="card">
+    alert(
+      "Product Name is required."
+    );
 
-<div class="actions no-print">
+    $("productName").focus();
 
-<button
-type="button"
-class="secondary"
-id="viewBackBtn">
+    return;
 
-← Back
-
-</button>
+  }
 
 
-<button
-type="button"
-class="primary"
-id="viewPrintBtn">
-
-🖨️ Print
-
-</button>
+  const ingredients =
+    getIngredients();
 
 
-<button
-type="button"
-class="secondary"
-id="viewEditBtn">
-
-✏️ Edit
-
-</button>
-
-</div>
+  /*
+    Remove completely empty ingredient rows
+  */
 
 
-<h2>
-${esc(f.product_name)}
-</h2>
+  const item = {
+
+    formula_no:
+      $("formulaNo")
+        .value
+        .trim(),
+
+    product_name:
+      product,
+
+    formula_name:
+      $("formulaName")
+        .value
+        .trim(),
+
+    version:
+      $("version")
+        .value
+        .trim(),
+
+    formula_date:
+      $("date").value ||
+      today(),
+
+    batch_size:
+      $("batchSize").value
+        ? Number(
+            $("batchSize").value
+          )
+        : null,
+
+    batch_unit:
+      $("batchUnit").value,
+
+    preparation_method:
+      $("method")
+        .value
+        .trim(),
+
+    result:
+      $("result")
+        .value
+        .trim(),
+
+    notes:
+      $("notes")
+        .value
+        .trim(),
+
+    updated_at:
+      new Date()
+        .toISOString()
+
+  };
 
 
-<p>
+  /*
+    Disable button during save
+  */
 
-<b>Formula No:</b>
-${esc(f.formula_no || "-")}
-
-&nbsp;&nbsp;
-
-<b>Version:</b>
-${esc(f.version || "-")}
-
-&nbsp;&nbsp;
-
-<b>Date:</b>
-${esc(f.formula_date || "-")}
-
-</p>
+  const saveBtn =
+    $("saveBtn");
 
 
-<p>
-
-<b>Formula Name:</b>
-${esc(f.formula_name || "-")}
-
-</p>
+  const oldText =
+    saveBtn.textContent;
 
 
-<h3>
-Ingredients
-</h3>
+  saveBtn.disabled =
+    true;
 
 
-<table>
+  saveBtn.textContent =
+    "⏳ Saving...";
 
-<tr>
 
-<th>Ingredient</th>
-<th>Quantity</th>
-<th>Unit</th>
-<th>%</th>
+  try {
 
-</tr>
+    let formulaId =
+      editingId;
 
-${
-ing ||
-`
-<tr>
-<td colspan="4">
-No ingredients
-</td>
-</tr>
-`
+
+    /* =====================================================
+       UPDATE EXISTING FORMULA
+    ===================================================== */
+
+    if (editingId) {
+
+      setStatus(
+        "☁ Updating formula..."
+      );
+
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from("formulas")
+          .update(item)
+          .eq(
+            "id",
+            editingId
+          );
+
+
+      if (error)
+        throw new Error(
+          "Formula update failed: " +
+          error.message
+        );
+
+
+      /*
+        Delete old ingredients
+      */
+
+      const {
+        error:
+          deleteError
+      } =
+        await supabaseClient
+          .from("formula_ingredients")
+          .delete()
+          .eq(
+            "formula_id",
+            editingId
+          );
+
+
+      if (deleteError)
+        throw new Error(
+          "Old ingredient delete failed: " +
+          deleteError.message
+        );
+
+
+    }
+
+    /* =====================================================
+       CREATE NEW FORMULA
+    ===================================================== */
+
+    else {
+
+      setStatus(
+        "☁ Creating formula..."
+      );
+
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from("formulas")
+          .insert(item)
+          .select("id")
+          .single();
+
+
+      if (error)
+        throw new Error(
+          "Formula creation failed: " +
+          error.message
+        );
+
+
+      if (!data || !data.id)
+        throw new Error(
+          "Formula was created but ID was not returned."
+        );
+
+
+      formulaId =
+        data.id;
+
+    }
+
+
+    /* =====================================================
+       SAVE INGREDIENTS
+    ===================================================== */
+
+    if (
+      ingredients.length
+    ) {
+
+      const ingredientRows =
+        ingredients
+          .map(
+            x => ({
+
+              formula_id:
+                formulaId,
+
+              ingredient_name:
+                x.name,
+
+              quantity:
+                x.qty !== ""
+                  ? Number(x.qty)
+                  : null,
+
+              unit:
+                x.unit,
+
+              percentage:
+                x.pct !== ""
+                  ? Number(x.pct)
+                  : null
+
+            })
+          );
+
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .from("formula_ingredients")
+          .insert(
+            ingredientRows
+          );
+
+
+      if (error)
+        throw new Error(
+          "Ingredient save failed: " +
+          error.message
+        );
+
+    }
+
+
+    /*
+      If manually typed ingredients were used,
+      automatically add them to Science master list.
+    */
+
+    await autoSaveCustomIngredients(
+      ingredients
+    );
+
+
+    setStatus(
+      editingId
+        ? "☁ Formula updated successfully."
+        : "☁ Formula saved successfully."
+    );
+
+
+    alert(
+      editingId
+        ? "Formula updated successfully."
+        : "Formula saved successfully."
+    );
+
+
+    await loadFormulas();
+
+
+    editFormula(
+      formulaId
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "SAVE ERROR:",
+      error
+    );
+
+
+    setStatus(
+      "❌ " +
+      (error.message || error),
+      true
+    );
+
+
+    alert(
+      "SAVE ERROR:\n\n" +
+      (error.message || error) +
+      "\n\nCheck Supabase RLS policies."
+    );
+
+
+  } finally {
+
+    saveBtn.disabled =
+      false;
+
+    saveBtn.textContent =
+      oldText;
+
+  }
+
 }
 
-</table>
+
+/* =========================================================
+   AUTO SAVE CUSTOM INGREDIENTS
+========================================================= */
+
+async function autoSaveCustomIngredients(
+  ingredientRows
+) {
+
+  if (
+    !supabaseClient ||
+    !ingredientRows.length
+  )
+    return;
 
 
-<h3>
-Preparation Method
-</h3>
-
-<div>
-${nl(
-f.preparation_method || "-"
-)}
-</div>
+  const masterRows = [];
 
 
-<h3>
-Result
-</h3>
+  for (
+    const ingredient
+    of ingredientRows
+  ) {
 
-<div>
-${nl(
-f.result || "-"
-)}
-</div>
+    if (!ingredient.name)
+      continue;
 
 
-<h3>
-Notes
-</h3>
-
-<div>
-${nl(
-f.notes || "-"
-)}
-</div>
-
-</div>
-
-`;
+    const exists =
+      [
+        ...(masterIngredients.natural || []),
+        ...(masterIngredients.science || [])
+      ]
+      .some(
+        x =>
+          x.toLowerCase() ===
+          ingredient.name.toLowerCase()
+      );
 
 
-$("viewBackBtn")
-.addEventListener(
-"click",
-renderList
-);
+    if (!exists) {
+
+      masterRows.push({
+
+        name:
+          ingredient.name,
+
+        category:
+          "science",
+
+        updated_at:
+          new Date()
+            .toISOString()
+
+      });
+
+    }
+
+  }
 
 
-$("viewPrintBtn")
-.addEventListener(
-"click",
-function(){
-
-printFormula(f.id);
-
-}
-);
+  if (!masterRows.length)
+    return;
 
 
-$("viewEditBtn")
-.addEventListener(
-"click",
-function(){
+  try {
 
-editFormula(f.id);
-
-}
-);
-
-}
-
-
-/* =========================================
-   DELETE
-========================================= */
-
-async function deleteCurrent(){
-
-if(!editingId)
-return;
+    await supabaseClient
+      .from("ingredients")
+      .upsert(
+        masterRows,
+        {
+          onConflict:
+            "name"
+        }
+      );
 
 
-if(
-!confirm(
-"Delete this formula?"
-)
-)
-return;
+    await loadMasterIngredients();
 
 
-if(!supabaseClient){
+  } catch (error) {
 
-alert(
-"Supabase is not connected."
-);
+    /*
+      Don't fail formula save just because
+      master ingredient auto-save failed.
+    */
 
-return;
+    console.warn(
+      "Master ingredient auto-save:",
+      error
+    );
+
+  }
 
 }
 
 
-try{
+/* =========================================================
+   LOAD FORMULAS
+========================================================= */
 
-const {
-error:ingredientDeleteError
-} =
-await supabaseClient
-.from("formula_ingredients")
-.delete()
-.eq(
-"formula_id",
-editingId
-);
+async function loadFormulas() {
+
+  setStatus(
+    "☁ Loading formulas..."
+  );
 
 
-if(ingredientDeleteError)
-throw ingredientDeleteError;
+  try {
+
+    let rows = [];
 
 
-const {
-error
-} =
-await supabaseClient
-.from("formulas")
-.delete()
-.eq(
-"id",
-editingId
-);
+    if (supabaseClient) {
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from("formulas")
+          .select("*")
+          .order(
+            "created_at",
+            {
+              ascending:false
+            }
+          );
 
 
-if(error)
-throw error;
+      if (error)
+        throw error;
 
 
-alert(
-"Formula deleted successfully."
-);
+      rows =
+        data || [];
+
+    }
 
 
-editingId = null;
+    /*
+      Load formula ingredients
+    */
 
-lastBatchSize = 0;
+    let ingredientRows = [];
 
 
-await loadFormulas();
+    if (
+      rows.length &&
+      supabaseClient
+    ) {
+
+      const ids =
+        rows
+          .map(
+            f => f.id
+          )
+          .filter(Boolean);
 
 
-showTab("seen");
+      if (ids.length) {
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from(
+              "formula_ingredients"
+            )
+            .select("*")
+            .in(
+              "formula_id",
+              ids
+            );
+
+
+        if (error) {
+
+          console.warn(
+            "Ingredient load warning:",
+            error
+          );
+
+        } else {
+
+          ingredientRows =
+            data || [];
+
+        }
+
+      }
+
+    }
+
+
+    const ingredientMap =
+      {};
+
+
+    ingredientRows
+      .forEach(
+        ingredient => {
+
+          const key =
+            String(
+              ingredient.formula_id
+            );
+
+
+          if (
+            !ingredientMap[key]
+          ) {
+
+            ingredientMap[key] =
+              [];
+
+          }
+
+
+          ingredientMap[key]
+            .push(
+              ingredient
+            );
+
+        }
+      );
+
+
+    formulas =
+      rows.map(
+        formula => ({
+
+          ...formula,
+
+          formula_ingredients:
+            ingredientMap[
+              String(formula.id)
+            ] || []
+
+        })
+      );
+
+
+    setStatus(
+      "☁ Connected • " +
+      formulas.length +
+      " formula(s) online"
+    );
+
+
+    renderList();
+
+
+  } catch (error) {
+
+    console.error(
+      "Load formulas error:",
+      error
+    );
+
+
+    setStatus(
+      "❌ " +
+      (error.message || error),
+      true
+    );
+
+
+    $("formulaList")
+      .innerHTML = `
+
+        <div class="empty">
+
+          Formula load failed.
+
+          <br><br>
+
+          <small>
+            ${esc(
+              error.message ||
+              error
+            )}
+          </small>
+
+        </div>
+
+      `;
+
+  }
 
 }
 
-catch(error){
 
-console.error(
-"Delete error:",
-error
-);
+/* =========================================================
+   FORMULA LIST
+========================================================= */
 
-alert(
-"Delete error: "
-+
-(error.message || error)
-);
+function renderList() {
+
+  const input =
+    $("search");
+
+
+  const q =
+    input
+      ? input.value
+          .toLowerCase()
+          .trim()
+      : "";
+
+
+  const list =
+    formulas.filter(
+      f => (
+
+        (f.product_name || "") +
+        " " +
+        (f.formula_no || "") +
+        " " +
+        (f.formula_name || "")
+
+      )
+      .toLowerCase()
+      .includes(q)
+    );
+
+
+  if (!list.length) {
+
+    $("formulaList")
+      .innerHTML = `
+
+        <div class="empty">
+
+          No formulas found.
+
+          <br><br>
+
+          Click <b>New</b>
+          to add one.
+
+        </div>
+
+      `;
+
+    return;
+
+  }
+
+
+  $("formulaList")
+    .innerHTML = `
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Formula No.</th>
+
+            <th>Product</th>
+
+            <th>Formula</th>
+
+            <th>Version</th>
+
+            <th>Date</th>
+
+            <th class="no-print">
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${
+            list
+              .map(
+                f => `
+
+                  <tr>
+
+                    <td>
+                      ${esc(
+                        f.formula_no ||
+                        "-"
+                      )}
+                    </td>
+
+                    <td>
+                      <b>
+                        ${esc(
+                          f.product_name ||
+                          "-"
+                        )}
+                      </b>
+                    </td>
+
+                    <td>
+                      ${esc(
+                        f.formula_name ||
+                        "-"
+                      )}
+                    </td>
+
+                    <td>
+                      ${esc(
+                        f.version ||
+                        "-"
+                      )}
+                    </td>
+
+                    <td>
+                      ${esc(
+                        f.formula_date ||
+                        "-"
+                      )}
+                    </td>
+
+                    <td class="no-print">
+
+                      <button
+                        type="button"
+                        class="secondary view-btn"
+                        data-id="${esc(f.id)}">
+
+                        👁 View
+
+                      </button>
+
+
+                      <button
+                        type="button"
+                        class="secondary edit-btn"
+                        data-id="${esc(f.id)}">
+
+                        ✏️ Edit
+
+                      </button>
+
+
+                      <button
+                        type="button"
+                        class="secondary print-btn"
+                        data-id="${esc(f.id)}">
+
+                        🖨️ Print
+
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                `
+              )
+              .join("")
+          }
+
+        </tbody>
+
+      </table>
+
+    `;
+
+
+  $("formulaList")
+    .querySelectorAll(
+      ".view-btn"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            viewFormula(
+              this.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  $("formulaList")
+    .querySelectorAll(
+      ".edit-btn"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            editFormula(
+              this.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  $("formulaList")
+    .querySelectorAll(
+      ".print-btn"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          function() {
+
+            printFormula(
+              this.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
 
 }
 
+
+/* =========================================================
+   EDIT FORMULA
+========================================================= */
+
+function editFormula(id) {
+
+  const f =
+    formulas.find(
+      x =>
+        String(x.id) ===
+        String(id)
+    );
+
+
+  if (!f) {
+
+    alert(
+      "Formula not found."
+    );
+
+    return;
+
+  }
+
+
+  editingId =
+    f.id;
+
+
+  $("formulaNo").value =
+    f.formula_no || "";
+
+
+  $("productName").value =
+    f.product_name || "";
+
+
+  $("formulaName").value =
+    f.formula_name || "";
+
+
+  $("version").value =
+    f.version || "";
+
+
+  $("date").value =
+    f.formula_date ||
+    today();
+
+
+  $("batchSize").value =
+    f.batch_size ?? "";
+
+
+  $("batchUnit").value =
+    f.batch_unit ||
+    "g";
+
+
+  lastBatchSize =
+    Number(
+      f.batch_size
+    ) || 0;
+
+
+  $("method").value =
+    f.preparation_method ||
+    "";
+
+
+  $("result").value =
+    f.result ||
+    "";
+
+
+  $("notes").value =
+    f.notes ||
+    "";
+
+
+  $("ingredients").innerHTML =
+    "";
+
+
+  const ingredients =
+    f.formula_ingredients ||
+    [];
+
+
+  if (ingredients.length) {
+
+    ingredients.forEach(
+      x =>
+        addIngredient({
+
+          name:
+            x.ingredient_name,
+
+          qty:
+            x.quantity,
+
+          unit:
+            x.unit,
+
+          pct:
+            x.percentage
+
+        })
+    );
+
+
+  } else {
+
+    addIngredient();
+
+  }
+
+
+  $("deleteBtn")
+    .style.display =
+      "inline-block";
+
+
+  calcTotals();
+
+  showTab("edit");
+
 }
 
 
-/* =========================================
+/* =========================================================
+   VIEW FORMULA
+========================================================= */
+
+function viewFormula(id) {
+
+  const f =
+    formulas.find(
+      x =>
+        String(x.id) ===
+        String(id)
+    );
+
+
+  if (!f) {
+
+    alert(
+      "Formula not found."
+    );
+
+    return;
+
+  }
+
+
+  const ingredients =
+    f.formula_ingredients ||
+    [];
+
+
+  const ing =
+    ingredients
+      .map(
+        x => `
+
+          <tr>
+
+            <td>
+              ${esc(
+                x.ingredient_name
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                x.quantity ?? ""
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                x.unit || ""
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                x.percentage ?? ""
+              )}
+            </td>
+
+          </tr>
+
+        `
+      )
+      .join("");
+
+
+  $("formulaList")
+    .innerHTML = `
+
+      <div class="card">
+
+        <div class="actions no-print">
+
+          <button
+            type="button"
+            class="secondary"
+            id="viewBackBtn">
+
+            ← Back
+
+          </button>
+
+
+          <button
+            type="button"
+            class="primary"
+            id="viewPrintBtn">
+
+            🖨️ Print
+
+          </button>
+
+
+          <button
+            type="button"
+            class="secondary"
+            id="viewEditBtn">
+
+            ✏️ Edit
+
+          </button>
+
+        </div>
+
+
+        <h2>
+          ${esc(
+            f.product_name
+          )}
+        </h2>
+
+
+        <p>
+
+          <b>Formula No:</b>
+          ${esc(
+            f.formula_no || "-"
+          )}
+
+          &nbsp;&nbsp;
+
+          <b>Version:</b>
+          ${esc(
+            f.version || "-"
+          )}
+
+          &nbsp;&nbsp;
+
+          <b>Date:</b>
+          ${esc(
+            f.formula_date || "-"
+          )}
+
+        </p>
+
+
+        <p>
+
+          <b>Formula Name:</b>
+          ${esc(
+            f.formula_name || "-"
+          )}
+
+        </p>
+
+
+        <h3>
+          Ingredients
+        </h3>
+
+
+        <table>
+
+          <tr>
+
+            <th>Ingredient</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>%</th>
+
+          </tr>
+
+          ${
+            ing ||
+            `
+              <tr>
+                <td colspan="4">
+                  No ingredients
+                </td>
+              </tr>
+            `
+          }
+
+        </table>
+
+
+        <h3>
+          Preparation Method
+        </h3>
+
+        <div>
+          ${nl(
+            f.preparation_method ||
+            "-"
+          )}
+        </div>
+
+
+        <h3>
+          Result
+        </h3>
+
+        <div>
+          ${nl(
+            f.result ||
+            "-"
+          )}
+        </div>
+
+
+        <h3>
+          Notes
+        </h3>
+
+        <div>
+          ${nl(
+            f.notes ||
+            "-"
+          )}
+        </div>
+
+      </div>
+
+    `;
+
+
+  $("viewBackBtn")
+    .addEventListener(
+      "click",
+      renderList
+    );
+
+
+  $("viewPrintBtn")
+    .addEventListener(
+      "click",
+      function() {
+
+        printFormula(
+          f.id
+        );
+
+      }
+    );
+
+
+  $("viewEditBtn")
+    .addEventListener(
+      "click",
+      function() {
+
+        editFormula(
+          f.id
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   DELETE CURRENT FORMULA
+========================================================= */
+
+async function deleteCurrent() {
+
+  if (!editingId)
+    return;
+
+
+  if (
+    !confirm(
+      "Delete this formula?"
+    )
+  )
+    return;
+
+
+  if (!supabaseClient) {
+
+    alert(
+      "Supabase is not connected."
+    );
+
+    return;
+
+  }
+
+
+  const deleteBtn =
+    $("deleteBtn");
+
+
+  deleteBtn.disabled =
+    true;
+
+
+  try {
+
+    setStatus(
+      "☁ Deleting formula..."
+    );
+
+
+    /*
+      Delete ingredients first
+    */
+
+    const {
+      error:
+        ingredientDeleteError
+    } =
+      await supabaseClient
+        .from(
+          "formula_ingredients"
+        )
+        .delete()
+        .eq(
+          "formula_id",
+          editingId
+        );
+
+
+    if (
+      ingredientDeleteError
+    )
+      throw new Error(
+        "Ingredient delete failed: " +
+        ingredientDeleteError.message
+      );
+
+
+    /*
+      Delete formula
+    */
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("formulas")
+        .delete()
+        .eq(
+          "id",
+          editingId
+        );
+
+
+    if (error)
+      throw new Error(
+        "Formula delete failed: " +
+        error.message
+      );
+
+
+    alert(
+      "Formula deleted successfully."
+    );
+
+
+    editingId = null;
+
+    lastBatchSize = 0;
+
+
+    await loadFormulas();
+
+
+    showTab("seen");
+
+
+  } catch (error) {
+
+    console.error(
+      "Delete error:",
+      error
+    );
+
+
+    setStatus(
+      "❌ " +
+      (error.message || error),
+      true
+    );
+
+
+    alert(
+      "Delete error:\n\n" +
+      (error.message || error)
+    );
+
+
+  } finally {
+
+    deleteBtn.disabled =
+      false;
+
+  }
+
+}
+
+
+/* =========================================================
    PRINT
-========================================= */
+========================================================= */
 
-function printFormula(id){
+function printFormula(id) {
 
-const f =
-formulas.find(
-x =>
-String(x.id) ===
-String(id)
-);
+  const f =
+    formulas.find(
+      x =>
+        String(x.id) ===
+        String(id)
+    );
 
 
-if(!f){
+  if (!f) {
 
-alert(
-"Formula not found."
-);
+    alert(
+      "Formula not found."
+    );
 
-return;
+    return;
+
+  }
+
+
+  const ingredients =
+    f.formula_ingredients ||
+    [];
+
+
+  const ing =
+    ingredients
+      .map(
+        x => `
+
+          <tr>
+
+            <td>
+              ${esc(
+                x.ingredient_name
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                x.quantity ?? ""
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                x.unit || ""
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                x.percentage ?? ""
+              )}
+            </td>
+
+          </tr>
+
+        `
+      )
+      .join("");
+
+
+  $("printArea")
+    .innerHTML = `
+
+      <div class="print-head">
+
+        <div class="brand-print">
+          Liara Professional™
+        </div>
+
+        <div class="brand-line">
+          ADVANCED HERBAL
+        </div>
+
+        <div style="
+          font-size:11px;
+          margin-top:5px
+        ">
+
+          Professional Formula &
+          Product Development
+
+        </div>
+
+      </div>
+
+
+      <h2>
+        FORMULA SHEET
+      </h2>
+
+
+      <table class="print-table">
+
+        <tr>
+
+          <th>
+            Product Name
+          </th>
+
+          <td>
+            ${esc(
+              f.product_name
+            )}
+          </td>
+
+          <th>
+            Formula No.
+          </th>
+
+          <td>
+            ${esc(
+              f.formula_no || "-"
+            )}
+          </td>
+
+        </tr>
+
+
+        <tr>
+
+          <th>
+            Formula Name
+          </th>
+
+          <td>
+            ${esc(
+              f.formula_name || "-"
+            )}
+          </td>
+
+          <th>
+            Version
+          </th>
+
+          <td>
+            ${esc(
+              f.version || "-"
+            )}
+          </td>
+
+        </tr>
+
+
+        <tr>
+
+          <th>
+            Date
+          </th>
+
+          <td>
+            ${esc(
+              f.formula_date || "-"
+            )}
+          </td>
+
+          <th>
+            Batch
+          </th>
+
+          <td>
+            ${esc(
+              f.batch_size ?? "-"
+            )}
+            ${esc(
+              f.batch_unit || ""
+            )}
+          </td>
+
+        </tr>
+
+      </table>
+
+
+      <h3>
+        Ingredients
+      </h3>
+
+
+      <table class="print-table">
+
+        <tr>
+
+          <th>
+            Ingredient
+          </th>
+
+          <th>
+            Quantity
+          </th>
+
+          <th>
+            Unit
+          </th>
+
+          <th>
+            %
+          </th>
+
+        </tr>
+
+        ${ing}
+
+      </table>
+
+
+      <h3>
+        Preparation Method
+      </h3>
+
+      <div>
+        ${nl(
+          f.preparation_method ||
+          "-"
+        )}
+      </div>
+
+
+      <h3>
+        Result
+      </h3>
+
+      <div>
+        ${nl(
+          f.result ||
+          "-"
+        )}
+      </div>
+
+
+      <h3>
+        Notes
+      </h3>
+
+      <div>
+        ${nl(
+          f.notes ||
+          "-"
+        )}
+      </div>
+
+
+      <div class="print-footer">
+
+        Liara Professional™ • Advanced Herbal<br>
+
+        Professional Formula Sheet
+
+      </div>
+
+    `;
+
+
+  document
+    .querySelectorAll(
+      ".panel"
+    )
+    .forEach(
+      p =>
+        p.classList.remove(
+          "active"
+        )
+    );
+
+
+  $("printArea")
+    .style.display =
+      "block";
+
+
+  setTimeout(
+    function() {
+
+      window.print();
+
+      $("printArea")
+        .style.display =
+          "none";
+
+      showTab("seen");
+
+      renderList();
+
+    },
+    100
+  );
 
 }
 
 
-const ingredients =
-f.formula_ingredients || [];
+/* =========================================================
+   EVENTS
+========================================================= */
 
+function setupEvents() {
 
-const ing =
-ingredients
-.map(
-x =>
-`
+  /*
+    Settings
+  */
 
-<tr>
+  $("settingsButton")
+    .addEventListener(
+      "click",
+      toggleSettings
+    );
 
-<td>
-${esc(
-x.ingredient_name
-)}
-</td>
 
-<td>
-${esc(
-x.quantity ?? ""
-)}
-</td>
+  /*
+    Tabs
+  */
 
-<td>
-${esc(
-x.unit || ""
-)}
-</td>
+  $("seenTab")
+    .addEventListener(
+      "click",
+      function() {
 
-<td>
-${esc(
-x.percentage ?? ""
-)}
-</td>
+        showTab("seen");
 
-</tr>
+      }
+    );
 
-`
-)
-.join("");
 
+  $("editTab")
+    .addEventListener(
+      "click",
+      function() {
 
-$("printArea")
-.innerHTML =
-`
+        showTab("edit");
 
-<div class="print-head">
+      }
+    );
 
-<div class="brand-print">
-Liara Professional™
-</div>
 
-<div class="brand-line">
-ADVANCED HERBAL
-</div>
+  /*
+    New
+  */
 
-<div style="font-size:11px;margin-top:5px">
-Professional Formula & Product Development
-</div>
+  $("newTopBtn")
+    .addEventListener(
+      "click",
+      newFormula
+    );
 
-</div>
 
+  /*
+    Clear
+  */
 
-<h2>
-FORMULA SHEET
-</h2>
+  $("clearBtn")
+    .addEventListener(
+      "click",
+      newFormula
+    );
 
 
-<table class="print-table">
+  /*
+    Save
+  */
 
-<tr>
+  $("saveBtn")
+    .addEventListener(
+      "click",
+      saveFormula
+    );
 
-<th>
-Product Name
-</th>
 
-<td>
-${esc(
-f.product_name
-)}
-</td>
+  /*
+    Delete
+  */
 
-<th>
-Formula No.
-</th>
+  $("deleteBtn")
+    .addEventListener(
+      "click",
+      deleteCurrent
+    );
 
-<td>
-${esc(
-f.formula_no || "-"
-)}
-</td>
 
-</tr>
+  /*
+    Add ingredient
+  */
 
+  $("addIngredientBtn")
+    .addEventListener(
+      "click",
+      function() {
 
-<tr>
+        addIngredient();
 
-<th>
-Formula Name
-</th>
+      }
+    );
 
-<td>
-${esc(
-f.formula_name || "-"
-)}
-</td>
 
-<th>
-Version
-</th>
+  /*
+    Search
+  */
 
-<td>
-${esc(
-f.version || "-"
-)}
-</td>
+  $("search")
+    .addEventListener(
+      "input",
+      renderList
+    );
 
-</tr>
 
+  /*
+    Science
+  */
 
-<tr>
+  $("scienceAddBtn")
+    .addEventListener(
+      "click",
+      function() {
 
-<th>
-Date
-</th>
+        addMasterIngredient(
+          "science"
+        );
 
-<td>
-${esc(
-f.formula_date || "-"
-)}
-</td>
+      }
+    );
 
-<th>
-Batch
-</th>
 
-<td>
-${esc(
-f.batch_size ?? "-"
-)}
-${esc(
-f.batch_unit || ""
-)}
-</td>
+  /*
+    Natural
+  */
 
-</tr>
+  $("naturalAddBtn")
+    .addEventListener(
+      "click",
+      function() {
 
-</table>
+        addMasterIngredient(
+          "natural"
+        );
 
+      }
+    );
 
-<h3>
-Ingredients
-</h3>
 
+  /*
+    Enter = add
+  */
 
-<table class="print-table">
+  $("scienceInput")
+    .addEventListener(
+      "keydown",
+      function(event) {
 
-<tr>
+        if (
+          event.key ===
+          "Enter"
+        ) {
 
-<th>
-Ingredient
-</th>
+          event.preventDefault();
 
-<th>
-Quantity
-</th>
+          addMasterIngredient(
+            "science"
+          );
 
-<th>
-Unit
-</th>
+        }
 
-<th>
-%
-</th>
+      }
+    );
 
-</tr>
 
-${ing}
+  $("naturalInput")
+    .addEventListener(
+      "keydown",
+      function(event) {
 
-</table>
+        if (
+          event.key ===
+          "Enter"
+        ) {
 
+          event.preventDefault();
 
-<h3>
-Preparation Method
-</h3>
+          addMasterIngredient(
+            "natural"
+          );
 
-<div>
-${nl(
-f.preparation_method || "-"
-)}
-</div>
+        }
 
+      }
+    );
 
-<h3>
-Result
-</h3>
 
-<div>
-${nl(
-f.result || "-"
-)}
-</div>
+  /*
+    Batch scaling
+  */
 
-
-<h3>
-Notes
-</h3>
-
-<div>
-${nl(
-f.notes || "-"
-)}
-</div>
-
-
-<div class="print-footer">
-
-Liara Professional™ • Advanced Herbal<br>
-Professional Formula Sheet
-
-</div>
-
-`;
-
-
-document
-.querySelectorAll(".panel")
-.forEach(
-p =>
-p.classList.remove("active")
-);
-
-
-$("printArea")
-.style.display =
-"block";
-
-
-setTimeout(
-function(){
-
-window.print();
-
-$("printArea")
-.style.display =
-"none";
-
-showTab("seen");
-
-renderList();
-
-},
-100
-);
+  $("batchSize")
+    .addEventListener(
+      "change",
+      scaleIngredientsForBatch
+    );
 
 }
 
 
-/* =========================================
-   ALL BUTTON EVENTS
-========================================= */
-
-function setupEvents(){
-
-/* Settings */
-
-$("settingsButton")
-.addEventListener(
-"click",
-toggleSettings
-);
-
-
-/* Tabs */
-
-$("seenTab")
-.addEventListener(
-"click",
-function(){
-
-showTab("seen");
-
-}
-);
-
-
-$("editTab")
-.addEventListener(
-"click",
-function(){
-
-showTab("edit");
-
-}
-);
-
-
-/* New */
-
-$("newTopBtn")
-.addEventListener(
-"click",
-newFormula
-);
-
-
-/* Clear */
-
-$("clearBtn")
-.addEventListener(
-"click",
-newFormula
-);
-
-
-/* Save */
-
-$("saveBtn")
-.addEventListener(
-"click",
-saveFormula
-);
-
-
-/* Delete */
-
-$("deleteBtn")
-.addEventListener(
-"click",
-deleteCurrent
-);
-
-
-/* Add Ingredient */
-
-$("addIngredientBtn")
-.addEventListener(
-"click",
-function(){
-
-addIngredient();
-
-}
-);
-
-
-/* Search */
-
-$("search")
-.addEventListener(
-"input",
-renderList
-);
-
-
-/* Science add */
-
-$("scienceAddBtn")
-.addEventListener(
-"click",
-function(){
-
-addMasterIngredient(
-"science"
-);
-
-}
-);
-
-
-/* Natural add */
-
-$("naturalAddBtn")
-.addEventListener(
-"click",
-function(){
-
-addMasterIngredient(
-"natural"
-);
-
-}
-);
-
-
-/* Enter key */
-
-$("scienceInput")
-.addEventListener(
-"keydown",
-function(event){
-
-if(event.key === "Enter"){
-
-event.preventDefault();
-
-addMasterIngredient(
-"science"
-);
-
-}
-
-}
-);
-
-
-$("naturalInput")
-.addEventListener(
-"keydown",
-function(event){
-
-if(event.key === "Enter"){
-
-event.preventDefault();
-
-addMasterIngredient(
-"natural"
-);
-
-}
-
-}
-);
-
-
-/* =========================================
-   BATCH SIZE CHANGE
-========================================= */
-
-/*
-The change event fires when the user finishes
-editing the batch field and leaves it / presses Tab.
-
-It does NOT run for every keystroke.
-*/
-
-$("batchSize")
-.addEventListener(
-"change",
-function(){
-
-scaleIngredientsForBatch();
-
-}
-);
-
-}
-
-
-/* =========================================
+/* =========================================================
    START
-========================================= */
+========================================================= */
 
 document.addEventListener(
-"DOMContentLoaded",
-function(){
+  "DOMContentLoaded",
+  async function() {
 
-try{ setupEvents(); }catch(e){ console.error("Setup error:",e); }
+    try {
 
-try{ $("date").value = today(); }catch(e){ console.error(e); }
+      setupEvents();
 
-try{ addIngredient(); }catch(e){ console.error("Ingredient UI error:",e); }
+    } catch (e) {
 
-try{ renderMasterLists(); }catch(e){ console.error("Master list error:",e); }
+      console.error(
+        "Setup error:",
+        e
+      );
 
-/* Always load saved formulas independently of the UI setup. */
-loadFormulas();
+    }
 
-}
+
+    try {
+
+      $("date").value =
+        today();
+
+    } catch (e) {
+
+      console.error(e);
+
+    }
+
+
+    /*
+      Load master ingredients FIRST
+      so dropdowns contain Supabase data.
+    */
+
+    try {
+
+      await loadMasterIngredients();
+
+    } catch (e) {
+
+      console.error(
+        "Master ingredient error:",
+        e
+      );
+
+    }
+
+
+    /*
+      Add first empty ingredient row
+    */
+
+    try {
+
+      if (
+        !$(
+          "ingredients"
+        ).children.length
+      ) {
+
+        addIngredient();
+
+      }
+
+    } catch (e) {
+
+      console.error(
+        "Ingredient UI error:",
+        e
+      );
+
+    }
+
+
+    /*
+      Load formulas
+    */
+
+    await loadFormulas();
+
+  }
 );
 
 </script>
-
-</body>
-</html>
