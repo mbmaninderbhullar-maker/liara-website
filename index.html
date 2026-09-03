@@ -12,6 +12,50 @@
 
 <style>
 
+:root{
+  --gold:#b58a3c;
+  --gold2:#d8bd7a;
+  --black:#111;
+  --dark:#191919;
+  --cream:#f7f3eb;
+  --line:#e8e1d5;
+  --muted:#777;
+  --white:#fff;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--black);
+  background:#fff;
+  line-height:1.6;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+img{
+  max-width:100%;
+  display:block;
+}
+
+
 /* =========================================
    LOGO
    ========================================= */
@@ -79,59 +123,6 @@
 
 
 /* =========================================
-   ROOT
-   ========================================= */
-
-:root{
-  --gold:#b58a3c;
-  --gold2:#d8bd7a;
-  --black:#111;
-  --dark:#191919;
-  --cream:#f7f3eb;
-  --line:#e8e1d5;
-  --muted:#777;
-  --white:#fff;
-}
-
-
-/* =========================================
-   RESET
-   ========================================= */
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  color:var(--black);
-  background:#fff;
-  line-height:1.6;
-}
-
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-button{
-  font-family:inherit;
-  cursor:pointer;
-}
-
-img{
-  max-width:100%;
-  display:block;
-}
-
-
-/* =========================================
    TOP BAR
    ========================================= */
 
@@ -187,7 +178,7 @@ nav a:hover{
 
 
 /* =========================================
-   LARGER HERO / TOP HEADING SECTION
+   HERO
    ========================================= */
 
 .hero{
@@ -294,11 +285,6 @@ nav a:hover{
   opacity:.65;
 }
 
-
-/* =========================================
-   HERO PRODUCT CARD
-   ========================================= */
-
 .hero-product-card{
   position:relative;
   z-index:2;
@@ -393,8 +379,7 @@ nav a:hover{
   display:block;
   padding:18px;
   background:transparent;
-  transition:
-    transform 3.5s cubic-bezier(.2,.7,.2,1);
+  transition:transform 3.5s cubic-bezier(.2,.7,.2,1);
 }
 
 .hero-slide.active img{
@@ -438,7 +423,6 @@ nav a:hover{
   border-radius:10px;
   background:var(--gold);
   border-color:var(--gold);
-  transform:none;
 }
 
 .hero-slide-loading{
@@ -674,7 +658,7 @@ nav a:hover{
 
 .price-box{
   display:flex;
-  align-items:baseline;
+  align-items:center;
   gap:8px;
   flex-wrap:wrap;
 }
@@ -683,6 +667,21 @@ nav a:hover{
   font-size:18px;
   color:var(--gold);
   font-weight:bold;
+  white-space:nowrap;
+}
+
+.sale-label{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:4px 7px;
+  background:var(--gold);
+  color:#fff;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:1px;
+  line-height:1;
+  border-radius:2px;
   white-space:nowrap;
 }
 
@@ -1218,12 +1217,15 @@ footer{
     margin-top:4px;
   }
 
+  .price-box{
+    gap:7px;
+  }
+
 }
 
 </style>
 
 </head>
-
 
 <body>
 
@@ -1260,28 +1262,18 @@ footer{
               x2="1"
               y2="1">
 
-              <stop
-                offset="0%"
-                stop-color="#e4c87b"/>
-
-              <stop
-                offset="48%"
-                stop-color="#b98932"/>
-
-              <stop
-                offset="100%"
-                stop-color="#dcb961"/>
+              <stop offset="0%" stop-color="#e4c87b"/>
+              <stop offset="48%" stop-color="#b98932"/>
+              <stop offset="100%" stop-color="#dcb961"/>
 
             </linearGradient>
 
           </defs>
 
-
           <path
             d="M42 8h35v8H61v57h27v11H42z"
             fill="url(#liaraGold2)"
           />
-
 
           <path
             d="M61 68c5-19 16-32 34-40-1 16-8 29-25 39"
@@ -1291,7 +1283,6 @@ footer{
             stroke-linecap="round"
           />
 
-
           <path
             d="M65 68c12-9 20-18 25-29"
             fill="none"
@@ -1300,14 +1291,12 @@ footer{
             stroke-linecap="round"
           />
 
-
           <path
             d="M27 57v18M18 66h18"
             stroke="#c59a42"
             stroke-width="3"
             stroke-linecap="round"
           />
-
 
           <circle
             cx="25"
@@ -1320,11 +1309,9 @@ footer{
 
       </span>
 
-
       <span class="logo-word">
         LIARA
       </span>
-
 
       <small>
         <span></span> PROFESSIONAL <span></span>
@@ -1336,17 +1323,11 @@ footer{
     <nav>
 
       <a href="#home">Home</a>
-
       <a href="#products">Shop</a>
-
       <a href="#categories">Categories</a>
-
       <a href="#why-us">Why Liara</a>
-
       <a href="#about">About</a>
-
       <a href="account.html">My Account</a>
-
       <a href="track-order.html">Track Order</a>
 
       <a class="nav-cart" href="cart.html">
@@ -1366,19 +1347,16 @@ footer{
 
 <section id="home" class="hero">
 
-
   <div class="hero-content">
 
     <div class="kicker">
       LIARA PROFESSIONAL™ • ADVANCED HERBAL
     </div>
 
-
     <h1>
       Advanced
       <span>Herbal Care.</span>
     </h1>
-
 
     <p>
       Discover Liara Professional™ — a modern herbal beauty,
@@ -1386,13 +1364,11 @@ footer{
       with nature-inspired care for your everyday routine.
     </p>
 
-
     <div class="hero-buttons">
 
       <a href="#products" class="btn">
         SHOP PRODUCTS
       </a>
-
 
       <a href="#about" class="btn btn-light">
         DISCOVER LIARA
@@ -1419,7 +1395,6 @@ footer{
 
       </div>
 
-
       <div
         class="hero-slide-dots"
         id="heroSlideDots">
@@ -1438,18 +1413,15 @@ footer{
 
 <section id="products" class="section">
 
-
   <div class="heading">
 
     <p>
       SHOP LIARA
     </p>
 
-
     <h2>
       Featured Products
     </h2>
-
 
     <div class="sub">
       Choose your Liara essentials and discover products
@@ -1464,7 +1436,6 @@ footer{
     <span id="productCount">
       Loading products...
     </span>
-
 
     <a
       href="#products"
@@ -1495,17 +1466,13 @@ footer{
      CATEGORIES
      ========================================= -->
 
-<section
-  id="categories"
-  class="section categories">
-
+<section id="categories" class="section categories">
 
   <div class="heading">
 
     <p>
       SHOP BY CATEGORY
     </p>
-
 
     <h2>
       Find Your Care
@@ -1516,14 +1483,9 @@ footer{
 
   <div class="category-grid">
 
+    <a class="category" href="#products">
 
-    <a
-      class="category"
-      href="#products">
-
-      <span>
-        01
-      </span>
+      <span>01</span>
 
       <h3>
         Skincare
@@ -1536,13 +1498,9 @@ footer{
     </a>
 
 
-    <a
-      class="category"
-      href="#products">
+    <a class="category" href="#products">
 
-      <span>
-        02
-      </span>
+      <span>02</span>
 
       <h3>
         Body Care
@@ -1555,13 +1513,9 @@ footer{
     </a>
 
 
-    <a
-      class="category"
-      href="#products">
+    <a class="category" href="#products">
 
-      <span>
-        03
-      </span>
+      <span>03</span>
 
       <h3>
         Beauty Care
@@ -1582,17 +1536,13 @@ footer{
      WHY LIARA
      ========================================= -->
 
-<section
-  id="why-us"
-  class="section why">
-
+<section id="why-us" class="section why">
 
   <div class="heading">
 
     <p>
       WHY LIARA
     </p>
-
 
     <h2>
       Why Choose Liara?
@@ -1603,18 +1553,15 @@ footer{
 
   <div class="why-grid">
 
-
     <div class="why-card">
 
       <div class="icon">
         01
       </div>
 
-
       <h3>
         Quality Focused
       </h3>
-
 
       <p>
         We focus on thoughtful product development
@@ -1630,11 +1577,9 @@ footer{
         02
       </div>
 
-
       <h3>
         Advanced Herbal Care
       </h3>
-
 
       <p>
         Nature-inspired care combined with a modern
@@ -1650,11 +1595,9 @@ footer{
         03
       </div>
 
-
       <h3>
         Customer First
       </h3>
-
 
       <p>
         We aim to build trust through quality,
@@ -1672,13 +1615,9 @@ footer{
      ABOUT / STORY
      ========================================= -->
 
-<section
-  id="about"
-  class="story">
-
+<section id="about" class="story">
 
   <div class="story-inner">
-
 
     <div>
 
@@ -1686,17 +1625,12 @@ footer{
         THE LIARA STORY
       </div>
 
-
       <h2>
-
         Beauty With
-
         <span>
           Nature & Purpose.
         </span>
-
       </h2>
-
 
       <p>
         Liara Professional™ is the consumer-facing
@@ -1704,13 +1638,11 @@ footer{
         brand by Liara Group Private Limited.
       </p>
 
-
       <p>
         Our vision is to build a modern and trusted brand
         around thoughtful development, herbal-inspired care,
         quality and everyday self-care.
       </p>
-
 
       <a
         href="#products"
@@ -1726,18 +1658,13 @@ footer{
 
     <div class="story-card">
 
-
       <div>
 
-        <strong>
-          01
-        </strong>
-
+        <strong>01</strong>
 
         <h3>
           Advanced Herbal Approach
         </h3>
-
 
         <p>
           Nature-inspired ingredients with a modern
@@ -1749,15 +1676,11 @@ footer{
 
       <div>
 
-        <strong>
-          02
-        </strong>
-
+        <strong>02</strong>
 
         <h3>
           Modern Beauty
         </h3>
-
 
         <p>
           Care designed for contemporary everyday routines.
@@ -1768,15 +1691,11 @@ footer{
 
       <div>
 
-        <strong>
-          03
-        </strong>
-
+        <strong>03</strong>
 
         <h3>
           Growing With Customers
         </h3>
-
 
         <p>
           Building Liara with trust and long-term
@@ -1796,17 +1715,13 @@ footer{
      FAQ
      ========================================= -->
 
-<section
-  class="section faq"
-  id="faq">
-
+<section class="section faq" id="faq">
 
   <div class="heading">
 
     <p>
       FAQ
     </p>
-
 
     <h2>
       Questions, Answered.
@@ -1816,7 +1731,6 @@ footer{
 
 
   <div class="faq-container">
-
 
     <details>
 
@@ -1898,10 +1812,7 @@ footer{
      CONTACT
      ========================================= -->
 
-<section
-  id="contact"
-  class="contact">
-
+<section id="contact" class="contact">
 
   <div class="heading">
 
@@ -1909,19 +1820,16 @@ footer{
       GET IN TOUCH
     </p>
 
-
     <h2>
       Let's Connect
     </h2>
 
   </div>
 
-
   <p>
     Have a question about Liara Professional?
     We'd love to hear from you.
   </p>
-
 
   <a
     class="contact-email"
@@ -1930,7 +1838,6 @@ footer{
     info@liara.co.in
 
   </a>
-
 
   <a
     href="mailto:info@liara.co.in"
@@ -1949,16 +1856,13 @@ footer{
 
 <footer>
 
-
   <div class="footer-grid">
-
 
     <div class="footer-brand">
 
       <div class="footer-logo">
         LIARA
       </div>
-
 
       <p>
         Liara Professional™ — Advanced Herbal beauty,
@@ -1975,16 +1879,13 @@ footer{
         SHOP
       </h4>
 
-
       <a href="#products">
         Products
       </a>
 
-
       <a href="account.html">
         My Account
       </a>
-
 
       <a href="cart.html">
         Shopping Cart
@@ -1999,16 +1900,13 @@ footer{
         COMPANY
       </h4>
 
-
       <a href="#about">
         About Liara
       </a>
 
-
       <a href="#why-us">
         Why Liara
       </a>
-
 
       <a href="#contact">
         Contact
@@ -2023,21 +1921,17 @@ footer{
         INFORMATION
       </h4>
 
-
       <a href="privacy-policy.html">
         Privacy Policy
       </a>
-
 
       <a href="terms.html">
         Terms & Conditions
       </a>
 
-
       <a href="shipping-policy.html">
         Shipping Policy
       </a>
-
 
       <a href="refund-policy.html">
         Refund / Return Policy
@@ -2050,12 +1944,10 @@ footer{
 
   <div class="footer-bottom">
 
-
     <span>
       © 2026 Liara Group Private Limited.
       All Rights Reserved.
     </span>
-
 
     <a
       href="company-login.html"
@@ -2075,7 +1967,6 @@ footer{
      ========================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -2104,6 +1995,27 @@ function escapeHtml(value){
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
+
+}
+
+
+function toNumber(value){
+
+  if(value === null || value === undefined){
+    return 0;
+  }
+
+  const cleaned =
+    String(value)
+      .replace(/[₹,\s]/g,"")
+      .trim();
+
+  const number =
+    Number(cleaned);
+
+  return Number.isFinite(number)
+    ? number
+    : 0;
 
 }
 
@@ -2164,12 +2076,7 @@ function getSalePrice(p){
     p.price ??
     0;
 
-  const number =
-    Number(value);
-
-  return Number.isFinite(number)
-    ? number
-    : 0;
+  return toNumber(value);
 
 }
 
@@ -2192,12 +2099,7 @@ function getOriginalPrice(p){
     p.mrp_price ??
     0;
 
-  const number =
-    Number(value);
-
-  return Number.isFinite(number)
-    ? number
-    : 0;
+  return toNumber(value);
 
 }
 
@@ -2217,7 +2119,7 @@ function getProductStock(p){
 
   if(!p) return 0;
 
-  return Number(
+  return toNumber(
     p.stock ??
     p.quantity ??
     p.inventory ??
@@ -2246,8 +2148,9 @@ function getProductPriceHtml(product){
 
 
   /*
-    Original price will only show
-    when it is higher than sale price.
+    SALE label + original price
+    only when original price is
+    higher than sale price.
   */
 
   if(
@@ -2261,6 +2164,10 @@ function getProductPriceHtml(product){
 
         <span class="sale-price">
           ${saleText}
+        </span>
+
+        <span class="sale-label">
+          SALE
         </span>
 
         <span class="original-price">
@@ -2460,12 +2367,10 @@ function renderHeroSlideshow(products){
 
 
     [
-
       product.image_url,
       product.image_url_2,
       product.image_url_3,
       product.image_url_4
-
     ].forEach(url => {
 
       const clean =
@@ -2502,7 +2407,6 @@ function renderHeroSlideshow(products){
 
     if(dots)
       dots.innerHTML = "";
-
 
     return;
 
@@ -3155,7 +3059,6 @@ document.addEventListener(
 );
 
 </script>
-
 
 </body>
 </html>
