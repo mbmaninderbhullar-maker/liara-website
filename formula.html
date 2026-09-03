@@ -2376,155 +2376,110 @@ alert(
 
 async function loadFormulas(){
 
-if(!supabaseClient){
-
-setStatus(
-"❌ Supabase library not available.",
-true
-);
-
-return;
-
-}
-
-
-setStatus(
-"☁ Loading formulas..."
-);
-
+setStatus("☁ Loading formulas...");
 
 try{
 
-const {
-data: formulaRows,
-error: formulaError
-} =
-await supabaseClient
-.from("formulas")
-.select("*")
-.order(
-"created_at",
-{
-ascending:false
+let rows = [];
+
+/* First try the Supabase JS client. */
+if(supabaseClient){
+  const result = await supabaseClient
+    .from("formulas")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(result.error) throw result.error;
+  rows = result.data || [];
 }
-);
 
+/* If the client is unavailable or returned no usable data, use the REST API directly. */
+if(!rows.length){
+  const response = await fetch(
+    SUPABASE_URL + "/rest/v1/formulas?select=*&order=created_at.desc",
+    {
+      method:"GET",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer " + SUPABASE_KEY,
+        "Accept":"application/json"
+      }
+    }
+  );
 
-if(formulaError)
-throw formulaError;
+  if(!response.ok){
+    const text = await response.text();
+    throw new Error("Formula API " + response.status + ": " + text);
+  }
 
+  rows = await response.json();
+}
 
-const rows = formulaRows || [];
-const ids = rows.map(f => f.id).filter(Boolean);
-
-/*
-   Load the formula list independently.
-   If ingredient loading has a problem, the formulas must STILL show.
-*/
+/* Load ingredients separately. A missing ingredient query must NOT hide formulas. */
 let ingredientRows = [];
-let ingredientLoadWarning = "";
 
-if(ids.length){
+if(rows.length){
+  const ids = rows.map(f => f.id).filter(Boolean);
 
-try{
+  if(supabaseClient && ids.length){
+    const result = await supabaseClient
+      .from("formula_ingredients")
+      .select("*")
+      .in("formula_id",ids);
 
-const {
-data: ingData,
-error: ingredientError
-} =
-await supabaseClient
-.from("formula_ingredients")
-.select("*")
-.in("formula_id", ids);
+    if(!result.error) ingredientRows = result.data || [];
+  }
 
-if(ingredientError){
-console.warn("Ingredient load warning:", ingredientError);
-ingredientLoadWarning = ingredientError.message || "Ingredient data could not be loaded.";
-}else{
-ingredientRows = ingData || [];
+  if(!ingredientRows.length && ids.length){
+    const url = SUPABASE_URL + "/rest/v1/formula_ingredients?select=*&formula_id=in.(" + ids.join(",") + ")";
+    const response = await fetch(url,{
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer " + SUPABASE_KEY,
+        "Accept":"application/json"
+      }
+    });
+
+    if(response.ok){
+      ingredientRows = await response.json();
+    }
+  }
 }
-
-}catch(ingredientError){
-console.warn("Ingredient load warning:", ingredientError);
-ingredientLoadWarning = ingredientError.message || "Ingredient data could not be loaded.";
-}
-
-}
-
 
 const ingredientMap = {};
 
-ingredientRows.forEach(ingredient => {
-
-const key = String(ingredient.formula_id);
-
-if(!ingredientMap[key])
-ingredientMap[key] = [];
-
-ingredientMap[key].push(ingredient);
-
+(ingredientRows || []).forEach(ingredient => {
+  const key = String(ingredient.formula_id);
+  if(!ingredientMap[key]) ingredientMap[key] = [];
+  ingredientMap[key].push(ingredient);
 });
 
-
 formulas = rows.map(formula => ({
-...formula,
-formula_ingredients:
-ingredientMap[String(formula.id)] || []
+  ...formula,
+  formula_ingredients: ingredientMap[String(formula.id)] || []
 }));
 
-
-setStatus(
-"☁ Connected • "
-+
-formulas.length
-+
-" formula(s) online"
-+
-(ingredientLoadWarning ? " • Ingredients warning" : "")
-);
-
-
+setStatus("☁ Connected • " + formulas.length + " formula(s) online");
 renderList();
 
-}
+}catch(error){
 
-catch(error){
+console.error("Load formulas error:",error);
 
-console.error(
-"Load formulas error:",
-error
-);
+setStatus("❌ " + (error.message || error),true);
 
-setStatus(
-"❌ Supabase error: "
-+
-(error.message || error),
-true
-);
-
-
-$("formulaList")
-.innerHTML =
-`
-
-<div class="empty">
-
-Could not load formulas.
-
-<br><br>
-
-${esc(
-error.message || error
-)}
-
-</div>
-
-`;
-
+const box = $("formulaList");
+if(box){
+  box.innerHTML = `
+    <div class="empty error">
+      Formula load failed.<br><br>
+      <small>${esc(error.message || error)}</small>
+    </div>
+  `;
 }
 
 }
-
+}
 
 /* =========================================
    LIST
@@ -3709,15 +3664,15 @@ document.addEventListener(
 "DOMContentLoaded",
 function(){
 
-setupEvents();
+try{ setupEvents(); }catch(e){ console.error("Setup error:",e); }
 
-$("date").value =
-today();
+try{ $("date").value = today(); }catch(e){ console.error(e); }
 
-addIngredient();
+try{ addIngredient(); }catch(e){ console.error("Ingredient UI error:",e); }
 
-renderMasterLists();
+try{ renderMasterLists(); }catch(e){ console.error("Master list error:",e); }
 
+/* Always load saved formulas independently of the UI setup. */
 loadFormulas();
 
 }
