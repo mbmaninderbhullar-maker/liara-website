@@ -1838,7 +1838,7 @@ const DEFAULT_SETTINGS = {
     sales:{
         currency:"INR",
         taxEnabled:true,
-        gstRate:18,
+        gstRate:18, // GST rate; order detail shows GST as included in the stored grand total
         discountEnabled:true,
         shippingEnabled:true,
         shippingCharge:0,
@@ -2004,6 +2004,24 @@ function productName(order){
            order.item ||
            "Product";
 
+}
+
+
+function gstBreakdown(total){
+    const settings = getSettings();
+    const rate = Number(settings?.sales?.gstRate ?? 18);
+    const grand = Number(total || 0);
+    if(!Number.isFinite(grand) || grand <= 0 || !Number.isFinite(rate) || rate < 0){
+        return { rate: Math.max(0, rate || 0), taxable: grand > 0 ? grand : 0, gst: 0, total: grand };
+    }
+    const taxable = grand / (1 + rate / 100);
+    const gst = grand - taxable;
+    return {
+        rate,
+        taxable: Math.round(taxable * 100) / 100,
+        gst: Math.round(gst * 100) / 100,
+        total: grand
+    };
 }
 
 function productPrice(order){
@@ -2791,13 +2809,19 @@ function viewOrder(id){
 
     </div>
 
-    <div class="detail-total">
+    ${(() => {
+        const g = gstBreakdown(total);
+        return `
+        <div class="gst-breakup">
+            <div><span>Taxable Amount</span><strong>${money(g.taxable)}</strong></div>
+            <div><span>GST (${g.rate}% included)</span><strong>${money(g.gst)}</strong></div>
+        </div>
 
-        <span>Grand Total:</span>
-
-        <strong>${money(total)}</strong>
-
-    </div>
+        <div class="detail-total">
+            <span>Grand Total <small style="font-weight:600;color:#777;">(GST included)</small>:</span>
+            <strong>${money(g.total)}</strong>
+        </div>`;
+    })()}
     `;
 
     document.getElementById(
