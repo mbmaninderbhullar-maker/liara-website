@@ -2257,6 +2257,54 @@ async function verifyRazorpayPayment(response) {
 }
 
 
+async function sendAutomaticWhatsApp(orderId) {
+
+    try {
+        if (!orderId) return { success:false, skipped:true };
+
+        const { data: order, error: orderError } =
+            await supabaseClient
+                .from("orders")
+                .select("id,order_number,customer_name,phone,total,payment_method,shipping_status")
+                .eq("id", orderId)
+                .maybeSingle();
+
+        if (orderError || !order) {
+            console.warn("WhatsApp: order could not be loaded", orderError);
+            return { success:false, skipped:true };
+        }
+
+        const { data, error } =
+            await supabaseClient.functions.invoke(
+                "whatsapp-order-notify",
+                {
+                    body: {
+                        order: order,
+                        order_id: order.id,
+                        order_number: order.order_number,
+                        customer_name: order.customer_name,
+                        phone: order.phone,
+                        total: order.total,
+                        payment_method: order.payment_method,
+                        shipping_status: order.shipping_status || "Shipway Booked"
+                    }
+                }
+            );
+
+        if (error || !data?.success) {
+            console.warn("WhatsApp automatic notification failed:", error || data?.error);
+            return { success:false, error:error?.message || data?.error };
+        }
+
+        return data;
+
+    } catch (error) {
+        console.warn("WhatsApp automatic notification error:", error);
+        return { success:false, error:error?.message };
+    }
+}
+
+
 async function createShipwayOrder(orderId) {
 
     if (!orderId) {
@@ -2502,6 +2550,11 @@ async function openRazorpayPayment(button) {
                 await createShipwayOrder(
                     savedOrderId
                 );
+
+                const whatsappResult = await sendAutomaticWhatsApp(savedOrderId);
+                if (!whatsappResult?.success) {
+                    console.warn("Order is successful, but automatic WhatsApp notification was not sent.");
+                }
 
                 orderSuccess(button);
 
@@ -2782,6 +2835,11 @@ document.getElementById(
                 await createShipwayOrder(
                     savedOrderId
                 );
+
+                const whatsappResult = await sendAutomaticWhatsApp(savedOrderId);
+                if (!whatsappResult?.success) {
+                    console.warn("Order is successful, but automatic WhatsApp notification was not sent.");
+                }
 
                 orderSuccess(button);
 
