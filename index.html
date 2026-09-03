@@ -272,128 +272,18 @@ nav a:hover{color:var(--gold)}
   object-fit:contain
 }
 
-/* =====================================================
-   LIARA HERO PRODUCT PHOTO SLIDESHOW
-   Premium blurred photo background + clear product photo
-===================================================== */
-.hero-product-card{
-  overflow:hidden;
-  isolation:isolate;
-  border-radius:4px;
-  background:#fff;
-}
 
-.hero-slideshow{
-  position:relative;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(213,184,111,.20),transparent 48%),
-    #f7f3eb;
-}
-
-.hero-slide{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  transform:scale(1.02);
-  filter:blur(12px);
-  transition:opacity .65s ease,transform 2s ease,filter .65s ease;
-  pointer-events:none;
-  z-index:0;
-}
-
-.hero-slide.active{
-  opacity:1;
-  transform:scale(1);
-  filter:blur(0);
-  z-index:2;
-}
-
-.hero-slide-bg{
-  position:absolute;
-  inset:-24px;
-  width:calc(100% + 48px)!important;
-  height:calc(100% + 48px)!important;
-  object-fit:cover!important;
-  object-position:center;
-  filter:blur(24px) saturate(1.08);
-  opacity:.34;
-  transform:scale(1.08);
-  background:#f7f3eb;
-}
-
-.hero-slide-bg:after{
-  content:"";
-  position:absolute;
-  inset:0;
-}
-
-.hero-slide:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:1;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(255,255,255,.08),transparent 46%),
-    linear-gradient(180deg,rgba(255,255,255,.08),rgba(247,243,235,.22));
-  pointer-events:none;
-}
-
-.hero-slide-main{
-  position:relative;
-  z-index:3;
-  width:100%!important;
-  height:100%!important;
-  padding:10px;
-  object-fit:contain!important;
-  object-position:center;
-  display:block;
-  filter:drop-shadow(0 24px 28px rgba(0,0,0,.18));
-  background:transparent;
-}
-
-.hero-slide-dots{
-  position:absolute;
-  z-index:10;
-  left:50%;
-  bottom:12px;
-  transform:translateX(-50%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  padding:5px 8px;
-  border-radius:20px;
-  background:rgba(255,255,255,.70);
-  backdrop-filter:blur(8px);
-  box-shadow:0 5px 16px rgba(0,0,0,.08);
-}
-
-.hero-slide-dot{
-  width:6px;
-  height:6px;
-  padding:0;
-  border:0;
-  border-radius:50%;
-  background:#c9c1b3;
-  transition:.25s ease;
-}
-
-.hero-slide-dot.active{
-  width:18px;
-  border-radius:8px;
-  background:var(--gold);
-}
-
-@media(max-width:520px){
-  .hero-slide-main{padding:7px}
-  .hero-slide-dots{bottom:9px}
-}
+.hero-product-card{overflow:hidden;}
+.hero-slideshow{position:relative;width:100%;height:100%;overflow:hidden;background:#fff;}
+.hero-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(1.025);filter:blur(10px);transition:opacity .8s ease,transform 2s ease,filter .9s ease;pointer-events:none;z-index:1;}
+.hero-slide::before{content:"";position:absolute;inset:-25px;background:var(--hero-bg) center/cover no-repeat;filter:blur(24px) saturate(1.08);transform:scale(1.12);opacity:.34;z-index:-2;}
+.hero-slide::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,rgba(255,255,255,.08),rgba(255,255,255,.72) 72%);z-index:-1;}
+.hero-slide.active{opacity:1;transform:scale(1);filter:blur(0);z-index:2;}
+.hero-slide img{position:relative;z-index:3;width:100%;height:100%;object-fit:contain;object-position:center;display:block;padding:8px;background:transparent;}
+.hero-slide-dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:6px;z-index:8;}
+.hero-slide-dot{width:6px;height:6px;padding:0;border:1px solid rgba(181,138,60,.65);border-radius:50%;background:rgba(255,255,255,.75);cursor:pointer;}
+.hero-slide-dot.active{background:var(--gold);transform:scale(1.25);}
+.hero-slide-loading{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#999;font-size:12px;letter-spacing:1px;}
 
 .hero-product-placeholder{
   position:relative;
@@ -1118,10 +1008,10 @@ footer{
   <div class="hero-product">
 
     <div class="hero-product-card" id="heroProductVisual">
-
-      <div class="hero-slideshow" id="heroSlideshow" aria-label="Liara product photos"></div>
-      <div class="hero-slide-dots" id="heroSlideDots" aria-label="Product photo navigation"></div>
-
+      <div class="hero-slideshow" id="heroSlideshow">
+        <div class="hero-slide-loading">Loading product...</div>
+      </div>
+      <div class="hero-slide-dots" id="heroSlideDots"></div>
     </div>
 
   </div>
@@ -1520,155 +1410,6 @@ function escapeHtml(value){
 }
 
 
-
-/* =====================================================
-   HERO PHOTO SLIDESHOW
-===================================================== */
-let heroSlideTimer = null;
-
-function getHeroProductImages(products){
-
-  const list = Array.isArray(products) ? products : [];
-
-  // Prefer a product that actually has multiple photos.
-  const product =
-    list.find(function(p){
-      return [p.image_url,p.image_url_2,p.image_url_3,p.image_url_4]
-        .filter(function(v){ return String(v || '').trim(); }).length > 1;
-    }) || list.find(function(p){
-      return [p.image_url,p.image_url_2,p.image_url_3,p.image_url_4]
-        .some(function(v){ return String(v || '').trim(); });
-    });
-
-  if(!product) return [];
-
-  return [
-    product.image_url,
-    product.image_url_2,
-    product.image_url_3,
-    product.image_url_4
-  ]
-  .map(function(url){ return String(url || '').trim(); })
-  .filter(Boolean)
-  .filter(function(url,index,arr){ return arr.indexOf(url) === index; });
-}
-
-function renderHeroSlideshow(images){
-
-  const box = document.getElementById('heroSlideshow');
-  const dots = document.getElementById('heroSlideDots');
-
-  if(!box) return;
-
-  if(heroSlideTimer){
-    clearInterval(heroSlideTimer);
-    heroSlideTimer = null;
-  }
-
-  if(!images || !images.length){
-    box.innerHTML = `
-      <div class="hero-product-placeholder">
-        <span>LIARA</span>
-      </div>
-    `;
-    if(dots) dots.innerHTML = '';
-    return;
-  }
-
-  box.innerHTML = '';
-
-  images.forEach(function(url,index){
-
-    const slide = document.createElement('div');
-    slide.className = 'hero-slide' + (index === 0 ? ' active' : '');
-
-    const bg = document.createElement('img');
-    bg.className = 'hero-slide-bg';
-    bg.src = url;
-    bg.alt = '';
-    bg.setAttribute('aria-hidden','true');
-    bg.loading = index === 0 ? 'eager' : 'lazy';
-
-    const main = document.createElement('img');
-    main.className = 'hero-slide-main';
-    main.src = url;
-    main.alt = 'Liara Professional product photo ' + (index + 1);
-    main.loading = index === 0 ? 'eager' : 'lazy';
-
-    function removeSlideIfBroken(){
-      slide.remove();
-      if(dots) dots.querySelectorAll('.hero-slide-dot').forEach(function(dot){
-        dot.remove();
-      });
-    }
-
-    bg.onerror = function(){
-      bg.style.display = 'none';
-    };
-
-    main.onerror = function(){
-      removeSlideIfBroken();
-    };
-
-    slide.appendChild(bg);
-    slide.appendChild(main);
-    box.appendChild(slide);
-  });
-
-  if(dots){
-    dots.innerHTML = '';
-    images.forEach(function(_,index){
-      const dot = document.createElement('button');
-      dot.type = 'button';
-      dot.className = 'hero-slide-dot' + (index === 0 ? ' active' : '');
-      dot.setAttribute('aria-label','Show product photo ' + (index + 1));
-      dot.dataset.heroIndex = String(index);
-      dots.appendChild(dot);
-    });
-  }
-
-  let current = 0;
-
-  function showHeroSlide(index){
-    const slides = box.querySelectorAll('.hero-slide');
-    if(!slides.length) return;
-
-    current = (index + slides.length) % slides.length;
-
-    slides.forEach(function(slide,i){
-      slide.classList.toggle('active',i === current);
-    });
-
-    if(dots){
-      dots.querySelectorAll('.hero-slide-dot').forEach(function(dot,i){
-        dot.classList.toggle('active',i === current);
-      });
-    }
-  }
-
-  if(dots){
-    dots.onclick = function(event){
-      const dot = event.target.closest('.hero-slide-dot');
-      if(!dot) return;
-      showHeroSlide(Number(dot.dataset.heroIndex || 0));
-      restartHeroTimer();
-    };
-  }
-
-  function restartHeroTimer(){
-    if(heroSlideTimer) clearInterval(heroSlideTimer);
-    heroSlideTimer = null;
-
-    if(box.querySelectorAll('.hero-slide').length > 1){
-      heroSlideTimer = setInterval(function(){
-        showHeroSlide(current + 1);
-      },2000);
-    }
-  }
-
-  restartHeroTimer();
-}
-
 function getProductImage(p){
 
   return p.image_url ||
@@ -1825,6 +1566,40 @@ function buyNow(product){
 }
 
 
+let heroSlideTimer = null;
+
+function renderHeroSlideshow(products){
+  const box=document.getElementById("heroSlideshow");
+  const dots=document.getElementById("heroSlideDots");
+  if(!box)return;
+  if(heroSlideTimer){clearInterval(heroSlideTimer);heroSlideTimer=null;}
+  const list=Array.isArray(products)?products:[];
+  const product=list.find(p=>p&&(p.image_url||p.image_url_2||p.image_url_3||p.image_url_4));
+  if(!product){box.innerHTML='<div class="hero-product-placeholder"><span>LIARA</span></div>';if(dots)dots.innerHTML="";return;}
+  const images=[product.image_url,product.image_url_2,product.image_url_3,product.image_url_4].map(v=>String(v||"").trim()).filter(Boolean);
+  if(!images.length){box.innerHTML='<div class="hero-product-placeholder"><span>LIARA</span></div>';if(dots)dots.innerHTML="";return;}
+  box.innerHTML="";
+  images.forEach((url,index)=>{
+    const slide=document.createElement("div");
+    slide.className="hero-slide"+(index===0?" active":"");
+    slide.style.setProperty("--hero-bg",`url("${url.replace(/"/g,'\\"')}")`);
+    const img=document.createElement("img");
+    img.src=url; img.alt="Liara Professional product photo "+(index+1); img.loading=index===0?"eager":"lazy";
+    img.onerror=function(){slide.remove();};
+    slide.appendChild(img); box.appendChild(slide);
+  });
+  function updateDots(){
+    if(!dots)return;
+    dots.innerHTML="";
+    box.querySelectorAll(".hero-slide").forEach((_,i)=>{const b=document.createElement("button");b.type="button";b.className="hero-slide-dot"+(i===0?" active":"");b.setAttribute("aria-label","Show product photo "+(i+1));b.dataset.index=i;dots.appendChild(b);});
+  }
+  updateDots();
+  let current=0;
+  function show(index){const slides=Array.from(box.querySelectorAll(".hero-slide"));if(!slides.length)return;current=(index+slides.length)%slides.length;slides.forEach((x,i)=>x.classList.toggle("active",i===current));if(dots)dots.querySelectorAll(".hero-slide-dot").forEach((x,i)=>x.classList.toggle("active",i===current));}
+  if(dots)dots.onclick=e=>{const b=e.target.closest(".hero-slide-dot");if(b)show(Number(b.dataset.index||0));};
+  if(images.length>1)heroSlideTimer=setInterval(()=>show(current+1),2000);
+}
+
 async function loadHomepageProducts(){
 
   const box =
@@ -1857,11 +1632,6 @@ async function loadHomepageProducts(){
 
     if(error)
       throw error;
-
-
-    renderHeroSlideshow(
-      getHeroProductImages(data || [])
-    );
 
 
     if(!data || data.length === 0){
@@ -2038,8 +1808,6 @@ async function loadHomepageProducts(){
 
 
   }catch(error){
-
-    renderHeroSlideshow([]);
 
     console.error(
       "LIARA PRODUCT ERROR:",
