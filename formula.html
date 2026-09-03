@@ -2417,9 +2417,16 @@ throw formulaError;
 const rows = formulaRows || [];
 const ids = rows.map(f => f.id).filter(Boolean);
 
+/*
+   Load the formula list independently.
+   If ingredient loading has a problem, the formulas must STILL show.
+*/
 let ingredientRows = [];
+let ingredientLoadWarning = "";
 
 if(ids.length){
+
+try{
 
 const {
 data: ingData,
@@ -2430,10 +2437,17 @@ await supabaseClient
 .select("*")
 .in("formula_id", ids);
 
-if(ingredientError)
-throw ingredientError;
-
+if(ingredientError){
+console.warn("Ingredient load warning:", ingredientError);
+ingredientLoadWarning = ingredientError.message || "Ingredient data could not be loaded.";
+}else{
 ingredientRows = ingData || [];
+}
+
+}catch(ingredientError){
+console.warn("Ingredient load warning:", ingredientError);
+ingredientLoadWarning = ingredientError.message || "Ingredient data could not be loaded.";
+}
 
 }
 
@@ -2465,6 +2479,8 @@ setStatus(
 formulas.length
 +
 " formula(s) online"
++
+(ingredientLoadWarning ? " • Ingredients warning" : "")
 );
 
 
