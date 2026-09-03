@@ -1598,6 +1598,14 @@ body{
 }
 </style>
 
+
+<style id="liara-order-status-combo">
+.order-status-control{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:190px}
+.order-status-select{border:1px solid #ddd;background:#fff;border-radius:7px;padding:7px 8px;font-size:10px;font-weight:700;outline:none;cursor:pointer;min-width:125px}
+.order-status-save{border:0;background:#211d18;color:#fff;border-radius:7px;padding:7px 9px;font-size:10px;font-weight:700;cursor:pointer}
+.order-status-save:hover{background:#ad8232}
+.status-updated-note{font-size:9px;color:#287a3e;font-weight:700;display:none}
+</style>
 </head>
 
 <body>
@@ -2582,15 +2590,28 @@ function renderOrders(orders){
             </td>
 
             <td>
+                <div class="order-status-control">
+                    <button
+                        class="table-btn view-btn"
+                        onclick="viewOrder(
+                            '${escapeHtml(String(order.id))}'
+                        )">
+                        👁 View
+                    </button>
 
-                <button
-                    class="table-btn view-btn"
-                    onclick="viewOrder(
-                        '${escapeHtml(String(order.id))}'
-                    )">
-                    👁 View
-                </button>
-
+                    <select
+                        class="order-status-select"
+                        id="orderStatus_${escapeHtml(String(order.id))}"
+                        onchange="updateOrderStatusFromList('${escapeHtml(String(order.id))}',this.value)">
+                        <option value="Pending" ${String(status).toLowerCase()==="pending"?"selected":""}>Pending</option>
+                        <option value="Confirmed" ${String(status).toLowerCase()==="confirmed"?"selected":""}>Confirmed</option>
+                        <option value="Packed" ${String(status).toLowerCase()==="packed"?"selected":""}>Packed</option>
+                        <option value="Shipped" ${String(status).toLowerCase()==="shipped"?"selected":""}>Shipped</option>
+                        <option value="Delivered" ${String(status).toLowerCase()==="delivered"?"selected":""}>Delivered</option>
+                        <option value="Cancelled" ${String(status).toLowerCase()==="cancelled"?"selected":""}>Cancelled</option>
+                    </select>
+                    <span class="status-updated-note" id="statusNote_${escapeHtml(String(order.id))}">✓ Saved</span>
+                </div>
             </td>
 
         </tr>
@@ -2711,6 +2732,113 @@ function startShipwayAutoSync(){
 }
 
 startShipwayAutoSync();
+
+/* =========================================================
+   CUSTOMER ACCOUNT STATUS SYNC
+   The customer account reads the same public.orders row.
+   Updating this row therefore updates the customer's order
+   status everywhere the account page reads orders.
+========================================================= */
+
+async function updateOrderStatusFromList(id, newStatus){
+
+    const order = allOrders.find(
+        x => String(x.id) === String(id)
+    );
+
+    if(!order) return;
+
+    const previousStatus = order.status || "Pending";
+
+    if(String(newStatus).toLowerCase() === "cancelled"){
+        if(!confirm("Cancel this order?")){
+
+            const select = document.getElementById("orderStatus_"+id);
+
+            if(select){
+                select.value = previousStatus;
+            }
+
+            return;
+        }
+    }
+
+    await updateOrderStatus(id, newStatus);
+
+}
+
+async function updateOrderStatus(id, newStatus){
+
+    const user = await checkAdmin();
+    if(!user) return;
+
+    const normalized = String(newStatus || "Pending");
+
+    const {data,error} = await supabaseClient
+        .from("orders")
+        .update({
+            status: normalized
+        })
+        .eq("id", id)
+        .select("*")
+        .single();
+
+    if(error){
+        console.error("Order status update error:", error);
+        alert("Status update failed: " + error.message);
+
+        const failedSelect =
+            document.getElementById("orderStatus_"+id);
+
+        const oldOrder =
+            allOrders.find(x => String(x.id) === String(id));
+
+        if(failedSelect && oldOrder){
+            failedSelect.value =
+                oldOrder.status || "Pending";
+        }
+
+        return;
+    }
+
+    const updatedOrder = data || {
+        ...allOrders.find(x => String(x.id) === String(id)),
+        status: normalized
+    };
+
+    allOrders = allOrders.map(order =>
+        String(order.id) === String(id)
+            ? updatedOrder
+            : order
+    );
+
+    if(currentOrder &&
+       String(currentOrder.id) === String(id)){
+        currentOrder = updatedOrder;
+    }
+
+    updateOrderSummary(allOrders);
+    applyOrderFilters();
+
+    const note =
+        document.getElementById("statusNote_"+id);
+
+    if(note){
+        note.style.display = "inline";
+        setTimeout(()=>{
+            note.style.display = "none";
+        },1800);
+    }
+
+    if(
+        document.getElementById("orderModal").style.display === "flex" &&
+        currentOrder &&
+        String(currentOrder.id) === String(id)
+    ){
+        viewOrder(id);
+    }
+
+}
 
 /* =========================================================
    VIEW ORDER
@@ -2912,12 +3040,51 @@ function viewOrder(id){
         <strong>${money(total)}</strong>
     </div>
     <div class="gst-inclusive-note">Website selling prices are final prices; GST is already included. GST is shown only as the included tax breakup.</div>
+
+    <div style="margin-top:18px;padding:14px;background:#faf8f5;border:1px solid #e8e1d7;border-radius:10px">
+        <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:7px">UPDATE ORDER STATUS</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <select id="modalOrderStatusSelect"
+                    class="order-status-select"
+                    style="min-width:160px">
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Packed">Packed</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+            <button class="btn" type="button" onclick="updateCurrentOrderStatus()">Update Status</button>
+        </div>
+    </div>
     `;
+
+    const modalStatusSelect =
+        document.getElementById("modalOrderStatusSelect");
+
+    if(modalStatusSelect){
+        modalStatusSelect.value = status;
+    }
 
     document.getElementById(
         "orderModal"
     ).style.display = "flex";
 
+}
+
+async function updateCurrentOrderStatus(){
+
+    if(!currentOrder || !currentOrder.id) return;
+
+    const select =
+        document.getElementById("modalOrderStatusSelect");
+
+    if(!select) return;
+
+    await updateOrderStatus(
+        currentOrder.id,
+        select.value
+    );
 }
 
 function closeOrderModal(){
