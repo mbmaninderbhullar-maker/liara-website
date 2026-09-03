@@ -2396,14 +2396,12 @@ setStatus(
 try{
 
 const {
-data,
-error
+data: formulaRows,
+error: formulaError
 } =
 await supabaseClient
 .from("formulas")
-.select(
-"*, formula_ingredients(*)"
-)
+.select("*")
 .order(
 "created_at",
 {
@@ -2412,12 +2410,53 @@ ascending:false
 );
 
 
-if(error)
-throw error;
+if(formulaError)
+throw formulaError;
 
 
-formulas =
-data || [];
+const rows = formulaRows || [];
+const ids = rows.map(f => f.id).filter(Boolean);
+
+let ingredientRows = [];
+
+if(ids.length){
+
+const {
+data: ingData,
+error: ingredientError
+} =
+await supabaseClient
+.from("formula_ingredients")
+.select("*")
+.in("formula_id", ids);
+
+if(ingredientError)
+throw ingredientError;
+
+ingredientRows = ingData || [];
+
+}
+
+
+const ingredientMap = {};
+
+ingredientRows.forEach(ingredient => {
+
+const key = String(ingredient.formula_id);
+
+if(!ingredientMap[key])
+ingredientMap[key] = [];
+
+ingredientMap[key].push(ingredient);
+
+});
+
+
+formulas = rows.map(formula => ({
+...formula,
+formula_ingredients:
+ingredientMap[String(formula.id)] || []
+}));
 
 
 setStatus(
