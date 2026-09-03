@@ -2084,6 +2084,43 @@ async function saveOrderToDatabase(statusText) {
             total:
                 total,
 
+            /* Invoice / GST data */
+            subtotal:
+                Number(subtotal || 0),
+
+            discount:
+                Number(discountTotal || 0),
+
+            gst_amount:
+                Number(gstTotal || 0),
+
+            gst_rate:
+                checkoutItems.length === 1
+                    ? Number(getProductGST(checkoutItems[0]) || 0)
+                    : 0,
+
+            hsn_code:
+                checkoutItems.length === 1
+                    ? (checkoutItems[0].hsn_code || checkoutItems[0].hsn || "")
+                    : "",
+
+            items:
+                checkoutItems.map(function(product){
+                    return {
+                        name: product.name || "Product",
+                        quantity: Number(product.quantity || 1),
+                        mrp: getProductMRP(product),
+                        sale_price: getProductSalePrice(product),
+                        discount_percent: getProductDiscount(
+                            product,
+                            getProductMRP(product),
+                            getProductSalePrice(product)
+                        ),
+                        gst_rate: getProductGST(product),
+                        hsn_code: product.hsn_code || product.hsn || ""
+                    };
+                }),
+
             payment_method:
                 payment,
 
@@ -2316,7 +2353,49 @@ function clearCheckoutStorage() {
 }
 
 
+function openCustomerWhatsApp(orderNumber) {
+    const phoneRaw = document.getElementById("mobile")?.value?.trim() || "";
+    const phone = phoneRaw.replace(/\\D/g, "");
+
+    if (!phone || phone.length < 10) {
+        return;
+    }
+
+    const customerName =
+        document.getElementById("name")?.value?.trim() || "Customer";
+
+    const payment =
+        document.getElementById("payment")?.value || "Payment";
+
+    const lines = [
+        "LIARA PROFESSIONAL™",
+        "",
+        "🎉 Order Confirmed",
+        "Order: " + (orderNumber || "LIARA ORDER"),
+        "Customer: " + customerName,
+        "",
+        "Sale Subtotal: ₹" + money(subtotal),
+        "GST: ₹" + money(gstTotal),
+        "Shipping: " + (shippingTotal > 0 ? "₹" + money(shippingTotal) : "FREE"),
+        "Total: ₹" + money(total),
+        "Payment: " + payment,
+        "",
+        "Thank you for shopping with Liara Professional™.",
+        "Your delivery tracking details will be shared when the shipment is booked."
+    ];
+
+    window.open(
+        "https://wa.me/" + phone + "?text=" +
+        encodeURIComponent(lines.join("\n")),
+        "_blank",
+        "noopener"
+    );
+}
+
 function orderSuccess(button) {
+
+    const orderNumber =
+        localStorage.getItem("liaraLastOrderNumber") || "";
 
     clearCheckoutStorage();
 
@@ -2327,12 +2406,30 @@ function orderSuccess(button) {
     button.innerText =
         "Order Placed ✓";
 
-    setTimeout(function() {
+    const waButton = document.createElement("button");
+    waButton.type = "button";
+    waButton.className = "btn place-order";
+    waButton.style.marginTop = "10px";
+    waButton.style.background = "#25D366";
+    waButton.style.color = "#fff";
+    waButton.innerText = "💬 Send Order on WhatsApp";
 
+    waButton.onclick = function() {
+        openCustomerWhatsApp(orderNumber);
+    };
+
+    const messageBox = document.getElementById("message");
+    if (messageBox && messageBox.parentNode) {
+        messageBox.parentNode.insertBefore(
+            waButton,
+            messageBox.nextSibling
+        );
+    }
+
+    setTimeout(function() {
         window.location.href =
             "account.html";
-
-    }, 1500);
+    }, 3500);
 }
 
 
