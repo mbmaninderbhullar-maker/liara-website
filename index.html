@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta name="description" content="Liara Professional™ — Advanced Herbal beauty, skincare and personal care.">
+
 <title>Liara Professional™ | Advanced Herbal</title>
 
 <style>
+
+/* =========================================
+   LOGO
+   ========================================= */
+
 .logo strong{
   font-family:Georgia,"Times New Roman",serif;
   font-size:30px;
@@ -70,6 +77,11 @@
   line-height:1;
 }
 
+
+/* =========================================
+   ROOT
+   ========================================= */
+
 :root{
   --gold:#b58a3c;
   --gold2:#d8bd7a;
@@ -81,37 +93,47 @@
   --white:#fff;
 }
 
+
+/* =========================================
+   RESET
+   ========================================= */
+
 *{
   box-sizing:border-box;
   margin:0;
-  padding:0
+  padding:0;
 }
 
 html{
-  scroll-behavior:smooth
+  scroll-behavior:smooth;
 }
 
 body{
   font-family:Arial,Helvetica,sans-serif;
   color:var(--black);
   background:#fff;
-  line-height:1.6
+  line-height:1.6;
 }
 
 a{
   text-decoration:none;
-  color:inherit
+  color:inherit;
 }
 
 button{
   font-family:inherit;
-  cursor:pointer
+  cursor:pointer;
 }
 
 img{
   max-width:100%;
-  display:block
+  display:block;
 }
+
+
+/* =========================================
+   TOP BAR
+   ========================================= */
 
 .topbar{
   background:#111;
@@ -119,8 +141,13 @@ img{
   text-align:center;
   padding:8px 12px;
   font-size:9px;
-  letter-spacing:2px
+  letter-spacing:2px;
 }
+
+
+/* =========================================
+   HEADER
+   ========================================= */
 
 header{
   position:sticky;
@@ -128,7 +155,7 @@ header{
   z-index:1000;
   background:rgba(255,255,255,.96);
   backdrop-filter:blur(15px);
-  border-bottom:1px solid #eee
+  border-bottom:1px solid #eee;
 }
 
 .header-inner{
@@ -139,24 +166,25 @@ header{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:25px
+  gap:25px;
 }
 
 nav{
   display:flex;
   align-items:center;
-  gap:20px
+  gap:20px;
 }
 
 nav a{
   font-size:10px;
   font-weight:bold;
-  color:#444
+  color:#444;
 }
 
 nav a:hover{
-  color:var(--gold)
+  color:var(--gold);
 }
+
 
 /* =========================================
    LARGER HERO / TOP HEADING SECTION
@@ -175,11 +203,11 @@ nav a:hover{
       rgba(213,184,111,.28),
       transparent 32%
     ),
-    linear-gradient(125deg,#fcfbf8,#f1ebdf)
+    linear-gradient(125deg,#fcfbf8,#f1ebdf);
 }
 
 .hero-content{
-  max-width:680px
+  max-width:680px;
 }
 
 .kicker{
@@ -187,19 +215,19 @@ nav a:hover{
   font-size:10px;
   font-weight:bold;
   letter-spacing:4px;
-  margin-bottom:18px
+  margin-bottom:18px;
 }
 
 .hero h1{
   font-size:clamp(48px,6.4vw,82px);
   line-height:.98;
   letter-spacing:-3.5px;
-  margin-bottom:25px
+  margin-bottom:25px;
 }
 
 .hero h1 span{
   display:block;
-  color:var(--gold)
+  color:var(--gold);
 }
 
 .hero p{
@@ -207,7 +235,7 @@ nav a:hover{
   font-size:15px;
   line-height:1.9;
   max-width:570px;
-  margin-bottom:31px
+  margin-bottom:31px;
 }
 
 .btn{
@@ -222,33 +250,38 @@ nav a:hover{
   border-radius:2px;
   font-size:10px;
   font-weight:bold;
-  transition:.25s
+  transition:.25s;
 }
 
 .btn:hover{
   background:var(--gold);
   border-color:var(--gold);
-  transform:translateY(-2px)
+  transform:translateY(-2px);
 }
 
 .btn-light{
   background:#fff;
   color:#222;
-  border-color:#d4ccbd
+  border-color:#d4ccbd;
 }
 
 .hero-buttons{
   display:flex;
   gap:10px;
-  flex-wrap:wrap
+  flex-wrap:wrap;
 }
+
+
+/* =========================================
+   HERO PRODUCT
+   ========================================= */
 
 .hero-product{
   min-height:510px;
   display:flex;
   align-items:center;
   justify-content:center;
-  position:relative
+  position:relative;
 }
 
 .hero-product:before{
@@ -258,10 +291,14 @@ nav a:hover{
   height:420px;
   border-radius:50%;
   background:radial-gradient(circle,#ead5a3,#d5b36a);
-  opacity:.65
+  opacity:.65;
 }
 
-/* HERO PRODUCT CARD */
+
+/* =========================================
+   HERO PRODUCT CARD
+   ========================================= */
+
 .hero-product-card{
   position:relative;
   z-index:2;
@@ -277,17 +314,21 @@ nav a:hover{
   align-items:center;
   justify-content:center;
   overflow:hidden;
-  border-radius:3px
+  border-radius:3px;
 }
 
-/* HERO SLIDESHOW */
+
+/* =========================================
+   HERO SLIDESHOW
+   ========================================= */
+
 .hero-slideshow{
   position:relative;
   width:100%;
   height:100%;
   overflow:hidden;
   background:
-    linear-gradient(145deg,#faf8f3,#eee7d9)
+    linear-gradient(145deg,#faf8f3,#eee7d9);
 }
 
 .hero-slide{
@@ -304,7 +345,7 @@ nav a:hover{
     transform 2.8s cubic-bezier(.2,.7,.2,1),
     filter 1s ease;
   pointer-events:none;
-  z-index:1
+  z-index:1;
 }
 
 .hero-slide::before{
@@ -318,7 +359,7 @@ nav a:hover{
   filter:blur(28px);
   transform:scale(1.15);
   opacity:.22;
-  z-index:-2
+  z-index:-2;
 }
 
 .hero-slide::after{
@@ -332,14 +373,14 @@ nav a:hover{
       rgba(255,255,255,.25) 48%,
       rgba(255,255,255,.78) 100%
     );
-  z-index:-1
+  z-index:-1;
 }
 
 .hero-slide.active{
   opacity:1;
   transform:scale(1);
   filter:blur(0);
-  z-index:2
+  z-index:2;
 }
 
 .hero-slide img{
@@ -353,12 +394,17 @@ nav a:hover{
   padding:18px;
   background:transparent;
   transition:
-    transform 3.5s cubic-bezier(.2,.7,.2,1)
+    transform 3.5s cubic-bezier(.2,.7,.2,1);
 }
 
 .hero-slide.active img{
-  transform:scale(1.035)
+  transform:scale(1.035);
 }
+
+
+/* =========================================
+   HERO DOTS
+   ========================================= */
 
 .hero-slide-dots{
   position:absolute;
@@ -373,7 +419,7 @@ nav a:hover{
   border-radius:20px;
   background:rgba(255,255,255,.72);
   backdrop-filter:blur(8px);
-  border:1px solid rgba(181,138,60,.18)
+  border:1px solid rgba(181,138,60,.18);
 }
 
 .hero-slide-dot{
@@ -384,7 +430,7 @@ nav a:hover{
   border-radius:50%;
   background:#fff;
   cursor:pointer;
-  transition:.3s ease
+  transition:.3s ease;
 }
 
 .hero-slide-dot.active{
@@ -392,7 +438,7 @@ nav a:hover{
   border-radius:10px;
   background:var(--gold);
   border-color:var(--gold);
-  transform:none
+  transform:none;
 }
 
 .hero-slide-loading{
@@ -405,8 +451,13 @@ nav a:hover{
   font-size:10px;
   font-weight:bold;
   letter-spacing:2px;
-  text-transform:uppercase
+  text-transform:uppercase;
 }
+
+
+/* =========================================
+   PLACEHOLDER
+   ========================================= */
 
 .hero-product-placeholder{
   position:relative;
@@ -428,7 +479,7 @@ nav a:hover{
   display:flex;
   align-items:center;
   justify-content:center;
-  margin-top:28px
+  margin-top:28px;
 }
 
 .hero-product-placeholder:before{
@@ -446,7 +497,7 @@ nav a:hover{
       #3d3d3d 48%,
       #0a0a0a
     );
-  box-shadow:0 5px 9px rgba(0,0,0,.25)
+  box-shadow:0 5px 9px rgba(0,0,0,.25);
 }
 
 .hero-product-placeholder:after{
@@ -458,7 +509,7 @@ nav a:hover{
   height:128px;
   background:#fbf8f0;
   border:1px solid #c8a65f;
-  box-shadow:0 5px 14px rgba(0,0,0,.07)
+  box-shadow:0 5px 14px rgba(0,0,0,.07);
 }
 
 .hero-product-placeholder span{
@@ -472,7 +523,7 @@ nav a:hover{
   font-size:25px;
   font-weight:700;
   letter-spacing:5px;
-  color:#171717
+  color:#171717;
 }
 
 .hero-product-placeholder span:after{
@@ -486,16 +537,21 @@ nav a:hover{
   font-family:Arial,Helvetica,sans-serif;
   font-size:7px;
   font-weight:700;
-  letter-spacing:2px
+  letter-spacing:2px;
 }
 
+
+/* =========================================
+   SECTIONS
+   ========================================= */
+
 .section{
-  padding:80px 6%
+  padding:80px 6%;
 }
 
 .heading{
   text-align:center;
-  margin-bottom:38px
+  margin-bottom:38px;
 }
 
 .heading p{
@@ -503,20 +559,25 @@ nav a:hover{
   font-size:9px;
   font-weight:bold;
   letter-spacing:3px;
-  margin-bottom:8px
+  margin-bottom:8px;
 }
 
 .heading h2{
   font-size:clamp(30px,4vw,43px);
-  line-height:1.15
+  line-height:1.15;
 }
 
 .heading .sub{
   color:#777;
   font-size:12px;
   max-width:600px;
-  margin:12px auto 0
+  margin:12px auto 0;
 }
+
+
+/* =========================================
+   SHOP BAR
+   ========================================= */
 
 .shopbar{
   max-width:1250px;
@@ -524,20 +585,25 @@ nav a:hover{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:15px
+  gap:15px;
 }
 
 .shopbar span{
   font-size:11px;
-  color:#777
+  color:#777;
 }
+
+
+/* =========================================
+   PRODUCT GRID
+   ========================================= */
 
 .product-grid{
   max-width:1250px;
   margin:auto;
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:20px
+  gap:20px;
 }
 
 .product-card{
@@ -546,12 +612,12 @@ nav a:hover{
   border-radius:8px;
   padding:12px;
   transition:.3s;
-  overflow:hidden
+  overflow:hidden;
 }
 
 .product-card:hover{
   transform:translateY(-6px);
-  box-shadow:0 20px 45px rgba(0,0,0,.1)
+  box-shadow:0 20px 45px rgba(0,0,0,.1);
 }
 
 .product-image{
@@ -562,35 +628,35 @@ nav a:hover{
   overflow:hidden;
   display:flex;
   align-items:center;
-  justify-content:center
+  justify-content:center;
 }
 
 .product-image img{
   width:100%;
   height:100%;
-  object-fit:cover
+  object-fit:cover;
 }
 
 .product-image img.contain{
   object-fit:contain;
-  padding:10px
+  padding:10px;
 }
 
 .product-info{
-  padding:16px 3px 3px
+  padding:16px 3px 3px;
 }
 
 .product-name{
   font-size:16px;
   font-weight:bold;
-  margin-bottom:5px
+  margin-bottom:5px;
 }
 
 .product-desc{
   font-size:11px;
   color:#777;
   line-height:1.65;
-  min-height:38px
+  min-height:38px;
 }
 
 .product-meta{
@@ -598,8 +664,9 @@ nav a:hover{
   justify-content:space-between;
   align-items:center;
   gap:8px;
-  margin-top:13px
+  margin-top:13px;
 }
+
 
 /* =========================================
    SALE / ORIGINAL PRICE
@@ -609,14 +676,14 @@ nav a:hover{
   display:flex;
   align-items:baseline;
   gap:8px;
-  flex-wrap:wrap
+  flex-wrap:wrap;
 }
 
 .sale-price{
   font-size:18px;
   color:var(--gold);
   font-weight:bold;
-  white-space:nowrap
+  white-space:nowrap;
 }
 
 .original-price{
@@ -626,25 +693,30 @@ nav a:hover{
   text-decoration:line-through;
   text-decoration-thickness:1px;
   text-decoration-color:#999;
-  white-space:nowrap
+  white-space:nowrap;
 }
 
 .stock{
   font-size:9px;
   color:#388044;
   font-weight:bold;
-  white-space:nowrap
+  white-space:nowrap;
 }
 
 .stock.out{
-  color:#a33
+  color:#a33;
 }
+
+
+/* =========================================
+   PRODUCT ACTIONS
+   ========================================= */
 
 .product-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:7px;
-  margin-top:13px
+  margin-top:13px;
 }
 
 .product-actions button,
@@ -657,25 +729,35 @@ nav a:hover{
   font-weight:bold;
   display:flex;
   align-items:center;
-  justify-content:center
+  justify-content:center;
 }
 
 .product-actions .outline{
   background:#fff;
   color:#222;
-  border-color:#d5cec0
+  border-color:#d5cec0;
 }
+
+
+/* =========================================
+   LOADING
+   ========================================= */
 
 .loading,
 .empty{
   grid-column:1/-1;
   text-align:center;
   padding:60px 15px;
-  color:#777
+  color:#777;
 }
 
+
+/* =========================================
+   CATEGORIES
+   ========================================= */
+
 .categories{
-  background:var(--cream)
+  background:var(--cream);
 }
 
 .category-grid{
@@ -683,7 +765,7 @@ nav a:hover{
   margin:auto;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:18px
+  gap:18px;
 }
 
 .category{
@@ -694,33 +776,38 @@ nav a:hover{
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
-  transition:.3s
+  transition:.3s;
 }
 
 .category:hover{
   transform:translateY(-5px);
-  border-color:var(--gold)
+  border-color:var(--gold);
 }
 
 .category span{
   color:var(--gold);
   font-size:9px;
   font-weight:bold;
-  letter-spacing:2px
+  letter-spacing:2px;
 }
 
 .category h3{
   font-size:23px;
-  margin:5px 0
+  margin:5px 0;
 }
 
 .category p{
   font-size:10px;
-  color:#777
+  color:#777;
 }
 
+
+/* =========================================
+   WHY LIARA
+   ========================================= */
+
 .why{
-  background:#fff
+  background:#fff;
 }
 
 .why-grid{
@@ -728,14 +815,14 @@ nav a:hover{
   margin:auto;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:20px
+  gap:20px;
 }
 
 .why-card{
   text-align:center;
   padding:35px 25px;
   background:var(--cream);
-  border:1px solid var(--line)
+  border:1px solid var(--line);
 }
 
 .icon{
@@ -749,24 +836,29 @@ nav a:hover{
   align-items:center;
   justify-content:center;
   font-size:10px;
-  font-weight:bold
+  font-weight:bold;
 }
 
 .why-card h3{
   font-size:16px;
-  margin-bottom:8px
+  margin-bottom:8px;
 }
 
 .why-card p{
   font-size:11px;
   color:#777;
-  line-height:1.8
+  line-height:1.8;
 }
+
+
+/* =========================================
+   STORY
+   ========================================= */
 
 .story{
   background:#191919;
   color:#fff;
-  padding:85px 6%
+  padding:85px 6%;
 }
 
 .story-inner{
@@ -775,112 +867,127 @@ nav a:hover{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:70px;
-  align-items:center
+  align-items:center;
 }
 
 .story h2{
   font-size:clamp(35px,5vw,55px);
   line-height:1.02;
-  margin:12px 0 20px
+  margin:12px 0 20px;
 }
 
 .story h2 span{
   display:block;
-  color:var(--gold2)
+  color:var(--gold2);
 }
 
 .story p{
   color:#aaa;
   font-size:12px;
   line-height:1.9;
-  margin-bottom:12px
+  margin-bottom:12px;
 }
 
 .story-card{
   border:1px solid #383838;
   padding:28px;
-  background:rgba(255,255,255,.025)
+  background:rgba(255,255,255,.025);
 }
 
 .story-card div{
   padding:17px 0;
-  border-bottom:1px solid #333
+  border-bottom:1px solid #333;
 }
 
 .story-card div:last-child{
-  border-bottom:0
+  border-bottom:0;
 }
 
 .story-card strong{
   color:var(--gold2);
   font-size:10px;
-  letter-spacing:2px
+  letter-spacing:2px;
 }
 
 .story-card h3{
   font-size:16px;
-  margin:4px 0
+  margin:4px 0;
 }
 
 .story-card p{
-  margin:0
+  margin:0;
 }
 
+
+/* =========================================
+   FAQ
+   ========================================= */
+
 .faq{
-  background:var(--cream)
+  background:var(--cream);
 }
 
 .faq-container{
   max-width:850px;
-  margin:auto
+  margin:auto;
 }
 
 details{
   border-bottom:1px solid #ddd;
-  padding:19px 0
+  padding:19px 0;
 }
 
 details:first-child{
-  border-top:1px solid #ddd
+  border-top:1px solid #ddd;
 }
 
 summary{
   cursor:pointer;
   font-size:13px;
-  font-weight:bold
+  font-weight:bold;
 }
 
 details p{
   color:#777;
   font-size:11px;
   line-height:1.8;
-  padding-top:12px
+  padding-top:12px;
 }
+
+
+/* =========================================
+   CONTACT
+   ========================================= */
 
 .contact{
   text-align:center;
   padding:75px 6%;
-  background:linear-gradient(135deg,#faf7f0,#eee6d6)
+  background:linear-gradient(135deg,#faf7f0,#eee6d6);
 }
 
 .contact p{
   max-width:550px;
   margin:10px auto 18px;
   color:#777;
-  font-size:12px
+  font-size:12px;
 }
 
 .contact-email{
   display:block;
   color:var(--gold);
   font-size:13px;
-  margin-bottom:20px
+  margin-bottom:20px;
 }
+
+
+/* =========================================
+   FOOTER
+   ========================================= */
 
 footer{
   background:#0d0d0d;
   color:#aaa;
-  padding:55px 6% 22px
+  padding:55px 6% 22px;
 }
 
 .footer-grid{
@@ -890,32 +997,32 @@ footer{
   grid-template-columns:1.6fr 1fr 1fr 1fr;
   gap:40px;
   padding-bottom:35px;
-  border-bottom:1px solid #292929
+  border-bottom:1px solid #292929;
 }
 
 .footer-logo{
   color:#fff;
   font-size:25px;
   font-weight:900;
-  letter-spacing:5px
+  letter-spacing:5px;
 }
 
 .footer-grid h4{
   color:#fff;
   font-size:10px;
   letter-spacing:2px;
-  margin-bottom:17px
+  margin-bottom:17px;
 }
 
 .footer-grid a{
   display:block;
   font-size:10px;
   margin-bottom:11px;
-  color:#707070
+  color:#707070;
 }
 
 .footer-grid a:hover{
-  color:var(--gold2)
+  color:var(--gold2);
 }
 
 .footer-brand p{
@@ -923,7 +1030,7 @@ footer{
   line-height:1.8;
   max-width:300px;
   margin-top:15px;
-  color:#666
+  color:#666;
 }
 
 .admin-login-btn{
@@ -938,13 +1045,13 @@ footer{
   font-size:8px;
   font-weight:700;
   letter-spacing:1px;
-  transition:.25s
+  transition:.25s;
 }
 
 .admin-login-btn:hover{
   color:#fff;
   border-color:var(--gold);
-  background:rgba(181,138,60,.08)
+  background:rgba(181,138,60,.08);
 }
 
 .footer-bottom{
@@ -955,38 +1062,48 @@ footer{
   align-items:center;
   gap:15px;
   font-size:8px;
-  color:#555
+  color:#555;
 }
+
+
+/* =========================================
+   TABLET
+   ========================================= */
 
 @media(max-width:1050px){
 
   .product-grid{
-    grid-template-columns:repeat(3,1fr)
+    grid-template-columns:repeat(3,1fr);
   }
 
   nav{
-    gap:13px
+    gap:13px;
   }
 
 }
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
 
 @media(max-width:800px){
 
   .header-inner{
     flex-direction:column;
     align-items:flex-start;
-    padding:15px 5%
+    padding:15px 5%;
   }
 
   nav{
     width:100%;
     overflow-x:auto;
     justify-content:flex-start;
-    padding-bottom:3px
+    padding-bottom:3px;
   }
 
   nav a{
-    white-space:nowrap
+    white-space:nowrap;
   }
 
   .hero{
@@ -994,756 +1111,971 @@ footer{
     text-align:center;
     padding-top:65px;
     padding-bottom:70px;
-    min-height:auto
+    min-height:auto;
   }
 
   .hero-content{
-    margin:auto
+    margin:auto;
   }
 
   .hero p{
     margin-left:auto;
-    margin-right:auto
+    margin-right:auto;
   }
 
   .hero-buttons{
-    justify-content:center
+    justify-content:center;
   }
 
   .hero-product{
-    min-height:390px
+    min-height:390px;
   }
 
   .product-grid{
-    grid-template-columns:repeat(2,1fr)
+    grid-template-columns:repeat(2,1fr);
   }
 
   .category-grid,
   .why-grid,
   .story-inner{
-    grid-template-columns:1fr
+    grid-template-columns:1fr;
   }
 
   .footer-grid{
-    grid-template-columns:1fr 1fr
+    grid-template-columns:1fr 1fr;
   }
 
   .footer-brand{
-    grid-column:1/-1
+    grid-column:1/-1;
   }
 
 }
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
 
 @media(max-width:520px){
 
   .topbar{
-    font-size:7px
+    font-size:7px;
   }
 
   .hero{
-    padding:55px 5% 60px
+    padding:55px 5% 60px;
   }
 
   .hero h1{
-    font-size:45px
+    font-size:45px;
   }
 
   .hero-product-card{
     width:280px;
-    height:345px
+    height:345px;
   }
 
   .hero-slide img{
-    padding:12px
+    padding:12px;
   }
 
   .hero-product:before{
     width:290px;
-    height:290px
+    height:290px;
   }
 
   .section{
-    padding:65px 5%
+    padding:65px 5%;
   }
 
   .product-grid{
-    grid-template-columns:1fr
+    grid-template-columns:1fr;
   }
 
   .product-image{
-    height:300px
+    height:300px;
   }
 
   .shopbar{
     align-items:flex-start;
-    flex-direction:column
+    flex-direction:column;
   }
 
   .footer-grid{
-    grid-template-columns:1fr
+    grid-template-columns:1fr;
   }
 
   .footer-brand{
-    grid-column:auto
+    grid-column:auto;
   }
 
   .footer-bottom{
     flex-direction:column;
-    text-align:center
+    text-align:center;
   }
 
   .admin-login-btn{
-    margin-top:4px
+    margin-top:4px;
   }
 
 }
+
 </style>
 
 </head>
 
+
 <body>
+
+
+<!-- =========================================
+     TOP BAR
+     ========================================= -->
 
 <div class="topbar">
   LIARA PROFESSIONAL™ &nbsp; • &nbsp; ADVANCED HERBAL • QUALITY • CARE • CONFIDENCE
 </div>
 
+
+<!-- =========================================
+     HEADER
+     ========================================= -->
+
 <header>
+
   <div class="header-inner">
 
-```
-<a href="#home" class="logo" aria-label="Liara Professional">
+    <a href="#home" class="logo" aria-label="Liara Professional">
 
-  <span class="logo-mark" aria-hidden="true">
+      <span class="logo-mark" aria-hidden="true">
 
-    <svg viewBox="0 0 120 105">
+        <svg viewBox="0 0 120 105">
 
-      <defs>
+          <defs>
 
-        <linearGradient id="liaraGold2" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#e4c87b"/>
-          <stop offset="48%" stop-color="#b98932"/>
-          <stop offset="100%" stop-color="#dcb961"/>
-        </linearGradient>
+            <linearGradient
+              id="liaraGold2"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="1">
 
-      </defs>
+              <stop
+                offset="0%"
+                stop-color="#e4c87b"/>
 
-      <path
-        d="M42 8h35v8H61v57h27v11H42z"
-        fill="url(#liaraGold2)"
-      />
+              <stop
+                offset="48%"
+                stop-color="#b98932"/>
 
-      <path
-        d="M61 68c5-19 16-32 34-40-1 16-8 29-25 39"
-        fill="none"
-        stroke="url(#liaraGold2)"
-        stroke-width="5"
-        stroke-linecap="round"
-      />
+              <stop
+                offset="100%"
+                stop-color="#dcb961"/>
 
-      <path
-        d="M65 68c12-9 20-18 25-29"
-        fill="none"
-        stroke="#c59a42"
-        stroke-width="2.4"
-        stroke-linecap="round"
-      />
+            </linearGradient>
 
-      <path
-        d="M27 57v18M18 66h18"
-        stroke="#c59a42"
-        stroke-width="3"
-        stroke-linecap="round"
-      />
+          </defs>
 
-      <circle
-        cx="25"
-        cy="84"
-        r="4.2"
-        fill="#c59a42"
-      />
 
-    </svg>
+          <path
+            d="M42 8h35v8H61v57h27v11H42z"
+            fill="url(#liaraGold2)"
+          />
 
-  </span>
 
-  <span class="logo-word">
-    LIARA
-  </span>
+          <path
+            d="M61 68c5-19 16-32 34-40-1 16-8 29-25 39"
+            fill="none"
+            stroke="url(#liaraGold2)"
+            stroke-width="5"
+            stroke-linecap="round"
+          />
 
-  <small>
-    <span></span> PROFESSIONAL <span></span>
-  </small>
 
-</a>
+          <path
+            d="M65 68c12-9 20-18 25-29"
+            fill="none"
+            stroke="#c59a42"
+            stroke-width="2.4"
+            stroke-linecap="round"
+          />
 
-<nav>
 
-  <a href="#home">Home</a>
-  <a href="#products">Shop</a>
-  <a href="#categories">Categories</a>
-  <a href="#why-us">Why Liara</a>
-  <a href="#about">About</a>
-  <a href="account.html">My Account</a>
-  <a href="track-order.html">Track Order</a>
-  <a class="nav-cart" href="cart.html">Cart 🛒</a>
+          <path
+            d="M27 57v18M18 66h18"
+            stroke="#c59a42"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
 
-</nav>
-```
+
+          <circle
+            cx="25"
+            cy="84"
+            r="4.2"
+            fill="#c59a42"
+          />
+
+        </svg>
+
+      </span>
+
+
+      <span class="logo-word">
+        LIARA
+      </span>
+
+
+      <small>
+        <span></span> PROFESSIONAL <span></span>
+      </small>
+
+    </a>
+
+
+    <nav>
+
+      <a href="#home">Home</a>
+
+      <a href="#products">Shop</a>
+
+      <a href="#categories">Categories</a>
+
+      <a href="#why-us">Why Liara</a>
+
+      <a href="#about">About</a>
+
+      <a href="account.html">My Account</a>
+
+      <a href="track-order.html">Track Order</a>
+
+      <a class="nav-cart" href="cart.html">
+        Cart 🛒
+      </a>
+
+    </nav>
 
   </div>
+
 </header>
+
+
+<!-- =========================================
+     HERO
+     ========================================= -->
 
 <section id="home" class="hero">
 
+
   <div class="hero-content">
 
-```
-<div class="kicker">
-  LIARA PROFESSIONAL™ • ADVANCED HERBAL
-</div>
+    <div class="kicker">
+      LIARA PROFESSIONAL™ • ADVANCED HERBAL
+    </div>
 
-<h1>
-  Advanced
-  <span>Herbal Care.</span>
-</h1>
 
-<p>
-  Discover Liara Professional™ — a modern herbal beauty,
-  skincare and personal-care brand, thoughtfully created
-  with nature-inspired care for your everyday routine.
-</p>
+    <h1>
+      Advanced
+      <span>Herbal Care.</span>
+    </h1>
 
-<div class="hero-buttons">
 
-  <a href="#products" class="btn">
-    SHOP PRODUCTS
-  </a>
+    <p>
+      Discover Liara Professional™ — a modern herbal beauty,
+      skincare and personal-care brand, thoughtfully created
+      with nature-inspired care for your everyday routine.
+    </p>
 
-  <a href="#about" class="btn btn-light">
-    DISCOVER LIARA
-  </a>
 
-</div>
-```
+    <div class="hero-buttons">
 
-  </div>
+      <a href="#products" class="btn">
+        SHOP PRODUCTS
+      </a>
 
-  <div class="hero-product">
 
-```
-<div class="hero-product-card" id="heroProductVisual">
+      <a href="#about" class="btn btn-light">
+        DISCOVER LIARA
+      </a>
 
-  <div class="hero-slideshow" id="heroSlideshow">
-
-    <div class="hero-slide-loading">
-      Loading product...
     </div>
 
   </div>
 
-  <div
-    class="hero-slide-dots"
-    id="heroSlideDots">
-  </div>
 
-</div>
-```
+  <div class="hero-product">
+
+    <div
+      class="hero-product-card"
+      id="heroProductVisual">
+
+      <div
+        class="hero-slideshow"
+        id="heroSlideshow">
+
+        <div class="hero-slide-loading">
+          Loading product...
+        </div>
+
+      </div>
+
+
+      <div
+        class="hero-slide-dots"
+        id="heroSlideDots">
+      </div>
+
+    </div>
 
   </div>
 
 </section>
 
+
+<!-- =========================================
+     PRODUCTS
+     ========================================= -->
+
 <section id="products" class="section">
+
 
   <div class="heading">
 
-```
-<p>SHOP LIARA</p>
+    <p>
+      SHOP LIARA
+    </p>
 
-<h2>
-  Featured Products
-</h2>
 
-<div class="sub">
-  Choose your Liara essentials and discover products
-  made for modern everyday care.
-</div>
-```
+    <h2>
+      Featured Products
+    </h2>
+
+
+    <div class="sub">
+      Choose your Liara essentials and discover products
+      made for modern everyday care.
+    </div>
 
   </div>
+
 
   <div class="shopbar">
 
-```
-<span id="productCount">
-  Loading products...
-</span>
+    <span id="productCount">
+      Loading products...
+    </span>
 
-<a
-  href="#products"
-  class="btn"
-  style="min-height:38px;padding:10px 17px">
-  VIEW ALL
-</a>
-```
+
+    <a
+      href="#products"
+      class="btn"
+      style="min-height:38px;padding:10px 17px">
+
+      VIEW ALL
+
+    </a>
 
   </div>
+
 
   <div
     id="dynamicProducts"
     class="product-grid">
 
-```
-<div class="loading">
-  Loading products...
-</div>
-```
+    <div class="loading">
+      Loading products...
+    </div>
 
   </div>
 
 </section>
+
+
+<!-- =========================================
+     CATEGORIES
+     ========================================= -->
 
 <section
   id="categories"
   class="section categories">
 
+
   <div class="heading">
 
-```
-<p>SHOP BY CATEGORY</p>
+    <p>
+      SHOP BY CATEGORY
+    </p>
 
-<h2>
-  Find Your Care
-</h2>
-```
+
+    <h2>
+      Find Your Care
+    </h2>
 
   </div>
 
+
   <div class="category-grid">
 
-```
-<a class="category" href="#products">
-  <span>01</span>
-  <h3>Skincare</h3>
-  <p>
-    Explore skincare essentials for your routine.
-  </p>
-</a>
 
-<a class="category" href="#products">
-  <span>02</span>
-  <h3>Body Care</h3>
-  <p>
-    Everyday body and personal-care essentials.
-  </p>
-</a>
+    <a
+      class="category"
+      href="#products">
 
-<a class="category" href="#products">
-  <span>03</span>
-  <h3>Beauty Care</h3>
-  <p>
-    Thoughtful beauty products from Liara.
-  </p>
-</a>
-```
+      <span>
+        01
+      </span>
+
+      <h3>
+        Skincare
+      </h3>
+
+      <p>
+        Explore skincare essentials for your routine.
+      </p>
+
+    </a>
+
+
+    <a
+      class="category"
+      href="#products">
+
+      <span>
+        02
+      </span>
+
+      <h3>
+        Body Care
+      </h3>
+
+      <p>
+        Everyday body and personal-care essentials.
+      </p>
+
+    </a>
+
+
+    <a
+      class="category"
+      href="#products">
+
+      <span>
+        03
+      </span>
+
+      <h3>
+        Beauty Care
+      </h3>
+
+      <p>
+        Thoughtful beauty products from Liara.
+      </p>
+
+    </a>
 
   </div>
 
 </section>
+
+
+<!-- =========================================
+     WHY LIARA
+     ========================================= -->
 
 <section
   id="why-us"
   class="section why">
 
+
   <div class="heading">
 
-```
-<p>WHY LIARA</p>
+    <p>
+      WHY LIARA
+    </p>
 
-<h2>
-  Why Choose Liara?
-</h2>
-```
+
+    <h2>
+      Why Choose Liara?
+    </h2>
 
   </div>
+
 
   <div class="why-grid">
 
-```
-<div class="why-card">
 
-  <div class="icon">
-    01
-  </div>
+    <div class="why-card">
 
-  <h3>
-    Quality Focused
-  </h3>
+      <div class="icon">
+        01
+      </div>
 
-  <p>
-    We focus on thoughtful product development
-    and a consistent customer experience.
-  </p>
 
-</div>
+      <h3>
+        Quality Focused
+      </h3>
 
-<div class="why-card">
 
-  <div class="icon">
-    02
-  </div>
+      <p>
+        We focus on thoughtful product development
+        and a consistent customer experience.
+      </p>
 
-  <h3>
-    Advanced Herbal Care
-  </h3>
+    </div>
 
-  <p>
-    Nature-inspired care combined with a modern
-    approach to everyday beauty and personal care.
-  </p>
 
-</div>
+    <div class="why-card">
 
-<div class="why-card">
+      <div class="icon">
+        02
+      </div>
 
-  <div class="icon">
-    03
-  </div>
 
-  <h3>
-    Customer First
-  </h3>
+      <h3>
+        Advanced Herbal Care
+      </h3>
 
-  <p>
-    We aim to build trust through quality,
-    service and a refined shopping experience.
-  </p>
 
-</div>
-```
+      <p>
+        Nature-inspired care combined with a modern
+        approach to everyday beauty and personal care.
+      </p>
+
+    </div>
+
+
+    <div class="why-card">
+
+      <div class="icon">
+        03
+      </div>
+
+
+      <h3>
+        Customer First
+      </h3>
+
+
+      <p>
+        We aim to build trust through quality,
+        service and a refined shopping experience.
+      </p>
+
+    </div>
 
   </div>
 
 </section>
+
+
+<!-- =========================================
+     ABOUT / STORY
+     ========================================= -->
 
 <section
   id="about"
   class="story">
 
+
   <div class="story-inner">
 
-```
-<div>
 
-  <div class="kicker">
-    THE LIARA STORY
-  </div>
+    <div>
 
-  <h2>
-    Beauty With
-    <span>
-      Nature & Purpose.
-    </span>
-  </h2>
+      <div class="kicker">
+        THE LIARA STORY
+      </div>
 
-  <p>
-    Liara Professional™ is the consumer-facing
-    Advanced Herbal beauty, skincare and personal-care
-    brand by Liara Group Private Limited.
-  </p>
 
-  <p>
-    Our vision is to build a modern and trusted brand
-    around thoughtful development, herbal-inspired care,
-    quality and everyday self-care.
-  </p>
+      <h2>
 
-  <a
-    href="#products"
-    class="btn"
-    style="margin-top:12px;background:var(--gold);border-color:var(--gold)">
-    SHOP LIARA
-  </a>
+        Beauty With
 
-</div>
+        <span>
+          Nature & Purpose.
+        </span>
 
-<div class="story-card">
+      </h2>
 
-  <div>
 
-    <strong>01</strong>
+      <p>
+        Liara Professional™ is the consumer-facing
+        Advanced Herbal beauty, skincare and personal-care
+        brand by Liara Group Private Limited.
+      </p>
 
-    <h3>
-      Advanced Herbal Approach
-    </h3>
 
-    <p>
-      Nature-inspired ingredients with a modern
-      approach to personal care.
-    </p>
+      <p>
+        Our vision is to build a modern and trusted brand
+        around thoughtful development, herbal-inspired care,
+        quality and everyday self-care.
+      </p>
 
-  </div>
 
-  <div>
+      <a
+        href="#products"
+        class="btn"
+        style="margin-top:12px;background:var(--gold);border-color:var(--gold)">
 
-    <strong>02</strong>
+        SHOP LIARA
 
-    <h3>
-      Modern Beauty
-    </h3>
+      </a>
 
-    <p>
-      Care designed for contemporary everyday routines.
-    </p>
+    </div>
 
-  </div>
 
-  <div>
+    <div class="story-card">
 
-    <strong>03</strong>
 
-    <h3>
-      Growing With Customers
-    </h3>
+      <div>
 
-    <p>
-      Building Liara with trust and long-term
-      customer relationships.
-    </p>
+        <strong>
+          01
+        </strong>
 
-  </div>
 
-</div>
-```
+        <h3>
+          Advanced Herbal Approach
+        </h3>
+
+
+        <p>
+          Nature-inspired ingredients with a modern
+          approach to personal care.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <strong>
+          02
+        </strong>
+
+
+        <h3>
+          Modern Beauty
+        </h3>
+
+
+        <p>
+          Care designed for contemporary everyday routines.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <strong>
+          03
+        </strong>
+
+
+        <h3>
+          Growing With Customers
+        </h3>
+
+
+        <p>
+          Building Liara with trust and long-term
+          customer relationships.
+        </p>
+
+      </div>
+
+    </div>
 
   </div>
 
 </section>
+
+
+<!-- =========================================
+     FAQ
+     ========================================= -->
 
 <section
   class="section faq"
   id="faq">
 
+
   <div class="heading">
 
-```
-<p>FAQ</p>
+    <p>
+      FAQ
+    </p>
 
-<h2>
-  Questions, Answered.
-</h2>
-```
+
+    <h2>
+      Questions, Answered.
+    </h2>
 
   </div>
 
+
   <div class="faq-container">
 
-```
-<details>
 
-  <summary>
-    What is Liara Professional™?
-  </summary>
+    <details>
 
-  <p>
-    Liara Professional™ is an Advanced Herbal
-    beauty, skincare and personal-care brand
-    operated by Liara Group Private Limited.
-  </p>
+      <summary>
+        What is Liara Professional™?
+      </summary>
 
-</details>
+      <p>
+        Liara Professional™ is an Advanced Herbal
+        beauty, skincare and personal-care brand
+        operated by Liara Group Private Limited.
+      </p>
 
-<details>
+    </details>
 
-  <summary>
-    What products does Liara offer?
-  </summary>
 
-  <p>
-    Our collection focuses on beauty, skincare
-    and personal-care products with a modern
-    herbal-inspired approach.
-  </p>
+    <details>
 
-</details>
+      <summary>
+        What products does Liara offer?
+      </summary>
 
-<details>
+      <p>
+        Our collection focuses on beauty, skincare
+        and personal-care products with a modern
+        herbal-inspired approach.
+      </p>
 
-  <summary>
-    How can I check my order?
-  </summary>
+    </details>
 
-  <p>
-    Customers can use the My Account section
-    to access available account and order information.
-  </p>
 
-</details>
+    <details>
 
-<details>
+      <summary>
+        How can I check my order?
+      </summary>
 
-  <summary>
-    What is your return or refund policy?
-  </summary>
+      <p>
+        Customers can use the My Account section
+        to access available account and order information.
+      </p>
 
-  <p>
-    Please refer to the Refund / Return Policy
-    for the applicable terms and conditions.
-  </p>
+    </details>
 
-</details>
 
-<details>
+    <details>
 
-  <summary>
-    How can I contact Liara?
-  </summary>
+      <summary>
+        What is your return or refund policy?
+      </summary>
 
-  <p>
-    You can contact our team through
-    info@liara.co.in.
-  </p>
+      <p>
+        Please refer to the Refund / Return Policy
+        for the applicable terms and conditions.
+      </p>
 
-</details>
-```
+    </details>
+
+
+    <details>
+
+      <summary>
+        How can I contact Liara?
+      </summary>
+
+      <p>
+        You can contact our team through
+        info@liara.co.in.
+      </p>
+
+    </details>
 
   </div>
 
 </section>
 
+
+<!-- =========================================
+     CONTACT
+     ========================================= -->
+
 <section
   id="contact"
   class="contact">
 
+
   <div class="heading">
 
-```
-<p>GET IN TOUCH</p>
+    <p>
+      GET IN TOUCH
+    </p>
 
-<h2>
-  Let's Connect
-</h2>
-```
+
+    <h2>
+      Let's Connect
+    </h2>
 
   </div>
+
 
   <p>
     Have a question about Liara Professional?
     We'd love to hear from you.
   </p>
 
-<a
- class="contact-email"
- href="mailto:info@liara.co.in">
-[info@liara.co.in](mailto:info@liara.co.in) </a>
 
-<a
- href="mailto:info@liara.co.in"
- class="btn">
-CONTACT US </a>
+  <a
+    class="contact-email"
+    href="mailto:info@liara.co.in">
+
+    info@liara.co.in
+
+  </a>
+
+
+  <a
+    href="mailto:info@liara.co.in"
+    class="btn">
+
+    CONTACT US
+
+  </a>
 
 </section>
 
+
+<!-- =========================================
+     FOOTER
+     ========================================= -->
+
 <footer>
+
 
   <div class="footer-grid">
 
-```
-<div class="footer-brand">
 
-  <div class="footer-logo">
-    LIARA
+    <div class="footer-brand">
+
+      <div class="footer-logo">
+        LIARA
+      </div>
+
+
+      <p>
+        Liara Professional™ — Advanced Herbal beauty,
+        skincare and personal care focused on quality,
+        thoughtful development and modern everyday self-care.
+      </p>
+
+    </div>
+
+
+    <div>
+
+      <h4>
+        SHOP
+      </h4>
+
+
+      <a href="#products">
+        Products
+      </a>
+
+
+      <a href="account.html">
+        My Account
+      </a>
+
+
+      <a href="cart.html">
+        Shopping Cart
+      </a>
+
+    </div>
+
+
+    <div>
+
+      <h4>
+        COMPANY
+      </h4>
+
+
+      <a href="#about">
+        About Liara
+      </a>
+
+
+      <a href="#why-us">
+        Why Liara
+      </a>
+
+
+      <a href="#contact">
+        Contact
+      </a>
+
+    </div>
+
+
+    <div>
+
+      <h4>
+        INFORMATION
+      </h4>
+
+
+      <a href="privacy-policy.html">
+        Privacy Policy
+      </a>
+
+
+      <a href="terms.html">
+        Terms & Conditions
+      </a>
+
+
+      <a href="shipping-policy.html">
+        Shipping Policy
+      </a>
+
+
+      <a href="refund-policy.html">
+        Refund / Return Policy
+      </a>
+
+    </div>
+
   </div>
 
-  <p>
-    Liara Professional™ — Advanced Herbal beauty,
-    skincare and personal care focused on quality,
-    thoughtful development and modern everyday self-care.
-  </p>
-
-</div>
-
-<div>
-
-  <h4>SHOP</h4>
-
-  <a href="#products">
-    Products
-  </a>
-
-  <a href="account.html">
-    My Account
-  </a>
-
-  <a href="cart.html">
-    Shopping Cart
-  </a>
-
-</div>
-
-<div>
-
-  <h4>COMPANY</h4>
-
-  <a href="#about">
-    About Liara
-  </a>
-
-  <a href="#why-us">
-    Why Liara
-  </a>
-
-  <a href="#contact">
-    Contact
-  </a>
-
-</div>
-
-<div>
-
-  <h4>INFORMATION</h4>
-
-  <a href="privacy-policy.html">
-    Privacy Policy
-  </a>
-
-  <a href="terms.html">
-    Terms & Conditions
-  </a>
-
-  <a href="shipping-policy.html">
-    Shipping Policy
-  </a>
-
-  <a href="refund-policy.html">
-    Refund / Return Policy
-  </a>
-
-</div>
-```
-
-  </div>
 
   <div class="footer-bottom">
 
-```
-<span>
-  © 2026 Liara Group Private Limited.
-  All Rights Reserved.
-</span>
 
-<a
-  href="company-login.html"
-  class="admin-login-btn">
-  Admin Login
-</a>
-```
+    <span>
+      © 2026 Liara Group Private Limited.
+      All Rights Reserved.
+    </span>
+
+
+    <a
+      href="company-login.html"
+      class="admin-login-btn">
+
+      Admin Login
+
+    </a>
 
   </div>
 
 </footer>
 
+
+<!-- =========================================
+     SUPABASE
+     ========================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
@@ -1914,8 +2246,8 @@ function getProductPriceHtml(product){
 
 
   /*
-    Show original price only when
-    it is actually higher than sale price.
+    Original price will only show
+    when it is higher than sale price.
   */
 
   if(
@@ -1924,6 +2256,7 @@ function getProductPriceHtml(product){
   ){
 
     return `
+
       <div class="price-box">
 
         <span class="sale-price">
@@ -1935,12 +2268,14 @@ function getProductPriceHtml(product){
         </span>
 
       </div>
+
     `;
 
   }
 
 
   return `
+
     <div class="price-box">
 
       <span class="sale-price">
@@ -1948,6 +2283,7 @@ function getProductPriceHtml(product){
       </span>
 
     </div>
+
   `;
 
 }
@@ -2000,12 +2336,14 @@ async function addToCart(product){
 
   let cart = [];
 
+
   try{
 
     cart =
       JSON.parse(
         localStorage.getItem("cart") || "[]"
       );
+
 
     if(!Array.isArray(cart)){
       cart=[];
@@ -2043,6 +2381,7 @@ async function addToCart(product){
     JSON.stringify(cart)
   );
 
+
   window.location.href =
     "cart.html";
 
@@ -2077,12 +2416,14 @@ function buyNow(product){
 
 let heroSlideTimer = null;
 
+
 function renderHeroSlideshow(products){
 
   const box =
     document.getElementById(
       "heroSlideshow"
     );
+
 
   const dots =
     document.getElementById(
@@ -2158,8 +2499,10 @@ function renderHeroSlideshow(products){
     box.innerHTML =
       '<div class="hero-product-placeholder"><span>LIARA</span></div>';
 
+
     if(dots)
       dots.innerHTML = "";
+
 
     return;
 
@@ -2421,6 +2764,7 @@ async function loadHomepageProducts(){
       "dynamicProducts"
     );
 
+
   const count =
     document.getElementById(
       "productCount"
@@ -2463,6 +2807,7 @@ async function loadHomepageProducts(){
     const data =
       result.data;
 
+
     const error =
       result.error;
 
@@ -2479,6 +2824,7 @@ async function loadHomepageProducts(){
         "SUPABASE ERROR:",
         error
       );
+
 
       throw error;
 
@@ -2500,8 +2846,10 @@ async function loadHomepageProducts(){
       box.innerHTML =
         '<div class="empty">No products available right now.</div>';
 
+
       count.textContent =
         "0 products";
+
 
       return;
 
@@ -2539,12 +2887,6 @@ async function loadHomepageProducts(){
           );
 
 
-        const salePrice =
-          getSalePrice(
-            product
-          );
-
-
         const stock =
           getProductStock(
             product
@@ -2571,6 +2913,7 @@ async function loadHomepageProducts(){
           image
 
           ? `
+
             <img
               src="${escapeHtml(image)}"
               alt="${escapeHtml(name)}"
@@ -2580,12 +2923,19 @@ async function loadHomepageProducts(){
                 this.style.display='none';
               "
             >
+
           `
 
           : `
+
             <div class="hero-product-placeholder">
-              <span>LIARA</span>
+
+              <span>
+                LIARA
+              </span>
+
             </div>
+
           `;
 
 
@@ -2597,7 +2947,9 @@ async function loadHomepageProducts(){
 
           </div>
 
+
           <div class="product-info">
+
 
             <div class="product-name">
 
@@ -2665,6 +3017,7 @@ async function loadHomepageProducts(){
               : ""
 
             }
+
 
           </div>
 
@@ -2802,6 +3155,7 @@ document.addEventListener(
 );
 
 </script>
+
 
 </body>
 </html>
