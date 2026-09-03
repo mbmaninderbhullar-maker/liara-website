@@ -1838,7 +1838,7 @@ const DEFAULT_SETTINGS = {
     sales:{
         currency:"INR",
         taxEnabled:true,
-        gstRate:18, // GST rate; order detail shows GST as included in the stored grand total
+        gstRate:18, // GST rate extracted from the GST-inclusive website selling price
         discountEnabled:true,
         shippingEnabled:true,
         shippingCharge:0,
@@ -2007,9 +2007,11 @@ function productName(order){
 }
 
 
-function gstBreakdown(total){
+function gstBreakdown(total, rateOverride){
+    // Website prices are GST-inclusive. Example: ₹125 is the final customer price,
+    // not ₹125 + GST. This helper extracts the GST portion from that inclusive price.
     const settings = getSettings();
-    const rate = Number(settings?.sales?.gstRate ?? 18);
+    const rate = Number(rateOverride ?? settings?.sales?.gstRate ?? 18);
     const grand = Number(total || 0);
     if(!Number.isFinite(grand) || grand <= 0 || !Number.isFinite(rate) || rate < 0){
         return { rate: Math.max(0, rate || 0), taxable: grand > 0 ? grand : 0, gst: 0, total: grand };
@@ -2024,6 +2026,14 @@ function gstBreakdown(total){
     };
 }
 
+function gstInclusivePrice(price){
+    return Number(price || 0);
+}
+
+function gstInclusiveLabel(price, rateOverride){
+    const g = gstBreakdown(price, rateOverride);
+    return `₹${Number(g.total).toLocaleString("en-IN")} (GST ${g.rate}% included)`;
+}
 function productPrice(order){
 
     if(order.price != null){
@@ -2814,13 +2824,13 @@ function viewOrder(id){
         return `
         <div class="gst-breakup">
             <div><span>Taxable Amount</span><strong>${money(g.taxable)}</strong></div>
-            <div><span>GST (${g.rate}% included)</span><strong>${money(g.gst)}</strong></div>
+            <div><span>GST (${g.rate}% included in price)</span><strong>${money(g.gst)}</strong></div>
         </div>
 
         <div class="detail-total">
-            <span>Grand Total <small style="font-weight:600;color:#777;">(GST included)</small>:</span>
+            <span>Grand Total <small style="font-weight:600;color:#777;">(price includes GST)</small>:</span>
             <strong>${money(g.total)}</strong>
-        </div>`;
+        </div><div class="gst-inclusive-note">Website selling prices are final prices; GST is already included.</div>`;
     })()}
     `;
 
