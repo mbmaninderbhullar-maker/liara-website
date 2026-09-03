@@ -2708,6 +2708,27 @@ function viewOrder(id){
     const total =
         Number(order.total || 0);
 
+    // GST is already included in the product selling price.
+    // Use the stored sale subtotal (before shipping) so shipping is never taxed here.
+    const saleSubtotal = Number(
+        order.subtotal != null ? order.subtotal : total
+    );
+    const storedGST = Number(order.gst_amount);
+    const gstRate = Number(
+        order.gst_rate != null && Number(order.gst_rate) > 0
+            ? order.gst_rate
+            : getSettings().sales.gstRate || 0
+    );
+    const gstInfo = Number.isFinite(storedGST) && storedGST > 0
+        ? {
+            rate: gstRate,
+            taxable: Math.max(0, saleSubtotal - storedGST),
+            gst: storedGST,
+            total: saleSubtotal
+        }
+        : gstBreakdown(saleSubtotal, gstRate);
+    const shippingAmount = Math.max(0, total - saleSubtotal);
+
     const pay =
         payment(order);
 
@@ -2819,19 +2840,17 @@ function viewOrder(id){
 
     </div>
 
-    ${(() => {
-        const g = gstBreakdown(total);
-        return `
-        <div class="gst-breakup">
-            <div><span>Taxable Amount</span><strong>${money(g.taxable)}</strong></div>
-            <div><span>GST (${g.rate}% included in price)</span><strong>${money(g.gst)}</strong></div>
-        </div>
+    <div class="gst-breakup">
+        <div><span>Taxable Amount</span><strong>${money(gstInfo.taxable)}</strong></div>
+        <div><span>GST (${gstInfo.rate}% included in price)</span><strong>${money(gstInfo.gst)}</strong></div>
+        ${shippingAmount > 0 ? `<div><span>Shipping</span><strong>${money(shippingAmount)}</strong></div>` : ""}
+    </div>
 
-        <div class="detail-total">
-            <span>Grand Total <small style="font-weight:600;color:#777;">(price includes GST)</small>:</span>
-            <strong>${money(g.total)}</strong>
-        </div><div class="gst-inclusive-note">Website selling prices are final prices; GST is already included.</div>`;
-    })()}
+    <div class="detail-total">
+        <span>Grand Total <small style="font-weight:600;color:#777;">(GST included)</small>:</span>
+        <strong>${money(total)}</strong>
+    </div>
+    <div class="gst-inclusive-note">Website selling prices are final prices; GST is already included. GST is shown only as the included tax breakup.</div>
     `;
 
     document.getElementById(
@@ -7504,6 +7523,27 @@ function printCurrentOrder(){
     const total =
         Number(order.total || 0);
 
+    // GST is already included in the product selling price.
+    // Use the stored sale subtotal (before shipping) so shipping is never taxed here.
+    const saleSubtotal = Number(
+        order.subtotal != null ? order.subtotal : total
+    );
+    const storedGST = Number(order.gst_amount);
+    const gstRate = Number(
+        order.gst_rate != null && Number(order.gst_rate) > 0
+            ? order.gst_rate
+            : getSettings().sales.gstRate || 0
+    );
+    const gstInfo = Number.isFinite(storedGST) && storedGST > 0
+        ? {
+            rate: gstRate,
+            taxable: Math.max(0, saleSubtotal - storedGST),
+            gst: storedGST,
+            total: saleSubtotal
+        }
+        : gstBreakdown(saleSubtotal, gstRate);
+    const shippingAmount = Math.max(0, total - saleSubtotal);
+
     const pay =
         payment(order);
 
@@ -7653,16 +7693,25 @@ function printCurrentOrder(){
     ${
         settings.invoice.showGST
         ?
-        `<div style="text-align:right;margin-top:12px;font-size:11px">
-            GST configured: ${Number(settings.sales.gstRate)}%
+        `<div style="margin-top:16px;margin-left:auto;width:330px;border-top:1px solid #ddd;padding-top:10px;font-size:11px">
+            <div style="display:flex;justify-content:space-between;padding:3px 0">
+                <span>Taxable Amount</span>
+                <strong>${money(gstInfo.taxable)}</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0">
+                <span>GST (${gstInfo.rate}% included)</span>
+                <strong>${money(gstInfo.gst)}</strong>
+            </div>
+            ${shippingAmount > 0 ? `<div style="display:flex;justify-content:space-between;padding:3px 0"><span>Shipping</span><strong>${money(shippingAmount)}</strong></div>` : ""}
+            <div style="display:flex;justify-content:space-between;padding:7px 0 0;margin-top:5px;border-top:1px solid #ddd;font-size:13px">
+                <span><strong>Grand Total (GST Included)</strong></span>
+                <strong>${money(total)}</strong>
+            </div>
+            <div style="margin-top:6px;font-size:9px;color:#666">Selling price is GST-inclusive; GST is not added again.</div>
         </div>`
         :
-        ""
+        `<div class="print-total">Grand Total: ${money(total)}</div>`
     }
-
-    <div class="print-total">
-        Grand Total: ${money(total)}
-    </div>
 
     <div class="print-footer">
 
