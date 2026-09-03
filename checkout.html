@@ -249,6 +249,13 @@
     font-size:14px;
 }
 .summary-row.discount-row{color:#287a3e}
+.gst-inclusive-note{
+    margin-top:7px;
+    font-size:10px;
+    color:#777;
+    text-align:right;
+}
+
 
 @media (max-width: 800px) {
 
@@ -588,7 +595,7 @@ html, body {
                 </div>
 
                 <div class="summary-row">
-                    <span>GST</span>
+                    <span>GST (Included)</span>
                     <span>₹<span id="checkout-gst">0</span></span>
                 </div>
 
@@ -599,10 +606,14 @@ html, body {
 
             </div>
 
+            <div class="gst-inclusive-note">
+                Product selling prices already include GST. GST shown above is only the included tax breakup.
+            </div>
+
             <div class="total-box">
 
                 <span>
-                    Total
+                    Total <small style="font-size:11px;color:#777;font-weight:600;">(GST Included)</small>
                 </span>
 
                 <span>
@@ -1136,6 +1147,7 @@ function getProductDiscount(product, mrp, sale){
 }
 
 function getProductGST(product){
+    // This rate is used to extract GST from the GST-inclusive website price.
     const gst = Number(product?.gst_rate ?? product?.gst ?? 0);
     return Number.isFinite(gst) && gst > 0 ? gst : 0;
 }
@@ -1211,8 +1223,12 @@ function calculateCheckoutTotals(){
         discountTotal += discount * qty;
         subtotal += sale * qty;
 
-        if(taxEnabled){
-            gstTotal += (sale * qty) * (gstRate / 100);
+        if(taxEnabled && gstRate > 0){
+            // Website selling price is GST-inclusive.
+            // Example: ₹125 at 18% GST = ₹105.93 taxable + ₹19.07 GST = ₹125 final.
+            const inclusiveAmount = sale * qty;
+            const taxableAmount = inclusiveAmount / (1 + gstRate / 100);
+            gstTotal += inclusiveAmount - taxableAmount;
         }
     });
 
@@ -1225,7 +1241,9 @@ function calculateCheckoutTotals(){
         }
     }
 
-    total = subtotal + gstTotal + shippingTotal;
+    // Sale prices already include GST, so GST is only a breakup here.
+    // Never add GST again to the customer/Razorpay total.
+    total = subtotal + shippingTotal;
 
     const mrpEl = document.getElementById("checkout-mrp-total");
     const discountEl = document.getElementById("checkout-discount");
@@ -1304,7 +1322,7 @@ async function renderCheckout(){
 
                     <p>
                         Qty ${productQuantity}
-                        ${gstRate > 0 ? ` • GST ${money(gstRate)}%` : ""}
+                        ${gstRate > 0 ? ` • GST ${money(gstRate)}% included` : ""}
                     </p>
 
                     ${hsnCode
@@ -2084,7 +2102,7 @@ async function saveOrderToDatabase(statusText) {
             total:
                 total,
 
-            /* Invoice / GST data */
+            /* Invoice / GST data — selling prices are GST-inclusive */
             subtotal:
                 Number(subtotal || 0),
 
@@ -2422,7 +2440,7 @@ function openCustomerWhatsApp(orderNumber) {
         "Customer: " + customerName,
         "",
         "Sale Subtotal: ₹" + money(subtotal),
-        "GST: ₹" + money(gstTotal),
+        "GST Included: ₹" + money(gstTotal),
         "Shipping: " + (shippingTotal > 0 ? "₹" + money(shippingTotal) : "FREE"),
         "Total: ₹" + money(total),
         "Payment: " + payment,
