@@ -1464,6 +1464,18 @@ body{
 </style>
 
 <style>
+/* ORDER STATUS ACTIONS */
+#orders-section .order-actions{display:flex;flex-wrap:wrap;gap:5px;min-width:260px}
+#orders-section .order-status-btn{border:0;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:10px;font-weight:700;white-space:nowrap}
+#orders-section .order-confirm{background:#e8f3e9;color:#287a3e}
+#orders-section .order-packed{background:#f8f0dd;color:#987329}
+#orders-section .order-shipped{background:#e7eef8;color:#345f91}
+#orders-section .order-delivered{background:#e8f3e9;color:#237a45}
+#orders-section .order-cancel{background:#f7dddd;color:#a33}
+#orders-section .order-status-select{padding:8px 10px;border:1px solid #ddd;border-radius:7px;background:#fff;font-weight:700;font-size:11px}
+#orders-section .order-status-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+@media(max-width:700px){#orders-section .order-actions{min-width:220px}}
+
 /* ORDERS ONLY - compact header and summary cards */
 #orders-section .admin-header{padding:7px 9px!important;margin-bottom:7px!important}
 #orders-section .admin-header h2{font-size:15px!important;line-height:1.1!important;margin:0!important}
@@ -2521,15 +2533,20 @@ function renderOrders(orders){
             </td>
 
             <td>
-
-                <button
-                    class="table-btn view-btn"
-                    onclick="viewOrder(
-                        '${escapeHtml(String(order.id))}'
-                    )">
-                    👁 View
-                </button>
-
+                <div class="order-actions">
+                    <button class="table-btn view-btn"
+                        onclick="viewOrder('${escapeHtml(String(order.id))}')">👁 View</button>
+                    ${status.toLowerCase() !== 'confirmed' && status.toLowerCase() !== 'packed' && status.toLowerCase() !== 'shipped' && status.toLowerCase() !== 'delivered' && status.toLowerCase() !== 'cancelled'
+                        ? `<button class="order-status-btn order-confirm" onclick="updateOrderStatus('${escapeHtml(String(order.id))}','Confirmed')">✓ Confirm</button>` : ''}
+                    ${['pending','confirmed'].includes(status.toLowerCase())
+                        ? `<button class="order-status-btn order-packed" onclick="updateOrderStatus('${escapeHtml(String(order.id))}','Packed')">📦 Packed</button>` : ''}
+                    ${['confirmed','packed'].includes(status.toLowerCase())
+                        ? `<button class="order-status-btn order-shipped" onclick="updateOrderStatus('${escapeHtml(String(order.id))}','Shipped')">🚚 Ship</button>` : ''}
+                    ${['shipped'].includes(status.toLowerCase())
+                        ? `<button class="order-status-btn order-delivered" onclick="updateOrderStatus('${escapeHtml(String(order.id))}','Delivered')">✓ Delivered</button>` : ''}
+                    ${!['cancelled','delivered'].includes(status.toLowerCase())
+                        ? `<button class="order-status-btn order-cancel" onclick="updateOrderStatus('${escapeHtml(String(order.id))}','Cancelled')">✕ Cancel</button>` : ''}
+                </div>
             </td>
 
         </tr>
@@ -2851,12 +2868,69 @@ function viewOrder(id){
         <strong>${money(total)}</strong>
     </div>
     <div class="gst-inclusive-note">Website selling prices are final prices; GST is already included. GST is shown only as the included tax breakup.</div>
+
+    <div class="order-status-actions" style="margin-top:16px;padding:12px;background:#faf8f5;border:1px solid #eee5d5;border-radius:10px;">
+        <strong style="font-size:12px;">Update Order Status:</strong>
+        <select class="order-status-select" id="orderStatusSelect">
+            ${['Pending','Confirmed','Packed','Shipped','Delivered','Cancelled'].map(x=>`<option value="${x}" ${String(status).toLowerCase()===x.toLowerCase()?'selected':''}>${x}</option>`).join('')}
+        </select>
+        <button class="btn" style="padding:8px 11px;font-size:11px;" onclick="updateCurrentOrderStatus()">Update Status</button>
+    </div>
     `;
 
     document.getElementById(
         "orderModal"
     ).style.display = "flex";
 
+}
+
+async function updateCurrentOrderStatus(){
+    if(!currentOrder) return;
+    const select = document.getElementById("orderStatusSelect");
+    if(!select) return;
+    await updateOrderStatus(currentOrder.id, select.value, true);
+}
+
+async function updateOrderStatus(id, newStatus, fromModal=false){
+    const user = await checkAdmin();
+    if(!user) return;
+
+    const order = allOrders.find(x => String(x.id) === String(id));
+    if(!order) {
+        alert("Order not found.");
+        return;
+    }
+
+    const oldStatus = order.status || "Pending";
+    if(String(oldStatus).toLowerCase() === String(newStatus).toLowerCase()){
+        return;
+    }
+
+    if(newStatus === "Cancelled" && !confirm("Cancel this order?")) return;
+
+    const {data, error} = await supabaseClient
+        .from("orders")
+        .update({ status: newStatus })
+        .eq("id", id)
+        .select("*")
+        .single();
+
+    if(error){
+        alert("Status update failed: " + error.message);
+        return;
+    }
+
+    const updated = data || {...order, status:newStatus};
+    const index = allOrders.findIndex(x => String(x.id) === String(id));
+    if(index >= 0) allOrders[index] = updated;
+    currentOrder = updated;
+
+    updateOrderSummary(allOrders);
+    applyOrderFilters();
+
+    if(fromModal){
+        viewOrder(id);
+    }
 }
 
 function closeOrderModal(){
