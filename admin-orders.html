@@ -1519,6 +1519,31 @@ body{
     .product-card-arrow{width:30px;height:30px}
 }
 </style>
+
+<style id="liara-live-delivery-photo-fix">
+.shipway-live-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:7px 10px;border:1px solid #d8eadb;border-radius:8px;
+    background:#f3fbf4;color:#287a3e;font-size:11px;font-weight:800;
+}
+#deliveryTable .data-table{min-width:1250px}
+#deliveryTable .shipway-status-cell small{font-size:9px}
+.photo-preview{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(100px,1fr))!important;
+    gap:10px!important;
+    margin-top:15px!important;
+}
+.photo-preview .existing-photo-item{display:block!important}
+.photo-preview img{
+    width:100%!important;height:120px!important;
+    object-fit:cover!important;border-radius:9px!important;
+}
+@media(max-width:800px){
+    .photo-preview{grid-template-columns:repeat(2,1fr)!important}
+}
+</style>
+
 </head>
 
 <body>
@@ -4411,13 +4436,45 @@ function previewEditPhoto(event){
 
 async function uploadAdditionalProductPhotos(files){
     const urls = [];
-    for(const file of [...files].slice(0,4)){
-        const extension = file.name.split(".").pop().toLowerCase();
-        const filePath = "products/" + Date.now() + "-" + Math.random().toString(36).substring(2) + "." + extension;
-        const upload = await supabaseClient.storage.from(IMAGE_BUCKET).upload(filePath,file,{cacheControl:"3600",upsert:false});
+    const selected = [...(files || [])].slice(0,4);
+
+    for(let i=0;i<selected.length;i++){
+        const file = selected[i];
+        if(!file || !file.type || !file.type.startsWith("image/")){
+            throw new Error("Sirf image files upload karo.");
+        }
+
+        const extension = (file.name.split(".").pop() || "jpg")
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g,"");
+
+        const filePath =
+            "products/" +
+            Date.now() + "-" +
+            i + "-" +
+            Math.random().toString(36).slice(2) +
+            "." + (extension || "jpg");
+
+        const upload = await supabaseClient.storage
+            .from(IMAGE_BUCKET)
+            .upload(filePath,file,{
+                cacheControl:"3600",
+                upsert:false,
+                contentType:file.type
+            });
+
         if(upload.error) throw new Error(upload.error.message);
-        urls.push(supabaseClient.storage.from(IMAGE_BUCKET).getPublicUrl(filePath).data.publicUrl);
+
+        const publicUrl =
+            supabaseClient.storage
+                .from(IMAGE_BUCKET)
+                .getPublicUrl(filePath)
+                .data.publicUrl;
+
+        if(!publicUrl) throw new Error("Uploaded photo URL generate nahi hoya.");
+        urls.push(publicUrl);
     }
+
     return urls;
 }
 
@@ -4437,8 +4494,7 @@ async function saveEditedProduct(id){
     const keyIngredients = document.getElementById("editProductKeyIngredientsInput").value.trim();
     const howToUse = document.getElementById("editProductHowToUseInput").value.trim();
     const benefits = document.getElementById("editProductBenefitsInput").value.trim();
-    const files = document.getElementById("editProductPhotoInput").files;
-    const file = files[0];
+    const files = [...(document.getElementById("editProductPhotoInput").files || [])].slice(0,4);
     const status = document.getElementById("editUploadStatus");
 
     if(!name){
@@ -4501,10 +4557,11 @@ async function saveEditedProduct(id){
             }
         }
 
-        const imageUrl = selectedPhotoUrls[0] || oldProduct.image_url || null;
-        const imageUrl2 = selectedPhotoUrls[1] || oldProduct.image_url_2 || null;
-        const imageUrl3 = selectedPhotoUrls[2] || oldProduct.image_url_3 || null;
-        const imageUrl4 = selectedPhotoUrls[3] || oldProduct.image_url_4 || null;
+        const replacingPhotos = files.length > 0;
+        const imageUrl  = replacingPhotos ? (selectedPhotoUrls[0] || null) : (oldProduct.image_url || null);
+        const imageUrl2 = replacingPhotos ? (selectedPhotoUrls[1] || null) : (oldProduct.image_url_2 || null);
+        const imageUrl3 = replacingPhotos ? (selectedPhotoUrls[2] || null) : (oldProduct.image_url_3 || null);
+        const imageUrl4 = replacingPhotos ? (selectedPhotoUrls[3] || null) : (oldProduct.image_url_4 || null);
 
         status.innerText = "Saving changes...";
 
@@ -4928,10 +4985,9 @@ async function saveProduct(){
             "productBenefitsInput"
         ).value.trim();
 
-    const files =
-        document.getElementById(
-            "productPhotoInput"
-        ).files;
+    const files = [
+        ...(document.getElementById("productPhotoInput")?.files || [])
+    ].slice(0,4);
 
     const variants = collectProductVariants();
     if(variants === null) return;
@@ -4940,8 +4996,6 @@ async function saveProduct(){
         alert("Maximum 4 photos upload karo.");
         return;
     }
-
-    const file = files[0];
 
     const status =
         document.getElementById(
@@ -4969,7 +5023,7 @@ async function saveProduct(){
     if(!Number.isFinite(discount) || discount < 0 || discount > 100){ alert("Valid discount pao."); return; }
     if(!Number.isFinite(gstRate) || gstRate < 0 || gstRate > 100){ alert("Valid GST rate pao."); return; }
 
-    if(!file){
+    if(!files.length){
 
         alert("Product photo upload karo.");
         return;
@@ -4982,68 +5036,24 @@ async function saveProduct(){
     if(!user) return;
 
     status.innerText =
-        "Uploading photo...";
+        "Uploading product photos...";
 
     try{
 
-        const extension =
-            file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
+        const selectedPhotoUrls =
+            await uploadAdditionalProductPhotos(files);
 
-        const fileName =
-            Date.now() +
-            "-" +
-            Math.random()
-            .toString(36)
-            .substring(2) +
-            "." +
-            extension;
-
-        const filePath =
-            "products/" +
-            fileName;
-
-        const upload =
-            await supabaseClient
-            .storage
-            .from(IMAGE_BUCKET)
-            .upload(
-                filePath,
-                file,
-                {
-                    cacheControl:"3600",
-                    upsert:false
-                }
-            );
-
-        if(upload.error){
-
-            alert(
-                "Photo upload failed:\n\n" +
-                upload.error.message
-            );
-
-            return;
-
+        if(!selectedPhotoUrls.length){
+            throw new Error("Product photos upload nahi hoyian.");
         }
 
         status.innerText =
             "Saving product...";
 
-        const publicData =
-            supabaseClient
-            .storage
-            .from(IMAGE_BUCKET)
-            .getPublicUrl(filePath);
-
-        const imageUrl =
-            publicData.data.publicUrl;
-
-        const extraPhotoUrls = files.length > 1
-            ? await uploadAdditionalProductPhotos(files.slice(1))
-            : [];
+        const imageUrl  = selectedPhotoUrls[0] || null;
+        const imageUrl2 = selectedPhotoUrls[1] || null;
+        const imageUrl3 = selectedPhotoUrls[2] || null;
+        const imageUrl4 = selectedPhotoUrls[3] || null;
 
         const insert =
             await supabaseClient
@@ -5064,9 +5074,9 @@ async function saveProduct(){
                 how_to_use:howToUse,
                 benefits:benefits,
                 image_url:imageUrl,
-                image_url_2:extraPhotoUrls[0] || null,
-                image_url_3:extraPhotoUrls[1] || null,
-                image_url_4:extraPhotoUrls[2] || null,
+                image_url_2:imageUrl2,
+                image_url_3:imageUrl3,
+                image_url_4:imageUrl4,
                 variants:variants
 
             });
@@ -5341,94 +5351,73 @@ async function loadCustomers(){
 ========================================================= */
 
 async function loadDelivery(){
-
-    document.getElementById(
-        "other-content"
-    ).innerHTML = `
-
+    document.getElementById("other-content").innerHTML = `
     <div class="admin-box">
-
         <div class="admin-header">
-
             <div>
                 <p>DELIVERY MANAGEMENT</p>
-                <h2>🚚 Delivery Tracking</h2>
+                <h2>🚚 Live Shipway Tracking</h2>
+                <small style="color:#777">Live status pulled from Shipway for every active shipment.</small>
             </div>
-
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-                <span class="shipway-live-badge">🟢 SHIPWAY AUTO SYNC</span>
-                <button class="btn" onclick="syncShipwayStatuses({refresh:true})">
-                    🔄 Sync Now
-                </button>
-                <button class="btn" onclick="loadDelivery()">
-                    Refresh
-                </button>
+                <span class="shipway-live-badge">🟢 LIVE SHIPWAY</span>
+                <button class="btn" onclick="loadDelivery()">🔄 Refresh Live</button>
             </div>
-
         </div>
-
+        <div id="deliveryLiveNote" style="margin:-8px 0 14px;color:#777;font-size:11px"></div>
         <div id="deliveryTable">
-            <div class="message">
-                Loading delivery orders...
-            </div>
+            <div class="message">Fetching live Shipway tracking...</div>
         </div>
-
     </div>
     `;
 
-    const user =
-        await checkAdmin();
-
+    const user = await checkAdmin();
     if(!user) return;
 
-    const {data,error} =
-        await supabaseClient
+    const {data,error} = await supabaseClient
         .from("orders")
         .select("*")
-        .order(
-            "created_at",
-            {ascending:false}
-        );
+        .order("created_at",{ascending:false});
 
     if(error){
-
-        document.getElementById(
-            "deliveryTable"
-        ).innerHTML = `
-            <div class="message error">
-                ${escapeHtml(error.message)}
-            </div>
-        `;
-
+        document.getElementById("deliveryTable").innerHTML =
+            `<div class="message error">${escapeHtml(error.message)}</div>`;
         return;
-
     }
 
-    const deliveryOrders =
-        (data || []).filter(order=>{
+    const activeOrders = (data || []).filter(order=>{
+        const s = String(order.status || "").toLowerCase();
+        return s !== "delivered" && s !== "cancelled";
+    });
 
-            const status =
-                String(
-                    order.status || "Pending"
-                ).toLowerCase();
-
-            return status !== "delivered" &&
-                   status !== "cancelled";
-
-        });
-
-    if(!deliveryOrders.length){
-
-        document.getElementById(
-            "deliveryTable"
-        ).innerHTML = `
-            <div class="message">
-                No active delivery orders.
-            </div>
-        `;
-
+    if(!activeOrders.length){
+        document.getElementById("deliveryTable").innerHTML =
+            `<div class="message">No active delivery orders.</div>`;
         return;
+    }
 
+    document.getElementById("deliveryLiveNote").textContent =
+        "Checking Shipway live status…";
+
+    const liveOrders = [];
+
+    for(const order of activeOrders){
+        let live = null;
+        try{
+            const {data:result,error:fnError} =
+                await supabaseClient.functions.invoke(
+                    "shipway-track-order",
+                    { body:{ order_id: order.order_number || order.id } }
+                );
+
+            if(!fnError && result?.success){
+                live = result;
+            }
+        }catch(err){
+            console.warn("Shipway live tracking failed:",err);
+        }
+
+        liveOrders.push({order,live});
     }
 
     let html = `
@@ -5438,93 +5427,83 @@ async function loadDelivery(){
     <tr>
         <th>ORDER ID</th>
         <th>CUSTOMER</th>
-        <th>MOBILE</th>
         <th>PRODUCT</th>
-        <th>ADDRESS</th>
-        <th>STATUS</th>
+        <th>AWB</th>
+        <th>COURIER</th>
+        <th>LIVE SHIPWAY STATUS</th>
+        <th>LOCATION</th>
+        <th>UPDATED</th>
         <th>ACTION</th>
     </tr>
     </thead>
-    <tbody>
-    `;
+    <tbody>`;
 
-    deliveryOrders.forEach(order=>{
+    liveOrders.forEach(({order,live})=>{
+        const liveStatus =
+            live?.status ||
+            live?.normalized_status ||
+            live?.tracking_status ||
+            order.shipping_status ||
+            order.status ||
+            "Pending";
 
-        const address =
-            order.address ||
-            order.shipping_address ||
-            order.delivery_address ||
-            "-";
+        const awb =
+            live?.awb ||
+            live?.tracking_number ||
+            order.awb ||
+            order.tracking_number ||
+            "—";
+
+        const courier =
+            live?.courier_name ||
+            live?.courier ||
+            order.courier_name ||
+            "—";
+
+        const location =
+            live?.tracking_location ||
+            live?.location ||
+            "—";
+
+        const updated =
+            live?.tracking_updated_at ||
+            live?.updated_at ||
+            order.tracking_updated_at ||
+            "";
+
+        const updatedText = updated
+            ? new Date(updated).toLocaleString("en-IN")
+            : "Live checked now";
 
         html += `
         <tr>
-
+            <td><strong>${escapeHtml(order.order_number || shortOrderId(order.id))}</strong></td>
+            <td>${escapeHtml(order.customer_name || order.name || "—")}</td>
+            <td class="product-name">${escapeHtml(productName(order))}</td>
+            <td><strong>${escapeHtml(String(awb))}</strong></td>
+            <td>${escapeHtml(String(courier))}</td>
             <td>
-                <strong>
-                    ${escapeHtml(
-                        shortOrderId(order.id)
-                    )}
-                </strong>
+                <div class="shipway-status-cell">
+                    ${statusBadge(liveStatus)}
+                    ${live
+                        ? `<small style="color:#287a3e;font-weight:700">● LIVE FROM SHIPWAY</small>`
+                        : `<small class="shipway-awb">Shipway response unavailable</small>`}
+                </div>
             </td>
-
+            <td>${escapeHtml(String(location))}</td>
+            <td style="white-space:nowrap;font-size:10px">${escapeHtml(updatedText)}</td>
             <td>
-                ${escapeHtml(
-                    order.customer_name ||
-                    order.name ||
-                    "-"
-                )}
+                <button class="table-btn view-btn"
+                    onclick="viewOrder('${escapeHtml(String(order.id))}')">View</button>
             </td>
-
-            <td>
-                ${escapeHtml(
-                    order.phone ||
-                    order.mobile ||
-                    "-"
-                )}
-            </td>
-
-            <td class="product-name">
-                ${escapeHtml(productName(order))}
-            </td>
-
-            <td>${escapeHtml(address)}</td>
-
-            <td>${statusBadge(order.status)}</td>
-
-            <td>
-                <button
-                    class="table-btn view-btn"
-                    onclick="viewOrder(
-                        '${escapeHtml(String(order.id))}'
-                    )">
-                    View
-                </button>
-            </td>
-
-        </tr>
-        `;
-
+        </tr>`;
     });
 
-    html += `
-    </tbody>
-    </table>
-    </div>
-    `;
-
-    document.getElementById(
-        "deliveryTable"
-    ).innerHTML = html;
-
-    // Keep Delivery section aligned with Shipway.
-    setTimeout(()=>{
-        syncShipwayStatuses({
-            refresh:false
-        }).then(()=>{
-            loadDelivery();
-        });
-    },300);
-
+    html += `</tbody></table></div>`;
+    document.getElementById("deliveryTable").innerHTML = html;
+    document.getElementById("deliveryLiveNote").textContent =
+        "Last live check: " + new Date().toLocaleString("en-IN") +
+        " • Shipway is the status source.";
 }
 
 /* =========================================================
