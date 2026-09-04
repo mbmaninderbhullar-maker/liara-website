@@ -819,42 +819,6 @@ html, body {
 
                 </div>
 
-
-
-                <!-- PAYMENT -->
-
-                <div class="form-group">
-
-                    <label>
-                        Payment Method
-                    </label>
-
-                    <select id="payment">
-
-                        <option value="">
-                            Select Payment Method
-                        </option>
-
-                        <option value="Cash on Delivery">
-                            Cash on Delivery
-                        </option>
-
-                        <option value="Online Payment">
-                            Online Payment
-                        </option>
-
-                    </select>
-
-                    <div
-                        id="paymentError"
-                        class="field-error-message">
-
-                    </div>
-
-                </div>
-
-
-
                 <!-- BUTTON -->
 
                 <button
@@ -1102,21 +1066,10 @@ function getPaymentPopupCharge(subtotalValue, paymentMethod){
 }
 
 function syncPopupPaymentOnCheckout(){
-    const paymentElement = document.getElementById("payment");
     const shippingElement = document.getElementById("checkout-shipping");
     const shippingLabel = document.getElementById("checkout-shipping-label");
 
-    if(!paymentElement) return;
-
     const saved = getSavedBuyNowPayment();
-
-    if(checkoutMode === "buyNow" && saved.method){
-        paymentElement.value = saved.method;
-
-        /* Keep customer from changing the popup decision here.
-           This guarantees the exact selected charge remains intact. */
-        paymentElement.disabled = true;
-    }
 
     if(checkoutMode === "buyNow" && saved.charge !== null){
         shippingTotal = saved.charge;
@@ -1543,16 +1496,7 @@ document.addEventListener(
                     data.pincode;
 
             }
-
-
-            if(data.payment !== undefined) {
-
-                document.getElementById("payment").value =
-                    data.payment;
-
-            }
-
-            /* Restore product-page popup payment choice for Buy Now. */
+/* Restore product-page popup payment choice for Buy Now. */
             syncPopupPaymentOnCheckout();
 
         }
@@ -1573,36 +1517,6 @@ document.addEventListener(
 /* =====================================================
    PAYMENT CHANGE / POPUP SYNC
 ===================================================== */
-
-const paymentSelect = document.getElementById("payment");
-
-if(paymentSelect){
-    paymentSelect.addEventListener("change", function(){
-
-        if(checkoutMode === "buyNow"){
-            /* Buy Now payment must remain exactly what was selected
-               on the product-page popup. */
-            const saved = getSavedBuyNowPayment();
-
-            if(saved.method){
-                this.value = saved.method;
-                this.disabled = true;
-            }
-
-            calculateCheckoutTotals();
-            return;
-        }
-
-        /* Cart checkout has no product-page popup selection,
-           so keep the existing Admin Settings shipping behavior. */
-        localStorage.setItem(
-            "liaraPaymentMethod",
-            this.value || ""
-        );
-
-        calculateCheckoutTotals();
-    });
-}
 
 /* =====================================================
    ERROR FUNCTIONS
@@ -1701,8 +1615,6 @@ const fields = [
     ["state","stateError"],
 
     ["pincode","pincodeError"],
-
-    ["payment","paymentError"]
 
 ];
 
@@ -2053,36 +1965,24 @@ function validateForm() {
 
 
 
-    /* PAYMENT */
+    /* PAYMENT FROM PAYMENT POPUP */
 
     const payment =
-        document.getElementById(
-            "payment"
-        ).value;
+        localStorage.getItem(
+            "liaraPaymentMethod"
+        ) || "";
 
-
-    if(payment === "") {
-
-        setError(
-            "payment",
-            "paymentError",
-            "Please select a payment method."
+    if(
+        payment !== "Cash on Delivery" &&
+        payment !== "Online Payment"
+    ){
+        showMessage(
+            "Please go back and select a payment method."
         );
-
-
         valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "payment"
-            );
-
     }
 
-
-
-    /* FOCUS FIRST ERROR */
+/* FOCUS FIRST ERROR */
 
     if(firstInvalid) {
 
@@ -2140,7 +2040,7 @@ async function saveOrderToDatabase(statusText) {
         document.getElementById("pincode").value.trim();
 
     const payment =
-        document.getElementById("payment").value;
+        localStorage.getItem("liaraPaymentMethod") || "";
 
 
     /* =====================================================
@@ -2594,7 +2494,7 @@ function openCustomerWhatsApp(orderNumber) {
         document.getElementById("name")?.value?.trim() || "Customer";
 
     const payment =
-        document.getElementById("payment")?.value || "Payment";
+        localStorage.getItem("liaraPaymentMethod") || "Payment";
 
     const lines = [
         "LIARA PROFESSIONAL™",
@@ -2901,7 +2801,7 @@ document.getElementById(
                     document.getElementById("pincode").value.trim(),
 
                 payment:
-                    document.getElementById("payment").value
+                    localStorage.getItem("liaraPaymentMethod") || ""
             };
 
 
