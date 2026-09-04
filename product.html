@@ -3793,6 +3793,9 @@ function showLiaraPaymentPopup(item){
     `;
 
     document.body.appendChild(popup);
+
+    // Keep the exact Buy Now item available until the customer selects a payment method.
+    window.liaraPendingBuyNowItem = item;
     selectLiaraPaymentMethod("cod");
 
     setTimeout(() => {
