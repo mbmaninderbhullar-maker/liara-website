@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Liara Professional™ | My Account</title>
 <meta name="theme-color" content="#0f0f0f">
-<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
@@ -616,23 +617,85 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
+let supabaseClient = null;
 let customerOrders = [];
 
-function money(v){
-  return "₹" +
-    Number(v || 0).toLocaleString("en-IN",{
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    });
+
+/* ---------------------------------------
+   SUPABASE CLIENT
+--------------------------------------- */
+
+function createSupabaseClient(){
+
+  if(
+    !window.supabase ||
+    typeof window.supabase.createClient !== "function"
+  ){
+    return null;
+  }
+
+  try{
+    return window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+  }catch(error){
+    console.error("Supabase client error:",error);
+    return null;
+  }
 }
 
+
+/* ---------------------------------------
+   TIMEOUT HELPER
+--------------------------------------- */
+
+function withTimeout(promise,ms){
+
+  return Promise.race([
+
+    promise,
+
+    new Promise((_,reject)=>{
+
+      setTimeout(
+        ()=>{
+          reject(
+            new Error(
+              "Request timed out. Please refresh the page."
+            )
+          );
+        },
+        ms
+      );
+
+    })
+
+  ]);
+
+}
+
+
+/* ---------------------------------------
+   BASIC HELPERS
+--------------------------------------- */
+
+function money(v){
+
+  return "₹" +
+    Number(v || 0).toLocaleString(
+      "en-IN",
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
+
+}
+
+
 function esc(v){
+
   return String(v ?? "").replace(
     /[&<>"']/g,
     m => ({
@@ -643,12 +706,20 @@ function esc(v){
       "'":"&#039;"
     }[m])
   );
+
 }
 
+
 function dateText(v){
+
   if(!v) return "—";
 
-  return new Date(v).toLocaleDateString(
+  const d = new Date(v);
+
+  if(isNaN(d.getTime()))
+    return "—";
+
+  return d.toLocaleDateString(
     "en-IN",
     {
       day:"2-digit",
@@ -656,30 +727,49 @@ function dateText(v){
       year:"numeric"
     }
   );
+
 }
 
+
 function statusClass(s){
+
   const x =
     String(s || "").toLowerCase();
 
   return x.includes("deliver")
     ? "delivered"
     : "";
+
 }
+
+
+/* ---------------------------------------
+   ORDER HELPERS
+--------------------------------------- */
 
 function getItems(order){
 
-  if(Array.isArray(order.items))
+  if(
+    Array.isArray(order.items) &&
+    order.items.length
+  ){
     return order.items;
+  }
 
   if(typeof order.items === "string"){
-    try{
-      const x = JSON.parse(order.items);
 
-      if(Array.isArray(x))
+    try{
+
+      const x =
+        JSON.parse(order.items);
+
+      if(Array.isArray(x) && x.length)
         return x;
 
-    }catch(e){}
+    }catch(e){
+      console.warn("Unable to parse items:",e);
+    }
+
   }
 
   return [{
@@ -687,25 +777,36 @@ function getItems(order){
     quantity:order.quantity || 1,
     sale_price:order.total || 0
   }];
+
 }
 
+
 function getTrackUrl(order){
+
   return order.shipway_tracking_url ||
          order.tracking_url ||
          "";
+
 }
 
+
 function getAwb(order){
+
   return order.shipway_awb ||
          order.shiprocket_awb ||
          "";
+
 }
 
+
 function getCourier(order){
+
   return order.shipway_courier_name ||
          order.courier_name ||
          "—";
+
 }
+
 
 function isActive(order){
 
@@ -719,73 +820,198 @@ function isActive(order){
   return !!getAwb(order) &&
          !s.includes("deliver") &&
          !s.includes("cancel");
+
 }
+
+
+/* ---------------------------------------
+   AUTH / INITIAL LOAD
+--------------------------------------- */
 
 async function init(){
 
-  const {data,error} =
-    await supabaseClient.auth.getUser();
+  const ordersBox =
+    document.getElementById("orders");
 
-  if(error || !data?.user){
+  const welcome =
+    document.getElementById("welcome");
 
-    document.getElementById("authButton")
-      .textContent = "Login";
+  const authButton =
+    document.getElementById("authButton");
 
-    document.getElementById("orders").innerHTML =
-      '<div class="error">' +
-      '<h3>Welcome to My Account</h3>' +
-      '<p>Please sign in to view your orders, invoices and shipment details.</p>' +
-      '<button class="btn btn-gold" onclick="openLogin()">Login</button>' +
-      '</div>';
+  try{
 
-    document.getElementById("welcome")
-      .textContent =
-      "Please sign in to view your orders.";
+    /* Make sure Supabase SDK loaded */
+    supabaseClient =
+      createSupabaseClient();
 
-    return;
-  }
+    if(!supabaseClient){
 
-  document.getElementById("authButton")
-    .textContent = "Sign Out";
+      throw new Error(
+        "Supabase library could not be loaded."
+      );
 
-  const user = data.user;
+    }
 
-  document.getElementById("welcome")
-    .textContent =
-    "Signed in as " +
-    (
-      user.user_metadata?.full_name ||
-      user.email ||
-      "Liara customer"
+
+    /*
+      IMPORTANT:
+      getUser() performs a network request.
+      Timeout prevents permanent Loading state.
+    */
+
+    const result =
+      await withTimeout(
+        supabaseClient.auth.getUser(),
+        12000
+      );
+
+    const user =
+      result?.data?.user || null;
+
+    const authError =
+      result?.error || null;
+
+
+    /* No logged-in user */
+    if(authError || !user){
+
+      authButton.textContent = "Login";
+
+      ordersBox.innerHTML =
+        '<div class="error">' +
+        '<h3>Welcome to My Account</h3>' +
+        '<p>Please sign in to view your orders, invoices and shipment details.</p>' +
+        '<button class="btn btn-gold" onclick="openLogin()">Login</button>' +
+        '</div>';
+
+      welcome.textContent =
+        "Please sign in to view your orders.";
+
+      document.getElementById("totalOrders")
+        .textContent = "0";
+
+      document.getElementById("totalSpent")
+        .textContent = money(0);
+
+      document.getElementById("activeShipments")
+        .textContent = "0";
+
+      document.getElementById("orderCount")
+        .textContent = "0 orders";
+
+      return;
+    }
+
+
+    /* Logged in */
+    authButton.textContent =
+      "Sign Out";
+
+    welcome.textContent =
+      "Signed in as " +
+      (
+        user.user_metadata?.full_name ||
+        user.email ||
+        "Liara customer"
+      );
+
+
+    /*
+      Load only this user's orders.
+    */
+
+    const orderResult =
+      await withTimeout(
+
+        supabaseClient
+          .from("orders")
+          .select("*")
+          .eq("user_id",user.id)
+          .order(
+            "created_at",
+            {ascending:false}
+          ),
+
+        12000
+
+      );
+
+
+    const orders =
+      orderResult?.data || null;
+
+    const orderError =
+      orderResult?.error || null;
+
+
+    if(orderError){
+
+      console.error(
+        "Orders query error:",
+        orderError
+      );
+
+      ordersBox.innerHTML =
+        '<div class="error">' +
+        '<h3>Unable to load orders</h3>' +
+        '<p>' +
+        esc(
+          orderError.message ||
+          "Please refresh and try again."
+        ) +
+        '</p>' +
+        '<button class="btn btn-gold" onclick="location.reload()">Refresh</button>' +
+        '</div>';
+
+      document.getElementById("orderCount")
+        .textContent = "Unable to load";
+
+      return;
+    }
+
+
+    customerOrders =
+      Array.isArray(orders)
+        ? orders
+        : [];
+
+
+    renderOrders();
+
+  }catch(error){
+
+    console.error(
+      "My Account initialization error:",
+      error
     );
 
-  const {
-    data:orders,
-    error:orderError
-  } =
-    await supabaseClient
-      .from("orders")
-      .select("*")
-      .eq("user_id",user.id)
-      .order("created_at",{ascending:false});
+    authButton.textContent =
+      "Login";
 
-  if(orderError){
-
-    console.error(orderError);
-
-    document.getElementById("orders").innerHTML =
+    ordersBox.innerHTML =
       '<div class="error">' +
-      'Unable to load your orders right now.<br>' +
-      'Please refresh and try again.' +
+      '<h3>Unable to load My Account</h3>' +
+      '<p>' +
+      esc(
+        error?.message ||
+        "Something went wrong. Please refresh the page."
+      ) +
+      '</p>' +
+      '<button class="btn btn-gold" onclick="location.reload()">Refresh Page</button>' +
       '</div>';
 
-    return;
+    welcome.textContent =
+      "Please refresh and try again.";
+
   }
 
-  customerOrders = orders || [];
-
-  renderOrders();
 }
+
+
+/* ---------------------------------------
+   RENDER ORDERS
+--------------------------------------- */
 
 function renderOrders(){
 
@@ -806,19 +1032,22 @@ function renderOrders(){
       : "s"
     );
 
+
   document.getElementById("totalSpent")
     .textContent =
     money(
       customerOrders.reduce(
-        (a,o) =>
+        (a,o)=>
           a + Number(o.total || 0),
         0
       )
     );
 
+
   document.getElementById("activeShipments")
     .textContent =
     customerOrders.filter(isActive).length;
+
 
   if(!customerOrders.length){
 
@@ -832,17 +1061,24 @@ function renderOrders(){
     return;
   }
 
+
   box.innerHTML =
     customerOrders.map((o,i)=>{
 
-      const items = getItems(o);
-      const awb = getAwb(o);
-      const tracking = getTrackUrl(o);
+      const items =
+        getItems(o);
+
+      const awb =
+        getAwb(o);
+
+      const tracking =
+        getTrackUrl(o);
 
       const shippingStatus =
         o.shipping_status ||
         o.status ||
         "Order Received";
+
 
       return `
       <article class="order">
@@ -852,13 +1088,19 @@ function renderOrders(){
           <div>
 
             <div class="order-no">
-              ${esc(o.order_number || "LIARA ORDER")}
+              ${esc(
+                o.order_number ||
+                "LIARA ORDER"
+              )}
             </div>
 
             <div class="date">
               ${dateText(o.created_at)}
               ·
-              ${esc(o.payment_method || "Payment")}
+              ${esc(
+                o.payment_method ||
+                "Payment"
+              )}
             </div>
 
           </div>
@@ -888,6 +1130,7 @@ function renderOrders(){
                   </div>
 
                   <div class="product-meta">
+
                     Qty:
                     ${Number(
                       it.quantity ||
@@ -926,12 +1169,14 @@ function renderOrders(){
 
           </div>
 
+
           <div class="shipbox">
 
             <div class="ship-grid">
 
               <div class="ship-item">
                 <small>Shipment Tracking ID</small>
+
                 <strong class="awb">
                   ${esc(
                     awb ||
@@ -940,21 +1185,28 @@ function renderOrders(){
                 </strong>
               </div>
 
+
               <div class="ship-item">
                 <small>Courier</small>
+
                 <strong>
-                  ${esc(getCourier(o))}
+                  ${esc(
+                    getCourier(o)
+                  )}
                 </strong>
               </div>
 
+
               <div class="ship-item">
                 <small>Order Total</small>
+
                 <strong>
                   ${money(o.total)}
                 </strong>
               </div>
 
             </div>
+
 
             <div class="actions">
 
@@ -989,6 +1241,7 @@ function renderOrders(){
                 )
               }
 
+
               <button
                 class="btn btn-gold"
                 onclick="openInvoice(${i})"
@@ -1006,9 +1259,17 @@ function renderOrders(){
       `;
 
     }).join("");
+
 }
 
+
+/* ---------------------------------------
+   TRACKING
+--------------------------------------- */
+
 function trackByAwb(awb){
+
+  if(!awb) return;
 
   window.open(
     "https://app.shipway.com/track/" +
@@ -1016,7 +1277,9 @@ function trackByAwb(awb){
     "_blank",
     "noopener"
   );
+
 }
+
 
 /* ---------------------------------------
    ORDER TEXT PARSERS
@@ -1037,35 +1300,39 @@ function parseOrderAmount(text,label){
   return m
     ? Number(m[1])
     : 0;
+
 }
 
+
 /*
- IMPORTANT FIX:
+ IMPORTANT SHIPPING FIX
 
- Correct regex:
- /SHIPPING\s*₹?.../
+ Supports:
 
- NOT:
- /SHIPPING\\s*₹?.../
-
- This allows:
  SHIPPING ₹120
  SHIPPING ₹80
  SHIPPING ₹60
  SHIPPING ₹0
+
+ Also supports:
+
+ SHIPPING: ₹120
+ SHIPPING - ₹120
 */
 
 function parseOrderShipping(text){
 
   const m =
     String(text || "").match(
-      /SHIPPING\s*₹?\s*([0-9]+(?:\.[0-9]+)?)/i
+      /SHIPPING\s*(?:[:\-])?\s*₹?\s*([0-9]+(?:\.[0-9]+)?)/i
     );
 
   return m
     ? Number(m[1])
     : 0;
+
 }
+
 
 function parseOrderGstRate(text){
 
@@ -1077,34 +1344,51 @@ function parseOrderGstRate(text){
   return m
     ? Number(m[1])
     : 0;
+
 }
+
+
+/* ---------------------------------------
+   INVOICE ITEMS
+--------------------------------------- */
 
 function getInvoiceItems(order){
 
   if(
     Array.isArray(order.items) &&
     order.items.length
-  )
+  ){
     return order.items;
+  }
+
 
   const raw =
     String(order.product || "");
 
+
   const first =
-    raw.split(" | MRP TOTAL")[0].trim();
+    raw
+      .split(" | MRP TOTAL")[0]
+      .trim();
+
 
   const qtyMatch =
-    first.match(/×\s*(\d+)/);
+    first.match(
+      /×\s*(\d+)/
+    );
+
 
   const saleMatch =
     first.match(
       /SALE\s*₹\s*([0-9]+(?:\.[0-9]+)?)/i
     );
 
+
   const hsnMatch =
     first.match(
       /HSN\s*([A-Za-z0-9.-]+)/i
     );
+
 
   const name =
     (
@@ -1112,8 +1396,11 @@ function getInvoiceItems(order){
       "Liara Product"
     ).trim();
 
+
   return [{
+
     name,
+
     quantity:
       qtyMatch
       ? Number(qtyMatch[1])
@@ -1130,21 +1417,18 @@ function getInvoiceItems(order){
     hsn_code:
       hsnMatch
       ? hsnMatch[1]
-      : (order.hsn_code || "")
+      : (
+        order.hsn_code ||
+        ""
+      )
+
   }];
+
 }
+
 
 /* ---------------------------------------
    SHIPPING RESOLVER
-
-   Priority:
-   1. pricing.shipping
-   2. pricing.delivery_charge
-   3. order.shipping
-   4. order.delivery_charge
-   5. order.shipping_charge
-   6. order.delivery_charge_amount
-   7. SHIPPING ₹ amount from product text
 --------------------------------------- */
 
 function getInvoiceShipping(order){
@@ -1154,6 +1438,7 @@ function getInvoiceShipping(order){
     typeof order.pricing === "object"
       ? order.pricing
       : {};
+
 
   const candidates = [
 
@@ -1171,6 +1456,7 @@ function getInvoiceShipping(order){
 
   ];
 
+
   for(const value of candidates){
 
     if(
@@ -1179,17 +1465,31 @@ function getInvoiceShipping(order){
       String(value).trim() !== ""
     ){
 
-      const n = Number(value);
+      const n =
+        Number(value);
 
       if(Number.isFinite(n))
         return Math.max(0,n);
+
     }
+
   }
+
+
+  /*
+    If shipping is stored inside
+    product text, read it.
+
+    Example:
+    SHIPPING ₹120
+  */
 
   return parseOrderShipping(
     order.product || ""
   );
+
 }
+
 
 /* ---------------------------------------
    GST INVOICE
@@ -1200,8 +1500,12 @@ function openInvoice(index){
   const o =
     customerOrders[index];
 
+  if(!o) return;
+
+
   const items =
     getInvoiceItems(o);
+
 
   const p =
     o.pricing &&
@@ -1209,8 +1513,10 @@ function openInvoice(index){
       ? o.pricing
       : {};
 
+
   const raw =
     o.product || "";
+
 
   const parsedGst =
     parseOrderAmount(
@@ -1218,11 +1524,13 @@ function openInvoice(index){
       "GST"
     );
 
+
   const parsedDiscount =
     parseOrderAmount(
       raw,
       "DISCOUNT"
     );
+
 
   const parsedSubtotal =
     parseOrderAmount(
@@ -1230,8 +1538,10 @@ function openInvoice(index){
       "SALE SUBTOTAL"
     );
 
+
   const shipping =
     getInvoiceShipping(o);
+
 
   const gst =
     Number(
@@ -1241,6 +1551,7 @@ function openInvoice(index){
       0
     );
 
+
   const discount =
     Number(
       o.discount ||
@@ -1248,6 +1559,7 @@ function openInvoice(index){
       parsedDiscount ||
       0
     );
+
 
   const subtotal =
     Number(
@@ -1257,12 +1569,15 @@ function openInvoice(index){
       0
     );
 
+
   const hsn =
     o.hsn_code || "";
+
 
   const customer =
     o.customer_name ||
     "Customer";
+
 
   const address =
     o.shipping_address ||
@@ -1275,6 +1590,7 @@ function openInvoice(index){
     ]
     .filter(Boolean)
     .join(", ");
+
 
   document.getElementById(
     "invoiceContent"
@@ -1295,25 +1611,36 @@ function openInvoice(index){
 
       </div>
 
+
       <div>
 
         <b>Invoice Details</b>
 
         Order:
-        ${esc(o.order_number || "—")}<br>
+        ${esc(
+          o.order_number ||
+          "—"
+        )}<br>
 
         Date:
         ${dateText(o.created_at)}<br>
 
         Payment:
-        ${esc(o.payment_method || "—")}<br>
+        ${esc(
+          o.payment_method ||
+          "—"
+        )}<br>
 
         AWB:
-        ${esc(getAwb(o) || "—")}
+        ${esc(
+          getAwb(o) ||
+          "—"
+        )}
 
       </div>
 
     </div>
+
 
     <table>
 
@@ -1329,6 +1656,7 @@ function openInvoice(index){
 
       </thead>
 
+
       <tbody>
 
         ${
@@ -1341,6 +1669,7 @@ function openInvoice(index){
                 1
               );
 
+
             const price =
               Number(
                 it.sale_price ||
@@ -1348,11 +1677,13 @@ function openInvoice(index){
                 0
               );
 
+
             const rate =
               Number(
                 it.gst_rate ||
                 0
               );
+
 
             return `
 
@@ -1375,12 +1706,18 @@ function openInvoice(index){
                   )}
                 </td>
 
-                <td>${qty}</td>
-
-                <td>${rate}%</td>
+                <td>
+                  ${qty}
+                </td>
 
                 <td>
-                  ${money(price * qty)}
+                  ${rate}%
+                </td>
+
+                <td>
+                  ${money(
+                    price * qty
+                  )}
                 </td>
 
               </tr>
@@ -1394,22 +1731,32 @@ function openInvoice(index){
 
     </table>
 
+
     <div class="totals">
 
       <div class="total-line">
         <span>Sale Subtotal</span>
-        <b>${money(subtotal)}</b>
+        <b>
+          ${money(subtotal)}
+        </b>
       </div>
+
 
       <div class="total-line">
         <span>Discount</span>
-        <b>- ${money(discount)}</b>
+        <b>
+          - ${money(discount)}
+        </b>
       </div>
+
 
       <div class="total-line">
         <span>GST</span>
-        <b>${money(gst)}</b>
+        <b>
+          ${money(gst)}
+        </b>
       </div>
+
 
       <div class="total-line">
         <span>Shipping</span>
@@ -1422,16 +1769,21 @@ function openInvoice(index){
         </b>
       </div>
 
+
       <div class="total-line grand">
         <span>Total</span>
-        <b>${money(o.total)}</b>
+        <b>
+          ${money(o.total)}
+        </b>
       </div>
 
     </div>
 
+
     <p style="font-size:10px;color:#777;margin-top:28px">
       This invoice is generated from the order information stored with Liara Professional™.
     </p>
+
 
     <button
       class="btn btn-gold"
@@ -1443,10 +1795,13 @@ function openInvoice(index){
 
   `;
 
+
   document
     .getElementById("invoiceModal")
     .classList.add("show");
+
 }
+
 
 /* ---------------------------------------
    WHATSAPP
@@ -1457,22 +1812,34 @@ function shareOrderWhatsApp(index){
   const o =
     customerOrders[index];
 
+  if(!o) return;
+
+
   const items =
     getInvoiceItems(o);
+
 
   const lines = [
 
     "LIARA PROFESSIONAL™",
     "",
+
     "Order: " +
-      (o.order_number || "LIARA ORDER"),
+      (
+        o.order_number ||
+        "LIARA ORDER"
+      ),
 
     "Customer: " +
-      (o.customer_name || "Customer"),
+      (
+        o.customer_name ||
+        "Customer"
+      ),
 
     ""
 
   ];
+
 
   items.forEach(it=>{
 
@@ -1483,12 +1850,14 @@ function shareOrderWhatsApp(index){
         1
       );
 
+
     const price =
       Number(
         it.sale_price ||
         it.price ||
         0
       );
+
 
     lines.push(
       (
@@ -1504,14 +1873,17 @@ function shareOrderWhatsApp(index){
 
   });
 
+
   const raw =
     o.product || "";
+
 
   const p =
     o.pricing &&
     typeof o.pricing === "object"
       ? o.pricing
       : {};
+
 
   const subtotal =
     Number(
@@ -1524,6 +1896,7 @@ function shareOrderWhatsApp(index){
       0
     );
 
+
   const gst =
     Number(
       o.gst_amount ||
@@ -1535,20 +1908,25 @@ function shareOrderWhatsApp(index){
       0
     );
 
+
   const shipping =
     getInvoiceShipping(o);
 
+
   lines.push("");
+
 
   lines.push(
     "Sale Subtotal: " +
     money(subtotal)
   );
 
+
   lines.push(
     "GST: " +
     money(gst)
   );
+
 
   lines.push(
     "Shipping: " +
@@ -1559,16 +1937,20 @@ function shareOrderWhatsApp(index){
     )
   );
 
+
   lines.push(
     "Total: " +
     money(o.total)
   );
 
+
   lines.push("");
+
 
   lines.push(
     "Thank you for shopping with Liara Professional™."
   );
+
 
   window.open(
     "https://wa.me/?text=" +
@@ -1578,10 +1960,12 @@ function shareOrderWhatsApp(index){
     "_blank",
     "noopener"
   );
+
 }
 
+
 /* ---------------------------------------
-   MODALS
+   INVOICE MODAL
 --------------------------------------- */
 
 function closeInvoice(){
@@ -1589,23 +1973,35 @@ function closeInvoice(){
   document
     .getElementById("invoiceModal")
     .classList.remove("show");
+
 }
+
 
 document
   .getElementById("invoiceModal")
   .addEventListener(
     "click",
     e=>{
-      if(e.target.id === "invoiceModal")
+      if(
+        e.target.id ===
+        "invoiceModal"
+      ){
         closeInvoice();
+      }
     }
   );
+
+
+/* ---------------------------------------
+   LOGIN MODAL
+--------------------------------------- */
 
 function openLogin(){
 
   document
     .getElementById("loginModal")
     .classList.add("show");
+
 
   setTimeout(
     ()=>{
@@ -1615,22 +2011,31 @@ function openLogin(){
     },
     100
   );
+
 }
+
 
 function closeLogin(){
 
   document
     .getElementById("loginModal")
     .classList.remove("show");
+
 }
+
 
 function handleAuthButton(){
 
+  const button =
+    document.getElementById(
+      "authButton"
+    );
+
+
   if(
-    document
-      .getElementById("authButton")
-      ?.textContent
-      .trim() === "Sign Out"
+    button &&
+    button.textContent.trim() ===
+    "Sign Out"
   ){
 
     logout();
@@ -1640,9 +2045,39 @@ function handleAuthButton(){
     openLogin();
 
   }
+
 }
 
+
+/* ---------------------------------------
+   CUSTOMER LOGIN
+--------------------------------------- */
+
 async function customerLogin(){
+
+  if(!supabaseClient){
+
+    supabaseClient =
+      createSupabaseClient();
+
+  }
+
+
+  if(!supabaseClient){
+
+    const msg =
+      document.getElementById(
+        "loginMessage"
+      );
+
+    msg.textContent =
+      "Supabase connection is unavailable.";
+
+    msg.style.color = "#b33";
+
+    return;
+  }
+
 
   const email =
     document
@@ -1651,44 +2086,23 @@ async function customerLogin(){
       .trim()
       .toLowerCase();
 
+
   const password =
     document
       .getElementById("loginPassword")
       .value;
+
 
   const msg =
     document.getElementById(
       "loginMessage"
     );
 
+
   if(!email || !password){
 
     msg.textContent =
       "Please enter email and password.";
-
-    msg.style.color = "#b33";
-
-    return;
-  }
-
-  msg.textContent =
-    "Signing in...";
-
-  msg.style.color =
-    "#9a7028";
-
-  const {error} =
-    await supabaseClient.auth
-      .signInWithPassword({
-        email,
-        password
-      });
-
-  if(error){
-
-    msg.textContent =
-      error.message ||
-      "Login failed.";
 
     msg.style.color =
       "#b33";
@@ -1696,37 +2110,149 @@ async function customerLogin(){
     return;
   }
 
+
   msg.textContent =
-    "Login successful.";
+    "Signing in...";
 
   msg.style.color =
-    "#287a3e";
+    "#9a7028";
 
-  setTimeout(
-    ()=>location.reload(),
-    500
-  );
+
+  try{
+
+    const result =
+      await withTimeout(
+
+        supabaseClient.auth
+          .signInWithPassword({
+            email,
+            password
+          }),
+
+        12000
+
+      );
+
+
+    const error =
+      result?.error || null;
+
+
+    if(error){
+
+      msg.textContent =
+        error.message ||
+        "Login failed.";
+
+      msg.style.color =
+        "#b33";
+
+      return;
+    }
+
+
+    msg.textContent =
+      "Login successful.";
+
+    msg.style.color =
+      "#287a3e";
+
+
+    setTimeout(
+      ()=>{
+        location.reload();
+      },
+      500
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Login error:",
+      error
+    );
+
+
+    msg.textContent =
+      error?.message ||
+      "Login failed. Please try again.";
+
+    msg.style.color =
+      "#b33";
+
+  }
+
 }
+
 
 document
   .getElementById("loginModal")
   .addEventListener(
     "click",
     e=>{
-      if(e.target.id === "loginModal")
+      if(
+        e.target.id ===
+        "loginModal"
+      ){
         closeLogin();
+      }
     }
   );
 
+
+/* ---------------------------------------
+   LOGOUT
+--------------------------------------- */
+
 async function logout(){
 
-  await supabaseClient.auth.signOut();
+  try{
+
+    if(supabaseClient){
+
+      await withTimeout(
+        supabaseClient.auth.signOut(),
+        8000
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Logout error:",
+      error
+    );
+
+  }
+
 
   window.location.href =
     "index.html";
+
 }
 
-init();
+
+/* ---------------------------------------
+   START
+--------------------------------------- */
+
+if(
+  document.readyState ===
+  "loading"
+){
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    init
+  );
+
+}else{
+
+  init();
+
+}
 
 </script>
 
