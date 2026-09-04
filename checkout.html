@@ -827,6 +827,28 @@ html, body {
 
 
 
+                    <!-- PAYMENT METHOD (AUTO SELECTED FROM POPUP) -->
+
+                    <div class="form-group full-width">
+
+                        <label>
+                            Payment Method
+                        </label>
+
+                        <select id="payment" disabled>
+                            <option value="">Select Payment Method</option>
+                            <option value="Cash on Delivery">Cash on Delivery</option>
+                            <option value="Online Payment">Online Payment</option>
+                        </select>
+
+                        <div
+                            id="paymentError"
+                            class="field-error-message">
+                        </div>
+
+                    </div>
+
+
                     <!-- PIN -->
 
                     <div class="form-group full-width">
@@ -1115,6 +1137,13 @@ function getPaymentPopupCharge(subtotalValue, paymentMethod){
 function syncPopupPaymentOnCheckout(){
     const paymentMethod =
         getStoredPaymentMethod();
+
+    /* Automatically show the payment method selected in the
+       previous COD / Online Payment popup. */
+    const paymentSelect = document.getElementById("payment");
+    if(paymentSelect){
+        paymentSelect.value = paymentMethod || "";
+    }
     const shippingElement = document.getElementById("checkout-shipping");
     const shippingLabel = document.getElementById("checkout-shipping-label");
 
@@ -1747,6 +1776,15 @@ document.getElementById(
 
 
 
+/* Keep the visible payment selector synced with popup selection. */
+function syncVisiblePaymentMethod(){
+    const select = document.getElementById("payment");
+    if(!select) return;
+    select.value = getStoredPaymentMethod() || "";
+}
+
+syncVisiblePaymentMethod();
+
 /* =====================================================
    VALIDATE FORM
 ===================================================== */
@@ -2016,7 +2054,9 @@ function validateForm() {
 
     /* PAYMENT FROM PAYMENT POPUP */
 
+    const paymentSelect = document.getElementById("payment");
     const payment =
+        (paymentSelect && paymentSelect.value) ||
         getStoredPaymentMethod();
 
     if(
@@ -2932,10 +2972,13 @@ document.getElementById(
 
         try {
 
-            const payment =
-                localStorage.getItem(
-                    "liaraPaymentMethod"
-                ) || "";
+            const payment = getStoredPaymentMethod();
+
+            /* Keep the selected popup method available to every
+               checkout step and display it in the selector. */
+            localStorage.setItem("liaraPaymentMethod", payment);
+            const paymentSelect = document.getElementById("payment");
+            if(paymentSelect) paymentSelect.value = payment;
 
 
             /* =====================================================
