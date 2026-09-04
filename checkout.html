@@ -1050,6 +1050,18 @@ function money(value){
    selected in the product popup is authoritative.
 ===================================================== */
 
+function getStoredPaymentMethod(){
+    const raw = (localStorage.getItem("liaraPaymentMethod") || "").trim();
+
+    if(raw === "cod" || raw === "COD" || raw === "cash_on_delivery" || raw === "Cash on Delivery")
+        return "Cash on Delivery";
+
+    if(raw === "online" || raw === "Online" || raw === "online_payment" || raw === "Online Payment")
+        return "Online Payment";
+
+    return raw;
+}
+
 function getSavedBuyNowPayment(){
     if(checkoutMode !== "buyNow") return {
         method: "",
@@ -1057,7 +1069,7 @@ function getSavedBuyNowPayment(){
     };
 
     const method =
-        localStorage.getItem("liaraPaymentMethod") || "";
+        getStoredPaymentMethod();
 
     const rawCharge =
         localStorage.getItem("liaraDeliveryCharge");
@@ -1102,7 +1114,7 @@ function getPaymentPopupCharge(subtotalValue, paymentMethod){
 
 function syncPopupPaymentOnCheckout(){
     const paymentMethod =
-        localStorage.getItem("liaraPaymentMethod") || "";
+        getStoredPaymentMethod();
     const shippingElement = document.getElementById("checkout-shipping");
     const shippingLabel = document.getElementById("checkout-shipping-label");
 
@@ -2005,9 +2017,7 @@ function validateForm() {
     /* PAYMENT FROM PAYMENT POPUP */
 
     const payment =
-        localStorage.getItem(
-            "liaraPaymentMethod"
-        ) || "";
+        getStoredPaymentMethod();
 
     if(
         payment !== "Cash on Delivery" &&
@@ -2077,7 +2087,7 @@ async function saveOrderToDatabase(statusText) {
         document.getElementById("pincode").value.trim();
 
     const payment =
-        localStorage.getItem("liaraPaymentMethod") || "";
+        getStoredPaymentMethod();
 
 
     /* =====================================================
@@ -2531,7 +2541,7 @@ function openCustomerWhatsApp(orderNumber) {
         document.getElementById("name")?.value?.trim() || "Customer";
 
     const payment =
-        localStorage.getItem("liaraPaymentMethod") || "Payment";
+        getStoredPaymentMethod() || "Payment";
 
     const lines = [
         "LIARA PROFESSIONAL™",
@@ -2780,7 +2790,7 @@ document.getElementById(
         if(!validateForm()) {
 
             const selectedPayment =
-                localStorage.getItem("liaraPaymentMethod") || "";
+                getStoredPaymentMethod();
 
             if(
                 selectedPayment !== "Cash on Delivery" &&
@@ -2850,7 +2860,7 @@ document.getElementById(
                     document.getElementById("pincode").value.trim(),
 
                 payment:
-                    localStorage.getItem("liaraPaymentMethod") || ""
+                    getStoredPaymentMethod()
             };
 
 
