@@ -3694,25 +3694,131 @@ async function buyNow() {
     };
 
 
-    localStorage.setItem(
-        "liaraBuyNow",
-        JSON.stringify(
-            buyNowItem
-        )
-    );
-
-
-    localStorage.setItem(
-        "liaraCheckoutMode",
-        "buyNow"
-    );
-
-
-    window.location.href =
-        "checkout.html";
+    /* =====================================================
+       PAYMENT METHOD POPUP
+       Shows immediately after Buy Now and calculates charges
+       from the selected variant price × quantity.
+    ===================================================== */
+    showLiaraPaymentPopup(buyNowItem);
+    return;
 
 }
 
+
+/* =====================================================
+   BUY NOW PAYMENT METHOD POPUP
+===================================================== */
+function liaraMoney(value){
+    return "₹" + Number(value || 0).toLocaleString("en-IN");
+}
+
+function closeLiaraPaymentPopup(){
+    const popup = document.getElementById("liaraPaymentPopup");
+    if(popup) popup.remove();
+}
+
+function updateLiaraPaymentTotal(item, method){
+    const subtotal = Number(item.price || 0) * Number(item.quantity || 1);
+    let delivery = 0;
+    let chargeLabel = "FREE Delivery";
+
+    if(method === "cod"){
+        delivery = subtotal <= 999 ? 120 : 80;
+        chargeLabel = "COD Charge";
+    } else {
+        delivery = subtotal <= 499 ? 80 : 0;
+        chargeLabel = "Delivery Charge";
+    }
+
+    const deliveryEl = document.getElementById("liaraPopupDelivery");
+    const totalEl = document.getElementById("liaraPopupFinalTotal");
+    const labelEl = document.getElementById("liaraPopupChargeLabel");
+    const codBtn = document.getElementById("liaraPopupCOD");
+    const onlineBtn = document.getElementById("liaraPopupOnline");
+
+    if(deliveryEl) deliveryEl.textContent = delivery ? liaraMoney(delivery) : "FREE";
+    if(totalEl) totalEl.textContent = liaraMoney(subtotal + delivery);
+    if(labelEl) labelEl.textContent = chargeLabel;
+    if(codBtn) codBtn.classList.toggle("active", method === "cod");
+    if(onlineBtn) onlineBtn.classList.toggle("active", method === "online");
+
+    return { subtotal, delivery, total: subtotal + delivery };
+}
+
+function showLiaraPaymentPopup(item){
+    closeLiaraPaymentPopup();
+
+    const subtotal = Number(item.price || 0) * Number(item.quantity || 1);
+
+    const popup = document.createElement("div");
+    popup.id = "liaraPaymentPopup";
+    popup.innerHTML = `
+        <div class="liara-payment-overlay" onclick="if(event.target===this)closeLiaraPaymentPopup()">
+            <div class="liara-payment-modal" role="dialog" aria-modal="true" aria-labelledby="liaraPaymentTitle">
+                <button type="button" class="liara-payment-close" onclick="closeLiaraPaymentPopup()" aria-label="Close">×</button>
+
+                <div class="liara-payment-icon">💳</div>
+                <h2 id="liaraPaymentTitle">Choose Your Payment Method</h2>
+                <p class="liara-payment-subtitle">Select a payment method to see your final order total.</p>
+
+                <div class="liara-payment-options">
+                    <button type="button" id="liaraPopupCOD" class="liara-payment-option" onclick="selectLiaraPaymentMethod('cod')">
+                        <span class="liara-option-icon">💵</span>
+                        <span class="liara-option-content">
+                            <strong>Cash on Delivery</strong>
+                            <small>Orders up to ₹999 → ₹120 COD Charge<br>Orders above ₹999 → ₹80 COD Charge</small>
+                        </span>
+                    </button>
+
+                    <button type="button" id="liaraPopupOnline" class="liara-payment-option" onclick="selectLiaraPaymentMethod('online')">
+                        <span class="liara-option-icon">⚡</span>
+                        <span class="liara-option-content">
+                            <strong>Online Payment</strong>
+                            <small>Orders up to ₹499 → ₹80 Delivery Charge<br>Orders above ₹499 → FREE Delivery</small>
+                        </span>
+                    </button>
+                </div>
+
+                <div class="liara-payment-summary">
+                    <div><span>Order Total</span><strong>${liaraMoney(subtotal)}</strong></div>
+                    <div><span id="liaraPopupChargeLabel">Delivery Charge</span><strong id="liaraPopupDelivery">—</strong></div>
+                    <div class="liara-final-row"><span>Final Total</span><strong id="liaraPopupFinalTotal">—</strong></div>
+                </div>
+
+                <button type="button" id="liaraContinueCheckout" class="liara-continue-payment" disabled>
+                    Continue to Checkout
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+    selectLiaraPaymentMethod("cod");
+
+    setTimeout(() => {
+        document.getElementById("liaraContinueCheckout")?.focus();
+    }, 50);
+}
+
+function selectLiaraPaymentMethod(method){
+    const item = JSON.parse(localStorage.getItem("liaraBuyNow") || "null") || window.liaraPendingBuyNowItem;
+    if(!item) return;
+
+    const result = updateLiaraPaymentTotal(item, method);
+    const continueBtn = document.getElementById("liaraContinueCheckout");
+    if(continueBtn){
+        continueBtn.disabled = false;
+        continueBtn.onclick = function(){
+            localStorage.setItem("liaraBuyNow", JSON.stringify(item));
+            localStorage.setItem("liaraCheckoutMode", "buyNow");
+            localStorage.setItem("liaraPaymentMethod", method);
+            localStorage.setItem("liaraDeliveryCharge", String(result.delivery));
+            localStorage.setItem("liaraOrderSubtotal", String(result.subtotal));
+            localStorage.setItem("liaraOrderFinalTotal", String(result.total));
+            window.location.href = "checkout.html";
+        };
+    }
+}
 
 /* =====================================================
    START
@@ -3850,6 +3956,137 @@ document.addEventListener("DOMContentLoaded", function(){
     .product-mrp-cut{font-size:13px !important;}
     .product-sale-label{font-size:8px !important; padding:3px 6px !important;}
     .product-sale-price{font-size:21px !important;}
+}
+
+/* =====================================================
+   BUY NOW PAYMENT POPUP
+===================================================== */
+#liaraPaymentPopup .liara-payment-overlay{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:rgba(0,0,0,.58);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    backdrop-filter:blur(4px);
+}
+#liaraPaymentPopup .liara-payment-modal{
+    width:min(480px,100%);
+    max-height:92vh;
+    overflow:auto;
+    background:#fff;
+    border-radius:22px;
+    padding:25px;
+    position:relative;
+    box-shadow:0 25px 70px rgba(0,0,0,.25);
+    font-family:inherit;
+}
+#liaraPaymentPopup .liara-payment-close{
+    position:absolute;
+    top:10px;
+    right:12px;
+    border:0;
+    background:transparent;
+    font-size:29px;
+    line-height:1;
+    cursor:pointer;
+    color:#555;
+}
+#liaraPaymentPopup .liara-payment-icon{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:#faf3e6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:23px;
+    margin:0 auto 10px;
+}
+#liaraPaymentPopup h2{
+    margin:0;
+    text-align:center;
+    font-size:23px;
+    color:#222;
+}
+#liaraPaymentPopup .liara-payment-subtitle{
+    text-align:center;
+    color:#777;
+    font-size:13px;
+    margin:7px 20px 18px;
+}
+#liaraPaymentPopup .liara-payment-options{
+    display:grid;
+    gap:10px;
+}
+#liaraPaymentPopup .liara-payment-option{
+    width:100%;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    text-align:left;
+    border:1.5px solid #ddd;
+    background:#fff;
+    border-radius:14px;
+    padding:14px;
+    cursor:pointer;
+    transition:.18s ease;
+}
+#liaraPaymentPopup .liara-payment-option:hover,
+#liaraPaymentPopup .liara-payment-option.active{
+    border-color:#ad8232;
+    background:#fffaf2;
+    box-shadow:0 4px 14px rgba(173,130,50,.12);
+}
+#liaraPaymentPopup .liara-option-icon{font-size:23px;line-height:1.2;}
+#liaraPaymentPopup .liara-option-content{display:flex;flex-direction:column;gap:5px;}
+#liaraPaymentPopup .liara-option-content strong{font-size:15px;color:#222;}
+#liaraPaymentPopup .liara-option-content small{font-size:11.5px;line-height:1.55;color:#666;}
+#liaraPaymentPopup .liara-payment-summary{
+    margin-top:17px;
+    padding:13px 15px;
+    border-radius:13px;
+    background:#f8f8f8;
+}
+#liaraPaymentPopup .liara-payment-summary>div{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:5px 0;
+    color:#555;
+    font-size:13px;
+}
+#liaraPaymentPopup .liara-payment-summary strong{color:#222;}
+#liaraPaymentPopup .liara-payment-summary .liara-final-row{
+    margin-top:7px;
+    padding-top:10px;
+    border-top:1px solid #ddd;
+    font-size:16px;
+    color:#222;
+}
+#liaraPaymentPopup .liara-final-row strong{font-size:18px;color:#ad8232;}
+#liaraPaymentPopup .liara-continue-payment{
+    width:100%;
+    margin-top:14px;
+    min-height:46px;
+    border:0;
+    border-radius:12px;
+    background:#222;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+}
+#liaraPaymentPopup .liara-continue-payment:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+@media(max-width:480px){
+    #liaraPaymentPopup .liara-payment-modal{padding:21px 15px;border-radius:19px;}
+    #liaraPaymentPopup h2{font-size:20px;}
+    #liaraPaymentPopup .liara-option-content small{font-size:10.5px;}
 }
 </style>
 
