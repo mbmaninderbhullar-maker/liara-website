@@ -1,2929 +1,784 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liara Professional™ | Checkout</title>
-
 <link rel="stylesheet" href="style.css">
-
 <style>
-
-.checkout-section {
-    padding: 80px 8%;
-    background: #faf8f5;
-    min-height: 70vh;
-}
-
-.checkout-container {
-    max-width: 1100px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 35px;
-}
-
-.checkout-box {
-    background: white;
-    padding: 35px;
-    border-radius: 18px;
-    box-shadow: 0 10px 35px rgba(0,0,0,.08);
-}
-
-.checkout-box h3 {
-    margin: 0 0 25px;
-    font-size: 24px;
-}
-
-.order-summary {
-    border: 1px solid #eee;
-    padding: 22px;
-    border-radius: 14px;
-}
-
-.order-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding-bottom: 18px;
-    margin-bottom: 18px;
-    border-bottom: 1px solid #eee;
-}
-
-.order-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.order-item img {
-    width: 75px;
-    height: 75px;
-    object-fit: contain;
-    border-radius: 10px;
-    background: #f7f1e7;
-}
-
-.order-item h4 {
-    margin: 0 0 6px;
-}
-
-.order-item p {
-    margin: 0;
-    color: #666;
-}
-
-.order-mode {
-    display: inline-block;
-    margin-bottom: 18px;
-    padding: 7px 12px;
-    border-radius: 20px;
-    background: #f5f1e7;
-    color: #ad8232;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.total-box {
-    display: flex;
-    justify-content: space-between;
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.form-group {
-    margin-bottom: 19px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 7px;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 13px 15px;
-    border: 1px solid #ddd;
-    border-radius: 9px;
-    font-size: 15px;
-    box-sizing: border-box;
-    outline: none;
-    background: white;
-    transition: .2s;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #ad8232;
-}
-
-.form-group input.field-error,
-.form-group select.field-error {
-    border-color: #d33 !important;
-    background: #fff8f8;
-}
-
-.form-group input.field-success,
-.form-group select.field-success {
-    border-color: #287a3e;
-}
-
-.field-error-message {
-    display: none;
-    color: #c62828;
-    font-size: 12px;
-    margin-top: 6px;
-    font-weight: 600;
-}
-
-.field-error-message.show {
-    display: block;
-}
-
-.address-title {
-    margin: 25px 0 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    color: #ad8232;
-    font-size: 18px;
-}
-
-.address-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 15px;
-}
-
-.full-width {
-    grid-column: 1 / -1;
-}
-
-.place-order {
-    width: 100%;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-.place-order:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
-.message {
-    text-align: center;
-    margin-top: 15px;
-    font-weight: bold;
-}
-
-.empty-checkout {
-    text-align: center;
-    padding: 40px 15px;
-    color: #777;
-}
-
-.back-shopping {
-    display: inline-block;
-    margin-top: 15px;
-    color: #ad8232;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-
-.price-line{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:6px;
-}
-.mrp-cut{
-    color:#999;
-    text-decoration:line-through;
-    font-size:13px;
-}
-.sale-label{
-    color:#ad8232;
-    font-weight:800;
-    font-size:12px;
-    letter-spacing:.5px;
-}
-.sale-price{
-    font-weight:800;
-    font-size:15px;
-}
-.discount-badge{
-    color:#287a3e;
-    font-size:12px;
-    font-weight:700;
-}
-.hsn-line{
-    color:#777;
-    font-size:11px;
-    margin-top:5px;
-}
-.tax-summary{
-    margin-top:20px;
-    padding-top:15px;
-    border-top:1px solid #eee;
-}
-.summary-row{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    margin:8px 0;
-    color:#555;
-    font-size:14px;
-}
-.summary-row.discount-row{color:#287a3e}
-.gst-inclusive-note{
-    margin-top:7px;
-    font-size:10px;
-    color:#777;
-    text-align:right;
-}
-
-
-@media (max-width: 800px) {
-
-    .checkout-container {
-        grid-template-columns: 1fr;
-    }
-
-    .checkout-section {
-        padding: 50px 5%;
-    }
-
-    .address-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .full-width {
-        grid-column: auto;
-    }
-
-}
-
-
-/* =====================================================
-   COMPACT ONE-SCREEN CHECKOUT
-===================================================== */
-html, body {
-    overflow-x: hidden;
-}
-
-.checkout-section {
-    padding: 24px 4% 18px !important;
-    min-height: calc(100vh - 110px) !important;
-}
-
-.checkout-section .heading {
-    margin-bottom: 16px !important;
-}
-
-.checkout-section .heading p {
-    margin: 0 0 4px !important;
-    font-size: 10px !important;
-}
-
-.checkout-section .heading h2 {
-    margin: 0 !important;
-    font-size: 25px !important;
-}
-
-.checkout-container {
-    max-width: 1120px !important;
-    grid-template-columns: 0.95fr 1.05fr !important;
-    gap: 18px !important;
-    align-items: start;
-}
-
-.checkout-box {
-    padding: 18px !important;
-    border-radius: 14px !important;
-}
-
-.checkout-box h3 {
-    margin: 0 0 12px !important;
-    font-size: 19px !important;
-}
-
-.order-mode {
-    margin-bottom: 10px !important;
-    padding: 5px 9px !important;
-    font-size: 10px !important;
-}
-
-.order-summary {
-    padding: 10px !important;
-    border-radius: 10px !important;
-    max-height: 180px;
-    overflow-y: auto;
-}
-
-.order-item {
-    gap: 10px !important;
-    padding-bottom: 10px !important;
-    margin-bottom: 10px !important;
-}
-
-.order-item img {
-    width: 52px !important;
-    height: 52px !important;
-    border-radius: 8px !important;
-}
-
-.order-item h4 {
-    margin: 0 0 3px !important;
-    font-size: 13px !important;
-}
-
-.order-item p {
-    font-size: 11px !important;
-}
-
-.price-line {
-    gap: 6px !important;
-    margin-top: 3px !important;
-}
-
-.mrp-cut { font-size: 10px !important; }
-.sale-label, .discount-badge { font-size: 10px !important; }
-.sale-price { font-size: 13px !important; }
-.hsn-line { font-size: 9px !important; margin-top: 2px !important; }
-
-.tax-summary {
-    margin-top: 10px !important;
-    padding-top: 8px !important;
-}
-
-.summary-row {
-    margin: 5px 0 !important;
-    font-size: 12px !important;
-}
-
-.total-box {
-    font-size: 17px !important;
-    margin-top: 10px !important;
-    padding-top: 10px !important;
-}
-
-.form-group {
-    margin-bottom: 9px !important;
-}
-
-.form-group label {
-    margin-bottom: 4px !important;
-    font-size: 11px !important;
-}
-
-.form-group input,
-.form-group select {
-    padding: 9px 11px !important;
-    border-radius: 7px !important;
-    font-size: 13px !important;
-}
-
-.field-error-message {
-    font-size: 9px !important;
-    margin-top: 3px !important;
-}
-
-.address-title {
-    margin: 12px 0 8px !important;
-    padding-bottom: 6px !important;
-    font-size: 14px !important;
-}
-
-.address-grid {
-    gap: 0 10px !important;
-}
-
-.place-order {
-    margin-top: 5px !important;
-    padding: 10px 12px !important;
-    font-size: 14px !important;
-}
-
-.message {
-    margin-top: 7px !important;
-    font-size: 11px !important;
-}
-
-.checkout-section + footer {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-}
-
-@media (min-width: 801px) {
-    body {
-        overflow-y: hidden;
-    }
-}
-
-@media (max-height: 800px) and (min-width: 801px) {
-    .checkout-section {
-        padding-top: 15px !important;
-        padding-bottom: 10px !important;
-    }
-    .checkout-section .heading {
-        margin-bottom: 10px !important;
-    }
-    .checkout-section .heading h2 {
-        font-size: 21px !important;
-    }
-    .checkout-box {
-        padding: 14px !important;
-    }
-    .order-summary {
-        max-height: 145px;
-    }
-    .form-group {
-        margin-bottom: 6px !important;
-    }
-    .form-group input,
-    .form-group select {
-        padding: 7px 9px !important;
-    }
-    .address-title {
-        margin: 8px 0 5px !important;
-    }
-}
-
-@media (max-width: 800px) {
-    body {
-        overflow-y: auto;
-    }
-    .checkout-section {
-        padding: 20px 4% !important;
-    }
-    .checkout-container {
-        grid-template-columns: 1fr !important;
-    }
-}
-
+.checkout-section{padding:80px 8%;background:#faf8f5;min-height:70vh}
+.checkout-container{max-width:1100px;margin:auto;display:grid;grid-template-columns:1fr 1.2fr;gap:35px}
+.checkout-box{background:white;padding:35px;border-radius:18px;box-shadow:0 10px 35px rgba(0,0,0,.08)}
+.checkout-box h3{margin:0 0 25px;font-size:24px}
+.order-summary{border:1px solid #eee;padding:22px;border-radius:14px}
+.order-item{display:flex;align-items:center;gap:15px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid #eee}
+.order-item:last-child{border-bottom:none;margin-bottom:0}
+.order-item img{width:75px;height:75px;object-fit:contain;border-radius:10px;background:#f7f1e7}
+.order-item h4{margin:0 0 6px}
+.order-item p{margin:0;color:#666}
+.variant-badge{display:inline-block;margin:2px 0 6px;padding:4px 9px;border-radius:6px;background:#f7f1e7;color:#ad8232;font-size:12px;font-weight:700}
+.order-mode{display:inline-block;margin-bottom:18px;padding:7px 12px;border-radius:20px;background:#f5f1e7;color:#ad8232;font-size:12px;font-weight:bold}
+.total-box{display:flex;justify-content:space-between;font-size:20px;font-weight:bold;margin-top:20px;padding-top:20px;border-top:1px solid #eee}
+.form-group{margin-bottom:19px}
+.form-group label{display:block;margin-bottom:7px;font-weight:600;font-size:14px}
+.form-group input,.form-group select{width:100%;padding:13px 15px;border:1px solid #ddd;border-radius:9px;font-size:15px;box-sizing:border-box;outline:none;background:white;transition:.2s}
+.form-group input:focus,.form-group select:focus{border-color:#ad8232}
+.form-group input.field-error,.form-group select.field-error{border-color:#d33!important;background:#fff8f8}
+.form-group input.field-success,.form-group select.field-success{border-color:#287a3e}
+.field-error-message{display:none;color:#c62828;font-size:12px;margin-top:6px;font-weight:600}
+.field-error-message.show{display:block}
+.address-title{margin:25px 0 15px;padding-bottom:10px;border-bottom:1px solid #eee;color:#ad8232;font-size:18px}
+.address-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}
+.full-width{grid-column:1/-1}
+.place-order{width:100%;border:none;cursor:pointer;font-size:16px;margin-top:10px}
+.place-order:disabled{opacity:.6;cursor:not-allowed}
+.message{text-align:center;margin-top:15px;font-weight:bold}
+.empty-checkout{text-align:center;padding:40px 15px;color:#777}
+.back-shopping{display:inline-block;margin-top:15px;color:#ad8232;text-decoration:none;font-weight:bold}
+@media(max-width:800px){.checkout-container{grid-template-columns:1fr}.checkout-section{padding:50px 5%}.address-grid{grid-template-columns:1fr}.full-width{grid-column:auto}}
 </style>
-
 </head>
-
-
 <body>
 
-
 <header>
-
-    <a href="index.html" class="logo">
-
-        <span>
-            LIARA
-        </span>
-
-        <small>
-            PROFESSIONAL™
-        </small>
-
-    </a>
-
-
-    <nav>
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="index.html#about">
-            About
-        </a>
-
-        <a href="index.html#products">
-            Products
-        </a>
-
-        <a href="cart.html">
-            Cart 🛒
-        </a>
-
-        <a href="account.html">
-            My Account
-        </a>
-
-        <a href="index.html#contact">
-            Contact
-        </a>
-
-    </nav>
-
+<a href="index.html" class="logo"><span>LIARA</span><small>PROFESSIONAL™</small></a>
+<nav>
+<a href="index.html">Home</a>
+<a href="index.html#about">About</a>
+<a href="index.html#products">Products</a>
+<a href="cart.html">Cart 🛒</a>
+<a href="account.html">My Account</a>
+<a href="index.html#contact">Contact</a>
+</nav>
 </header>
 
-
-
 <section class="checkout-section">
-
-
-    <div class="heading">
-
-        <p>
-            LIARA PROFESSIONAL™
-        </p>
-
-        <h2>
-            Complete Your Order
-        </h2>
-
-    </div>
-
-
-
-    <div class="checkout-container">
-
-
-        <!-- ORDER SUMMARY -->
-
-        <div class="checkout-box">
-
-            <h3>
-                Your Order
-            </h3>
-
-
-            <div
-                id="orderMode"
-                class="order-mode">
-
-                Loading...
-
-            </div>
-
-
-            <div
-                id="order-items"
-                class="order-summary">
-
-                Loading your order...
-
-            </div>
-
-
-            <div class="tax-summary">
-
-                <div class="summary-row">
-                    <span>MRP Total</span>
-                    <span>₹<span id="checkout-mrp-total">0</span></span>
-                </div>
-
-                <div class="summary-row discount-row">
-                    <span>Discount</span>
-                    <span>- ₹<span id="checkout-discount">0</span></span>
-                </div>
-
-                <div class="summary-row">
-                    <span>Sale Subtotal</span>
-                    <span>₹<span id="checkout-subtotal">0</span></span>
-                </div>
-
-                <div class="summary-row">
-                    <span>GST (Included)</span>
-                    <span>₹<span id="checkout-gst">0</span></span>
-                </div>
-
-                <div class="summary-row">
-                    <span>Shipping</span>
-                    <span id="checkout-shipping-label">₹<span id="checkout-shipping">0</span></span>
-                </div>
-
-            </div>
-
-            <div class="gst-inclusive-note">
-                Product selling prices already include GST. GST shown above is only the included tax breakup.
-            </div>
-
-            <div class="total-box">
-
-                <span>
-                    Total <small style="font-size:11px;color:#777;font-weight:600;">(GST Included)</small>
-                </span>
-
-                <span>
-                    ₹<span id="checkout-total">0</span>
-                </span>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- CUSTOMER DETAILS -->
-
-        <div class="checkout-box">
-
-            <h3>
-                Customer Details
-            </h3>
-
-
-            <form
-                id="checkoutForm"
-                novalidate>
-
-
-                <!-- NAME -->
-
-                <div class="form-group">
-
-                    <label>
-                        Full Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        placeholder="Enter your full name">
-
-                    <div
-                        id="nameError"
-                        class="field-error-message">
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- MOBILE -->
-
-                <div class="form-group">
-
-                    <label>
-                        Mobile Number
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="mobile"
-                        placeholder="Enter your mobile number"
-                        maxlength="10"
-                        inputmode="numeric">
-
-                    <div
-                        id="mobileError"
-                        class="field-error-message">
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- ADDRESS -->
-
-                <div class="address-title">
-
-                    Delivery Address
-
-                </div>
-
-
-                <div class="address-grid">
-
-
-                    <!-- HOUSE -->
-
-                    <div class="form-group">
-
-                        <label>
-                            House / Flat No.
-                        </label>
-
-                        <input
-                            type="text"
-                            id="house_no"
-                            placeholder="House / Flat No.">
-
-                        <div
-                            id="houseError"
-                            class="field-error-message">
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- STREET -->
-
-                    <div class="form-group">
-
-                        <label>
-                            Street / Area
-                        </label>
-
-                        <input
-                            type="text"
-                            id="street"
-                            placeholder="Street / Area">
-
-                        <div
-                            id="streetError"
-                            class="field-error-message">
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- CITY -->
-
-                    <div class="form-group">
-
-                        <label>
-                            City
-                        </label>
-
-                        <input
-                            type="text"
-                            id="city"
-                            placeholder="City">
-
-                        <div
-                            id="cityError"
-                            class="field-error-message">
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- STATE -->
-
-                    <div class="form-group">
-
-                        <label>
-                            State
-                        </label>
-
-                        <input
-                            type="text"
-                            id="state"
-                            placeholder="State">
-
-                        <div
-                            id="stateError"
-                            class="field-error-message">
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- PIN -->
-
-                    <div class="form-group full-width">
-
-                        <label>
-                            PIN Code
-                              
-                        </label>
-
-                        <input
-                            type="text"
-                            id="pincode"
-                            placeholder="6 digit PIN Code"
-                            maxlength="6"
-                            inputmode="numeric">
-
-                        <div
-                            id="pincodeError"
-                            class="field-error-message">
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- PAYMENT -->
-
-                <div class="form-group">
-
-                    <label>
-                        Payment Method
-                    </label>
-
-                    <select id="payment">
-
-                        <option value="">
-                            Select Payment Method
-                        </option>
-
-                        <option value="Cash on Delivery">
-                            Cash on Delivery
-                        </option>
-
-                        <option value="Online Payment">
-                            Online Payment
-                        </option>
-
-                    </select>
-
-                    <div
-                        id="paymentError"
-                        class="field-error-message">
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- BUTTON -->
-
-                <button
-                    type="submit"
-                    class="btn place-order"
-                    id="placeOrderButton">
-
-                    Place Order
-
-                </button>
-
-
-                <div
-                    id="message"
-                    class="message">
-
-                </div>
-
-
-            </form>
-
-        </div>
-
-    </div>
-
+<div class="heading">
+<p>LIARA PROFESSIONAL™</p>
+<h2>Complete Your Order</h2>
+</div>
+
+<div class="checkout-container">
+
+<div class="checkout-box">
+<h3>Your Order</h3>
+<div id="orderMode" class="order-mode">Loading...</div>
+<div id="order-items" class="order-summary">Loading your order...</div>
+<div class="total-box" style="display:block;">
+<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+<span>Order Subtotal</span>
+<span>₹<span id="checkout-subtotal">0</span></span>
+</div>
+<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+<span id="checkout-charge-label">Delivery / COD Charge</span>
+<span>₹<span id="checkout-charge">0</span></span>
+</div>
+<div style="display:flex;justify-content:space-between;font-weight:700;padding-top:10px;border-top:1px solid #ddd;">
+<span>Final Total</span>
+<span>₹<span id="checkout-total">0</span></span>
+</div>
+</div>
+</div>
+
+<div class="checkout-box">
+<h3>Customer Details</h3>
+
+<form id="checkoutForm" novalidate>
+
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="name" placeholder="Enter your full name">
+<div id="nameError" class="field-error-message"></div>
+</div>
+
+<div class="form-group">
+<label>Mobile Number</label>
+<input type="tel" id="mobile" placeholder="Enter your mobile number" maxlength="10" inputmode="numeric">
+<div id="mobileError" class="field-error-message"></div>
+</div>
+
+<div class="address-title">Delivery Address</div>
+<div class="address-grid">
+
+<div class="form-group">
+<label>House / Flat No.</label>
+<input type="text" id="house_no" placeholder="House / Flat No.">
+<div id="houseError" class="field-error-message"></div>
+</div>
+
+<div class="form-group">
+<label>Street / Area</label>
+<input type="text" id="street" placeholder="Street / Area">
+<div id="streetError" class="field-error-message"></div>
+</div>
+
+<div class="form-group">
+<label>City</label>
+<input type="text" id="city" placeholder="City">
+<div id="cityError" class="field-error-message"></div>
+</div>
+
+<div class="form-group">
+<label>State</label>
+<input type="text" id="state" placeholder="State">
+<div id="stateError" class="field-error-message"></div>
+</div>
+
+<div class="form-group full-width">
+<label>PIN Code</label>
+<input type="text" id="pincode" placeholder="6 digit PIN Code" maxlength="6" inputmode="numeric">
+<div id="pincodeError" class="field-error-message"></div>
+</div>
+</div>
+
+<div class="form-group">
+<label>Payment Method</label>
+<select id="payment">
+<option value="">Select Payment Method</option>
+<option value="Cash on Delivery">Cash on Delivery</option>
+<option value="Online Payment">Online Payment</option>
+</select>
+<div id="paymentError" class="field-error-message"></div>
+</div>
+
+<button type="submit" class="btn place-order" id="placeOrderButton">Place Order</button>
+<div id="message" class="message"></div>
+</form>
+</div>
+</div>
 </section>
 
-
-
 <footer>
-
-    <div class="footer-brand">
-
-        LIARA
-
-        <small>
-            PROFESSIONAL™
-        </small>
-
-    </div>
-
-
-    <p>
-
-        © 2026 Liara Group Private Limited.
-        All Rights Reserved.
-
-    </p>
-
+<div class="footer-brand">LIARA <small>PROFESSIONAL™</small></div>
+<p>© 2026 Liara Group Private Limited. All Rights Reserved.</p>
 </footer>
 
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
+const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
+const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
+const checkoutMode=localStorage.getItem("liaraCheckoutMode")||"cart";
+let checkoutItems=[];
+
+if(checkoutMode==="buyNow"){
+    const buyNow=JSON.parse(localStorage.getItem("liaraBuyNow")||"null");
+    if(buyNow) checkoutItems=[buyNow];
+}else{
+    checkoutItems=JSON.parse(localStorage.getItem("liaraCart")||"[]");
+}
+
+const orderItems=document.getElementById("order-items");
+const totalElement=document.getElementById("checkout-total");
+const subtotalElement=document.getElementById("checkout-subtotal");
+const chargeElement=document.getElementById("checkout-charge");
+const chargeLabelElement=document.getElementById("checkout-charge-label");
+const orderModeElement=document.getElementById("orderMode");
+
+orderModeElement.innerText=checkoutMode==="buyNow"
+    ?"⚡ BUY NOW — Direct Order"
+    :"🛒 CART ORDER";
 
 /* =====================================================
-   SUPABASE
+   VARIANT HELPERS
+   Supports the variant formats used by product/cart pages:
+   selectedVariant, variant, variantLabel, size + unit, label + unit.
 ===================================================== */
+function getProductVariant(product){
+    const v=product?.selectedVariant||product?.variant||null;
 
-const SUPABASE_URL =
-    "https://oinafbuicwhleudztzyz.supabase.co";
-
-
-const SUPABASE_KEY =
-"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
-
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-
-
-/* =====================================================
-   CHECKOUT MODE
-===================================================== */
-
-const checkoutMode =
-    localStorage.getItem(
-        "liaraCheckoutMode"
-    ) || "cart";
-
-
-let checkoutItems = [];
-
-
-if (checkoutMode === "buyNow") {
-
-    const buyNow =
-        JSON.parse(
-            localStorage.getItem(
-                "liaraBuyNow"
-            ) || "null"
-        );
-
-
-    if (buyNow) {
-
-        checkoutItems = [
-            buyNow
-        ];
-
+    if(v && typeof v==="object"){
+        const label=String(v.label??v.size??"").trim();
+        const unit=String(v.unit??"").trim();
+        if(label) return {label,unit};
     }
 
+    const directLabel=String(product?.variantLabel||product?.selectedSize||"").trim();
+    const directUnit=String(product?.variantUnit||"").trim();
+
+    if(directLabel) return {label:directLabel,unit:directUnit};
+
+    const size=String(product?.size??"").trim();
+    const unit=String(product?.unit??"").trim();
+
+    if(size) return {label:size,unit};
+
+    return null;
 }
 
-else {
+function getProductPrice(product){
+    const v=product?.selectedVariant||product?.variant||null;
 
-    checkoutItems =
-        JSON.parse(
-            localStorage.getItem(
-                "liaraCart"
-            ) || "[]"
-        );
+    if(v && typeof v==="object" && v.price!==undefined && v.price!==null && v.price!==""){
+        return Number(v.price)||0;
+    }
 
+    if(product?.variantPrice!==undefined && product?.variantPrice!==null && product?.variantPrice!==""){
+        return Number(product.variantPrice)||0;
+    }
+
+    return Number(product?.price)||0;
 }
 
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const orderItems =
-    document.getElementById(
-        "order-items"
-    );
-
-
-const totalElement =
-    document.getElementById(
-        "checkout-total"
-    );
-
-
-const orderModeElement =
-    document.getElementById(
-        "orderMode"
-    );
-
-
-
-/* =====================================================
-   MODE
-===================================================== */
-
-if (checkoutMode === "buyNow") {
-
-    orderModeElement.innerText =
-        "⚡ BUY NOW — Direct Order";
-
+function getVariantText(product){
+    const v=getProductVariant(product);
+    if(!v) return "";
+    return v.label+(v.unit?" "+v.unit:"");
 }
 
-else {
-
-    orderModeElement.innerText =
-        "🛒 CART ORDER";
-
+function getProductDisplayName(product){
+    const name=product?.name||"Product";
+    const variant=getVariantText(product);
+    return variant ? name+" — "+variant : name;
 }
-
-
 
 /* =====================================================
    SHOW ORDER
 ===================================================== */
+let total=0;
 
-/* =====================================================
-   SHOW ORDER
-===================================================== */
+if(!checkoutItems||checkoutItems.length===0){
+    orderItems.innerHTML=`
+        <div class="empty-checkout">
+            <p>Your order is empty.</p>
+            <a href="index.html#products" class="back-shopping">← Continue Shopping</a>
+        </div>`;
+}else{
+    let orderHTML="";
 
-let total = 0;
-let mrpTotal = 0;
-let discountTotal = 0;
-let subtotal = 0;
-let gstTotal = 0;
-let shippingTotal = 0;
-let shippingIsFree = false;
+    checkoutItems.forEach(function(product){
+        const productPrice=getProductPrice(product);
+        const productQuantity=Number(product.quantity)||1;
+        const variantText=getVariantText(product);
 
-function money(value){
-    return Number(value || 0).toLocaleString("en-IN", {
-        maximumFractionDigits: 2
+        total+=productPrice*productQuantity;
+
+        orderHTML+=`
+            <div class="order-item">
+                <img
+                    src="${escapeHtml(product.image||product.image_url||"facewash.jpg")}"
+                    alt="${escapeHtml(product.name||"Product")}"
+                    onerror="this.src='facewash.jpg'">
+
+                <div>
+                    <h4>${escapeHtml(product.name||"Product")}</h4>
+
+                    ${variantText
+                        ?`<div class="variant-badge">Size: ${escapeHtml(variantText)}</div>`
+                        :""}
+
+                    <p>
+                        ₹${productPrice.toLocaleString("en-IN")}
+                        × ${productQuantity}
+                    </p>
+                </div>
+            </div>`;
     });
+
+    orderItems.innerHTML=orderHTML;
 }
 
-function getCheckoutSettings(){
-    const defaults = {
-        sales: {
-            gstRate: 0,
-            taxEnabled: true,
-            discountEnabled: true,
-            shippingEnabled: false,
-            shippingCharge: 0,
-            freeShippingAbove: 0
-        },
-        checkout: {
-            minimumOrder: 0
-        }
-    };
-
-    try{
-        const raw = localStorage.getItem("liara_professional_admin_settings");
-        if(!raw) return defaults;
-        const saved = JSON.parse(raw);
-        return {
-            sales: Object.assign({}, defaults.sales, saved.sales || {}),
-            checkout: Object.assign({}, defaults.checkout, saved.checkout || {})
-        };
-    }catch(error){
-        console.warn("Checkout settings could not be read:", error);
-        return defaults;
-    }
-}
-
-function parseVariants(product){
-    let variants = product?.variants;
-    if(typeof variants === "string"){
-        try{ variants = JSON.parse(variants); }catch(e){ variants = []; }
-    }
-    return Array.isArray(variants) ? variants : [];
-}
-
-function getSelectedVariantFromProduct(product){
-    const selectedSize = String(product?.size || "").trim();
-    if(!selectedSize) return null;
-
-    const variants = parseVariants(product);
-    if(!variants.length) return null;
-
-    const normalized = selectedSize.toLowerCase().replace(/\s+/g, " ").trim();
-    return variants.find(function(v){
-        const label = String(
-            v?.label ||
-            ((v?.size ?? "") + (v?.unit ? " " + v.unit : ""))
-        ).toLowerCase().replace(/\s+/g, " ").trim();
-        const sizeOnly = String(v?.size ?? "").toLowerCase().trim();
-        return label === normalized || sizeOnly === normalized;
-    }) || null;
-}
-
-function getProductSalePrice(product){
-    const variant = getSelectedVariantFromProduct(product);
-    if(variant){
-        const variantSale = Number(variant.sale_price);
-        const variantMRP = Number(variant.price);
-        const variantActive = variant.sale_active !== false &&
-            Number.isFinite(variantSale) && variantSale > 0 &&
-            (!Number.isFinite(variantMRP) || variantSale < variantMRP);
-        if(variantActive) return variantSale;
-        if(Number.isFinite(variantMRP) && variantMRP > 0) return variantMRP;
+/* =====================================================
+   PAYMENT / DELIVERY CHARGE FROM BUY-NOW POPUP
+   Buy Now keeps the exact charge selected by the customer
+   on the product-page popup. It is NOT recalculated on checkout.
+===================================================== */
+function getLiaraPaymentCharge(subtotal,paymentMethod){
+    if(paymentMethod==="Cash on Delivery"){
+        return subtotal<=999 ? 120 : 80;
     }
 
-    const sale = Number(product?.sale_price);
-    const mrp = Number(product?.mrp ?? product?.price ?? 0);
-    const active = product?.sale_active !== false &&
-        Number.isFinite(sale) && sale > 0 &&
-        (!Number.isFinite(mrp) || sale < mrp);
-    if(active) return sale;
-
-    return Number(product?.price || 0);
-}
-
-function getProductMRP(product){
-    const variant = getSelectedVariantFromProduct(product);
-    if(variant){
-        const variantMRP = Number(variant.price);
-        if(Number.isFinite(variantMRP) && variantMRP > 0) return variantMRP;
+    if(paymentMethod==="Online Payment"){
+        return subtotal<=499 ? 80 : 0;
     }
 
-    const mrp = Number(product?.mrp ?? product?.price ?? 0);
-    const sale = getProductSalePrice(product);
-    return Number.isFinite(mrp) && mrp > 0 ? mrp : sale;
-}
-
-function getProductDiscount(product, mrp, sale){
-    const variant = getSelectedVariantFromProduct(product);
-    const variantDiscount = Number(variant?.discount_percent);
-    if(Number.isFinite(variantDiscount) && variantDiscount > 0) return Math.min(100, variantDiscount);
-
-    const supplied = Number(product?.discount_percent);
-    if(Number.isFinite(supplied) && supplied > 0) return Math.min(100, supplied);
-
-    if(mrp > sale && mrp > 0) return ((mrp - sale) / mrp) * 100;
     return 0;
 }
 
-function getProductGST(product){
-    // This rate is used to extract GST from the GST-inclusive website price.
-    const gst = Number(product?.gst_rate ?? product?.gst ?? 0);
-    return Number.isFinite(gst) && gst > 0 ? gst : 0;
+function syncCheckoutPayment(){
+    const paymentElement=document.getElementById("payment");
+    const payment=paymentElement.value;
+
+    let charge=Number(localStorage.getItem("liaraDeliveryCharge"));
+
+    /* For Buy Now, the popup's saved charge is authoritative. */
+    if(checkoutMode==="buyNow" && (payment==="Cash on Delivery" || payment==="Online Payment")){
+        if(!Number.isFinite(charge) || charge<0){
+            charge=getLiaraPaymentCharge(total,payment);
+        }
+    }else{
+        charge=getLiaraPaymentCharge(total,payment);
+    }
+
+    const finalTotal=total+charge;
+
+    subtotalElement.innerText=total.toLocaleString("en-IN");
+    chargeElement.innerText=charge.toLocaleString("en-IN");
+    chargeLabelElement.innerText=payment==="Cash on Delivery"
+        ?"COD Charge"
+        :"Delivery Charge";
+    totalElement.innerText=finalTotal.toLocaleString("en-IN");
+
+    localStorage.setItem("liaraOrderSubtotal",String(total));
+    localStorage.setItem("liaraDeliveryCharge",String(charge));
+    localStorage.setItem("liaraOrderFinalTotal",String(finalTotal));
+
+    return finalTotal;
 }
 
-async function hydrateCheckoutItems(){
-    if(!Array.isArray(checkoutItems) || !checkoutItems.length) return;
+/* Restore the exact method chosen in the Buy Now popup. */
+const savedPopupPayment=localStorage.getItem("liaraPaymentMethod")||"";
+if(savedPopupPayment==="Cash on Delivery" || savedPopupPayment==="Online Payment"){
+    document.getElementById("payment").value=savedPopupPayment;
 
-    const ids = [...new Set(
-        checkoutItems.map(item => item?.id).filter(Boolean).map(String)
-    )];
-    if(!ids.length) return;
-
-    try{
-        const {data, error} = await supabaseClient
-            .from("products")
-            .select("*")
-            .in("id", ids);
-
-        if(error){
-            console.warn("Could not refresh checkout product pricing:", error.message);
-            return;
-        }
-
-        const map = new Map((data || []).map(p => [String(p.id), p]));
-
-        checkoutItems = checkoutItems.map(function(item){
-            const fresh = map.get(String(item.id));
-            if(!fresh) return item;
-
-            const merged = Object.assign({}, fresh, item);
-            const selectedVariant = getSelectedVariantFromProduct(merged);
-
-            /* Product-page/cart item can carry only the selected size.
-               Always use the latest admin values for that selected variant. */
-            if(selectedVariant){
-                merged.price = Number(selectedVariant.price || merged.price || 0);
-                merged.sale_price = Number(selectedVariant.sale_price || 0) || null;
-                merged.discount_percent = Number(selectedVariant.discount_percent || 0);
-                merged.sale_active = selectedVariant.sale_active !== false;
-                merged.variant_stock = Number(selectedVariant.stock || 0);
-                merged.variant_unit = selectedVariant.unit || "";
-            }
-
-            return merged;
-        });
-    }catch(error){
-        console.warn("Checkout product refresh failed:", error);
+    if(checkoutMode==="buyNow"){
+        /* Customer already selected this on the popup. Keep it fixed here. */
+        document.getElementById("payment").disabled=true;
     }
 }
 
-function calculateCheckoutTotals(){
-    mrpTotal = 0;
-    discountTotal = 0;
-    subtotal = 0;
-    gstTotal = 0;
-    shippingTotal = 0;
-    shippingIsFree = false;
+syncCheckoutPayment();
 
-    const settings = getCheckoutSettings();
-    const taxEnabled = settings.sales.taxEnabled !== false;
-    const shippingEnabled = settings.sales.shippingEnabled === true;
-    const shippingCharge = Math.max(0, Number(settings.sales.shippingCharge) || 0);
-    const freeAbove = Math.max(0, Number(settings.sales.freeShippingAbove) || 0);
-
-    (checkoutItems || []).forEach(function(product){
-        const qty = Math.max(1, Number(product.quantity) || 1);
-        const mrp = getProductMRP(product);
-        const sale = getProductSalePrice(product);
-        const discount = Math.max(0, mrp - sale);
-        const gstRate = getProductGST(product);
-
-        mrpTotal += mrp * qty;
-        discountTotal += discount * qty;
-        subtotal += sale * qty;
-
-        if(taxEnabled && gstRate > 0){
-            // Website selling price is GST-inclusive.
-            // Example: ₹125 at 18% GST = ₹105.93 taxable + ₹19.07 GST = ₹125 final.
-            const inclusiveAmount = sale * qty;
-            const taxableAmount = inclusiveAmount / (1 + gstRate / 100);
-            gstTotal += inclusiveAmount - taxableAmount;
-        }
-    });
-
-    if(shippingEnabled && shippingCharge > 0){
-        if(freeAbove > 0 && subtotal >= freeAbove){
-            shippingIsFree = true;
-            shippingTotal = 0;
-        }else{
-            shippingTotal = shippingCharge;
-        }
-    }
-
-    // Sale prices already include GST, so GST is only a breakup here.
-    // Never add GST again to the customer/Razorpay total.
-    total = subtotal + shippingTotal;
-
-    const mrpEl = document.getElementById("checkout-mrp-total");
-    const discountEl = document.getElementById("checkout-discount");
-    const subtotalEl = document.getElementById("checkout-subtotal");
-    const gstEl = document.getElementById("checkout-gst");
-    const shippingEl = document.getElementById("checkout-shipping");
-    const shippingLabel = document.getElementById("checkout-shipping-label");
-
-    if(mrpEl) mrpEl.innerText = money(mrpTotal);
-    if(discountEl) discountEl.innerText = money(discountTotal);
-    if(subtotalEl) subtotalEl.innerText = money(subtotal);
-    if(gstEl) gstEl.innerText = money(gstTotal);
-    if(shippingEl) shippingEl.innerText = money(shippingTotal);
-    if(shippingLabel){
-        shippingLabel.innerHTML = shippingIsFree
-            ? '<span style="color:#287a3e;font-weight:700;">FREE</span>'
-            : '₹<span id="checkout-shipping">' + money(shippingTotal) + '</span>';
-    }
-    if(totalElement) totalElement.innerText = money(total);
-}
-
-async function renderCheckout(){
-    await hydrateCheckoutItems();
-
-    if(!checkoutItems || checkoutItems.length === 0){
-        orderItems.innerHTML = `
-            <div class="empty-checkout">
-                <p>Your order is empty.</p>
-                <a href="index.html#products" class="back-shopping">
-                    ← Continue Shopping
-                </a>
-            </div>
-        `;
-        calculateCheckoutTotals();
+document.getElementById("payment").addEventListener("change",function(){
+    /* Buy Now must use the popup selection exactly as chosen. */
+    if(checkoutMode==="buyNow"){
+        this.value=localStorage.getItem("liaraPaymentMethod")||this.value;
+        syncCheckoutPayment();
         return;
     }
 
-    let orderHTML = "";
-
-    checkoutItems.forEach(function(product){
-        const productPrice = getProductSalePrice(product);
-        const productMRP = getProductMRP(product);
-        const productQuantity = Math.max(1, Number(product.quantity) || 1);
-        const discountPercent = getProductDiscount(product, productMRP, productPrice);
-        const gstRate = getProductGST(product);
-        const hsnCode = product.hsn_code || product.hsn || "";
-        const variant = getSelectedVariantFromProduct(product);
-        const variantLabel = product.size
-            ? String(product.size) + (product.variant_unit || variant?.unit ? " " + (product.variant_unit || variant?.unit) : "")
-            : "";
-
-        orderHTML += `
-            <div class="order-item">
-                <img
-                    src="${escapeHtml(product.image || product.image_url || "facewash.jpg")}" 
-                    alt="${escapeHtml(product.name || "Product")}" 
-                    onerror="this.src='facewash.jpg'"
-                >
-                <div style="flex:1;">
-                    <h4>${escapeHtml(product.name || "Product")}</h4>
-
-                    ${variantLabel ? `<div style="font-size:12px;color:#777;margin:3px 0 5px;font-weight:600;">${escapeHtml(variantLabel)}</div>` : ""}
-
-                    <div class="price-line">
-                        ${productMRP > productPrice
-                            ? `<span class="mrp-cut">MRP ₹${money(productMRP)}</span>`
-                            : ""
-                        }
-                        <span class="sale-label">SALE</span>
-                        <span class="sale-price">₹${money(productPrice)}</span>
-                        ${discountPercent > 0
-                            ? `<span class="discount-badge">${money(discountPercent)}% OFF</span>`
-                            : ""
-                        }
-                    </div>
-
-                    <p>
-                        Qty ${productQuantity}
-                        ${gstRate > 0 ? ` • GST ${money(gstRate)}% included` : ""}
-                    </p>
-
-                    ${hsnCode
-                        ? `<div class="hsn-line">HSN Code: ${escapeHtml(hsnCode)}</div>`
-                        : ""
-                    }
-                </div>
-            </div>
-        `;
-    });
-
-    orderItems.innerHTML = orderHTML;
-    calculateCheckoutTotals();
-}
-
-renderCheckout();
+    localStorage.setItem("liaraPaymentMethod",this.value);
+    localStorage.removeItem("liaraDeliveryCharge");
+    syncCheckoutPayment();
+});
 
 /* =====================================================
    RESTORE CHECKOUT AFTER GOOGLE LOGIN
 ===================================================== */
+document.addEventListener("DOMContentLoaded",function(){
+    const savedCustomer=localStorage.getItem("liaraPendingCheckout");
+    if(!savedCustomer) return;
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
+    try{
+        const data=JSON.parse(savedCustomer);
 
-        const savedCustomer =
-            localStorage.getItem(
-                "liaraPendingCheckout"
-            );
-
-
-        if(!savedCustomer) {
-            return;
+        if(data.name!==undefined) document.getElementById("name").value=data.name;
+        if(data.mobile!==undefined) document.getElementById("mobile").value=data.mobile;
+        if(data.house_no!==undefined) document.getElementById("house_no").value=data.house_no;
+        if(data.street!==undefined) document.getElementById("street").value=data.street;
+        if(data.city!==undefined) document.getElementById("city").value=data.city;
+        if(data.state!==undefined) document.getElementById("state").value=data.state;
+        if(data.pincode!==undefined) document.getElementById("pincode").value=data.pincode;
+        if(data.payment!==undefined){
+            document.getElementById("payment").value=data.payment;
+            localStorage.setItem("liaraPaymentMethod",data.payment);
+            syncCheckoutPayment();
         }
-
-
-        try {
-
-            const data =
-                JSON.parse(
-                    savedCustomer
-                );
-
-
-            if(data.name !== undefined) {
-
-                document.getElementById("name").value =
-                    data.name;
-
-            }
-
-
-            if(data.mobile !== undefined) {
-
-                document.getElementById("mobile").value =
-                    data.mobile;
-
-            }
-
-
-            if(data.house_no !== undefined) {
-
-                document.getElementById("house_no").value =
-                    data.house_no;
-
-            }
-
-
-            if(data.street !== undefined) {
-
-                document.getElementById("street").value =
-                    data.street;
-
-            }
-
-
-            if(data.city !== undefined) {
-
-                document.getElementById("city").value =
-                    data.city;
-
-            }
-
-
-            if(data.state !== undefined) {
-
-                document.getElementById("state").value =
-                    data.state;
-
-            }
-
-
-            if(data.pincode !== undefined) {
-
-                document.getElementById("pincode").value =
-                    data.pincode;
-
-            }
-
-
-            if(data.payment !== undefined) {
-
-                document.getElementById("payment").value =
-                    data.payment;
-
-            }
-
-        }
-
-        catch(error) {
-
-            console.error(
-                "CHECKOUT RESTORE ERROR:",
-                error
-            );
-
-        }
-
+    }catch(error){
+        console.error("CHECKOUT RESTORE ERROR:",error);
     }
-);
-
-
-/* =====================================================
-   ERROR FUNCTIONS
-===================================================== */
-
-function setError(
-    fieldId,
-    errorId,
-    message
-) {
-
-    const field =
-        document.getElementById(
-            fieldId
-        );
-
-
-    const error =
-        document.getElementById(
-            errorId
-        );
-
-
-    field.classList.add(
-        "field-error"
-    );
-
-
-    field.classList.remove(
-        "field-success"
-    );
-
-
-    error.innerText =
-        message;
-
-
-    error.classList.add(
-        "show"
-    );
-
-}
-
-
-
-function clearError(
-    fieldId,
-    errorId
-) {
-
-    const field =
-        document.getElementById(
-            fieldId
-        );
-
-
-    const error =
-        document.getElementById(
-            errorId
-        );
-
-
-    field.classList.remove(
-        "field-error"
-    );
-
-
-    error.innerText =
-        "";
-
-
-    error.classList.remove(
-        "show"
-    );
-
-}
-
-
+});
 
 /* =====================================================
-   CLEAR ERRORS WHEN TYPING
+   ERRORS
 ===================================================== */
+function setError(fieldId,errorId,message){
+    const field=document.getElementById(fieldId);
+    const error=document.getElementById(errorId);
+    field.classList.add("field-error");
+    field.classList.remove("field-success");
+    error.innerText=message;
+    error.classList.add("show");
+}
 
-const fields = [
+function clearError(fieldId,errorId){
+    const field=document.getElementById(fieldId);
+    const error=document.getElementById(errorId);
+    field.classList.remove("field-error");
+    error.innerText="";
+    error.classList.remove("show");
+}
 
-    ["name","nameError"],
-
-    ["mobile","mobileError"],
-
-    ["house_no","houseError"],
-
-    ["street","streetError"],
-
-    ["city","cityError"],
-
-    ["state","stateError"],
-
-    ["pincode","pincodeError"],
-
-    ["payment","paymentError"]
-
+const fields=[
+    ["name","nameError"],["mobile","mobileError"],["house_no","houseError"],
+    ["street","streetError"],["city","cityError"],["state","stateError"],
+    ["pincode","pincodeError"],["payment","paymentError"]
 ];
 
+fields.forEach(function(pair){
+    const field=document.getElementById(pair[0]);
+    field.addEventListener("input",()=>clearError(pair[0],pair[1]));
+    field.addEventListener("change",()=>clearError(pair[0],pair[1]));
+});
 
-fields.forEach(
-    function(pair) {
+document.getElementById("mobile").addEventListener("input",function(){
+    this.value=this.value.replace(/\D/g,"").slice(0,10);
+});
 
-        const field =
-            document.getElementById(
-                pair[0]
-            );
-
-
-        field.addEventListener(
-            "input",
-            function() {
-
-                clearError(
-                    pair[0],
-                    pair[1]
-                );
-
-            }
-        );
-
-
-        field.addEventListener(
-            "change",
-            function() {
-
-                clearError(
-                    pair[0],
-                    pair[1]
-                );
-
-            }
-        );
-
-    }
-);
-
-
+document.getElementById("pincode").addEventListener("input",function(){
+    this.value=this.value.replace(/\D/g,"").slice(0,6);
+});
 
 /* =====================================================
-   MOBILE ONLY NUMBERS
+   VALIDATE
 ===================================================== */
+function validateForm(){
+    let valid=true;
+    let firstInvalid=null;
 
-document.getElementById(
-    "mobile"
-).addEventListener(
-    "input",
-    function() {
+    fields.forEach(pair=>clearError(pair[0],pair[1]));
 
-        this.value =
-            this.value
-                .replace(/\D/g,"")
-                .slice(0,10);
-
-    }
-);
-
-
-
-/* =====================================================
-   PIN ONLY NUMBERS
-===================================================== */
-
-document.getElementById(
-    "pincode"
-).addEventListener(
-    "input",
-    function() {
-
-        this.value =
-            this.value
-                .replace(/\D/g,"")
-                .slice(0,6);
-
-    }
-);
-
-
-
-/* =====================================================
-   VALIDATE FORM
-===================================================== */
-
-function validateForm() {
-
-    let valid = true;
-
-    let firstInvalid = null;
-
-
-    /* CLEAR OLD ERRORS */
-
-    fields.forEach(
-        function(pair) {
-
-            clearError(
-                pair[0],
-                pair[1]
-            );
-
-        }
-    );
-
-
-
-    /* NAME */
-
-    const name =
-        document.getElementById(
-            "name"
-        ).value.trim();
-
-
-    if(name === "") {
-
-        setError(
-            "name",
-            "nameError",
-            "Please enter your full name."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "name"
-            );
-
+    const name=document.getElementById("name").value.trim();
+    if(name===""){
+        setError("name","nameError","Please enter your full name.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("name");
     }
 
-
-
-    /* MOBILE */
-
-    const mobile =
-        document.getElementById(
-            "mobile"
-        ).value.trim();
-
-
-    if(mobile === "") {
-
-        setError(
-            "mobile",
-            "mobileError",
-            "Please enter your mobile number."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "mobile"
-            );
-
+    const mobile=document.getElementById("mobile").value.trim();
+    if(mobile===""){
+        setError("mobile","mobileError","Please enter your mobile number.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("mobile");
+    }else if(!/^[0-9]{10}$/.test(mobile)){
+        setError("mobile","mobileError","Please enter a valid 10-digit mobile number.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("mobile");
     }
 
-    else if(!/^[0-9]{10}$/.test(mobile)) {
-
-        setError(
-            "mobile",
-            "mobileError",
-            "Please enter a valid 10-digit mobile number."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "mobile"
-            );
-
+    const house=document.getElementById("house_no").value.trim();
+    if(house===""){
+        setError("house_no","houseError","Please enter your House / Flat No.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("house_no");
     }
 
-
-
-    /* HOUSE */
-
-    const house =
-        document.getElementById(
-            "house_no"
-        ).value.trim();
-
-
-    if(house === "") {
-
-        setError(
-            "house_no",
-            "houseError",
-            "Please enter your House / Flat No."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "house_no"
-            );
-
+    const street=document.getElementById("street").value.trim();
+    if(street===""){
+        setError("street","streetError","Please enter your Street / Area.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("street");
     }
 
-
-
-    /* STREET */
-
-    const street =
-        document.getElementById(
-            "street"
-        ).value.trim();
-
-
-    if(street === "") {
-
-        setError(
-            "street",
-            "streetError",
-            "Please enter your Street / Area."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "street"
-            );
-
+    const city=document.getElementById("city").value.trim();
+    if(city===""){
+        setError("city","cityError","Please enter your city.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("city");
     }
 
-
-
-    /* CITY */
-
-    const city =
-        document.getElementById(
-            "city"
-        ).value.trim();
-
-
-    if(city === "") {
-
-        setError(
-            "city",
-            "cityError",
-            "Please enter your city."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "city"
-            );
-
+    const state=document.getElementById("state").value.trim();
+    if(state===""){
+        setError("state","stateError","Please enter your state.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("state");
     }
 
-
-
-    /* STATE */
-
-    const state =
-        document.getElementById(
-            "state"
-        ).value.trim();
-
-
-    if(state === "") {
-
-        setError(
-            "state",
-            "stateError",
-            "Please enter your state."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "state"
-            );
-
+    const pincode=document.getElementById("pincode").value.trim();
+    if(pincode===""){
+        setError("pincode","pincodeError","Please enter your PIN Code.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("pincode");
+    }else if(!/^[0-9]{6}$/.test(pincode)){
+        setError("pincode","pincodeError","Please enter a valid 6-digit PIN Code.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("pincode");
     }
 
-
-
-    /* PINCODE */
-
-    const pincode =
-        document.getElementById(
-            "pincode"
-        ).value.trim();
-
-
-    if(pincode === "") {
-
-        setError(
-            "pincode",
-            "pincodeError",
-            "Please enter your PIN Code."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "pincode"
-            );
-
+    const payment=document.getElementById("payment").value;
+    if(payment===""){
+        setError("payment","paymentError","Please select a payment method.");
+        valid=false;
+        firstInvalid=firstInvalid||document.getElementById("payment");
     }
 
-    else if(!/^[0-9]{6}$/.test(pincode)) {
-
-        setError(
-            "pincode",
-            "pincodeError",
-            "Please enter a valid 6-digit PIN Code."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "pincode"
-            );
-
-    }
-
-
-
-    /* PAYMENT */
-
-    const payment =
-        document.getElementById(
-            "payment"
-        ).value;
-
-
-    if(payment === "") {
-
-        setError(
-            "payment",
-            "paymentError",
-            "Please select a payment method."
-        );
-
-
-        valid = false;
-
-        firstInvalid =
-            firstInvalid ||
-            document.getElementById(
-                "payment"
-            );
-
-    }
-
-
-
-    /* FOCUS FIRST ERROR */
-
-    if(firstInvalid) {
-
-        firstInvalid.focus();
-
-    }
-
-
+    if(firstInvalid) firstInvalid.focus();
     return valid;
-
 }
-
-
 
 /* =====================================================
-   PLACE ORDER + RAZORPAY
+   RAZORPAY
 ===================================================== */
+const RAZORPAY_KEY_ID="rzp_live_TU2zkAcjKfrnym";
 
-const RAZORPAY_KEY_ID =
-    "rzp_live_TU2zkAcjKfrnym";
+async function saveOrderToDatabase(statusText){
+    const {data:authData,error:authError}=await supabaseClient.auth.getUser();
 
-
-async function saveOrderToDatabase(statusText) {
-
-    const {data:authData,error:authError} =
-        await supabaseClient.auth.getUser();
-
-    if(authError || !authData?.user){
-        throw new Error(
-            "Customer login session expired. Please log in again."
-        );
-    }
-
-    const customerUser = authData.user;
-
-    const customerName =
-        document.getElementById("name").value.trim();
-
-    const phone =
-        document.getElementById("mobile").value.trim();
-
-    const houseNo =
-        document.getElementById("house_no").value.trim();
-
-    const street =
-        document.getElementById("street").value.trim();
-
-    const city =
-        document.getElementById("city").value.trim();
-
-    const state =
-        document.getElementById("state").value.trim();
-
-    const pincode =
-        document.getElementById("pincode").value.trim();
-
-    const payment =
-        document.getElementById("payment").value;
-
-
-    /* =====================================================
-       GENERATE UNIQUE LIARA ORDER NUMBER
-    ===================================================== */
-
-    const now = new Date();
-
-    const datePart =
-        String(now.getDate()).padStart(2,"0") +
-        String(now.getMonth() + 1).padStart(2,"0") +
-        String(now.getFullYear()).slice(-2);
-
-    const randomPart =
-        Math.floor(1000 + Math.random() * 9000);
-
-    const orderNumber =
-        "LIARA-" + datePart + "-" + randomPart;
-
-
-    /* =====================================================
-       PRODUCTS
-    ===================================================== */
-
-    let productNames = "";
-    let totalQuantity = 0;
-
-    checkoutItems.forEach(function(product){
-
-        const quantity =
-            Number(product.quantity || 1);
-
-        const salePrice = getProductSalePrice(product);
-        const mrpPrice = getProductMRP(product);
-        const gstRate = getProductGST(product);
-        const hsnCode = product.hsn_code || product.hsn || "";
-
-        productNames +=
-            (typeof getProductDisplayName === "function"
-                ? getProductDisplayName(product)
-                : (product.name || "Product")) +
-            " × " +
-            quantity +
-            " | MRP ₹" + mrpPrice +
-            " | SALE ₹" + salePrice +
-            (gstRate > 0 ? " | GST " + gstRate + "%" : "") +
-            (hsnCode ? " | HSN " + hsnCode : "") +
-            ", ";
-
-        totalQuantity += quantity;
-    });
-
-    productNames =
-        productNames.replace(/,\s*$/,"");
-
-    productNames +=
-        " | MRP TOTAL ₹" + mrpTotal +
-        " | DISCOUNT ₹" + discountTotal +
-        " | SALE SUBTOTAL ₹" + subtotal +
-        " | GST ₹" + gstTotal +
-        " | SHIPPING ₹" + shippingTotal +
-        (shippingIsFree ? " (FREE)" : "");
-
-
-    /* =====================================================
-       SAVE ORDER
-    ===================================================== */
-
-    const {error} =
-        await supabaseClient
-        .from("orders")
-        .insert([{
-
-            user_id:
-                customerUser.id,
-
-            order_number:
-                orderNumber,
-
-            customer_name:
-                customerName,
-
-            phone:
-                phone,
-
-            house_no:
-                houseNo,
-
-            street:
-                street,
-
-            city:
-                city,
-
-            state:
-                state,
-
-            pincode:
-                pincode,
-
-            address:
-                [
-                    houseNo,
-                    street,
-                    city,
-                    state,
-                    pincode
-                ]
-                .filter(Boolean)
-                .join(", "),
-
-            product:
-                productNames,
-
-            quantity:
-                totalQuantity,
-
-            total:
-                total,
-
-            /* Invoice / GST data — selling prices are GST-inclusive */
-            subtotal:
-                Number(subtotal || 0),
-
-            discount:
-                Number(discountTotal || 0),
-
-            gst_amount:
-                Number(gstTotal || 0),
-
-            gst_rate:
-                checkoutItems.length === 1
-                    ? Number(getProductGST(checkoutItems[0]) || 0)
-                    : 0,
-
-            hsn_code:
-                checkoutItems.length === 1
-                    ? (checkoutItems[0].hsn_code || checkoutItems[0].hsn || "")
-                    : "",
-
-            items:
-                checkoutItems.map(function(product){
-                    return {
-                        name: product.name || "Product",
-                        quantity: Number(product.quantity || 1),
-                        mrp: getProductMRP(product),
-                        sale_price: getProductSalePrice(product),
-                        discount_percent: getProductDiscount(
-                            product,
-                            getProductMRP(product),
-                            getProductSalePrice(product)
-                        ),
-                        gst_rate: getProductGST(product),
-                        hsn_code: product.hsn_code || product.hsn || ""
-                    };
-                }),
-
-            payment_method:
-                payment,
-
-            status:
-                statusText,
-
-            shipping_status:
-                "Order Received"
-
-        }]);
-
-
-    if(error){
-        throw error;
-    }
-
-    /* =====================================================
-       KEEP ORDER NUMBER FOR SUCCESS / TRACKING
-    ===================================================== */
-
-    localStorage.setItem(
-        "liaraLastOrderNumber",
-        orderNumber
-    );
-
-    return orderNumber;
-}
-
-
-async function createRazorpayOrder() {
-
-    /* =====================================================
-       FINAL TOTAL RE-CALCULATION
-       Keep checkout, bill and Razorpay on the same amount.
-       Shipping from Admin Settings is included here.
-    ===================================================== */
-    calculateCheckoutTotals();
-
-    const { data, error } =
-        await supabaseClient.functions.invoke(
-            "create-razorpay-order",
-            {
-                body: {
-                    action: "create",
-                    amount: total,
-                    receipt:
-                        "liara_" + Date.now()
-                }
-            }
-        );
-
-
-    if(error) {
-        throw new Error(
-            error.message ||
-            "Could not connect to Razorpay."
-        );
-    }
-
-
-    if(!data || !data.success || !data.order) {
-        throw new Error(
-            data?.error ||
-            "Could not create Razorpay order."
-        );
-    }
-
-
-    return data.order;
-}
-
-
-async function verifyRazorpayPayment(response) {
-
-    let items = checkoutItems.map(function(product) {
-        return {
-            name: product.name || "Product",
-            quantity: Number(product.quantity || 1),
-            mrp: getProductMRP(product),
-            sale_price: getProductSalePrice(product),
-            discount_percent: getProductDiscount(
-                product,
-                getProductMRP(product),
-                getProductSalePrice(product)
-            ),
-            gst_rate: getProductGST(product),
-            hsn_code: product.hsn_code || product.hsn || ""
-        };
-    });
-
-    const orderPayload = {
-        customer_name: document.getElementById("name").value.trim(),
-        phone: document.getElementById("mobile").value.trim(),
-        house_no: document.getElementById("house_no").value.trim(),
-        street: document.getElementById("street").value.trim(),
-        city: document.getElementById("city").value.trim(),
-        state: document.getElementById("state").value.trim(),
-        pincode: document.getElementById("pincode").value.trim(),
-        total: Number(total || 0),
-        pricing: {
-            mrp_total: Number(mrpTotal || 0),
-            discount_total: Number(discountTotal || 0),
-            sale_subtotal: Number(subtotal || 0),
-            gst_total: Number(gstTotal || 0),
-            shipping: Number(shippingTotal || 0),
-            shipping_free: Boolean(shippingIsFree)
-        },
-        items: items
-    };
-
-    const { data, error } =
-        await supabaseClient.functions.invoke(
-            "create-razorpay-order",
-            {
-                body: {
-                    action: "verify_and_save",
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_signature: response.razorpay_signature,
-                    order: orderPayload
-                }
-            }
-        );
-
-    if(error) {
-        throw new Error(error.message || "Payment/order verification failed.");
-    }
-
-    if(!data || !data.success || !data.verified || !data.saved) {
-        throw new Error(data?.error || "Payment was verified, but the order could not be saved.");
-    }
-
-    return data;
-}
-
-
-async function sendAutomaticWhatsApp(orderId) {
-
-    try {
-        if (!orderId) return { success:false, skipped:true };
-
-        const { data: order, error: orderError } =
-            await supabaseClient
-                .from("orders")
-                .select("id,order_number,customer_name,phone,total,payment_method,shipping_status")
-                .eq("id", orderId)
-                .maybeSingle();
-
-        if (orderError || !order) {
-            console.warn("WhatsApp: order could not be loaded", orderError);
-            return { success:false, skipped:true };
-        }
-
-        const { data, error } =
-            await supabaseClient.functions.invoke(
-                "whatsapp-order-notify",
-                {
-                    body: {
-                        order: order,
-                        order_id: order.id,
-                        order_number: order.order_number,
-                        customer_name: order.customer_name,
-                        phone: order.phone,
-                        total: order.total,
-                        payment_method: order.payment_method,
-                        shipping_status: order.shipping_status || "Shipway Booked"
-                    }
-                }
-            );
-
-        if (error || !data?.success) {
-            console.warn("WhatsApp automatic notification failed:", error || data?.error);
-            return { success:false, error:error?.message || data?.error };
-        }
-
-        return data;
-
-    } catch (error) {
-        console.warn("WhatsApp automatic notification error:", error);
-        return { success:false, error:error?.message };
-    }
-}
-
-
-async function createShipwayOrder(orderId) {
-
-    if (!orderId) {
-        throw new Error("Order ID is missing for Shipway booking.");
-    }
-
-    const { data, error } =
-        await supabaseClient.functions.invoke(
-            "shipway-create-order",
-            {
-                body: {
-                    order_id: orderId
-                }
-            }
-        );
-
-    if (error) {
-        throw new Error(
-            error.message ||
-            "Shipway order could not be created."
-        );
-    }
-
-    if (!data || !data.success) {
-        throw new Error(
-            data?.error ||
-            "Shipway order could not be created."
-        );
-    }
-
-    return data;
-}
-
-async function getLatestCustomerOrder() {
-
-    const { data: authData, error: authError } =
-        await supabaseClient.auth.getUser();
-
-    if (authError || !authData?.user) {
+    if(authError||!authData?.user){
         throw new Error("Customer login session expired. Please log in again.");
     }
 
-    const { data, error } =
-        await supabaseClient
-            .from("orders")
-            .select("id")
-            .eq("user_id", authData.user.id)
-            .order("created_at", { ascending: false })
-            .limit(1)
-            .maybeSingle();
+    const customerUser=authData.user;
+    const customerName=document.getElementById("name").value.trim();
+    const phone=document.getElementById("mobile").value.trim();
+    const houseNo=document.getElementById("house_no").value.trim();
+    const street=document.getElementById("street").value.trim();
+    const city=document.getElementById("city").value.trim();
+    const state=document.getElementById("state").value.trim();
+    const pincode=document.getElementById("pincode").value.trim();
+    const payment=document.getElementById("payment").value;
 
-    if (error || !data?.id) {
-        throw new Error("Order was saved, but its ID could not be found.");
-    }
+    let productNames="";
+    let totalQuantity=0;
 
-    return data.id;
+    checkoutItems.forEach(function(product){
+        const quantity=Number(product.quantity||1);
+        productNames+=getProductDisplayName(product)+" × "+quantity+", ";
+        totalQuantity+=quantity;
+    });
+
+    productNames=productNames.replace(/,\s*$/,"");
+
+    const {error}=await supabaseClient.from("orders").insert([{
+        user_id:customerUser.id,
+        customer_name:customerName,
+        phone:phone,
+        house_no:houseNo,
+        street:street,
+        city:city,
+        state:state,
+        pincode:pincode,
+        address:[houseNo,street,city,state,pincode].filter(Boolean).join(", "),
+        product:productNames,
+        quantity:totalQuantity,
+        total:total,
+        payment_method:payment,
+        status:statusText
+    }]);
+
+    if(error) throw error;
 }
 
+async function createRazorpayOrder(){
+    const {data,error}=await supabaseClient.functions.invoke("create-razorpay-order",{
+        body:{action:"create",amount:total,receipt:"liara_"+Date.now()}
+    });
 
-function clearCheckoutStorage() {
-
-    localStorage.removeItem(
-        "liaraPendingCheckout"
-    );
-
-    localStorage.removeItem(
-        "liaraPendingGoogleOrder"
-    );
-
-
-    if(checkoutMode === "buyNow") {
-
-        localStorage.removeItem(
-            "liaraBuyNow"
-        );
-
-        localStorage.removeItem(
-            "liaraCheckoutMode"
-        );
-
-    }
-    else {
-
-        localStorage.removeItem(
-            "liaraCart"
-        );
-
-        localStorage.removeItem(
-            "liaraCheckoutMode"
-        );
-
-    }
+    if(error) throw new Error(error.message||"Could not connect to Razorpay.");
+    if(!data||!data.success||!data.order) throw new Error(data?.error||"Could not create Razorpay order.");
+    return data.order;
 }
 
+async function verifyRazorpayPayment(response){
+    const items=checkoutItems.map(function(product){
+        const variant=getProductVariant(product);
+        return {
+            name:product.name||"Product",
+            variant:variant?{
+                label:variant.label,
+                unit:variant.unit||""
+            }:null,
+            quantity:Number(product.quantity||1),
+            price:getProductPrice(product)
+        };
+    });
 
-function openCustomerWhatsApp(orderNumber) {
-    const phoneRaw = document.getElementById("mobile")?.value?.trim() || "";
-    const phone = phoneRaw.replace(/\\D/g, "");
+    const orderPayload={
+        customer_name:document.getElementById("name").value.trim(),
+        phone:document.getElementById("mobile").value.trim(),
+        house_no:document.getElementById("house_no").value.trim(),
+        street:document.getElementById("street").value.trim(),
+        city:document.getElementById("city").value.trim(),
+        state:document.getElementById("state").value.trim(),
+        pincode:document.getElementById("pincode").value.trim(),
+        total:Number(total||0),
+        items:items
+    };
 
-    if (!phone || phone.length < 10) {
-        return;
+    const {data,error}=await supabaseClient.functions.invoke("create-razorpay-order",{
+        body:{
+            action:"verify_and_save",
+            razorpay_order_id:response.razorpay_order_id,
+            razorpay_payment_id:response.razorpay_payment_id,
+            razorpay_signature:response.razorpay_signature,
+            order:orderPayload
+        }
+    });
+
+    if(error) throw new Error(error.message||"Payment/order verification failed.");
+    if(!data||!data.success||!data.verified||!data.saved){
+        throw new Error(data?.error||"Payment was verified, but the order could not be saved.");
     }
 
-    const customerName =
-        document.getElementById("name")?.value?.trim() || "Customer";
-
-    const payment =
-        document.getElementById("payment")?.value || "Payment";
-
-    const lines = [
-        "LIARA PROFESSIONAL™",
-        "",
-        "🎉 Order Confirmed",
-        "Order: " + (orderNumber || "LIARA ORDER"),
-        "Customer: " + customerName,
-        "",
-        "Sale Subtotal: ₹" + money(subtotal),
-        "GST Included: ₹" + money(gstTotal),
-        "Shipping: " + (shippingTotal > 0 ? "₹" + money(shippingTotal) : "FREE"),
-        "Total: ₹" + money(total),
-        "Payment: " + payment,
-        "",
-        "Thank you for shopping with Liara Professional™.",
-        "Your delivery tracking details will be shared when the shipment is booked."
-    ];
-
-    window.open(
-        "https://wa.me/" + phone + "?text=" +
-        encodeURIComponent(lines.join("\n")),
-        "_blank",
-        "noopener"
-    );
+    return data;
 }
 
-function orderSuccess(button) {
+function clearCheckoutStorage(){
+    localStorage.removeItem("liaraPendingCheckout");
+    localStorage.removeItem("liaraPendingGoogleOrder");
 
-    const orderNumber =
-        localStorage.getItem("liaraLastOrderNumber") || "";
+    if(checkoutMode==="buyNow"){
+        localStorage.removeItem("liaraBuyNow");
+    }else{
+        localStorage.removeItem("liaraCart");
+    }
 
+    localStorage.removeItem("liaraCheckoutMode");
+    localStorage.removeItem("liaraPaymentMethod");
+    localStorage.removeItem("liaraDeliveryCharge");
+    localStorage.removeItem("liaraOrderSubtotal");
+    localStorage.removeItem("liaraOrderFinalTotal");
+}
+
+function orderSuccess(button){
     clearCheckoutStorage();
+    showMessage("🎉 Order placed successfully!");
+    button.innerText="Order Placed ✓";
 
-    showMessage(
-        "🎉 Order placed successfully!"
-    );
-
-    button.innerText =
-        "Order Placed ✓";
-
-    const waButton = document.createElement("button");
-    waButton.type = "button";
-    waButton.className = "btn place-order";
-    waButton.style.marginTop = "10px";
-    waButton.style.background = "#25D366";
-    waButton.style.color = "#fff";
-    waButton.innerText = "💬 Send Order on WhatsApp";
-
-    waButton.onclick = function() {
-        openCustomerWhatsApp(orderNumber);
-    };
-
-    const messageBox = document.getElementById("message");
-    if (messageBox && messageBox.parentNode) {
-        messageBox.parentNode.insertBefore(
-            waButton,
-            messageBox.nextSibling
-        );
-    }
-
-    setTimeout(function() {
-        window.location.href =
-            "account.html";
-    }, 3500);
+    setTimeout(function(){
+        window.location.href="account.html";
+    },1500);
 }
 
+async function openRazorpayPayment(button){
+    showMessage("Creating secure payment...");
+    const razorpayOrder=await createRazorpayOrder();
 
-async function openRazorpayPayment(button) {
-
-    showMessage(
-        "Creating secure payment..."
-    );
-
-    const razorpayOrder =
-        await createRazorpayOrder();
-
-
-    const options = {
-
-        key:
-            RAZORPAY_KEY_ID,
-
-        amount:
-            razorpayOrder.amount,
-
-        currency:
-            razorpayOrder.currency || "INR",
-
-        name:
-            "Liara Professional™",
-
-        description:
-            "Liara Professional Order",
-
-        order_id:
-            razorpayOrder.id,
-
-        prefill: {
-            name:
-                document.getElementById("name").value.trim()
+    const options={
+        key:RAZORPAY_KEY_ID,
+        amount:razorpayOrder.amount,
+        currency:razorpayOrder.currency||"INR",
+        name:"Liara Professional™",
+        description:"Liara Professional Order",
+        order_id:razorpayOrder.id,
+        prefill:{name:document.getElementById("name").value.trim()},
+        notes:{
+            customer_name:document.getElementById("name").value.trim(),
+            phone:document.getElementById("mobile").value.trim()
         },
+        theme:{color:"#ad8232"},
 
-        notes: {
-            customer_name:
-                document.getElementById("name").value.trim(),
-            phone:
-                document.getElementById("mobile").value.trim()
-        },
-
-        theme: {
-            color: "#ad8232"
-        },
-
-        handler: async function(response) {
-
-            try {
-
-                button.innerText =
-                    "Verifying Payment...";
-
-                showMessage(
-                    "Verifying your payment..."
-                );
-
-
+        handler:async function(response){
+            try{
+                button.innerText="Verifying Payment...";
+                showMessage("Verifying your payment...");
                 await verifyRazorpayPayment(response);
-
-                showMessage(
-                    "Payment verified. Creating Shipway delivery..."
-                );
-
-                const savedOrderId =
-                    await getLatestCustomerOrder();
-
-                await createShipwayOrder(
-                    savedOrderId
-                );
-
-                const whatsappResult = await sendAutomaticWhatsApp(savedOrderId);
-                if (!whatsappResult?.success) {
-                    console.warn("Order is successful, but automatic WhatsApp notification was not sent.");
-                }
-
                 orderSuccess(button);
-
-            }
-            catch(error) {
-
-                console.error(
-                    "RAZORPAY SUCCESS HANDLER ERROR:",
-                    error
-                );
-
-                button.disabled = false;
-                button.innerText =
-                    "Place Order";
-
-                console.error("PAYMENT/ORDER ERROR DETAILS:", error);
-
-                showMessage(
-                    "Payment received, but we could not finish your order. Please do not pay again. Contact us with your payment ID."
-                );
+            }catch(error){
+                console.error("RAZORPAY SUCCESS HANDLER ERROR:",error);
+                button.disabled=false;
+                button.innerText="Place Order";
+                showMessage("Payment received, but we could not finish your order. Please do not pay again. Contact us with your payment ID.");
             }
         },
 
-        modal: {
-            ondismiss: function() {
-
-                button.disabled = false;
-                button.innerText =
-                    "Place Order";
-
-                showMessage(
-                    "Payment cancelled. Your order was not placed."
-                );
+        modal:{
+            ondismiss:function(){
+                button.disabled=false;
+                button.innerText="Place Order";
+                showMessage("Payment cancelled. Your order was not placed.");
             }
         }
     };
 
+    const razorpay=new Razorpay(options);
 
-    const razorpay =
-        new Razorpay(options);
-
-
-    razorpay.on(
-        "payment.failed",
-        function(response) {
-
-            console.error(
-                "RAZORPAY PAYMENT FAILED:",
-                response.error
-            );
-
-            button.disabled = false;
-            button.innerText =
-                "Place Order";
-
-            showMessage(
-                response?.error?.description ||
-                "Payment failed. Please try again."
-            );
-        }
-    );
-
+    razorpay.on("payment.failed",function(response){
+        console.error("RAZORPAY PAYMENT FAILED:",response.error);
+        button.disabled=false;
+        button.innerText="Place Order";
+        showMessage(response?.error?.description||"Payment failed. Please try again.");
+    });
 
     razorpay.open();
 }
 
-
-
 /* =====================================================
-   SUBMIT CHECKOUT
+   SUBMIT
 ===================================================== */
-
-document.getElementById(
-    "checkoutForm"
-).addEventListener(
-    "submit",
-    async function(event) {
-
-        event.preventDefault();
-
-
-        /* =====================================================
-           ALWAYS LOCK THE FINAL CHECKOUT TOTAL
-           Includes Admin shipping charge/free-shipping rule.
-        ===================================================== */
-        calculateCheckoutTotals();
-
-        /* CHECK ORDER */
-
-        if(!checkoutItems || checkoutItems.length === 0) {
-
-            showMessage(
-                "Your order is empty."
-            );
-
-            return;
-        }
-
-
-        /* VALIDATE */
-
-        if(!validateForm()) {
-
-            showMessage(
-                "Please fill all required fields."
-            );
-
-            return;
-        }
-
-
-        /* =====================================================
-           GOOGLE LOGIN
-        ===================================================== */
-
-        const {
-            data: { user },
-            error: userError
-        } = await supabaseClient
-            .auth
-            .getUser();
-
-
-        if(userError) {
-
-            console.error(
-                "AUTH ERROR:",
-                userError
-            );
-        }
-
-
-        /* =====================================================
-           IF NOT LOGGED IN
-        ===================================================== */
-
-        if(!user) {
-
-            const checkoutCustomerData = {
-
-                name:
-                    document.getElementById("name").value.trim(),
-
-                mobile:
-                    document.getElementById("mobile").value.trim(),
-
-                house_no:
-                    document.getElementById("house_no").value.trim(),
-
-                street:
-                    document.getElementById("street").value.trim(),
-
-                city:
-                    document.getElementById("city").value.trim(),
-
-                state:
-                    document.getElementById("state").value.trim(),
-
-                pincode:
-                    document.getElementById("pincode").value.trim(),
-
-                payment:
-                    document.getElementById("payment").value
-            };
-
-
-            localStorage.setItem(
-                "liaraPendingCheckout",
-                JSON.stringify(checkoutCustomerData)
-            );
-
-            localStorage.setItem(
-                "liaraPendingGoogleOrder",
-                "true"
-            );
-
-
-            showMessage(
-                "Please continue with Google..."
-            );
-
-
-            const { error } =
-                await supabaseClient
-                    .auth
-                    .signInWithOAuth({
-                        provider: "google",
-                        options: {
-                            redirectTo:
-                                window.location.origin +
-                                window.location.pathname
-                        }
-                    });
-
-
-            if(error) {
-
-                console.error(
-                    "GOOGLE LOGIN ERROR:",
-                    error
-                );
-
-                localStorage.removeItem(
-                    "liaraPendingGoogleOrder"
-                );
-
-                showMessage(
-                    "Google login failed: " +
-                    error.message
-                );
-            }
-
-
-            return;
-        }
-
-
-        /* =====================================================
-           CUSTOMER + BUTTON
-        ===================================================== */
-
-        const button =
-            document.getElementById(
-                "placeOrderButton"
-            );
-
-
-        button.disabled = true;
-        button.innerText =
-            "Processing...";
-
-
-        try {
-
-            const payment =
-                document.getElementById(
-                    "payment"
-                ).value;
-
-
-            /* =====================================================
-               ONLINE PAYMENT
-            ===================================================== */
-
-            if(payment === "Online Payment") {
-
-                await openRazorpayPayment(
-                    button
-                );
-
-                return;
-            }
-
-
-            /* =====================================================
-               CASH ON DELIVERY
-            ===================================================== */
-
-            if(payment === "Cash on Delivery") {
-
-                /* Recalculate once more so the saved order/bill
-                   receives the exact same shipping amount shown
-                   on checkout. */
-                calculateCheckoutTotals();
-
-                button.innerText =
-                    "Placing Order...";
-
-                const savedOrderId =
-                    await saveOrderToDatabase(
-                        "Order Received"
-                    );
-
-                showMessage(
-                    "Order received. Creating Shipway delivery..."
-                );
-
-                await createShipwayOrder(
-                    savedOrderId
-                );
-
-                const whatsappResult = await sendAutomaticWhatsApp(savedOrderId);
-                if (!whatsappResult?.success) {
-                    console.warn("Order is successful, but automatic WhatsApp notification was not sent.");
-                }
-
-                orderSuccess(button);
-
-                return;
-            }
-
-
-            throw new Error(
-                "Please select a valid payment method."
-            );
-
-        }
-        catch(error) {
-
-            console.error(
-                "ORDER ERROR:",
-                error
-            );
-
-            button.disabled = false;
-            button.innerText =
-                "Place Order";
-
-            showMessage(
-                error?.message ||
-                "Order could not be placed. Please try again."
-            );
-        }
+document.getElementById("checkoutForm").addEventListener("submit",async function(event){
+    event.preventDefault();
+
+    if(!checkoutItems||checkoutItems.length===0){
+        showMessage("Your order is empty.");
+        return;
     }
-);
 
+    if(!validateForm()){
+        showMessage("Please fill all required fields.");
+        return;
+    }
 
-/* =====================================================
-   MESSAGE
-===================================================== */
+    const {data:{user},error:userError}=await supabaseClient.auth.getUser();
 
-function showMessage(text) {
+    if(userError) console.error("AUTH ERROR:",userError);
 
-    document.getElementById(
-        "message"
-    ).innerText =
-        text;
+    if(!user){
+        const checkoutCustomerData={
+            name:document.getElementById("name").value.trim(),
+            mobile:document.getElementById("mobile").value.trim(),
+            house_no:document.getElementById("house_no").value.trim(),
+            street:document.getElementById("street").value.trim(),
+            city:document.getElementById("city").value.trim(),
+            state:document.getElementById("state").value.trim(),
+            pincode:document.getElementById("pincode").value.trim(),
+            payment:document.getElementById("payment").value,
+            delivery_charge:Number(localStorage.getItem("liaraDeliveryCharge")||0)
+        };
 
+        localStorage.setItem("liaraPendingCheckout",JSON.stringify(checkoutCustomerData));
+        localStorage.setItem("liaraPendingGoogleOrder","true");
+        showMessage("Please continue with Google...");
+
+        const {error}=await supabaseClient.auth.signInWithOAuth({
+            provider:"google",
+            options:{
+                redirectTo:window.location.origin+window.location.pathname
+            }
+        });
+
+        if(error){
+            console.error("GOOGLE LOGIN ERROR:",error);
+            localStorage.removeItem("liaraPendingGoogleOrder");
+            showMessage("Google login failed: "+error.message);
+        }
+        return;
+    }
+
+    const button=document.getElementById("placeOrderButton");
+    button.disabled=true;
+    button.innerText="Processing...";
+
+    try{
+        const payment=document.getElementById("payment").value;
+        total=syncCheckoutPayment();
+
+        if(payment==="Online Payment"){
+            await openRazorpayPayment(button);
+            return;
+        }
+
+        if(payment==="Cash on Delivery"){
+            button.innerText="Placing Order...";
+            await saveOrderToDatabase("Order Received");
+            orderSuccess(button);
+            return;
+        }
+
+        throw new Error("Please select a valid payment method.");
+    }catch(error){
+        console.error("ORDER ERROR:",error);
+        button.disabled=false;
+        button.innerText="Place Order";
+        showMessage(error?.message||"Order could not be placed. Please try again.");
+    }
+});
+
+function showMessage(text){
+    document.getElementById("message").innerText=text;
 }
 
-
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHtml(value) {
-
-    return String(value ?? "")
+function escapeHtml(value){
+    return String(value??"")
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
-
 }
-
 </script>
-
-
 </body>
-
 </html>
-```
