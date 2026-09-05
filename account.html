@@ -1570,6 +1570,43 @@ function openInvoice(index){
     );
 
 
+  const mrpStored = Number(
+    o.mrp_total ??
+    p.mrp_total ??
+    p.original_total ??
+    p.mrp ??
+    0
+  );
+
+  const itemSaleTotal = items.reduce((sum,it)=>{
+    const qty = Number(it.quantity || it.product_quantity || it.qty || 1);
+    const price = Number(it.sale_price ?? it.price ?? 0);
+    return sum + (price * qty);
+  },0);
+
+  const mrpTotal = mrpStored > 0
+    ? mrpStored
+    : items.reduce((sum,it)=>{
+        const qty = Number(it.quantity || it.product_quantity || it.qty || 1);
+        const mrp = Number(
+          it.mrp ??
+          it.mrp_price ??
+          it.original_price ??
+          it.originalPrice ??
+          it.regular_price ??
+          it.compare_at_price ??
+          it.price_before_discount ??
+          it.sale_price ??
+          it.price ??
+          0
+        );
+        return sum + (mrp * qty);
+      },0);
+
+  const finalDiscount = discount > 0
+    ? discount
+    : Math.max(0, mrpTotal - (subtotal > 0 ? subtotal : itemSaleTotal));
+
   const hsn =
     o.hsn_code || "";
 
@@ -1651,7 +1688,8 @@ function openInvoice(index){
           <th>HSN</th>
           <th>Qty</th>
           <th>GST</th>
-          <th>Amount</th>
+          <th>MRP</th>
+          <th>Sale</th>
         </tr>
 
       </thead>
@@ -1675,6 +1713,18 @@ function openInvoice(index){
                 it.sale_price ||
                 it.price ||
                 0
+              );
+
+            const mrp =
+              Number(
+                it.mrp ??
+                it.mrp_price ??
+                it.original_price ??
+                it.originalPrice ??
+                it.regular_price ??
+                it.compare_at_price ??
+                it.price_before_discount ??
+                price
               );
 
 
@@ -1716,6 +1766,12 @@ function openInvoice(index){
 
                 <td>
                   ${money(
+                    mrp * qty
+                  )}
+                </td>
+
+                <td>
+                  ${money(
                     price * qty
                   )}
                 </td>
@@ -1735,9 +1791,9 @@ function openInvoice(index){
     <div class="totals">
 
       <div class="total-line">
-        <span>Sale Subtotal</span>
+        <span>MRP Total</span>
         <b>
-          ${money(subtotal)}
+          ${money(mrpTotal)}
         </b>
       </div>
 
@@ -1745,13 +1801,21 @@ function openInvoice(index){
       <div class="total-line">
         <span>Discount</span>
         <b>
-          - ${money(discount)}
+          - ${money(finalDiscount)}
         </b>
       </div>
 
 
       <div class="total-line">
-        <span>GST</span>
+        <span>Total After Discount</span>
+        <b>
+          ${money(subtotal > 0 ? subtotal : itemSaleTotal)}
+        </b>
+      </div>
+
+
+      <div class="total-line">
+        <span>GST (Included)</span>
         <b>
           ${money(gst)}
         </b>
@@ -1771,7 +1835,7 @@ function openInvoice(index){
 
 
       <div class="total-line grand">
-        <span>Total</span>
+        <span>Grand Total</span>
         <b>
           ${money(o.total)}
         </b>
