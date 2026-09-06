@@ -3415,6 +3415,29 @@ function renderSales(orders){
 
 }
 
+
+<style id="liara-stock-variant-manager-css">
+.stock-variant-box{
+    margin:12px 0 16px;
+    padding:18px;
+    border:1px solid #eadfce;
+    border-radius:14px;
+    background:#fffdf9;
+}
+.stock-variant-box h3{margin:0 0 5px}
+.stock-variant-box .variant-help{color:#777;font-size:12px;margin-bottom:14px}
+.stock-variant-box .variant-preview{
+    margin-top:10px;padding:10px 12px;border-radius:9px;
+    background:#f7f3ec;color:#555;font-size:12px;
+}
+.stock-variant-box .variant-error{
+    margin-top:10px;color:#a33;font-size:12px;font-weight:700;
+}
+@media(max-width:700px){
+    .stock-variant-box .form-grid{grid-template-columns:1fr!important}
+}
+</style>
+
 /* =========================================================
    STOCK — WAREHOUSE / ONLINE / PARTY
 ========================================================= */
@@ -3447,9 +3470,13 @@ async function loadStock(){
         <div id="stockWarehousePanel" class="stock-location-panel">
             <div class="stock-location-head">
                 <div><h3>🏭 Warehouse Stock</h3><p>Add new stock here. This is the source for Online Website and Party.</p></div>
-                <button class="btn" onclick="showWarehouseAddForm()">➕ Add Stock</button>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn" onclick="showProductVariantForm()">➕ Add Product Size / Variant</button>
+                    <button class="btn" onclick="showWarehouseAddForm()">➕ Add Stock</button>
+                </div>
             </div>
             <div id="warehouseAddForm"></div>
+            <div id="productVariantForm"></div>
             <div id="warehouseStockTable"><div class="message">Loading...</div></div>
         </div>
 
@@ -3540,6 +3567,321 @@ async function renderNewStockLocations(){
 function productOptions(selected=''){
     return (allProducts||[]).map(p=>`<option value="${p.id}" ${String(p.id)===String(selected)?'selected':''}>${escapeHtml(p.name)}</option>`).join('');
 }
+
+
+/* =========================================================
+   PRODUCT SIZE / VARIANT MANAGER
+   Adds/updates the same product_stock_variants row used by
+   the customer product page.
+========================================================= */
+
+function normalizeStockUnit(value){
+    const u = String(value || "").trim().toLowerCase();
+    if(["g","gram","grams"].includes(u)) return "g";
+    if(["kg","kilogram","kilograms"].includes(u)) return "kg";
+    if(["ml","millilitre","milliliter","millilitres","milliliters"].includes(u)) return "ml";
+    if(["l","ltr","litre","liter","litres","liters"].includes(u)) return "l";
+    return u;
+}
+
+function stockVariantKeyLocal(size, unit){
+    const n = Number(size);
+    const sizeKey = Number.isFinite(n) ? String(n) : String(size || "").trim().toLowerCase();
+    return sizeKey + "|" + normalizeStockUnit(unit);
+}
+
+function showProductVariantForm(productId=""){
+    const box = document.getElementById("productVariantForm");
+    if(!box) return;
+
+    const selectedProduct = allProducts.find(p => String(p.id) === String(productId));
+    const options = productOptions(productId);
+
+    box.innerHTML = `
+        <div class="stock-variant-box">
+            <h3>➕ Add Product Size / Variant</h3>
+            <div class="variant-help">
+                Ethe product da size/unit, price te online stock define karo.
+                Same Product + Size + Unit dubara paun te duplicate nahi banega — existing variant update hovega.
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Product</label>
+                    <select id="stockVariantProduct" onchange="previewProductVariant()">
+                        ${options}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Size</label>
+                    <input id="stockVariantSize" type="number" min="0.001" step="any"
+                           placeholder="e.g. 50" oninput="previewProductVariant()">
+                </div>
+
+                <div class="form-group">
+                    <label>Unit</label>
+                    <select id="stockVariantUnit" onchange="previewProductVariant()">
+                        <option value="g">G</option>
+                        <option value="ml">ML</option>
+                        <option value="kg">KG</option>
+                        <option value="l">L</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>MRP ₹</label>
+                    <input id="stockVariantMRP" type="number" min="0" step="0.01"
+                           placeholder="e.g. 199" oninput="previewProductVariant()">
+                </div>
+
+                <div class="form-group">
+                    <label>Sale Price ₹ <small>(optional)</small></label>
+                    <input id="stockVariantSale" type="number" min="0" step="0.01"
+                           placeholder="e.g. 149">
+                </div>
+
+                <div class="form-group">
+                    <label>Online Stock / Quantity</label>
+                    <input id="stockVariantOnline" type="number" min="0" step="1"
+                           value="0" placeholder="e.g. 100">
+                </div>
+
+                <div class="form-group">
+                    <label>Warehouse Stock <small>(optional)</small></label>
+                    <input id="stockVariantWarehouse" type="number" min="0" step="1"
+                           value="0" placeholder="e.g. 20">
+                </div>
+
+                <div class="form-group full">
+                    <label>Note <small>(optional)</small></label>
+                    <input id="stockVariantNote" type="text"
+                           placeholder="e.g. New 50g variant">
+                </div>
+            </div>
+
+            <div id="stockVariantPreview" class="variant-preview">
+                Product + size select karo.
+            </div>
+            <div id="stockVariantError" class="variant-error"></div>
+
+            <div class="settings-actions" style="margin-top:14px">
+                <button class="btn green-btn" onclick="saveProductVariant()">💾 Save Product Variant</button>
+                <button class="btn gray-btn" onclick="document.getElementById('productVariantForm').innerHTML=''">Cancel</button>
+            </div>
+        </div>
+    `;
+
+    previewProductVariant();
+}
+
+function previewProductVariant(){
+    const productEl = document.getElementById("stockVariantProduct");
+    const sizeEl = document.getElementById("stockVariantSize");
+    const unitEl = document.getElementById("stockVariantUnit");
+    const mrpEl = document.getElementById("stockVariantMRP");
+    const preview = document.getElementById("stockVariantPreview");
+    if(!preview) return;
+
+    const product = allProducts.find(p => String(p.id) === String(productEl?.value));
+    const size = String(sizeEl?.value || "").trim();
+    const unit = normalizeStockUnit(unitEl?.value);
+    const mrp = Number(mrpEl?.value || 0);
+
+    if(!product){
+        preview.textContent = "Product select karo.";
+        return;
+    }
+
+    preview.textContent =
+        "Variant: " + (product.name || "Product") +
+        (size ? " • " + size + " " + unit : "") +
+        (mrp > 0 ? " • MRP ₹" + mrp.toLocaleString("en-IN") : "");
+}
+
+async function saveProductVariant(){
+    const errorBox = document.getElementById("stockVariantError");
+    if(errorBox) errorBox.textContent = "";
+
+    const productId = document.getElementById("stockVariantProduct")?.value;
+    const sizeRaw = document.getElementById("stockVariantSize")?.value;
+    const unit = normalizeStockUnit(document.getElementById("stockVariantUnit")?.value);
+    const mrp = Number(document.getElementById("stockVariantMRP")?.value || 0);
+    const saleRaw = document.getElementById("stockVariantSale")?.value;
+    const sale = saleRaw === "" || saleRaw == null ? null : Number(saleRaw);
+    const onlineQty = Number(document.getElementById("stockVariantOnline")?.value || 0);
+    const warehouseQty = Number(document.getElementById("stockVariantWarehouse")?.value || 0);
+    const note = String(document.getElementById("stockVariantNote")?.value || "").trim();
+
+    const size = Number(sizeRaw);
+
+    if(!productId){
+        alert("Product select karo.");
+        return;
+    }
+    if(!Number.isFinite(size) || size <= 0){
+        alert("Valid size pao.");
+        return;
+    }
+    if(!unit){
+        alert("Unit select karo.");
+        return;
+    }
+    if(!Number.isFinite(mrp) || mrp <= 0){
+        alert("Valid MRP pao.");
+        return;
+    }
+    if(sale !== null && (!Number.isFinite(sale) || sale < 0 || sale > mrp)){
+        alert("Sale price MRP ton vadh nahi ho sakdi.");
+        return;
+    }
+    if(!Number.isInteger(onlineQty) || onlineQty < 0){
+        alert("Valid online stock pao.");
+        return;
+    }
+    if(!Number.isInteger(warehouseQty) || warehouseQty < 0){
+        alert("Valid warehouse stock pao.");
+        return;
+    }
+
+    const product = allProducts.find(p => String(p.id) === String(productId));
+    if(!product){
+        alert("Product not found.");
+        return;
+    }
+
+    const key = stockVariantKeyLocal(size, unit);
+
+    try{
+        // Check existing variant first.
+        const {data: existing, error: findError} = await supabaseClient
+            .from("product_stock_variants")
+            .select("id,size,unit,online_given,online_sold")
+            .eq("product_id", product.id);
+
+        if(findError) throw findError;
+
+        const rows = Array.isArray(existing) ? existing : [];
+        const found = rows.find(v => stockVariantKeyLocal(v.size, v.unit) === key);
+
+        const payload = {
+            product_id: product.id,
+            size: size,
+            unit: unit,
+            online_given: onlineQty,
+            ...(found ? {} : {online_sold: 0})
+        };
+
+        let savedVariant = null;
+
+        if(found){
+            // Never reset already-sold quantity. New online stock becomes the
+            // requested online_given value so the available amount stays
+            // online_given - online_sold.
+            const sold = Number(found.online_sold || 0);
+            payload.online_given = Math.max(sold, onlineQty);
+
+            const result = await supabaseClient
+                .from("product_stock_variants")
+                .update(payload)
+                .eq("id", found.id)
+                .select()
+                .single();
+
+            if(result.error) throw result.error;
+            savedVariant = result.data;
+        }else{
+            const result = await supabaseClient
+                .from("product_stock_variants")
+                .insert(payload)
+                .select()
+                .single();
+
+            if(result.error) throw result.error;
+            savedVariant = result.data;
+        }
+
+        // Keep product.variants synchronized so the customer page can show
+        // size + MRP + sale price. Stock remains authoritative in
+        // product_stock_variants.
+        let variants = product.variants;
+        if(typeof variants === "string"){
+            try{ variants = JSON.parse(variants); }catch(e){ variants = []; }
+        }
+        if(!Array.isArray(variants)) variants = [];
+
+        const idx = variants.findIndex(v =>
+            stockVariantKeyLocal(v?.size, v?.unit) === key
+        );
+
+        const variantObject = {
+            size: size,
+            unit: unit,
+            price: mrp,
+            sale_price: sale !== null && sale > 0 && sale < mrp ? sale : null,
+            discount_percent: sale !== null && sale > 0 && sale < mrp
+                ? Number((((mrp - sale) / mrp) * 100).toFixed(2))
+                : 0,
+            sale_active: sale !== null && sale > 0 && sale < mrp,
+            stock: Math.max(0, Number(onlineQty) || 0)
+        };
+
+        if(idx >= 0) variants[idx] = variantObject;
+        else variants.push(variantObject);
+
+        const productUpdate = await supabaseClient
+            .from("products")
+            .update({variants: variants})
+            .eq("id", product.id);
+
+        if(productUpdate.error) throw productUpdate.error;
+
+        // Optional warehouse opening stock for this exact variant.
+        // This is recorded separately, without changing the existing warehouse
+        // transfer workflow.
+        if(warehouseQty > 0){
+            const tx = await supabaseClient
+                .from("stock_transactions")
+                .insert({
+                    product_id: product.id,
+                    transaction_type: "purchase",
+                    quantity: warehouseQty,
+                    source: "warehouse",
+                    destination: "warehouse",
+                    note: note || ("Variant " + size + " " + unit + " stock received")
+                });
+            if(tx.error) throw tx.error;
+
+            const currentWarehouse = Number(product.warehouse_stock || 0);
+            const upWarehouse = await supabaseClient
+                .from("products")
+                .update({warehouse_stock: currentWarehouse + warehouseQty})
+                .eq("id", product.id);
+
+            if(upWarehouse.error) throw upWarehouse.error;
+        }
+
+        alert(
+            (found ? "Product variant updated successfully." : "Product variant added successfully.") +
+            "\n\n" +
+            (product.name || "Product") + " — " + size + " " + unit +
+            "\nMRP: ₹" + mrp.toLocaleString("en-IN") +
+            (sale !== null && sale > 0 && sale < mrp
+                ? "\nSale: ₹" + sale.toLocaleString("en-IN")
+                : "") +
+            "\nOnline Stock: " + onlineQty
+        );
+
+        document.getElementById("productVariantForm").innerHTML = "";
+        await loadStock();
+
+    }catch(err){
+        console.error("Product variant save error:", err);
+        if(errorBox) errorBox.textContent = err?.message || String(err);
+        alert("Product variant save failed:\n\n" + (err?.message || err));
+    }
+}
+
 
 function showWarehouseAddForm(productId=''){
     document.getElementById('warehouseAddForm').innerHTML=`<div class="stock-transfer-box"><h3>📥 Add Stock to Warehouse</h3><div class="form-grid"><div class="form-group"><label>Product</label><select id="warehouseProduct">${productOptions(productId)}</select></div><div class="form-group"><label>Quantity</label><input id="warehouseQty" type="number" min="1" placeholder="e.g. 50"></div><div class="form-group full"><label>Note / Supplier</label><input id="warehouseNote" type="text" placeholder="New stock from supplier"></div></div><div class="settings-actions"><button class="btn" onclick="saveWarehouseStock()">💾 Add to Warehouse</button><button class="btn gray-btn" onclick="document.getElementById('warehouseAddForm').innerHTML=''">Cancel</button></div></div>`;
