@@ -4924,10 +4924,15 @@ document.addEventListener(
 
 
       /* -----------------------------------------------
-         MASTER INGREDIENTS FIRST
+         MASTER INGREDIENTS — OPTIONAL
+         Never block formula loading if this query fails.
       ------------------------------------------------ */
 
-      await loadMasterIngredients();
+      try{
+        await loadMasterIngredients();
+      }catch(masterError){
+        console.warn("Master ingredients skipped:",masterError);
+      }
 
 
       /* -----------------------------------------------
