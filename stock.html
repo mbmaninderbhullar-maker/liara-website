@@ -99,6 +99,19 @@ tr:last-child td{border-bottom:0}
 .print-btn{background:#fff;border:1px solid #dfe2e7;color:#222}
 .help-text{font-size:9px;color:#888;margin-top:4px}
 
+/* PRODUCT + SIZE MANAGER */
+.product-manager-box{width:760px}
+.product-manager-note{background:#f5f6f8;border:1px solid #e5e7eb;border-radius:9px;padding:11px;font-size:11px;line-height:1.6;margin-bottom:14px}
+.pm-mode{display:flex;gap:8px;margin-bottom:12px}
+.pm-mode button{flex:1;border:1px solid #dfe2e7;background:#fff;color:#333}
+.pm-mode button.active{background:#111827;color:#fff}
+.pm-row{display:grid;grid-template-columns:1.4fr .7fr .7fr .9fr .9fr 38px;gap:7px;align-items:end;margin-bottom:8px}
+.pm-row label{font-size:9px;color:#666;margin:0 0 4px;display:block}
+.pm-remove{background:#fee2e2;color:#991b1b;padding:8px 10px}
+.pm-add{margin-top:5px;background:#eef0f3;color:#222}
+.pm-hidden{display:none!important}
+@media(max-width:650px){.product-manager-box{width:100%}.pm-row{grid-template-columns:1fr 1fr}.pm-remove{width:100%}}
+
 .toast{position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;padding:12px 16px;border-radius:8px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:10000}
 .toast.show{opacity:1;transform:translateY(0)}
 
@@ -165,6 +178,7 @@ tr:last-child td{border-bottom:0}
 <option value="pcs">PCS</option>
 </select>
 <button class="dark-btn" onclick="openAddStock()">+ Add Warehouse Stock</button>
+<button class="light-btn" onclick="openProductSizeManager('add')">＋ Add Product / Size</button>
 <button class="light-btn" onclick="loadData()">Refresh</button>
 </div>
 
@@ -188,6 +202,7 @@ tr:last-child td{border-bottom:0}
 <div class="section-head">
 <div><h2>🏭 Warehouse</h2><p>All fresh stock enters here first.</p></div>
 <button class="dark-btn" onclick="openAddStock()">+ Add Stock</button>
+<button class="light-btn" onclick="openProductSizeManager('add')">＋ Add Product / Size</button>
 </div>
 
 <div class="table-box">
@@ -447,6 +462,44 @@ Bill = party da debit. Paid = party ton received payment.
 <button class="cancel-btn" onclick="closeModal('partyPaymentModal')">Cancel</button>
 </div>
 </div>
+</div>
+
+<!-- PRODUCT + SIZE MANAGER -->
+<div class="modal" id="productSizeModal">
+  <div class="modal-box product-manager-box">
+    <div class="modal-title" id="productSizeTitle">Add Product / Size</div>
+    <div class="product-manager-note">
+      Product name <strong>sirf ik vaar</strong> rahega. Ise product de andar 50g, 100g, 250g, 500ml etc. alag-alag sizes add/edit karo.
+      <br><strong>Orders nu eh manager touch nahi karda.</strong>
+    </div>
+
+    <div class="pm-mode">
+      <button type="button" id="pmAddModeBtn" onclick="setProductManagerMode('add')">＋ Add Product</button>
+      <button type="button" id="pmEditModeBtn" onclick="setProductManagerMode('edit')">✎ Edit Product</button>
+    </div>
+
+    <div id="pmAddProductWrap">
+      <label>Product Name</label>
+      <input id="pmNewProductName" type="text" placeholder="Product name">
+    </div>
+
+    <div id="pmEditProductWrap" class="pm-hidden">
+      <label>Select Product</label>
+      <select id="pmExistingProduct" onchange="loadProductSizeRows()"></select>
+    </div>
+
+    <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <strong style="font-size:13px">Sizes / Variants</strong>
+      <button type="button" class="pm-add" onclick="addProductSizeRow()">＋ Add Size</button>
+    </div>
+
+    <div id="pmSizeRows" style="margin-top:10px"></div>
+
+    <div class="modal-actions">
+      <button class="save-btn" onclick="saveProductSizeManager()">Save Product / Sizes</button>
+      <button class="cancel-btn" onclick="closeModal('productSizeModal')">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2389,6 +2442,202 @@ setTimeout(
 ()=>w.print(),
 350
 );
+}
+
+/* =========================================================
+   PRODUCT + SIZE MANAGER
+   One product name -> many separate sizes/variants.
+   This manager does NOT edit orders.
+========================================================= */
+let productManagerMode="add";
+
+function normalizeUnitValue(v){
+  const u=String(v||"").trim().toLowerCase();
+  if(["gram","grams","g"].includes(u)) return "g";
+  if(["kilogram","kilograms","kg"].includes(u)) return "kg";
+  if(["millilitre","milliliter","millilitres","milliliters","ml"].includes(u)) return "ml";
+  if(["l","ltr","litre","liter","litres","liters"].includes(u)) return "ltr";
+  if(["pcs","pc","piece","pieces"].includes(u)) return "pcs";
+  return u||"g";
+}
+
+function uniqueProductList(){
+  const map=new Map();
+  products.forEach(p=>{
+    const name=getName(p).trim();
+    if(name && !map.has(name.toLowerCase())) map.set(name.toLowerCase(),p);
+  });
+  return [...map.values()];
+}
+
+function openProductSizeManager(mode="add"){
+  productManagerMode=mode;
+  setProductManagerMode(mode);
+  document.getElementById("pmNewProductName").value="";
+  fillProductManagerSelect();
+  if(mode==="edit") loadProductSizeRows();
+  else{
+    document.getElementById("pmSizeRows").innerHTML="";
+    addProductSizeRow();
+  }
+  document.getElementById("productSizeModal").style.display="flex";
+}
+
+function setProductManagerMode(mode){
+  productManagerMode=mode;
+  document.getElementById("pmAddModeBtn")?.classList.toggle("active",mode==="add");
+  document.getElementById("pmEditModeBtn")?.classList.toggle("active",mode==="edit");
+  document.getElementById("pmAddProductWrap")?.classList.toggle("pm-hidden",mode!=="add");
+  document.getElementById("pmEditProductWrap")?.classList.toggle("pm-hidden",mode!=="edit");
+  const title=document.getElementById("productSizeTitle");
+  if(title) title.textContent=mode==="add"?"Add Product / Sizes":"Edit Product / Sizes";
+  if(mode==="edit"){
+    fillProductManagerSelect();
+    loadProductSizeRows();
+  }else{
+    document.getElementById("pmSizeRows").innerHTML="";
+    addProductSizeRow();
+  }
+}
+
+function fillProductManagerSelect(){
+  const s=document.getElementById("pmExistingProduct");
+  if(!s)return;
+  const list=uniqueProductList();
+  s.innerHTML=list.map(p=>`<option value="${safe(p.id)}">${safe(getName(p))}</option>`).join("")||'<option value="">No products found</option>';
+}
+
+function productVariantsArray(p){
+  let data=p?.variants;
+  if(typeof data==="string"){
+    try{data=JSON.parse(data);}catch(e){data=[];}
+  }
+  return Array.isArray(data)?data:[];
+}
+
+function addProductSizeRow(v={}){
+  const wrap=document.getElementById("pmSizeRows");
+  if(!wrap)return;
+  const row=document.createElement("div");
+  row.className="pm-row";
+  const sale=v.sale_price!=null&&v.sale_price!==""?Number(v.sale_price):"";
+  const discount=Number(v.discount_percent||0);
+  row.innerHTML=`
+    <div><label>SIZE</label><input class="pm-size" type="number" min="0.01" step="any" value="${safe(String(v.size??""))}" placeholder="100"></div>
+    <div><label>UNIT</label><select class="pm-unit">
+      <option value="g">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="ltr">ltr</option><option value="pcs">pcs</option>
+    </select></div>
+    <div><label>MRP ₹</label><input class="pm-price" type="number" min="0" step="0.01" value="${safe(String(v.price??v.mrp??""))}" placeholder="199"></div>
+    <div><label>SALE ₹</label><input class="pm-sale" type="number" min="0" step="0.01" value="${sale}" placeholder="149"></div>
+    <div><label>DISCOUNT %</label><input class="pm-discount" type="number" min="0" max="100" step="0.01" value="${discount||""}" placeholder="25"></div>
+    <button type="button" class="pm-remove" title="Remove size" onclick="this.parentElement.remove()">✕</button>
+  `;
+  wrap.appendChild(row);
+  row.querySelector(".pm-unit").value=normalizeUnitValue(v.unit||"g");
+}
+
+function loadProductSizeRows(){
+  if(productManagerMode!=="edit")return;
+  const id=document.getElementById("pmExistingProduct")?.value;
+  const p=products.find(x=>String(x.id)===String(id));
+  const wrap=document.getElementById("pmSizeRows");
+  if(!wrap)return;
+  wrap.innerHTML="";
+  const arr=productVariantsArray(p);
+  if(arr.length) arr.forEach(v=>addProductSizeRow(v));
+  else addProductSizeRow();
+}
+
+function collectProductManagerSizes(){
+  const rows=[...document.querySelectorAll("#pmSizeRows .pm-row")];
+  const result=[];
+  const seen=new Set();
+  for(const row of rows){
+    const size=Number(row.querySelector(".pm-size")?.value||0);
+    const unit=normalizeUnitValue(row.querySelector(".pm-unit")?.value);
+    const price=Number(row.querySelector(".pm-price")?.value||0);
+    const saleText=(row.querySelector(".pm-sale")?.value||"").trim();
+    const sale=saleText===""?null:Number(saleText);
+    const discount=Number(row.querySelector(".pm-discount")?.value||0);
+    if(!size&&!price&&!saleText)continue;
+    if(!Number.isFinite(size)||size<=0){alert("Har size valid pao.");return null;}
+    if(!Number.isFinite(price)||price<0){alert("Har size da valid MRP pao.");return null;}
+    if(sale!==null&&(!Number.isFinite(sale)||sale<=0||sale>=price)){alert("Sale price MRP ton ghatt te 0 ton vadh honi chahidi hai.");return null;}
+    if(!Number.isFinite(discount)||discount<0||discount>100){alert("Discount 0-100 de vich pao.");return null;}
+    const key=size+"|"+unit;
+    if(seen.has(key)){alert("Same product vich same size/unit duplicate nahi ho sakda: "+size+" "+unit);return null;}
+    seen.add(key);
+    result.push({size,unit:unit.toUpperCase(),price,sale_price:sale,discount_percent:discount,sale_active:sale!==null&&sale>0&&sale<price});
+  }
+  if(!result.length){alert("At least ik size add karo.");return null;}
+  return result;
+}
+
+async function saveProductSizeManager(){
+  const sizes=collectProductManagerSizes();
+  if(!sizes)return;
+  let productId=null;
+  let product=null;
+
+  if(productManagerMode==="add"){
+    const name=document.getElementById("pmNewProductName")?.value.trim()||"";
+    if(!name){alert("Product name pao.");return;}
+    const duplicate=uniqueProductList().find(p=>getName(p).trim().toLowerCase()===name.toLowerCase());
+    if(duplicate){
+      alert("Eh product pehlan hi maujood hai. Edit Product use karo te navi size add karo.");
+      return;
+    }
+    try{
+      const r=await supabaseClient.from(PRODUCT_TABLE).insert({name,price:sizes[0].price,sale_price:sizes[0].sale_price,sale_active:!!sizes[0].sale_active,discount_percent:sizes[0].discount_percent,variants:sizes}).select().single();
+      if(r.error)throw r.error;
+      product=r.data; productId=r.data.id;
+      for(const v of sizes){
+        const ins=await supabaseClient.from(VARIANT_TABLE).insert({product_id:Number(productId),size:v.size,unit:normalizeUnitValue(v.unit),warehouse_stock:0,online_given:0,online_sold:0,offline_given:0});
+        if(ins.error)throw ins.error;
+      }
+      closeModal("productSizeModal");
+      toast("Product te sizes add ho gaye.");
+      await loadData();
+    }catch(e){alert("Product save failed: "+e.message);}
+    return;
+  }
+
+  productId=document.getElementById("pmExistingProduct")?.value;
+  product=products.find(p=>String(p.id)===String(productId));
+  if(!product){alert("Product select karo.");return;}
+
+  try{
+    const oldStockVariants=variants.filter(v=>String(v.product_id)===String(productId));
+    const mergedSizes=sizes.map(v=>{
+      const old=oldStockVariants.find(x=>Number(x.size)===Number(v.size)&&normalizeUnitValue(x.unit)===normalizeUnitValue(v.unit));
+      return {...v,stock:old?number(old.warehouse_stock):0};
+    });
+
+    const first=mergedSizes[0];
+    const up=await supabaseClient.from(PRODUCT_TABLE).update({
+      variants:mergedSizes,
+      price:first.price,
+      sale_price:first.sale_price,
+      sale_active:!!first.sale_active,
+      discount_percent:first.discount_percent
+    }).eq("id",productId);
+    if(up.error)throw up.error;
+
+    for(const v of mergedSizes){
+      const old=oldStockVariants.find(x=>Number(x.size)===Number(v.size)&&normalizeUnitValue(x.unit)===normalizeUnitValue(v.unit));
+      if(old){
+        const r=await supabaseClient.from(VARIANT_TABLE).update({size:v.size,unit:normalizeUnitValue(v.unit)}).eq("id",old.id);
+        if(r.error)throw r.error;
+      }else{
+        const r=await supabaseClient.from(VARIANT_TABLE).insert({product_id:Number(productId),size:v.size,unit:normalizeUnitValue(v.unit),warehouse_stock:0,online_given:0,online_sold:0,offline_given:0});
+        if(r.error)throw r.error;
+      }
+    }
+
+    closeModal("productSizeModal");
+    toast("Product sizes updated. Orders unchanged.");
+    await loadData();
+  }catch(e){alert("Product update failed: "+e.message);}
 }
 
 document.addEventListener(
