@@ -851,13 +851,6 @@ td button{
           </div>
         </div>
 
-        <button
-          type="button"
-          class="secondary no-print"
-          id="addIngredientBtn"
-        >
-          ＋ Add Ingredient
-        </button>
 
       </div>
 
@@ -924,6 +917,19 @@ td button{
           value="0%"
         >
 
+      </div>
+
+      <div
+        class="actions no-print"
+        style="margin-top:15px;margin-bottom:0"
+      >
+        <button
+          type="button"
+          class="secondary"
+          id="addIngredientBtn"
+        >
+          ＋ Add Ingredient
+        </button>
       </div>
 
     </div>
@@ -3693,6 +3699,13 @@ async function loadFormulas(){
 }
 
 /* =========================================================
+   FORMULA EDIT PASSWORD
+========================================================= */
+
+const FORMULA_EDIT_PASSWORD = "Waheguru@123";
+
+
+/* =========================================================
    RENDER FORMULA LIST
 ========================================================= */
 
@@ -3834,14 +3847,6 @@ function renderList(){
 
                     <button
                       type="button"
-                      class="secondary edit-btn"
-                      data-id="${esc(f.id)}"
-                    >
-                      ✏️ Edit
-                    </button>
-
-                    <button
-                      type="button"
                       class="secondary print-btn"
                       data-id="${esc(f.id)}"
                     >
@@ -3875,24 +3880,6 @@ function renderList(){
         function(){
 
           viewFormula(
-            this.dataset.id
-          );
-
-        }
-      );
-
-    });
-
-
-  $("formulaList")
-    .querySelectorAll(".edit-btn")
-    .forEach(function(btn){
-
-      btn.addEventListener(
-        "click",
-        function(){
-
-          editFormula(
             this.dataset.id
           );
 
@@ -4371,6 +4358,17 @@ async function viewFormula(id){
     "viewEditBtn",
     "click",
     function(){
+
+      const password = prompt("Enter password to edit this formula:");
+
+      if(password === null){
+        return;
+      }
+
+      if(password !== FORMULA_EDIT_PASSWORD){
+        alert("Incorrect password.");
+        return;
+      }
 
       editFormula(f.id);
 
