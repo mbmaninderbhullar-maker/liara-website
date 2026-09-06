@@ -3535,51 +3535,52 @@ async function loadFormulas(){
 
     if(ids.length){
 
-      const ingredientsResult =
-        await supabaseClient
-          .from("formula_ingredients")
-          .select(
-            "id,formula_id,ingredient_name,quantity,unit,percentage"
-          )
-          .in("formula_id",ids);
+      /* ---------------------------------------------------
+         IMPORTANT:
+         Load ingredients FORMULA-BY-FORMULA.
+         This is more reliable than a single .in() query
+         and guarantees each formula gets its own rows.
+      --------------------------------------------------- */
 
-      if(ingredientsResult.error){
+      let allIngredientRows = [];
 
-        console.error(
-          "Formula ingredients load error:",
-          ingredientsResult.error
+      for(const formulaId of ids){
+
+        const one =
+          await supabaseClient
+            .from("formula_ingredients")
+            .select(
+              "id,formula_id,ingredient_name,quantity,unit,percentage"
+            )
+            .eq("formula_id",formulaId);
+
+        console.log(
+          "INGREDIENTS FOR FORMULA:",
+          formulaId,
+          one
         );
 
-        /* Fallback: load ingredients formula-by-formula. */
-        let fallbackIngredients = [];
+        if(one.error){
 
-        for(const formulaId of ids){
+          console.error(
+            "Ingredient load error for formula " +
+            formulaId + ":",
+            one.error
+          );
 
-          const one =
-            await supabaseClient
-              .from("formula_ingredients")
-              .select(
-                "id,formula_id,ingredient_name,quantity,unit,percentage"
-              )
-              .eq("formula_id",formulaId);
+          continue;
+        }
 
-          if(!one.error && Array.isArray(one.data)){
-            fallbackIngredients =
-              fallbackIngredients.concat(one.data);
-          }
+        if(Array.isArray(one.data)){
+
+          allIngredientRows =
+            allIngredientRows.concat(one.data);
 
         }
 
-        ingredientRows = fallbackIngredients;
-
-      }else{
-
-        ingredientRows =
-          Array.isArray(ingredientsResult.data)
-            ? ingredientsResult.data
-            : [];
-
       }
+
+      ingredientRows = allIngredientRows;
     }
 
     /* -----------------------------------------------------
@@ -3635,6 +3636,12 @@ async function loadFormulas(){
       ingredientRows.length +
       " ingredient row(s) loaded"
     );
+
+    if(formulas.length && !ingredientRows.length){
+      console.warn(
+        "Formulas loaded, but formula_ingredients returned 0 rows."
+      );
+    }
 
     /* If zero rows really came back, make the reason visible. */
     if(!formulas.length){
