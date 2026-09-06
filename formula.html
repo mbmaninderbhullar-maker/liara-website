@@ -3422,25 +3422,21 @@ async function loadFormulas(){
   try{
 
     /* -----------------------------------------------------
-       LOAD FORMULAS FIRST
-       Do NOT depend on ingredients/master data for the list.
+       LOAD FORMULAS
     ----------------------------------------------------- */
 
-    let result =
-      await supabaseClient
-        .from("formulas")
-        .select("*")
-        .order("created_at",{ascending:false});
+    let result = await supabaseClient
+      .from("formulas")
+      .select("*")
+      .order("created_at",{ascending:false});
 
-    /* Fallback if created_at ordering fails */
     if(
       result.error &&
       /created_at/i.test(result.error.message || "")
     ){
-      result =
-        await supabaseClient
-          .from("formulas")
-          .select("*");
+      result = await supabaseClient
+        .from("formulas")
+        .select("*");
     }
 
     if(result.error){
@@ -3454,43 +3450,79 @@ async function loadFormulas(){
       : [];
 
     /* -----------------------------------------------------
-       LOAD ALL FORMULA INGREDIENTS SEPARATELY
-       This avoids relying on a Supabase nested relationship.
+       LOAD INGREDIENTS
+       First try one bulk query. If that fails, fall back
+       to one query per formula so old formulas still display.
     ----------------------------------------------------- */
 
     let ingredientRows = [];
 
     const ids = rows
-      .map(function(f){ return f && f.id; })
+      .map(function(f){
+        return f && f.id ? String(f.id).trim() : "";
+      })
       .filter(Boolean);
 
     if(ids.length){
 
-      const ingredientsResult =
-        await supabaseClient
-          .from("formula_ingredients")
-          .select(
-            "id,formula_id,ingredient_name,quantity,unit,percentage"
-          )
-          .in("formula_id",ids);
+      const ingredientsResult = await supabaseClient
+        .from("formula_ingredients")
+        .select(
+          "id,formula_id,ingredient_name,quantity,unit,percentage"
+        )
+        .in("formula_id",ids);
 
-      if(ingredientsResult.error){
-        console.error(
-          "Formula ingredients load error:",
+      if(
+        !ingredientsResult.error &&
+        Array.isArray(ingredientsResult.data)
+      ){
+
+        ingredientRows = ingredientsResult.data;
+
+      }else{
+
+        console.warn(
+          "Bulk formula ingredient load failed. Trying individual formula loads.",
           ingredientsResult.error
         );
 
-        /* Keep formulas visible even if ingredient loading fails. */
-        setStatus(
-          "⚠ " + rows.length +
-          " formula(s) loaded, but ingredients could not be loaded."
-        );
-      }else{
-        ingredientRows =
-          Array.isArray(ingredientsResult.data)
-            ? ingredientsResult.data
-            : [];
+        const individualRows = [];
+
+        for(const formulaId of ids){
+
+          try{
+
+            const one = await supabaseClient
+              .from("formula_ingredients")
+              .select(
+                "id,formula_id,ingredient_name,quantity,unit,percentage"
+              )
+              .eq("formula_id",formulaId)
+              .order("id",{ascending:true});
+
+            if(
+              !one.error &&
+              Array.isArray(one.data)
+            ){
+              individualRows.push(...one.data);
+            }
+
+          }catch(oneError){
+
+            console.warn(
+              "Ingredient load failed for formula:",
+              formulaId,
+              oneError
+            );
+
+          }
+
+        }
+
+        ingredientRows = individualRows;
+
       }
+
     }
 
     /* -----------------------------------------------------
@@ -3517,10 +3549,11 @@ async function loadFormulas(){
         unit: row.unit ?? "",
         percentage: row.percentage ?? ""
       });
+
     });
 
     /* -----------------------------------------------------
-       FINAL FORMULA OBJECTS USED BY VIEW / EDIT / PRINT
+       FINAL FORMULA OBJECTS
     ----------------------------------------------------- */
 
     formulas = rows.map(function(formula){
@@ -3532,10 +3565,11 @@ async function loadFormulas(){
         formula_ingredients:
           ingredientMap[key] || []
       };
+
     });
 
     /* -----------------------------------------------------
-       MASTER INGREDIENTS MUST NEVER BLOCK FORMULA DISPLAY
+       MASTER INGREDIENTS NEVER BLOCK FORMULA DISPLAY
     ----------------------------------------------------- */
 
     try{
@@ -3547,7 +3581,6 @@ async function loadFormulas(){
       );
     }
 
-    /* IMPORTANT: render AFTER formulas are assigned. */
     renderList();
 
     setStatus(
@@ -3579,7 +3612,9 @@ async function loadFormulas(){
         </div>
       `;
     }
+
   }
+
 }
 
 /* =========================================================
@@ -3695,9 +3730,16 @@ function renderList(){
                   </td>
 
                   <td>
-                    ${esc(
+                    <b>${esc(
                       f.formula_name || "-"
-                    )}
+                    )}</b>
+                    <div style="margin-top:4px;color:#888;font-size:10px;">
+                      ${
+                        Array.isArray(f.formula_ingredients)
+                          ? f.formula_ingredients.length + " ingredient(s)"
+                          : "0 ingredient(s)"
+                      }
+                    </div>
                   </td>
 
                   <td>
