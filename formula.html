@@ -4050,7 +4050,7 @@ function editFormula(id){
    VIEW FORMULA
 ========================================================= */
 
-function viewFormula(id){
+async function viewFormula(id){
 
   const f =
     formulas.find(function(x){
@@ -4071,8 +4071,86 @@ function viewFormula(id){
   }
 
 
-  const ingredients =
-    f.formula_ingredients || [];
+  let ingredients =
+    Array.isArray(f.formula_ingredients)
+      ? f.formula_ingredients
+      : [];
+
+  /* -------------------------------------------------------
+     LAST-MILE INGREDIENT RECOVERY
+     If the formula loaded but its ingredients were not
+     attached, fetch the exact rows directly from Supabase
+     REST using the Formula UUID.
+  ------------------------------------------------------- */
+  if(!ingredients.length){
+
+    try{
+
+      const url =
+        SUPABASE_URL +
+        "/rest/v1/formula_ingredients" +
+        "?select=*" +
+        "&formula_id=eq." +
+        encodeURIComponent(String(f.id));
+
+      const response =
+        await fetch(url,{
+          method:"GET",
+          headers:{
+            "apikey":SUPABASE_KEY,
+            "Authorization":"Bearer " + SUPABASE_KEY,
+            "Accept":"application/json"
+          }
+        });
+
+      const text = await response.text();
+
+      console.log(
+        "VIEW INGREDIENT REST:",
+        response.status,
+        text
+      );
+
+      if(response.ok && text){
+
+        const data = JSON.parse(text);
+
+        if(Array.isArray(data)){
+          ingredients = data.map(function(row){
+            return {
+              id:row.id,
+              formula_id:row.formula_id,
+              ingredient_name:row.ingredient_name ?? "",
+              quantity:row.quantity ?? "",
+              unit:row.unit ?? "",
+              percentage:row.percentage ?? ""
+            };
+          });
+
+          /* Keep the fetched ingredients attached to this formula. */
+          f.formula_ingredients = ingredients;
+        }
+
+      }else{
+
+        console.error(
+          "VIEW INGREDIENT REST ERROR:",
+          response.status,
+          text
+        );
+
+      }
+
+    }catch(error){
+
+      console.error(
+        "VIEW INGREDIENT FETCH ERROR:",
+        error
+      );
+
+    }
+
+  }
 
 
   const ingredientHTML =
