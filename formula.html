@@ -3413,204 +3413,174 @@ async function saveFormula(){
 async function loadFormulas(){
 
   if(!supabaseClient){
-
-    setStatus(
-      "❌ Supabase not connected.",
-      true
-    );
-
+    setStatus("❌ Supabase not connected.",true);
     return;
   }
 
-
-  setStatus(
-    "☁ Loading formulas..."
-  );
-
+  setStatus("☁ Loading formulas...");
 
   try{
+
+    /* -----------------------------------------------------
+       LOAD FORMULAS FIRST
+       Do NOT depend on ingredients/master data for the list.
+    ----------------------------------------------------- */
 
     let result =
       await supabaseClient
         .from("formulas")
         .select("*")
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
+        .order("created_at",{ascending:false});
 
-
-    /* -----------------------------------------------------
-       FALLBACK IF created_at DOES NOT EXIST
-    ----------------------------------------------------- */
-
+    /* Fallback if created_at ordering fails */
     if(
       result.error &&
-      /created_at/i.test(
-        result.error.message || ""
-      )
+      /created_at/i.test(result.error.message || "")
     ){
-
       result =
         await supabaseClient
           .from("formulas")
           .select("*");
-
     }
-
 
     if(result.error){
-
       throw new Error(
-        result.error.message
+        "Formula load failed: " + result.error.message
       );
-
     }
 
+    const rows = Array.isArray(result.data)
+      ? result.data
+      : [];
 
-    const rows =
-      result.data || [];
-
+    /* -----------------------------------------------------
+       LOAD ALL FORMULA INGREDIENTS SEPARATELY
+       This avoids relying on a Supabase nested relationship.
+    ----------------------------------------------------- */
 
     let ingredientRows = [];
 
+    const ids = rows
+      .map(function(f){ return f && f.id; })
+      .filter(Boolean);
 
-    if(rows.length){
+    if(ids.length){
 
-      const ids =
-        rows
-          .map(function(f){
-            return f.id;
-          })
-          .filter(Boolean);
+      const ingredientsResult =
+        await supabaseClient
+          .from("formula_ingredients")
+          .select(
+            "id,formula_id,ingredient_name,quantity,unit,percentage"
+          )
+          .in("formula_id",ids);
 
+      if(ingredientsResult.error){
+        console.error(
+          "Formula ingredients load error:",
+          ingredientsResult.error
+        );
 
-      if(ids.length){
-
-        const ingredientsResult =
-          await supabaseClient
-            .from("formula_ingredients")
-            .select("*")
-            .in(
-              "formula_id",
-              ids
-            );
-
-
-        if(!ingredientsResult.error){
-
-          ingredientRows =
-            ingredientsResult.data || [];
-
-        }else{
-
-          console.warn(
-            "Formula ingredient load:",
-            ingredientsResult.error
-          );
-
-        }
-
+        /* Keep formulas visible even if ingredient loading fails. */
+        setStatus(
+          "⚠ " + rows.length +
+          " formula(s) loaded, but ingredients could not be loaded."
+        );
+      }else{
+        ingredientRows =
+          Array.isArray(ingredientsResult.data)
+            ? ingredientsResult.data
+            : [];
       }
-
     }
 
+    /* -----------------------------------------------------
+       GROUP INGREDIENTS BY FORMULA UUID
+    ----------------------------------------------------- */
 
-    const ingredientMap = {};
-
+    const ingredientMap = Object.create(null);
 
     ingredientRows.forEach(function(row){
 
-      const key =
-        String(row.formula_id);
+      if(!row || !row.formula_id) return;
 
+      const key = String(row.formula_id).trim();
 
       if(!ingredientMap[key]){
         ingredientMap[key] = [];
       }
 
-
-      ingredientMap[key].push(row);
-
+      ingredientMap[key].push({
+        id: row.id,
+        formula_id: row.formula_id,
+        ingredient_name: row.ingredient_name ?? "",
+        quantity: row.quantity ?? "",
+        unit: row.unit ?? "",
+        percentage: row.percentage ?? ""
+      });
     });
 
+    /* -----------------------------------------------------
+       FINAL FORMULA OBJECTS USED BY VIEW / EDIT / PRINT
+    ----------------------------------------------------- */
 
-    formulas =
-      rows.map(function(formula){
+    formulas = rows.map(function(formula){
 
-        return {
+      const key = String(formula.id || "").trim();
 
-          ...formula,
+      return {
+        ...formula,
+        formula_ingredients:
+          ingredientMap[key] || []
+      };
+    });
 
-          formula_ingredients:
-            ingredientMap[
-              String(formula.id)
-            ] || []
+    /* -----------------------------------------------------
+       MASTER INGREDIENTS MUST NEVER BLOCK FORMULA DISPLAY
+    ----------------------------------------------------- */
 
-        };
+    try{
+      await loadMasterIngredients();
+    }catch(masterError){
+      console.warn(
+        "Master ingredient load skipped:",
+        masterError
+      );
+    }
 
-      });
-
-
-    await loadMasterIngredients();
-
+    /* IMPORTANT: render AFTER formulas are assigned. */
     renderList();
-
 
     setStatus(
       "☁ Connected • " +
       formulas.length +
-      " formula(s) online"
+      " formula(s) online • " +
+      ingredientRows.length +
+      " ingredient row(s) loaded"
     );
-
 
   }catch(error){
 
-    console.error(
-      "Formula load error:",
-      error
-    );
+    console.error("Formula load error:",error);
 
+    formulas = [];
 
     setStatus(
-      "❌ Formula load failed: " +
-      (
-        error.message ||
-        String(error)
-      ),
+      "❌ " +
+      (error.message || String(error)),
       true
     );
 
-
     if($("formulaList")){
-
       $("formulaList").innerHTML = `
-
         <div class="empty">
-
           <b>Formula load failed.</b>
-
           <br><br>
-
-          <small>
-            ${esc(
-              error.message ||
-              String(error)
-            )}
-          </small>
-
+          <small>${esc(error.message || String(error))}</small>
         </div>
-
       `;
-
     }
-
   }
-
 }
-
 
 /* =========================================================
    RENDER FORMULA LIST
