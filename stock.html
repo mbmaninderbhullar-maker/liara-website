@@ -105,7 +105,7 @@ tr:last-child td{border-bottom:0}
 .pm-mode{display:flex;gap:8px;margin-bottom:12px}
 .pm-mode button{flex:1;border:1px solid #dfe2e7;background:#fff;color:#333}
 .pm-mode button.active{background:#111827;color:#fff}
-.pm-row{display:grid;grid-template-columns:1.4fr .7fr .7fr .9fr .9fr 38px;gap:7px;align-items:end;margin-bottom:8px}
+.pm-row{display:grid;grid-template-columns:1.4fr .8fr 38px;gap:7px;align-items:end;margin-bottom:8px}
 .pm-row label{font-size:9px;color:#666;margin:0 0 4px;display:block}
 .pm-remove{background:#fee2e2;color:#991b1b;padding:8px 10px}
 .pm-add{margin-top:5px;background:#eef0f3;color:#222}
@@ -469,7 +469,7 @@ Bill = party da debit. Paid = party ton received payment.
   <div class="modal-box product-manager-box">
     <div class="modal-title" id="productSizeTitle">Add Product / Size</div>
     <div class="product-manager-note">
-      Product name <strong>sirf ik vaar</strong> rahega. Ise product de andar 50g, 100g, 250g, 500ml etc. alag-alag sizes add/edit karo.
+      Product name <strong>sirf ik vaar</strong> rahega. Product de andar 50g, 100g, 250g, 500ml etc. alag-alag sizes add/edit karo.<br>MRP, Sale Price te Discount <strong>Product Settings</strong> vich hi manage honge.
       <br><strong>Orders nu eh manager touch nahi karda.</strong>
     </div>
 
@@ -2520,16 +2520,11 @@ function addProductSizeRow(v={}){
   if(!wrap)return;
   const row=document.createElement("div");
   row.className="pm-row";
-  const sale=v.sale_price!=null&&v.sale_price!==""?Number(v.sale_price):"";
-  const discount=Number(v.discount_percent||0);
   row.innerHTML=`
     <div><label>SIZE</label><input class="pm-size" type="number" min="0.01" step="any" value="${safe(String(v.size??""))}" placeholder="100"></div>
     <div><label>UNIT</label><select class="pm-unit">
       <option value="g">g</option><option value="kg">kg</option><option value="ml">ml</option><option value="ltr">ltr</option><option value="pcs">pcs</option>
     </select></div>
-    <div><label>MRP ₹</label><input class="pm-price" type="number" min="0" step="0.01" value="${safe(String(v.price??v.mrp??""))}" placeholder="199"></div>
-    <div><label>SALE ₹</label><input class="pm-sale" type="number" min="0" step="0.01" value="${sale}" placeholder="149"></div>
-    <div><label>DISCOUNT %</label><input class="pm-discount" type="number" min="0" max="100" step="0.01" value="${discount||""}" placeholder="25"></div>
     <button type="button" class="pm-remove" title="Remove size" onclick="this.parentElement.remove()">✕</button>
   `;
   wrap.appendChild(row);
@@ -2552,92 +2547,211 @@ function collectProductManagerSizes(){
   const rows=[...document.querySelectorAll("#pmSizeRows .pm-row")];
   const result=[];
   const seen=new Set();
+
   for(const row of rows){
     const size=Number(row.querySelector(".pm-size")?.value||0);
     const unit=normalizeUnitValue(row.querySelector(".pm-unit")?.value);
-    const price=Number(row.querySelector(".pm-price")?.value||0);
-    const saleText=(row.querySelector(".pm-sale")?.value||"").trim();
-    const sale=saleText===""?null:Number(saleText);
-    const discount=Number(row.querySelector(".pm-discount")?.value||0);
-    if(!size&&!price&&!saleText)continue;
-    if(!Number.isFinite(size)||size<=0){alert("Har size valid pao.");return null;}
-    if(!Number.isFinite(price)||price<0){alert("Har size da valid MRP pao.");return null;}
-    if(sale!==null&&(!Number.isFinite(sale)||sale<=0||sale>=price)){alert("Sale price MRP ton ghatt te 0 ton vadh honi chahidi hai.");return null;}
-    if(!Number.isFinite(discount)||discount<0||discount>100){alert("Discount 0-100 de vich pao.");return null;}
+
+    if(!size)continue;
+
+    if(!Number.isFinite(size)||size<=0){
+      alert("Har size valid pao.");
+      return null;
+    }
+
     const key=size+"|"+unit;
-    if(seen.has(key)){alert("Same product vich same size/unit duplicate nahi ho sakda: "+size+" "+unit);return null;}
+    if(seen.has(key)){
+      alert("Same product vich same size/unit duplicate nahi ho sakda: "+size+" "+unit);
+      return null;
+    }
+
     seen.add(key);
-    result.push({size,unit:unit.toUpperCase(),price,sale_price:sale,discount_percent:discount,sale_active:sale!==null&&sale>0&&sale<price});
+    result.push({size,unit:unit.toUpperCase()});
   }
-  if(!result.length){alert("At least ik size add karo.");return null;}
+
+  if(!result.length){
+    alert("At least ik size add karo.");
+    return null;
+  }
+
   return result;
 }
 
 async function saveProductSizeManager(){
   const sizes=collectProductManagerSizes();
   if(!sizes)return;
+
   let productId=null;
   let product=null;
 
   if(productManagerMode==="add"){
     const name=document.getElementById("pmNewProductName")?.value.trim()||"";
-    if(!name){alert("Product name pao.");return;}
-    const duplicate=uniqueProductList().find(p=>getName(p).trim().toLowerCase()===name.toLowerCase());
+    if(!name){
+      alert("Product name pao.");
+      return;
+    }
+
+    const duplicate=uniqueProductList().find(
+      p=>getName(p).trim().toLowerCase()===name.toLowerCase()
+    );
+
     if(duplicate){
       alert("Eh product pehlan hi maujood hai. Edit Product use karo te navi size add karo.");
       return;
     }
+
     try{
-      const r=await supabaseClient.from(PRODUCT_TABLE).insert({name,price:sizes[0].price,sale_price:sizes[0].sale_price,sale_active:!!sizes[0].sale_active,discount_percent:sizes[0].discount_percent,variants:sizes}).select().single();
+      /*
+        MRP / Sale / Discount stock page ton save nahi hunde.
+        Eh Product Settings vich manage honge.
+        Nawa product sirf name + size/unit naal create hunda hai.
+      */
+      const variantsForProduct=sizes.map(v=>({
+        size:v.size,
+        unit:v.unit,
+        price:0,
+        sale_price:null,
+        discount_percent:0,
+        sale_active:false,
+        stock:0
+      }));
+
+      const r=await supabaseClient
+        .from(PRODUCT_TABLE)
+        .insert({
+          name,
+          price:0,
+          sale_price:null,
+          sale_active:false,
+          discount_percent:0,
+          variants:variantsForProduct
+        })
+        .select()
+        .single();
+
       if(r.error)throw r.error;
-      product=r.data; productId=r.data.id;
+
+      product=r.data;
+      productId=r.data.id;
+
       for(const v of sizes){
-        const ins=await supabaseClient.from(VARIANT_TABLE).insert({product_id:Number(productId),size:v.size,unit:normalizeUnitValue(v.unit),warehouse_stock:0,online_given:0,online_sold:0,offline_given:0});
+        const ins=await supabaseClient
+          .from(VARIANT_TABLE)
+          .insert({
+            product_id:Number(productId),
+            size:v.size,
+            unit:normalizeUnitValue(v.unit),
+            warehouse_stock:0,
+            online_given:0,
+            online_sold:0,
+            offline_given:0
+          });
+
         if(ins.error)throw ins.error;
       }
+
       closeModal("productSizeModal");
-      toast("Product te sizes add ho gaye.");
+      toast("Product te sizes add ho gaye. Price Product Settings vich set karo.");
       await loadData();
-    }catch(e){alert("Product save failed: "+e.message);}
+
+    }catch(e){
+      alert("Product save failed: "+e.message);
+    }
+
     return;
   }
 
   productId=document.getElementById("pmExistingProduct")?.value;
   product=products.find(p=>String(p.id)===String(productId));
-  if(!product){alert("Product select karo.");return;}
+
+  if(!product){
+    alert("Product select karo.");
+    return;
+  }
 
   try{
-    const oldStockVariants=variants.filter(v=>String(v.product_id)===String(productId));
+    const oldProductVariants=productVariantsArray(product);
+    const oldStockVariants=variants.filter(
+      v=>String(v.product_id)===String(productId)
+    );
+
+    /*
+      Existing Product Settings values preserve rakho.
+      Stock page sirf size/unit add/edit karda hai.
+      MRP / Sale / Discount nu touch nahi karda.
+    */
     const mergedSizes=sizes.map(v=>{
-      const old=oldStockVariants.find(x=>Number(x.size)===Number(v.size)&&normalizeUnitValue(x.unit)===normalizeUnitValue(v.unit));
-      return {...v,stock:old?number(old.warehouse_stock):0};
+      const oldProduct=oldProductVariants.find(
+        x=>Number(x.size)===Number(v.size) &&
+           normalizeUnitValue(x.unit)===normalizeUnitValue(v.unit)
+      );
+
+      const oldStock=oldStockVariants.find(
+        x=>Number(x.size)===Number(v.size) &&
+           normalizeUnitValue(x.unit)===normalizeUnitValue(v.unit)
+      );
+
+      return {
+        ...(oldProduct||{}),
+        size:v.size,
+        unit:v.unit,
+        stock:oldStock?number(oldStock.warehouse_stock):number(oldProduct?.stock||0)
+      };
     });
 
-    const first=mergedSizes[0];
-    const up=await supabaseClient.from(PRODUCT_TABLE).update({
-      variants:mergedSizes,
-      price:first.price,
-      sale_price:first.sale_price,
-      sale_active:!!first.sale_active,
-      discount_percent:first.discount_percent
-    }).eq("id",productId);
+    /*
+      Product-level price fields are intentionally left unchanged.
+      Only products.variants size/unit list is updated.
+    */
+    const up=await supabaseClient
+      .from(PRODUCT_TABLE)
+      .update({
+        variants:mergedSizes
+      })
+      .eq("id",productId);
+
     if(up.error)throw up.error;
 
     for(const v of mergedSizes){
-      const old=oldStockVariants.find(x=>Number(x.size)===Number(v.size)&&normalizeUnitValue(x.unit)===normalizeUnitValue(v.unit));
+      const old=oldStockVariants.find(
+        x=>Number(x.size)===Number(v.size) &&
+           normalizeUnitValue(x.unit)===normalizeUnitValue(v.unit)
+      );
+
       if(old){
-        const r=await supabaseClient.from(VARIANT_TABLE).update({size:v.size,unit:normalizeUnitValue(v.unit)}).eq("id",old.id);
+        const r=await supabaseClient
+          .from(VARIANT_TABLE)
+          .update({
+            size:v.size,
+            unit:normalizeUnitValue(v.unit)
+          })
+          .eq("id",old.id);
+
         if(r.error)throw r.error;
       }else{
-        const r=await supabaseClient.from(VARIANT_TABLE).insert({product_id:Number(productId),size:v.size,unit:normalizeUnitValue(v.unit),warehouse_stock:0,online_given:0,online_sold:0,offline_given:0});
+        const r=await supabaseClient
+          .from(VARIANT_TABLE)
+          .insert({
+            product_id:Number(productId),
+            size:v.size,
+            unit:normalizeUnitValue(v.unit),
+            warehouse_stock:0,
+            online_given:0,
+            online_sold:0,
+            offline_given:0
+          });
+
         if(r.error)throw r.error;
       }
     }
 
     closeModal("productSizeModal");
-    toast("Product sizes updated. Orders unchanged.");
+    toast("Product sizes updated. MRP / Sale / Discount unchanged.");
     await loadData();
-  }catch(e){alert("Product update failed: "+e.message);}
+
+  }catch(e){
+    alert("Product update failed: "+e.message);
+  }
 }
 
 document.addEventListener(
