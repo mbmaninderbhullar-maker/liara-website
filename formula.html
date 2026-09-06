@@ -3421,132 +3421,190 @@ async function loadFormulas(){
 
   try{
 
+    let rows = [];
+    let formulaError = null;
+
     /* -----------------------------------------------------
-       LOAD FORMULAS
+       PRIMARY: Supabase JS query
+       Explicitly request rows + exact count.
     ----------------------------------------------------- */
-
-    let result = await supabaseClient
-      .from("formulas")
-      .select("*");
-
-    if(
-      result.error &&
-      /created_at/i.test(result.error.message || "")
-    ){
-      result = await supabaseClient
+    const result =
+      await supabaseClient
         .from("formulas")
-        .select("*");
-    }
+        .select("*",{count:"exact"})
+        .limit(1000);
+
+    console.log("FORMULAS JS RESULT:",result);
 
     if(result.error){
+      formulaError = result.error;
+    }else if(Array.isArray(result.data)){
+      rows = result.data;
+    }
+
+    /* -----------------------------------------------------
+       FALLBACK: direct REST request to the SAME project.
+       This bypasses any client-side query issue and also
+       gives a clear HTTP error if the table is not readable.
+    ----------------------------------------------------- */
+    if(!rows.length){
+
+      try{
+
+        const restResponse =
+          await fetch(
+            SUPABASE_URL +
+            "/rest/v1/formulas?select=*",
+            {
+              method:"GET",
+              headers:{
+                "apikey":SUPABASE_KEY,
+                "Authorization":"Bearer " + SUPABASE_KEY,
+                "Accept":"application/json"
+              }
+            }
+          );
+
+        const restText =
+          await restResponse.text();
+
+        console.log(
+          "FORMULAS REST STATUS:",
+          restResponse.status,
+          restText
+        );
+
+        if(restResponse.ok){
+
+          const restData =
+            restText ? JSON.parse(restText) : [];
+
+          if(Array.isArray(restData)){
+            rows = restData;
+            formulaError = null;
+          }
+
+        }else{
+
+          formulaError =
+            new Error(
+              "REST " +
+              restResponse.status +
+              ": " +
+              restText
+            );
+
+        }
+
+      }catch(restError){
+
+        console.error(
+          "Formula REST fallback error:",
+          restError
+        );
+
+        if(!formulaError){
+          formulaError = restError;
+        }
+
+      }
+    }
+
+    if(formulaError && !rows.length){
       throw new Error(
-        "Formula load failed: " + result.error.message
+        "Formula load failed: " +
+        (
+          formulaError.message ||
+          String(formulaError)
+        )
       );
     }
 
-    const rows = Array.isArray(result.data)
-      ? result.data
-      : [];
-
     /* -----------------------------------------------------
-       LOAD INGREDIENTS
-       First try one bulk query. If that fails, fall back
-       to one query per formula so old formulas still display.
+       LOAD ALL FORMULA INGREDIENTS SEPARATELY
+       This avoids relying on a nested Supabase relation.
     ----------------------------------------------------- */
-
     let ingredientRows = [];
 
-    const ids = rows
-      .map(function(f){
-        return f && f.id ? String(f.id).trim() : "";
-      })
-      .filter(Boolean);
+    const ids =
+      rows
+        .map(function(f){
+          return f && f.id;
+        })
+        .filter(Boolean);
 
     if(ids.length){
 
-      const ingredientsResult = await supabaseClient
-        .from("formula_ingredients")
-        .select(
-          "id,formula_id,ingredient_name,quantity,unit,percentage"
-        )
-        .in("formula_id",ids);
+      const ingredientsResult =
+        await supabaseClient
+          .from("formula_ingredients")
+          .select(
+            "id,formula_id,ingredient_name,quantity,unit,percentage"
+          )
+          .in("formula_id",ids);
 
-      if(
-        !ingredientsResult.error &&
-        Array.isArray(ingredientsResult.data)
-      ){
+      if(ingredientsResult.error){
 
-        ingredientRows = ingredientsResult.data;
-
-      }else{
-
-        console.warn(
-          "Bulk formula ingredient load failed. Trying individual formula loads.",
+        console.error(
+          "Formula ingredients load error:",
           ingredientsResult.error
         );
 
-        const individualRows = [];
+        /* Fallback: load ingredients formula-by-formula. */
+        let fallbackIngredients = [];
 
         for(const formulaId of ids){
 
-          try{
-
-            const one = await supabaseClient
+          const one =
+            await supabaseClient
               .from("formula_ingredients")
               .select(
                 "id,formula_id,ingredient_name,quantity,unit,percentage"
               )
-              .eq("formula_id",formulaId)
-              .order("id",{ascending:true});
+              .eq("formula_id",formulaId);
 
-            if(
-              !one.error &&
-              Array.isArray(one.data)
-            ){
-              individualRows.push(...one.data);
-            }
-
-          }catch(oneError){
-
-            console.warn(
-              "Ingredient load failed for formula:",
-              formulaId,
-              oneError
-            );
-
+          if(!one.error && Array.isArray(one.data)){
+            fallbackIngredients =
+              fallbackIngredients.concat(one.data);
           }
 
         }
 
-        ingredientRows = individualRows;
+        ingredientRows = fallbackIngredients;
+
+      }else{
+
+        ingredientRows =
+          Array.isArray(ingredientsResult.data)
+            ? ingredientsResult.data
+            : [];
 
       }
-
     }
 
     /* -----------------------------------------------------
        GROUP INGREDIENTS BY FORMULA UUID
     ----------------------------------------------------- */
-
     const ingredientMap = Object.create(null);
 
     ingredientRows.forEach(function(row){
 
       if(!row || !row.formula_id) return;
 
-      const key = String(row.formula_id).trim();
+      const key =
+        String(row.formula_id).trim();
 
       if(!ingredientMap[key]){
         ingredientMap[key] = [];
       }
 
       ingredientMap[key].push({
-        id: row.id,
-        formula_id: row.formula_id,
-        ingredient_name: row.ingredient_name ?? "",
-        quantity: row.quantity ?? "",
-        unit: row.unit ?? "",
-        percentage: row.percentage ?? ""
+        id:row.id,
+        formula_id:row.formula_id,
+        ingredient_name:row.ingredient_name ?? "",
+        quantity:row.quantity ?? "",
+        unit:row.unit ?? "",
+        percentage:row.percentage ?? ""
       });
 
     });
@@ -3554,31 +3612,19 @@ async function loadFormulas(){
     /* -----------------------------------------------------
        FINAL FORMULA OBJECTS
     ----------------------------------------------------- */
+    formulas =
+      rows.map(function(formula){
 
-    formulas = rows.map(function(formula){
+        const key =
+          String(formula.id || "").trim();
 
-      const key = String(formula.id || "").trim();
+        return {
+          ...formula,
+          formula_ingredients:
+            ingredientMap[key] || []
+        };
 
-      return {
-        ...formula,
-        formula_ingredients:
-          ingredientMap[key] || []
-      };
-
-    });
-
-    /* -----------------------------------------------------
-       MASTER INGREDIENTS NEVER BLOCK FORMULA DISPLAY
-    ----------------------------------------------------- */
-
-    try{
-      await loadMasterIngredients();
-    }catch(masterError){
-      console.warn(
-        "Master ingredient load skipped:",
-        masterError
-      );
-    }
+      });
 
     renderList();
 
@@ -3590,19 +3636,41 @@ async function loadFormulas(){
       " ingredient row(s) loaded"
     );
 
+    /* If zero rows really came back, make the reason visible. */
+    if(!formulas.length){
+
+      console.warn(
+        "Formula table returned 0 rows. " +
+        "Check RLS SELECT policy and table data."
+      );
+
+      setStatus(
+        "⚠ Supabase connected, but formulas table returned 0 rows. " +
+        "Check formulas RLS SELECT policy."
+      );
+
+    }
+
   }catch(error){
 
-    console.error("Formula load error:",error);
+    console.error(
+      "Formula load error:",
+      error
+    );
 
     formulas = [];
 
     setStatus(
       "❌ " +
-      (error.message || String(error)),
+      (
+        error.message ||
+        String(error)
+      ),
       true
     );
 
     if($("formulaList")){
+
       $("formulaList").innerHTML = `
         <div class="empty">
           <b>Formula load failed.</b>
@@ -3610,6 +3678,7 @@ async function loadFormulas(){
           <small>${esc(error.message || String(error))}</small>
         </div>
       `;
+
     }
 
   }
@@ -3729,16 +3798,9 @@ function renderList(){
                   </td>
 
                   <td>
-                    <b>${esc(
+                    ${esc(
                       f.formula_name || "-"
-                    )}</b>
-                    <div style="margin-top:4px;color:#888;font-size:10px;">
-                      ${
-                        Array.isArray(f.formula_ingredients)
-                          ? f.formula_ingredients.length + " ingredient(s)"
-                          : "0 ingredient(s)"
-                      }
-                    </div>
+                    )}
                   </td>
 
                   <td>
@@ -4923,15 +4985,10 @@ document.addEventListener(
 
 
       /* -----------------------------------------------
-         MASTER INGREDIENTS — OPTIONAL
-         Never block formula loading if this query fails.
+         MASTER INGREDIENTS FIRST
       ------------------------------------------------ */
 
-      try{
-        await loadMasterIngredients();
-      }catch(masterError){
-        console.warn("Master ingredients skipped:",masterError);
-      }
+      await loadMasterIngredients();
 
 
       /* -----------------------------------------------
