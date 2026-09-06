@@ -3427,8 +3427,7 @@ async function loadFormulas(){
 
     let result = await supabaseClient
       .from("formulas")
-      .select("*")
-      .order("created_at",{ascending:false});
+      .select("*");
 
     if(
       result.error &&
