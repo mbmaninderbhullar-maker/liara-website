@@ -121,7 +121,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
       <button type="button" onclick="addFormulaIngredient()">+ Add Ingredient</button>
     </div>
 
-    <div id="formulaIngredientRows" style="margin-top:16px"></div>
+    <div style="display:grid;grid-template-columns:minmax(180px,2fr) 120px 140px 130px 70px;gap:8px;margin-top:16px;padding:10px;background:#111;color:#fff;border-radius:9px;font-size:13px;font-weight:700"><div>Ingredient</div><div>Quantity (g)</div><div>Rate / Gram</div><div>Ingredient Cost</div><div></div></div><div id="formulaIngredientRows" style="margin-top:8px"></div>
 
     <div style="margin-top:16px;padding:14px;border-top:2px solid #222">
       <div><strong>Total Weight:</strong> <span id="formulaTotalWeight">0 g</span></div>
@@ -278,7 +278,7 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
 
     const row = document.createElement('div');
     row.className = 'formula-builder-row';
-    row.style.cssText = 'display:grid;grid-template-columns:minmax(180px,2fr) 110px 130px 120px 70px;gap:8px;align-items:center;margin-bottom:10px;padding:10px;border:1px solid #ddd;border-radius:10px';
+    row.style.cssText = 'display:grid;grid-template-columns:minmax(180px,2fr) 120px 140px 130px 70px;gap:8px;align-items:center;margin-bottom:10px;padding:10px;border:1px solid #ddd;border-radius:10px;background:#fff';
 
     row.innerHTML = `
       <select class="formula-ing" onchange="formulaRowChanged(this)">
