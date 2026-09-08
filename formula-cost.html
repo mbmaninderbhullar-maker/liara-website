@@ -92,7 +92,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 <input id="ingredientRate" type="number" min="0" step="0.01" placeholder="e.g. 500">
 </div>
 
-<button class="black" onclick="addIngredient()">+ Add Ingredient</button>
+<button id="ingredientSaveBtn" class="black" onclick="addIngredient()">+ Add Ingredient</button><button id="ingredientCancelBtn" class="light" style="display:none" onclick="cancelIngredientEdit()">Cancel Edit</button>
 </div>
 <div class="rate-note">The rate is the total amount paid for the entered purchase quantity — it does not have to be a per-kg rate.</div>
 <div id="ingredientStatus" class="status"></div>
@@ -175,9 +175,38 @@ function renderIngredientMaster(){
   let box=document.getElementById("ingredientMasterList"); if(!box)return;
   const list=getIngredientMaster();
   if(!list.length){box.innerHTML='<div class="empty">No ingredients added yet.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${String(x.purchaseUnit||"kg").toUpperCase()==="GRAM"?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${String(x.purchaseUnit||"kg").toUpperCase()==="GRAM"?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="editIngredient(${i})">Edit</button> <button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
 }
 function escGlobal(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));}
+function editIngredient(i){
+  const list=getIngredientMaster();
+  const item=list[i];
+  if(!item)return;
+  document.getElementById("ingredientName").value=item.name||"";
+  document.getElementById("ingredientQty").value=item.purchaseQty||1;
+  document.getElementById("ingredientUnit").value=(item.purchaseUnit||"kg").toLowerCase()==="g"?"g":"kg";
+  document.getElementById("ingredientRate").value=item.purchaseRate??"";
+  window.editingIngredientId=item.id||null;
+  window.editingIngredientIndex=i;
+  const btn=document.getElementById("ingredientSaveBtn");
+  if(btn){btn.textContent="✓ Update Ingredient";}
+  const cancel=document.getElementById("ingredientCancelBtn");
+  if(cancel)cancel.style.display="block";
+  showIngredientStatus(`Editing: ${item.name}`,true);
+  document.getElementById("ingredientName")?.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function cancelIngredientEdit(){
+  window.editingIngredientId=null; window.editingIngredientIndex=null;
+  document.getElementById("ingredientName").value="";
+  document.getElementById("ingredientQty").value="1";
+  document.getElementById("ingredientUnit").value="kg";
+  document.getElementById("ingredientRate").value="";
+  const btn=document.getElementById("ingredientSaveBtn");
+  if(btn)btn.textContent="+ Add Ingredient";
+  const cancel=document.getElementById("ingredientCancelBtn");
+  if(cancel)cancel.style.display="none";
+  showIngredientStatus("",true);
+}
 async function deleteIngredient(i){
   const list=getIngredientMaster();
   const item=list[i];
@@ -525,14 +554,16 @@ async function addIngredient(){
   const grams=(unit==='g'||unit==='gram'||unit==='grams')?qty:qty*1000;
   const ratePerGram=grams?rate/grams:0;
   const current=getIngredientMaster();
-  const existing=current.find(x=>String(x.name||'').trim().toLowerCase()===name.toLowerCase());
+  const existingByName=current.find(x=>String(x.name||'').trim().toLowerCase()===name.toLowerCase());
+  const editingId=window.editingIngredientId||null;
+  const targetId=editingId || existingByName?.id || null;
 
-  if(existing?.id){
+  if(targetId){
     const {error}=await supabaseClient.from('ingredients_master').update({
       name, purchase_qty:qty, purchase_unit:unit, purchase_rate:rate,
       rate_per_gram:ratePerGram
-    }).eq('id',existing.id);
-    if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
+    }).eq('id',targetId);
+    if(error){showIngredientStatus('Ingredient update failed: '+error.message,false);return;}
   }else{
     const {error}=await supabaseClient.from('ingredients_master').insert({
       name, category:'Natural', purchase_qty:qty, purchase_unit:unit,
@@ -545,10 +576,8 @@ async function addIngredient(){
   renderIngredientMaster();
   // Refresh the formula builder dropdowns so the new ingredient is immediately available.
   if(typeof renderFormulaRows==='function') renderFormulaRows();
-  showIngredientStatus(existing ? 'Ingredient rate updated successfully.' : 'Ingredient saved successfully.',true);
-  document.getElementById('ingredientName').value='';
-  document.getElementById('ingredientQty').value='1';
-  document.getElementById('ingredientRate').value='';
+  showIngredientStatus((editingId||existingByName) ? 'Ingredient updated successfully.' : 'Ingredient saved successfully.',true);
+  cancelIngredientEdit();
 }
 
 window.addEventListener('load',async()=>{await loadIngredientsFromSupabase();await renderProducts();renderIngredientMaster();});
