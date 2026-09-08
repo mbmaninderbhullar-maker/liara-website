@@ -188,9 +188,70 @@ function ingredientGramRate(i){
 function renderIngredientMaster(){
   let box=document.getElementById("ingredientMasterList"); if(!box)return;
   const list=getIngredientMaster();
-  if(!list.length){box.innerHTML='<div class="empty">No ingredients added yet.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${(String(x.purchaseUnit||"kg").toLowerCase().startsWith("g"))?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="editIngredient(${i})">Edit</button> <button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
+  if(!list.length){box.innerHTML='<div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;flex-wrap:wrap"><button class="blue" onclick="exportAllIngredientsExcel()">📊 Download All Ingredients Excel</button><button class="light" onclick="exportAllIngredientsPDF()">📄 Download All Ingredients PDF</button></div><div class="empty">No ingredients added yet.</div>';return;}
+  box.innerHTML='<div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;flex-wrap:wrap"><button class="blue" onclick="exportAllIngredientsExcel()">📊 Download All Ingredients Excel</button><button class="light" onclick="exportAllIngredientsPDF()">📄 Download All Ingredients PDF</button></div><div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${(String(x.purchaseUnit||"kg").toLowerCase().startsWith("g"))?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="editIngredient(${i})">Edit</button> <button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
 }
+
+window.exportAllIngredientsExcel=function(){
+  const list=getIngredientMaster();
+  if(!list.length){alert('No ingredients available to export.');return;}
+  if(typeof XLSX==='undefined'){alert('Excel library could not load.');return;}
+  const data=list.map((x,i)=>{
+    const g=ingredientGramRate(x);
+    const unit=String(x.purchaseUnit||'kg').toLowerCase().startsWith('g')?'Gram':'KG';
+    return {
+      'S.No.':i+1,
+      'Ingredient Name':x.name||'',
+      'Purchase Quantity':Number(x.purchaseQty||0),
+      'Unit':unit,
+      'Total Purchase Rate (₹)':Number(x.purchaseRate||0),
+      'Rate / Gram (₹)':Number(g.toFixed(4)),
+      'Rate / KG (₹)':Number((g*1000).toFixed(2))
+    };
+  });
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws['!cols']=[{wch:8},{wch:30},{wch:20},{wch:12},{wch:24},{wch:20},{wch:18}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'All Ingredients');
+  XLSX.writeFile(wb,'LIARA_All_Ingredients.xlsx');
+};
+
+window.exportAllIngredientsPDF=function(){
+  const list=getIngredientMaster();
+  if(!list.length){alert('No ingredients available to export.');return;}
+  const jsPDF=window.jspdf?.jsPDF;
+  if(!jsPDF){alert('PDF library could not load.');return;}
+  const doc=new jsPDF({unit:'mm',format:'a4',orientation:'landscape'});
+  let y=18;
+  const pageW=297;
+  doc.setFontSize(18); doc.setFont(undefined,'bold'); doc.text('LIARA PROFESSIONAL™',14,y); y+=8;
+  doc.setFontSize(12); doc.setFont(undefined,'normal'); doc.text('Complete Ingredient Master List',14,y); y+=8;
+  doc.setFontSize(9); doc.text(`Total Ingredients: ${list.length}`,14,y); y+=7;
+  const x=[10,22,92,145,166,215,253];
+  const headers=['S.No.','Ingredient','Purchase Qty','Total Rate','Rate / Gram','Rate / KG','Unit'];
+  function header(){
+    doc.setFillColor(17,17,17); doc.setTextColor(255,255,255); doc.rect(10,y-5,277,8,'F');
+    doc.setFontSize(8); doc.setFont(undefined,'bold');
+    headers.forEach((h,i)=>doc.text(h,x[i],y));
+    y+=8; doc.setTextColor(0,0,0); doc.setFont(undefined,'normal');
+  }
+  header();
+  list.forEach((item,i)=>{
+    if(y>195){doc.addPage();y=18;header();}
+    const g=ingredientGramRate(item);
+    const unit=String(item.purchaseUnit||'kg').toLowerCase().startsWith('g')?'Gram':'KG';
+    doc.setFontSize(8);
+    doc.text(String(i+1),x[0],y);
+    doc.text(String(item.name||'').slice(0,38),x[1],y);
+    doc.text(`${Number(item.purchaseQty||0).toLocaleString('en-IN')} ${unit}`,x[2],y);
+    doc.text(`₹${Number(item.purchaseRate||0).toFixed(2)}`,x[3],y);
+    doc.text(`₹${g.toFixed(4)}`,x[4],y);
+    doc.text(`₹${(g*1000).toFixed(2)}`,x[5],y);
+    doc.text(unit,x[6],y);
+    y+=7;
+  });
+  doc.save('LIARA_All_Ingredients.pdf');
+};
 function escGlobal(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));}
 function editIngredient(i){
   const list=getIngredientMaster();
