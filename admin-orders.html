@@ -1667,6 +1667,13 @@ body{
 .order-status-save{border:0;background:#211d18;color:#fff;border-radius:7px;padding:7px 9px;font-size:10px;font-weight:700;cursor:pointer}
 .order-status-save:hover{background:#ad8232}
 .status-updated-note{font-size:9px;color:#287a3e;font-weight:700;display:none}
+
+.email-attachments{margin-top:20px;padding-top:16px;border-top:1px solid #e5e7eb}
+.email-attachments-title{font-weight:700;margin-bottom:10px}
+.email-attachments-list{display:flex;flex-wrap:wrap;gap:10px}
+.email-attachment-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #ddd;border-radius:10px;background:#fafafa;text-decoration:none;color:inherit;min-width:240px}
+.email-attachment-card small{display:block;color:#777;margin-top:3px}
+.email-attachment-icon{font-size:22px}
 </style>
 </head>
 
@@ -1881,6 +1888,11 @@ body{
 <div class="settings-field"><label>BCC</label><input id="mailBcc" type="text" placeholder="Optional"></div>
 <div class="settings-field"><label>SUBJECT</label><input id="mailSubject" type="text" placeholder="Subject"></div>
 <div class="settings-field" style="grid-column:1/-1"><label>MESSAGE</label><textarea id="mailContent" rows="10" placeholder="Write your message..."></textarea></div>
+<div class="settings-field" style="grid-column:1/-1">
+<label>ATTACHMENTS</label>
+<input id="mailAttachments" type="file" multiple>
+<small style="color:#777;display:block;margin-top:5px">Attach one or more files. Maximum 10 MB per file.</small>
+</div>
 </div>
 <div class="settings-actions" style="padding:0 14px 14px">
   <button class="btn" type="button" onclick="sendZohoMail()">📤 Send</button>
@@ -2255,6 +2267,7 @@ function showSection(section,button){
     }
 
     if(section === "orders") loadOrders();
+    if(section === "email") loadZohoMail();
     else if(section === "sales") loadSales();
     else if(section === "products") loadProducts();
     else if(section === "add-product") showAddProduct();
@@ -8162,8 +8175,12 @@ function emailInitial(m){
     return escapeHtml((s.includes("@")?s.split("@")[0]:s).charAt(0).toUpperCase()||"M");
 }
 async function openZohoEmail(i){
-    const m=zohoEmails[i]; if(!m)return;
-    const reader=document.getElementById("emailReader"); if(!reader)return;
+    const m=zohoEmails[i];
+    if(!m)return;
+
+    const reader=document.getElementById("emailReader");
+    if(!reader)return;
+
     reader.innerHTML=`<div class="email-reader-top">
         <button type="button" onclick="closeEmailReader()">← Back</button>
         <button type="button" onclick="replyZohoEmail(${i})">↩ Reply</button>
@@ -8178,8 +8195,48 @@ async function openZohoEmail(i){
         </div>
       </div>
       <div class="email-body">${m.content||escapeHtml(m.summary||"No message content.")}</div>
+      ${renderEmailAttachments(m)}
     </div>`;
 }
+
+function renderEmailAttachments(m){
+    const list=Array.isArray(m?.attachments)?m.attachments:[];
+    if(!list.length)return "";
+
+    return `<div class="email-attachments">
+      <div class="email-attachments-title">📎 Attachments (${list.length})</div>
+      <div class="email-attachments-list">
+        ${list.map((a,n)=>{
+          const name=escapeHtml(a?.name||a?.fileName||a?.filename||("Attachment "+(n+1)));
+          const size=a?.size ? formatAttachmentSize(a.size) : "";
+          const url=a?.downloadUrl||a?.url||a?.contentUrl||a?.href||"";
+          return url
+            ? `<a class="email-attachment-card" href="${escapeAttribute(url)}" target="_blank" rel="noopener">
+                 <span class="email-attachment-icon">📎</span>
+                 <span><strong>${name}</strong>${size?`<small>${size}</small>`:""}</span>
+                 <span>Download ↗</span>
+               </a>`
+            : `<div class="email-attachment-card">
+                 <span class="email-attachment-icon">📎</span>
+                 <span><strong>${name}</strong>${size?`<small>${size}</small>`:""}</span>
+               </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+}
+
+function formatAttachmentSize(bytes){
+    const n=Number(bytes);
+    if(!Number.isFinite(n)||n<=0)return "";
+    if(n<1024)return n+" B";
+    if(n<1024*1024)return (n/1024).toFixed(1)+" KB";
+    return (n/1024/1024).toFixed(1)+" MB";
+}
+
+function escapeAttribute(value){
+    return String(value??"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
 function closeEmailReader(){
     const reader=document.getElementById("emailReader");
     if(reader)reader.innerHTML='<div class="message">Select an email to read it.</div>';
@@ -8205,15 +8262,69 @@ function openComposeMail(){
 }
 function closeComposeMail(){const box=document.getElementById("composeMailBox");if(box)box.style.display="none";}
 async function sendZohoMail(){
-    const to=document.getElementById("mailTo").value.trim(),subject=document.getElementById("mailSubject").value.trim(),
-    content=document.getElementById("mailContent").value,status=document.getElementById("sendMailStatus");
-    if(!to||!subject||!content){status.textContent="To, subject and message are required.";status.style.display="block";return;}
-    status.textContent="Sending...";status.style.display="block";
+    const to=document.getElementById("mailTo").value.trim();
+    const subject=document.getElementById("mailSubject").value.trim();
+    const content=document.getElementById("mailContent").value;
+    const status=document.getElementById("sendMailStatus");
+    const fileInput=document.getElementById("mailAttachments");
+    const files=[...(fileInput?.files||[])];
+
+    if(!to||!subject||!content){
+        status.textContent="To, subject and message are required.";
+        status.style.display="block";
+        return;
+    }
+
+    status.textContent=files.length
+        ? "Uploading attachment(s) and sending..."
+        : "Sending...";
+    status.style.display="block";
+
     try{
-        await zohoRequest("send",{toAddress:to,ccAddress:document.getElementById("mailCc").value.trim(),bccAddress:document.getElementById("mailBcc").value.trim(),subject,content});
+        const attachments=[];
+
+        for(const file of files){
+            if(file.size>10*1024*1024){
+                throw new Error(file.name+" is larger than 10 MB.");
+            }
+
+            const dataUrl=await new Promise((resolve,reject)=>{
+                const r=new FileReader();
+                r.onload=()=>resolve(r.result);
+                r.onerror=()=>reject(new Error("Could not read "+file.name));
+                r.readAsDataURL(file);
+            });
+
+            attachments.push({
+                name:file.name,
+                type:file.type||"application/octet-stream",
+                data:String(dataUrl).split(",")[1]
+            });
+        }
+
+        await zohoRequest("send",{
+            toAddress:to,
+            ccAddress:document.getElementById("mailCc").value.trim(),
+            bccAddress:document.getElementById("mailBcc").value.trim(),
+            subject,
+            content,
+            attachments
+        });
+
         status.textContent="Email sent successfully.";
-        setTimeout(()=>{closeComposeMail();["mailTo","mailCc","mailBcc","mailSubject","mailContent"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});},700);
-    }catch(e){status.textContent=e.message;}
+        if(fileInput)fileInput.value="";
+
+        setTimeout(()=>{
+            closeComposeMail();
+            ["mailTo","mailCc","mailBcc","mailSubject","mailContent"].forEach(id=>{
+                const e=document.getElementById(id);
+                if(e)e.value="";
+            });
+        },700);
+
+    }catch(e){
+        status.textContent=e.message||"Failed to send email.";
+    }
 }
 
 </script>
