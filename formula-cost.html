@@ -131,7 +131,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
     </div>
   </div>
 </div>
-<div class="card" id="savedProductsListCard" style="margin-top:18px">
+<div id="savedProductsListCard" class="card" style="margin-top:18px">
   <h3>Products</h3>
   <div id="savedProductsList"></div>
 </div>
@@ -151,6 +151,12 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+</script>
 <script>
 function showIngredientStatus(message, ok=true){
   const el=document.getElementById("ingredientStatus");
@@ -201,7 +207,23 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
   const LS_PRODUCTS = 'liaraProductsV2';
   const LS_ING = 'liaraIngredientsV2';
 
+  let ingredientCache = [];
+  window.loadIngredientsFromSupabase = async function(){
+    const {data,error}=await supabaseClient.from('ingredients_master')
+      .select('*').order('name',{ascending:true});
+    if(error){ console.error(error); return ingredientCache; }
+    ingredientCache=(data||[]).map(x=>({
+      id:x.id,name:x.name,category:x.category||'',
+      purchaseQty:Number(x.purchase_qty||1),
+      purchaseUnit:(x.purchase_unit||'kg').toLowerCase(),
+      purchaseRate:Number(x.purchase_rate||0),
+      ratePerGram:Number(x.rate_per_gram||0)
+    }));
+    localStorage.setItem(LS_ING,JSON.stringify(ingredientCache));
+    return ingredientCache;
+  };
   function getIngredients(){
+    if(ingredientCache.length) return ingredientCache;
     try { return JSON.parse(localStorage.getItem(LS_ING) || '[]'); } catch(e){ return []; }
   }
   function getProducts(){
@@ -301,7 +323,7 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
     document.getElementById('formulaCost100').textContent = `₹${weight ? (total/weight*100).toFixed(2) : '0.00'}`;
   }
 
-  window.saveCurrentFormula = function(){
+  window.saveCurrentFormula = async function(){
     if(!active) return;
     const ingredients = [];
     document.querySelectorAll('.formula-builder-row').forEach(row=>{
@@ -309,20 +331,57 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
       const grams=Number(row.querySelector('.formula-grams')?.value || 0);
       if(id && grams>0){
         const ing=getIngredients().find(x=>String(x.id)===String(id));
-        ingredients.push({ingredientId:id, ingredientName:ing?.name||'', grams});
+        const rate=gramRate(ing), cost=grams*rate;
+        ingredients.push({ingredientId:id, ingredientName:ing?.name||'', grams, rate, cost});
       }
     });
-    if(!ingredients.length){ alert('Enter at least one ingredient and its quantity in grams.'); return; }
+    if(!ingredients.length){ alert('Add at least one ingredient with grams.'); return; }
+
+    const totalWeight=ingredients.reduce((a,x)=>a+x.grams,0);
+    const totalCost=ingredients.reduce((a,x)=>a+x.cost,0);
+    const formulaNo='LIARA-'+Date.now();
+
+    const {data:formula,error}=await supabaseClient.from('formulas').insert({
+      formula_no:formulaNo,
+      product_name:active.name,
+      formula_name:active.name,
+      product_reference:active.reference||null,
+      version:'1.0',
+      formula_date:new Date().toISOString().slice(0,10),
+      batch_size:totalWeight,
+      batch_unit:'g'
+    }).select().single();
+
+    if(error){ alert('Formula save failed:\n\n'+error.message); return; }
+
+    const rows=ingredients.map(x=>({
+      formula_id:formula.id,
+      ingredient_id:x.ingredientId,
+      ingredient_name:x.ingredientName,
+      quantity:x.grams,
+      unit:'g',
+      grams:x.grams,
+      rate_per_gram:x.rate,
+      ingredient_cost:x.cost,
+      percentage:totalWeight ? (x.grams/totalWeight*100) : 0
+    }));
+
+    const {error:rowError}=await supabaseClient.from('formula_ingredients').insert(rows);
+    if(rowError){
+      await supabaseClient.from('formulas').delete().eq('id',formula.id);
+      alert('Formula ingredients save failed:\n\n'+rowError.message);
+      return;
+    }
 
     active.ingredients=ingredients;
+    active.supabaseFormulaId=formula.id;
     active.updatedAt=new Date().toISOString();
-
     const products=getProducts();
-    const idx=products.findIndex(x=>x.id===active.id || String(x.name).toLowerCase()===String(active.name).toLowerCase());
+    const idx=products.findIndex(x=>String(x.name).toLowerCase()===String(active.name).toLowerCase());
     if(idx>=0) products[idx]=active; else products.push(active);
     saveProducts(products);
-    renderProducts();
-    alert('Product formula saved successfully.');
+    await renderProducts();
+    alert('Product formula saved to Supabase.');
   };
 
   window.viewSavedProduct = function(index){
@@ -349,21 +408,53 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
     modal.style.display='block';
   };
 
-  window.deleteProduct = function(index){
-    if(!confirm('Are you sure you want to delete this product?')) return;
-    const p=getProducts();
-    p.splice(index,1); saveProducts(p); renderProducts();
+  window.deleteProduct = async function(index){
+    const products=await loadProductsFromSupabase();
+    const p=products[index];
+    if(!p) return;
+    if(!confirm('Delete this product formula?')) return;
+    const {error}=await supabaseClient.from('formulas').delete().eq('id',p.supabaseFormulaId);
+    if(error){ alert('Delete failed:\n\n'+error.message); return; }
+    await renderProducts();
   };
 
-  window.renderProducts = function(){
+  async function loadProductsFromSupabase(){
+    const {data:forms,error}=await supabaseClient.from('formulas')
+      .select('*').order('created_at',{ascending:false});
+    if(error){ console.error(error); return getProducts(); }
+    const ids=(forms||[]).map(x=>x.id);
+    let fi=[];
+    if(ids.length){
+      const r=await supabaseClient.from('formula_ingredients').select('*').in('formula_id',ids);
+      if(!r.error) fi=r.data||[];
+    }
+    const products=(forms||[]).map(f=>({
+      id:f.id,
+      supabaseFormulaId:f.id,
+      name:f.product_name||f.formula_name||'Product',
+      reference:f.product_reference||'',
+      ingredients:fi.filter(x=>String(x.formula_id)===String(f.id)).map(x=>({
+        ingredientId:x.ingredient_id,
+        ingredientName:x.ingredient_name,
+        grams:Number(x.grams ?? x.quantity ?? 0)
+      }))
+    }));
+    saveProducts(products);
+    return products;
+  }
+
+  window.renderProducts = async function(){
     const box=document.getElementById('savedProductsList');
     if(!box) return;
-    const products=getProducts();
+    const products=await loadProductsFromSupabase();
     if(!products.length){ box.innerHTML='<div style="padding:14px;color:#777">No products added yet.</div>'; return; }
     const list=getIngredients();
     box.innerHTML=products.map((p,i)=>{
       let w=0,c=0;
-      (p.ingredients||[]).forEach(x=>{const ing=list.find(z=>String(z.id)===String(x.ingredientId));const g=Number(x.grams||0);w+=g;c+=g*gramRate(ing);});
+      (p.ingredients||[]).forEach(x=>{
+        const ing=list.find(z=>String(z.id)===String(x.ingredientId));
+        const g=Number(x.grams||0); w+=g; c+=g*gramRate(ing);
+      });
       return `<div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
         <div><strong>${esc(p.name)}</strong><div style="color:#777">${p.ingredients?.length||0} ingredients • Total Weight: <b>${w.toFixed(2)} g</b> • Ingredient Cost: <b>₹${c.toFixed(2)}</b></div></div>
         <div style="display:flex;gap:7px"><button onclick="viewSavedProduct(${i})">View Formula</button><button onclick="printSavedProduct(${i})">Print</button><button onclick="deleteProduct(${i})">Delete</button></div>
@@ -374,6 +465,28 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
   // Re-render saved products after ingredient master changes too.
   window.addEventListener('load', function(){ renderProducts(); renderIngredientMaster(); });
 })();
+</script>
+<script>
+async function addIngredient(){
+  const name=document.getElementById('ingredientName')?.value.trim();
+  const qty=Number(document.getElementById('ingredientQty')?.value||0);
+  const unit=(document.getElementById('ingredientUnit')?.value||'kg').toLowerCase();
+  const rate=Number(document.getElementById('ingredientRate')?.value||0);
+  if(!name){showIngredientStatus('Please enter an ingredient name.',false);return;}
+  if(!(qty>0)){showIngredientStatus('Please enter a valid purchase quantity.',false);return;}
+  if(!(rate>=0)){showIngredientStatus('Please enter a valid purchase rate.',false);return;}
+  const grams=(unit==='g'||unit==='gram'||unit==='grams')?qty:qty*1000;
+  const ratePerGram=grams?rate/grams:0;
+  const {error}=await supabaseClient.from('ingredients_master').insert({name,category:'',purchase_qty:qty,purchase_unit:unit,purchase_rate:rate,rate_per_gram:ratePerGram});
+  if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
+  await loadIngredientsFromSupabase();
+  renderIngredientMaster();
+  showIngredientStatus('Ingredient saved successfully.',true);
+  document.getElementById('ingredientName').value='';
+  document.getElementById('ingredientQty').value='1';
+  document.getElementById('ingredientRate').value='';
+}
+window.addEventListener('load',async()=>{await loadIngredientsFromSupabase();await renderProducts();renderIngredientMaster();});
 </script>
 
 </body>
