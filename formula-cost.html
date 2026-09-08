@@ -641,7 +641,7 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
       ingredients:fi.filter(x=>String(x.formula_id)===String(f.id)).map(x=>({
         ingredientId:x.ingredient_id,
         ingredientName:x.ingredient_name,
-        grams:Number(x.grams ?? x.quantity ?? 0)
+        grams:(Number.isFinite(Number(x.quantity)) && Number(x.quantity)!==0) ? ((String(x.unit||'g').toLowerCase().startsWith('kg')) ? Number(x.quantity)*1000 : Number(x.quantity)) : Number(x.grams ?? 0)
       }))
     }));
     saveProducts(products);
