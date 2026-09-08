@@ -476,46 +476,125 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
   window.viewSavedProduct = async function(index){
     const p=getProducts()[index];
     if(!p) return;
-    // Refresh Ingredient Master so the formula always shows the latest price.
     await window.loadIngredientsFromSupabase();
     const list=getIngredients();
     let total=0, weight=0;
-    const rows=(p.ingredients||[]).map(x=>{
+    const baseRows=(p.ingredients||[]).map(x=>{
       const ing=findMasterIngredient(x,list);
       const g=Number(x.grams||0), r=getLiveRate(x,list), c=g*r;
       weight+=g; total+=c;
-      return `<tr><td>${esc(ing?.name||x.ingredientName||'')}</td><td>₹${Number(r.toFixed(6))} / g</td><td>${g.toFixed(2)} g</td><td>₹${c.toFixed(2)}</td></tr>`;
-    }).join('');
+      return { name:ing?.name||x.ingredientName||'', grams:g, rate:r, cost:c, ingredientId:ing?.id||x.ingredientId||null };
+    });
+
     const modal=document.getElementById('productViewModal');
     document.getElementById('viewProductName').textContent=p.name||'Product';
     document.getElementById('viewProductContent').innerHTML=`
+      <div style="overflow-x:auto">
       <table style="width:100%;border-collapse:collapse">
       <thead><tr><th>Ingredient Name</th><th>Rate / Gram</th><th>Gram</th><th>Total</th></tr></thead>
-      <tbody>${rows}</tbody>
-      <tfoot><tr><th colspan="3" style="text-align:right">TOTAL</th><th>₹${total.toFixed(2)}</th></tr></tfoot>
-      </table>
-      <p><strong>Total Weight:</strong> ${weight.toFixed(2)} g</p>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px">
-        <strong>Cost Basis:</strong>
-        <select id="viewCostBasis" onchange="updateViewBasis()" style="max-width:190px">
-          <option value="100" ${Number(p.costBasis||100)===100?'selected':''}>100 g</option>
-          <option value="1000" ${Number(p.costBasis||100)===1000?'selected':''}>1000 g (1 KG)</option>
-        </select>
+      <tbody id="viewFormulaRows"></tbody>
+      <tfoot><tr><th colspan="3" style="text-align:right">TOTAL</th><th id="viewFormulaTotalCostText">₹0.00</th></tr></tfoot>
+      </table></div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px">
+        <strong>Total Weight:</strong>
+        <input id="viewTotalWeightInput" type="number" min="0.01" step="0.01" value="${weight.toFixed(2)}" oninput="updateViewFormulaWeight()" style="width:150px;padding:10px;border:1px solid #ccc;border-radius:8px">
+        <span>g</span>
+        <span style="color:#777;font-size:13px">Change this to any batch size (30g, 50g, 100g, 250g, 1000g, etc.).</span>
       </div>
-      <p><strong>Cost / <span id="viewBasisLabel">${Number(p.costBasis||100)===1000?'1000 g (1 KG)':'100 g'}</span>:</strong> <span id="viewBasisValue">₹${weight ? (total/weight*Number(p.costBasis||100)).toFixed(2) : '0.00'}</span></p>
-      <input type="hidden" id="viewFormulaTotalWeight" value="${weight}">
-      <input type="hidden" id="viewFormulaTotalCost" value="${total}">`;
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <strong>Cost Basis:</strong>
+        <input id="viewCostBasis" type="number" min="0.01" step="0.01" value="${Number(p.costBasis||100)}" oninput="updateViewBasis()" style="width:150px;padding:10px;border:1px solid #ccc;border-radius:8px">
+        <span>g</span>
+      </div>
+      <p><strong>Cost / <span id="viewBasisLabel">${Number(p.costBasis||100).toFixed(2)} g</span>:</strong> <span id="viewBasisValue">₹0.00</span></p>
+      <input type="hidden" id="viewFormulaCurrentWeight" value="${weight}">
+      <input type="hidden" id="viewFormulaCurrentCost" value="${total}">
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button onclick="saveEditedFormula(${index})" style="background:#111;color:#fff">✓ Save Changes</button>
+      </div>`;
+
+    window._viewFormulaState={index, product:p, rows:baseRows, originalWeight:weight};
+    renderViewFormulaRows();
     modal.style.display='block';
+  };
+
+  window.renderViewFormulaRows = function(){
+    const s=window._viewFormulaState;
+    if(!s) return;
+    const target=Number(document.getElementById('viewTotalWeightInput')?.value||s.originalWeight||0);
+    const ratio=s.originalWeight>0 ? target/s.originalWeight : 0;
+    let total=0;
+    const html=s.rows.map((x,i)=>{
+      const g=x.grams*ratio, c=g*x.rate;
+      total+=c;
+      return `<tr><td>${esc(x.name)}</td><td>₹${Number(x.rate).toFixed(4)} / g</td><td><input class="viewGramEdit" data-index="${i}" type="number" min="0" step="0.01" value="${g.toFixed(2)}" oninput="updateViewFormulaFromRows()" style="width:110px;padding:7px;border:1px solid #ccc;border-radius:7px"> g</td><td>₹${c.toFixed(2)}</td></tr>`;
+    }).join('');
+    document.getElementById('viewFormulaRows').innerHTML=html;
+    document.getElementById('viewFormulaTotalCostText').textContent=`₹${total.toFixed(2)}`;
+    document.getElementById('viewTotalWeightInput').value=s.rows.reduce((a,x)=>a+x.grams*ratio,0).toFixed(2);
+    document.getElementById('viewFormulaCurrentWeight').value=s.rows.reduce((a,x)=>a+x.grams*ratio,0);
+    document.getElementById('viewFormulaCurrentCost').value=total;
+    updateViewBasis();
+  };
+
+  window.updateViewFormulaWeight = function(){
+    renderViewFormulaRows();
+  };
+
+  window.updateViewFormulaFromRows = function(){
+    const s=window._viewFormulaState;
+    if(!s) return;
+    const inputs=[...document.querySelectorAll('.viewGramEdit')];
+    let totalWeight=0,total=0;
+    inputs.forEach(input=>{
+      const i=Number(input.dataset.index), g=Number(input.value||0);
+      const x=s.rows[i]; totalWeight+=g; total+=g*x.rate;
+    });
+    document.getElementById('viewTotalWeightInput').value=totalWeight.toFixed(2);
+    document.getElementById('viewFormulaTotalCostText').textContent=`₹${total.toFixed(2)}`;
+    document.getElementById('viewFormulaCurrentWeight').value=totalWeight;
+    document.getElementById('viewFormulaCurrentCost').value=total;
+    updateViewBasis();
   };
 
   window.updateViewBasis = function(){
     const basis=Number(document.getElementById('viewCostBasis')?.value||100);
-    const weight=Number(document.getElementById('viewFormulaTotalWeight')?.value||0);
-    const total=Number(document.getElementById('viewFormulaTotalCost')?.value||0);
+    const weight=Number(document.getElementById('viewFormulaCurrentWeight')?.value||0);
+    const total=Number(document.getElementById('viewFormulaCurrentCost')?.value||0);
     const label=document.getElementById('viewBasisLabel');
     const value=document.getElementById('viewBasisValue');
-    if(label) label.textContent=basis===1000?'1000 g (1 KG)':'100 g';
+    if(label) label.textContent=`${basis.toFixed(2)} g`;
     if(value) value.textContent=`₹${(weight ? total/weight*basis : 0).toFixed(2)}`;
+  };
+
+  window.saveEditedFormula = async function(index){
+    const s=window._viewFormulaState;
+    if(!s) return;
+    const inputs=[...document.querySelectorAll('.viewGramEdit')];
+    const editedRows=inputs.map((input,i)=>({ ...s.rows[i], grams:Number(input.value||0) }));
+    const totalWeight=editedRows.reduce((a,x)=>a+x.grams,0);
+    if(totalWeight<=0){ alert('Total weight must be greater than 0.'); return; }
+    const basis=Number(document.getElementById('viewCostBasis')?.value||100);
+    const p={...s.product, costBasis:basis, ingredients:editedRows.map(x=>({
+      ingredientId:x.ingredientId, ingredientName:x.name, grams:x.grams, rate:x.rate,
+      cost:x.grams*x.rate, percentage:totalWeight?(x.grams/totalWeight*100):0
+    }))};
+    const formulaId=p.supabaseFormulaId;
+    if(formulaId){
+      const {error:fe}=await supabaseClient.from('formulas').update({batch_size:totalWeight, batch_unit:'g', updated_at:new Date().toISOString()}).eq('id',formulaId);
+      if(fe){alert('Formula update failed:\n\n'+fe.message);return;}
+      const {error:de}=await supabaseClient.from('formula_ingredients').delete().eq('formula_id',formulaId);
+      if(de){alert('Formula ingredients update failed:\n\n'+de.message);return;}
+      const rows=p.ingredients.map(x=>({formula_id:formulaId,ingredient_id:x.ingredientId||null,ingredient_name:x.ingredientName,quantity:x.grams,unit:'g',grams:x.grams,rate_per_gram:x.rate,ingredient_cost:x.cost,percentage:x.percentage}));
+      const {error:ie}=await supabaseClient.from('formula_ingredients').insert(rows);
+      if(ie){alert('Formula ingredients save failed:\n\n'+ie.message);return;}
+    }
+    const products=getProducts();
+    products[index]=p;
+    saveProducts(products);
+    await renderProducts();
+    alert('Formula updated successfully.');
+    window.viewSavedProduct(index);
   };
 
   window.deleteProduct = async function(index){
