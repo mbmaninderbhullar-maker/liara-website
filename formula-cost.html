@@ -152,6 +152,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
     <div id="viewProductContent" style="margin-top:18px"></div>
     <div style="text-align:right;margin-top:18px">
       <button type="button" onclick="printProductView()">🖨 Print</button>
+      <button type="button" onclick="exportFormulaExcel()">📊 Excel</button>
       <button type="button" onclick="closeProductView()">Close</button>
     </div>
   </div>
@@ -159,6 +160,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
 const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
@@ -233,6 +235,34 @@ function printProductView(){
   const w=window.open("","_blank","width=900,height=700"); if(!w){alert("Please allow pop-ups to print the formula.");return;}
   w.document.write(`<!DOCTYPE html><html><head><title>${name}</title><style>body{font-family:Arial;padding:30px;color:#111}h1{margin-bottom:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#111;color:#fff}p{margin-top:12px}</style></head><body><h1>${escGlobal(name)}</h1>${content}</body></html>`); w.document.close(); w.focus(); setTimeout(()=>w.print(),300);
 }
+window.exportFormulaExcel = function(){
+  const s=window._viewFormulaState;
+  if(!s){ alert('Open a formula first.'); return; }
+  const totalWeight=Number(document.getElementById('viewTotalWeightInput')?.value||s.originalWeight||0);
+  const ratio=s.originalWeight>0 ? totalWeight/s.originalWeight : 0;
+  const rows=s.rows.map(x=>{
+    const grams=x.grams*ratio;
+    const cost=grams*Number(x.rate||0);
+    return {
+      'Ingredient Name':x.name,
+      'Rate / Gram (₹)':Number(x.rate||0),
+      'Gram':Number(grams.toFixed(2)),
+      'Total Cost (₹)':Number(cost.toFixed(2))
+    };
+  });
+  const total=rows.reduce((a,x)=>a+x['Total Cost (₹)'],0);
+  rows.push({'Ingredient Name':'TOTAL','Rate / Gram (₹)':'','Gram':Number(totalWeight.toFixed(2)),'Total Cost (₹)':Number(total.toFixed(2))});
+  const basis=Number(document.getElementById('viewCostBasis')?.value||100);
+  const basisCost=totalWeight?total/totalWeight*basis:0;
+  rows.push({'Ingredient Name':`Cost / ${basis} g`,'Rate / Gram (₹)':'','Gram':'','Total Cost (₹)':Number(basisCost.toFixed(2))});
+  const ws=XLSX.utils.json_to_sheet(rows);
+  ws['!cols']=[{wch:28},{wch:18},{wch:14},{wch:18}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Formula');
+  const safe=(s.product.name||'Formula').replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'');
+  XLSX.writeFile(wb,`${safe||'Formula'}_${totalWeight}g.xlsx`);
+};
+
 async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printProductView,100);}
 (function(){
   const LS_PRODUCTS = 'liaraProductsV2';
@@ -527,34 +557,18 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
     const html=s.rows.map((x,i)=>{
       const g=x.grams*ratio, c=g*x.rate;
       total+=c;
-      return `<tr><td>${esc(x.name)}</td><td>₹${Number(x.rate).toFixed(4)} / g</td><td><input class="viewGramEdit" data-index="${i}" type="number" min="0" step="0.01" value="${g.toFixed(2)}" oninput="updateViewFormulaFromRows()" style="width:110px;padding:7px;border:1px solid #ccc;border-radius:7px"> g</td><td>₹${c.toFixed(2)}</td></tr>`;
+      return `<tr><td>${esc(x.name)}</td><td>₹${Number(x.rate).toFixed(4)} / g</td><td><span class="viewGramValue" data-index="${i}">${g.toFixed(2)}</span> g</td><td>₹${c.toFixed(2)}</td></tr>`;
     }).join('');
     document.getElementById('viewFormulaRows').innerHTML=html;
     document.getElementById('viewFormulaTotalCostText').textContent=`₹${total.toFixed(2)}`;
-    document.getElementById('viewTotalWeightInput').value=s.rows.reduce((a,x)=>a+x.grams*ratio,0).toFixed(2);
-    document.getElementById('viewFormulaCurrentWeight').value=s.rows.reduce((a,x)=>a+x.grams*ratio,0);
+    document.getElementById('viewTotalWeightInput').value=target.toFixed(2);
+    document.getElementById('viewFormulaCurrentWeight').value=target;
     document.getElementById('viewFormulaCurrentCost').value=total;
     updateViewBasis();
   };
 
   window.updateViewFormulaWeight = function(){
     renderViewFormulaRows();
-  };
-
-  window.updateViewFormulaFromRows = function(){
-    const s=window._viewFormulaState;
-    if(!s) return;
-    const inputs=[...document.querySelectorAll('.viewGramEdit')];
-    let totalWeight=0,total=0;
-    inputs.forEach(input=>{
-      const i=Number(input.dataset.index), g=Number(input.value||0);
-      const x=s.rows[i]; totalWeight+=g; total+=g*x.rate;
-    });
-    document.getElementById('viewTotalWeightInput').value=totalWeight.toFixed(2);
-    document.getElementById('viewFormulaTotalCostText').textContent=`₹${total.toFixed(2)}`;
-    document.getElementById('viewFormulaCurrentWeight').value=totalWeight;
-    document.getElementById('viewFormulaCurrentCost').value=total;
-    updateViewBasis();
   };
 
   window.updateViewBasis = function(){
@@ -570,11 +584,12 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
   window.saveEditedFormula = async function(index){
     const s=window._viewFormulaState;
     if(!s) return;
-    const inputs=[...document.querySelectorAll('.viewGramEdit')];
-    const editedRows=inputs.map((input,i)=>({ ...s.rows[i], grams:Number(input.value||0) }));
-    const totalWeight=editedRows.reduce((a,x)=>a+x.grams,0);
+    const totalWeight=Number(document.getElementById('viewTotalWeightInput')?.value||0);
     if(totalWeight<=0){ alert('Total weight must be greater than 0.'); return; }
+    const ratio=s.originalWeight>0 ? totalWeight/s.originalWeight : 0;
     const basis=Number(document.getElementById('viewCostBasis')?.value||100);
+    const editedRows=s.rows.map(x=>({ ...x, grams:x.grams*ratio }));
+    const total=editedRows.reduce((a,x)=>a+x.grams*x.rate,0);
     const p={...s.product, costBasis:basis, ingredients:editedRows.map(x=>({
       ingredientId:x.ingredientId, ingredientName:x.name, grams:x.grams, rate:x.rate,
       cost:x.grams*x.rate, percentage:totalWeight?(x.grams/totalWeight*100):0
