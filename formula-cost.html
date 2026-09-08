@@ -12,14 +12,14 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f4f5f7;color:#161616;pad
 .header h1{font-size:27px}.header p{color:#bbb;margin-top:6px;font-size:14px}
 .card{background:#fff;border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 5px 20px rgba(0,0,0,.06)}
 .card h2{font-size:20px;margin-bottom:17px}
-.form-grid{display:grid;grid-template-columns:1.5fr 1fr auto;gap:12px;align-items:end}
+.form-grid{display:grid;grid-template-columns:1.4fr .7fr .7fr auto;gap:12px;align-items:end}
 .field label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:7px}
 input,select{width:100%;height:44px;border:1px solid #ddd;border-radius:9px;padding:0 12px;font-size:15px;outline:none;background:#fff}
 input:focus,select:focus{border-color:#111}
 button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:700;cursor:pointer}
-.black{background:#111;color:#fff}.gold{background:#c49a22;color:#fff}.red{background:#dc3545;color:#fff}.light{background:#eee;color:#111}
+.black{background:#111;color:#fff}.gold{background:#c49a22;color:#fff}.red{background:#dc3545;color:#fff}.light{background:#eee;color:#111}.blue{background:#1769aa;color:#fff}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
+table{width:100%;border-collapse:collapse;min-width:760px}
 th{background:#111;color:#fff;padding:12px;text-align:left;font-size:13px}
 td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 .num{text-align:right;font-weight:700}
@@ -30,19 +30,26 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 .product-box{border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:18px}
 .product-box h3{font-size:18px;margin-bottom:7px}
 .product-meta{font-size:13px;color:#666;margin-bottom:14px}
-.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}
 .summary-box{background:#f7f7f7;border-radius:11px;padding:15px}
 .summary-box span{display:block;font-size:12px;color:#777;margin-bottom:6px}
 .summary-box strong{font-size:20px}
 .status{margin-top:13px;padding:11px;border-radius:9px;display:none;font-size:14px}
 .status.ok{display:block;background:#e8f7ed;color:#176b32}
 .status.err{display:block;background:#fdeaea;color:#a51d1d}
+.rate-note{font-size:12px;color:#777;margin-top:5px}
 .hidden{display:none!important}
-@media(max-width:800px){
- body{padding:10px}.form-grid,.product-head{grid-template-columns:1fr}
+@media(max-width:900px){
+ body{padding:10px}
+ .form-grid,.product-head{grid-template-columns:1fr 1fr}
+ .form-grid button,.product-head button{width:100%}
  .summary{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:480px){.summary{grid-template-columns:1fr}.header h1{font-size:22px}}
+@media(max-width:480px){
+ .form-grid,.product-head{grid-template-columns:1fr}
+ .summary{grid-template-columns:1fr}
+ .header h1{font-size:22px}
+}
 </style>
 </head>
 <body>
@@ -56,19 +63,39 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 <!-- STEP 1 -->
 <div class="card">
 <h2>Step 1 — Add All Ingredients</h2>
-<p class="note">Pehla sare ingredients de naam te ₹/kg rate add karo. Product banaunde time eh list automatically aa javegi.</p>
+<p class="note">
+Ingredient di purchase quantity/unit te total purchase rate pao.
+System automatic <strong>₹ per gram</strong> calculate karega.
+Example: 1 KG = ₹500 → ₹0.50/g.
+</p>
 
 <div class="form-grid">
 <div class="field">
 <label>Ingredient Name</label>
 <input id="ingredientName" type="text" placeholder="e.g. Coconut Oil">
 </div>
+
 <div class="field">
-<label>Rate ₹ / KG</label>
-<input id="ingredientRate" type="number" min="0" step="0.01" placeholder="e.g. 300">
+<label>Purchase Qty</label>
+<input id="ingredientQty" type="number" min="0.000001" step="0.001" value="1" placeholder="e.g. 1">
 </div>
+
+<div class="field">
+<label>Unit</label>
+<select id="ingredientUnit">
+<option value="kg">KG</option>
+<option value="g">Gram</option>
+</select>
+</div>
+
+<div class="field">
+<label>Total Purchase Rate ₹</label>
+<input id="ingredientRate" type="number" min="0" step="0.01" placeholder="e.g. 500">
+</div>
+
 <button class="black" onclick="addIngredient()">+ Add Ingredient</button>
 </div>
+<div class="rate-note">Rate matlab us purchase quantity da total amount hai — per KG dena zaroori nahi.</div>
 <div id="ingredientStatus" class="status"></div>
 </div>
 
@@ -76,7 +103,17 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 <h2>Ingredient Master</h2>
 <div class="table-wrap">
 <table>
-<thead><tr><th>#</th><th>Ingredient</th><th>Rate / KG</th><th>Rate / Gram</th><th>Action</th></tr></thead>
+<thead>
+<tr>
+<th>#</th>
+<th>Ingredient</th>
+<th>Purchase</th>
+<th>Total Rate</th>
+<th>Rate / Gram</th>
+<th>Rate / KG</th>
+<th>Action</th>
+</tr>
+</thead>
 <tbody id="ingredientTable"></tbody>
 </table>
 </div>
@@ -84,8 +121,12 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 
 <!-- STEP 2 -->
 <div class="card">
-<h2>Step 2 — Add Product</h2>
-<p class="note">Product da naam pao. Thalle sare saved ingredients aa jaan ge. Tusi sirf use hon wale gram enter karo.</p>
+<h2>Step 2 — Add Product / Formula</h2>
+<p class="note">
+Product da naam pao. Thalle sare saved ingredients aa jaan ge.
+Jis ingredient di lor hai, usda <strong>quantity + unit</strong> enter karo.
+Cost automatically calculate hovegi.
+</p>
 
 <div class="product-head">
 <div class="field">
@@ -104,7 +145,7 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 <!-- CURRENT PRODUCT -->
 <div id="currentProductCard" class="card hidden">
 <h2>Product Ingredients</h2>
-<p class="note">Jis ingredient di lor hai usde saamne gram enter karo. Cost automatically calculate hovegi.</p>
+<p class="note">Example: ingredient 250g use hoya ta 250 + Gram select karo; 1kg use hoya ta 1 + KG.</p>
 
 <div class="product-box">
 <h3 id="currentProductName">Product</h3>
@@ -116,8 +157,9 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 <tr>
 <th>#</th>
 <th>Ingredient</th>
-<th>Rate / KG</th>
-<th>Gram Used</th>
+<th>Rate / Gram</th>
+<th>Qty Used</th>
+<th>Unit</th>
 <th>Ingredient Cost</th>
 </tr>
 </thead>
@@ -130,6 +172,7 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 <div class="summary-box"><span>Total Ingredient Cost</span><strong id="totalCost">₹0.00</strong></div>
 <div class="summary-box"><span>Cost / 100g</span><strong id="cost100">₹0.00</strong></div>
 <div class="summary-box"><span>Cost / 1kg</span><strong id="cost1000">₹0.00</strong></div>
+<div class="summary-box"><span>Cost / 1g</span><strong id="cost1">₹0.00</strong></div>
 </div>
 
 <div class="actions">
@@ -159,8 +202,19 @@ function qty(n){
  return Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:3});
 }
 function esc(v){
- return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
+
+/* Convert purchase quantity into grams */
+function purchaseToGrams(qtyValue,unit){
+ return String(unit).toLowerCase()==="kg" ? Number(qtyValue||0)*1000 : Number(qtyValue||0);
+}
+
+/* Convert formula quantity into grams */
+function usedToGrams(qtyValue,unit){
+ return String(unit).toLowerCase()==="kg" ? Number(qtyValue||0)*1000 : Number(qtyValue||0);
+}
+
 function status(id,msg,type){
  const el=document.getElementById(id);
  el.textContent=msg;
@@ -168,17 +222,54 @@ function status(id,msg,type){
  setTimeout(()=>el.className="status",2500);
 }
 
+function normalizeIngredient(x){
+ /* Backward compatibility with old version:
+    old rate was already ₹/KG. */
+ if(x.purchaseQty==null || !x.purchaseUnit){
+   return {
+    ...x,
+    purchaseQty:1,
+    purchaseUnit:"kg",
+    purchaseRate:Number(x.rate||0)
+   };
+ }
+ return x;
+}
+
+ingredients=ingredients.map(normalizeIngredient);
+
+function ingredientRatePerGram(x){
+ const grams=purchaseToGrams(x.purchaseQty,x.purchaseUnit);
+ return grams>0 ? Number(x.purchaseRate||0)/grams : 0;
+}
+function ingredientRatePerKg(x){
+ return ingredientRatePerGram(x)*1000;
+}
+
 function addIngredient(){
  const name=document.getElementById("ingredientName").value.trim();
- const rate=Number(document.getElementById("ingredientRate").value);
+ const purchaseQty=Number(document.getElementById("ingredientQty").value);
+ const purchaseUnit=document.getElementById("ingredientUnit").value;
+ const purchaseRate=Number(document.getElementById("ingredientRate").value);
+
  if(!name)return status("ingredientStatus","Ingredient name enter karo.","err");
- if(!Number.isFinite(rate)||rate<0)return status("ingredientStatus","Valid ₹/kg rate enter karo.","err");
- if(ingredients.some(x=>x.name.toLowerCase()===name.toLowerCase()))
+ if(!Number.isFinite(purchaseQty)||purchaseQty<=0)return status("ingredientStatus","Valid purchase quantity enter karo.","err");
+ if(!Number.isFinite(purchaseRate)||purchaseRate<0)return status("ingredientStatus","Valid purchase rate enter karo.","err");
+ if(ingredients.some(x=>String(x.name||"").toLowerCase()===name.toLowerCase()))
    return status("ingredientStatus","Eh ingredient pehlan hi add hai.","err");
 
- ingredients.push({id:Date.now()+Math.random(),name,rate});
+ ingredients.push({
+  id:Date.now()+Math.random(),
+  name,
+  purchaseQty,
+  purchaseUnit,
+  purchaseRate
+ });
+
  localStorage.setItem("liaraIngredientsV2",JSON.stringify(ingredients));
  document.getElementById("ingredientName").value="";
+ document.getElementById("ingredientQty").value="1";
+ document.getElementById("ingredientUnit").value="kg";
  document.getElementById("ingredientRate").value="";
  renderIngredients();
  status("ingredientStatus","Ingredient successfully add ho gaya.","ok");
@@ -187,24 +278,28 @@ function addIngredient(){
 function renderIngredients(){
  const tb=document.getElementById("ingredientTable");
  if(!ingredients.length){
-   tb.innerHTML='<tr><td colspan="5" class="empty">Haje koi ingredient add nahi hoya.</td></tr>';
-   return;
+  tb.innerHTML='<tr><td colspan="7" class="empty">Haje koi ingredient add nahi hoya.</td></tr>';
+  return;
  }
- tb.innerHTML=ingredients.map((x,i)=>`
- <tr>
-  <td>${i+1}</td>
-  <td><strong>${esc(x.name)}</strong></td>
-  <td>₹${money(x.rate)}</td>
-  <td>₹${money(x.rate/1000)}</td>
-  <td><button class="red" onclick="deleteIngredient('${x.id}')">Delete</button></td>
- </tr>`).join("");
+ tb.innerHTML=ingredients.map((x,i)=>{
+  const unit=String(x.purchaseUnit||"kg").toUpperCase()==="KG"?"KG":"g";
+  return `<tr>
+   <td>${i+1}</td>
+   <td><strong>${esc(x.name)}</strong></td>
+   <td>${qty(x.purchaseQty)} ${unit}</td>
+   <td>₹${money(x.purchaseRate)}</td>
+   <td>₹${money(ingredientRatePerGram(x))}</td>
+   <td>₹${money(ingredientRatePerKg(x))}</td>
+   <td><button class="red" onclick="deleteIngredient('${x.id}')">Delete</button></td>
+  </tr>`;
+ }).join("");
 }
 
 function deleteIngredient(id){
  if(currentProduct && currentProduct.rows.some(r=>String(r.ingredientId)===String(id))){
-   if(!confirm("Eh ingredient current product vich hai. Delete karan naal oh row vi remove ho javegi. Continue?"))return;
-   currentProduct.rows=currentProduct.rows.filter(r=>String(r.ingredientId)!==String(id));
-   renderCurrentProduct();
+  if(!confirm("Eh ingredient current product vich hai. Delete karan naal oh row vi remove ho javegi. Continue?"))return;
+  currentProduct.rows=currentProduct.rows.filter(r=>String(r.ingredientId)!==String(id));
+  renderCurrentProduct();
  }
  ingredients=ingredients.filter(x=>String(x.id)!==String(id));
  localStorage.setItem("liaraIngredientsV2",JSON.stringify(ingredients));
@@ -220,7 +315,7 @@ function startProduct(){
  currentProduct={
   name,
   batch,
-  rows:ingredients.map(x=>({ingredientId:x.id,grams:0}))
+  rows:ingredients.map(x=>({ingredientId:x.id,qty:0,unit:"g"}))
  };
  document.getElementById("currentProductCard").classList.remove("hidden");
  renderCurrentProduct();
@@ -234,40 +329,55 @@ function renderCurrentProduct(){
 
  const tb=document.getElementById("productIngredientTable");
  if(!currentProduct.rows.length){
-  tb.innerHTML='<tr><td colspan="5" class="empty">Koi ingredient available nahi.</td></tr>';
+  tb.innerHTML='<tr><td colspan="6" class="empty">Koi ingredient available nahi.</td></tr>';
   updateSummary(); return;
  }
 
  tb.innerHTML=currentProduct.rows.map((row,i)=>{
   const ing=ingredients.find(x=>String(x.id)===String(row.ingredientId));
   if(!ing)return "";
-  const cost=(Number(row.grams)||0)*ing.rate/1000;
+  /* Backward compatibility with old saved formula rows */
+  const rowQty=row.qty!=null ? row.qty : (row.grams||0);
+  const rowUnit=row.unit || "g";
+  const cost=usedToGrams(rowQty,rowUnit)*ingredientRatePerGram(ing);
+
   return `<tr>
    <td>${i+1}</td>
    <td><strong>${esc(ing.name)}</strong></td>
-   <td>₹${money(ing.rate)}</td>
-   <td><input type="number" min="0" step="0.01" value="${row.grams||""}" placeholder="0"
-      oninput="setGrams('${row.ingredientId}',this.value)"></td>
-   <td class="num">₹${money(cost)}</td>
+   <td>₹${money(ingredientRatePerGram(ing))}</td>
+   <td><input type="number" min="0" step="0.001" value="${rowQty||""}" placeholder="0"
+      oninput="setUsedQty('${row.ingredientId}',this.value)"></td>
+   <td>
+    <select onchange="setUsedUnit('${row.ingredientId}',this.value)">
+      <option value="g" ${rowUnit==="g"?"selected":""}>Gram</option>
+      <option value="kg" ${rowUnit==="kg"?"selected":""}>KG</option>
+    </select>
+   </td>
+   <td class="num" id="cost-${row.ingredientId}">₹${money(cost)}</td>
   </tr>`;
  }).join("");
  updateSummary();
 }
 
-function setGrams(id,value){
+function setUsedQty(id,value){
  const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
- if(row)row.grams=Math.max(0,Number(value)||0);
+ if(row)row.qty=Math.max(0,Number(value)||0);
  updateSummary();
- const tb=document.getElementById("productIngredientTable");
- [...tb.querySelectorAll("tr")].forEach((tr,idx)=>{
-   const r=currentProduct.rows[idx];
-   if(!r)return;
-   const ing=ingredients.find(x=>String(x.id)===String(r.ingredientId));
-   if(ing){
-    const cell=tr.children[4];
-    if(cell)cell.textContent="₹"+money((Number(r.grams)||0)*ing.rate/1000);
-   }
- });
+ updateRowCost(id);
+}
+function setUsedUnit(id,value){
+ const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
+ if(row)row.unit=value;
+ updateSummary();
+ updateRowCost(id);
+}
+function updateRowCost(id){
+ const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
+ const ing=ingredients.find(x=>String(x.id)===String(id));
+ const cell=document.getElementById("cost-"+id);
+ if(row&&ing&&cell){
+  cell.textContent="₹"+money(usedToGrams(row.qty,row.unit)*ingredientRatePerGram(ing));
+ }
 }
 
 function calculate(){
@@ -275,9 +385,9 @@ function calculate(){
  (currentProduct?.rows||[]).forEach(r=>{
   const ing=ingredients.find(x=>String(x.id)===String(r.ingredientId));
   if(!ing)return;
-  const g=Number(r.grams)||0;
-  weight+=g;
-  cost+=g*ing.rate/1000;
+  const grams=usedToGrams(r.qty!=null?r.qty:(r.grams||0),r.unit||"g");
+  weight+=grams;
+  cost+=grams*ingredientRatePerGram(ing);
  });
  return {weight,cost};
 }
@@ -288,16 +398,22 @@ function updateSummary(){
  document.getElementById("totalCost").textContent="₹"+money(cost);
  document.getElementById("cost100").textContent="₹"+money(weight?cost/weight*100:0);
  document.getElementById("cost1000").textContent="₹"+money(weight?cost/weight*1000:0);
+ document.getElementById("cost1").textContent="₹"+money(weight?cost/weight:0);
 }
 
 function saveCurrentProduct(){
  if(!currentProduct)return;
  const {weight,cost}=calculate();
- if(weight<=0)return status("productStatus","Product vich ghatt ton ghatt ik ingredient de gram enter karo.","err");
+ if(weight<=0)return status("productStatus","Product vich ghatt ton ghatt ik ingredient di quantity enter karo.","err");
 
  const cleanedRows=currentProduct.rows
-  .filter(r=>(Number(r.grams)||0)>0)
-  .map(r=>({ingredientId:r.ingredientId,grams:Number(r.grams)}));
+  .filter(r=>(Number(r.qty!=null?r.qty:r.grams)||0)>0)
+  .map(r=>({
+   ingredientId:r.ingredientId,
+   qty:Number(r.qty!=null?r.qty:r.grams),
+   unit:r.unit||"g",
+   grams:usedToGrams(Number(r.qty!=null?r.qty:r.grams),r.unit||"g")
+  }));
 
  const product={
   id:Date.now()+Math.random(),
@@ -325,7 +441,15 @@ function cancelProduct(){
 function viewProduct(id){
  const p=products.find(x=>String(x.id)===String(id));
  if(!p)return;
- currentProduct={name:p.name,batch:p.batch||"",rows:p.rows.map(r=>({...r}))};
+ currentProduct={
+  name:p.name,
+  batch:p.batch||"",
+  rows:p.rows.map(r=>({
+   ...r,
+   qty:r.qty!=null?r.qty:(r.grams||0),
+   unit:r.unit||"g"
+  }))
+ };
  document.getElementById("currentProductCard").classList.remove("hidden");
  renderCurrentProduct();
  document.getElementById("currentProductCard").scrollIntoView({behavior:"smooth"});
@@ -344,19 +468,22 @@ function renderProducts(){
   box.innerHTML='<div class="empty">Haje koi product save nahi hoya.</div>';
   return;
  }
- box.innerHTML=products.map(p=>`
- <div class="product-box">
-  <h3>${esc(p.name)}</h3>
-  <div class="product-meta">
-   ${p.batch?esc(p.batch)+" • ":""}Total Weight: <strong>${qty(p.totalWeight)}g</strong>
-   • Ingredient Cost: <strong>₹${money(p.totalCost)}</strong>
-   • Cost/100g: <strong>₹${money(p.totalWeight?p.totalCost/p.totalWeight*100:0)}</strong>
-  </div>
-  <div class="actions">
-   <button class="black" onclick="viewProduct('${p.id}')">View Formula</button>
-   <button class="red" onclick="deleteProduct('${p.id}')">Delete</button>
-  </div>
- </div>`).join("");
+ box.innerHTML=products.map(p=>{
+  const weight=Number(p.totalWeight||0);
+  const cost=Number(p.totalCost||0);
+  return `<div class="product-box">
+   <h3>${esc(p.name)}</h3>
+   <div class="product-meta">
+    ${p.batch?esc(p.batch)+" • ":""}Total Weight: <strong>${qty(weight)} g</strong>
+    • Ingredient Cost: <strong>₹${money(cost)}</strong>
+    • Cost/100g: <strong>₹${money(weight?cost/weight*100:0)}</strong>
+   </div>
+   <div class="actions">
+    <button class="black" onclick="viewProduct('${p.id}')">View Formula</button>
+    <button class="red" onclick="deleteProduct('${p.id}')">Delete</button>
+   </div>
+  </div>`;
+ }).join("");
 }
 
 renderIngredients();
