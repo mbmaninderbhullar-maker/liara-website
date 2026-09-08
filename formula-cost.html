@@ -171,30 +171,25 @@ function ingredientGramRate(i){
   if(q>0 && Number.isFinite(r)){const grams=String(i.purchaseUnit||"kg").toLowerCase()==="gram"?q:q*1000; return grams>0?r/grams:0;}
   return Number(i.ratePerGram)||((Number(i.rate)||0)/1000);
 }
-function addIngredient(){
-  const name=document.getElementById("ingredientName")?.value.trim();
-  const qty=Number(document.getElementById("ingredientQty")?.value);
-  const unit=document.getElementById("ingredientUnit")?.value||"kg";
-  const rate=Number(document.getElementById("ingredientRate")?.value);
-  if(!name){showIngredientStatus("Please enter an ingredient name.",false);return;}
-  if(!Number.isFinite(qty)||qty<=0){showIngredientStatus("Please enter a valid purchase quantity.",false);return;}
-  if(!Number.isFinite(rate)||rate<0){showIngredientStatus("Please enter a valid purchase rate.",false);return;}
-  const list=getIngredientMaster();
-  const existing=list.findIndex(x=>String(x.name||"").trim().toLowerCase()===name.toLowerCase());
-  const item={id:(existing>=0?list[existing].id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()))),name,purchaseQty:qty,purchaseUnit:unit,purchaseRate:rate,ratePerGram:ingredientGramRate({purchaseQty:qty,purchaseUnit:unit,purchaseRate:rate}),updatedAt:new Date().toISOString()};
-  if(existing>=0) list[existing]=item; else list.push(item);
-  saveIngredientMaster(list); renderIngredientMaster();
-  document.getElementById("ingredientName").value=""; document.getElementById("ingredientQty").value="1"; document.getElementById("ingredientRate").value="";
-  showIngredientStatus(existing>=0?"Ingredient rate updated successfully.":"Ingredient added successfully.",true);
-}
 function renderIngredientMaster(){
   let box=document.getElementById("ingredientMasterList"); if(!box)return;
   const list=getIngredientMaster();
   if(!list.length){box.innerHTML='<div class="empty">No ingredients added yet.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${String(x.purchaseUnit||"kg").toUpperCase()==="GRAM"?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${String(x.purchaseUnit||"kg").toUpperCase()==="GRAM"?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
 }
 function escGlobal(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));}
-function deleteIngredient(i){const list=getIngredientMaster(); if(!list[i])return; if(!confirm("Delete this ingredient?"))return; list.splice(i,1); saveIngredientMaster(list); renderIngredientMaster();}
+async function deleteIngredient(i){
+  const list=getIngredientMaster();
+  const item=list[i];
+  if(!item)return;
+  if(!confirm(`Delete \"${item.name}\" from Ingredient Master?`))return;
+  if(item.id){
+    const {error}=await supabaseClient.from('ingredients_master').delete().eq('id',item.id);
+    if(error){showIngredientStatus('Delete failed: '+error.message,false);return;}
+  }
+  list.splice(i,1); saveIngredientMaster(list); await loadIngredientsFromSupabase(); renderIngredientMaster();
+  showIngredientStatus('Ingredient deleted successfully.',true);
+}
 function closeProductView(){const m=document.getElementById("productViewModal");if(m)m.style.display="none";}
 function printProductView(){
   const name=document.getElementById("viewProductName")?.textContent||"Product Formula";
@@ -212,6 +207,32 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
     const {data,error}=await supabaseClient.from('ingredients_master')
       .select('*').order('name',{ascending:true});
     if(error){ console.error(error); return ingredientCache; }
+
+    // Automatically bring ingredient names used in saved formulas into Ingredient Master.
+    // Only missing names are added; existing purchased rates are never overwritten.
+    try{
+      const {data:used,error:usedErr}=await supabaseClient
+        .from('formula_ingredients').select('ingredient_id,ingredient_name');
+      if(!usedErr && used){
+        const existingNames=new Set((data||[]).map(x=>String(x.name||'').trim().toLowerCase()));
+        const missing=[];
+        used.forEach(row=>{
+          const nm=String(row.ingredient_name||'').trim();
+          if(nm && !existingNames.has(nm.toLowerCase())){
+            existingNames.add(nm.toLowerCase());
+            missing.push({name:nm,category:'Natural',purchase_qty:1,purchase_unit:'kg',purchase_rate:0,rate_per_gram:0});
+          }
+        });
+        if(missing.length){
+          const ins=await supabaseClient.from('ingredients_master').insert(missing);
+          if(!ins.error){
+            const fresh=await supabaseClient.from('ingredients_master').select('*').order('name',{ascending:true});
+            if(!fresh.error) data=fresh.data||data;
+          }
+        }
+      }
+    }catch(syncErr){ console.warn('Formula ingredient sync skipped:',syncErr); }
+
     ingredientCache=(data||[]).map(x=>({
       id:x.id,name:x.name,category:x.category||'',
       purchaseQty:Number(x.purchase_qty||1),
@@ -500,17 +521,36 @@ async function addIngredient(){
   if(!name){showIngredientStatus('Please enter an ingredient name.',false);return;}
   if(!(qty>0)){showIngredientStatus('Please enter a valid purchase quantity.',false);return;}
   if(!(rate>=0)){showIngredientStatus('Please enter a valid purchase rate.',false);return;}
+
   const grams=(unit==='g'||unit==='gram'||unit==='grams')?qty:qty*1000;
   const ratePerGram=grams?rate/grams:0;
-  const {error}=await supabaseClient.from('ingredients_master').insert({name,category:'Natural',purchase_qty:qty,purchase_unit:unit,purchase_rate:rate,rate_per_gram:ratePerGram});
-  if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
+  const current=getIngredientMaster();
+  const existing=current.find(x=>String(x.name||'').trim().toLowerCase()===name.toLowerCase());
+
+  if(existing?.id){
+    const {error}=await supabaseClient.from('ingredients_master').update({
+      name, purchase_qty:qty, purchase_unit:unit, purchase_rate:rate,
+      rate_per_gram:ratePerGram
+    }).eq('id',existing.id);
+    if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
+  }else{
+    const {error}=await supabaseClient.from('ingredients_master').insert({
+      name, category:'Natural', purchase_qty:qty, purchase_unit:unit,
+      purchase_rate:rate, rate_per_gram:ratePerGram
+    });
+    if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
+  }
+
   await loadIngredientsFromSupabase();
   renderIngredientMaster();
-  showIngredientStatus('Ingredient saved successfully.',true);
+  // Refresh the formula builder dropdowns so the new ingredient is immediately available.
+  if(typeof renderFormulaRows==='function') renderFormulaRows();
+  showIngredientStatus(existing ? 'Ingredient rate updated successfully.' : 'Ingredient saved successfully.',true);
   document.getElementById('ingredientName').value='';
   document.getElementById('ingredientQty').value='1';
   document.getElementById('ingredientRate').value='';
 }
+
 window.addEventListener('load',async()=>{await loadIngredientsFromSupabase();await renderProducts();renderIngredientMaster();});
 </script>
 
