@@ -202,7 +202,7 @@ function printProductView(){
   const w=window.open("","_blank","width=900,height=700"); if(!w){alert("Please allow pop-ups to print the formula.");return;}
   w.document.write(`<!DOCTYPE html><html><head><title>${name}</title><style>body{font-family:Arial;padding:30px;color:#111}h1{margin-bottom:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#111;color:#fff}p{margin-top:12px}</style></head><body><h1>${escGlobal(name)}</h1>${content}</body></html>`); w.document.close(); w.focus(); setTimeout(()=>w.print(),300);
 }
-function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,100);}
+async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printProductView,100);}
 (function(){
   const LS_PRODUCTS = 'liaraProductsV2';
   const LS_ING = 'liaraIngredientsV2';
@@ -237,14 +237,37 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
   }
   function gramRate(ing){
     if(!ing) return 0;
-    if(Number.isFinite(Number(ing.ratePerGram))) return Number(ing.ratePerGram) || 0;
+    const saved = Number(ing.ratePerGram);
+    if(Number.isFinite(saved) && saved > 0) return saved;
     const q = Number(ing.purchaseQty);
     const r = Number(ing.purchaseRate);
     if(q > 0 && Number.isFinite(r)){
-      const g = String(ing.purchaseUnit || 'kg').toLowerCase() === 'gram' ? q : q*1000;
+      const u = String(ing.purchaseUnit || 'kg').toLowerCase();
+      const g = ['g','gram','grams'].includes(u) ? q : q*1000;
       if(g > 0) return r/g;
     }
     return (Number(ing.rate)||0)/1000;
+  }
+
+  // Match formula ingredients to Ingredient Master by ID first, then by name.
+  // This makes old formulas automatically use the current Ingredient Master price.
+  function findMasterIngredient(x, list){
+    const arr = list || getIngredients();
+    let ing = null;
+    if(x && x.ingredientId) ing = arr.find(i => String(i.id) === String(x.ingredientId));
+    if(!ing && x && x.ingredientName){
+      const target = String(x.ingredientName).trim().toLowerCase();
+      ing = arr.find(i => String(i.name || '').trim().toLowerCase() === target);
+    }
+    return ing;
+  }
+
+  function getLiveRate(x, list){
+    const ing = findMasterIngredient(x, list);
+    const live = gramRate(ing);
+    if(live > 0) return live;
+    const old = Number(x && (x.rate ?? x.rate_per_gram) || 0);
+    return Number.isFinite(old) ? old : 0;
   }
 
   let active = null;
@@ -384,14 +407,16 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
     alert('Product formula saved to Supabase.');
   };
 
-  window.viewSavedProduct = function(index){
+  window.viewSavedProduct = async function(index){
     const p=getProducts()[index];
     if(!p) return;
+    // Refresh Ingredient Master so the formula always shows the latest price.
+    await window.loadIngredientsFromSupabase();
     const list=getIngredients();
     let total=0, weight=0;
     const rows=(p.ingredients||[]).map(x=>{
-      const ing=list.find(i=>String(i.id)===String(x.ingredientId));
-      const g=Number(x.grams||0), r=gramRate(ing), c=g*r;
+      const ing=findMasterIngredient(x,list);
+      const g=Number(x.grams||0), r=getLiveRate(x,list), c=g*r;
       weight+=g; total+=c;
       return `<tr><td>${esc(ing?.name||x.ingredientName||'')}</td><td>₹${Number(r.toFixed(6))} / g</td><td>${g.toFixed(2)} g</td><td>₹${c.toFixed(2)}</td></tr>`;
     }).join('');
@@ -452,8 +477,8 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
     box.innerHTML=products.map((p,i)=>{
       let w=0,c=0;
       (p.ingredients||[]).forEach(x=>{
-        const ing=list.find(z=>String(z.id)===String(x.ingredientId));
-        const g=Number(x.grams||0); w+=g; c+=g*gramRate(ing);
+        const ing=findMasterIngredient(x,list);
+        const g=Number(x.grams||0); w+=g; c+=g*getLiveRate(x,list);
       });
       return `<div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
         <div><strong>${esc(p.name)}</strong><div style="color:#777">${p.ingredients?.length||0} ingredients • Total Weight: <b>${w.toFixed(2)} g</b> • Ingredient Cost: <b>₹${c.toFixed(2)}</b></div></div>
