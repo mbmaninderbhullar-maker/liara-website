@@ -62,10 +62,9 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 
 <!-- STEP 1 -->
 <div class="card">
-<h2>Step 1 — Add All Ingredients</h2>
+<h2>Step 1 — Ingredient Master</h2>
 <p class="note">
-Ingredient di purchase quantity/unit te total purchase rate pao.
-System automatic <strong>₹ per gram</strong> calculate karega.
+Enter the purchase quantity, unit, and total purchase rate. The system will automatically calculate <strong>₹ per gram</strong> and <strong>₹ per kg</strong>.
 Example: 1 KG = ₹500 → ₹0.50/g.
 </p>
 
@@ -76,7 +75,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 </div>
 
 <div class="field">
-<label>Purchase Qty</label>
+<label>Purchase Quantity</label>
 <input id="ingredientQty" type="number" min="0.000001" step="0.001" value="1" placeholder="e.g. 1">
 </div>
 
@@ -89,28 +88,29 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 </div>
 
 <div class="field">
-<label>Total Purchase Rate ₹</label>
+<label>Total Purchase Rate (₹)</label>
 <input id="ingredientRate" type="number" min="0" step="0.01" placeholder="e.g. 500">
 </div>
 
 <button class="black" onclick="addIngredient()">+ Add Ingredient</button>
 </div>
-<div class="rate-note">Rate matlab us purchase quantity da total amount hai — per KG dena zaroori nahi.</div>
+<div class="rate-note">The rate is the total amount paid for the entered purchase quantity — it does not have to be a per-kg rate.</div>
 <div id="ingredientStatus" class="status"></div>
+<div id="ingredientMasterList" style="margin-top:18px"></div>
 </div>
 
 
 <div class="card" id="productBuilderCard">
-  <h2>Step 2 — Add Product / Formula</h2>
-  <p>Product name ik vaar rakho. Us product de andar sirf oh ingredients add karo jo formula vich chahide ne.</p>
+  <h2>Step 2 — Product Formula</h2>
+  <p>Enter the product name once. Add only the ingredients required for that product formula.</p>
 
   <label><strong>Product Name</strong></label>
   <input id="productName" type="text" placeholder="e.g. Herbal Face Wash Creamy">
 
-  <label><strong>Product / Batch Reference (optional)</strong></label>
+  <label><strong>Product / Batch Reference (Optional)</strong></label>
   <input id="productRef" type="text" placeholder="Optional">
 
-  <button type="button" onclick="createProductBuilder()">+ Add Product</button>
+  <button type="button" onclick="createProductBuilder()">+ Create Product</button>
 
   <div id="activeProductBuilder" style="display:none;margin-top:20px">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
@@ -131,7 +131,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
     </div>
   </div>
 </div>
-id="savedProductsListCard" style="margin-top:18px">
+<div class="card" id="savedProductsListCard" style="margin-top:18px">
   <h3>Products</h3>
   <div id="savedProductsList"></div>
 </div>
@@ -152,6 +152,51 @@ id="savedProductsListCard" style="margin-top:18px">
 
 
 <script>
+function showIngredientStatus(message, ok=true){
+  const el=document.getElementById("ingredientStatus");
+  if(!el)return; el.textContent=message; el.className="status "+(ok?"ok":"err");
+}
+function getIngredientMaster(){
+  try{return JSON.parse(localStorage.getItem("liaraIngredientsV2")||"[]");}catch(e){return [];}
+}
+function saveIngredientMaster(list){localStorage.setItem("liaraIngredientsV2",JSON.stringify(list));}
+function ingredientGramRate(i){
+  const q=Number(i.purchaseQty), r=Number(i.purchaseRate);
+  if(q>0 && Number.isFinite(r)){const grams=String(i.purchaseUnit||"kg").toLowerCase()==="gram"?q:q*1000; return grams>0?r/grams:0;}
+  return Number(i.ratePerGram)||((Number(i.rate)||0)/1000);
+}
+function addIngredient(){
+  const name=document.getElementById("ingredientName")?.value.trim();
+  const qty=Number(document.getElementById("ingredientQty")?.value);
+  const unit=document.getElementById("ingredientUnit")?.value||"kg";
+  const rate=Number(document.getElementById("ingredientRate")?.value);
+  if(!name){showIngredientStatus("Please enter an ingredient name.",false);return;}
+  if(!Number.isFinite(qty)||qty<=0){showIngredientStatus("Please enter a valid purchase quantity.",false);return;}
+  if(!Number.isFinite(rate)||rate<0){showIngredientStatus("Please enter a valid purchase rate.",false);return;}
+  const list=getIngredientMaster();
+  const existing=list.findIndex(x=>String(x.name||"").trim().toLowerCase()===name.toLowerCase());
+  const item={id:(existing>=0?list[existing].id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()))),name,purchaseQty:qty,purchaseUnit:unit,purchaseRate:rate,ratePerGram:ingredientGramRate({purchaseQty:qty,purchaseUnit:unit,purchaseRate:rate}),updatedAt:new Date().toISOString()};
+  if(existing>=0) list[existing]=item; else list.push(item);
+  saveIngredientMaster(list); renderIngredientMaster();
+  document.getElementById("ingredientName").value=""; document.getElementById("ingredientQty").value="1"; document.getElementById("ingredientRate").value="";
+  showIngredientStatus(existing>=0?"Ingredient rate updated successfully.":"Ingredient added successfully.",true);
+}
+function renderIngredientMaster(){
+  let box=document.getElementById("ingredientMasterList"); if(!box)return;
+  const list=getIngredientMaster();
+  if(!list.length){box.innerHTML='<div class="empty">No ingredients added yet.</div>';return;}
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${String(x.purchaseUnit||"kg").toUpperCase()==="GRAM"?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
+}
+function escGlobal(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));}
+function deleteIngredient(i){const list=getIngredientMaster(); if(!list[i])return; if(!confirm("Delete this ingredient?"))return; list.splice(i,1); saveIngredientMaster(list); renderIngredientMaster();}
+function closeProductView(){const m=document.getElementById("productViewModal");if(m)m.style.display="none";}
+function printProductView(){
+  const name=document.getElementById("viewProductName")?.textContent||"Product Formula";
+  const content=document.getElementById("viewProductContent")?.innerHTML||"";
+  const w=window.open("","_blank","width=900,height=700"); if(!w){alert("Please allow pop-ups to print the formula.");return;}
+  w.document.write(`<!DOCTYPE html><html><head><title>${name}</title><style>body{font-family:Arial;padding:30px;color:#111}h1{margin-bottom:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#111;color:#fff}p{margin-top:12px}</style></head><body><h1>${escGlobal(name)}</h1>${content}</body></html>`); w.document.close(); w.focus(); setTimeout(()=>w.print(),300);
+}
+function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,100);}
 (function(){
   const LS_PRODUCTS = 'liaraProductsV2';
   const LS_ING = 'liaraIngredientsV2';
@@ -184,7 +229,7 @@ id="savedProductsListCard" style="margin-top:18px">
 
   window.createProductBuilder = function(){
     const name = document.getElementById('productName').value.trim();
-    if(!name){ alert('Product Name pao.'); return; }
+    if(!name){ alert('Enter a Product Name.'); return; }
 
     active = {
       id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
@@ -205,7 +250,7 @@ id="savedProductsListCard" style="margin-top:18px">
     if(!active) return;
     const list = getIngredients();
     if(!list.length){
-      alert('Pehla Ingredient Master vich ingredient add karo.');
+      alert('Please add an ingredient to Ingredient Master first.');
       return;
     }
 
@@ -267,7 +312,7 @@ id="savedProductsListCard" style="margin-top:18px">
         ingredients.push({ingredientId:id, ingredientName:ing?.name||'', grams});
       }
     });
-    if(!ingredients.length){ alert('At least one ingredient te gram pao.'); return; }
+    if(!ingredients.length){ alert('Enter at least one ingredient and its quantity in grams.'); return; }
 
     active.ingredients=ingredients;
     active.updatedAt=new Date().toISOString();
@@ -277,7 +322,7 @@ id="savedProductsListCard" style="margin-top:18px">
     if(idx>=0) products[idx]=active; else products.push(active);
     saveProducts(products);
     renderProducts();
-    alert('Product formula saved.');
+    alert('Product formula saved successfully.');
   };
 
   window.viewSavedProduct = function(index){
@@ -305,7 +350,7 @@ id="savedProductsListCard" style="margin-top:18px">
   };
 
   window.deleteProduct = function(index){
-    if(!confirm('Eh product delete karna hai?')) return;
+    if(!confirm('Are you sure you want to delete this product?')) return;
     const p=getProducts();
     p.splice(index,1); saveProducts(p); renderProducts();
   };
@@ -327,7 +372,7 @@ id="savedProductsListCard" style="margin-top:18px">
   };
 
   // Re-render saved products after ingredient master changes too.
-  window.addEventListener('load', renderProducts);
+  window.addEventListener('load', function(){ renderProducts(); renderIngredientMaster(); });
 })();
 </script>
 
