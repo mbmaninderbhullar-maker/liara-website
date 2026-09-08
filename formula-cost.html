@@ -477,7 +477,7 @@ async function addIngredient(){
   if(!(rate>=0)){showIngredientStatus('Please enter a valid purchase rate.',false);return;}
   const grams=(unit==='g'||unit==='gram'||unit==='grams')?qty:qty*1000;
   const ratePerGram=grams?rate/grams:0;
-  const {error}=await supabaseClient.from('ingredients_master').insert({name,category:'',purchase_qty:qty,purchase_unit:unit,purchase_rate:rate,rate_per_gram:ratePerGram});
+  const {error}=await supabaseClient.from('ingredients_master').insert({name,category:'Natural',purchase_qty:qty,purchase_unit:unit,purchase_rate:rate,rate_per_gram:ratePerGram});
   if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
   await loadIngredientsFromSupabase();
   renderIngredientMaster();
