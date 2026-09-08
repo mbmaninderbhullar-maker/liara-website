@@ -123,9 +123,9 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 <div class="card">
 <h2>Step 2 — Add Product / Formula</h2>
 <p class="note">
-Product da naam pao. Thalle sare saved ingredients aa jaan ge.
-Jis ingredient di lor hai, usda <strong>quantity + unit</strong> enter karo.
-Cost automatically calculate hovegi.
+Product add karde hi <strong>saare saved ingredients</strong> thalle aa jaan ge.
+Jis ingredient di lor hai, usda gram/KG enter karo. Ingredient Master vich saved
+rate de hisaab naal <strong>price automatically change</strong> hovegi.
 </p>
 
 <div class="product-head">
@@ -165,6 +165,10 @@ Cost automatically calculate hovegi.
 </thead>
 <tbody id="productIngredientTable"></tbody>
 </table>
+</div>
+
+<div class="rate-note" style="margin-top:14px;padding:10px;background:#f7f7f7;border-radius:9px">
+<strong>Live Cost — Gram rate follows Ingredient Master automatically:</strong> Quantity change karde hi har ingredient da price te total product cost turant update hovega.
 </div>
 
 <div class="summary">
@@ -361,13 +365,19 @@ function renderCurrentProduct(){
 
 function setUsedQty(id,value){
  const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
- if(row)row.qty=Math.max(0,Number(value)||0);
+ if(row){
+  row.qty=Math.max(0,Number(value)||0);
+  row.grams=usedToGrams(row.qty,row.unit||"g");
+ }
  updateSummary();
  updateRowCost(id);
 }
 function setUsedUnit(id,value){
  const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
- if(row)row.unit=value;
+ if(row){
+  row.unit=value;
+  row.grams=usedToGrams(Number(row.qty)||0,row.unit);
+ }
  updateSummary();
  updateRowCost(id);
 }
@@ -376,7 +386,9 @@ function updateRowCost(id){
  const ing=ingredients.find(x=>String(x.id)===String(id));
  const cell=document.getElementById("cost-"+id);
  if(row&&ing&&cell){
-  cell.textContent="₹"+money(usedToGrams(row.qty,row.unit)*ingredientRatePerGram(ing));
+  const grams=usedToGrams(row.qty,row.unit);
+  const cost=grams*ingredientRatePerGram(ing);
+  cell.innerHTML="₹"+money(cost);
  }
 }
 
