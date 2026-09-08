@@ -124,9 +124,16 @@ Example: 1 KG = ₹500 → ₹0.50/g.
     <div style="display:grid;grid-template-columns:minmax(180px,2fr) 120px 140px 130px 70px;gap:8px;margin-top:16px;padding:10px;background:#111;color:#fff;border-radius:9px;font-size:13px;font-weight:700"><div>Ingredient</div><div>Quantity (g)</div><div>Rate / Gram</div><div>Ingredient Cost</div><div></div></div><div id="formulaIngredientRows" style="margin-top:8px"></div>
 
     <div style="margin-top:16px;padding:14px;border-top:2px solid #222">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+        <strong>Cost Basis:</strong>
+        <select id="formulaCostBasis" onchange="recalcFormula()" style="max-width:180px">
+          <option value="100">100 g</option>
+          <option value="1000">1000 g (1 KG)</option>
+        </select>
+      </div>
       <div><strong>Total Weight:</strong> <span id="formulaTotalWeight">0 g</span></div>
       <div><strong>Total Ingredient Cost:</strong> <span id="formulaTotalCost">₹0.00</span></div>
-      <div><strong>Cost / 100g:</strong> <span id="formulaCost100">₹0.00</span></div>
+      <div><strong>Cost / <span id="formulaBasisLabel">100 g</span>:</strong> <span id="formulaCostBasisValue">₹0.00</span></div>
       <button type="button" onclick="saveCurrentFormula()" style="margin-top:12px">Save Product Formula</button>
     </div>
   </div>
@@ -337,6 +344,8 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
     document.getElementById('activeProductRef').textContent = active.reference ? 'Reference: '+active.reference : '';
     document.getElementById('activeProductBuilder').style.display = 'block';
     document.getElementById('formulaIngredientRows').innerHTML = '';
+    const basisEl=document.getElementById('formulaCostBasis');
+    if(basisEl) basisEl.value='100';
     addFormulaIngredient();
     recalcFormula();
   };
@@ -393,7 +402,13 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
     });
     document.getElementById('formulaTotalWeight').textContent = `${weight.toFixed(2)} g`;
     document.getElementById('formulaTotalCost').textContent = `₹${total.toFixed(2)}`;
-    document.getElementById('formulaCost100').textContent = `₹${weight ? (total/weight*100).toFixed(2) : '0.00'}`;
+    const basis = Number(document.getElementById('formulaCostBasis')?.value || 100);
+    const basisLabel = basis === 1000 ? '1000 g (1 KG)' : '100 g';
+    const basisValue = weight ? (total / weight * basis) : 0;
+    const labelEl = document.getElementById('formulaBasisLabel');
+    const valueEl = document.getElementById('formulaCostBasisValue');
+    if(labelEl) labelEl.textContent = basisLabel;
+    if(valueEl) valueEl.textContent = `₹${basisValue.toFixed(2)}`;
   }
 
   window.saveCurrentFormula = async function(){
@@ -422,7 +437,8 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
       version:'1.0',
       formula_date:new Date().toISOString().slice(0,10),
       batch_size:totalWeight,
-      batch_unit:'g'
+      batch_unit:'g',
+      cost_basis:Number(document.getElementById('formulaCostBasis')?.value || 100)
     }).select().single();
 
     if(error){ alert('Formula save failed:\n\n'+error.message); return; }
@@ -479,8 +495,27 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
       <tfoot><tr><th colspan="3" style="text-align:right">TOTAL</th><th>₹${total.toFixed(2)}</th></tr></tfoot>
       </table>
       <p><strong>Total Weight:</strong> ${weight.toFixed(2)} g</p>
-      <p><strong>Cost / 100g:</strong> ₹${weight ? (total/weight*100).toFixed(2) : '0.00'}</p>`;
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px">
+        <strong>Cost Basis:</strong>
+        <select id="viewCostBasis" onchange="updateViewBasis()" style="max-width:190px">
+          <option value="100" ${Number(p.costBasis||100)===100?'selected':''}>100 g</option>
+          <option value="1000" ${Number(p.costBasis||100)===1000?'selected':''}>1000 g (1 KG)</option>
+        </select>
+      </div>
+      <p><strong>Cost / <span id="viewBasisLabel">${Number(p.costBasis||100)===1000?'1000 g (1 KG)':'100 g'}</span>:</strong> <span id="viewBasisValue">₹${weight ? (total/weight*Number(p.costBasis||100)).toFixed(2) : '0.00'}</span></p>
+      <input type="hidden" id="viewFormulaTotalWeight" value="${weight}">
+      <input type="hidden" id="viewFormulaTotalCost" value="${total}">`;
     modal.style.display='block';
+  };
+
+  window.updateViewBasis = function(){
+    const basis=Number(document.getElementById('viewCostBasis')?.value||100);
+    const weight=Number(document.getElementById('viewFormulaTotalWeight')?.value||0);
+    const total=Number(document.getElementById('viewFormulaTotalCost')?.value||0);
+    const label=document.getElementById('viewBasisLabel');
+    const value=document.getElementById('viewBasisValue');
+    if(label) label.textContent=basis===1000?'1000 g (1 KG)':'100 g';
+    if(value) value.textContent=`₹${(weight ? total/weight*basis : 0).toFixed(2)}`;
   };
 
   window.deleteProduct = async function(index){
@@ -508,6 +543,7 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
       supabaseFormulaId:f.id,
       name:f.product_name||f.formula_name||'Product',
       reference:f.product_reference||'',
+      costBasis:Number(f.cost_basis||100),
       ingredients:fi.filter(x=>String(x.formula_id)===String(f.id)).map(x=>({
         ingredientId:x.ingredient_id,
         ingredientName:x.ingredient_name,
@@ -531,7 +567,7 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
         const g=Number(x.grams||0); w+=g; c+=g*getLiveRate(x,list);
       });
       return `<div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
-        <div><strong>${esc(p.name)}</strong><div style="color:#777">${p.ingredients?.length||0} ingredients • Total Weight: <b>${w.toFixed(2)} g</b> • Ingredient Cost: <b>₹${c.toFixed(2)}</b></div></div>
+        <div><strong>${esc(p.name)}</strong><div style="color:#777">${p.ingredients?.length||0} ingredients • Total Weight: <b>${w.toFixed(2)} g</b> • Ingredient Cost: <b>₹${c.toFixed(2)}</b> • Cost / ${Number(p.costBasis||100)===1000?'1000 g':'100 g'}: <b>₹${w ? (c/w*Number(p.costBasis||100)).toFixed(2) : '0.00'}</b></div></div>
         <div style="display:flex;gap:7px"><button onclick="viewSavedProduct(${i})">View Formula</button><button onclick="printSavedProduct(${i})">Print</button><button onclick="deleteProduct(${i})">Delete</button></div>
       </div>`;
     }).join('');
