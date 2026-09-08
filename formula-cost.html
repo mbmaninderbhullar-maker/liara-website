@@ -134,7 +134,11 @@ Example: 1 KG = ₹500 → ₹0.50/g.
       <div><strong>Total Weight:</strong> <span id="formulaTotalWeight">0 g</span></div>
       <div><strong>Total Ingredient Cost:</strong> <span id="formulaTotalCost">₹0.00</span></div>
       <div><strong>Cost / <span id="formulaBasisLabel">100 g</span>:</strong> <span id="formulaCostBasisValue">₹0.00</span></div>
-      <button type="button" onclick="saveCurrentFormula()" style="margin-top:12px">Save Product Formula</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button type="button" onclick="saveCurrentFormula()">Save Product Formula</button>
+        <button type="button" onclick="exportCurrentFormulaExcel()">📊 Download Excel</button>
+        <button type="button" onclick="exportCurrentFormulaPDF()">📄 Download PDF</button>
+      </div>
     </div>
   </div>
 </div>
@@ -161,6 +165,7 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
@@ -440,6 +445,69 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
     if(labelEl) labelEl.textContent = basisLabel;
     if(valueEl) valueEl.textContent = `₹${basisValue.toFixed(2)}`;
   }
+
+  function getCurrentBuilderData(){
+    const name=(document.getElementById('productName')?.value||document.getElementById('activeProductTitle')?.textContent||'Formula').trim() || 'Formula';
+    const basis=Number(document.getElementById('formulaCostBasis')?.value||100);
+    const list=getIngredients();
+    const rows=[];
+    document.querySelectorAll('.formula-builder-row').forEach(row=>{
+      const id=row.querySelector('.formula-ing')?.value;
+      const grams=Number(row.querySelector('.formula-grams')?.value||0);
+      if(!id || !(grams>0)) return;
+      const ing=list.find(x=>String(x.id)===String(id));
+      const rate=gramRate(ing);
+      rows.push({name:ing?.name||'', grams, rate, cost:grams*rate});
+    });
+    const totalWeight=rows.reduce((a,x)=>a+x.grams,0);
+    const totalCost=rows.reduce((a,x)=>a+x.cost,0);
+    const basisCost=totalWeight ? totalCost/totalWeight*basis : 0;
+    return {name,basis,rows,totalWeight,totalCost,basisCost};
+  }
+
+  window.exportCurrentFormulaExcel=function(){
+    const d=getCurrentBuilderData();
+    if(!d.rows.length){alert('Add ingredients with quantity first.');return;}
+    if(typeof XLSX==='undefined'){alert('Excel library could not load.');return;}
+    const data=d.rows.map(x=>({
+      'Ingredient Name':x.name,
+      'Quantity (g)':Number(x.grams.toFixed(2)),
+      'Rate / Gram (₹)':Number(x.rate.toFixed(4)),
+      'Ingredient Cost (₹)':Number(x.cost.toFixed(2))
+    }));
+    data.push({'Ingredient Name':'TOTAL','Quantity (g)':Number(d.totalWeight.toFixed(2)),'Rate / Gram (₹)':'','Ingredient Cost (₹)':Number(d.totalCost.toFixed(2))});
+    data.push({'Ingredient Name':`Cost / ${d.basis} g`,'Quantity (g)':'','Rate / Gram (₹)':'','Ingredient Cost (₹)':Number(d.basisCost.toFixed(2))});
+    const ws=XLSX.utils.json_to_sheet(data);
+    ws['!cols']=[{wch:30},{wch:16},{wch:20},{wch:22}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Formula');
+    const safe=d.name.replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'')||'Formula';
+    XLSX.writeFile(wb,`${safe}_${d.totalWeight.toFixed(2)}g.xlsx`);
+  };
+
+  window.exportCurrentFormulaPDF=function(){
+    const d=getCurrentBuilderData();
+    if(!d.rows.length){alert('Add ingredients with quantity first.');return;}
+    const jsPDF=window.jspdf?.jsPDF;
+    if(!jsPDF){alert('PDF library could not load.');return;}
+    const doc=new jsPDF({unit:'mm',format:'a4'});
+    const safe=d.name.replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'')||'Formula';
+    let y=18;
+    doc.setFontSize(18); doc.text(d.name,14,y); y+=9;
+    doc.setFontSize(10); doc.text(`Ingredient Formula | Total Weight: ${d.totalWeight.toFixed(2)} g`,14,y); y+=8;
+    doc.setFillColor(17,17,17); doc.setTextColor(255,255,255); doc.rect(14,y-5,182,8,'F');
+    doc.setFontSize(9); doc.text('Ingredient',17,y); doc.text('Quantity (g)',92,y); doc.text('Rate/g',130,y); doc.text('Cost',171,y); y+=8;
+    doc.setTextColor(0,0,0);
+    d.rows.forEach((x,idx)=>{
+      if(y>278){doc.addPage();y=18;}
+      doc.setFontSize(9); doc.text(String(x.name).slice(0,38),17,y); doc.text(x.grams.toFixed(2),92,y); doc.text(`₹${x.rate.toFixed(4)}`,130,y); doc.text(`₹${x.cost.toFixed(2)}`,171,y); y+=7;
+      if(idx<d.rows.length-1){doc.setDrawColor(220,220,220);doc.line(14,y-4,196,y-4);}
+    });
+    y+=3; doc.setFontSize(10); doc.setFont(undefined,'bold');
+    doc.text('TOTAL',130,y); doc.text(`₹${d.totalCost.toFixed(2)}`,171,y); y+=8;
+    doc.setFont(undefined,'normal'); doc.text(`Cost / ${d.basis} g: ₹${d.basisCost.toFixed(2)}`,14,y);
+    doc.save(`${safe}_${d.totalWeight.toFixed(2)}g.pdf`);
+  };
 
   window.saveCurrentFormula = async function(){
     if(!active) return;
