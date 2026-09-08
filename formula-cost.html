@@ -500,6 +500,37 @@ function renderProducts(){
 
 renderIngredients();
 renderProducts();
+
+function renderIngredientList(productIngredients){
+  const tbody = document.getElementById('ingredientListTable');
+  const totalEl = document.getElementById('ingredientListTotal');
+  if(!tbody || !totalEl) return;
+
+  tbody.innerHTML = '';
+  let total = 0;
+
+  (productIngredients || []).forEach(item => {
+    const ing = ingredients.find(x => String(x.id) === String(item.ingredientId));
+    if(!ing) return;
+
+    const grams = Number(item.grams || 0);
+    const gramRate = ingredientRatePerGram(ing);
+    const cost = grams * gramRate;
+    total += cost;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="padding:10px;border-bottom:1px solid #eee">${escapeHtml(ing.name || '')}</td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee">₹${gramRate.toFixed(4)}</td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee">${grams.toFixed(2)} g</td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;font-weight:700">₹${cost.toFixed(2)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  totalEl.textContent = money(total);
+}
+
 </script>
 </body>
 </html>
