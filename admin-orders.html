@@ -80,6 +80,12 @@
     font-weight:800;
     letter-spacing:.3px;
 }
+
+/* ================= GMAIL STYLE EMAIL VIEW ================= */
+.email-reader{display:none!important;grid-column:2;min-height:500px;background:#fff;border:1px solid #ece8e1;border-radius:14px;overflow:hidden;margin:0}
+.email-list-row{display:grid;grid-template-columns:220px minmax(0,1fr) 80px;gap:14px;align-items:center;padding:14px 16px;border-bottom:1px solid #eee;cursor:pointer;background:#fff}
+.email-list-row:hover{background:#fffaf0}.email-list-row.unread{font-weight:800;background:#fffdf8}.email-unread-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ad8232;margin-right:8px}.email-row-sender,.email-row-content{min-width:0}.email-preview{font-weight:400;color:#888;font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.email-row-date{text-align:right;color:#777;font-size:11px}.email-reader-top{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid #eee;background:#faf8f5}.email-reader-top button{border:1px solid #ddd;background:#fff;border-radius:7px;padding:8px 11px;cursor:pointer;font-weight:700;font-size:11px}.email-reader-content{padding:24px}.email-reader-head{display:flex;gap:13px;align-items:center;border-bottom:1px solid #eee;padding-bottom:18px}.email-reader-avatar{width:42px;height:42px;border-radius:50%;background:#ad8232;color:#fff;display:grid;place-items:center;font-weight:800}.email-reader-head h3{margin:0 0 6px;font-size:20px}.email-reader-address{font-size:11px;color:#777}.email-body{padding:22px 2px;line-height:1.65;word-break:break-word}.email-attachments{border-top:1px solid #eee;padding-top:16px}.email-attachments h4{margin:0 0 10px}.email-attachment-card{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #e7e2da;background:#faf8f5;border-radius:9px;padding:10px 12px;margin:7px 0;font-size:12px}.email-attachment-card a{font-weight:700;color:#345f91;text-decoration:none}
+@media(max-width:850px){.email-layout{grid-template-columns:1fr!important}.email-reader{grid-column:1}.email-nav{display:flex;gap:6px;overflow:auto}.email-nav-btn{white-space:nowrap}.email-list-row{grid-template-columns:1fr 70px}.email-row-date{grid-column:2;grid-row:1/3}}
 </style>
 </style>
 <!DOCTYPE html>
@@ -8106,227 +8112,23 @@ document.getElementById(
 loadOrders();
 
 
-/* ================= ZOHO MAIL ================= */
-let zohoEmails=[]; let zohoFolder="INBOX";
+/* ================= ZOHO MAIL — GMAIL STYLE ================= */
+let zohoEmails=[]; let zohoFolder="INBOX"; let openEmailIndex=-1; let localReadState={};
+function emailKey(m){return String(m?.messageId||m?.message_id||m?.msgId||m?.id||m?.messageID||((m?.fromAddress||m?.sender||"")+"|"+(m?.subject||"")+"|"+(m?.date||m?.receivedTime||"")));}
+function emailIsUnread(m){const k=emailKey(m);if(localReadState[k])return false;return m?.unread===true||m?.isUnread===true||m?.read===false||String(m?.status||"").toLowerCase()==="unread"||String(m?.isRead||"").toLowerCase()==="false";}
+function emailDate(m){const raw=m?.date||m?.receivedTime||m?.receivedAt||m?.createdAt||m?.timestamp;if(!raw)return "";const d=new Date(raw);return Number.isNaN(d.getTime())?"":d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"});}
 async function zohoRequest(action,payload={}){const user=await checkAdmin();if(!user)return null;const {data,error}=await supabaseClient.functions.invoke("zoho-mail",{body:{action,...payload}});if(error)throw new Error(error.message||"Zoho Mail request failed.");if(data?.error)throw new Error(data.error);return data;}
-function emailIsUnread(m){
-    return m?.unread===true || m?.isUnread===true || m?.read===false ||
-           String(m?.status||"").toLowerCase()==="unread";
-}
-function emailDate(m){
-    const raw=m?.date||m?.receivedTime||m?.receivedAt||m?.createdAt||m?.timestamp;
-    if(!raw) return "";
-    const d=new Date(raw);
-    if(Number.isNaN(d.getTime())) return "";
-    return d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"});
-}
-async function loadZohoMail(){
-    const list=document.getElementById("emailList"),status=document.getElementById("emailStatus");
-    if(!list)return;
-    list.innerHTML='<div class="message">Loading emails...</div>';
-    try{
-        const data=await zohoRequest("list",{folder:zohoFolder});
-        zohoEmails=Array.isArray(data?.messages)?data.messages:[];
-        renderEmailList();
-        const unread=zohoEmails.filter(emailIsUnread).length;
-        if(status)status.textContent=zohoEmails.length+" emails";
-        const badge=document.getElementById("inboxCountBadge");
-        const topBadge=document.getElementById("inboxNewBadge");
-        if(zohoFolder==="INBOX"){
-            [badge,topBadge].forEach(b=>{
-                if(!b)return;
-                b.textContent=unread;
-                b.style.display=unread?"inline-flex":"none";
-            });
-        }
-    }catch(e){
-        list.innerHTML='<div class="message error">'+escapeHtml(e.message)+'</div>';
-        if(status)status.textContent="Mail not connected";
-    }
-}
-function emailFolder(folder,button){
-    zohoFolder=folder;
-    document.querySelectorAll(".email-nav-btn").forEach(b=>b.classList.remove("active"));
-    if(button)button.classList.add("active");
-    const reader=document.getElementById("emailReader");
-    if(reader)reader.innerHTML='<div class="message">Select an email to read it.</div>';
-    loadZohoMail();
-}
 function filterEmailList(){renderEmailList();}
-function renderEmailList(){
-    const list=document.getElementById("emailList"); if(!list)return;
-    const q=(document.getElementById("emailSearch")?.value||"").toLowerCase().trim();
-    const rows=zohoEmails.filter(m=>!q||[m.subject,m.fromAddress,m.sender,m.toAddress,m.summary,m.content].join(" ").toLowerCase().includes(q));
-    if(!rows.length){list.innerHTML='<div class="message">No emails found.</div>';return;}
-    list.innerHTML=rows.map((m,i)=>{
-        const unread=emailIsUnread(m);
-        const sender=escapeHtml(m.fromAddress||m.sender||"Unknown");
-        const subject=escapeHtml(m.subject||"(No subject)");
-        const preview=escapeHtml((m.summary||m.content||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim());
-        return `<div class="email-list-row ${unread?"unread":""}" onclick="openZohoEmail(${i})">
-            <div class="email-row-sender">${unread?'<span class="email-unread-dot"></span>':''}${sender}</div>
-            <div class="email-row-content"><span class="email-subject">${subject}</span><div class="email-preview">${preview}</div></div>
-            <div class="email-row-date">${emailDate(m)}</div>
-        </div>`;
-    }).join("");
-}
-function emailInitial(m){
-    const s=(m?.fromAddress||m?.sender||"M").trim();
-    return escapeHtml((s.includes("@")?s.split("@")[0]:s).charAt(0).toUpperCase()||"M");
-}
-async function openZohoEmail(i){
-    const m=zohoEmails[i];
-    if(!m)return;
-
-    const reader=document.getElementById("emailReader");
-    if(!reader)return;
-
-    reader.innerHTML=`<div class="email-reader-top">
-        <button type="button" onclick="closeEmailReader()">← Back</button>
-        <button type="button" onclick="replyZohoEmail(${i})">↩ Reply</button>
-        <button type="button" onclick="forwardZohoEmail(${i})">↪ Forward</button>
-    </div>
-    <div class="email-reader-content">
-      <div class="email-reader-head">
-        <div class="email-reader-avatar">${emailInitial(m)}</div>
-        <div>
-          <h3>${escapeHtml(m.subject||"(No subject)")}</h3>
-          <div class="email-reader-address"><strong>${escapeHtml(m.fromAddress||m.sender||"Unknown")}</strong> → ${escapeHtml(m.toAddress||"info@liara.co.in")} · ${emailDate(m)}</div>
-        </div>
-      </div>
-      <div class="email-body">${m.content||escapeHtml(m.summary||"No message content.")}</div>
-      ${renderEmailAttachments(m)}
-    </div>`;
-}
-
-function renderEmailAttachments(m){
-    const list=Array.isArray(m?.attachments)?m.attachments:[];
-    if(!list.length)return "";
-
-    return `<div class="email-attachments">
-      <div class="email-attachments-title">📎 Attachments (${list.length})</div>
-      <div class="email-attachments-list">
-        ${list.map((a,n)=>{
-          const name=escapeHtml(a?.name||a?.fileName||a?.filename||("Attachment "+(n+1)));
-          const size=a?.size ? formatAttachmentSize(a.size) : "";
-          const url=a?.downloadUrl||a?.url||a?.contentUrl||a?.href||"";
-          return url
-            ? `<a class="email-attachment-card" href="${escapeAttribute(url)}" target="_blank" rel="noopener">
-                 <span class="email-attachment-icon">📎</span>
-                 <span><strong>${name}</strong>${size?`<small>${size}</small>`:""}</span>
-                 <span>Download ↗</span>
-               </a>`
-            : `<div class="email-attachment-card">
-                 <span class="email-attachment-icon">📎</span>
-                 <span><strong>${name}</strong>${size?`<small>${size}</small>`:""}</span>
-               </div>`;
-        }).join("")}
-      </div>
-    </div>`;
-}
-
-function formatAttachmentSize(bytes){
-    const n=Number(bytes);
-    if(!Number.isFinite(n)||n<=0)return "";
-    if(n<1024)return n+" B";
-    if(n<1024*1024)return (n/1024).toFixed(1)+" KB";
-    return (n/1024/1024).toFixed(1)+" MB";
-}
-
-function escapeAttribute(value){
-    return String(value??"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-function closeEmailReader(){
-    const reader=document.getElementById("emailReader");
-    if(reader)reader.innerHTML='<div class="message">Select an email to read it.</div>';
-}
-function replyZohoEmail(i){
-    const m=zohoEmails[i]; if(!m)return;
-    openComposeMail();
-    document.getElementById("mailTo").value=m.fromAddress||m.sender||"";
-    document.getElementById("mailSubject").value=(String(m.subject||"").toLowerCase().startsWith("re:")?"":"Re: ")+(m.subject||"");
-    document.getElementById("mailContent").focus();
-}
-function forwardZohoEmail(i){
-    const m=zohoEmails[i]; if(!m)return;
-    openComposeMail();
-    document.getElementById("mailSubject").value=(String(m.subject||"").toLowerCase().startsWith("fwd:")?"":"Fwd: ")+(m.subject||"");
-    document.getElementById("mailContent").value="\n\n---------- Forwarded message ----------\n"+(m.content||m.summary||"");
-    document.getElementById("mailContent").focus();
-}
-function openComposeMail(){
-    const box=document.getElementById("composeMailBox");
-    if(box)box.style.display="block";
-    document.getElementById("mailTo")?.focus();
-}
-function closeComposeMail(){const box=document.getElementById("composeMailBox");if(box)box.style.display="none";}
-async function sendZohoMail(){
-    const to=document.getElementById("mailTo").value.trim();
-    const subject=document.getElementById("mailSubject").value.trim();
-    const content=document.getElementById("mailContent").value;
-    const status=document.getElementById("sendMailStatus");
-    const fileInput=document.getElementById("mailAttachments");
-    const files=[...(fileInput?.files||[])];
-
-    if(!to||!subject||!content){
-        status.textContent="To, subject and message are required.";
-        status.style.display="block";
-        return;
-    }
-
-    status.textContent=files.length
-        ? "Uploading attachment(s) and sending..."
-        : "Sending...";
-    status.style.display="block";
-
-    try{
-        const attachments=[];
-
-        for(const file of files){
-            if(file.size>10*1024*1024){
-                throw new Error(file.name+" is larger than 10 MB.");
-            }
-
-            const dataUrl=await new Promise((resolve,reject)=>{
-                const r=new FileReader();
-                r.onload=()=>resolve(r.result);
-                r.onerror=()=>reject(new Error("Could not read "+file.name));
-                r.readAsDataURL(file);
-            });
-
-            attachments.push({
-                name:file.name,
-                type:file.type||"application/octet-stream",
-                data:String(dataUrl).split(",")[1]
-            });
-        }
-
-        await zohoRequest("send",{
-            toAddress:to,
-            ccAddress:document.getElementById("mailCc").value.trim(),
-            bccAddress:document.getElementById("mailBcc").value.trim(),
-            subject,
-            content,
-            attachments
-        });
-
-        status.textContent="Email sent successfully.";
-        if(fileInput)fileInput.value="";
-
-        setTimeout(()=>{
-            closeComposeMail();
-            ["mailTo","mailCc","mailBcc","mailSubject","mailContent"].forEach(id=>{
-                const e=document.getElementById(id);
-                if(e)e.value="";
-            });
-        },700);
-
-    }catch(e){
-        status.textContent=e.message||"Failed to send email.";
-    }
-}
-
+function renderEmailList(){const list=document.getElementById("emailList");if(!list)return;const q=(document.getElementById("emailSearch")?.value||"").toLowerCase().trim();const rows=zohoEmails.map((m,i)=>({m,i})).filter(x=>!q||[x.m.subject,x.m.fromAddress,x.m.sender,x.m.toAddress,x.m.summary,x.m.content].join(" ").toLowerCase().includes(q));if(!rows.length){list.innerHTML='<div class="message">No emails found.</div>';return;}list.innerHTML=rows.map(({m,i})=>{const unread=emailIsUnread(m),sender=escapeHtml(m.fromAddress||m.sender||"Unknown"),subject=escapeHtml(m.subject||"(No subject)"),preview=escapeHtml((m.summary||m.content||"").replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim()).slice(0,180);return `<div class="email-list-row ${unread?"unread":""}" onclick="openZohoEmail(${i})"><div class="email-row-sender">${unread?'<span class="email-unread-dot"></span>':''}${sender}</div><div class="email-row-content"><span class="email-subject">${subject}</span><div class="email-preview">${preview}</div></div><div class="email-row-date">${emailDate(m)}</div></div>`;}).join("");}
+function emailInitial(m){const s=(m?.fromAddress||m?.sender||"M").trim();return escapeHtml((s.includes("@")?s.split("@")[0]:s).charAt(0).toUpperCase()||"M");}
+function attachmentArray(m){return Array.isArray(m?.attachments)?m.attachments:Array.isArray(m?.attachment)?m.attachment:[];}
+function renderAttachments(m){const a=attachmentArray(m);if(!a.length)return "";return `<div class="email-attachments"><h4>📎 Attachments (${a.length})</h4>${a.map(x=>{const name=escapeHtml(x?.attachmentName||x?.name||x?.fileName||"Attachment"),url=x?.downloadUrl||x?.url||x?.contentUrl||x?.href||"";return `<div class="email-attachment-card"><span>📄 ${name}</span>${url?`<a href="${String(url).replace(/"/g,"&quot;")}" target="_blank" rel="noopener">Download</a>`:"<small>Attachment available in Zoho</small>"}</div>`;}).join("")}</div>`;}
+async function openZohoEmail(i){const m=zohoEmails[i];if(!m)return;openEmailIndex=i;localReadState[emailKey(m)]=true;renderEmailList();const list=document.getElementById("emailList"),reader=document.getElementById("emailReader");if(list)list.style.display="none";if(reader){reader.style.display="block";reader.innerHTML=`<div class="email-reader-top"><button type="button" onclick="closeEmailReader()">← Back to Inbox</button><button type="button" onclick="replyZohoEmail(${i})">↩ Reply</button><button type="button" onclick="forwardZohoEmail(${i})">↪ Forward</button></div><div class="email-reader-content"><div class="email-reader-head"><div class="email-reader-avatar">${emailInitial(m)}</div><div><h3>${escapeHtml(m.subject||"(No subject)")}</h3><div class="email-reader-address"><strong>${escapeHtml(m.fromAddress||m.sender||"Unknown")}</strong> → ${escapeHtml(m.toAddress||"info@liara.co.in")} · ${emailDate(m)}</div></div></div><div class="email-body">${m.content||escapeHtml(m.summary||"No message content.")}</div>${renderAttachments(m)}</div>`;}}
+function closeEmailReader(){openEmailIndex=-1;const list=document.getElementById("emailList"),reader=document.getElementById("emailReader");if(list)list.style.display="block";if(reader){reader.style.display="none";reader.innerHTML='<div class="message">Select an email to read it.</div>';}}
+function replyZohoEmail(i){const m=zohoEmails[i];if(!m)return;openComposeMail();const to=document.getElementById("mailTo"),subject=document.getElementById("mailSubject"),content=document.getElementById("mailContent");if(to)to.value=m.fromAddress||m.sender||"";if(subject)subject.value=(m.subject||"").startsWith("Re:")?m.subject:"Re: "+(m.subject||"");if(content)content.value="\n\n\n--- Original Message ---\n"+(m.content||m.summary||"");}
+function forwardZohoEmail(i){const m=zohoEmails[i];if(!m)return;openComposeMail();const subject=document.getElementById("mailSubject"),content=document.getElementById("mailContent");if(subject)subject.value=(m.subject||"").startsWith("Fwd:")?m.subject:"Fwd: "+(m.subject||"");if(content)content.value="\n\n\n--- Forwarded Message ---\nFrom: "+(m.fromAddress||m.sender||"")+"\nSubject: "+(m.subject||"")+"\n\n"+(m.content||m.summary||"");}
+async function loadZohoMail(){const list=document.getElementById("emailList"),status=document.getElementById("emailStatus");if(!list)return;closeEmailReader();list.innerHTML='<div class="message">Loading emails...</div>';try{const data=await zohoRequest("list",{folder:zohoFolder});zohoEmails=Array.isArray(data?.messages)?data.messages:[];renderEmailList();const unread=zohoEmails.filter(emailIsUnread).length;if(status)status.textContent=zohoEmails.length+" emails";const badge=document.getElementById("inboxCountBadge"),topBadge=document.getElementById("inboxNewBadge");if(zohoFolder==="INBOX"){[badge,topBadge].forEach(b=>{if(!b)return;b.textContent=unread;b.style.display=unread?"inline-flex":"none";});}}catch(e){list.innerHTML='<div class="message error">'+escapeHtml(e.message)+'</div>';if(status)status.textContent="Mail not connected";}}
+function emailFolder(folder,button){zohoFolder=folder;document.querySelectorAll(".email-nav-btn").forEach(b=>b.classList.remove("active"));if(button)button.classList.add("active");closeEmailReader();loadZohoMail();}
 </script>
 
 
