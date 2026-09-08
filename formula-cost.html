@@ -191,7 +191,7 @@ function renderIngredientMaster(){
   let box=document.getElementById("ingredientMasterList"); if(!box)return;
   const list=getIngredientMaster();
   if(!list.length){box.innerHTML='<div class="empty">No ingredients added yet.</div>';return;}
-  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${String(x.purchaseUnit||"kg").toUpperCase()==="GRAM"?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+list.map((x,i)=>{const g=ingredientGramRate(x);return `<tr><td><strong>${escGlobal(x.name)}</strong></td><td>${Number(x.purchaseQty).toLocaleString("en-IN")} ${String(x.purchaseUnit||"kg").toUpperCase()==="GRAM"?"Gram":"KG"}</td><td>₹${Number(x.purchaseRate||0).toFixed(2)}</td><td>₹${(g*1000).toFixed(2)}</td><td><button class="light" onclick="deleteIngredient(${i})">Delete</button></td></tr>`}).join('')+'</tbody></table></div>';
 }
 function escGlobal(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));}
 function deleteIngredient(i){const list=getIngredientMaster(); if(!list[i])return; if(!confirm("Delete this ingredient?"))return; list.splice(i,1); saveIngredientMaster(list); renderIngredientMaster();}
@@ -315,7 +315,7 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
       total += cost;
       const rateEl=row.querySelector('.formula-rate');
       const costEl=row.querySelector('.formula-cost');
-      if(rateEl) rateEl.textContent = `₹${rate.toFixed(4)} / g`;
+      if(rateEl) rateEl.textContent = `₹${Number(rate.toFixed(6))} / g`;
       if(costEl) costEl.innerHTML = `<strong>₹${cost.toFixed(2)}</strong>`;
     });
     document.getElementById('formulaTotalWeight').textContent = `${weight.toFixed(2)} g`;
@@ -393,7 +393,7 @@ function printSavedProduct(i){viewSavedProduct(i); setTimeout(printProductView,1
       const ing=list.find(i=>String(i.id)===String(x.ingredientId));
       const g=Number(x.grams||0), r=gramRate(ing), c=g*r;
       weight+=g; total+=c;
-      return `<tr><td>${esc(ing?.name||x.ingredientName||'')}</td><td>₹${r.toFixed(4)}</td><td>${g.toFixed(2)} g</td><td>₹${c.toFixed(2)}</td></tr>`;
+      return `<tr><td>${esc(ing?.name||x.ingredientName||'')}</td><td>₹${Number(r.toFixed(6))} / g</td><td>${g.toFixed(2)} g</td><td>₹${c.toFixed(2)}</td></tr>`;
     }).join('');
     const modal=document.getElementById('productViewModal');
     document.getElementById('viewProductName').textContent=p.name||'Product';
