@@ -99,557 +99,39 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 <div id="ingredientStatus" class="status"></div>
 </div>
 
-<div class="card">
-<h2>Ingredient Master</h2>
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Ingredient</th>
-<th>Purchase</th>
-<th>Total Rate</th>
-<th>Rate / Gram</th>
-<th>Rate / KG</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody id="ingredientTable"></tbody>
-</table>
-</div>
-</div>
 
-<!-- STEP 2 -->
-<div class="card">
-<h2>Step 2 — Add Product / Formula</h2>
-<p class="note">
-Product add karde hi <strong>saare saved ingredients</strong> thalle aa jaan ge.
-Jis ingredient di lor hai, usda gram/KG enter karo. Ingredient Master vich saved
-rate de hisaab naal <strong>price automatically change</strong> hovegi.
-</p>
+<div class="card" id="productBuilderCard">
+  <h2>Step 2 — Add Product / Formula</h2>
+  <p>Product name ik vaar rakho. Us product de andar sirf oh ingredients add karo jo formula vich chahide ne.</p>
 
-<div class="product-head">
-<div class="field">
-<label>Product Name</label>
-<input id="productName" type="text" placeholder="e.g. Herbal Hair Oil">
-</div>
-<div class="field">
-<label>Product / Batch Reference (optional)</label>
-<input id="productBatch" type="text" placeholder="e.g. 1 Batch">
-</div>
-<button class="gold" onclick="startProduct()">+ Add Product</button>
-</div>
-<div id="productStatus" class="status"></div>
-</div>
+  <label><strong>Product Name</strong></label>
+  <input id="productName" type="text" placeholder="e.g. Herbal Face Wash Creamy">
 
-<!-- CURRENT PRODUCT -->
-<div id="currentProductCard" class="card hidden">
-<h2>Product Ingredients</h2>
-<p class="note">Example: ingredient 250g use hoya ta 250 + Gram select karo; 1kg use hoya ta 1 + KG.</p>
+  <label><strong>Product / Batch Reference (optional)</strong></label>
+  <input id="productRef" type="text" placeholder="Optional">
 
-<div class="product-box">
-<h3 id="currentProductName">Product</h3>
-<div class="product-meta" id="currentProductMeta"></div>
+  <button type="button" onclick="createProductBuilder()">+ Add Product</button>
 
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Ingredient</th>
-<th>Rate / Gram</th>
-<th>Qty Used</th>
-<th>Unit</th>
-<th>Ingredient Cost</th>
-</tr>
-</thead>
-<tbody id="productIngredientTable"></tbody>
-</table>
-</div>
-
-<div class="rate-note" style="margin-top:14px;padding:10px;background:#f7f7f7;border-radius:9px">
-<strong>Live Cost — Gram rate follows Ingredient Master automatically:</strong> Quantity change karde hi har ingredient da price te total product cost turant update hovega.
-</div>
-
-<div class="summary">
-<div class="summary-box"><span>Total Weight</span><strong id="totalWeight">0 g</strong></div>
-<div class="summary-box"><span>Total Ingredient Cost</span><strong id="totalCost">₹0.00</strong></div>
-<div class="summary-box"><span>Cost / 100g</span><strong id="cost100">₹0.00</strong></div>
-<div class="summary-box"><span>Cost / 1kg</span><strong id="cost1000">₹0.00</strong></div>
-<div class="summary-box"><span>Cost / 1g</span><strong id="cost1">₹0.00</strong></div>
-</div>
-
-<div class="actions">
-<button class="black" onclick="saveCurrentProduct()">Save Product</button>
-<button class="light" onclick="cancelProduct()">Cancel</button>
-</div>
-</div>
-</div>
-
-<!-- SAVED PRODUCTS -->
-<div class="card">
-<h2>Saved Products</h2>
-<div id="savedProducts"></div>
-</div>
-
-</div>
-
-<script>
-let ingredients=JSON.parse(localStorage.getItem("liaraIngredientsV2")||"[]");
-let products=JSON.parse(localStorage.getItem("liaraProductsV2")||"[]");
-let currentProduct=null;
-
-function money(n){
- return Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-function qty(n){
- return Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:3});
-}
-function esc(v){
- return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-}
-
-/* Convert purchase quantity into grams */
-function purchaseToGrams(qtyValue,unit){
- return String(unit).toLowerCase()==="kg" ? Number(qtyValue||0)*1000 : Number(qtyValue||0);
-}
-
-/* Convert formula quantity into grams */
-function usedToGrams(qtyValue,unit){
- return String(unit).toLowerCase()==="kg" ? Number(qtyValue||0)*1000 : Number(qtyValue||0);
-}
-
-function status(id,msg,type){
- const el=document.getElementById(id);
- el.textContent=msg;
- el.className="status "+type;
- setTimeout(()=>el.className="status",2500);
-}
-
-function normalizeIngredient(x){
- /* Backward compatibility with old version:
-    old rate was already ₹/KG. */
- if(x.purchaseQty==null || !x.purchaseUnit){
-   return {
-    ...x,
-    purchaseQty:1,
-    purchaseUnit:"kg",
-    purchaseRate:Number(x.rate||0)
-   };
- }
- return x;
-}
-
-ingredients=ingredients.map(normalizeIngredient);
-
-function ingredientRatePerGram(x){
- const grams=purchaseToGrams(x.purchaseQty,x.purchaseUnit);
- return grams>0 ? Number(x.purchaseRate||0)/grams : 0;
-}
-function ingredientRatePerKg(x){
- return ingredientRatePerGram(x)*1000;
-}
-
-function addIngredient(){
- const name=document.getElementById("ingredientName").value.trim();
- const purchaseQty=Number(document.getElementById("ingredientQty").value);
- const purchaseUnit=document.getElementById("ingredientUnit").value;
- const purchaseRate=Number(document.getElementById("ingredientRate").value);
-
- if(!name)return status("ingredientStatus","Ingredient name enter karo.","err");
- if(!Number.isFinite(purchaseQty)||purchaseQty<=0)return status("ingredientStatus","Valid purchase quantity enter karo.","err");
- if(!Number.isFinite(purchaseRate)||purchaseRate<0)return status("ingredientStatus","Valid purchase rate enter karo.","err");
- if(ingredients.some(x=>String(x.name||"").toLowerCase()===name.toLowerCase()))
-   return status("ingredientStatus","Eh ingredient pehlan hi add hai.","err");
-
- ingredients.push({
-  id:Date.now()+Math.random(),
-  name,
-  purchaseQty,
-  purchaseUnit,
-  purchaseRate
- });
-
- localStorage.setItem("liaraIngredientsV2",JSON.stringify(ingredients));
- document.getElementById("ingredientName").value="";
- document.getElementById("ingredientQty").value="1";
- document.getElementById("ingredientUnit").value="kg";
- document.getElementById("ingredientRate").value="";
- renderIngredients();
- status("ingredientStatus","Ingredient successfully add ho gaya.","ok");
-}
-
-function renderIngredients(){
- const tb=document.getElementById("ingredientTable");
- if(!ingredients.length){
-  tb.innerHTML='<tr><td colspan="7" class="empty">Haje koi ingredient add nahi hoya.</td></tr>';
-  return;
- }
- tb.innerHTML=ingredients.map((x,i)=>{
-  const unit=String(x.purchaseUnit||"kg").toUpperCase()==="KG"?"KG":"g";
-  return `<tr>
-   <td>${i+1}</td>
-   <td><strong>${esc(x.name)}</strong></td>
-   <td>${qty(x.purchaseQty)} ${unit}</td>
-   <td>₹${money(x.purchaseRate)}</td>
-   <td>₹${money(ingredientRatePerGram(x))}</td>
-   <td>₹${money(ingredientRatePerKg(x))}</td>
-   <td><button class="red" onclick="deleteIngredient('${x.id}')">Delete</button></td>
-  </tr>`;
- }).join("");
-}
-
-function deleteIngredient(id){
- if(currentProduct && currentProduct.rows.some(r=>String(r.ingredientId)===String(id))){
-  if(!confirm("Eh ingredient current product vich hai. Delete karan naal oh row vi remove ho javegi. Continue?"))return;
-  currentProduct.rows=currentProduct.rows.filter(r=>String(r.ingredientId)!==String(id));
-  renderCurrentProduct();
- }
- ingredients=ingredients.filter(x=>String(x.id)!==String(id));
- localStorage.setItem("liaraIngredientsV2",JSON.stringify(ingredients));
- renderIngredients();
-}
-
-function startProduct(){
- const name=document.getElementById("productName").value.trim();
- const batch=document.getElementById("productBatch").value.trim();
- if(!name)return status("productStatus","Product name enter karo.","err");
- if(!ingredients.length)return status("productStatus","Pehla ingredients add karo.","err");
-
- currentProduct={
-  name,
-  batch,
-  rows:ingredients.map(x=>({ingredientId:x.id,qty:0,unit:"g"}))
- };
- document.getElementById("currentProductCard").classList.remove("hidden");
- renderCurrentProduct();
- document.getElementById("currentProductCard").scrollIntoView({behavior:"smooth",block:"start"});
-}
-
-function renderCurrentProduct(){
- if(!currentProduct)return;
- document.getElementById("currentProductName").textContent=currentProduct.name;
- document.getElementById("currentProductMeta").textContent=currentProduct.batch?currentProduct.batch:"Product cost calculation";
-
- const tb=document.getElementById("productIngredientTable");
- if(!currentProduct.rows.length){
-  tb.innerHTML='<tr><td colspan="6" class="empty">Koi ingredient available nahi.</td></tr>';
-  updateSummary(); return;
- }
-
- tb.innerHTML=currentProduct.rows.map((row,i)=>{
-  const ing=ingredients.find(x=>String(x.id)===String(row.ingredientId));
-  if(!ing)return "";
-  /* Backward compatibility with old saved formula rows */
-  const rowQty=row.qty!=null ? row.qty : (row.grams||0);
-  const rowUnit=row.unit || "g";
-  const cost=usedToGrams(rowQty,rowUnit)*ingredientRatePerGram(ing);
-
-  return `<tr>
-   <td>${i+1}</td>
-   <td><strong>${esc(ing.name)}</strong></td>
-   <td>₹${money(ingredientRatePerGram(ing))}</td>
-   <td><input type="number" min="0" step="0.001" value="${rowQty||""}" placeholder="0"
-      oninput="setUsedQty('${row.ingredientId}',this.value)"></td>
-   <td>
-    <select onchange="setUsedUnit('${row.ingredientId}',this.value)">
-      <option value="g" ${rowUnit==="g"?"selected":""}>Gram</option>
-      <option value="kg" ${rowUnit==="kg"?"selected":""}>KG</option>
-    </select>
-   </td>
-   <td class="num" id="cost-${row.ingredientId}">₹${money(cost)}</td>
-  </tr>`;
- }).join("");
- updateSummary();
-}
-
-function setUsedQty(id,value){
- const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
- if(row){
-  row.qty=Math.max(0,Number(value)||0);
-  row.grams=usedToGrams(row.qty,row.unit||"g");
- }
- updateSummary();
- updateRowCost(id);
-}
-function setUsedUnit(id,value){
- const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
- if(row){
-  row.unit=value;
-  row.grams=usedToGrams(Number(row.qty)||0,row.unit);
- }
- updateSummary();
- updateRowCost(id);
-}
-function updateRowCost(id){
- const row=currentProduct.rows.find(r=>String(r.ingredientId)===String(id));
- const ing=ingredients.find(x=>String(x.id)===String(id));
- const cell=document.getElementById("cost-"+id);
- if(row&&ing&&cell){
-  const grams=usedToGrams(row.qty,row.unit);
-  const cost=grams*ingredientRatePerGram(ing);
-  cell.innerHTML="₹"+money(cost);
- }
-}
-
-function calculate(){
- let weight=0,cost=0;
- (currentProduct?.rows||[]).forEach(r=>{
-  const ing=ingredients.find(x=>String(x.id)===String(r.ingredientId));
-  if(!ing)return;
-  const grams=usedToGrams(r.qty!=null?r.qty:(r.grams||0),r.unit||"g");
-  weight+=grams;
-  cost+=grams*ingredientRatePerGram(ing);
- });
- return {weight,cost};
-}
-
-function updateSummary(){
- const {weight,cost}=calculate();
- document.getElementById("totalWeight").textContent=qty(weight)+" g";
- document.getElementById("totalCost").textContent="₹"+money(cost);
- document.getElementById("cost100").textContent="₹"+money(weight?cost/weight*100:0);
- document.getElementById("cost1000").textContent="₹"+money(weight?cost/weight*1000:0);
- document.getElementById("cost1").textContent="₹"+money(weight?cost/weight:0);
-}
-
-function saveCurrentProduct(){
- if(!currentProduct)return;
- const {weight,cost}=calculate();
- if(weight<=0)return status("productStatus","Product vich ghatt ton ghatt ik ingredient di quantity enter karo.","err");
-
- const cleanedRows=currentProduct.rows
-  .filter(r=>(Number(r.qty!=null?r.qty:r.grams)||0)>0)
-  .map(r=>({
-   ingredientId:r.ingredientId,
-   qty:Number(r.qty!=null?r.qty:r.grams),
-   unit:r.unit||"g",
-   grams:usedToGrams(Number(r.qty!=null?r.qty:r.grams),r.unit||"g")
-  }));
-
- const product={
-  id:Date.now()+Math.random(),
-  name:currentProduct.name,
-  batch:currentProduct.batch,
-  rows:cleanedRows,
-  totalWeight:weight,
-  totalCost:cost,
-  createdAt:new Date().toISOString()
- };
- products.unshift(product);
- localStorage.setItem("liaraProductsV2",JSON.stringify(products));
- status("productStatus","Product successfully save ho gaya.","ok");
- cancelProduct();
- renderProducts();
-}
-
-function cancelProduct(){
- currentProduct=null;
- document.getElementById("currentProductCard").classList.add("hidden");
- document.getElementById("productName").value="";
- document.getElementById("productBatch").value="";
-}
-
-function viewProduct(id){
- const p=products.find(x=>String(x.id)===String(id));
- if(!p)return;
- currentProduct={
-  name:p.name,
-  batch:p.batch||"",
-  rows:p.rows.map(r=>({
-   ...r,
-   qty:r.qty!=null?r.qty:(r.grams||0),
-   unit:r.unit||"g"
-  }))
- };
- document.getElementById("currentProductCard").classList.remove("hidden");
- renderCurrentProduct();
- document.getElementById("currentProductCard").scrollIntoView({behavior:"smooth"});
-}
-
-function deleteProduct(id){
- if(!confirm("Product delete karna hai?"))return;
- products=products.filter(x=>String(x.id)!==String(id));
- localStorage.setItem("liaraProductsV2",JSON.stringify(products));
- renderProducts();
-}
-
-function renderProducts(){
- const box=document.getElementById("savedProducts");
- if(!products.length){
-  box.innerHTML='<div class="empty">Haje koi product save nahi hoya.</div>';
-  return;
- }
- box.innerHTML=products.map(p=>{
-  const weight=Number(p.totalWeight||0);
-  const cost=Number(p.totalCost||0);
-  return `<div class="product-box">
-   <h3>${esc(p.name)}</h3>
-   <div class="product-meta">
-    ${p.batch?esc(p.batch)+" • ":""}Total Weight: <strong>${qty(weight)} g</strong>
-    • Ingredient Cost: <strong>₹${money(cost)}</strong>
-    • Cost/100g: <strong>₹${money(weight?cost/weight*100:0)}</strong>
-   </div>
-   <div class="actions">
-    <button class="black" onclick="viewProduct('${p.id}')">View Formula</button>
-    <button class="red" onclick="deleteProduct('${p.id}')">Delete</button>
-   </div>
-  </div>`;
- }).join("");
-}
-
-renderIngredients();
-renderProducts();
-
-function renderIngredientList(productIngredients){
-  const tbody = document.getElementById('ingredientListTable');
-  const totalEl = document.getElementById('ingredientListTotal');
-  if(!tbody || !totalEl) return;
-
-  tbody.innerHTML = '';
-  let total = 0;
-
-  (productIngredients || []).forEach(item => {
-    const ing = ingredients.find(x => String(x.id) === String(item.ingredientId));
-    if(!ing) return;
-
-    const grams = Number(item.grams || 0);
-    const gramRate = ingredientRatePerGram(ing);
-    const cost = grams * gramRate;
-    total += cost;
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="padding:10px;border-bottom:1px solid #eee">${escapeHtml(ing.name || '')}</td>
-      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee">₹${gramRate.toFixed(4)}</td>
-      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee">${grams.toFixed(2)} g</td>
-      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;font-weight:700">₹${cost.toFixed(2)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  totalEl.textContent = money(total);
-}
-
-
-function renderSavedProductsList(){
-  const box = document.getElementById('savedProductsList');
-  if(!box) return;
-
-  const products = (typeof savedProducts !== 'undefined' && Array.isArray(savedProducts))
-    ? savedProducts
-    : (typeof products !== 'undefined' && Array.isArray(products) ? products : []);
-
-  if(!products.length){
-    box.innerHTML = '<div style="padding:14px;color:#777">No products added yet.</div>';
-    return;
-  }
-
-  box.innerHTML = products.map((p, i) => `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid #eee">
+  <div id="activeProductBuilder" style="display:none;margin-top:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
       <div>
-        <strong>${escapeHtml(p.name || p.productName || ('Product '+(i+1)))}</strong>
+        <h3 id="activeProductTitle" style="margin:0"></h3>
+        <div id="activeProductRef" style="color:#777;margin-top:4px"></div>
       </div>
-      <div style="display:flex;gap:8px">
-        <button type="button" onclick="viewSavedProduct(${i})">View</button>
-        <button type="button" onclick="printSavedProduct(${i})">Print</button>
-      </div>
+      <button type="button" onclick="addFormulaIngredient()">+ Add Ingredient</button>
     </div>
-  `).join('');
-}
 
-function getSavedProductAt(index){
-  const products = (typeof savedProducts !== 'undefined' && Array.isArray(savedProducts))
-    ? savedProducts
-    : (typeof products !== 'undefined' && Array.isArray(products) ? products : []);
-  return products[index];
-}
+    <div id="formulaIngredientRows" style="margin-top:16px"></div>
 
-function productIngredientsForView(p){
-  return p.ingredients || p.items || p.formula || [];
-}
-
-function viewSavedProduct(index){
-  const p = getSavedProductAt(index);
-  if(!p) return;
-
-  const modal = document.getElementById('productViewModal');
-  const title = document.getElementById('viewProductName');
-  const content = document.getElementById('viewProductContent');
-  if(!modal || !content) return;
-
-  title.textContent = p.name || p.productName || 'Product';
-
-  const rows = productIngredientsForView(p).map(item => {
-    const ing = ingredients.find(x => String(x.id) === String(item.ingredientId || item.id));
-    if(!ing) return '';
-    const grams = Number(item.grams || item.qty || 0);
-    const rate = ingredientRatePerGram(ing);
-    const total = grams * rate;
-    return `<tr>
-      <td style="padding:10px;border-bottom:1px solid #eee">${escapeHtml(ing.name || '')}</td>
-      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee">₹${rate.toFixed(4)}</td>
-      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee">${grams.toFixed(2)} g</td>
-      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;font-weight:700">₹${total.toFixed(2)}</td>
-    </tr>`;
-  }).join('');
-
-  const total = productIngredientsForView(p).reduce((sum,item) => {
-    const ing = ingredients.find(x => String(x.id) === String(item.ingredientId || item.id));
-    if(!ing) return sum;
-    return sum + Number(item.grams || item.qty || 0) * ingredientRatePerGram(ing);
-  }, 0);
-
-  content.innerHTML = `
-    <table style="width:100%;border-collapse:collapse">
-      <thead><tr>
-        <th style="text-align:left;padding:10px;border-bottom:2px solid #222">Ingredient Name</th>
-        <th style="text-align:right;padding:10px;border-bottom:2px solid #222">Rate / Gram</th>
-        <th style="text-align:right;padding:10px;border-bottom:2px solid #222">Gram</th>
-        <th style="text-align:right;padding:10px;border-bottom:2px solid #222">Total</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-      <tfoot><tr>
-        <th colspan="3" style="text-align:right;padding:12px">TOTAL</th>
-        <th style="text-align:right;padding:12px">₹${total.toFixed(2)}</th>
-      </tr></tfoot>
-    </table>`;
-  modal.style.display = 'block';
-}
-
-function closeProductView(){
-  const modal = document.getElementById('productViewModal');
-  if(modal) modal.style.display = 'none';
-}
-
-function printSavedProduct(index){
-  viewSavedProduct(index);
-  setTimeout(printProductView, 80);
-}
-
-function printProductView(){
-  const title = document.getElementById('viewProductName');
-  const content = document.getElementById('viewProductContent');
-  if(!content) return;
-
-  const w = window.open('', '_blank', 'width=900,height=700');
-  if(!w) return;
-  w.document.write(`<!doctype html><html><head><title>${escapeHtml(title?.textContent || 'Product')}</title>
-  <style>body{font-family:Arial,sans-serif;padding:25px}h2{margin-bottom:20px}
-  table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ddd}
-  th{text-align:left}td:nth-child(n+2),th:nth-child(n+2){text-align:right}
-  tfoot th{border-top:2px solid #222;border-bottom:0}</style></head>
-  <body><h2>${escapeHtml(title?.textContent || 'Product')}</h2>${content.innerHTML}</body></html>`);
-  w.document.close();
-  w.focus();
-  setTimeout(() => { w.print(); }, 250);
-}
-
-window.addEventListener('load', renderSavedProductsList);
-
-</script>
-
-<div class="card" id="savedProductsListCard" style="margin-top:18px">
+    <div style="margin-top:16px;padding:14px;border-top:2px solid #222">
+      <div><strong>Total Weight:</strong> <span id="formulaTotalWeight">0 g</span></div>
+      <div><strong>Total Ingredient Cost:</strong> <span id="formulaTotalCost">₹0.00</span></div>
+      <div><strong>Cost / 100g:</strong> <span id="formulaCost100">₹0.00</span></div>
+      <button type="button" onclick="saveCurrentFormula()" style="margin-top:12px">Save Product Formula</button>
+    </div>
+  </div>
+</div>
+id="savedProductsListCard" style="margin-top:18px">
   <h3>Products</h3>
   <div id="savedProductsList"></div>
 </div>
@@ -667,6 +149,187 @@ window.addEventListener('load', renderSavedProductsList);
     </div>
   </div>
 </div>
+
+
+<script>
+(function(){
+  const LS_PRODUCTS = 'liaraProductsV2';
+  const LS_ING = 'liaraIngredientsV2';
+
+  function getIngredients(){
+    try { return JSON.parse(localStorage.getItem(LS_ING) || '[]'); } catch(e){ return []; }
+  }
+  function getProducts(){
+    try { return JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]'); } catch(e){ return []; }
+  }
+  function saveProducts(p){
+    localStorage.setItem(LS_PRODUCTS, JSON.stringify(p));
+  }
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  }
+  function gramRate(ing){
+    if(!ing) return 0;
+    if(Number.isFinite(Number(ing.ratePerGram))) return Number(ing.ratePerGram) || 0;
+    const q = Number(ing.purchaseQty);
+    const r = Number(ing.purchaseRate);
+    if(q > 0 && Number.isFinite(r)){
+      const g = String(ing.purchaseUnit || 'kg').toLowerCase() === 'gram' ? q : q*1000;
+      if(g > 0) return r/g;
+    }
+    return (Number(ing.rate)||0)/1000;
+  }
+
+  let active = null;
+
+  window.createProductBuilder = function(){
+    const name = document.getElementById('productName').value.trim();
+    if(!name){ alert('Product Name pao.'); return; }
+
+    active = {
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      name,
+      reference: document.getElementById('productRef').value.trim(),
+      ingredients: []
+    };
+
+    document.getElementById('activeProductTitle').textContent = name;
+    document.getElementById('activeProductRef').textContent = active.reference ? 'Reference: '+active.reference : '';
+    document.getElementById('activeProductBuilder').style.display = 'block';
+    document.getElementById('formulaIngredientRows').innerHTML = '';
+    addFormulaIngredient();
+    recalcFormula();
+  };
+
+  window.addFormulaIngredient = function(){
+    if(!active) return;
+    const list = getIngredients();
+    if(!list.length){
+      alert('Pehla Ingredient Master vich ingredient add karo.');
+      return;
+    }
+
+    const row = document.createElement('div');
+    row.className = 'formula-builder-row';
+    row.style.cssText = 'display:grid;grid-template-columns:minmax(180px,2fr) 110px 130px 120px 70px;gap:8px;align-items:center;margin-bottom:10px;padding:10px;border:1px solid #ddd;border-radius:10px';
+
+    row.innerHTML = `
+      <select class="formula-ing" onchange="formulaRowChanged(this)">
+        <option value="">Select Ingredient</option>
+        ${list.map(x => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}
+      </select>
+      <input class="formula-grams" type="number" min="0" step="0.01" placeholder="Gram" oninput="formulaRowChanged(this)">
+      <div class="formula-rate">₹0.0000 / g</div>
+      <div class="formula-cost"><strong>₹0.00</strong></div>
+      <button type="button" onclick="removeFormulaIngredient(this)">✕</button>
+    `;
+    document.getElementById('formulaIngredientRows').appendChild(row);
+    recalcFormula();
+  };
+
+  window.formulaRowChanged = function(el){
+    recalcFormula();
+  };
+
+  window.removeFormulaIngredient = function(btn){
+    btn.closest('.formula-builder-row')?.remove();
+    recalcFormula();
+  };
+
+  function recalcFormula(){
+    let weight=0, total=0;
+    document.querySelectorAll('.formula-builder-row').forEach(row=>{
+      const id = row.querySelector('.formula-ing')?.value;
+      const grams = Number(row.querySelector('.formula-grams')?.value || 0);
+      const ing = getIngredients().find(x=>String(x.id)===String(id));
+      const rate = gramRate(ing);
+      const cost = grams * rate;
+      weight += grams;
+      total += cost;
+      const rateEl=row.querySelector('.formula-rate');
+      const costEl=row.querySelector('.formula-cost');
+      if(rateEl) rateEl.textContent = `₹${rate.toFixed(4)} / g`;
+      if(costEl) costEl.innerHTML = `<strong>₹${cost.toFixed(2)}</strong>`;
+    });
+    document.getElementById('formulaTotalWeight').textContent = `${weight.toFixed(2)} g`;
+    document.getElementById('formulaTotalCost').textContent = `₹${total.toFixed(2)}`;
+    document.getElementById('formulaCost100').textContent = `₹${weight ? (total/weight*100).toFixed(2) : '0.00'}`;
+  }
+
+  window.saveCurrentFormula = function(){
+    if(!active) return;
+    const ingredients = [];
+    document.querySelectorAll('.formula-builder-row').forEach(row=>{
+      const id=row.querySelector('.formula-ing')?.value;
+      const grams=Number(row.querySelector('.formula-grams')?.value || 0);
+      if(id && grams>0){
+        const ing=getIngredients().find(x=>String(x.id)===String(id));
+        ingredients.push({ingredientId:id, ingredientName:ing?.name||'', grams});
+      }
+    });
+    if(!ingredients.length){ alert('At least one ingredient te gram pao.'); return; }
+
+    active.ingredients=ingredients;
+    active.updatedAt=new Date().toISOString();
+
+    const products=getProducts();
+    const idx=products.findIndex(x=>x.id===active.id || String(x.name).toLowerCase()===String(active.name).toLowerCase());
+    if(idx>=0) products[idx]=active; else products.push(active);
+    saveProducts(products);
+    renderProducts();
+    alert('Product formula saved.');
+  };
+
+  window.viewSavedProduct = function(index){
+    const p=getProducts()[index];
+    if(!p) return;
+    const list=getIngredients();
+    let total=0, weight=0;
+    const rows=(p.ingredients||[]).map(x=>{
+      const ing=list.find(i=>String(i.id)===String(x.ingredientId));
+      const g=Number(x.grams||0), r=gramRate(ing), c=g*r;
+      weight+=g; total+=c;
+      return `<tr><td>${esc(ing?.name||x.ingredientName||'')}</td><td>₹${r.toFixed(4)}</td><td>${g.toFixed(2)} g</td><td>₹${c.toFixed(2)}</td></tr>`;
+    }).join('');
+    const modal=document.getElementById('productViewModal');
+    document.getElementById('viewProductName').textContent=p.name||'Product';
+    document.getElementById('viewProductContent').innerHTML=`
+      <table style="width:100%;border-collapse:collapse">
+      <thead><tr><th>Ingredient Name</th><th>Rate / Gram</th><th>Gram</th><th>Total</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><th colspan="3" style="text-align:right">TOTAL</th><th>₹${total.toFixed(2)}</th></tr></tfoot>
+      </table>
+      <p><strong>Total Weight:</strong> ${weight.toFixed(2)} g</p>
+      <p><strong>Cost / 100g:</strong> ₹${weight ? (total/weight*100).toFixed(2) : '0.00'}</p>`;
+    modal.style.display='block';
+  };
+
+  window.deleteProduct = function(index){
+    if(!confirm('Eh product delete karna hai?')) return;
+    const p=getProducts();
+    p.splice(index,1); saveProducts(p); renderProducts();
+  };
+
+  window.renderProducts = function(){
+    const box=document.getElementById('savedProductsList');
+    if(!box) return;
+    const products=getProducts();
+    if(!products.length){ box.innerHTML='<div style="padding:14px;color:#777">No products added yet.</div>'; return; }
+    const list=getIngredients();
+    box.innerHTML=products.map((p,i)=>{
+      let w=0,c=0;
+      (p.ingredients||[]).forEach(x=>{const ing=list.find(z=>String(z.id)===String(x.ingredientId));const g=Number(x.grams||0);w+=g;c+=g*gramRate(ing);});
+      return `<div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+        <div><strong>${esc(p.name)}</strong><div style="color:#777">${p.ingredients?.length||0} ingredients • Total Weight: <b>${w.toFixed(2)} g</b> • Ingredient Cost: <b>₹${c.toFixed(2)}</b></div></div>
+        <div style="display:flex;gap:7px"><button onclick="viewSavedProduct(${i})">View Formula</button><button onclick="printSavedProduct(${i})">Print</button><button onclick="deleteProduct(${i})">Delete</button></div>
+      </div>`;
+    }).join('');
+  };
+
+  // Re-render saved products after ingredient master changes too.
+  window.addEventListener('load', renderProducts);
+})();
+</script>
 
 </body>
 </html>
