@@ -884,7 +884,7 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
       });
       return `<div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
         <div><strong>${esc(p.name)}</strong><div style="color:#777">${p.ingredients?.length||0} ingredients • Total Weight: <b>${w.toFixed(2)} g</b> • Ingredient Cost: <b>₹${c.toFixed(2)}</b> • Cost / ${Number(p.costBasis||100)===1000?'1000 g':'100 g'}: <b>₹${w ? (c/w*Number(p.costBasis||100)).toFixed(2) : '0.00'}</b></div></div>
-        <div style="display:flex;gap:7px"><button onclick="viewSavedProduct(${i})">View Formula</button><button onclick="printSavedProduct(${i})">Print</button><button onclick="deleteProduct(${i})">Delete</button></div>
+        <div style="display:flex;gap:7px"><button onclick="viewSavedProduct(${i})">View Formula</button><button onclick="printSavedProduct(${i})">Print</button></div>
       </div>`;
     }).join('');
   };
