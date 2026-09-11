@@ -416,7 +416,7 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
           const nm=String(row.ingredient_name||'').trim();
           if(nm && !existingNames.has(nm.toLowerCase())){
             existingNames.add(nm.toLowerCase());
-            missing.push({name:nm,category:'Natural',purchase_qty:1,purchase_unit:'kg',purchase_rate:0,rate_per_gram:0});
+            missing.push({name:nm,category:'',description:'',purchase_qty:1,purchase_unit:'kg',purchase_rate:0,rate_per_gram:0});
           }
         });
         if(missing.length){
@@ -430,13 +430,40 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
     }catch(syncErr){ console.warn('Formula ingredient sync skipped:',syncErr); }
 
     ingredientCache=(data||[]).map(x=>({
-      id:x.id,name:x.name,category:x.category||'',
+      id:x.id,name:x.name,category:x.category||'',description:x.description||'',
       purchaseQty:Number(x.purchase_qty||1),
       purchaseUnit:(x.purchase_unit||'kg').toLowerCase(),
       purchaseRate:Number(x.purchase_rate||0),
       ratePerGram:Number(x.rate_per_gram||0)
     }));
     localStorage.setItem(LS_ING,JSON.stringify(ingredientCache));
+
+    // Migrate old laptop-only Category/Description metadata to Supabase once.
+    try{
+      const legacy=getIngredientMeta();
+      const migrations=[];
+      ingredientCache.forEach(item=>{
+        const old=legacy[metaKey(item)];
+        if(!old || !item.id) return;
+        const category=String(old.category??'').trim();
+        const description=String(old.description??'').trim();
+        if(category || description){
+          migrations.push({id:item.id,category,description});
+        }
+      });
+      for(const m of migrations){
+        const {error:mErr}=await supabaseClient.from('ingredients_master').update({category:m.category,description:m.description}).eq('id',m.id);
+        if(mErr) console.warn('Legacy ingredient metadata migration skipped:',mErr.message);
+      }
+      if(migrations.length){
+        const {data:again,error:againErr}=await supabaseClient.from('ingredients_master').select('*').order('name',{ascending:true});
+        if(!againErr){
+          ingredientCache=(again||[]).map(x=>({id:x.id,name:x.name,category:x.category||'',description:x.description||'',purchaseQty:Number(x.purchase_qty||1),purchaseUnit:(x.purchase_unit||'kg').toLowerCase(),purchaseRate:Number(x.purchase_rate||0),ratePerGram:Number(x.rate_per_gram||0)}));
+          localStorage.setItem(LS_ING,JSON.stringify(ingredientCache));
+        }
+      }
+    }catch(migErr){ console.warn('Legacy ingredient metadata migration skipped:',migErr); }
+
     return ingredientCache;
   };
   function getIngredients(){
@@ -885,22 +912,29 @@ async function addIngredient(){
 
   if(targetId){
     const {error}=await supabaseClient.from('ingredients_master').update({
-      name, purchase_qty:qty, purchase_unit:unit, purchase_rate:rate,
+      name,
+      category,
+      description,
+      purchase_qty:qty,
+      purchase_unit:unit,
+      purchase_rate:rate,
       rate_per_gram:ratePerGram
     }).eq('id',targetId);
     if(error){showIngredientStatus('Ingredient update failed: '+error.message,false);return;}
   }else{
     const {error}=await supabaseClient.from('ingredients_master').insert({
-      name, category:'Natural', purchase_qty:qty, purchase_unit:unit,
-      purchase_rate:rate, rate_per_gram:ratePerGram
+      name,
+      category,
+      description,
+      purchase_qty:qty,
+      purchase_unit:unit,
+      purchase_rate:rate,
+      rate_per_gram:ratePerGram
     });
     if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
   }
 
   await loadIngredientsFromSupabase();
-  const savedList=getIngredientMaster();
-  const savedItem=savedList.find(x=>String(x.id||'')===String(targetId||'') || String(x.name||'').trim().toLowerCase()===name.toLowerCase());
-  if(savedItem){const meta=getIngredientMeta();meta[metaKey(savedItem)]={category,description};saveIngredientMeta(meta);}
   renderIngredientMaster();
   // Refresh the formula builder dropdowns so the new ingredient is immediately available.
   if(typeof renderFormulaRows==='function') renderFormulaRows();
