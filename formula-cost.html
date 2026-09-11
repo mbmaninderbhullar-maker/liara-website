@@ -19,9 +19,11 @@ input:focus,select:focus{border-color:#111}
 button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:700;cursor:pointer}
 .black{background:#111;color:#fff}.gold{background:#c49a22;color:#fff}.red{background:#dc3545;color:#fff}.light{background:#eee;color:#111}.blue{background:#1769aa;color:#fff}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:760px}
-th{background:#111;color:#fff;padding:12px;text-align:left;font-size:13px}
-td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{background:#111;color:#fff;padding:12px;text-align:left;font-size:13px;white-space:nowrap}
+td{padding:11px;border-bottom:1px solid #eee;font-size:14px;vertical-align:middle}
+td:last-child{white-space:nowrap;min-width:230px}
+td:last-child button{display:inline-block;white-space:nowrap;padding:10px 15px;margin:2px}
 .num{text-align:right;font-weight:700}
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
 .note{font-size:13px;color:#777;margin-bottom:15px}
