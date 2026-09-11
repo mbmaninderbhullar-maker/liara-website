@@ -2,5133 +2,893 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Liara Professional™ | Formula Manager</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Liara Professional™ | Ingredient & Product Cost</title>
 <style>
-*{
-  box-sizing:border-box;
-}
-
-:root{
-  --bg:#f5f3ee;
-  --card:#ffffff;
-  --dark:#171717;
-  --muted:#777;
-  --line:#e7e2d9;
-  --gold:#b38a45;
-  --gold2:#8f6a31;
-  --green:#1f5b42;
-  --red:#a52d2d;
-  --shadow:0 15px 45px rgba(0,0,0,.08);
-}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--dark);
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.header{
-  background:#111;
-  color:#fff;
-  padding:18px 25px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  position:sticky;
-  top:0;
-  z-index:50;
-  box-shadow:0 5px 25px rgba(0,0,0,.18);
-}
-
-.brand{
-  font-family:Georgia,serif;
-  font-size:24px;
-  letter-spacing:.5px;
-}
-
-.brand small{
-  display:block;
-  font-family:Arial,sans-serif;
-  font-size:9px;
-  letter-spacing:4px;
-  color:#c6a66b;
-  margin-top:4px;
-}
-
-.top-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.container{
-  max-width:1450px;
-  margin:auto;
-  padding:25px;
-}
-
-.status{
-  padding:10px 14px;
-  background:#eaf5ee;
-  color:#1f6548;
-  border:1px solid #cde5d7;
-  border-radius:9px;
-  margin-bottom:15px;
-  font-size:13px;
-}
-
-.status.error{
-  background:#fff0f0;
-  color:#a52d2d;
-  border-color:#edcaca;
-}
-
-.tabs{
-  display:flex;
-  gap:7px;
-  margin-bottom:18px;
-  border-bottom:1px solid var(--line);
-}
-
-.tab{
-  border:0;
-  background:transparent;
-  padding:13px 20px;
-  color:#777;
-  font-weight:700;
-  border-bottom:3px solid transparent;
-}
-
-.tab.active{
-  color:#171717;
-  border-bottom-color:var(--gold);
-}
-
-.panel{
-  display:none;
-}
-
-.panel.active{
-  display:block;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:22px;
-  box-shadow:var(--shadow);
-  margin-bottom:18px;
-}
-
-.card h2,
-.card h3{
-  font-family:Georgia,serif;
-}
-
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:18px;
-}
-
-.primary,
-.secondary,
-.danger{
-  border-radius:8px;
-  padding:9px 14px;
-  border:1px solid transparent;
-  font-weight:700;
-  transition:.2s;
-}
-
-.primary{
-  background:#171717;
-  color:white;
-}
-
-.primary:hover{
-  background:#333;
-}
-
-.secondary{
-  background:#fff;
-  color:#222;
-  border-color:#d8d2c7;
-}
-
-.secondary:hover{
-  border-color:var(--gold);
-}
-
-.danger{
-  background:#fff4f4;
-  color:var(--red);
-  border-color:#e8bebe;
-}
-
-.small-btn{
-  padding:5px 8px;
-  font-size:11px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
-
-.field{
-  margin-bottom:14px;
-}
-
-.field label{
-  display:block;
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.4px;
-  margin-bottom:6px;
-  color:#555;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  border:1px solid #ddd7cc;
-  border-radius:8px;
-  padding:10px 11px;
-  background:white;
-  outline:none;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(179,138,69,.10);
-}
-
-textarea{
-  min-height:110px;
-  resize:vertical;
-}
-
-input[readonly]{
-  background:#f5f5f5;
-  color:#777;
-}
-
-.section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.section-title h3{
-  margin:0;
-}
-
-.ingredients-wrap{
-  overflow-x:auto;
-}
-
-.ing-head,
-.ing-row{
-  display:grid;
-  grid-template-columns:minmax(260px,2.2fr) 120px 90px 110px 45px;
-  gap:8px;
-  align-items:center;
-  min-width:700px;
-}
-
-.ing-head{
-  background:#f6f3ed;
-  border:1px solid var(--line);
-  border-radius:8px 8px 0 0;
-  padding:9px;
-  font-size:11px;
-  font-weight:800;
-}
-
-.ing-row{
-  padding:8px;
-  border-left:1px solid var(--line);
-  border-right:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-}
-
-.custom-ingredient{
-  margin-top:6px;
-  display:none;
-}
-
-.total-bar{
-  margin-top:12px;
-  padding:13px;
-  background:#171717;
-  color:#fff;
-  border-radius:9px;
-  display:flex;
-  justify-content:flex-end;
-  gap:25px;
-  font-size:13px;
-}
-
-.empty{
-  text-align:center;
-  padding:55px 20px;
-  color:#888;
-  background:white;
-  border:1px dashed #d8d1c5;
-  border-radius:14px;
-}
-
-.search-row{
-  display:flex;
-  gap:10px;
-  margin-bottom:15px;
-}
-
-.search-row input{
-  max-width:500px;
-}
-
-.table-wrap{
-  overflow-x:auto;
-  background:white;
-  border-radius:14px;
-  border:1px solid var(--line);
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:900px;
-}
-
-th,
-td{
-  padding:11px 10px;
-  text-align:left;
-  border-bottom:1px solid #eee9e0;
-  font-size:12px;
-  vertical-align:top;
-}
-
-th{
-  background:#f6f3ed;
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-}
-
-td button{
-  margin:2px;
-}
-
-.settings-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  z-index:100;
-  display:none;
-}
-
-.settings-overlay.open{
-  display:block;
-}
-
-.settings-panel{
-  position:absolute;
-  right:0;
-  top:0;
-  height:100%;
-  width:min(560px,100%);
-  background:#fff;
-  overflow-y:auto;
-  padding:25px;
-  box-shadow:-15px 0 40px rgba(0,0,0,.2);
-}
-
-.settings-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.settings-head h2{
-  margin:0;
-  font-family:Georgia,serif;
-}
-
-.master-section{
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:15px;
-  margin-bottom:15px;
-}
-
-.master-section h3{
-  margin:0 0 10px;
-  font-size:15px;
-}
-
-.add-master{
-  display:flex;
-  gap:7px;
-}
-
-.add-master input{
-  flex:1;
-}
-
-.master-list{
-  margin-top:10px;
-  max-height:300px;
-  overflow-y:auto;
-}
-
-.master-item{
-  padding:8px 0;
-  border-bottom:1px solid #eee;
-  font-size:12px;
-}
-
-.master-item:last-child{
-  border-bottom:0;
-}
-
-.note{
-  font-size:11px;
-  line-height:1.6;
-  color:#777;
-  background:#faf8f4;
-  border-radius:9px;
-  padding:11px;
-}
-
-.print-area{
-  display:none;
-}
-
-.print-head{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.brand-print{
-  font-family:Georgia,serif;
-  font-size:25px;
-  font-weight:bold;
-}
-
-.brand-line{
-  color:#9b783e;
-  letter-spacing:4px;
-  font-size:9px;
-  margin-top:5px;
-}
-
-.print-footer{
-  margin-top:35px;
-  text-align:center;
-  font-size:10px;
-  color:#777;
-}
-
-@media(max-width:1000px){
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:650px){
-  .header{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .container{
-    padding:15px;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .card{
-    padding:15px;
-  }
-
-  .search-row{
-    flex-direction:column;
-  }
-
-  .total-bar{
-    flex-direction:column;
-    gap:5px;
-  }
-}
-
-@media print{
-  body{
-    background:#fff;
-  }
-
-  body > *{
-    display:none !important;
-  }
-
-  body > main{
-    display:block !important;
-    max-width:none !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
-
-  body > main > *{
-    display:none !important;
-  }
-
-  body > main > .print-area{
-    display:block !important;
-    padding:20px;
-    background:#fff;
-    color:#111;
-  }
-
-  .print-area table{
-    min-width:0;
-  }
-
-  .print-area th,
-  .print-area td{
-    border:1px solid #222;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f5f7;color:#161616;padding:20px}
+.container{max-width:1200px;margin:auto}
+.header{background:#111;color:#fff;padding:24px;border-radius:16px;margin-bottom:20px}
+.header h1{font-size:27px}.header p{color:#bbb;margin-top:6px;font-size:14px}
+.card{background:#fff;border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 5px 20px rgba(0,0,0,.06)}
+.card h2{font-size:20px;margin-bottom:17px}
+.form-grid{display:grid;grid-template-columns:1.4fr .7fr .7fr 1fr 1fr auto;gap:12px;align-items:end}
+.field label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:7px}
+input,select{width:100%;height:44px;border:1px solid #ddd;border-radius:9px;padding:0 12px;font-size:15px;outline:none;background:#fff}
+input:focus,select:focus{border-color:#111}
+button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:700;cursor:pointer}
+.black{background:#111;color:#fff}.gold{background:#c49a22;color:#fff}.red{background:#dc3545;color:#fff}.light{background:#eee;color:#111}.blue{background:#1769aa;color:#fff}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{background:#111;color:#fff;padding:12px;text-align:left;font-size:13px;white-space:nowrap}
+td{padding:11px;border-bottom:1px solid #eee;font-size:14px;vertical-align:middle}
+td:last-child{white-space:nowrap;min-width:205px}
+td:last-child button{display:inline-block;white-space:nowrap;padding:9px 13px;margin:2px}
+.ingredient-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:16px 0 12px}
+.ingredient-search{flex:1;min-width:220px;max-width:420px}
+.ingredient-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.ingredient-stat{background:#f7f7f7;border:1px solid #eee;border-radius:11px;padding:13px}
+.ingredient-stat span{display:block;font-size:12px;color:#777;margin-bottom:5px}
+.ingredient-stat strong{font-size:19px}
+@media(max-width:700px){.ingredient-stats{grid-template-columns:1fr}.ingredient-toolbar{align-items:stretch}.ingredient-search{max-width:none}}
+.num{text-align:right;font-weight:700}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.note{font-size:13px;color:#777;margin-bottom:15px}
+.empty{text-align:center;color:#888;padding:28px}
+.product-head{display:grid;grid-template-columns:1.5fr 1fr auto;gap:12px;align-items:end}
+.product-box{border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:18px}
+.product-box h3{font-size:18px;margin-bottom:7px}
+.product-meta{font-size:13px;color:#666;margin-bottom:14px}
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}
+.summary-box{background:#f7f7f7;border-radius:11px;padding:15px}
+.summary-box span{display:block;font-size:12px;color:#777;margin-bottom:6px}
+.summary-box strong{font-size:20px}
+.status{margin-top:13px;padding:11px;border-radius:9px;display:none;font-size:14px}
+.status.ok{display:block;background:#e8f7ed;color:#176b32}
+.status.err{display:block;background:#fdeaea;color:#a51d1d}
+.rate-note{font-size:12px;color:#777;margin-top:5px}
+.hidden{display:none!important}
+@media(max-width:900px){
+ body{padding:10px}
+ .form-grid,.product-head{grid-template-columns:1fr 1fr}
+ .form-grid button,.product-head button{width:100%}
+ .summary{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+ .form-grid,.product-head{grid-template-columns:1fr}
+ .summary{grid-template-columns:1fr}
+ .header h1{font-size:22px}
 }
 </style>
 </head>
-
 <body>
-
-<header class="header no-print">
-
-  <div>
-    <div class="brand">
-      Liara Professional™
-    </div>
-
-    <small>
-      ADVANCED HERBAL • FORMULA MANAGER
-    </small>
-  </div>
-
-  <div class="top-actions">
-
-    <button
-      type="button"
-      class="secondary"
-      id="newTopBtn"
-    >
-      ＋ New Formula
-    </button>
-
-    <button
-      type="button"
-      class="secondary"
-      id="settingsButton"
-    >
-      ⚙ Settings
-    </button>
-
-  </div>
-
-</header>
-
-
-<main class="container">
-
-  <div
-    id="status"
-    class="status no-print"
-  >
-    Connecting to Supabase...
-  </div>
-
-
-  <!-- =====================================================
-       TABS
-  ====================================================== -->
-
-  <div class="tabs no-print">
-
-    <button
-      type="button"
-      class="tab active"
-      id="seenTab"
-    >
-      📋 Formula Seen
-    </button>
-
-    <button
-      type="button"
-      class="tab"
-      id="editTab"
-    >
-      ✏️ Add / Edit Formula
-    </button>
-
-  </div>
-
-
-  <!-- =====================================================
-       FORMULA SEEN
-  ====================================================== -->
-
-  <section
-    id="seen"
-    class="panel active"
-  >
-
-    <div class="card">
-
-      <div class="section-title">
-
-        <div>
-          <h2>Formula Library</h2>
-
-          <div
-            style="
-              color:#888;
-              font-size:12px;
-              margin-top:4px;
-            "
-          >
-            Liara Professional™ formulation database
-          </div>
-        </div>
-
-        <button
-          type="button"
-          class="primary no-print"
-          id="newTopBtn2"
-        >
-          ＋ New
-        </button>
-
-      </div>
-
-
-      <div class="search-row no-print">
-
-        <input
-          type="search"
-          id="search"
-          placeholder="Search product, formula number, name or ID..."
-        >
-
-      </div>
-
-
-      <div id="formulaList">
-
-        <div class="empty">
-          Loading formulas...
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       EDIT FORMULA
-  ====================================================== -->
-
-  <section
-    id="edit"
-    class="panel"
-  >
-
-    <div class="card">
-
-      <div class="section-title">
-
-        <div>
-          <h2>Formula Details</h2>
-        </div>
-
-        <div class="actions no-print">
-
-          <button
-            type="button"
-            class="secondary"
-            id="clearBtn"
-          >
-            Clear
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="grid">
-
-        <div class="field">
-
-          <label>
-            Formula No.
-          </label>
-
-          <input
-            id="formulaNo"
-            type="text"
-            placeholder="LP-F-001"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Formula ID
-          </label>
-
-          <input
-            id="formulaId"
-            type="text"
-            readonly
-            placeholder="Auto generated"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Product Name *
-          </label>
-
-          <input
-            id="productName"
-            type="text"
-            placeholder="e.g. Herbal Face Wash"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Formula Name
-          </label>
-
-          <input
-            id="formulaName"
-            type="text"
-            placeholder="e.g. Advanced Herbal Formula"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Version
-          </label>
-
-          <input
-            id="version"
-            type="text"
-            placeholder="1.0"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Formula Date
-          </label>
-
-          <input
-            id="date"
-            type="date"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Batch Size
-          </label>
-
-          <input
-            id="batchSize"
-            type="number"
-            min="0"
-            step="any"
-            placeholder="1000"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Batch Unit
-          </label>
-
-          <select id="batchUnit">
-
-            <option value="g">
-              g
-            </option>
-
-            <option value="kg">
-              kg
-            </option>
-
-            <option value="ml">
-              ml
-            </option>
-
-            <option value="L">
-              L
-            </option>
-
-          </select>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- ===================================================
-         INGREDIENTS
-    ==================================================== -->
-
-    <div class="card">
-
-      <div class="section-title">
-
-        <div>
-          <h3>
-            Formula Ingredients
-          </h3>
-
-          <div
-            style="
-              font-size:11px;
-              color:#888;
-              margin-top:4px;
-            "
-          >
-            Ingredients are loaded from your existing Supabase formula data.
-          </div>
-        </div>
-
-
-      </div>
-
-
-      <div class="ingredients-wrap">
-
-        <div class="ing-head">
-
-          <div>
-            Ingredient
-          </div>
-
-          <div>
-            Quantity
-          </div>
-
-          <div>
-            Unit
-          </div>
-
-          <div>
-            Percentage
-          </div>
-
-          <div>
-          </div>
-
-        </div>
-
-
-        <div id="ingredients"></div>
-
-      </div>
-
-
-      <div class="total-bar">
-
-        <div>
-          Total Quantity:
-          <b id="totalQty">0</b>
-        </div>
-
-        <div>
-          Total Percentage:
-          <b id="totalPct">0%</b>
-        </div>
-
-      </div>
-
-
-      <div
-        class="field"
-        style="margin-top:15px"
-      >
-
-        <label>
-          Total Formula %
-        </label>
-
-        <input
-          id="totalPercent"
-          type="text"
-          readonly
-          value="0%"
-        >
-
-      </div>
-
-      <div
-        class="actions no-print"
-        style="margin-top:15px;margin-bottom:0"
-      >
-        <button
-          type="button"
-          class="secondary"
-          id="addIngredientBtn"
-        >
-          ＋ Add Ingredient
-        </button>
-      </div>
-
-    </div>
-
-
-    <!-- ===================================================
-         METHOD
-    ==================================================== -->
-
-    <div class="card">
-
-      <h3>
-        Preparation & Results
-      </h3>
-
-
-      <div class="field">
-
-        <label>
-          Preparation Method
-        </label>
-
-        <textarea
-          id="method"
-          placeholder="Write complete manufacturing / preparation procedure..."
-        ></textarea>
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          Result
-        </label>
-
-        <textarea
-          id="result"
-          placeholder="Appearance, colour, texture, pH, fragrance, result..."
-        ></textarea>
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          Notes
-        </label>
-
-        <textarea
-          id="notes"
-          placeholder="Additional notes..."
-        ></textarea>
-
-      </div>
-
-
-      <div class="actions no-print">
-
-        <button
-          type="button"
-          class="primary"
-          id="saveBtn"
-        >
-          💾 Save Formula
-        </button>
-
-
-        <button
-          type="button"
-          class="secondary"
-          id="clearBtn2"
-        >
-          Clear
-        </button>
-
-
-        <button
-          type="button"
-          class="danger"
-          id="deleteBtn"
-          style="display:none"
-        >
-          🗑 Delete Formula
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       PRINT AREA
-  ====================================================== -->
-
-  <section
-    id="printArea"
-    class="print-area"
-  ></section>
-
-</main>
-
-
-<!-- =======================================================
-     SETTINGS OVERLAY
-======================================================= -->
-
-<div
-  id="settingsPanel"
-  class="settings-overlay no-print"
->
-
-  <aside class="settings-panel">
-
-    <div class="settings-head">
-
-      <div>
-
-        <h2>
-          Ingredient Settings
-        </h2>
-
-        <div
-          style="
-            font-size:11px;
-            color:#888;
-            margin-top:4px;
-          "
-        >
-          Liara Professional™ Master Ingredients
-        </div>
-
-      </div>
-
-
-      <button
-        type="button"
-        class="secondary"
-        id="closeSettings"
-      >
-        ✕
-      </button>
-
-    </div>
-
-
-    <div class="note">
-
-      <b>Important:</b><br>
-
-      Existing ingredients are automatically collected from
-      <b>formula_ingredients</b> in Supabase, so your old
-      formulas' ingredients will appear here even if a separate
-      <b>ingredients</b> table does not exist.
-
-      <br><br>
-
-      New ingredients try to save to the
-      <b>ingredients</b> table. If that table is unavailable,
-      they are saved in this browser as a fallback.
-
-    </div>
-
-
-    <!-- SCIENCE -->
-
-    <div class="master-section">
-
-      <h3>
-        🧪 Science Ingredients
-      </h3>
-
-      <div class="add-master">
-
-        <input
-          id="scienceInput"
-          type="text"
-          placeholder="Add science ingredient..."
-        >
-
-        <button
-          type="button"
-          class="primary"
-          id="scienceAddBtn"
-        >
-          Add
-        </button>
-
-      </div>
-
-
-      <div
-        id="scienceList"
-        class="master-list"
-      >
-
-        <div
-          style="
-            color:#999;
-            font-size:12px;
-            padding:8px 0;
-          "
-        >
-          Loading...
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- NATURAL -->
-
-    <div class="master-section">
-
-      <h3>
-        🌿 Natural / Herbal Ingredients
-      </h3>
-
-      <div class="add-master">
-
-        <input
-          id="naturalInput"
-          type="text"
-          placeholder="Add natural / herbal ingredient..."
-        >
-
-        <button
-          type="button"
-          class="primary"
-          id="naturalAddBtn"
-        >
-          Add
-        </button>
-
-      </div>
-
-
-      <div
-        id="naturalList"
-        class="master-list"
-      >
-
-        <div
-          style="
-            color:#999;
-            font-size:12px;
-            padding:8px 0;
-          "
-        >
-          Loading...
-        </div>
-
-      </div>
-
-    </div>
-
-  </aside>
-
+<div class="container">
+
+<div class="header">
+<h1>LIARA PROFESSIONAL™</h1>
+<p>Ingredient Master & Product Cost Calculator</p>
+</div>
+
+<!-- STEP 1 -->
+<div class="card">
+<h2>Step 1 — Ingredient Master</h2>
+<p class="note">
+Enter the purchase quantity, unit, and total purchase rate. The system will automatically calculate <strong>₹ per gram</strong> and <strong>₹ per kg</strong>.
+Example: 1 KG = ₹500 → ₹0.50/g.
+</p>
+
+<div class="form-grid">
+<div class="field">
+<label>Ingredient Name</label>
+<input id="ingredientName" type="text" placeholder="e.g. Coconut Oil">
+</div>
+
+<div class="field">
+<label>Purchase Quantity</label>
+<input id="ingredientQty" type="number" min="0.000001" step="0.001" value="1" placeholder="e.g. 1">
+</div>
+
+<div class="field">
+<label>Unit</label>
+<select id="ingredientUnit">
+<option value="kg">KG</option>
+<option value="g">Gram</option>
+</select>
+</div>
+
+<div class="field">
+<label>Total Purchase Rate (₹)</label>
+<input id="ingredientRate" type="number" min="0" step="0.01" placeholder="e.g. 500">
+</div>
+
+<div class="field">
+<label>Category / Uses</label>
+<input id="ingredientCategory" type="text" placeholder="e.g. Brightening, Moisturizing">
+</div>
+
+<button id="ingredientSaveBtn" class="black" onclick="addIngredient()">+ Add Ingredient</button><button id="ingredientCancelBtn" class="light" style="display:none" onclick="cancelIngredientEdit()">Cancel Edit</button>
+</div>
+<div class="rate-note">The rate is the total amount paid for the entered purchase quantity — it does not have to be a per-kg rate.</div>
+<div id="ingredientStatus" class="status"></div>
+<div id="ingredientMasterList" style="margin-top:18px"></div>
 </div>
 
 
+<div class="card" id="productBuilderCard">
+  <h2>Step 2 — Product Formula</h2>
+  <p>Enter the product name once. Add only the ingredients required for that product formula.</p>
+
+  <label><strong>Product Name</strong></label>
+  <input id="productName" type="text" placeholder="e.g. Herbal Face Wash Creamy">
+
+  <label><strong>Product / Batch Reference (Optional)</strong></label>
+  <input id="productRef" type="text" placeholder="Optional">
+
+  <button type="button" onclick="createProductBuilder()">+ Create Product</button>
+
+  <div id="activeProductBuilder" style="display:none;margin-top:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <div>
+        <h3 id="activeProductTitle" style="margin:0"></h3>
+        <div id="activeProductRef" style="color:#777;margin-top:4px"></div>
+      </div>
+      <button type="button" onclick="addFormulaIngredient()">+ Add Ingredient</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:minmax(180px,2fr) 120px 140px 130px 70px;gap:8px;margin-top:16px;padding:10px;background:#111;color:#fff;border-radius:9px;font-size:13px;font-weight:700"><div>Ingredient</div><div>Quantity (g)</div><div>Rate / Gram</div><div>Ingredient Cost</div><div></div></div><div id="formulaIngredientRows" style="margin-top:8px"></div>
+
+    <div style="margin-top:16px;padding:14px;border-top:2px solid #222">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+        <strong>Cost Basis:</strong>
+        <select id="formulaCostBasis" onchange="recalcFormula()" style="max-width:180px">
+          <option value="100">100 g</option>
+          <option value="1000">1000 g (1 KG)</option>
+        </select>
+      </div>
+      <div><strong>Total Weight:</strong> <span id="formulaTotalWeight">0 g</span></div>
+      <div><strong>Total Ingredient Cost:</strong> <span id="formulaTotalCost">₹0.00</span></div>
+      <div><strong>Cost / <span id="formulaBasisLabel">100 g</span>:</strong> <span id="formulaCostBasisValue">₹0.00</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button type="button" onclick="saveCurrentFormula()">Save Product Formula</button>
+        <button type="button" onclick="exportCurrentFormulaExcel()">📊 Download Excel</button>
+        <button type="button" onclick="exportCurrentFormulaPDF()">📄 Download PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="savedProductsListCard" class="card" style="margin-top:18px">
+  <h3>Products</h3>
+  <div id="savedProductsList"></div>
+</div>
+
+<div id="productViewModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;padding:24px;overflow:auto">
+  <div style="max-width:900px;margin:20px auto;background:#fff;border-radius:14px;padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <h2 id="viewProductName" style="margin:0"></h2>
+      <button type="button" onclick="closeProductView()">✕</button>
+    </div>
+    <div id="viewProductContent" style="margin-top:18px"></div>
+    <div style="text-align:right;margin-top:18px">
+      <button type="button" onclick="printProductView()">🖨 Print</button>
+      <button type="button" onclick="exportFormulaExcel()">📊 Excel</button>
+      <button type="button" onclick="closeProductView()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-/* =========================================================
-   LIARA PROFESSIONAL™
-   COMPLETE FORMULA MANAGER
-========================================================= */
+const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+</script>
+<script>
+function showIngredientStatus(message, ok=true){
+  const el=document.getElementById("ingredientStatus");
+  if(!el)return;
+  el.textContent=message;
+  el.className="status "+(ok?"ok":"err");
+}
 
-const SUPABASE_URL =
-"https://oinafbuicwhleudztzyz.supabase.co";
+/* =====================================================
+   INGREDIENT MASTER — SUPABASE IS THE SOURCE OF TRUTH
+   LocalStorage is used only as an offline cache.
+===================================================== */
+function getIngredientMaster(){
+  if(Array.isArray(window.ingredientCache)) return window.ingredientCache;
+  try{return JSON.parse(localStorage.getItem("liaraIngredientsV2")||"[]");}catch(e){return [];}
+}
+function saveIngredientMaster(list){
+  // Cache only. Ingredient records are NEVER created/updated from localStorage.
+  try{localStorage.setItem("liaraIngredientsV2",JSON.stringify(list||[]));}catch(e){}
+}
+function ingredientGramRate(i){
+  const q=Number(i?.purchaseQty), r=Number(i?.purchaseRate);
+  if(q>0 && Number.isFinite(r)){
+    const unit=String(i?.purchaseUnit||"kg").toLowerCase();
+    const grams=(unit==='g'||unit==='gram'||unit==='grams')?q:q*1000;
+    return grams>0?r/grams:0;
+  }
+  const saved=Number(i?.ratePerGram);
+  return Number.isFinite(saved)?saved:0;
+}
+function escGlobal(v){return String(v??"").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));}
 
-const SUPABASE_KEY =
-"sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
+function renderIngredientMaster(){
+  const box=document.getElementById("ingredientMasterList");
+  if(!box)return;
+  const list=getIngredientMaster();
+  const q=(document.getElementById('ingredientSearch')?.value||'').trim().toLowerCase();
+  const filtered=q?list.filter(x=>[x.name,x.category].some(v=>String(v||'').toLowerCase().includes(q))):list;
 
-let supabaseClient = null;
-let formulas = [];
-let editingId = null;
-let lastBatchSize = 0;
+  const totalValue=list.reduce((a,x)=>a+Number(x.purchaseRate||0),0);
+  const categories=new Set(list.map(x=>String(x.category||'').trim()).filter(Boolean)).size;
 
-let masterIngredients = {
-  science: [],
-  natural: []
+  if(!list.length){
+    box.innerHTML=`<div class="ingredient-stats">
+      <div class="ingredient-stat"><span>Total Ingredients</span><strong>0</strong></div>
+      <div class="ingredient-stat"><span>Total Purchase Value</span><strong>₹0.00</strong></div>
+      <div class="ingredient-stat"><span>Categories / Uses</span><strong>0</strong></div>
+    </div>
+    <div class="ingredient-toolbar">
+      <input id="ingredientSearch" class="ingredient-search" placeholder="Search ingredient or category..." oninput="renderIngredientMaster()">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="blue" onclick="refreshIngredientMaster()">↻ Refresh</button>
+        <button class="blue" onclick="exportAllIngredientsExcel()">📊 Excel</button>
+        <button class="light" onclick="exportAllIngredientsPDF()">📄 PDF</button>
+      </div>
+    </div>
+    <div class="empty">No ingredients added yet.</div>`;
+    return;
+  }
+
+  box.innerHTML=`
+    <div class="ingredient-stats">
+      <div class="ingredient-stat"><span>Total Ingredients</span><strong>${list.length}</strong></div>
+      <div class="ingredient-stat"><span>Total Purchase Value</span><strong>₹${totalValue.toFixed(2)}</strong></div>
+      <div class="ingredient-stat"><span>Categories / Uses</span><strong>${categories}</strong></div>
+    </div>
+    <div class="ingredient-toolbar">
+      <input id="ingredientSearch" class="ingredient-search" value="${escGlobal(q)}" placeholder="Search ingredient or category..." oninput="renderIngredientMaster()">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="blue" onclick="refreshIngredientMaster()">↻ Refresh</button>
+        <button class="blue" onclick="exportAllIngredientsExcel()">📊 Excel</button>
+        <button class="light" onclick="exportAllIngredientsPDF()">📄 PDF</button>
+      </div>
+    </div>
+    <div style="font-size:13px;color:#777;margin-bottom:9px">Showing ${filtered.length} of ${list.length} ingredients • Supabase database is the master source.</div>
+    <div class="table-wrap"><table><thead><tr>
+      <th>Ingredient</th><th>Category / Uses</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th>
+    </tr></thead><tbody>
+    ${filtered.map(x=>{
+      const originalIndex=list.indexOf(x);
+      const g=ingredientGramRate(x);
+      const unit=String(x.purchaseUnit||'kg').toLowerCase().startsWith('g')?'Gram':'KG';
+      return `<tr>
+        <td><strong>${escGlobal(x.name)}</strong></td>
+        <td>${x.category?`<span style="display:inline-block;padding:5px 9px;background:#f2f2f2;border:1px solid #ddd;border-radius:999px;font-size:12px;font-weight:700">${escGlobal(x.category)}</span>`:'—'}</td>
+        <td>${Number(x.purchaseQty||0).toLocaleString("en-IN")} ${unit}</td>
+        <td>₹${Number(x.purchaseRate||0).toFixed(2)}</td>
+        <td>₹${g.toFixed(4)}</td>
+        <td>₹${(g*1000).toFixed(2)}</td>
+        <td><button class="light" onclick="editIngredient(${originalIndex})">Edit</button><button class="light" onclick="deleteIngredient(${originalIndex})">Delete</button></td>
+      </tr>`;
+    }).join('')}
+    </tbody></table></div>`;
+}
+
+window.refreshIngredientMaster=async function(){
+  showIngredientStatus('Refreshing ingredients from Supabase...',true);
+  const data=await loadIngredientsFromSupabase(true);
+  renderIngredientMaster();
+  showIngredientStatus(`Synced ${data.length} ingredient${data.length===1?'':'s'} from Supabase.`,true);
 };
 
-let masterSources = {};
-
-
-/* =========================================================
-   SUPABASE INIT
-========================================================= */
-
-function initSupabase(){
-
-  try{
-
-    if(
-      window.supabase &&
-      typeof window.supabase.createClient === "function"
-    ){
-
-      supabaseClient =
-        window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_KEY
-        );
-
-      return true;
-    }
-
-    console.error(
-      "Supabase JS library not loaded."
-    );
-
-    return false;
-
-  }catch(error){
-
-    console.error(
-      "Supabase initialization error:",
-      error
-    );
-
-    return false;
-  }
-}
-
-
-/* =========================================================
-   SHORTCUT
-========================================================= */
-
-function $(id){
-  return document.getElementById(id);
-}
-
-
-/* =========================================================
-   SAFE EVENT
-========================================================= */
-
-function on(id,event,fn){
-
-  const el = $(id);
-
-  if(el){
-    el.addEventListener(event,fn);
-  }
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-function setStatus(message,error=false){
-
-  const box = $("status");
-
-  if(!box) return;
-
-  box.textContent = message;
-
-  box.className =
-    error
-      ? "status error no-print"
-      : "status no-print";
-}
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
-
-function esc(value){
-
-  return String(value ?? "")
-    .replace(
-      /[&<>"']/g,
-      function(m){
-
-        return {
-          "&":"&amp;",
-          "<":"&lt;",
-          ">":"&gt;",
-          '"':"&quot;",
-          "'":"&#39;"
-        }[m];
-
-      }
-    );
-}
-
-
-function nl(value){
-
-  return esc(value)
-    .replace(/\n/g,"<br>");
-}
-
-
-/* =========================================================
-   NORMALIZE
-========================================================= */
-
-function normalizeName(value){
-
-  return String(value ?? "")
-    .trim()
-    .toLowerCase();
-}
-
-
-/* =========================================================
-   UUID
-========================================================= */
-
-function createUUID(){
-
-  if(
-    window.crypto &&
-    typeof window.crypto.randomUUID === "function"
-  ){
-
-    return window.crypto.randomUUID();
-
-  }
-
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
-    .replace(
-      /[xy]/g,
-      function(c){
-
-        const r =
-          Math.random()*16|0;
-
-        const v =
-          c==="x"
-            ? r
-            : (r&0x3|0x8);
-
-        return v.toString(16);
-      }
-    );
-}
-
-
-/* =========================================================
-   DATE
-========================================================= */
-
-function today(){
-
-  const d = new Date();
-
-  return [
-    d.getFullYear(),
-    String(d.getMonth()+1).padStart(2,"0"),
-    String(d.getDate()).padStart(2,"0")
-  ].join("-");
-}
-
-
-/* =========================================================
-   FORMULA NO
-========================================================= */
-
-function generateFormulaNo(){
-
-  let max = 0;
-
-  const used = new Set();
-
-  formulas.forEach(function(f){
-
-    const no =
-      String(f.formula_no || "").trim();
-
-    if(no){
-      used.add(no.toLowerCase());
-    }
-
-    const match =
-      no.match(/^LP-F-(\d+)$/i);
-
-    if(match){
-
-      max =
-        Math.max(
-          max,
-          parseInt(match[1],10)
-        );
-    }
-
+window.exportAllIngredientsExcel=function(){
+  const list=getIngredientMaster();
+  if(!list.length){alert('No ingredients available to export.');return;}
+  if(typeof XLSX==='undefined'){alert('Excel library could not load.');return;}
+  const data=list.map((x,i)=>{
+    const g=ingredientGramRate(x);
+    const unit=String(x.purchaseUnit||'kg').toLowerCase().startsWith('g')?'Gram':'KG';
+    return {'S.No.':i+1,'Ingredient Name':x.name||'','Category / Uses':x.category||'','Purchase Quantity':Number(x.purchaseQty||0),'Unit':unit,'Total Purchase Rate (₹)':Number(x.purchaseRate||0),'Rate / Gram (₹)':Number(g.toFixed(4)),'Rate / KG (₹)':Number((g*1000).toFixed(2))};
   });
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws['!cols']=[{wch:8},{wch:34},{wch:28},{wch:20},{wch:12},{wch:24},{wch:20},{wch:18}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'All Ingredients');
+  XLSX.writeFile(wb,'LIARA_All_Ingredients.xlsx');
+};
 
-  let next = max + 1;
-
-  let candidate =
-    "LP-F-" +
-    String(next).padStart(3,"0");
-
-  while(
-    used.has(candidate.toLowerCase())
-  ){
-
-    next++;
-
-    candidate =
-      "LP-F-" +
-      String(next).padStart(3,"0");
+window.exportAllIngredientsPDF=function(){
+  const list=getIngredientMaster();
+  if(!list.length){alert('No ingredients available to export.');return;}
+  const jsPDF=window.jspdf?.jsPDF;
+  if(!jsPDF){alert('PDF library could not load.');return;}
+  const doc=new jsPDF({unit:'mm',format:'a4',orientation:'landscape'});
+  let y=18;
+  const x=[10,22,85,135,164,202,238];
+  const headers=['S.No.','Ingredient','Category / Uses','Purchase Qty','Total Rate','Rate / Gram','Rate / KG'];
+  function header(){
+    doc.setFillColor(17,17,17);doc.setTextColor(255,255,255);doc.rect(10,y-5,277,8,'F');
+    doc.setFontSize(8);doc.setFont(undefined,'bold');headers.forEach((h,i)=>doc.text(h,x[i],y));
+    y+=8;doc.setTextColor(0,0,0);doc.setFont(undefined,'normal');
   }
+  doc.setFontSize(18);doc.setFont(undefined,'bold');doc.text('LIARA PROFESSIONAL™',14,y);y+=8;
+  doc.setFontSize(12);doc.setFont(undefined,'normal');doc.text('Complete Ingredient Master List',14,y);y+=8;
+  doc.setFontSize(9);doc.text(`Total Ingredients: ${list.length}`,14,y);y+=7;header();
+  list.forEach((item,i)=>{
+    if(y>195){doc.addPage();y=18;header();}
+    const g=ingredientGramRate(item);const unit=String(item.purchaseUnit||'kg').toLowerCase().startsWith('g')?'Gram':'KG';
+    doc.setFontSize(7.5);doc.text(String(i+1),x[0],y);doc.text(String(item.name||'').slice(0,30),x[1],y);doc.text(String(item.category||'').slice(0,24),x[2],y);
+    doc.text(`${Number(item.purchaseQty||0).toLocaleString('en-IN')} ${unit}`,x[3],y);doc.text(`₹${Number(item.purchaseRate||0).toFixed(2)}`,x[4],y);doc.text(`₹${g.toFixed(4)}`,x[5],y);doc.text(`₹${(g*1000).toFixed(2)}`,x[6],y);y+=7;
+  });
+  doc.save('LIARA_All_Ingredients.pdf');
+};
 
-  return candidate;
+function editIngredient(i){
+  const list=getIngredientMaster();const item=list[i];if(!item)return;
+  document.getElementById('ingredientName').value=item.name||'';
+  document.getElementById('ingredientQty').value=item.purchaseQty||1;
+  document.getElementById('ingredientUnit').value=(String(item.purchaseUnit||'kg').toLowerCase()==='g')?'g':'kg';
+  document.getElementById('ingredientRate').value=item.purchaseRate??'';
+  document.getElementById('ingredientCategory').value=item.category||'';
+  window.editingIngredientId=item.id||null;window.editingIngredientIndex=i;
+  const btn=document.getElementById('ingredientSaveBtn');if(btn)btn.textContent='✓ Update Ingredient';
+  const cancel=document.getElementById('ingredientCancelBtn');if(cancel)cancel.style.display='block';
+  showIngredientStatus(`Editing: ${item.name}`,true);
+  document.getElementById('ingredientName')?.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-
-/* =========================================================
-   NATURAL CLASSIFICATION
-========================================================= */
-
-const NATURAL_NAMES = new Set([
-
-  "cucumber extract",
-  "papaya extract",
-  "multani mitti",
-  "licorice extract",
-  "rose extract",
-  "aloe vera gel",
-  "almond oil",
-  "grean tea extract",
-  "green tea extract",
-  "shea butter",
-  "turmeric extract",
-  "manjistha extract",
-  "neem exract",
-  "neem extract",
-  "honey"
-
-]);
-
-
-function classifyIngredient(name){
-
-  const n =
-    normalizeName(name);
-
-  if(
-    NATURAL_NAMES.has(n)
-  ){
-    return "natural";
-  }
-
-  if(
-    /extract|mitti|aloe|almond oil|shea|butter|honey|manjistha|neem|rose|cucumber|papaya|turmeric|licorice|green tea/i
-      .test(name)
-  ){
-    return "natural";
-  }
-
-  return "science";
+function cancelIngredientEdit(){
+  window.editingIngredientId=null;window.editingIngredientIndex=null;
+  document.getElementById('ingredientName').value='';document.getElementById('ingredientQty').value='1';document.getElementById('ingredientUnit').value='kg';document.getElementById('ingredientRate').value='';document.getElementById('ingredientCategory').value='';
+  const btn=document.getElementById('ingredientSaveBtn');if(btn)btn.textContent='+ Add Ingredient';
+  const cancel=document.getElementById('ingredientCancelBtn');if(cancel)cancel.style.display='none';
+  showIngredientStatus('',true);
 }
 
+async function deleteIngredient(i){
+  const list=getIngredientMaster();const item=list[i];if(!item?.id)return;
+  if(!confirm(`Delete "${item.name}" from Ingredient Master?`))return;
+  showIngredientStatus('Deleting from Supabase...',true);
+  const {error}=await supabaseClient.from('ingredients_master').delete().eq('id',item.id);
+  if(error){showIngredientStatus('Delete failed: '+error.message,false);return;}
+  await loadIngredientsFromSupabase(true);renderIngredientMaster();
+  showIngredientStatus('Ingredient deleted successfully.',true);
+}
 
-/* =========================================================
-   LOCAL STORAGE
-========================================================= */
-
-function getLocalMasterIngredients(){
-
-  try{
-
-    const saved =
-      localStorage.getItem(
-        "liara_formula_master_ingredients"
-      );
-
-    if(!saved){
-
-      return {
-        science:[],
-        natural:[]
-      };
-    }
-
-    const parsed =
-      JSON.parse(saved);
-
+function closeProductView(){const m=document.getElementById("productViewModal");if(m)m.style.display="none";}
+function printProductView(){
+  const name=document.getElementById("viewProductName")?.textContent||"Product Formula";
+  const content=document.getElementById("viewProductContent")?.innerHTML||"";
+  const w=window.open("","_blank","width=900,height=700"); if(!w){alert("Please allow pop-ups to print the formula.");return;}
+  w.document.write(`<!DOCTYPE html><html><head><title>${name}</title><style>body{font-family:Arial;padding:30px;color:#111}h1{margin-bottom:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:10px;text-align:left}th{background:#111;color:#fff}p{margin-top:12px}</style></head><body><h1>${escGlobal(name)}</h1>${content}</body></html>`); w.document.close(); w.focus(); setTimeout(()=>w.print(),300);
+}
+window.exportFormulaExcel = function(){
+  const s=window._viewFormulaState;
+  if(!s){ alert('Open a formula first.'); return; }
+  const totalWeight=Number(document.getElementById('viewTotalWeightInput')?.value||s.originalWeight||0);
+  const ratio=s.originalWeight>0 ? totalWeight/s.originalWeight : 0;
+  const rows=s.rows.map(x=>{
+    const grams=x.grams*ratio;
+    const cost=grams*Number(x.rate||0);
     return {
+      'Ingredient Name':x.name,
+      'Rate / Gram (₹)':Number(x.rate||0),
+      'Gram':Number(grams.toFixed(2)),
+      'Total Cost (₹)':Number(cost.toFixed(2))
+    };
+  });
+  const total=rows.reduce((a,x)=>a+x['Total Cost (₹)'],0);
+  rows.push({'Ingredient Name':'TOTAL','Rate / Gram (₹)':'','Gram':Number(totalWeight.toFixed(2)),'Total Cost (₹)':Number(total.toFixed(2))});
+  const basis=Number(document.getElementById('viewCostBasis')?.value||100);
+  const basisCost=totalWeight?total/totalWeight*basis:0;
+  rows.push({'Ingredient Name':`Cost / ${basis} g`,'Rate / Gram (₹)':'','Gram':'','Total Cost (₹)':Number(basisCost.toFixed(2))});
+  const ws=XLSX.utils.json_to_sheet(rows);
+  ws['!cols']=[{wch:28},{wch:18},{wch:14},{wch:18}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Formula');
+  const safe=(s.product.name||'Formula').replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'');
+  XLSX.writeFile(wb,`${safe||'Formula'}_${totalWeight}g.xlsx`);
+};
 
-      science:
-        Array.isArray(parsed.science)
-          ? parsed.science
-          : [],
+async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printProductView,100);}
+(function(){
+  const LS_PRODUCTS = 'liaraProductsV2';
+  const LS_ING = 'liaraIngredientsV2';
 
-      natural:
-        Array.isArray(parsed.natural)
-          ? parsed.natural
-          : []
+  let ingredientCache = [];
+  window.ingredientCache = ingredientCache;
+  window.loadIngredientsFromSupabase = async function(forceRefresh=false){
+    if(!forceRefresh && ingredientCache.length) return ingredientCache;
+    const {data,error}=await supabaseClient.from('ingredients_master').select('*').order('name',{ascending:true});
+    if(error){
+      console.error(error);
+      try{ingredientCache=JSON.parse(localStorage.getItem(LS_ING)||'[]');}catch(e){ingredientCache=[];}
+      window.ingredientCache=ingredientCache;
+      return ingredientCache;
+    }
+    ingredientCache=(data||[]).map(x=>({
+      id:x.id,name:x.name,category:x.category||'',
+      purchaseQty:Number(x.purchase_qty||1),purchaseUnit:(x.purchase_unit||'kg').toLowerCase(),
+      purchaseRate:Number(x.purchase_rate||0),ratePerGram:Number(x.rate_per_gram||0)
+    }));
+    window.ingredientCache=ingredientCache;
+    saveIngredientMaster(ingredientCache);
+    return ingredientCache;
+  };
+  function getIngredients(){
+    if(ingredientCache.length) return ingredientCache;
+    try { return JSON.parse(localStorage.getItem(LS_ING) || '[]'); } catch(e){ return []; }
+  }
+  function getProducts(){
+    try { return JSON.parse(localStorage.getItem(LS_PRODUCTS) || '[]'); } catch(e){ return []; }
+  }
+  function saveProducts(p){
+    localStorage.setItem(LS_PRODUCTS, JSON.stringify(p));
+  }
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  }
+  function gramRate(ing){
+    if(!ing) return 0;
+    const saved = Number(ing.ratePerGram);
+    if(Number.isFinite(saved) && saved > 0) return saved;
+    const q = Number(ing.purchaseQty);
+    const r = Number(ing.purchaseRate);
+    if(q > 0 && Number.isFinite(r)){
+      const u = String(ing.purchaseUnit || 'kg').toLowerCase();
+      const g = ['g','gram','grams'].includes(u) ? q : q*1000;
+      if(g > 0) return r/g;
+    }
+    return (Number(ing.rate)||0)/1000;
+  }
 
+  // Match formula ingredients to Ingredient Master by ID first, then by name.
+  // This makes old formulas automatically use the current Ingredient Master price.
+  function findMasterIngredient(x, list){
+    const arr = list || getIngredients();
+    let ing = null;
+    if(x && x.ingredientId) ing = arr.find(i => String(i.id) === String(x.ingredientId));
+    if(!ing && x && x.ingredientName){
+      const target = String(x.ingredientName).trim().toLowerCase();
+      ing = arr.find(i => String(i.name || '').trim().toLowerCase() === target);
+    }
+    return ing;
+  }
+
+  function getLiveRate(x, list){
+    const ing = findMasterIngredient(x, list);
+    const live = gramRate(ing);
+    if(live > 0) return live;
+    const old = Number(x && (x.rate ?? x.rate_per_gram) || 0);
+    return Number.isFinite(old) ? old : 0;
+  }
+
+  let active = null;
+
+  window.createProductBuilder = function(){
+    const name = document.getElementById('productName').value.trim();
+    if(!name){ alert('Enter a Product Name.'); return; }
+
+    active = {
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      name,
+      reference: document.getElementById('productRef').value.trim(),
+      ingredients: []
     };
 
-  }catch(error){
-
-    console.warn(
-      "Local master ingredient error:",
-      error
-    );
-
-    return {
-      science:[],
-      natural:[]
-    };
-  }
-}
-
-
-function saveLocalMasterIngredients(data){
-
-  try{
-
-    localStorage.setItem(
-      "liara_formula_master_ingredients",
-      JSON.stringify(data)
-    );
-
-  }catch(error){
-
-    console.warn(
-      "Local storage save error:",
-      error
-    );
-  }
-}
-
-
-/* =========================================================
-   FALLBACK INGREDIENTS
-   Only used if database returns nothing.
-========================================================= */
-
-const KNOWN_INGREDIENTS = [
-
-  "Cucumber Extract",
-  "Decyl Glucoside",
-  "Papaya Extract",
-  "Phenoxethanol",
-  "Multani Mitti",
-  "Xanthan Gum",
-  "Licorice Extract",
-  "Niacinamide B3",
-  "Rose Extract",
-  "Allantion",
-  "Aloe Vera Gel",
-  "Almond Oil",
-  "Hyaluronic Acid",
-  "Emulsifying Wax",
-  "Coco Glucoside",
-  "Distilled Water",
-  "Glycerin",
-  "Grean Tea Extract",
-  "Green Tea Extract",
-  "Shea Butter",
-  "Turmeric Extract",
-  "Manjistha Extract",
-  "DL Panthenol",
-  "Vitamin E",
-  "Neem Exract",
-  "Neem Extract",
-  "Fragrance",
-  "Honey",
-  "Cetly Alcohol"
-
-];
-
-
-/* =========================================================
-   LOAD MASTER INGREDIENTS
-========================================================= */
-
-async function loadMasterIngredients(){
-
-  const local =
-    getLocalMasterIngredients();
-
-  const all = [];
-
-  masterSources = {};
-
-
-  /* -------------------------------------------------------
-     INGREDIENTS TABLE
-  ------------------------------------------------------- */
-
-  if(supabaseClient){
-
-    try{
-
-      let result =
-        await supabaseClient
-          .from("ingredients")
-          .select("*");
-
-      if(
-        !result.error &&
-        Array.isArray(result.data)
-      ){
-
-        result.data.forEach(function(row){
-
-          if(
-            row &&
-            row.name
-          ){
-
-            all.push({
-              name:String(row.name).trim(),
-              category:
-                row.category === "natural"
-                  ? "natural"
-                  : (
-                      row.category === "science"
-                        ? "science"
-                        : classifyIngredient(row.name)
-                    ),
-              source:"supabase"
-            });
-
-          }
-
-        });
-
-      }
-
-    }catch(error){
-
-      console.warn(
-        "ingredients table unavailable:",
-        error
-      );
-
-    }
-
-  }
-
-
-  /* -------------------------------------------------------
-     FORMULA INGREDIENTS
-  ------------------------------------------------------- */
-
-  if(supabaseClient){
-
-    try{
-
-      const result =
-        await supabaseClient
-          .from("formula_ingredients")
-          .select("ingredient_name");
-
-      if(
-        !result.error &&
-        Array.isArray(result.data)
-      ){
-
-        result.data.forEach(function(row){
-
-          if(
-            row &&
-            row.ingredient_name
-          ){
-
-            all.push({
-              name:
-                String(
-                  row.ingredient_name
-                ).trim(),
-
-              category:
-                classifyIngredient(
-                  row.ingredient_name
-                ),
-
-              source:"formula"
-            });
-
-          }
-
-        });
-
-      }
-
-    }catch(error){
-
-      console.warn(
-        "formula ingredient master load:",
-        error
-      );
-
-    }
-
-  }
-
-
-  /* -------------------------------------------------------
-     LOCAL
-  ------------------------------------------------------- */
-
-  local.science.forEach(function(name){
-
-    all.push({
-      name,
-      category:"science",
-      source:"local"
-    });
-
-  });
-
-  local.natural.forEach(function(name){
-
-    all.push({
-      name,
-      category:"natural",
-      source:"local"
-    });
-
-  });
-
-
-  /* -------------------------------------------------------
-     FALLBACK
-  ------------------------------------------------------- */
-
-  if(!all.length){
-
-    KNOWN_INGREDIENTS.forEach(function(name){
-
-      all.push({
-        name,
-        category:classifyIngredient(name),
-        source:"fallback"
-      });
-
-    });
-
-  }
-
-
-  /* -------------------------------------------------------
-     UNIQUE
-  ------------------------------------------------------- */
-
-  const unique = new Map();
-
-  all.forEach(function(item){
-
-    const key =
-      normalizeName(item.name);
-
-    if(!key) return;
-
-    if(!unique.has(key)){
-
-      unique.set(key,item);
-
-    }else{
-
-      const old =
-        unique.get(key);
-
-      if(item.source === "local"){
-
-        unique.set(key,item);
-
-      }else if(
-        old.source === "fallback"
-      ){
-
-        unique.set(key,item);
-
-      }
-
-    }
-
-  });
-
-
-  const science = [];
-  const natural = [];
-
-
-  unique.forEach(function(item){
-
-    const category =
-      item.category === "natural"
-        ? "natural"
-        : "science";
-
-    masterSources[
-      normalizeName(item.name)
-    ] = item.source;
-
-
-    if(category === "natural"){
-
-      natural.push(item.name);
-
-    }else{
-
-      science.push(item.name);
-
-    }
-
-  });
-
-
-  science.sort(function(a,b){
-    return a.localeCompare(b);
-  });
-
-  natural.sort(function(a,b){
-    return a.localeCompare(b);
-  });
-
-
-  masterIngredients = {
-    science,
-    natural
+    document.getElementById('activeProductTitle').textContent = name;
+    document.getElementById('activeProductRef').textContent = active.reference ? 'Reference: '+active.reference : '';
+    document.getElementById('activeProductBuilder').style.display = 'block';
+    document.getElementById('formulaIngredientRows').innerHTML = '';
+    const basisEl=document.getElementById('formulaCostBasis');
+    if(basisEl) basisEl.value='100';
+    addFormulaIngredient();
+    recalcFormula();
   };
 
+  window.addFormulaIngredient = function(){
+    if(!active) return;
+    const list = getIngredients();
+    if(!list.length){
+      alert('Please add an ingredient to Ingredient Master first.');
+      return;
+    }
 
-  renderMasterLists();
-  refreshIngredientDropdowns();
+    const row = document.createElement('div');
+    row.className = 'formula-builder-row';
+    row.style.cssText = 'display:grid;grid-template-columns:minmax(180px,2fr) 120px 140px 130px 70px;gap:8px;align-items:center;margin-bottom:10px;padding:10px;border:1px solid #ddd;border-radius:10px;background:#fff';
 
-}
+    row.innerHTML = `
+      <select class="formula-ing" onchange="formulaRowChanged(this)">
+        <option value="">Select Ingredient</option>
+        ${list.map(x => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}
+      </select>
+      <input class="formula-grams" type="number" min="0" step="0.01" placeholder="Gram" oninput="formulaRowChanged(this)">
+      <div class="formula-rate">₹0.0000 / g</div>
+      <div class="formula-cost"><strong>₹0.00</strong></div>
+      <button type="button" onclick="removeFormulaIngredient(this)">✕</button>
+    `;
+    document.getElementById('formulaIngredientRows').appendChild(row);
+    recalcFormula();
+  };
 
+  window.formulaRowChanged = function(el){
+    recalcFormula();
+  };
 
-/* =========================================================
-   RENDER SETTINGS
-========================================================= */
+  window.removeFormulaIngredient = function(btn){
+    btn.closest('.formula-builder-row')?.remove();
+    recalcFormula();
+  };
 
-function renderMasterLists(){
+  function recalcFormula(){
+    let weight=0, total=0;
+    document.querySelectorAll('.formula-builder-row').forEach(row=>{
+      const id = row.querySelector('.formula-ing')?.value;
+      const grams = Number(row.querySelector('.formula-grams')?.value || 0);
+      const ing = getIngredients().find(x=>String(x.id)===String(id));
+      const rate = gramRate(ing);
+      const cost = grams * rate;
+      weight += grams;
+      total += cost;
+      const rateEl=row.querySelector('.formula-rate');
+      const costEl=row.querySelector('.formula-cost');
+      if(rateEl) rateEl.textContent = `₹${Number(rate.toFixed(6))} / g`;
+      if(costEl) costEl.innerHTML = `<strong>₹${cost.toFixed(2)}</strong>`;
+    });
+    document.getElementById('formulaTotalWeight').textContent = `${weight.toFixed(2)} g`;
+    document.getElementById('formulaTotalCost').textContent = `₹${total.toFixed(2)}`;
+    const basis = Number(document.getElementById('formulaCostBasis')?.value || 100);
+    const basisLabel = basis === 1000 ? '1000 g (1 KG)' : '100 g';
+    const basisValue = weight ? (total / weight * basis) : 0;
+    const labelEl = document.getElementById('formulaBasisLabel');
+    const valueEl = document.getElementById('formulaCostBasisValue');
+    if(labelEl) labelEl.textContent = basisLabel;
+    if(valueEl) valueEl.textContent = `₹${basisValue.toFixed(2)}`;
+  }
 
-  renderMasterList(
-    "science",
-    masterIngredients.science
-  );
+  function getCurrentBuilderData(){
+    const name=(document.getElementById('productName')?.value||document.getElementById('activeProductTitle')?.textContent||'Formula').trim() || 'Formula';
+    const basis=Number(document.getElementById('formulaCostBasis')?.value||100);
+    const list=getIngredients();
+    const rows=[];
+    document.querySelectorAll('.formula-builder-row').forEach(row=>{
+      const id=row.querySelector('.formula-ing')?.value;
+      const grams=Number(row.querySelector('.formula-grams')?.value||0);
+      if(!id || !(grams>0)) return;
+      const ing=list.find(x=>String(x.id)===String(id));
+      const rate=gramRate(ing);
+      rows.push({name:ing?.name||'', grams, rate, cost:grams*rate});
+    });
+    const totalWeight=rows.reduce((a,x)=>a+x.grams,0);
+    const totalCost=rows.reduce((a,x)=>a+x.cost,0);
+    const basisCost=totalWeight ? totalCost/totalWeight*basis : 0;
+    return {name,basis,rows,totalWeight,totalCost,basisCost};
+  }
 
-  renderMasterList(
-    "natural",
-    masterIngredients.natural
-  );
+  window.exportCurrentFormulaExcel=function(){
+    const d=getCurrentBuilderData();
+    if(!d.rows.length){alert('Add ingredients with quantity first.');return;}
+    if(typeof XLSX==='undefined'){alert('Excel library could not load.');return;}
+    const data=d.rows.map(x=>({
+      'Ingredient Name':x.name,
+      'Quantity (g)':Number(x.grams.toFixed(2)),
+      'Rate / Gram (₹)':Number(x.rate.toFixed(4)),
+      'Ingredient Cost (₹)':Number(x.cost.toFixed(2))
+    }));
+    data.push({'Ingredient Name':'TOTAL','Quantity (g)':Number(d.totalWeight.toFixed(2)),'Rate / Gram (₹)':'','Ingredient Cost (₹)':Number(d.totalCost.toFixed(2))});
+    data.push({'Ingredient Name':`Cost / ${d.basis} g`,'Quantity (g)':'','Rate / Gram (₹)':'','Ingredient Cost (₹)':Number(d.basisCost.toFixed(2))});
+    const ws=XLSX.utils.json_to_sheet(data);
+    ws['!cols']=[{wch:30},{wch:16},{wch:20},{wch:22}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Formula');
+    const safe=d.name.replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'')||'Formula';
+    XLSX.writeFile(wb,`${safe}_${d.totalWeight.toFixed(2)}g.xlsx`);
+  };
 
-}
+  window.exportCurrentFormulaPDF=function(){
+    const d=getCurrentBuilderData();
+    if(!d.rows.length){alert('Add ingredients with quantity first.');return;}
+    const jsPDF=window.jspdf?.jsPDF;
+    if(!jsPDF){alert('PDF library could not load.');return;}
+    const doc=new jsPDF({unit:'mm',format:'a4'});
+    const safe=d.name.replace(/[^a-z0-9]+/gi,'_').replace(/^_|_$/g,'')||'Formula';
+    let y=18;
+    doc.setFontSize(18); doc.text(d.name,14,y); y+=9;
+    doc.setFontSize(10); doc.text(`Ingredient Formula | Total Weight: ${d.totalWeight.toFixed(2)} g`,14,y); y+=8;
+    doc.setFillColor(17,17,17); doc.setTextColor(255,255,255); doc.rect(14,y-5,182,8,'F');
+    doc.setFontSize(9); doc.text('Ingredient',17,y); doc.text('Quantity (g)',92,y); doc.text('Rate/g',130,y); doc.text('Cost',171,y); y+=8;
+    doc.setTextColor(0,0,0);
+    d.rows.forEach((x,idx)=>{
+      if(y>278){doc.addPage();y=18;}
+      doc.setFontSize(9); doc.text(String(x.name).slice(0,38),17,y); doc.text(x.grams.toFixed(2),92,y); doc.text(`₹${x.rate.toFixed(4)}`,130,y); doc.text(`₹${x.cost.toFixed(2)}`,171,y); y+=7;
+      if(idx<d.rows.length-1){doc.setDrawColor(220,220,220);doc.line(14,y-4,196,y-4);}
+    });
+    y+=3; doc.setFontSize(10); doc.setFont(undefined,'bold');
+    doc.text('TOTAL',130,y); doc.text(`₹${d.totalCost.toFixed(2)}`,171,y); y+=8;
+    doc.setFont(undefined,'normal'); doc.text(`Cost / ${d.basis} g: ₹${d.basisCost.toFixed(2)}`,14,y);
+    doc.save(`${safe}_${d.totalWeight.toFixed(2)}g.pdf`);
+  };
 
+  window.saveCurrentFormula = async function(){
+    if(!active) return;
+    const ingredients = [];
+    document.querySelectorAll('.formula-builder-row').forEach(row=>{
+      const id=row.querySelector('.formula-ing')?.value;
+      const grams=Number(row.querySelector('.formula-grams')?.value || 0);
+      if(id && grams>0){
+        const ing=getIngredients().find(x=>String(x.id)===String(id));
+        const rate=gramRate(ing), cost=grams*rate;
+        ingredients.push({ingredientId:id, ingredientName:ing?.name||'', grams, rate, cost});
+      }
+    });
+    if(!ingredients.length){ alert('Add at least one ingredient with grams.'); return; }
 
-function renderMasterList(type,list){
+    const totalWeight=ingredients.reduce((a,x)=>a+x.grams,0);
+    const totalCost=ingredients.reduce((a,x)=>a+x.cost,0);
+    const formulaNo='LIARA-'+Date.now();
 
-  const box =
-    $(type+"List");
+    const {data:formula,error}=await supabaseClient.from('formulas').insert({
+      formula_no:formulaNo,
+      product_name:active.name,
+      formula_name:active.name,
+      product_reference:active.reference||null,
+      version:'1.0',
+      formula_date:new Date().toISOString().slice(0,10),
+      batch_size:totalWeight,
+      batch_unit:'g',
+      cost_basis:Number(document.getElementById('formulaCostBasis')?.value || 100)
+    }).select().single();
 
-  if(!box) return;
+    if(error){ alert('Formula save failed:\n\n'+error.message); return; }
 
+    const rows=ingredients.map(x=>({
+      formula_id:formula.id,
+      ingredient_id:x.ingredientId,
+      ingredient_name:x.ingredientName,
+      quantity:x.grams,
+      unit:'g',
+      grams:x.grams,
+      rate_per_gram:x.rate,
+      ingredient_cost:x.cost,
+      percentage:totalWeight ? (x.grams/totalWeight*100) : 0
+    }));
 
-  if(!list.length){
+    const {error:rowError}=await supabaseClient.from('formula_ingredients').insert(rows);
+    if(rowError){
+      await supabaseClient.from('formulas').delete().eq('id',formula.id);
+      alert('Formula ingredients save failed:\n\n'+rowError.message);
+      return;
+    }
 
-    box.innerHTML =
-      `<div style="color:#999;font-size:12px;padding:8px 0">
-        No ingredients found.
+    active.ingredients=ingredients;
+    active.supabaseFormulaId=formula.id;
+    active.updatedAt=new Date().toISOString();
+    const products=getProducts();
+    const idx=products.findIndex(x=>String(x.name).toLowerCase()===String(active.name).toLowerCase());
+    if(idx>=0) products[idx]=active; else products.push(active);
+    saveProducts(products);
+    await renderProducts();
+    alert('Product formula saved to Supabase.');
+  };
+
+  window.viewSavedProduct = async function(index){
+    const p=getProducts()[index];
+    if(!p) return;
+    await window.loadIngredientsFromSupabase();
+    const list=getIngredients();
+    let total=0, weight=0;
+    const baseRows=(p.ingredients||[]).map(x=>{
+      const ing=findMasterIngredient(x,list);
+      const g=Number(x.grams||0), r=getLiveRate(x,list), c=g*r;
+      weight+=g; total+=c;
+      return { name:ing?.name||x.ingredientName||'', grams:g, rate:r, cost:c, ingredientId:ing?.id||x.ingredientId||null };
+    });
+
+    const modal=document.getElementById('productViewModal');
+    document.getElementById('viewProductName').textContent=p.name||'Product';
+    document.getElementById('viewProductContent').innerHTML=`
+      <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse">
+      <thead><tr><th>Ingredient Name</th><th>Rate / Gram</th><th>Gram</th><th>Total</th></tr></thead>
+      <tbody id="viewFormulaRows"></tbody>
+      <tfoot><tr><th colspan="3" style="text-align:right">TOTAL</th><th id="viewFormulaTotalCostText">₹0.00</th></tr></tfoot>
+      </table></div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px">
+        <strong>Total Weight:</strong>
+        <input id="viewTotalWeightInput" type="number" min="0.01" step="0.01" value="${weight.toFixed(2)}" oninput="updateViewFormulaWeight()" style="width:150px;padding:10px;border:1px solid #ccc;border-radius:8px">
+        <span>g</span>
+        <span style="color:#777;font-size:13px">Change this to any batch size (30g, 50g, 100g, 250g, 1000g, etc.).</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <strong>Cost Basis:</strong>
+        <input id="viewCostBasis" type="number" min="0.01" step="0.01" value="${Number(p.costBasis||100)}" oninput="updateViewBasis()" style="width:150px;padding:10px;border:1px solid #ccc;border-radius:8px">
+        <span>g</span>
+      </div>
+      <p><strong>Cost / <span id="viewBasisLabel">${Number(p.costBasis||100).toFixed(2)} g</span>:</strong> <span id="viewBasisValue">₹0.00</span></p>
+      <input type="hidden" id="viewFormulaCurrentWeight" value="${weight}">
+      <input type="hidden" id="viewFormulaCurrentCost" value="${total}">
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button onclick="saveEditedFormula(${index})" style="background:#111;color:#fff">✓ Save Changes</button>
       </div>`;
 
-    return;
-  }
-
-
-  box.innerHTML =
-    list.map(function(item){
-
-      const source =
-        masterSources[
-          normalizeName(item)
-        ] || "supabase";
-
-      const sourceText =
-        source === "local"
-          ? "LOCAL"
-          : source === "formula"
-            ? "USED IN FORMULA"
-            : source === "fallback"
-              ? "AVAILABLE"
-              : "SUPABASE";
-
-
-      const canDelete =
-        source === "local" ||
-        source === "supabase";
-
-
-      return `
-        <div class="master-item">
-
-          <div style="
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:10px;
-          ">
-
-            <span>
-              ${esc(item)}
-            </span>
-
-            <span style="
-              display:flex;
-              align-items:center;
-              gap:6px;
-            ">
-
-              <small style="
-                color:#999;
-                font-size:9px;
-              ">
-                ${esc(sourceText)}
-              </small>
-
-              ${
-                canDelete
-                ? `
-                  <button
-                    type="button"
-                    class="danger small-btn"
-                    data-delete-name="${esc(item)}"
-                    data-delete-type="${esc(type)}"
-                  >
-                    ×
-                  </button>
-                `
-                : ""
-              }
-
-            </span>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-
-
-  box
-    .querySelectorAll(
-      "[data-delete-name]"
-    )
-    .forEach(function(btn){
-
-      btn.addEventListener(
-        "click",
-        function(){
-
-          deleteMasterIngredient(
-            this.dataset.deleteName,
-            this.dataset.deleteType
-          );
-
-        }
-      );
-
-    });
-
-}
-
-
-/* =========================================================
-   ADD MASTER INGREDIENT
-========================================================= */
-
-async function addMasterIngredient(type){
-
-  const input =
-    $(type+"Input");
-
-  if(!input) return;
-
-
-  const value =
-    input.value.trim();
-
-  if(!value){
-
-    alert(
-      "Please enter ingredient name."
-    );
-
-    input.focus();
-
-    return;
-  }
-
-
-  const exists =
-    [
-      ...masterIngredients.science,
-      ...masterIngredients.natural
-    ].some(function(x){
-
-      return normalizeName(x) ===
-        normalizeName(value);
-
-    });
-
-
-  if(exists){
-
-    alert(
-      "This ingredient already exists."
-    );
-
-    input.select();
-
-    return;
-  }
-
-
-  let cloudSaved = false;
-
-
-  if(supabaseClient){
-
-    try{
-
-      const check =
-        await supabaseClient
-          .from("ingredients")
-          .select("id,name,category")
-          .ilike("name",value)
-          .limit(1);
-
-
-      if(!check.error){
-
-        if(
-          check.data &&
-          check.data.length
-        ){
-
-          alert(
-            "This ingredient already exists in Supabase."
-          );
-
-          await loadMasterIngredients();
-
-          return;
-        }
-
-
-        const insert =
-          await supabaseClient
-            .from("ingredients")
-            .insert({
-              name:value,
-              category:type
-            });
-
-
-        if(!insert.error){
-
-          cloudSaved = true;
-
-        }else{
-
-          console.warn(
-            "Cloud master save:",
-            insert.error.message
-          );
-
-        }
-
-      }
-
-    }catch(error){
-
-      console.warn(
-        "Cloud master error:",
-        error
-      );
-
-    }
-
-  }
-
-
-  if(!cloudSaved){
-
-    const local =
-      getLocalMasterIngredients();
-
-    local[type].push(value);
-
-    saveLocalMasterIngredients(local);
-
-  }
-
-
-  input.value = "";
-
-  await loadMasterIngredients();
-
-  input.focus();
-
-
-  setStatus(
-    cloudSaved
-      ? "☁ Ingredient saved to Supabase: "+value
-      : "✓ Ingredient saved locally: "+value
-  );
-
-}
-
-
-/* =========================================================
-   DELETE MASTER INGREDIENT
-========================================================= */
-
-async function deleteMasterIngredient(
-  name,
-  type
-){
-
-  if(!name) return;
-
-
-  const source =
-    masterSources[
-      normalizeName(name)
-    ];
-
-
-  if(source === "formula"){
-
-    alert(
-      "This ingredient is already used in a formula.\n\nIt will remain available in Formula Manager."
-    );
-
-    return;
-  }
-
-
-  if(
-    !confirm(
-      'Delete "'+name+'"?'
-    )
-  ){
-    return;
-  }
-
-
-  if(
-    supabaseClient &&
-    source === "supabase"
-  ){
-
-    try{
-
-      await supabaseClient
-        .from("ingredients")
-        .delete()
-        .eq("name",name);
-
-    }catch(error){
-
-      console.warn(
-        "Supabase ingredient delete:",
-        error
-      );
-
-    }
-
-  }
-
-
-  const local =
-    getLocalMasterIngredients();
-
-
-  local.science =
-    local.science.filter(function(x){
-
-      return normalizeName(x) !==
-        normalizeName(name);
-
-    });
-
-
-  local.natural =
-    local.natural.filter(function(x){
-
-      return normalizeName(x) !==
-        normalizeName(name);
-
-    });
-
-
-  saveLocalMasterIngredients(local);
-
-  await loadMasterIngredients();
-
-}
-
-
-/* =========================================================
-   INGREDIENT OPTIONS
-========================================================= */
-
-function getIngredientOptions(selected=""){
-
-  let html = `
-    <option value="">
-      Select ingredient...
-    </option>
-  `;
-
-
-  if(
-    masterIngredients.natural.length
-  ){
-
-    html += `
-      <optgroup label="🌿 Natural / Herbal">
-    `;
-
-    masterIngredients.natural.forEach(function(item){
-
-      html += `
-        <option
-          value="${esc(item)}"
-          ${
-            normalizeName(item) ===
-            normalizeName(selected)
-              ? "selected"
-              : ""
-          }
-        >
-          ${esc(item)}
-        </option>
-      `;
-
-    });
-
-    html += `</optgroup>`;
-  }
-
-
-  if(
-    masterIngredients.science.length
-  ){
-
-    html += `
-      <optgroup label="🧪 Science">
-    `;
-
-    masterIngredients.science.forEach(function(item){
-
-      html += `
-        <option
-          value="${esc(item)}"
-          ${
-            normalizeName(item) ===
-            normalizeName(selected)
-              ? "selected"
-              : ""
-          }
-        >
-          ${esc(item)}
-        </option>
-      `;
-
-    });
-
-    html += `</optgroup>`;
-  }
-
-
-  html += `
-    <option value="__custom__">
-      ✏️ Other / Type Manually
-    </option>
-  `;
-
-
-  return html;
-}
-
-
-/* =========================================================
-   REFRESH DROPDOWNS
-========================================================= */
-
-function refreshIngredientDropdowns(){
-
-  document
-    .querySelectorAll(
-      "#ingredients .ing-row"
-    )
-    .forEach(function(row){
-
-      const select =
-        row.querySelector(
-          ".iname-select"
-        );
-
-      const custom =
-        row.querySelector(
-          ".custom-ingredient"
-        );
-
-      if(!select) return;
-
-
-      let current = "";
-
-
-      if(
-        select.value &&
-        select.value !== "__custom__"
-      ){
-
-        current = select.value;
-
-      }else if(custom){
-
-        current = custom.value.trim();
-
-      }
-
-
-      select.innerHTML =
-        getIngredientOptions(current);
-
-
-      const option =
-        Array.from(select.options)
-          .find(function(o){
-
-            return normalizeName(o.value) ===
-              normalizeName(current);
-
-          });
-
-
-      if(
-        current &&
-        option
-      ){
-
-        select.value =
-          option.value;
-
-        if(custom){
-          custom.style.display = "none";
-        }
-
-      }else if(current){
-
-        select.value =
-          "__custom__";
-
-        if(custom){
-
-          custom.style.display = "block";
-          custom.value = current;
-
-        }
-
-      }
-
-    });
-
-}
-
-
-/* =========================================================
-   NEW FORMULA
-========================================================= */
-
-function newFormula(){
-
-  editingId = null;
-  lastBatchSize = 0;
-
-
-  if($("formulaNo")){
-    $("formulaNo").value =
-      generateFormulaNo();
-  }
-
-
-  if($("formulaId")){
-    $("formulaId").value =
-      createUUID();
-  }
-
-
-  if($("date")){
-    $("date").value =
-      today();
-  }
-
-
-  if($("batchUnit")){
-    $("batchUnit").value =
-      "g";
-  }
-
-
-  [
-    "productName",
-    "formulaName",
-    "version",
-    "batchSize",
-    "method",
-    "result",
-    "notes"
-  ].forEach(function(id){
-
-    if($(id)){
-      $(id).value = "";
-    }
-
-  });
-
-
-  if($("ingredients")){
-    $("ingredients").innerHTML = "";
-  }
-
-
-  addIngredient();
-
-
-  if($("deleteBtn")){
-    $("deleteBtn").style.display = "none";
-  }
-
-
-  calcTotals();
-
-  showTab("edit");
-
-
-  if($("productName")){
-    $("productName").focus();
-  }
-
-}
-
-
-/* =========================================================
-   ADD INGREDIENT
-========================================================= */
-
-function addIngredient(data={}){
-
-  if(!$("ingredients")) return;
-
-
-  const row =
-    document.createElement("div");
-
-  row.className =
-    "ing-row";
-
-
-  const name =
-    String(data.name || "");
-
-
-  row.innerHTML = `
-
-    <div>
-
-      <select class="iname-select">
-
-        ${getIngredientOptions(name)}
-
-      </select>
-
-      <input
-        class="iname custom-ingredient"
-        type="text"
-        placeholder="Type ingredient name"
-        value="${esc(name)}"
-      >
-
-    </div>
-
-
-    <input
-      class="iqty"
-      type="number"
-      min="0"
-      step="any"
-      placeholder="Qty"
-      value="${esc(data.qty ?? "")}"
-    >
-
-
-    <select class="iunit">
-
-      <option value="g">g</option>
-      <option value="kg">kg</option>
-      <option value="ml">ml</option>
-      <option value="L">L</option>
-
-    </select>
-
-
-    <input
-      class="ipct"
-      type="number"
-      min="0"
-      step="any"
-      placeholder="%"
-      value="${esc(data.pct ?? "")}"
-    >
-
-
-    <button
-      type="button"
-      class="danger ingredient-delete"
-      title="Remove"
-    >
-      ×
-    </button>
-
-  `;
-
-
-  $("ingredients")
-    .appendChild(row);
-
-
-  const select =
-    row.querySelector(".iname-select");
-
-  const custom =
-    row.querySelector(".custom-ingredient");
-
-
-  if(data.unit){
-
-    row.querySelector(".iunit").value =
-      data.unit;
-
-  }
-
-
-  const exists =
-    [
-      ...masterIngredients.natural,
-      ...masterIngredients.science
-    ].some(function(x){
-
-      return normalizeName(x) ===
-        normalizeName(name);
-
-    });
-
-
-  if(
-    name &&
-    !exists
-  ){
-
-    select.value =
-      "__custom__";
-
-    custom.style.display =
-      "block";
-
-  }else{
-
-    custom.style.display =
-      "none";
-
-  }
-
-
-  select.addEventListener(
-    "change",
-    function(){
-
-      ingredientSelectChanged(this);
-
-    }
-  );
-
-
-  custom.addEventListener(
-    "input",
-    calcTotals
-  );
-
-
-  row.querySelector(".iqty")
-    .addEventListener(
-      "input",
-      calcTotals
-    );
-
-
-  row.querySelector(".ipct")
-    .addEventListener(
-      "input",
-      calcTotals
-    );
-
-
-  row.querySelector(".ingredient-delete")
-    .addEventListener(
-      "click",
-      function(){
-
-        row.remove();
-
-        calcTotals();
-
-      }
-    );
-
-
-  calcTotals();
-}
-
-
-/* =========================================================
-   INGREDIENT SELECT
-========================================================= */
-
-function ingredientSelectChanged(select){
-
-  const row =
-    select.closest(".ing-row");
-
-  if(!row) return;
-
-
-  const custom =
-    row.querySelector(
-      ".custom-ingredient"
-    );
-
-
-  if(
-    select.value === "__custom__"
-  ){
-
-    custom.style.display =
-      "block";
-
-    custom.value = "";
-
-    custom.focus();
-
-  }else{
-
-    custom.style.display =
-      "none";
-
-    custom.value =
-      select.value;
-
-  }
-
-
-  calcTotals();
-}
-
-
-/* =========================================================
-   TOTALS
-========================================================= */
-
-function calcTotals(){
-
-  let quantity = 0;
-  let percentage = 0;
-
-
-  document
-    .querySelectorAll(
-      "#ingredients .iqty"
-    )
-    .forEach(function(el){
-
-      quantity +=
-        Number(el.value) || 0;
-
-    });
-
-
-  document
-    .querySelectorAll(
-      "#ingredients .ipct"
-    )
-    .forEach(function(el){
-
-      percentage +=
-        Number(el.value) || 0;
-
-    });
-
-
-  if($("totalQty")){
-
-    $("totalQty").textContent =
-      quantity
-        .toFixed(2)
-        .replace(/\.00$/,"");
-
-  }
-
-
-  if($("totalPct")){
-
-    $("totalPct").textContent =
-      percentage
-        .toFixed(2)
-        .replace(/\.00$/,"") +
-      "%";
-
-  }
-
-
-  if($("totalPercent")){
-
-    $("totalPercent").value =
-      percentage
-        .toFixed(2)
-        .replace(/\.00$/,"") +
-      "%";
-
-  }
-
-}
-
-
-/* =========================================================
-   BATCH SCALING
-========================================================= */
-
-function scaleIngredientsForBatch(){
-
-  const field =
-    $("batchSize");
-
-  if(!field) return;
-
-
-  const newBatch =
-    Number(field.value);
-
-
-  if(
-    !Number.isFinite(newBatch) ||
-    newBatch <= 0
-  ){
-    return;
-  }
-
-
-  if(
-    !lastBatchSize ||
-    lastBatchSize <= 0
-  ){
-
-    lastBatchSize =
-      newBatch;
-
-    return;
-  }
-
-
-  if(
-    Math.abs(
-      newBatch-lastBatchSize
-    ) < 0.000001
-  ){
-    return;
-  }
-
-
-  const multiplier =
-    newBatch /
-    lastBatchSize;
-
-
-  document
-    .querySelectorAll(
-      "#ingredients .iqty"
-    )
-    .forEach(function(qty){
-
-      const old =
-        Number(qty.value);
-
-      if(!Number.isFinite(old)){
-        return;
-      }
-
-
-      qty.value =
-        (old*multiplier)
-          .toFixed(6)
-          .replace(/\.?0+$/,"");
-
-    });
-
-
-  lastBatchSize =
-    newBatch;
-
-
-  calcTotals();
-}
-
-
-/* =========================================================
-   GET INGREDIENTS
-========================================================= */
-
-function getIngredients(){
-
-  return Array.from(
-    document.querySelectorAll(
-      "#ingredients .ing-row"
-    )
-  )
-  .map(function(row){
-
-    const select =
-      row.querySelector(
-        ".iname-select"
-      );
-
-    const custom =
-      row.querySelector(
-        ".custom-ingredient"
-      );
-
-
-    let name = "";
-
-
-    if(
-      select &&
-      select.value === "__custom__"
-    ){
-
-      name =
-        custom
-          ? custom.value.trim()
-          : "";
-
-    }else{
-
-      name =
-        select
-          ? select.value.trim()
-          : "";
-
-    }
-
-
-    return {
-
-      name,
-
-      qty:
-        row.querySelector(".iqty")
-          ? row.querySelector(".iqty").value
-          : "",
-
-      unit:
-        row.querySelector(".iunit")
-          ? row.querySelector(".iunit").value
-          : "g",
-
-      pct:
-        row.querySelector(".ipct")
-          ? row.querySelector(".ipct").value
-          : ""
-
-    };
-
-  })
-  .filter(function(x){
-
-    return x.name ||
-      x.qty ||
-      x.pct;
-
-  });
-}
-
-
-/* =========================================================
-   AUTO SAVE CUSTOM INGREDIENTS
-========================================================= */
-
-async function autoSaveCustomIngredients(rows){
-
-  if(!rows || !rows.length){
-    return;
-  }
-
-
-  const local =
-    getLocalMasterIngredients();
-
-
-  for(
-    const item of rows
-  ){
-
-    if(!item.name){
-      continue;
-    }
-
-
-    const exists =
-      [
-        ...masterIngredients.science,
-        ...masterIngredients.natural
-      ].some(function(x){
-
-        return normalizeName(x) ===
-          normalizeName(item.name);
-
-      });
-
-
-    if(exists){
-      continue;
-    }
-
-
-    let cloudSaved = false;
-
-
-    if(supabaseClient){
-
-      try{
-
-        const result =
-          await supabaseClient
-            .from("ingredients")
-            .insert({
-              name:item.name,
-              category:"science"
-            });
-
-
-        if(!result.error){
-          cloudSaved = true;
-        }
-
-      }catch(error){
-
-        console.warn(
-          "Custom ingredient cloud save:",
-          error
-        );
-
-      }
-
-    }
-
-
-    if(!cloudSaved){
-
-      const alreadyLocal =
-        [
-          ...local.science,
-          ...local.natural
-        ].some(function(x){
-
-          return normalizeName(x) ===
-            normalizeName(item.name);
-
-        });
-
-
-      if(!alreadyLocal){
-
-        local.science.push(
-          item.name
-        );
-
-      }
-
-    }
-
-  }
-
-
-  saveLocalMasterIngredients(local);
-
-  await loadMasterIngredients();
-
-}
-
-
-/* =========================================================
-   SAVE FORMULA
-========================================================= */
-
-async function saveFormula(){
-
-  if(!supabaseClient){
-
-    alert(
-      "Supabase is not connected."
-    );
-
-    return;
-  }
-
-
-  const product =
-    $("productName")
-      .value
-      .trim();
-
-
-  if(!product){
-
-    alert(
-      "Product Name is required."
-    );
-
-    $("productName").focus();
-
-    return;
-  }
-
-
-  const wasEditing =
-    Boolean(editingId);
-
-
-  let formulaId =
-    editingId ||
-    (
-      $("formulaId")
-        ? $("formulaId").value.trim()
-        : ""
-    );
-
-
-  if(!formulaId){
-
-    formulaId =
-      createUUID();
-
-  }
-
-
-  if($("formulaId")){
-    $("formulaId").value =
-      formulaId;
-  }
-
-
-  let formulaNo =
-    $("formulaNo")
-      .value
-      .trim();
-
-
-  if(!formulaNo){
-
-    formulaNo =
-      generateFormulaNo();
-
-    $("formulaNo").value =
-      formulaNo;
-
-  }
-
-
-  const ingredients =
-    getIngredients();
-
-
-  const item = {
-
-    formula_no:formulaNo,
-
-    product_name:product,
-
-    formula_name:
-      $("formulaName").value.trim(),
-
-    version:
-      $("version").value.trim(),
-
-    formula_date:
-      $("date").value || today(),
-
-    batch_size:
-      $("batchSize").value
-        ? Number($("batchSize").value)
-        : null,
-
-    batch_unit:
-      $("batchUnit").value,
-
-    preparation_method:
-      $("method").value.trim(),
-
-    result:
-      $("result").value.trim(),
-
-    notes:
-      $("notes").value.trim(),
-
-    updated_at:
-      new Date().toISOString()
-
+    window._viewFormulaState={index, product:p, rows:baseRows, originalWeight:weight};
+    renderViewFormulaRows();
+    modal.style.display='block';
   };
 
+  window.renderViewFormulaRows = function(){
+    const s=window._viewFormulaState;
+    if(!s) return;
+    const target=Number(document.getElementById('viewTotalWeightInput')?.value||s.originalWeight||0);
+    const ratio=s.originalWeight>0 ? target/s.originalWeight : 0;
+    let total=0;
+    const html=s.rows.map((x,i)=>{
+      const g=x.grams*ratio, c=g*x.rate;
+      total+=c;
+      return `<tr><td>${esc(x.name)}</td><td>₹${Number(x.rate).toFixed(4)} / g</td><td><span class="viewGramValue" data-index="${i}">${g.toFixed(2)}</span> g</td><td>₹${c.toFixed(2)}</td></tr>`;
+    }).join('');
+    document.getElementById('viewFormulaRows').innerHTML=html;
+    document.getElementById('viewFormulaTotalCostText').textContent=`₹${total.toFixed(2)}`;
+    document.getElementById('viewTotalWeightInput').value=target.toFixed(2);
+    document.getElementById('viewFormulaCurrentWeight').value=target;
+    document.getElementById('viewFormulaCurrentCost').value=total;
+    updateViewBasis();
+  };
 
-  const saveBtn =
-    $("saveBtn");
+  window.updateViewFormulaWeight = function(){
+    renderViewFormulaRows();
+  };
 
+  window.updateViewBasis = function(){
+    const basis=Number(document.getElementById('viewCostBasis')?.value||100);
+    const weight=Number(document.getElementById('viewFormulaCurrentWeight')?.value||0);
+    const total=Number(document.getElementById('viewFormulaCurrentCost')?.value||0);
+    const label=document.getElementById('viewBasisLabel');
+    const value=document.getElementById('viewBasisValue');
+    if(label) label.textContent=`${basis.toFixed(2)} g`;
+    if(value) value.textContent=`₹${(weight ? total/weight*basis : 0).toFixed(2)}`;
+  };
 
-  const oldText =
-    saveBtn
-      ? saveBtn.textContent
-      : "";
-
-
-  if(saveBtn){
-
-    saveBtn.disabled = true;
-    saveBtn.textContent =
-      "⏳ Saving...";
-
-  }
-
-
-  try{
-
-    /* =====================================================
-       UPDATE
-    ===================================================== */
-
-    if(wasEditing){
-
-      setStatus(
-        "☁ Updating formula..."
-      );
-
-
-      const result =
-        await supabaseClient
-          .from("formulas")
-          .update(item)
-          .eq("id",editingId);
-
-
-      if(result.error){
-
-        throw new Error(
-          "Formula update failed: " +
-          result.error.message
-        );
-
-      }
-
-
-      const ingredientDelete =
-        await supabaseClient
-          .from("formula_ingredients")
-          .delete()
-          .eq(
-            "formula_id",
-            editingId
-          );
-
-
-      if(ingredientDelete.error){
-
-        throw new Error(
-          "Old ingredient delete failed: " +
-          ingredientDelete.error.message
-        );
-
-      }
-
+  window.saveEditedFormula = async function(index){
+    const s=window._viewFormulaState;
+    if(!s) return;
+    const totalWeight=Number(document.getElementById('viewTotalWeightInput')?.value||0);
+    if(totalWeight<=0){ alert('Total weight must be greater than 0.'); return; }
+    const ratio=s.originalWeight>0 ? totalWeight/s.originalWeight : 0;
+    const basis=Number(document.getElementById('viewCostBasis')?.value||100);
+    const editedRows=s.rows.map(x=>({ ...x, grams:x.grams*ratio }));
+    const total=editedRows.reduce((a,x)=>a+x.grams*x.rate,0);
+    const p={...s.product, costBasis:basis, ingredients:editedRows.map(x=>({
+      ingredientId:x.ingredientId, ingredientName:x.name, grams:x.grams, rate:x.rate,
+      cost:x.grams*x.rate, percentage:totalWeight?(x.grams/totalWeight*100):0
+    }))};
+    const formulaId=p.supabaseFormulaId;
+    if(formulaId){
+      const {error:fe}=await supabaseClient.from('formulas').update({batch_size:totalWeight, batch_unit:'g', updated_at:new Date().toISOString()}).eq('id',formulaId);
+      if(fe){alert('Formula update failed:\n\n'+fe.message);return;}
+      const {error:de}=await supabaseClient.from('formula_ingredients').delete().eq('formula_id',formulaId);
+      if(de){alert('Formula ingredients update failed:\n\n'+de.message);return;}
+      const rows=p.ingredients.map(x=>({formula_id:formulaId,ingredient_id:x.ingredientId||null,ingredient_name:x.ingredientName,quantity:x.grams,unit:'g',grams:x.grams,rate_per_gram:x.rate,ingredient_cost:x.cost,percentage:x.percentage}));
+      const {error:ie}=await supabaseClient.from('formula_ingredients').insert(rows);
+      if(ie){alert('Formula ingredients save failed:\n\n'+ie.message);return;}
     }
-
-
-    /* =====================================================
-       CREATE
-    ===================================================== */
-
-    else{
-
-      setStatus(
-        "☁ Creating formula..."
-      );
-
-
-      const insertResult =
-        await supabaseClient
-          .from("formulas")
-          .insert({
-            id:formulaId,
-            ...item
-          })
-          .select("id")
-          .single();
-
-
-      if(insertResult.error){
-
-        throw new Error(
-          "Formula creation failed: " +
-          insertResult.error.message
-        );
-
-      }
-
-
-      if(
-        insertResult.data &&
-        insertResult.data.id
-      ){
-
-        formulaId =
-          insertResult.data.id;
-
-      }
-
-    }
-
-
-    /* =====================================================
-       SAVE INGREDIENTS
-    ===================================================== */
-
-    const ingredientRows =
-      ingredients
-        .filter(function(x){
-          return x.name;
-        })
-        .map(function(x){
-
-          return {
-
-            formula_id:formulaId,
-
-            ingredient_name:x.name,
-
-            quantity:
-              x.qty !== ""
-                ? Number(x.qty)
-                : null,
-
-            unit:x.unit,
-
-            percentage:
-              x.pct !== ""
-                ? Number(x.pct)
-                : null
-
-          };
-
-        });
-
-
-    if(ingredientRows.length){
-
-      const ingredientResult =
-        await supabaseClient
-          .from("formula_ingredients")
-          .insert(ingredientRows);
-
-
-      if(ingredientResult.error){
-
-        throw new Error(
-          "Ingredient save failed: " +
-          ingredientResult.error.message
-        );
-
-      }
-
-    }
-
-
-    await autoSaveCustomIngredients(
-      ingredients
-    );
-
-
-    editingId =
-      formulaId;
-
-
-    if($("formulaId")){
-      $("formulaId").value =
-        formulaId;
-    }
-
-
-    setStatus(
-      wasEditing
-        ? "☁ Formula updated successfully."
-        : "☁ Formula saved successfully."
-    );
-
-
-    alert(
-      wasEditing
-        ? "Formula updated successfully."
-        : "Formula saved successfully."
-    );
-
-
-    await loadFormulas();
-
-    editFormula(formulaId);
-
-
-  }catch(error){
-
-    console.error(
-      "SAVE ERROR:",
-      error
-    );
-
-
-    setStatus(
-      "❌ " +
-      (
-        error.message ||
-        String(error)
-      ),
-      true
-    );
-
-
-    alert(
-      "SAVE ERROR:\n\n" +
-      (
-        error.message ||
-        String(error)
-      ) +
-      "\n\nJe RLS policy error aa, Supabase policies check karo."
-    );
-
-
-  }finally{
-
-    if(saveBtn){
-
-      saveBtn.disabled = false;
-
-      saveBtn.textContent =
-        oldText || "💾 Save Formula";
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   LOAD FORMULAS
-========================================================= */
-
-async function loadFormulas(){
-
-  if(!supabaseClient){
-    setStatus("❌ Supabase not connected.",true);
-    return;
-  }
-
-  setStatus("☁ Loading formulas...");
-
-  try{
-
-    let rows = [];
-    let formulaError = null;
-
-    /* -----------------------------------------------------
-       PRIMARY: Supabase JS query
-       Explicitly request rows + exact count.
-    ----------------------------------------------------- */
-    const result =
-      await supabaseClient
-        .from("formulas")
-        .select("*",{count:"exact"})
-        .limit(1000);
-
-    console.log("FORMULAS JS RESULT:",result);
-
-    if(result.error){
-      formulaError = result.error;
-    }else if(Array.isArray(result.data)){
-      rows = result.data;
-    }
-
-    /* -----------------------------------------------------
-       FALLBACK: direct REST request to the SAME project.
-       This bypasses any client-side query issue and also
-       gives a clear HTTP error if the table is not readable.
-    ----------------------------------------------------- */
-    if(!rows.length){
-
-      try{
-
-        const restResponse =
-          await fetch(
-            SUPABASE_URL +
-            "/rest/v1/formulas?select=*",
-            {
-              method:"GET",
-              headers:{
-                "apikey":SUPABASE_KEY,
-                "Authorization":"Bearer " + SUPABASE_KEY,
-                "Accept":"application/json"
-              }
-            }
-          );
-
-        const restText =
-          await restResponse.text();
-
-        console.log(
-          "FORMULAS REST STATUS:",
-          restResponse.status,
-          restText
-        );
-
-        if(restResponse.ok){
-
-          const restData =
-            restText ? JSON.parse(restText) : [];
-
-          if(Array.isArray(restData)){
-            rows = restData;
-            formulaError = null;
-          }
-
-        }else{
-
-          formulaError =
-            new Error(
-              "REST " +
-              restResponse.status +
-              ": " +
-              restText
-            );
-
-        }
-
-      }catch(restError){
-
-        console.error(
-          "Formula REST fallback error:",
-          restError
-        );
-
-        if(!formulaError){
-          formulaError = restError;
-        }
-
-      }
-    }
-
-    if(formulaError && !rows.length){
-      throw new Error(
-        "Formula load failed: " +
-        (
-          formulaError.message ||
-          String(formulaError)
-        )
-      );
-    }
-
-    /* -----------------------------------------------------
-       LOAD ALL FORMULA INGREDIENTS SEPARATELY
-       This avoids relying on a nested Supabase relation.
-    ----------------------------------------------------- */
-    let ingredientRows = [];
-
-    const ids =
-      rows
-        .map(function(f){
-          return f && f.id;
-        })
-        .filter(Boolean);
-
+    const products=getProducts();
+    products[index]=p;
+    saveProducts(products);
+    await renderProducts();
+    alert('Formula updated successfully.');
+    window.viewSavedProduct(index);
+  };
+
+  window.deleteProduct = async function(index){
+    const products=await loadProductsFromSupabase();
+    const p=products[index];
+    if(!p) return;
+    if(!confirm('Delete this product formula?')) return;
+    const {error}=await supabaseClient.from('formulas').delete().eq('id',p.supabaseFormulaId);
+    if(error){ alert('Delete failed:\n\n'+error.message); return; }
+    await renderProducts();
+  };
+
+  async function loadProductsFromSupabase(){
+    const {data:forms,error}=await supabaseClient.from('formulas')
+      .select('*').order('created_at',{ascending:false});
+    if(error){ console.error(error); return getProducts(); }
+    const ids=(forms||[]).map(x=>x.id);
+    let fi=[];
     if(ids.length){
-
-      /* ---------------------------------------------------
-         IMPORTANT:
-         Load ingredients FORMULA-BY-FORMULA.
-         This is more reliable than a single .in() query
-         and guarantees each formula gets its own rows.
-      --------------------------------------------------- */
-
-      let allIngredientRows = [];
-
-      for(const formulaId of ids){
-
-        const one =
-          await supabaseClient
-            .from("formula_ingredients")
-            .select(
-              "id,formula_id,ingredient_name,quantity,unit,percentage"
-            )
-            .eq("formula_id",formulaId);
-
-        console.log(
-          "INGREDIENTS FOR FORMULA:",
-          formulaId,
-          one
-        );
-
-        if(one.error){
-
-          console.error(
-            "Ingredient load error for formula " +
-            formulaId + ":",
-            one.error
-          );
-
-          continue;
-        }
-
-        if(Array.isArray(one.data)){
-
-          allIngredientRows =
-            allIngredientRows.concat(one.data);
-
-        }
-
-      }
-
-      ingredientRows = allIngredientRows;
+      const r=await supabaseClient.from('formula_ingredients').select('*').in('formula_id',ids);
+      if(!r.error) fi=r.data||[];
     }
-
-    /* -----------------------------------------------------
-       GROUP INGREDIENTS BY FORMULA UUID
-    ----------------------------------------------------- */
-    const ingredientMap = Object.create(null);
-
-    ingredientRows.forEach(function(row){
-
-      if(!row || !row.formula_id) return;
-
-      const key =
-        String(row.formula_id).trim();
-
-      if(!ingredientMap[key]){
-        ingredientMap[key] = [];
-      }
-
-      ingredientMap[key].push({
-        id:row.id,
-        formula_id:row.formula_id,
-        ingredient_name:row.ingredient_name ?? "",
-        quantity:row.quantity ?? "",
-        unit:row.unit ?? "",
-        percentage:row.percentage ?? ""
-      });
-
-    });
-
-    /* -----------------------------------------------------
-       FINAL FORMULA OBJECTS
-    ----------------------------------------------------- */
-    formulas =
-      rows.map(function(formula){
-
-        const key =
-          String(formula.id || "").trim();
-
-        return {
-          ...formula,
-          formula_ingredients:
-            ingredientMap[key] || []
-        };
-
-      });
-
-    renderList();
-
-    setStatus(
-      "☁ Connected • " +
-      formulas.length +
-      " formula(s) online • " +
-      ingredientRows.length +
-      " ingredient row(s) loaded"
-    );
-
-    if(formulas.length && !ingredientRows.length){
-      console.warn(
-        "Formulas loaded, but formula_ingredients returned 0 rows."
-      );
-    }
-
-    /* If zero rows really came back, make the reason visible. */
-    if(!formulas.length){
-
-      console.warn(
-        "Formula table returned 0 rows. " +
-        "Check RLS SELECT policy and table data."
-      );
-
-      setStatus(
-        "⚠ Supabase connected, but formulas table returned 0 rows. " +
-        "Check formulas RLS SELECT policy."
-      );
-
-    }
-
-  }catch(error){
-
-    console.error(
-      "Formula load error:",
-      error
-    );
-
-    formulas = [];
-
-    setStatus(
-      "❌ " +
-      (
-        error.message ||
-        String(error)
-      ),
-      true
-    );
-
-    if($("formulaList")){
-
-      $("formulaList").innerHTML = `
-        <div class="empty">
-          <b>Formula load failed.</b>
-          <br><br>
-          <small>${esc(error.message || String(error))}</small>
-        </div>
-      `;
-
-    }
-
+    const products=(forms||[]).map(f=>({
+      id:f.id,
+      supabaseFormulaId:f.id,
+      name:f.product_name||f.formula_name||'Product',
+      reference:f.product_reference||'',
+      costBasis:Number(f.cost_basis||100),
+      ingredients:fi.filter(x=>String(x.formula_id)===String(f.id)).map(x=>({
+        ingredientId:x.ingredient_id,
+        ingredientName:x.ingredient_name,
+        grams:(Number.isFinite(Number(x.quantity)) && Number(x.quantity)!==0) ? ((String(x.unit||'g').toLowerCase().startsWith('kg')) ? Number(x.quantity)*1000 : Number(x.quantity)) : Number(x.grams ?? 0)
+      }))
+    }));
+    saveProducts(products);
+    return products;
   }
 
-}
-
-/* =========================================================
-   FORMULA EDIT PASSWORD
-========================================================= */
-
-const FORMULA_EDIT_PASSWORD = "Waheguru@123";
-
-
-/* =========================================================
-   RENDER FORMULA LIST
-========================================================= */
-
-function renderList(){
-
-  const q =
-    $("search")
-      ? $("search").value
-          .toLowerCase()
-          .trim()
-      : "";
-
-
-  const list =
-    formulas.filter(function(f){
-
-      return (
-        (f.product_name || "") +
-        " " +
-        (f.formula_no || "") +
-        " " +
-        (f.formula_name || "") +
-        " " +
-        (f.id || "")
-      )
-      .toLowerCase()
-      .includes(q);
-
-    });
-
-
-  if(!list.length){
-
-    $("formulaList").innerHTML = `
-
-      <div class="empty">
-
-        No formulas found.
-
-        <br><br>
-
-        Click <b>New Formula</b> to create one.
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  $("formulaList").innerHTML = `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Formula No.</th>
-            <th>Formula ID</th>
-            <th>Product</th>
-            <th>Formula</th>
-            <th>Version</th>
-            <th>Date</th>
-            <th>Action</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${
-            list.map(function(f){
-
-              return `
-
-                <tr>
-
-                  <td>
-                    <b>
-                      ${esc(
-                        f.formula_no || "-"
-                      )}
-                    </b>
-                  </td>
-
-                  <td>
-                    <span style="
-                      font-family:monospace;
-                      font-size:9px;
-                      color:#777;
-                      word-break:break-all;
-                    ">
-                      ${esc(
-                        f.id || "-"
-                      )}
-                    </span>
-                  </td>
-
-                  <td>
-                    <b>
-                      ${esc(
-                        f.product_name || "-"
-                      )}
-                    </b>
-                  </td>
-
-                  <td>
-                    ${esc(
-                      f.formula_name || "-"
-                    )}
-                  </td>
-
-                  <td>
-                    ${esc(
-                      f.version || "-"
-                    )}
-                  </td>
-
-                  <td>
-                    ${esc(
-                      f.formula_date || "-"
-                    )}
-                  </td>
-
-                  <td>
-
-                    <button
-                      type="button"
-                      class="secondary view-btn"
-                      data-id="${esc(f.id)}"
-                    >
-                      👁 View
-                    </button>
-
-                    <button
-                      type="button"
-                      class="secondary print-btn"
-                      data-id="${esc(f.id)}"
-                    >
-                      🖨 Print
-                    </button>
-
-                  </td>
-
-                </tr>
-
-              `;
-
-            }).join("")
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-
-  $("formulaList")
-    .querySelectorAll(".view-btn")
-    .forEach(function(btn){
-
-      btn.addEventListener(
-        "click",
-        function(){
-
-          viewFormula(
-            this.dataset.id
-          );
-
-        }
-      );
-
-    });
-
-
-  $("formulaList")
-    .querySelectorAll(".print-btn")
-    .forEach(function(btn){
-
-      btn.addEventListener(
-        "click",
-        function(){
-
-          printFormula(
-            this.dataset.id
-          );
-
-        }
-      );
-
-    });
-
-}
-
-
-/* =========================================================
-   EDIT FORMULA
-========================================================= */
-
-function editFormula(id){
-
-  const f =
-    formulas.find(function(x){
-
-      return String(x.id) ===
-        String(id);
-
-    });
-
-
-  if(!f){
-
-    alert(
-      "Formula not found."
-    );
-
-    return;
-  }
-
-
-  editingId =
-    f.id;
-
-
-  $("formulaId").value =
-    f.id || "";
-
-
-  $("formulaNo").value =
-    f.formula_no || "";
-
-
-  $("productName").value =
-    f.product_name || "";
-
-
-  $("formulaName").value =
-    f.formula_name || "";
-
-
-  $("version").value =
-    f.version || "";
-
-
-  $("date").value =
-    f.formula_date || today();
-
-
-  $("batchSize").value =
-    f.batch_size ?? "";
-
-
-  $("batchUnit").value =
-    f.batch_unit || "g";
-
-
-  lastBatchSize =
-    Number(f.batch_size) || 0;
-
-
-  $("method").value =
-    f.preparation_method || "";
-
-
-  $("result").value =
-    f.result || "";
-
-
-  $("notes").value =
-    f.notes || "";
-
-
-  $("ingredients").innerHTML = "";
-
-
-  const rows =
-    f.formula_ingredients || [];
-
-
-  if(rows.length){
-
-    rows.forEach(function(row){
-
-      addIngredient({
-
-        name:
-          row.ingredient_name,
-
-        qty:
-          row.quantity,
-
-        unit:
-          row.unit,
-
-        pct:
-          row.percentage
-
+  window.renderProducts = async function(){
+    const box=document.getElementById('savedProductsList');
+    if(!box) return;
+    const products=await loadProductsFromSupabase();
+    if(!products.length){ box.innerHTML='<div style="padding:14px;color:#777">No products added yet.</div>'; return; }
+    const list=getIngredients();
+    box.innerHTML=products.map((p,i)=>{
+      let w=0,c=0;
+      (p.ingredients||[]).forEach(x=>{
+        const ing=findMasterIngredient(x,list);
+        const g=Number(x.grams||0); w+=g; c+=g*getLiveRate(x,list);
       });
+      return `<div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+        <div><strong>${esc(p.name)}</strong><div style="color:#777">${p.ingredients?.length||0} ingredients • Total Weight: <b>${w.toFixed(2)} g</b> • Ingredient Cost: <b>₹${c.toFixed(2)}</b> • Cost / ${Number(p.costBasis||100)===1000?'1000 g':'100 g'}: <b>₹${w ? (c/w*Number(p.costBasis||100)).toFixed(2) : '0.00'}</b></div></div>
+        <div style="display:flex;gap:7px"><button onclick="viewSavedProduct(${i})">View Formula</button><button onclick="printSavedProduct(${i})">Print</button></div>
+      </div>`;
+    }).join('');
+  };
 
-    });
+  // Re-render saved products after ingredient master changes too.
+  window.addEventListener('load', function(){ renderProducts(); renderIngredientMaster(); });
+})();
+</script>
+<script>
+async function addIngredient(){
+  const name=document.getElementById('ingredientName')?.value.trim();
+  const qty=Number(document.getElementById('ingredientQty')?.value||0);
+  const unit=(document.getElementById('ingredientUnit')?.value||'kg').toLowerCase();
+  const rate=Number(document.getElementById('ingredientRate')?.value||0);
+  const category=document.getElementById('ingredientCategory')?.value.trim()||null;
+  if(!name){showIngredientStatus('Please enter an ingredient name.',false);return;}
+  if(!(qty>0)){showIngredientStatus('Please enter a valid purchase quantity.',false);return;}
+  if(!(rate>=0)){showIngredientStatus('Please enter a valid purchase rate.',false);return;}
 
+  const grams=(unit==='g'||unit==='gram'||unit==='grams')?qty:qty*1000;
+  const ratePerGram=grams?rate/grams:0;
+  const editingId=window.editingIngredientId||null;
+  showIngredientStatus(editingId?'Updating ingredient in Supabase...':'Saving ingredient to Supabase...',true);
+
+  if(editingId){
+    const {error}=await supabaseClient.from('ingredients_master').update({
+      name,category,purchase_qty:qty,purchase_unit:unit,purchase_rate:rate,rate_per_gram:ratePerGram,updated_at:new Date().toISOString()
+    }).eq('id',editingId);
+    if(error){showIngredientStatus('Ingredient update failed: '+error.message,false);return;}
   }else{
-
-    addIngredient();
-
-  }
-
-
-  $("deleteBtn").style.display =
-    "inline-block";
-
-
-  calcTotals();
-
-  showTab("edit");
-
-}
-
-
-/* =========================================================
-   VIEW FORMULA
-========================================================= */
-
-async function viewFormula(id){
-
-  const f =
-    formulas.find(function(x){
-
-      return String(x.id) ===
-        String(id);
-
+    const {data:existing,error:checkError}=await supabaseClient.from('ingredients_master').select('id,name').ilike('name',name).limit(1);
+    if(checkError){showIngredientStatus('Could not check existing ingredients: '+checkError.message,false);return;}
+    if(existing?.length){showIngredientStatus(`Ingredient already exists: ${existing[0].name}. Use Edit to update it.`,false);return;}
+    const {error}=await supabaseClient.from('ingredients_master').insert({
+      name,category,purchase_qty:qty,purchase_unit:unit,purchase_rate:rate,rate_per_gram:ratePerGram
     });
-
-
-  if(!f){
-
-    alert(
-      "Formula not found."
-    );
-
-    return;
+    if(error){showIngredientStatus('Ingredient save failed: '+error.message,false);return;}
   }
 
-
-  let ingredients =
-    Array.isArray(f.formula_ingredients)
-      ? f.formula_ingredients
-      : [];
-
-  /* -------------------------------------------------------
-     LAST-MILE INGREDIENT RECOVERY
-     If the formula loaded but its ingredients were not
-     attached, fetch the exact rows directly from Supabase
-     REST using the Formula UUID.
-  ------------------------------------------------------- */
-  if(!ingredients.length){
-
-    try{
-
-      const url =
-        SUPABASE_URL +
-        "/rest/v1/formula_ingredients" +
-        "?select=*" +
-        "&formula_id=eq." +
-        encodeURIComponent(String(f.id));
-
-      const response =
-        await fetch(url,{
-          method:"GET",
-          headers:{
-            "apikey":SUPABASE_KEY,
-            "Authorization":"Bearer " + SUPABASE_KEY,
-            "Accept":"application/json"
-          }
-        });
-
-      const text = await response.text();
-
-      console.log(
-        "VIEW INGREDIENT REST:",
-        response.status,
-        text
-      );
-
-      if(response.ok && text){
-
-        const data = JSON.parse(text);
-
-        if(Array.isArray(data)){
-          ingredients = data.map(function(row){
-            return {
-              id:row.id,
-              formula_id:row.formula_id,
-              ingredient_name:row.ingredient_name ?? "",
-              quantity:row.quantity ?? "",
-              unit:row.unit ?? "",
-              percentage:row.percentage ?? ""
-            };
-          });
-
-          /* Keep the fetched ingredients attached to this formula. */
-          f.formula_ingredients = ingredients;
-        }
-
-      }else{
-
-        console.error(
-          "VIEW INGREDIENT REST ERROR:",
-          response.status,
-          text
-        );
-
-      }
-
-    }catch(error){
-
-      console.error(
-        "VIEW INGREDIENT FETCH ERROR:",
-        error
-      );
-
-    }
-
-  }
-
-
-  const ingredientHTML =
-    ingredients.map(function(x){
-
-      return `
-
-        <tr>
-
-          <td>
-            ${esc(
-              x.ingredient_name || ""
-            )}
-          </td>
-
-          <td>
-            ${esc(
-              x.quantity ?? ""
-            )}
-          </td>
-
-          <td>
-            ${esc(
-              x.unit || ""
-            )}
-          </td>
-
-          <td>
-            ${esc(
-              x.percentage ?? ""
-            )}
-          </td>
-
-        </tr>
-
-      `;
-
-    }).join("");
-
-
-  $("formulaList").innerHTML = `
-
-    <div class="card">
-
-      <div class="actions no-print">
-
-        <button
-          type="button"
-          class="secondary"
-          id="viewBackBtn"
-        >
-          ← Back
-        </button>
-
-        <button
-          type="button"
-          class="primary"
-          id="viewPrintBtn"
-        >
-          🖨 Print
-        </button>
-
-        <button
-          type="button"
-          class="secondary"
-          id="viewEditBtn"
-        >
-          ✏ Edit
-        </button>
-
-      </div>
-
-
-      <h2>
-        ${esc(f.product_name || "-")}
-      </h2>
-
-
-      <p>
-
-        <b>Formula No:</b>
-        ${esc(f.formula_no || "-")}
-
-        &nbsp;&nbsp;
-
-        <b>Version:</b>
-        ${esc(f.version || "-")}
-
-        &nbsp;&nbsp;
-
-        <b>Date:</b>
-        ${esc(f.formula_date || "-")}
-
-      </p>
-
-
-      <p>
-
-        <b>Formula ID:</b>
-
-        <span style="
-          font-family:monospace;
-          font-size:10px;
-          word-break:break-all;
-        ">
-          ${esc(f.id || "-")}
-        </span>
-
-      </p>
-
-
-      <p>
-
-        <b>Formula Name:</b>
-        ${esc(f.formula_name || "-")}
-
-      </p>
-
-
-      <h3>
-        Ingredients
-      </h3>
-
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>Ingredient</th>
-              <th>Quantity</th>
-              <th>Unit</th>
-              <th>%</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            ${
-              ingredientHTML ||
-              `
-                <tr>
-                  <td colspan="4">
-                    No ingredients
-                  </td>
-                </tr>
-              `
-            }
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-
-      <h3>
-        Preparation Method
-      </h3>
-
-      <div>
-        ${nl(
-          f.preparation_method || "-"
-        )}
-      </div>
-
-
-      <h3>
-        Result
-      </h3>
-
-      <div>
-        ${nl(
-          f.result || "-"
-        )}
-      </div>
-
-
-      <h3>
-        Notes
-      </h3>
-
-      <div>
-        ${nl(
-          f.notes || "-"
-        )}
-      </div>
-
-    </div>
-
-  `;
-
-
-  on(
-    "viewBackBtn",
-    "click",
-    renderList
-  );
-
-
-  on(
-    "viewPrintBtn",
-    "click",
-    function(){
-
-      printFormula(f.id);
-
-    }
-  );
-
-
-  on(
-    "viewEditBtn",
-    "click",
-    function(){
-
-      const password = prompt("Enter password to edit this formula:");
-
-      if(password === null){
-        return;
-      }
-
-      if(password !== FORMULA_EDIT_PASSWORD){
-        alert("Incorrect password.");
-        return;
-      }
-
-      editFormula(f.id);
-
-    }
-  );
-
+  await loadIngredientsFromSupabase(true);
+  renderIngredientMaster();
+  if(typeof renderFormulaRows==='function') renderFormulaRows();
+  showIngredientStatus(editingId?'Ingredient updated successfully in Supabase.':'Ingredient saved successfully in Supabase.',true);
+  cancelIngredientEdit();
 }
 
-
-/* =========================================================
-   DELETE FORMULA
-========================================================= */
-
-async function deleteCurrent(){
-
-  if(!editingId){
-    return;
-  }
-
-
-  if(
-    !confirm(
-      "Delete this formula permanently?"
-    )
-  ){
-    return;
-  }
-
-
-  if(!supabaseClient){
-
-    alert(
-      "Supabase is not connected."
-    );
-
-    return;
-  }
-
-
-  const btn =
-    $("deleteBtn");
-
-
-  if(btn){
-    btn.disabled = true;
-  }
-
-
-  try{
-
-    setStatus(
-      "☁ Deleting formula..."
-    );
-
-
-    const ingredientsDelete =
-      await supabaseClient
-        .from("formula_ingredients")
-        .delete()
-        .eq(
-          "formula_id",
-          editingId
-        );
-
-
-    if(ingredientsDelete.error){
-
-      throw new Error(
-        "Ingredient delete failed: " +
-        ingredientsDelete.error.message
-      );
-
-    }
-
-
-    const formulaDelete =
-      await supabaseClient
-        .from("formulas")
-        .delete()
-        .eq(
-          "id",
-          editingId
-        );
-
-
-    if(formulaDelete.error){
-
-      throw new Error(
-        "Formula delete failed: " +
-        formulaDelete.error.message
-      );
-
-    }
-
-
-    alert(
-      "Formula deleted successfully."
-    );
-
-
-    editingId = null;
-    lastBatchSize = 0;
-
-
-    await loadFormulas();
-
-    showTab("seen");
-
-
-  }catch(error){
-
-    console.error(
-      "Delete error:",
-      error
-    );
-
-
-    setStatus(
-      "❌ " +
-      (
-        error.message ||
-        String(error)
-      ),
-      true
-    );
-
-
-    alert(
-      "DELETE ERROR:\n\n" +
-      (
-        error.message ||
-        String(error)
-      )
-    );
-
-
-  }finally{
-
-    if(btn){
-      btn.disabled = false;
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-function printFormula(id){
-
-  const f =
-    formulas.find(function(x){
-
-      return String(x.id) ===
-        String(id);
-
-    });
-
-
-  if(!f){
-
-    alert(
-      "Formula not found."
-    );
-
-    return;
-  }
-
-
-  const ingredients =
-    f.formula_ingredients || [];
-
-
-  const ing =
-    ingredients.map(function(x){
-
-      return `
-
-        <tr>
-
-          <td>
-            ${esc(x.ingredient_name || "")}
-          </td>
-
-          <td>
-            ${esc(x.quantity ?? "")}
-          </td>
-
-          <td>
-            ${esc(x.unit || "")}
-          </td>
-
-          <td>
-            ${esc(x.percentage ?? "")}
-          </td>
-
-        </tr>
-
-      `;
-
-    }).join("");
-
-
-  $("printArea").innerHTML = `
-
-    <div class="print-head">
-
-      <div class="brand-print">
-        Liara Professional™
-      </div>
-
-      <div class="brand-line">
-        ADVANCED HERBAL
-      </div>
-
-      <div style="
-        font-size:11px;
-        margin-top:6px;
-      ">
-        Professional Formula & Product Development
-      </div>
-
-    </div>
-
-
-    <h2 style="text-align:center">
-      FORMULA SHEET
-    </h2>
-
-
-    <table>
-
-      <tr>
-
-        <th>
-          Product Name
-        </th>
-
-        <td>
-          ${esc(f.product_name || "-")}
-        </td>
-
-        <th>
-          Formula No.
-        </th>
-
-        <td>
-          ${esc(f.formula_no || "-")}
-        </td>
-
-      </tr>
-
-
-      <tr>
-
-        <th>
-          Formula ID
-        </th>
-
-        <td
-          colspan="3"
-          style="
-            font-family:monospace;
-            font-size:9px;
-            word-break:break-all;
-          "
-        >
-          ${esc(f.id || "-")}
-        </td>
-
-      </tr>
-
-
-      <tr>
-
-        <th>
-          Formula Name
-        </th>
-
-        <td>
-          ${esc(f.formula_name || "-")}
-        </td>
-
-        <th>
-          Version
-        </th>
-
-        <td>
-          ${esc(f.version || "-")}
-        </td>
-
-      </tr>
-
-
-      <tr>
-
-        <th>
-          Date
-        </th>
-
-        <td>
-          ${esc(f.formula_date || "-")}
-        </td>
-
-        <th>
-          Batch
-        </th>
-
-        <td>
-          ${esc(f.batch_size ?? "-")}
-          ${esc(f.batch_unit || "")}
-        </td>
-
-      </tr>
-
-    </table>
-
-
-    <h3>
-      Ingredients
-    </h3>
-
-
-    <table>
-
-      <tr>
-
-        <th>
-          Ingredient
-        </th>
-
-        <th>
-          Quantity
-        </th>
-
-        <th>
-          Unit
-        </th>
-
-        <th>
-          %
-        </th>
-
-      </tr>
-
-      ${ing}
-
-    </table>
-
-
-    <h3>
-      Preparation Method
-    </h3>
-
-    <div>
-      ${nl(
-        f.preparation_method || "-"
-      )}
-    </div>
-
-
-    <h3>
-      Result
-    </h3>
-
-    <div>
-      ${nl(
-        f.result || "-"
-      )}
-    </div>
-
-
-    <h3>
-      Notes
-    </h3>
-
-    <div>
-      ${nl(
-        f.notes || "-"
-      )}
-    </div>
-
-
-    <div class="print-footer">
-
-      Liara Professional™
-      <br>
-      Advanced Herbal • Professional Formula Sheet
-
-    </div>
-
-  `;
-
-
-  $("printArea").style.display =
-    "block";
-
-
-  window.print();
-
-
-  setTimeout(function(){
-
-    $("printArea").style.display =
-      "none";
-
-  },500);
-
-}
-
-
-/* =========================================================
-   TABS
-========================================================= */
-
-function showTab(id){
-
-  document
-    .querySelectorAll(".panel")
-    .forEach(function(panel){
-
-      panel.classList.remove("active");
-
-    });
-
-
-  const panel = $(id);
-
-  if(panel){
-    panel.classList.add("active");
-  }
-
-
-  document
-    .querySelectorAll(".tab")
-    .forEach(function(tab){
-
-      tab.classList.remove("active");
-
-    });
-
-
-  if(id === "seen"){
-
-    $("seenTab")
-      .classList.add("active");
-
-  }else{
-
-    $("editTab")
-      .classList.add("active");
-
-  }
-
-}
-
-
-/* =========================================================
-   SETTINGS TOGGLE
-========================================================= */
-
-function openSettings(){
-
-  const panel =
-    $("settingsPanel");
-
-  if(panel){
-
-    panel.classList.add("open");
-
-    renderMasterLists();
-
-  }
-
-}
-
-
-function closeSettings(){
-
-  const panel =
-    $("settingsPanel");
-
-  if(panel){
-
-    panel.classList.remove("open");
-
-  }
-
-}
-
-
-/* =========================================================
-   EVENTS
-========================================================= */
-
-function setupEvents(){
-
-  on(
-    "settingsButton",
-    "click",
-    openSettings
-  );
-
-
-  on(
-    "closeSettings",
-    "click",
-    closeSettings
-  );
-
-
-  on(
-    "settingsPanel",
-    "click",
-    function(e){
-
-      if(e.target === this){
-
-        closeSettings();
-
-      }
-
-    }
-  );
-
-
-  on(
-    "seenTab",
-    "click",
-    function(){
-
-      showTab("seen");
-      renderList();
-
-    }
-  );
-
-
-  on(
-    "editTab",
-    "click",
-    function(){
-
-      showTab("edit");
-
-    }
-  );
-
-
-  on(
-    "newTopBtn",
-    "click",
-    newFormula
-  );
-
-
-  on(
-    "newTopBtn2",
-    "click",
-    newFormula
-  );
-
-
-  on(
-    "clearBtn",
-    "click",
-    newFormula
-  );
-
-
-  on(
-    "clearBtn2",
-    "click",
-    newFormula
-  );
-
-
-  on(
-    "saveBtn",
-    "click",
-    saveFormula
-  );
-
-
-  on(
-    "deleteBtn",
-    "click",
-    deleteCurrent
-  );
-
-
-  on(
-    "addIngredientBtn",
-    "click",
-    function(){
-
-      addIngredient();
-
-    }
-  );
-
-
-  on(
-    "search",
-    "input",
-    renderList
-  );
-
-
-  on(
-    "scienceAddBtn",
-    "click",
-    function(){
-
-      addMasterIngredient("science");
-
-    }
-  );
-
-
-  on(
-    "naturalAddBtn",
-    "click",
-    function(){
-
-      addMasterIngredient("natural");
-
-    }
-  );
-
-
-  on(
-    "scienceInput",
-    "keydown",
-    function(e){
-
-      if(e.key === "Enter"){
-
-        e.preventDefault();
-
-        addMasterIngredient("science");
-
-      }
-
-    }
-  );
-
-
-  on(
-    "naturalInput",
-    "keydown",
-    function(e){
-
-      if(e.key === "Enter"){
-
-        e.preventDefault();
-
-        addMasterIngredient("natural");
-
-      }
-
-    }
-  );
-
-
-  on(
-    "batchSize",
-    "change",
-    scaleIngredientsForBatch
-  );
-
-}
-
-
-/* =========================================================
-   START
-========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  async function(){
-
-    try{
-
-      initSupabase();
-
-      setupEvents();
-
-
-      if($("date")){
-        $("date").value =
-          today();
-      }
-
-
-      /* -----------------------------------------------
-         MASTER INGREDIENTS FIRST
-      ------------------------------------------------ */
-
-      await loadMasterIngredients();
-
-
-      /* -----------------------------------------------
-         FIRST ROW
-      ------------------------------------------------ */
-
-      if(
-        $("ingredients") &&
-        $("ingredients").children.length === 0
-      ){
-
-        addIngredient();
-
-      }
-
-
-      /* -----------------------------------------------
-         FORMULAS
-      ------------------------------------------------ */
-
-      await loadFormulas();
-
-
-    }catch(error){
-
-      console.error(
-        "APPLICATION ERROR:",
-        error
-      );
-
-
-      setStatus(
-        "❌ Application error: " +
-        (
-          error.message ||
-          String(error)
-        ),
-        true
-      );
-
-    }
-
-  }
-);
+window.addEventListener('load',async()=>{
+  await loadIngredientsFromSupabase(true);
+  renderIngredientMaster();
+  await renderProducts();
+});
 </script>
 
 </body>
