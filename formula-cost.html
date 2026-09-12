@@ -12,7 +12,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#f4f5f7;color:#161616;pad
 .header h1{font-size:27px}.header p{color:#bbb;margin-top:6px;font-size:14px}
 .card{background:#fff;border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 5px 20px rgba(0,0,0,.06)}
 .card h2{font-size:20px;margin-bottom:17px}
-.form-grid{display:grid;grid-template-columns:1.4fr .7fr .7fr auto;gap:12px;align-items:end}
+.form-grid{display:grid;grid-template-columns:1.4fr .7fr .7fr 1fr 1.05fr auto;gap:12px;align-items:end}
 .field label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:7px}
 input,select{width:100%;height:44px;border:1px solid #ddd;border-radius:9px;padding:0 12px;font-size:15px;outline:none;background:#fff}
 input:focus,select:focus{border-color:#111}
@@ -30,7 +30,7 @@ td{padding:11px;border-bottom:1px solid #eee;font-size:14px}
 .product-box{border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:18px}
 .product-box h3{font-size:18px;margin-bottom:7px}
 .product-meta{font-size:13px;color:#666;margin-bottom:14px}
-.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
 .summary-box{background:#f7f7f7;border-radius:11px;padding:15px}
 .summary-box span{display:block;font-size:12px;color:#777;margin-bottom:6px}
 .summary-box strong{font-size:20px}
@@ -103,21 +103,25 @@ Example: 1 KG = ₹500 → ₹0.50/g.
 <input id="ingredientCategory" type="text" placeholder="D-Tan, Brightening, Moisturizing">
 </div>
 
-<div class="field">
-<label>Description</label>
-<input id="ingredientDescription" type="text" placeholder="Short ingredient description">
-</div>
-
 <button id="ingredientSaveBtn" class="black" onclick="addIngredient()">+ Add Ingredient</button><button id="ingredientCancelBtn" class="light" style="display:none" onclick="cancelIngredientEdit()">Cancel Edit</button>
 </div>
 <div class="rate-note">The rate is the total amount paid for the entered purchase quantity — it does not have to be a per-kg rate.</div>
 <div id="ingredientStatus" class="status"></div>
-<div class="ingredient-tools">
-  <div class="field"><label>Search Ingredient / Category / Use</label><input id="ingredientSearch" type="text" placeholder="e.g. D-Tan, Brightening, Aloe..." oninput="renderIngredientMaster()"></div>
-  <div class="field"><label>Filter Category</label><select id="ingredientCategoryFilter" onchange="renderIngredientMaster()"><option value="">All Categories</option></select></div>
-  <button class="light" onclick="clearIngredientFilters()">Clear Filter</button>
+<div class="summary" id="ingredientSummary">
+  <div class="summary-box"><span>Total Ingredients</span><strong id="summaryTotalIngredients">0</strong></div>
+  <div class="summary-box"><span>Total Purchase Value</span><strong id="summaryPurchaseValue">₹0.00</strong></div>
+  <div class="summary-box"><span>Categories / Uses</span><strong id="summaryCategories">0</strong></div>
 </div>
-<div id="ingredientMasterList" style="margin-top:18px"></div>
+<div style="display:flex;gap:10px;align-items:end;margin-top:18px;flex-wrap:wrap">
+  <div class="field" style="flex:1 1 525px;min-width:240px"><input id="ingredientSearch" type="text" placeholder="Search ingredient or category..." oninput="renderIngredientMaster()"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="blue" onclick="loadIngredientsFromSupabase()">↻ Refresh</button>
+    <button class="blue" onclick="exportAllIngredientsExcel()">📊 Excel</button>
+    <button class="light" onclick="exportAllIngredientsPDF()">📄 PDF</button>
+  </div>
+</div>
+<div id="ingredientMasterCount" style="font-size:13px;color:#777;margin-top:14px"></div>
+<div id="ingredientMasterList" style="margin-top:8px"></div>
 </div>
 
 
@@ -236,18 +240,28 @@ window.closeIngredientView=function(){const m=document.getElementById("ingredien
 function renderIngredientMaster(){
   let box=document.getElementById("ingredientMasterList"); if(!box)return;
   const list=getIngredientMaster();
-  refreshIngredientCategoryFilter();
   const search=String(document.getElementById("ingredientSearch")?.value||"").trim().toLowerCase();
-  const filter=String(document.getElementById("ingredientCategoryFilter")?.value||"").trim().toLowerCase();
+  const filter="";
+  const totalValue=list.reduce((sum,x)=>sum+Number(x.purchaseRate||0),0);
+  const categorySet=new Set();
+  list.forEach(x=>getUses(x).forEach(u=>{const v=String(u||"").trim().toLowerCase();if(v)categorySet.add(v);}));
+  const totalEl=document.getElementById("summaryTotalIngredients");
+  const valueEl=document.getElementById("summaryPurchaseValue");
+  const catEl=document.getElementById("summaryCategories");
+  if(totalEl)totalEl.textContent=list.length;
+  if(valueEl)valueEl.textContent="₹"+totalValue.toFixed(2);
+  if(catEl)catEl.textContent=categorySet.size;
   const filtered=list.map((item,index)=>({item,index})).filter(({item})=>{
     const uses=getUses(item); const hay=[item.name||"",item.category||"",getDescription(item),...uses].join(" ").toLowerCase();
     const searchOk=!search||hay.includes(search);
     const filterOk=!filter||uses.some(u=>u.toLowerCase()===filter);
     return searchOk&&filterOk;
   });
-  if(!list.length){box.innerHTML='<div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;flex-wrap:wrap"><button class="blue" onclick="exportAllIngredientsExcel()">📊 Download All Ingredients Excel</button><button class="light" onclick="exportAllIngredientsPDF()">📄 Download All Ingredients PDF</button></div><div class="empty">No ingredients added yet.</div>';return;}
+  const countEl=document.getElementById('ingredientMasterCount');
+  if(countEl)countEl.textContent=`Showing ${filtered.length} of ${list.length} ingredients • Supabase database is the master source.`;
+  if(!list.length){if(countEl)countEl.textContent='Showing 0 of 0 ingredients • Supabase database is the master source.';box.innerHTML='<div class="empty">No ingredients added yet.</div>';return;}
   if(!filtered.length){box.innerHTML='<div class="empty">No ingredient found for this search/category.</div>';return;}
-  box.innerHTML='<div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;flex-wrap:wrap"><button class="blue" onclick="exportAllIngredientsExcel()">📊 Download All Ingredients Excel</button><button class="light" onclick="exportAllIngredientsPDF()">📄 Download All Ingredients PDF</button></div><div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Category / Uses</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+filtered.map(({item,index})=>{const g=ingredientGramRate(item);return `<tr><td><strong>${escGlobal(item.name)}</strong></td><td>${renderTags(item)}</td><td>${Number(item.purchaseQty).toLocaleString("en-IN")} ${String(item.purchaseUnit||"kg").toLowerCase().startsWith("g")?"Gram":"KG"}</td><td>₹${Number(item.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td style="white-space:nowrap"><button class="blue" onclick="viewIngredient(${index})">View</button> <button class="light" onclick="editIngredient(${index})">Edit</button></td></tr>`}).join('')+'</tbody></table></div>';
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Ingredient</th><th>Category / Uses</th><th>Purchase Quantity</th><th>Total Purchase Rate</th><th>Rate / Gram</th><th>Rate / KG</th><th>Action</th></tr></thead><tbody>'+filtered.map(({item,index})=>{const g=ingredientGramRate(item);return `<tr><td><strong>${escGlobal(item.name)}</strong></td><td>${renderTags(item)}</td><td>${Number(item.purchaseQty).toLocaleString("en-IN")} ${String(item.purchaseUnit||"kg").toLowerCase().startsWith("g")?"Gram":"KG"}</td><td>₹${Number(item.purchaseRate||0).toFixed(2)}</td><td>₹${g.toFixed(4)}</td><td>₹${(g*1000).toFixed(2)}</td><td style="white-space:nowrap"><button class="blue" onclick="viewIngredient(${index})">View</button> <button class="light" onclick="editIngredient(${index})">Edit</button></td></tr>`}).join('')+'</tbody></table></div>';
 }
 
 window.exportAllIngredientsExcel=function(){
@@ -322,7 +336,7 @@ function editIngredient(i){
   document.getElementById("ingredientUnit").value=(item.purchaseUnit||"kg").toLowerCase()==="g"?"g":"kg";
   document.getElementById("ingredientRate").value=item.purchaseRate??"";
   document.getElementById("ingredientCategory").value=getMeta(item).category||item.category||"";
-  document.getElementById("ingredientDescription").value=getDescription(item);
+  if(document.getElementById("ingredientDescription"))document.getElementById("ingredientDescription").value=getDescription(item);
   window.editingIngredientId=item.id||null;
   window.editingIngredientIndex=i;
   const btn=document.getElementById("ingredientSaveBtn");
@@ -339,7 +353,7 @@ function cancelIngredientEdit(){
   document.getElementById("ingredientUnit").value="kg";
   document.getElementById("ingredientRate").value="";
   document.getElementById("ingredientCategory").value="";
-  document.getElementById("ingredientDescription").value="";
+  if(document.getElementById("ingredientDescription"))document.getElementById("ingredientDescription").value="";
   const btn=document.getElementById("ingredientSaveBtn");
   if(btn)btn.textContent="+ Add Ingredient";
   const cancel=document.getElementById("ingredientCancelBtn");
