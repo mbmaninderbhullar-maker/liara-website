@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2184,35 +2185,94 @@ async function deleteMasterIngredient(
 
   if(
     !confirm(
-      'Delete "'+name+'"?'
+      'Delete "'+name+'" from Ingredient Settings?\n\nThis will permanently remove it from the Supabase ingredients table.'
     )
   ){
     return;
   }
 
 
+  /* -------------------------------------------------------
+     DELETE FROM SUPABASE
+     Settings ingredients are stored in the "ingredients"
+     table. Do not silently ignore database errors.
+  ------------------------------------------------------- */
   if(
-    supabaseClient &&
-    source === "supabase"
+    !supabaseClient
   ){
+
+    alert(
+      "Supabase is not connected. Ingredient was not deleted."
+    );
+
+    return;
+  }
+
+
+  if(source === "supabase"){
 
     try{
 
-      await supabaseClient
-        .from("ingredients")
-        .delete()
-        .eq("name",name);
+      const result =
+        await supabaseClient
+          .from("ingredients")
+          .delete()
+          .eq("name",name);
+
+
+      if(result.error){
+        throw result.error;
+      }
+
+
+      /* Verify that the ingredient is actually gone. */
+      const verify =
+        await supabaseClient
+          .from("ingredients")
+          .select("id")
+          .eq("name",name)
+          .limit(1);
+
+
+      if(verify.error){
+        throw verify.error;
+      }
+
+
+      if(
+        verify.data &&
+        verify.data.length
+      ){
+
+        throw new Error(
+          "Ingredient could not be deleted from Supabase. Please check your Supabase DELETE policy (RLS)."
+        );
+
+      }
 
     }catch(error){
 
-      console.warn(
-        "Supabase ingredient delete:",
+      console.error(
+        "Supabase ingredient delete failed:",
         error
       );
 
+      alert(
+        "Ingredient was NOT deleted.\n\nSupabase error: " +
+        (error.message || String(error))
+      );
+
+      return;
     }
 
   }
+
+
+  /* -------------------------------------------------------
+     Remove any old local fallback copy as well.
+  ------------------------------------------------------- */
+  const local =
+    getLocalMasterIngredients();
 
 
   local.science =
@@ -2235,10 +2295,15 @@ async function deleteMasterIngredient(
 
   saveLocalMasterIngredients(local);
 
+
   await loadMasterIngredients();
 
-}
 
+  setStatus(
+    "✓ Ingredient deleted from Supabase: "+name
+  );
+
+}
 
 /* =========================================================
    INGREDIENT OPTIONS
