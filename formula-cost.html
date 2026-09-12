@@ -404,6 +404,68 @@ async function printSavedProduct(i){await viewSavedProduct(i); setTimeout(printP
       .select('*').order('name',{ascending:true});
     if(error){ console.error(error); return ingredientCache; }
 
+    // Automatically sync ingredients saved in Formula Manager Settings
+    // (public.ingredients) into Ingredient Master (public.ingredients_master).
+    // Existing purchase quantity/rate data is NEVER overwritten.
+    try{
+      const {data:settingsIngredients,error:settingsErr}=await supabaseClient
+        .from('ingredients')
+        .select('name,category')
+        .order('name',{ascending:true});
+
+      if(!settingsErr && settingsIngredients){
+        const existingNames=new Set(
+          (data||[]).map(x=>String(x.name||'').trim().toLowerCase())
+        );
+
+        const missingFromSettings=[];
+
+        settingsIngredients.forEach(row=>{
+          const nm=String(row.name||'').trim();
+          if(nm && !existingNames.has(nm.toLowerCase())){
+            existingNames.add(nm.toLowerCase());
+
+            missingFromSettings.push({
+              name:nm,
+              category:String(row.category||'').trim(),
+              description:'',
+              purchase_qty:1,
+              purchase_unit:'kg',
+              purchase_rate:0,
+              rate_per_gram:0
+            });
+          }
+        });
+
+        if(missingFromSettings.length){
+          const syncResult=await supabaseClient
+            .from('ingredients_master')
+            .insert(missingFromSettings);
+
+          if(!syncResult.error){
+            const fresh=await supabaseClient
+              .from('ingredients_master')
+              .select('*')
+              .order('name',{ascending:true});
+
+            if(!fresh.error){
+              data=fresh.data||data;
+            }
+          }else{
+            console.warn(
+              'Settings ingredient sync skipped:',
+              syncResult.error.message
+            );
+          }
+        }
+      }
+    }catch(settingsSyncErr){
+      console.warn(
+        'Settings ingredient sync skipped:',
+        settingsSyncErr
+      );
+    }
+
     // Automatically bring ingredient names used in saved formulas into Ingredient Master.
     // Only missing names are added; existing purchased rates are never overwritten.
     try{
