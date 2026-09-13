@@ -136,6 +136,11 @@ button{
   color:#fff
 }
 
+.green{
+  background:#198754;
+  color:#fff
+}
+
 .actions{
   display:flex;
   gap:9px;
@@ -173,6 +178,13 @@ button{
   display:block;
   background:#fdeaea;
   color:#a51d1d
+}
+
+.status.loading{
+  display:block;
+  background:#f3f5f7;
+  color:#333;
+  border:1px solid #ddd
 }
 
 .label-preview{
@@ -229,6 +241,12 @@ button{
   margin-top:8px
 }
 
+.batch-preview-line{
+  font-size:13px;
+  color:#555;
+  margin-top:6px
+}
+
 .verify-result{
   margin-top:18px;
   padding:18px;
@@ -274,7 +292,7 @@ button{
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:850px
+  min-width:950px
 }
 
 th{
@@ -288,7 +306,8 @@ th{
 td{
   padding:10px;
   border-bottom:1px solid #eee;
-  font-size:13px
+  font-size:13px;
+  vertical-align:middle
 }
 
 .badge{
@@ -388,6 +407,89 @@ td{
   margin-top:14px;
   font-size:13px;
   line-height:1.6
+}
+
+/* RECORD BARCODE MODAL */
+
+.record-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.68);
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px
+}
+
+.record-modal.show{
+  display:flex
+}
+
+.record-modal-card{
+  width:min(600px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:16px;
+  padding:22px;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.3)
+}
+
+.record-modal-card h2{
+  margin-bottom:5px
+}
+
+.record-modal-product{
+  font-size:17px;
+  font-weight:700;
+  margin-top:8px
+}
+
+.record-modal-meta{
+  font-size:13px;
+  color:#666;
+  margin-top:5px
+}
+
+.record-barcode-box{
+  margin:20px auto 8px;
+  min-height:80px;
+  display:flex;
+  justify-content:center;
+  align-items:center
+}
+
+.record-barcode-box svg{
+  max-width:100%;
+  height:auto
+}
+
+.record-qr-box{
+  display:flex;
+  justify-content:center;
+  margin:14px 0
+}
+
+.record-qr-box img,
+.record-qr-box canvas{
+  max-width:180px!important;
+  height:auto!important
+}
+
+.record-code{
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:1px
+}
+
+.record-actions{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:18px
 }
 
 /* CUSTOMER QR / BARCODE VERIFICATION MODE */
@@ -496,6 +598,25 @@ td{
     padding:10mm
   }
 
+  .record-modal{
+    position:static!important;
+    display:block!important;
+    background:#fff!important;
+    padding:0!important
+  }
+
+  .record-modal-card{
+    width:100%!important;
+    max-height:none!important;
+    overflow:visible!important;
+    box-shadow:none!important;
+    border:0!important
+  }
+
+  .record-modal .no-print{
+    display:none!important
+  }
+
 }
 </style>
 </head>
@@ -516,19 +637,23 @@ td{
 
 <div class="tabs no-print">
 
+<!-- BATCH MANAGEMENT FIRST -->
+
 <button
 class="tab active"
+onclick="showTab('batches',this)"
+>
+Batch Management
+</button>
+
+
+<button
+class="tab"
 onclick="showTab('create',this)"
 >
 Create Barcode + QR
 </button>
 
-<button
-class="tab"
-onclick="showTab('batches',this)"
->
-Batch Management
-</button>
 
 <button
 class="tab"
@@ -536,6 +661,7 @@ onclick="showTab('verify',this)"
 >
 Verify Product
 </button>
+
 
 <button
 class="tab"
@@ -548,267 +674,12 @@ Barcode Records
 
 
 <!-- =========================================================
-     CREATE BARCODE + QR
-========================================================= -->
-
-<section id="tab-create">
-
-<div class="card">
-
-<h2>Create Product Barcode + QR</h2>
-
-<p class="note">
-Select Product → Variant / Size → Batch. The barcode and QR will automatically be linked to that production batch. One batch can have multiple verification barcodes.
-</p>
-
-
-<div class="grid">
-
-
-<div class="field">
-
-<label>
-Product Name *
-</label>
-
-<select
-id="productSelect"
-onchange="loadCreateVariants()"
->
-
-<option value="">
-Select Product
-</option>
-
-</select>
-
-</div>
-
-
-<div class="field">
-
-<label>
-Variant / Size *
-</label>
-
-<select
-id="variantSelect"
-onchange="loadCreateBatches()"
->
-
-<option value="">
-Select Variant / Size
-</option>
-
-</select>
-
-</div>
-
-
-<div class="field">
-
-<label>
-Select Batch *
-</label>
-
-<select
-id="batchSelect"
-onchange="selectBatchForBarcode()"
->
-
-<option value="">
-Select Batch
-</option>
-
-</select>
-
-</div>
-
-
-</div>
-
-
-<div
-id="selectedBatchSummary"
-class="batch-summary"
->
-
-<div class="batch-summary-title">
-Selected Batch
-</div>
-
-<div class="batch-summary-grid">
-
-
-<div class="batch-summary-item">
-
-<span>
-Batch Number
-</span>
-
-<strong id="selBatchNo">
-—
-</strong>
-
-</div>
-
-
-<div class="batch-summary-item">
-
-<span>
-Total Batch
-</span>
-
-<strong id="selBatchQty">
-—
-</strong>
-
-</div>
-
-
-<div class="batch-summary-item">
-
-<span>
-Manufacturing
-</span>
-
-<strong id="selBatchMfg">
-—
-</strong>
-
-</div>
-
-
-<div class="batch-summary-item">
-
-<span>
-Expiry
-</span>
-
-<strong id="selBatchExp">
-—
-</strong>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="black"
-onclick="createVerification()"
->
-Create Barcode + QR
-</button>
-
-<button
-class="light"
-onclick="clearCreateForm()"
->
-Clear
-</button>
-
-</div>
-
-
-<div
-id="createStatus"
-class="status"
-></div>
-
-
-<!-- LABEL PREVIEW -->
-
-<div
-id="labelPreview"
-class="label-preview hidden"
->
-
-<div class="label-brand">
-LIARA PROFESSIONAL™
-</div>
-
-
-<div
-id="previewProduct"
-class="label-product"
-></div>
-
-
-<div
-id="previewVariant"
-style="margin-top:4px;color:#666"
-></div>
-
-
-<div class="barcode-box">
-
-<svg id="barcode"></svg>
-
-</div>
-
-
-<div
-id="previewCode"
-class="code-text"
-></div>
-
-
-<div
-class="qr-box"
-id="qrcode"
-></div>
-
-
-<div class="small">
-Scan QR to verify authenticity online
-</div>
-
-
-<div
-class="actions no-print"
-style="justify-content:center"
->
-
-<button
-class="black"
-onclick="printLabel()"
->
-🖨 Print Label
-</button>
-
-
-<button
-class="blue"
-onclick="downloadBarcode()"
->
-⬇ Download Barcode
-</button>
-
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================================
      BATCH MANAGEMENT
 ========================================================= -->
 
 <section
 id="tab-batches"
-class="hidden"
 >
-
 
 <div class="card">
 
@@ -1048,8 +919,274 @@ id="batchList"
 style="margin-top:15px"
 ></div>
 
+
 </div>
 
+</section>
+
+
+<!-- =========================================================
+     CREATE BARCODE + QR
+========================================================= -->
+
+<section
+id="tab-create"
+class="hidden"
+>
+
+<div class="card">
+
+<h2>
+Create Product Barcode + QR
+</h2>
+
+
+<p class="note">
+Select Product → Variant / Size → Batch. The barcode and QR will automatically be linked to that production batch. One batch can have multiple verification barcodes.
+</p>
+
+
+<div class="grid">
+
+
+<div class="field">
+
+<label>
+Product Name *
+</label>
+
+<select
+id="productSelect"
+onchange="loadCreateVariants()"
+>
+
+<option value="">
+Select Product
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Variant / Size *
+</label>
+
+<select
+id="variantSelect"
+onchange="loadCreateBatches()"
+>
+
+<option value="">
+Select Variant / Size
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Select Batch *
+</label>
+
+<select
+id="batchSelect"
+onchange="selectBatchForBarcode()"
+>
+
+<option value="">
+Select Batch
+</option>
+
+</select>
+
+</div>
+
+
+</div>
+
+
+<div
+id="selectedBatchSummary"
+class="batch-summary"
+>
+
+<div class="batch-summary-title">
+Selected Batch
+</div>
+
+<div class="batch-summary-grid">
+
+
+<div class="batch-summary-item">
+
+<span>
+Batch Number
+</span>
+
+<strong id="selBatchNo">
+—
+</strong>
+
+</div>
+
+
+<div class="batch-summary-item">
+
+<span>
+Total Batch
+</span>
+
+<strong id="selBatchQty">
+—
+</strong>
+
+</div>
+
+
+<div class="batch-summary-item">
+
+<span>
+Manufacturing
+</span>
+
+<strong id="selBatchMfg">
+—
+</strong>
+
+</div>
+
+
+<div class="batch-summary-item">
+
+<span>
+Expiry
+</span>
+
+<strong id="selBatchExp">
+—
+</strong>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="black"
+id="createBarcodeBtn"
+onclick="createVerification()"
+>
+Create Barcode + QR
+</button>
+
+
+<button
+class="light"
+onclick="clearCreateForm()"
+>
+Clear
+</button>
+
+</div>
+
+
+<div
+id="createStatus"
+class="status"
+></div>
+
+
+<!-- LABEL PREVIEW -->
+
+<div
+id="labelPreview"
+class="label-preview hidden"
+>
+
+<div class="label-brand">
+LIARA PROFESSIONAL™
+</div>
+
+
+<div
+id="previewProduct"
+class="label-product"
+></div>
+
+
+<div
+id="previewVariant"
+style="margin-top:4px;color:#666"
+></div>
+
+
+<div
+id="previewBatchQty"
+class="batch-preview-line"
+></div>
+
+
+<div class="barcode-box">
+
+<svg id="barcode"></svg>
+
+</div>
+
+
+<div
+id="previewCode"
+class="code-text"
+></div>
+
+
+<div
+class="qr-box"
+id="qrcode"
+></div>
+
+
+<div class="small">
+Scan QR to verify authenticity online
+</div>
+
+
+<div
+class="actions no-print"
+style="justify-content:center"
+>
+
+<button
+class="black"
+onclick="printLabel()"
+>
+🖨 Print Label
+</button>
+
+
+<button
+class="blue"
+onclick="downloadBarcode()"
+>
+⬇ Download Barcode
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
@@ -1142,7 +1279,7 @@ Barcode Records
 
 
 <p class="note">
-Records are loaded live from the Supabase database.
+All generated barcodes are saved here. You can view, download or print any barcode again at any time.
 </p>
 
 
@@ -1179,6 +1316,107 @@ style="margin-top:15px"
 
 
 <!-- =========================================================
+     RECORD BARCODE MODAL
+========================================================= -->
+
+<div
+id="recordModal"
+class="record-modal"
+>
+
+<div class="record-modal-card">
+
+<h2>
+LIARA PROFESSIONAL™
+</h2>
+
+
+<div
+id="recordModalProduct"
+class="record-modal-product"
+>
+</div>
+
+
+<div
+id="recordModalVariant"
+class="record-modal-meta"
+>
+</div>
+
+
+<div
+id="recordModalBatch"
+class="record-modal-meta"
+>
+</div>
+
+
+<div
+class="record-barcode-box"
+>
+
+<svg id="recordBarcode"></svg>
+
+</div>
+
+
+<div
+id="recordModalCode"
+class="record-code"
+>
+</div>
+
+
+<div
+id="recordQr"
+class="record-qr-box"
+>
+</div>
+
+
+<div
+class="small"
+>
+Scan QR to verify authenticity online
+</div>
+
+
+<div
+class="record-actions no-print"
+>
+
+<button
+class="black"
+onclick="printRecordBarcode()"
+>
+🖨 Print
+</button>
+
+
+<button
+class="blue"
+onclick="downloadRecordBarcode()"
+>
+⬇ Download Barcode
+</button>
+
+
+<button
+class="light"
+onclick="closeRecordModal()"
+>
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
      LIBRARIES
 ========================================================= -->
 
@@ -1197,6 +1435,7 @@ style="margin-top:15px"
 
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
+
 
 const SUPABASE_ANON_KEY =
 "sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
@@ -1223,6 +1462,8 @@ let currentBatchVariants = [];
 
 let selectedBatch = null;
 
+let currentRecord = null;
+
 
 /* =========================================================
    TAB SYSTEM
@@ -1231,8 +1472,8 @@ let selectedBatch = null;
 function showTab(tab,btn){
 
 const tabs = [
-"create",
 "batches",
+"create",
 "verify",
 "records"
 ];
@@ -1292,7 +1533,8 @@ loadRecords();
 
 if(tab==="verify"){
 
-const c=getHashCode();
+const c =
+getHashCode();
 
 
 if(c){
@@ -1308,7 +1550,8 @@ verifyProduct();
 
 setTimeout(
 ()=>{
-const input=
+
+const input =
 document.getElementById(
 "verifyCode"
 );
@@ -1332,7 +1575,8 @@ input.focus();
 function setStatus(
 id,
 msg,
-ok=true
+ok=true,
+loading=false
 ){
 
 const el =
@@ -1345,9 +1589,24 @@ return;
 el.textContent=msg;
 
 
+if(loading){
+
 el.className =
-"status "+
-(ok?"ok":"err");
+"status loading";
+
+return;
+
+}
+
+
+el.className =
+"status "+(
+ok
+?
+"ok"
+:
+"err"
+);
 
 }
 
@@ -1667,6 +1926,7 @@ if(error){
 
 console.error(error);
 
+
 select.innerHTML =
 "<option value=''>Unable to load products</option>";
 
@@ -1704,7 +1964,7 @@ option
 
 function loadCreateProducts(){
 
-loadProductsInto(
+return loadProductsInto(
 "productSelect"
 );
 
@@ -1713,7 +1973,7 @@ loadProductsInto(
 
 function loadBatchProducts(){
 
-loadProductsInto(
+return loadProductsInto(
 "batchProductSelect"
 );
 
@@ -1788,7 +2048,9 @@ size!==undefined
 
 if(
 Number(size)===
-Math.floor(Number(size))
+Math.floor(
+Number(size)
+)
 ){
 
 size =
@@ -2066,6 +2328,21 @@ option
 
 });
 
+
+if(!data || !data.length){
+
+select.innerHTML =
+"<option value=''>No Active Batch Found</option>";
+
+
+setStatus(
+"createStatus",
+"No active batch found for this Product + Variant. Create a batch first.",
+false
+);
+
+}
+
 }
 
 
@@ -2111,6 +2388,7 @@ id
 if(error){
 
 console.error(error);
+
 
 setStatus(
 "createStatus",
@@ -2175,6 +2453,15 @@ document.getElementById(
 ).style.display =
 "block";
 
+
+setStatus(
+"createStatus",
+"Batch selected: "+
+data.batch_number+
+" — ready to create barcode.",
+true
+);
+
 }
 
 
@@ -2201,6 +2488,12 @@ box.style.display="none";
 ========================================================= */
 
 async function createVerification(){
+
+const button =
+document.getElementById(
+"createBarcodeBtn"
+);
+
 
 if(!selectedBatch){
 
@@ -2232,8 +2525,52 @@ return;
 }
 
 
+/* BUTTON LOCK */
+
+if(button){
+
+button.disabled=true;
+
+button.style.opacity=".65";
+
+button.textContent=
+"Creating...";
+
+}
+
+
+/* STEP 1 */
+
+setStatus(
+"createStatus",
+"⏳ Creating barcode and QR...",
+true,
+true
+);
+
+
+/* Give browser time to paint message */
+
+await new Promise(
+resolve=>setTimeout(
+resolve,
+80
+)
+);
+
+
 const code =
 makeCode();
+
+
+/* STEP 2 */
+
+setStatus(
+"createStatus",
+"⏳ Saving barcode record to Supabase...",
+true,
+true
+);
 
 
 const {
@@ -2282,15 +2619,29 @@ console.error(error);
 
 setStatus(
 "createStatus",
-"Save failed: "+
+"❌ Barcode save failed: "+
 error.message,
 false
 );
+
+
+if(button){
+
+button.disabled=false;
+
+button.style.opacity="1";
+
+button.textContent=
+"Create Barcode + QR";
+
+}
 
 return;
 
 }
 
+
+/* SAVE GLOBAL */
 
 lastCreatedCode =
 data.verification_code;
@@ -2302,11 +2653,33 @@ lastCreatedCode
 );
 
 
+/* STEP 3 */
+
+setStatus(
+"createStatus",
+"⏳ Generating barcode preview...",
+true,
+true
+);
+
+
+await new Promise(
+resolve=>setTimeout(
+resolve,
+80
+)
+);
+
+
+/* PRODUCT */
+
 document.getElementById(
 "previewProduct"
 ).textContent =
 data.product_name;
 
+
+/* VARIANT + BATCH */
 
 document.getElementById(
 "previewVariant"
@@ -2315,6 +2688,27 @@ data.variant+
 " • Batch: "+
 data.batch_number;
 
+
+/* TOTAL BATCH */
+
+document.getElementById(
+"previewBatchQty"
+).textContent =
+"Total Batch: "+
+selectedBatch.total_batch_quantity+
+" "+
+selectedBatch.batch_unit+
+" • MFG: "+
+fmtDate(
+selectedBatch.manufacturing_date
+)+
+" • EXP: "+
+fmtDate(
+selectedBatch.expiry_date
+);
+
+
+/* VERIFICATION CODE */
 
 document.getElementById(
 "previewCode"
@@ -2385,6 +2779,8 @@ QRCode.CorrectLevel.M
 );
 
 
+/* SHOW PREVIEW */
+
 document.getElementById(
 "labelPreview"
 ).classList.remove(
@@ -2392,13 +2788,52 @@ document.getElementById(
 );
 
 
+/* FINAL SUCCESS */
+
 setStatus(
 "createStatus",
-"Barcode + QR created successfully and linked to batch "+
+"✅ Barcode + QR created successfully! "+
+"Verification Code: "+
+data.verification_code+
+" • Batch: "+
 data.batch_number+
-".",
+" — Barcode is ready below. You can Print or Download it.",
 true
 );
+
+
+/* BUTTON RESTORE */
+
+if(button){
+
+button.disabled=false;
+
+button.style.opacity="1";
+
+button.textContent=
+"Create Barcode + QR";
+
+}
+
+
+/* Refresh records if needed */
+
+const recordsTab =
+document.getElementById(
+"tab-records"
+);
+
+
+if(
+recordsTab &&
+!recordsTab.classList.contains(
+"hidden"
+)
+){
+
+loadRecords();
+
+}
 
 }
 
@@ -2439,11 +2874,19 @@ document.getElementById(
 );
 
 
-setStatus(
-"createStatus",
-"",
-true
+const status =
+document.getElementById(
+"createStatus"
 );
+
+
+if(status){
+
+status.style.display="none";
+
+status.textContent="";
+
+}
 
 
 lastCreatedCode="";
@@ -2547,6 +2990,22 @@ false
 return;
 
 }
+
+
+setStatus(
+"batchStatus",
+"⏳ Saving production batch to Supabase...",
+true,
+true
+);
+
+
+await new Promise(
+resolve=>setTimeout(
+resolve,
+80
+)
+);
 
 
 /* Product Name */
@@ -2705,7 +3164,7 @@ console.error(error);
 
 setStatus(
 "batchStatus",
-"Batch save failed: "+
+"❌ Batch save failed: "+
 error.message,
 false
 );
@@ -2717,9 +3176,13 @@ return;
 
 setStatus(
 "batchStatus",
-"Batch "+
+"✅ Batch "+
 data.batch_number+
-" saved successfully.",
+" saved successfully! Total Batch: "+
+data.total_batch_quantity+
+" "+
+data.batch_unit+
+". You can now create barcode from this batch.",
 true
 );
 
@@ -2749,15 +3212,16 @@ String(productId)
 
 await loadCreateVariants();
 
+
 document.getElementById(
 "variantSelect"
 ).value =
 String(variantId);
 
+
 await loadCreateBatches();
 
 }
-
 
 }
 
@@ -2808,11 +3272,18 @@ document.getElementById(
 
 if(clearMessage){
 
-setStatus(
-"batchStatus",
-"",
-true
+const status =
+document.getElementById(
+"batchStatus"
 );
+
+if(status){
+
+status.style.display="none";
+
+status.textContent="";
+
+}
 
 }
 
@@ -2836,7 +3307,7 @@ return;
 
 
 box.innerHTML =
-"<div class='empty'>Loading...</div>";
+"<div class='empty'>Loading batches...</div>";
 
 
 const {
@@ -3147,7 +3618,6 @@ esc(title)+
 esc(message||"")+
 "</div>";
 
-
 return;
 
 }
@@ -3365,6 +3835,26 @@ return hash.substring(8);
 
 
 /* =========================================================
+   VERIFICATION URL
+========================================================= */
+
+function getVerificationUrl(
+code
+){
+
+return (
+window.location.origin+
+window.location.pathname+
+"#verify="+
+encodeURIComponent(
+code
+)
+);
+
+}
+
+
+/* =========================================================
    CUSTOMER QR MODE
 ========================================================= */
 
@@ -3528,7 +4018,7 @@ return;
 
 
 box.innerHTML =
-"<div class='empty'>Loading...</div>";
+"<div class='empty'>Loading barcode records...</div>";
 
 
 const {
@@ -3704,12 +4194,34 @@ x.created_at
 
 <td>
 
+<div
+style="display:flex;gap:6px;flex-wrap:wrap"
+>
+
 <button
 class="blue"
-onclick="useRecord('${esc(x.verification_code)}')"
+onclick="viewRecordBarcode('${esc(x.verification_code)}')"
 >
-Verify
+View
 </button>
+
+
+<button
+class="black"
+onclick="downloadRecordByCode('${esc(x.verification_code)}')"
+>
+Download
+</button>
+
+
+<button
+class="light"
+onclick="printRecordByCode('${esc(x.verification_code)}')"
+>
+Print
+</button>
+
+</div>
 
 </td>
 
@@ -3726,6 +4238,442 @@ Verify
 </div>
 
 `;
+
+}
+
+
+/* =========================================================
+   GET RECORD BY CODE
+========================================================= */
+
+async function getRecordByCode(
+code
+){
+
+const {
+data,
+error
+} =
+await supabaseClient
+.from(
+"product_verifications"
+)
+.select("*")
+.eq(
+"verification_code",
+code
+)
+.maybeSingle();
+
+
+if(error){
+
+console.error(error);
+
+setStatus(
+"recordsStatus",
+"Could not load barcode record: "+
+error.message,
+false
+);
+
+return null;
+
+}
+
+
+if(!data){
+
+setStatus(
+"recordsStatus",
+"Barcode record not found.",
+false
+);
+
+return null;
+
+}
+
+
+return data;
+
+}
+
+
+/* =========================================================
+   VIEW RECORD BARCODE
+========================================================= */
+
+async function viewRecordBarcode(
+code
+){
+
+const record =
+await getRecordByCode(
+code
+);
+
+
+if(!record)
+return;
+
+
+renderRecordBarcode(
+record
+);
+
+}
+
+
+/* =========================================================
+   RENDER RECORD BARCODE
+========================================================= */
+
+function renderRecordBarcode(
+record
+){
+
+currentRecord =
+record;
+
+
+document.getElementById(
+"recordModalProduct"
+).textContent =
+record.product_name||"";
+
+
+document.getElementById(
+"recordModalVariant"
+).textContent =
+"Variant / Size: "+
+(record.variant||"—");
+
+
+document.getElementById(
+"recordModalBatch"
+).textContent =
+"Batch: "+
+(record.batch_number||"—");
+
+
+document.getElementById(
+"recordModalCode"
+).textContent =
+record.verification_code||"";
+
+
+/* BARCODE */
+
+JsBarcode(
+"#recordBarcode",
+record.verification_code,
+{
+
+format:
+"CODE128",
+
+lineColor:
+"#111",
+
+width:
+2,
+
+height:
+65,
+
+displayValue:
+true,
+
+fontSize:
+13,
+
+margin:
+5
+
+}
+);
+
+
+/* QR */
+
+const qr =
+document.getElementById(
+"recordQr"
+);
+
+
+qr.innerHTML="";
+
+
+new QRCode(
+qr,
+{
+
+text:
+getVerificationUrl(
+record.verification_code
+),
+
+width:
+180,
+
+height:
+180,
+
+correctLevel:
+QRCode.CorrectLevel.M
+
+}
+);
+
+
+/* OPEN */
+
+document.getElementById(
+"recordModal"
+).classList.add(
+"show"
+);
+
+}
+
+
+/* =========================================================
+   CLOSE RECORD MODAL
+========================================================= */
+
+function closeRecordModal(){
+
+document.getElementById(
+"recordModal"
+).classList.remove(
+"show"
+);
+
+
+currentRecord=null;
+
+}
+
+
+/* =========================================================
+   DOWNLOAD RECORD BARCODE
+========================================================= */
+
+function downloadRecordBarcode(){
+
+if(!currentRecord){
+
+alert(
+"Open a barcode record first."
+);
+
+return;
+
+}
+
+
+const svg =
+document.getElementById(
+"recordBarcode"
+);
+
+
+if(!svg){
+
+alert(
+"Barcode not available."
+);
+
+return;
+
+}
+
+
+downloadSvgBarcode(
+svg,
+currentRecord.verification_code
+);
+
+}
+
+
+/* =========================================================
+   DOWNLOAD RECORD BY CODE
+========================================================= */
+
+async function downloadRecordByCode(
+code
+){
+
+const record =
+await getRecordByCode(
+code
+);
+
+
+if(!record)
+return;
+
+
+renderRecordBarcode(
+record
+);
+
+
+setTimeout(
+()=>{
+downloadRecordBarcode();
+},
+150
+);
+
+}
+
+
+/* =========================================================
+   DOWNLOAD SVG HELPER
+========================================================= */
+
+function downloadSvgBarcode(
+svg,
+code
+){
+
+const serializer =
+new XMLSerializer();
+
+
+let source =
+serializer.serializeToString(
+svg
+);
+
+
+/*
+Add XML namespace if missing.
+*/
+
+if(
+!source.includes(
+'xmlns="http://www.w3.org/2000/svg"'
+)
+){
+
+source =
+source.replace(
+"<svg",
+'<svg xmlns="http://www.w3.org/2000/svg"'
+);
+
+}
+
+
+const blob =
+new Blob(
+[source],
+{
+type:
+"image/svg+xml;charset=utf-8"
+}
+);
+
+
+const url =
+URL.createObjectURL(
+blob
+);
+
+
+const a =
+document.createElement(
+"a"
+);
+
+
+a.href=url;
+
+
+a.download =
+code+
+"_barcode.svg";
+
+
+document.body.appendChild(
+a
+);
+
+
+a.click();
+
+
+a.remove();
+
+
+setTimeout(
+()=>{
+URL.revokeObjectURL(
+url
+);
+},
+1000
+);
+
+}
+
+
+/* =========================================================
+   PRINT RECORD BARCODE
+========================================================= */
+
+function printRecordBarcode(){
+
+if(!currentRecord){
+
+alert(
+"Open a barcode record first."
+);
+
+return;
+
+}
+
+
+window.print();
+
+}
+
+
+/* =========================================================
+   PRINT RECORD BY CODE
+========================================================= */
+
+async function printRecordByCode(
+code
+){
+
+const record =
+await getRecordByCode(
+code
+);
+
+
+if(!record)
+return;
+
+
+renderRecordBarcode(
+record
+);
+
+
+setTimeout(
+()=>{
+printRecordBarcode();
+},
+200
+);
 
 }
 
@@ -3755,7 +4703,7 @@ verifyProduct();
 
 
 /* =========================================================
-   PRINT LABEL
+   PRINT CURRENT LABEL
 ========================================================= */
 
 function printLabel(){
@@ -3777,7 +4725,7 @@ window.print();
 
 
 /* =========================================================
-   DOWNLOAD BARCODE
+   DOWNLOAD CURRENT BARCODE
 ========================================================= */
 
 function downloadBarcode(){
@@ -3802,62 +4750,35 @@ return;
 }
 
 
-const serializer =
-new XMLSerializer();
-
-
-const source =
-serializer.serializeToString(
-svg
-);
-
-
-const blob =
-new Blob(
-[source],
-{
-type:
-"image/svg+xml;charset=utf-8"
-}
-);
-
-
-const url =
-URL.createObjectURL(
-blob
-);
-
-
-const a =
-document.createElement(
-"a"
-);
-
-
-a.href=url;
-
-
-a.download =
-lastCreatedCode+
-"_barcode.svg";
-
-
-document.body.appendChild(
-a
-);
-
-
-a.click();
-
-
-a.remove();
-
-
-URL.revokeObjectURL(
-url
+downloadSvgBarcode(
+svg,
+lastCreatedCode
 );
 
 }
+
+
+/* =========================================================
+   MODAL BACKDROP CLOSE
+========================================================= */
+
+document.getElementById(
+"recordModal"
+).addEventListener(
+"click",
+e=>{
+
+if(
+e.target.id===
+"recordModal"
+){
+
+closeRecordModal();
+
+}
+
+}
+);
 
 
 /* =========================================================
@@ -3895,10 +4816,12 @@ document.getElementById(
 "tab-create"
 );
 
+
 const batchesTab =
 document.getElementById(
 "tab-batches"
 );
+
 
 const recordsTab =
 document.getElementById(
@@ -4030,24 +4953,26 @@ document.getElementById(
 );
 
 
-if(createTab){
-
-createTab.classList.remove(
-"hidden"
-);
-
-createTab.style.display="";
-
-}
-
+/* BATCH FIRST */
 
 if(batchesTab){
 
-batchesTab.classList.add(
+batchesTab.classList.remove(
 "hidden"
 );
 
 batchesTab.style.display="";
+
+}
+
+
+if(createTab){
+
+createTab.classList.add(
+"hidden"
+);
+
+createTab.style.display="";
 
 }
 
@@ -4076,9 +5001,9 @@ recordsTab.style.display="";
 
 /* Load products */
 
-await loadCreateProducts();
-
 await loadBatchProducts();
+
+await loadCreateProducts();
 
 
 /* Load existing batches */
@@ -4089,6 +5014,16 @@ await loadBatches();
 /* Generate first batch number */
 
 await generateBatchNumber(false);
+
+
+/* Make Batch Management active */
+
+showTab(
+"batches",
+document.querySelectorAll(
+".tab"
+)[0]
+);
 
 })();
 </script>
