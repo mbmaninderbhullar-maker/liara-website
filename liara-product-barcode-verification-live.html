@@ -210,6 +210,15 @@ async function createVerification(){
   if(!productName){setStatus("createStatus","Please enter Product Name.",false);return;}
   if(!variant){setStatus("createStatus","Please enter Variant / Size.",false);return;}
 
+  // Verification records are protected by RLS and can only be created
+  // by an authenticated Liara admin/staff session. The Supabase session
+  // is shared automatically when this page is opened from the dashboard.
+  const {data:{session},error:sessionError}=await supabaseClient.auth.getSession();
+  if(sessionError || !session){
+    setStatus("createStatus","Admin session not found. Please login to Liara Admin first, then open Verification again.",false);
+    return;
+  }
+
   const code=makeCode();
 
   const {data,error}=await supabaseClient.from("product_verifications").insert({
