@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Liara Professional™ | Product Barcode & Verification</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
@@ -11,210 +12,185 @@
 body{font-family:Arial,Helvetica,sans-serif;background:#f5f3ef;color:#171717}
 header{background:#171717;color:#fff;padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-size:22px;font-weight:700;letter-spacing:1.5px}.sub{font-size:11px;color:#c9a15b;letter-spacing:2px;margin-top:4px}
-.wrap{max-width:1180px;margin:25px auto;padding:0 16px}
-.tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-.tab{border:1px solid #ddd;background:#fff;padding:11px 17px;border-radius:8px;cursor:pointer;font-weight:600}
-.tab.active{background:#ad8232;color:#fff;border-color:#ad8232}
+.wrap{max-width:1180px;margin:25px auto;padding:0 16px}.tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.tab{border:1px solid #ddd;background:#fff;padding:11px 17px;border-radius:8px;cursor:pointer;font-weight:600}.tab.active{background:#ad8232;color:#fff;border-color:#ad8232}
 .card{background:#fff;border:1px solid #e2ded7;border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 4px 16px rgba(0,0,0,.04)}
 h1{font-size:24px;margin-bottom:6px}.muted{color:#777;font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:18px}
 .field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#555}
 input,select{width:100%;padding:12px;border:1px solid #d6d1c8;border-radius:8px;font-size:14px;outline:none}
-input:focus,select:focus{border-color:#ad8232}
-.btn{border:0;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer}
-.primary{background:#ad8232;color:#fff}.dark{background:#191919;color:#fff}.light{background:#eee;color:#222}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+input:focus,select:focus{border-color:#ad8232}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.btn{border:0;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer}.primary{background:#ad8232;color:#fff}.dark{background:#191919;color:#fff}.light{background:#eee;color:#222}
 .notice{padding:12px 14px;border-radius:8px;background:#f8f1e4;border:1px solid #ead8b8;font-size:13px;margin-top:15px}
+.status{padding:10px 13px;border-radius:8px;background:#f3f3f3;font-size:12px;margin-top:15px}.ok{background:#edf8ef;color:#24753a}.err{background:#fff0f0;color:#9b2828}
 .barcodeBox{text-align:center;border:1px dashed #cfc8bc;border-radius:12px;padding:20px;margin-top:20px;background:#fff}
-#barcode{max-width:100%;height:90px}
-.code{font-family:monospace;font-size:17px;font-weight:700;letter-spacing:2px;margin-top:8px}
-.verifyBox{max-width:600px;margin:30px auto}.verifyResult{display:none;text-align:center;padding:25px;border-radius:12px}
-.verified{background:#edf8ef;border:1px solid #b9dfbf}.notverified{background:#fff0f0;border:1px solid #e4b5b5}
+#barcode{max-width:100%;height:90px}.code{font-family:monospace;font-size:17px;font-weight:700;letter-spacing:2px;margin-top:8px}
+#qrcode{margin:18px auto 5px;width:128px;height:128px}.verifyBox{max-width:650px;margin:30px auto}
+.verifyResult{display:none;text-align:center;padding:25px;border-radius:12px}.verified{background:#edf8ef;border:1px solid #b9dfbf}.notverified{background:#fff0f0;border:1px solid #e4b5b5}
 .tick{font-size:48px;margin-bottom:10px}.productName{font-size:25px;font-weight:700;margin:8px 0}
-.details{text-align:left;margin-top:20px;border-top:1px solid #ddd;padding-top:15px}
-.row{display:flex;justify-content:space-between;gap:15px;padding:9px 0;border-bottom:1px solid #eee;font-size:14px}
-.row b{color:#555}.small{font-size:12px;color:#777}
-#qrcode{margin:18px auto 5px;width:128px;height:128px}
-.tableWrap{overflow:auto;margin-top:18px}
-table{width:100%;border-collapse:collapse;min-width:700px}
-th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}
-th{background:#f6f3ee}
-.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700;background:#e8f6eb;color:#24753a}
+.details{text-align:left;margin-top:20px;border-top:1px solid #ddd;padding-top:15px}.row{display:flex;justify-content:space-between;gap:15px;padding:9px 0;border-bottom:1px solid #eee;font-size:14px}.row b{color:#555}
+.small{font-size:12px;color:#777}.badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700;background:#e8f6eb;color:#24753a}
+.tableWrap{overflow:auto;margin-top:18px}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}th{background:#f6f3ee}
+.scanHelp{background:#f8f8f8;border:1px solid #eee;padding:12px;border-radius:8px;margin-top:15px;font-size:13px}
 @media(max-width:700px){.grid{grid-template-columns:1fr}header{padding:15px}.logo{font-size:18px}.card{padding:16px}}
-@media print{header,.tabs,.noPrint,.actions{display:none!important}body{background:#fff}.wrap{margin:0;max-width:none}.card{border:0;box-shadow:none}}
+@media print{header,.tabs,.noPrint,.actions,.status{display:none!important}body{background:#fff}.wrap{margin:0;max-width:none}.card{border:0;box-shadow:none}}
 </style>
 </head>
 <body>
-
 <header>
-  <div>
-    <div class="logo">LIARA PROFESSIONAL™</div>
-    <div class="sub">PRODUCT AUTHENTICATION • BARCODE VERIFICATION</div>
-  </div>
-  <div class="small">Secure Product System</div>
+<div><div class="logo">LIARA PROFESSIONAL™</div><div class="sub">PRODUCT AUTHENTICATION • BARCODE + QR VERIFICATION</div></div>
+<div class="small">Secure Product System</div>
 </header>
 
 <div class="wrap">
-  <div class="tabs noPrint">
-    <button class="tab active" onclick="showTab('create',this)">Create Barcode</button>
-    <button class="tab" onclick="showTab('verify',this)">Verify Product</button>
-    <button class="tab" onclick="showTab('records',this)">Barcode Records</button>
-  </div>
+<div class="tabs noPrint">
+<button class="tab active" onclick="showTab('create',this)">Create Barcode</button>
+<button class="tab" onclick="showTab('verify',this)">Verify Product</button>
+<button class="tab" onclick="showTab('records',this)">Barcode Records</button>
+</div>
 
-  <section id="create" class="card">
-    <h1>Create Product Barcode</h1>
-    <div class="muted">Create a unique Liara verification code for every product/variant.</div>
+<section id="create" class="card">
+<h1>Create Product Barcode + QR</h1>
+<div class="muted">Every product/variant gets one permanent verification code stored in Supabase.</div>
+<div id="dbStatus" class="status">Connecting to Supabase...</div>
 
-    <div class="grid">
-      <div class="field"><label>Product Name *</label><input id="product" placeholder="e.g. Liara Brightening Soap"></div>
-      <div class="field"><label>Variant / Size *</label><input id="variant" placeholder="e.g. 100g"></div>
-      <div class="field"><label>Batch Number</label><input id="batch" placeholder="e.g. LP-B260901"></div>
-      <div class="field"><label>Manufacturing Date</label><input id="mfg" type="date"></div>
-      <div class="field"><label>Expiry Date</label><input id="exp" type="date"></div>
-      <div class="field"><label>Verification Status</label>
-        <select id="status"><option value="Verified">Verified</option><option value="Inactive">Inactive</option></select>
-      </div>
-    </div>
+<div class="grid">
+<div class="field"><label>Product Name *</label><input id="product" placeholder="e.g. Liara Brightening Soap"></div>
+<div class="field"><label>Variant / Size *</label><input id="variant" placeholder="e.g. 100g"></div>
+<div class="field"><label>Batch Number</label><input id="batch" placeholder="e.g. LP-B260901"></div>
+<div class="field"><label>Manufacturing Date</label><input id="mfg" type="date"></div>
+<div class="field"><label>Expiry Date</label><input id="exp" type="date"></div>
+<div class="field"><label>Status</label><select id="status"><option value="Verified">Verified</option><option value="Inactive">Inactive</option></select></div>
+</div>
+<div class="notice">The black CODE128 barcode is for shop/billing scanners. The QR code is for phone-camera verification. Both point to the same Supabase verification record.</div>
+<div class="actions"><button class="btn primary" onclick="createProduct()">Generate & Save</button><button class="btn light" onclick="clearForm()">Clear</button></div>
 
-    <div class="notice">Each saved product receives a unique verification code. The same code should be printed on the product label and linked to the verification page.</div>
+<div id="barcodeArea" class="barcodeBox" style="display:none">
+<div class="muted">STORE / BILLING BARCODE</div>
+<svg id="barcode"></svg>
+<div id="codeText" class="code"></div>
+<div id="qr"></div>
+<div class="small">Phone camera → scan QR → Liara verification page</div>
+<div class="actions noPrint" style="justify-content:center">
+<button class="btn dark" onclick="window.print()">Print Label</button>
+<button class="btn light" onclick="downloadBarcode()">Download Barcode SVG</button>
+</div>
+</div>
+</section>
 
-    <div class="actions">
-      <button class="btn primary" onclick="createCode()">Generate & Save Barcode</button>
-      <button class="btn light" onclick="clearForm()">Clear</button>
-    </div>
+<section id="verify" class="card" style="display:none">
+<div class="verifyBox">
+<h1>Liara Product Verification</h1>
+<div class="muted">Use either a phone camera QR scan or a shop barcode scanner.</div>
+<div class="scanHelp"><b>Barcode scanner:</b> click the field below, scan the product barcode, then press Verify. Most USB/Bluetooth scanners automatically type the code and press Enter.</div>
+<div class="actions">
+<input id="verifyCodeInput" autocomplete="off" placeholder="Scan or enter LIARA verification code">
+<button class="btn primary" onclick="verifyProduct()">Verify</button>
+</div>
+<div id="verifyGood" class="verifyResult verified" style="margin-top:20px">
+<div class="tick">✓</div><div class="small">AUTHENTIC PRODUCT</div>
+<div id="vProduct" class="productName"></div><div class="badge">VERIFIED BY LIARA</div>
+<div class="details">
+<div class="row"><b>Variant</b><span id="vVariant"></span></div>
+<div class="row"><b>Batch</b><span id="vBatch"></span></div>
+<div class="row"><b>Manufacturing</b><span id="vMfg"></span></div>
+<div class="row"><b>Expiry</b><span id="vExp"></span></div>
+<div class="row"><b>Verification Code</b><span id="vCode"></span></div>
+</div></div>
+<div id="verifyBad" class="verifyResult notverified" style="margin-top:20px">
+<div class="tick">!</div><div class="productName">Product Not Verified</div>
+<div>This code was not found in Liara's verification records, or the product is inactive.</div>
+<div class="small" style="margin-top:10px">Please contact Liara Professional™ if you suspect a counterfeit product.</div>
+</div>
+</div>
+</section>
 
-    <div id="barcodeArea" class="barcodeBox" style="display:none">
-      <div class="muted">PRODUCT BARCODE</div>
-      <svg id="barcode"></svg>
-      <div id="codeText" class="code"></div>
-      <div id="qr"></div>
-      <div class="small">Scan QR with a phone or scan the barcode with a store scanner.</div>
-      <div class="actions noPrint" style="justify-content:center">
-        <button class="btn dark" onclick="window.print()">Print Label</button>
-        <button class="btn light" onclick="downloadBarcode()">Download SVG</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="verify" class="card" style="display:none">
-    <div class="verifyBox">
-      <h1>Product Verification</h1>
-      <div class="muted">Enter the Liara Product Verification Code printed on the product.</div>
-      <div class="actions">
-        <input id="verifyCode" placeholder="Example: LIARA2609130001">
-        <button class="btn primary" onclick="verifyCode()">Verify Product</button>
-      </div>
-
-      <div id="verifyGood" class="verifyResult verified" style="margin-top:20px">
-        <div class="tick">✓</div>
-        <div class="small">AUTHENTIC PRODUCT</div>
-        <div id="vProduct" class="productName"></div>
-        <div class="badge">VERIFIED BY LIARA</div>
-        <div class="details">
-          <div class="row"><b>Variant</b><span id="vVariant"></span></div>
-          <div class="row"><b>Batch</b><span id="vBatch"></span></div>
-          <div class="row"><b>Manufacturing</b><span id="vMfg"></span></div>
-          <div class="row"><b>Expiry</b><span id="vExp"></span></div>
-          <div class="row"><b>Verification Code</b><span id="vCode"></span></div>
-        </div>
-      </div>
-
-      <div id="verifyBad" class="verifyResult notverified" style="margin-top:20px">
-        <div class="tick">!</div>
-        <div class="productName">Product Not Verified</div>
-        <div>This code was not found in the Liara verification records, or the product is inactive.</div>
-        <div class="small" style="margin-top:10px">Please contact Liara Professional™ before purchasing if you suspect a counterfeit product.</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="records" class="card" style="display:none">
-    <h1>Barcode Records</h1>
-    <div class="muted">Products created on this device. Connect this page to Supabase for your live store-wide database.</div>
-    <div class="tableWrap">
-      <table>
-        <thead><tr><th>Code</th><th>Product</th><th>Variant</th><th>Batch</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="recordsBody"></tbody>
-      </table>
-    </div>
-  </section>
+<section id="records" class="card" style="display:none">
+<h1>Barcode Records</h1><div class="muted">Live records loaded from Supabase.</div>
+<div class="tableWrap"><table><thead><tr><th>Code</th><th>Product</th><th>Variant</th><th>Batch</th><th>Status</th><th>Created</th></tr></thead><tbody id="recordsBody"></tbody></table></div>
+</section>
 </div>
 
 <script>
-const KEY='liara_product_verification_records';
+const SUPABASE_URL='https://oinafbuicwhleudztzyz.supabase.co';
+const SUPABASE_ANON_KEY='YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const TABLE='product_verifications';
 
-function records(){
-  try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}
+function setStatus(text,type=''){const e=document.getElementById('dbStatus');e.textContent=text;e.className='status '+type}
+async function testDb(){
+ try{
+  const {error}=await sb.from(TABLE).select('verification_code').limit(1);
+  if(error) throw error;
+  setStatus('Connected • Supabase product verification is ready','ok');
+ }catch(e){setStatus('Supabase connection error: '+e.message,'err')}
 }
-function saveRecords(r){localStorage.setItem(KEY,JSON.stringify(r))}
 function newCode(){
-  const d=new Date(), y=String(d.getFullYear()).slice(-2), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
-  return 'LIARA'+y+m+day+String(Date.now()).slice(-4);
+ const d=new Date(),y=String(d.getFullYear()).slice(-2),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+ return 'LIARA'+y+m+day+String(Date.now()).slice(-4);
 }
-function createCode(){
-  const product=document.getElementById('product').value.trim();
-  const variant=document.getElementById('variant').value.trim();
-  if(!product||!variant){alert('Product Name and Variant / Size are required.');return}
-  const item={
-    code:newCode(),product,variant,
-    batch:document.getElementById('batch').value.trim()||'—',
-    mfg:document.getElementById('mfg').value||'—',
-    exp:document.getElementById('exp').value||'—',
-    status:document.getElementById('status').value,
-    created:new Date().toISOString()
-  };
-  const r=records();r.unshift(item);saveRecords(r);renderBarcode(item);renderRecords();
+async function createProduct(){
+ const product=document.getElementById('product').value.trim(),variant=document.getElementById('variant').value.trim();
+ if(!product||!variant){alert('Product Name and Variant / Size are required.');return}
+ const item={
+  verification_code:newCode(),product_name:product,variant,
+  batch_number:document.getElementById('batch').value.trim()||null,
+  manufacturing_date:document.getElementById('mfg').value||null,
+  expiry_date:document.getElementById('exp').value||null,
+  status:document.getElementById('status').value
+ };
+ const {data,error}=await sb.from(TABLE).insert(item).select().single();
+ if(error){alert('Could not save to Supabase:\\n'+error.message);return}
+ renderBarcode(data);renderRecords();
 }
 function renderBarcode(item){
-  document.getElementById('barcodeArea').style.display='block';
-  document.getElementById('codeText').textContent=item.code;
-  JsBarcode('#barcode',item.code,{format:'CODE128',displayValue:false,height:80,width:2.2,margin:5});
-  const q=document.getElementById('qr');q.innerHTML='';
-  new QRCode(q,{text:location.href.split('#')[0]+'#verify='+encodeURIComponent(item.code),width:128,height:128});
+ document.getElementById('barcodeArea').style.display='block';document.getElementById('codeText').textContent=item.verification_code;
+ JsBarcode('#barcode',item.verification_code,{format:'CODE128',displayValue:false,height:80,width:2.2,margin:5});
+ const q=document.getElementById('qr');q.innerHTML='';
+ const verifyUrl=new URL(location.href);verifyUrl.hash='verify='+encodeURIComponent(item.verification_code);
+ new QRCode(q,{text:verifyUrl.toString(),width:128,height:128});
 }
 function downloadBarcode(){
-  const svg=document.getElementById('barcode');
-  const data=new XMLSerializer().serializeToString(svg);
-  const blob=new Blob([data],{type:'image/svg+xml'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Liara-Barcode.svg';a.click();
+ const data=new XMLSerializer().serializeToString(document.getElementById('barcode'));
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'image/svg+xml'}));a.download='Liara-'+document.getElementById('codeText').textContent+'.svg';a.click();
 }
-function verifyCode(){
-  const code=document.getElementById('verifyCode').value.trim().toUpperCase();
-  const item=records().find(x=>x.code===code);
-  document.getElementById('verifyGood').style.display='none';
-  document.getElementById('verifyBad').style.display='none';
-  if(!item||item.status!=='Verified'){document.getElementById('verifyBad').style.display='block';return}
-  document.getElementById('vProduct').textContent=item.product;
-  document.getElementById('vVariant').textContent=item.variant;
-  document.getElementById('vBatch').textContent=item.batch;
-  document.getElementById('vMfg').textContent=item.mfg;
-  document.getElementById('vExp').textContent=item.exp;
-  document.getElementById('vCode').textContent=item.code;
-  document.getElementById('verifyGood').style.display='block';
+async function verifyProduct(codeOverride=''){
+ const code=(codeOverride||document.getElementById('verifyCodeInput').value).trim().toUpperCase();
+ document.getElementById('verifyGood').style.display='none';document.getElementById('verifyBad').style.display='none';
+ if(!code){return}
+ const {data,error}=await sb.from(TABLE).select('verification_code,product_name,variant,batch_number,manufacturing_date,expiry_date,status').eq('verification_code',code).eq('status','Verified').maybeSingle();
+ if(error||!data){document.getElementById('verifyBad').style.display='block';return}
+ document.getElementById('vProduct').textContent=data.product_name;
+ document.getElementById('vVariant').textContent=data.variant;
+ document.getElementById('vBatch').textContent=data.batch_number||'—';
+ document.getElementById('vMfg').textContent=data.manufacturing_date||'—';
+ document.getElementById('vExp').textContent=data.expiry_date||'—';
+ document.getElementById('vCode').textContent=data.verification_code;
+ document.getElementById('verifyGood').style.display='block';
 }
-function renderRecords(){
-  const body=document.getElementById('recordsBody'),r=records();
-  body.innerHTML=r.length?r.map(x=>`<tr><td><b>${x.code}</b></td><td>${esc(x.product)}</td><td>${esc(x.variant)}</td><td>${esc(x.batch)}</td><td><span class="badge">${x.status}</span></td><td><button class="btn light" onclick="loadRecord('${x.code}')">View</button></td></tr>`).join(''):'<tr><td colspan="6">No barcode records yet.</td></tr>';
+async function renderRecords(){
+ const body=document.getElementById('recordsBody');
+ const {data,error}=await sb.from(TABLE).select('*').order('created_at',{ascending:false}).limit(200);
+ if(error){body.innerHTML='<tr><td colspan="6">Unable to load records: '+esc(error.message)+'</td></tr>';return}
+ body.innerHTML=data.length?data.map(x=>`<tr><td><b>${esc(x.verification_code)}</b></td><td>${esc(x.product_name)}</td><td>${esc(x.variant)}</td><td>${esc(x.batch_number||'—')}</td><td>${esc(x.status)}</td><td>${new Date(x.created_at).toLocaleString()}</td></tr>`).join(''):'<tr><td colspan="6">No barcode records yet.</td></tr>';
 }
-function loadRecord(code){
-  const item=records().find(x=>x.code===code);if(!item)return;
-  showTab('create',document.querySelectorAll('.tab')[0]);renderBarcode(item);
-}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function clearForm(){['product','variant','batch','mfg','exp'].forEach(id=>document.getElementById(id).value='');document.getElementById('barcodeArea').style.display='none'}
 function showTab(id,btn){
-  ['create','verify','records'].forEach(x=>document.getElementById(x).style.display=x===id?'block':'none');
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
-  if(id==='records')renderRecords();
+ ['create','verify','records'].forEach(x=>document.getElementById(x).style.display=x===id?'block':'none');
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
+ if(id==='records')renderRecords();
 }
-(function(){
-  const hash=location.hash;
-  if(hash.startsWith('#verify=')){
-    const code=decodeURIComponent(hash.split('=')[1]||'');
-    showTab('verify',document.querySelectorAll('.tab')[1]);
-    document.getElementById('verifyCode').value=code;verifyCode();
-  }
-  renderRecords();
+document.getElementById('verifyCodeInput').addEventListener('keydown',e=>{if(e.key==='Enter')verifyProduct()});
+(async()=>{
+ await testDb();
+ const h=location.hash;
+ if(h.startsWith('#verify=')){
+  const code=decodeURIComponent(h.substring(8));
+  showTab('verify',document.querySelectorAll('.tab')[1]);
+  document.getElementById('verifyCodeInput').value=code;
+  await verifyProduct(code);
+ }
 })();
 </script>
 </body>
