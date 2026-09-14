@@ -69,7 +69,7 @@ Use company email and password.
 <input
 type="email"
 id="email"
-value="info@liara.co.in"
+value="[info@liara.co.in](mailto:info@liara.co.in)"
 autocomplete="username"
 required
 
@@ -122,7 +122,7 @@ LIARA <small>PROFESSIONAL™</small>
 </p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
@@ -216,57 +216,12 @@ document.getElementById("message").innerText="";
 
 async function findStaffByLoginId(loginId){
 
-/*
-  Normalize entered Staff Login ID.
-
-  Accepted formats:
-
-  LIARA-ABC123
-  liara-abc123
-  LIARA ABC123
-  LIARA_ABC123
-  LIARAABC123
-*/
-
-let entered =
+const cleanLoginId =
 String(loginId || "")
 .trim()
 .toUpperCase();
 
-let cleanLoginId =
-entered
-.replace(/\s+/g,"")
-.replace(/_/g,"-");
-
-
-/*
-  Convert:
-
-  LIARAABC123
-
-  into:
-
-  LIARA-ABC123
-*/
-
-if(
-/^LIARA[A-Z0-9]{6}$/.test(cleanLoginId)
-){
-
-cleanLoginId =
-"LIARA-" +
-cleanLoginId.substring(5);
-
-}
-
-
-/*
-  Final validation.
-*/
-
-if(
-!/^LIARA-[A-Z0-9]{6}$/.test(cleanLoginId)
-){
+if(!/^LIARA-[A-Z0-9]{6}$/.test(cleanLoginId)){
 
 throw new Error(
 "Enter a valid Staff Login ID, e.g. LIARA-ABC123."
@@ -276,18 +231,10 @@ throw new Error(
 
 
 /*
-  Get staff profiles.
-
-  We fetch the available staff profiles and
-  normalize login_id/staff_code locally so
-  different formatting does not cause a
-  false "not found" result.
+  First try exact login_id.
 */
 
-let {
-data:profiles,
-error:profilesError
-} =
+let {data:profile,error:profileError} =
 await supabaseClient
 .from("staff_profiles")
 .select(`
@@ -300,86 +247,46 @@ permissions,
 active,
 login_id,
 staff_code
-`);
+`)
+.eq("login_id",cleanLoginId)
+.maybeSingle();
 
-
-if(profilesError){
-
-console.error(
-"Staff profile lookup error:",
-profilesError
-);
-
-throw profilesError;
-
+if(profileError){
+throw profileError;
 }
 
 
 /*
-  Normalize database Staff Login ID.
+  If login_id was not found,
+  try staff_code as fallback.
 */
 
-const normalizeStaffId = value => {
+if(!profile){
 
-if(!value){
+const fallback =
+await supabaseClient
+.from("staff_profiles")
+.select(`
+id,
+user_id,
+name,
+email,
+role,
+permissions,
+active,
+login_id,
+staff_code
+`)
+.eq("staff_code",cleanLoginId)
+.maybeSingle();
 
-return "";
-
+if(fallback.error){
+throw fallback.error;
 }
 
-let valueNormalized =
-String(value)
-.trim()
-.toUpperCase()
-.replace(/\s+/g,"")
-.replace(/_/g,"-");
-
-
-/*
-  Convert LIARAABC123
-  to LIARA-ABC123.
-*/
-
-if(
-/^LIARA[A-Z0-9]{6}$/.test(valueNormalized)
-){
-
-valueNormalized =
-"LIARA-" +
-valueNormalized.substring(5);
+profile=fallback.data;
 
 }
-
-return valueNormalized;
-
-};
-
-
-/*
-  Find matching profile using either:
-
-  login_id
-
-  OR
-
-  staff_code
-*/
-
-let profile =
-(profiles || []).find(item => {
-
-const databaseLoginId =
-normalizeStaffId(item.login_id);
-
-const databaseStaffCode =
-normalizeStaffId(item.staff_code);
-
-return (
-databaseLoginId === cleanLoginId ||
-databaseStaffCode === cleanLoginId
-);
-
-});
 
 
 /*
@@ -388,14 +295,8 @@ databaseStaffCode === cleanLoginId
 
 if(!profile){
 
-console.error(
-"Staff Login ID not found:",
-cleanLoginId,
-profiles
-);
-
 throw new Error(
-"Staff Login ID not found. Please check the ID created in Staff Management."
+"Staff Login ID not found."
 );
 
 }
@@ -420,17 +321,13 @@ throw new Error(
   not custom Login ID.
 */
 
-if(
-!profile.email ||
-!String(profile.email).trim()
-){
+if(!profile.email){
 
 throw new Error(
 "Staff account email is missing. Please contact Admin."
 );
 
 }
-
 
 return profile;
 
@@ -510,7 +407,7 @@ staffProfile =
 await findStaffByLoginId(loginValue);
 
 email =
-String(staffProfile.email).trim();
+staffProfile.email.trim();
 
 }
 
@@ -710,7 +607,6 @@ let errorMessage =
 error?.message ||
 "Login failed.";
 
-
 if(
 errorMessage.toLowerCase()
 .includes("invalid login credentials")
@@ -718,7 +614,6 @@ errorMessage.toLowerCase()
 
 errorMessage =
 "Invalid password.";
-
 }
 
 else if(
@@ -728,9 +623,7 @@ errorMessage.toLowerCase()
 
 errorMessage =
 "Staff account email is not confirmed.";
-
 }
-
 
 message.innerText=errorMessage;
 
