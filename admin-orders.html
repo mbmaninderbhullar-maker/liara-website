@@ -1532,6 +1532,24 @@ body{
 .staff-permission-item input{display:none}.staff-permission-item.allowed{border-color:#cfe4d3;background:#f4fbf5;color:#287a3e}.staff-permission-icon{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#eee;color:#999;font-size:10px}.staff-permission-item.allowed .staff-permission-icon{background:#287a3e;color:#fff}
 @media(max-width:900px){.staff-permission-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
+<style id="staff-management-premium-v2">
+.staff-role-check-card{box-shadow:0 8px 24px rgba(70,55,30,.06);overflow:hidden}
+.staff-role-check-head{padding-bottom:14px;border-bottom:1px solid #eee6da}
+.staff-role-check-head h3{font-size:18px;letter-spacing:-.2px}
+.staff-role-summary{background:#2f7d46;color:#fff;padding:7px 11px;border-radius:999px;box-shadow:0 4px 10px rgba(47,125,70,.15)}
+.staff-permission-grid{margin-top:14px;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.staff-permission-item{min-height:48px;transition:.18s ease;position:relative}
+.staff-permission-item.allowed{box-shadow:0 4px 12px rgba(40,122,62,.08)}
+.staff-permission-item.blocked{background:#fafafa;color:#999}
+.staff-permission-item.allowed:after{content:'ALLOWED';margin-left:auto;font-size:7px;letter-spacing:1px;font-weight:900;color:#287a3e}
+.staff-permission-item.blocked:after{content:'BLOCKED';margin-left:auto;font-size:7px;letter-spacing:1px;font-weight:900;color:#aaa}
+.staff-created-card{margin-top:14px;padding:15px;border:1px solid #d8eadb;border-radius:13px;background:linear-gradient(135deg,#f7fcf8,#fff);display:none}
+.staff-created-card.show{display:block}
+.staff-created-id{font-size:20px;font-weight:900;letter-spacing:1.6px;color:#8b5f14;margin-top:5px}
+.staff-created-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.staff-created-meta span{padding:6px 9px;border-radius:999px;background:#f3eee4;color:#6e572b;font-size:10px;font-weight:800}
+@media(max-width:900px){.staff-permission-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
 <style id="staff-management-final-layout-fix">
 .settings-layout{
     grid-template-columns:180px minmax(0,1fr) !important;
@@ -7584,6 +7602,17 @@ function staffStatus(message, ok=false){
     el.textContent=message;
 }
 
+function showStaffCreatedCard(loginId,role,permissions){
+    const card=document.getElementById("staffCreatedCard");
+    const id=document.getElementById("staffCreatedId");
+    const meta=document.getElementById("staffCreatedMeta");
+    if(!card||!id||!meta)return;
+    id.textContent=loginId||"—";
+    const count=Object.values(permissions||{}).filter(Boolean).length;
+    meta.innerHTML=`<span>Role: ${escapeHtml(role||"Staff")}</span><span>${count} sections allowed</span><span>Login ID ready</span>`;
+    card.classList.add("show");
+}
+
 function generateStaffLoginId(){
     const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     const a=new Uint32Array(6); crypto.getRandomValues(a);
@@ -7636,25 +7665,49 @@ async function createStaffLogin(){
     const email=document.getElementById("staffEmail")?.value.trim().toLowerCase();
     const password=document.getElementById("staffPassword")?.value || "";
     const role=document.getElementById("staffRole")?.value || "Viewer";
+    const permissions=getStaffPermissions();
     if(!name || !email || !password){ staffStatus("Name, email and password are required."); return; }
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ staffStatus("Valid staff email pao."); return; }
     if(password.length < 8){ staffStatus("Password must be at least 8 characters."); return; }
     const {data:{session}}=await supabaseClient.auth.getSession();
     if(!session){ staffStatus("Your admin session has expired. Please sign in again."); return; }
+
     const requestedLoginId=generateStaffLoginId();
-    const loginBox=document.getElementById("staffLoginId"); if(loginBox)loginBox.value=requestedLoginId;
+    const loginBox=document.getElementById("staffLoginId");
+    if(loginBox) loginBox.value=requestedLoginId;
     staffStatus("Creating staff login...", true);
-    const {data,error}=await supabaseClient.functions.invoke("create-staff",{
-        body:{name,email,password,role,phone:"",permissions:getStaffPermissions(),staff_code:requestedLoginId,login_id:requestedLoginId}
+
+    const result=await supabaseClient.functions.invoke("create-staff",{
+        body:{name,email,password,role,phone:"",permissions,staff_code:requestedLoginId,login_id:requestedLoginId}
     });
-    if(error){ staffStatus(data?.error || error.message || "Unable to create staff login."); return; }
+    const data=result?.data, error=result?.error;
+    if(error){ staffStatus(error.message || "Unable to create staff login."); return; }
     if(data?.error){ staffStatus(data.error); return; }
-    const finalId=data?.login_id||data?.staff_code||requestedLoginId;
-    if(loginBox)loginBox.value=finalId;
+
+    let finalId=data?.login_id||data?.staff_code||requestedLoginId;
+
+    // Ensure the generated ID is stored even if the Edge Function does not return it.
+    const {data:profile}=await supabaseClient
+        .from("staff_profiles")
+        .select("id,login_id,staff_code")
+        .eq("email",email)
+        .maybeSingle();
+    if(profile?.id && (!profile.login_id || !profile.staff_code)){
+        const {error:updateError}=await supabaseClient
+            .from("staff_profiles")
+            .update({login_id:finalId,staff_code:finalId})
+            .eq("id",profile.id);
+        if(!updateError){
+            finalId=finalId;
+        }
+    }
+
+    if(loginBox) loginBox.value=finalId;
+    showStaffCreatedCard(finalId,role,permissions);
     document.getElementById("staffName").value="";
     document.getElementById("staffEmail").value="";
     document.getElementById("staffPassword").value="";
-    staffStatus("Staff login created. Login ID: "+finalId, true);
+    staffStatus("Staff account ready. Login ID save ho gayi.", true);
     await loadStaffAccounts();
 }
 
@@ -8548,9 +8601,15 @@ function showStaffManagement(){
           <h3>Access & Permissions</h3>
           <small>Selected role de hisaab naal staff nu access milega.</small>
         </div>
-        <span id="staffRoleSummary" class="staff-role-summary">Viewer access</span>
+        <span id="staffRoleSummary" class="staff-role-summary">1 section allowed</span>
       </div>
       <div id="staffPermissionGrid" class="staff-permission-grid"></div>
+    </div>
+
+    <div id="staffCreatedCard" class="staff-created-card">
+      <div style="font-size:9px;letter-spacing:1.6px;font-weight:900;color:#287a3e;">STAFF LOGIN CREATED</div>
+      <div id="staffCreatedId" class="staff-created-id">—</div>
+      <div id="staffCreatedMeta" class="staff-created-meta"></div>
     </div>
 
     <div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;">
@@ -8565,6 +8624,8 @@ function showStaffManagement(){
       </div>
     </div>
   </div>`;
+  const firstLoginBox=document.getElementById("staffLoginId");
+  if(firstLoginBox && !firstLoginBox.value) firstLoginBox.value=generateStaffLoginId();
   renderStaffRoleCheck();
   document.getElementById("staffRole")?.addEventListener("change",renderStaffRoleCheck);
   if(typeof loadStaffAccounts==="function") loadStaffAccounts();
