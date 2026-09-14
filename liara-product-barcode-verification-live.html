@@ -987,79 +987,242 @@ clearFormulaIngredients();
 
 async function loadBatchFormulas(){
 
-const productSelect=document.getElementById("batchProductSelect");
+    const productSelect =
+        document.getElementById("batchProductSelect");
 
-const productName=
-productSelect.selectedOptions[0]?.textContent.trim()||"";
+    const productId =
+        productSelect.value;
 
-const formulaSelect=document.getElementById("batchFormulaSelect");
+    const productName =
+        productSelect.selectedOptions[0]?.textContent.trim() || "";
 
-formulaSelect.innerHTML="<option value=''>Loading Formulas...</option>";
+    const formulaSelect =
+        document.getElementById("batchFormulaSelect");
 
-clearFormulaIngredients();
+    formulaSelect.innerHTML =
+        "<option value=''>Loading Formulas...</option>";
 
-if(!productName){
+    clearFormulaIngredients();
 
-formulaSelect.innerHTML="<option value=''>Select Formula</option>";
-return;
+    if(!productId || !productName){
+
+        formulaSelect.innerHTML =
+            "<option value=''>Select Formula</option>";
+
+        return;
+    }
+
+    try{
+
+        /* -----------------------------------------------------
+           LOAD ALL FORMULAS
+           Do NOT filter in Supabase by product_name because
+           product name may have different spacing/case/reference.
+        ----------------------------------------------------- */
+
+        const {data,error} = await supabaseClient
+            .from("formulas")
+            .select(`
+                id,
+                formula_no,
+                product_name,
+                product_reference,
+                formula_name,
+                version,
+                formula_date,
+                batch_size,
+                batch_unit,
+                created_at
+            `)
+            .order("created_at",{ascending:false});
+
+        if(error){
+
+            console.error(
+                "FORMULA LOAD ERROR:",
+                error
+            );
+
+            formulaSelect.innerHTML =
+                "<option value=''>Unable to load formulas</option>";
+
+            setStatus(
+                "batchStatus",
+                "Formula load failed: " +
+                error.message,
+                false
+            );
+
+            return;
+        }
+
+        /* -----------------------------------------------------
+           NORMALIZE TEXT
+        ----------------------------------------------------- */
+
+        function normalize(value){
+
+            return String(value || "")
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g," ")
+                .replace(/[–—]/g,"-");
+
+        }
+
+        const selectedProductName =
+            normalize(productName);
+
+        const selectedProductId =
+            normalize(productId);
+
+        /* -----------------------------------------------------
+           MATCH FORMULA WITH PRODUCT
+           
+           Match by:
+           1. Product Name
+           2. Product Reference = Product ID
+           3. Product Reference = Product Name
+        ----------------------------------------------------- */
+
+        currentBatchFormulas =
+            (data || []).filter(formula => {
+
+                const formulaProductName =
+                    normalize(
+                        formula.product_name
+                    );
+
+                const formulaProductReference =
+                    normalize(
+                        formula.product_reference
+                    );
+
+                return (
+
+                    formulaProductName ===
+                    selectedProductName
+
+                    ||
+
+                    formulaProductReference ===
+                    selectedProductId
+
+                    ||
+
+                    formulaProductReference ===
+                    selectedProductName
+
+                );
+
+            });
+
+        /* -----------------------------------------------------
+           CLEAR DROPDOWN
+        ----------------------------------------------------- */
+
+        formulaSelect.innerHTML =
+            "<option value=''>Select Formula</option>";
+
+        /* -----------------------------------------------------
+           NO FORMULA
+        ----------------------------------------------------- */
+
+        if(!currentBatchFormulas.length){
+
+            console.warn(
+                "NO FORMULA MATCH FOUND",
+                {
+                    productId: productId,
+                    productName: productName,
+                    allFormulas: data
+                }
+            );
+
+            formulaSelect.innerHTML =
+                "<option value=''>No Formula Found</option>";
+
+            setStatus(
+                "batchStatus",
+                "No formula found for this product. " +
+                "Formula Master vich Product Name / Reference check karo.",
+                false
+            );
+
+            return;
+        }
+
+        /* -----------------------------------------------------
+           SHOW FORMULAS
+        ----------------------------------------------------- */
+
+        currentBatchFormulas.forEach(formula => {
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                formula.id;
+
+            option.textContent =
+                (formula.formula_no || "Formula") +
+                " — " +
+                (
+                    formula.formula_name ||
+                    formula.product_name ||
+                    "Formula"
+                ) +
+                (
+                    formula.version
+                    ? " • v" + formula.version
+                    : ""
+                );
+
+            formulaSelect.appendChild(
+                option
+            );
+
+        });
+
+        /* -----------------------------------------------------
+           STATUS
+        ----------------------------------------------------- */
+
+        setStatus(
+            "batchStatus",
+            "✓ " +
+            currentBatchFormulas.length +
+            " Formula(s) found for " +
+            productName +
+            ".",
+            true
+        );
+
+        console.log(
+            "MATCHED FORMULAS:",
+            currentBatchFormulas
+        );
+
+    }catch(error){
+
+        console.error(
+            "FORMULA LOAD EXCEPTION:",
+            error
+        );
+
+        formulaSelect.innerHTML =
+            "<option value=''>Unable to load formulas</option>";
+
+        setStatus(
+            "batchStatus",
+            "Formula loading error: " +
+            (error.message || error),
+            false
+        );
+
+    }
 
 }
-
-const {data,error}=await supabaseClient
-.from("formulas")
-.select("id,formula_no,product_name,formula_name,version,formula_date,batch_size,batch_unit")
-.ilike("product_name",productName)
-.order("created_at",{ascending:false});
-
-if(error){
-
-console.error(error);
-
-formulaSelect.innerHTML="<option value=''>Unable to load formulas</option>";
-
-setStatus("batchStatus","Formula load failed: "+error.message,false);
-
-return;
-
-}
-
-currentBatchFormulas=data||[];
-
-formulaSelect.innerHTML="<option value=''>Select Formula</option>";
-
-if(!currentBatchFormulas.length){
-
-formulaSelect.innerHTML="<option value=''>No Formula Found</option>";
-
-setStatus(
-"batchStatus",
-"No formula found for this product. Create the Formula Master first.",
-false
-);
-
-return;
-
-}
-
-currentBatchFormulas.forEach(formula=>{
-
-const option=document.createElement("option");
-
-option.value=formula.id;
-
-option.textContent=
-(formula.formula_no||"Formula")+
-" — "+
-(formula.formula_name||formula.product_name||"Formula")+
-(formula.version?" • v"+formula.version:"");
-
-formulaSelect.appendChild(option);
-
-});
-
-}
-
-
 /* =========================================================
    FORMULA INGREDIENTS
 ========================================================= */
