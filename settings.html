@@ -99,7 +99,7 @@ h1{margin:5px 0 0;font-size:30px}
 .staff-list-card{margin-top:15px}
 .staff-list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 .staff-list-head h3{font-size:13px;margin:0}.staff-list-head p{font-size:9px;color:#777;margin-top:4px}
-.staff-table{width:100%;border-collapse:collapse;min-width:760px;font-size:10px}
+.staff-table{width:100%;border-collapse:collapse;min-width:980px;font-size:10px}
 .staff-table th,.staff-table td{border-bottom:1px solid #eee;padding:10px 8px;text-align:left;vertical-align:middle}
 .staff-table th{background:#f7f3eb;color:#555;font-size:9px;letter-spacing:.5px}
 .staff-table tr:hover{background:#fcfaf6}
@@ -285,7 +285,7 @@ Staff account is now created and ready for login.
 <div class="staff-list-head">
 <div>
 <h3>👥 Staff Accounts</h3>
-<p>All staff accounts created in Supabase. Manager accounts will appear here automatically.</p>
+<p>All staff accounts created in Supabase. Manager accounts will appear here automatically. Use <b>RESET PASSWORD</b> to generate a new secure password.</p>
 </div>
 <button class="btn light" type="button" onclick="loadStaffAccounts()">↻ REFRESH</button>
 </div>
@@ -2638,6 +2638,7 @@ async function loadStaffAccounts(){
         '<td>'+staffDate(staff.created_at)+'</td>'+
         '<td><div class="staff-actions">'+
           '<button class="btn light staff-mini" type="button" onclick="viewStaffPermissions(\''+escapeStaffHtml(String(staff.id||""))+'\')">VIEW RIGHTS</button>'+
+          '<button class="btn light staff-mini" type="button" onclick="resetStaffPassword(\''+escapeStaffHtml(String(staff.id||""))+'\',\''+escapeStaffHtml(String(staff.email||""))+'\',\''+escapeStaffHtml(String(staff.name||""))+'\')">RESET PASSWORD</button>'+
           '<button class="btn light staff-mini" type="button" onclick="toggleStaffStatus(\''+escapeStaffHtml(String(staff.id||""))+'\','+(active?'false':'true')+')">'+(active?'DISABLE':'ENABLE')+'</button>'+
         '</div></td>'+
       '</tr>';
@@ -2694,6 +2695,78 @@ async function viewStaffPermissions(id){
     alert("Could not load staff rights.\n\n"+(error?.message||"Please try again."));
   }
 }
+
+/* =========================================================
+   STAFF PASSWORD RESET
+   ========================================================= */
+
+function generateSecureStaffPassword(){
+  const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+  const arr=new Uint32Array(16);
+  crypto.getRandomValues(arr);
+  return Array.from(arr,n=>chars[n%chars.length]).join("");
+}
+
+async function resetStaffPassword(id,email,name){
+  if(!id || !email){
+    alert("Staff email is missing. Please refresh the staff list.");
+    return;
+  }
+
+  if(email.trim().toLowerCase()==="info@liara.co.in"){
+    alert("The Main Admin password cannot be changed from Staff Management.");
+    return;
+  }
+
+  const ok=confirm(
+    "Reset password for "+(name||"this staff account")+"?\n\n"+
+    "A new temporary password will be generated and the old password will stop working."
+  );
+  if(!ok)return;
+
+  const newPassword=generateSecureStaffPassword();
+
+  try{
+    const {data:{session}={}}=await supabaseClient.auth.getSession();
+    if(!session) throw new Error("Admin login session not found.");
+
+    const {data,error}=await supabaseClient.functions.invoke(
+      "reset-staff-password",
+      {
+        body:{
+          email:email.trim().toLowerCase(),
+          password:newPassword
+        }
+      }
+    );
+
+    if(error)throw error;
+    if(!data?.ok){
+      throw new Error(data?.error||"Password reset failed.");
+    }
+
+    try{
+      await navigator.clipboard.writeText(newPassword);
+    }catch(e){}
+
+    alert(
+      "✓ PASSWORD RESET SUCCESSFUL\n\n"+
+      "Staff: "+(name||"—")+"\n"+
+      "Login ID / Email: "+email+"\n\n"+
+      "NEW TEMPORARY PASSWORD:\n"+newPassword+"\n\n"+
+      "The password has been copied to your clipboard if your browser allowed it.\n"+
+      "Give this password securely to the staff member."
+    );
+
+  }catch(error){
+    console.error("resetStaffPassword error:",error);
+    alert(
+      "Staff password reset failed.\n\n"+
+      (error?.message||"Please try again.")
+    );
+  }
+}
+
 
 /* =========================================================
    PASSWORD
