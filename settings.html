@@ -95,6 +95,18 @@ h1{margin:5px 0 0;font-size:30px}
  .card{padding:18px}
  .pf-grid{grid-template-columns:1fr}
 }
+
+.staff-list-card{margin-top:15px}
+.staff-list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.staff-list-head h3{font-size:13px;margin:0}.staff-list-head p{font-size:9px;color:#777;margin-top:4px}
+.staff-table{width:100%;border-collapse:collapse;min-width:760px;font-size:10px}
+.staff-table th,.staff-table td{border-bottom:1px solid #eee;padding:10px 8px;text-align:left;vertical-align:middle}
+.staff-table th{background:#f7f3eb;color:#555;font-size:9px;letter-spacing:.5px}
+.staff-table tr:hover{background:#fcfaf6}
+.staff-status{display:inline-block;padding:4px 8px;border-radius:20px;font-size:8px;font-weight:bold}
+.staff-status.active{background:#eaf7ed;color:#287a3e}.staff-status.inactive{background:#fbeaea;color:#a33}
+.staff-actions{display:flex;gap:6px;flex-wrap:wrap}.staff-mini{padding:6px 9px!important;font-size:8px!important}
+.staff-empty{text-align:center!important;padding:24px!important;color:#888}
 </style>
 </head>
 
@@ -266,6 +278,22 @@ Permissions: <b id="createdStaffPermissions">0</b> rights
 </div>
 <div style="margin-top:8px;font-size:9px;color:#5f7f66">
 Staff account is now created and ready for login.
+</div>
+</div>
+
+<div class="card staff-list-card">
+<div class="staff-list-head">
+<div>
+<h3>👥 Staff Accounts</h3>
+<p>All staff accounts created in Supabase. Manager accounts will appear here automatically.</p>
+</div>
+<button class="btn light" type="button" onclick="loadStaffAccounts()">↻ REFRESH</button>
+</div>
+<div class="table-wrap">
+<table class="staff-table">
+<thead><tr><th>STAFF</th><th>LOGIN ID</th><th>EMAIL</th><th>ROLE</th><th>STATUS</th><th>CREATED</th><th>ACTION</th></tr></thead>
+<tbody id="staffAccountsBody"><tr><td colspan="7" class="staff-empty">Loading staff accounts...</td></tr></tbody>
+</table>
 </div>
 </div>
 
@@ -2559,6 +2587,114 @@ setTimeout(
 }
 
 
+
+/* =========================================================
+   STAFF ACCOUNT LIST
+   ========================================================= */
+
+function escapeStaffHtml(value){
+  return String(value ?? "").replace(/[&<>\"']/g,function(ch){
+    return ({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;","'":"&#39;"})[ch];
+  });
+}
+
+function staffDate(value){
+  if(!value)return "—";
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return escapeStaffHtml(value);
+  return d.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
+}
+
+async function loadStaffAccounts(){
+  const body=document.getElementById("staffAccountsBody");
+  if(!body)return;
+  body.innerHTML='<tr><td colspan="7" class="staff-empty">Loading staff accounts...</td></tr>';
+
+  try{
+    const {data:{session}={}}=await supabaseClient.auth.getSession();
+    if(!session) throw new Error("Admin login session not found.");
+
+    const {data,error}=await supabaseClient
+      .from("staff_profiles")
+      .select("id,name,email,role,active,created_at,staff_code,login_id")
+      .order("created_at",{ascending:false});
+
+    if(error)throw error;
+
+    if(!data || !data.length){
+      body.innerHTML='<tr><td colspan="7" class="staff-empty">No staff accounts found.</td></tr>';
+      return;
+    }
+
+    body.innerHTML=data.map(function(staff){
+      const active=staff.active!==false;
+      const login=staff.login_id||staff.staff_code||"—";
+      return '<tr>'+
+        '<td><b>'+escapeStaffHtml(staff.name||"Unnamed Staff")+'</b></td>'+
+        '<td>'+escapeStaffHtml(login)+'</td>'+
+        '<td>'+escapeStaffHtml(staff.email||"—")+'</td>'+
+        '<td>'+escapeStaffHtml(staff.role||"—")+'</td>'+
+        '<td><span class="staff-status '+(active?'active':'inactive')+'">'+(active?'ACTIVE':'INACTIVE')+'</span></td>'+
+        '<td>'+staffDate(staff.created_at)+'</td>'+
+        '<td><div class="staff-actions">'+
+          '<button class="btn light staff-mini" type="button" onclick="viewStaffPermissions(\''+escapeStaffHtml(String(staff.id||""))+'\')">VIEW RIGHTS</button>'+
+          '<button class="btn light staff-mini" type="button" onclick="toggleStaffStatus(\''+escapeStaffHtml(String(staff.id||""))+'\','+(active?'false':'true')+')">'+(active?'DISABLE':'ENABLE')+'</button>'+
+        '</div></td>'+
+      '</tr>';
+    }).join("");
+
+  }catch(error){
+    console.error("loadStaffAccounts error:",error);
+    body.innerHTML='<tr><td colspan="7" class="staff-empty">Unable to load staff accounts. '+escapeStaffHtml(error?.message||"Please check Supabase permissions.")+'</td></tr>';
+  }
+}
+
+async function toggleStaffStatus(id,nextActive){
+  if(!id)return;
+  if(!confirm((nextActive?"Enable":"Disable")+" this staff account?"))return;
+  try{
+    const {error}=await supabaseClient
+      .from("staff_profiles")
+      .update({active:!!nextActive,updated_at:new Date().toISOString()})
+      .eq("id",id);
+    if(error)throw error;
+    showNotice("✓ Staff account "+(nextActive?"enabled":"disabled")+".");
+    await loadStaffAccounts();
+  }catch(error){
+    console.error("toggleStaffStatus error:",error);
+    alert("Staff status update failed.\n\n"+(error?.message||"Please try again."));
+  }
+}
+
+async function viewStaffPermissions(id){
+  try{
+    const {data,error}=await supabaseClient
+      .from("staff_profiles")
+      .select("name,login_id,staff_code,role,permissions")
+      .eq("id",id)
+      .single();
+    if(error)throw error;
+    const permissions=data?.permissions||{};
+    const rights=[];
+    Object.entries(permissions).forEach(function(entry){
+      const moduleName=entry[0], actions=entry[1]||{};
+      Object.entries(actions).forEach(function(actionEntry){
+        if(actionEntry[1])rights.push(moduleName.toUpperCase()+" / "+actionEntry[0].toUpperCase());
+      });
+    });
+    alert(
+      "STAFF RIGHTS\n\n"+
+      "Name: "+(data?.name||"—")+"\n"+
+      "Login ID: "+(data?.login_id||data?.staff_code||"—")+"\n"+
+      "Role: "+(data?.role||"—")+"\n\n"+
+      (rights.length?rights.join("\n"):"No permissions assigned.")
+    );
+  }catch(error){
+    console.error("viewStaffPermissions error:",error);
+    alert("Could not load staff rights.\n\n"+(error?.message||"Please try again."));
+  }
+}
+
 /* =========================================================
    PASSWORD
    ========================================================= */
@@ -2730,6 +2866,8 @@ showNotice(
 "✓ Staff account created successfully. Login ID: "+finalLoginId
 );
 
+await loadStaffAccounts();
+
 }catch(error){
 
 console.error("createStaff error:",error);
@@ -2868,6 +3006,7 @@ await generateStaffLoginId()
 );
 
 await loadSettings();
+await loadStaffAccounts();
 
 subscribeToSettings();
 
@@ -2893,4 +3032,3 @@ cached
 
 </body>
 </html>
-```
