@@ -85,7 +85,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style id="liara-admin-page-lock">html,body{visibility:hidden!important}</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -1522,6 +1521,17 @@ body{
 
 </style>
 
+<style id="staff-management-premium-ui">
+.staff-role-check-card{margin-top:16px;border:1px solid #e6dfd4;border-radius:14px;background:linear-gradient(180deg,#fffdf9,#faf8f5);padding:16px}
+.staff-role-check-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
+.staff-role-check-head span:first-child{font-size:9px;letter-spacing:1.8px;font-weight:800;color:#ad8232}
+.staff-role-check-head h3{margin:3px 0 3px;font-size:17px}.staff-role-check-head small{color:#888;font-size:11px}
+.staff-role-summary{padding:7px 10px;border-radius:20px;background:#f1eadc;color:#806226;font-size:10px;font-weight:800;white-space:nowrap}
+.staff-permission-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.staff-permission-item{display:flex;align-items:center;gap:7px;padding:9px 10px;border:1px solid #e6e1d8;border-radius:9px;background:#fff;font-size:11px;font-weight:700;color:#555}
+.staff-permission-item input{display:none}.staff-permission-item.allowed{border-color:#cfe4d3;background:#f4fbf5;color:#287a3e}.staff-permission-icon{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#eee;color:#999;font-size:10px}.staff-permission-item.allowed .staff-permission-icon{background:#287a3e;color:#fff}
+@media(max-width:900px){.staff-permission-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
 <style id="staff-management-final-layout-fix">
 .settings-layout{
     grid-template-columns:180px minmax(0,1fr) !important;
@@ -1982,35 +1992,6 @@ window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
-
-/* =========================================================
-   LIARA ADMIN PAGE LOCK — DIRECT URL PROTECTION
-   Requires an authenticated Liara admin session.
-========================================================= */
-(function(){
-  const LOCK_STYLE_ID="liara-admin-page-lock";
-  function unlockPage(){
-    const s=document.getElementById(LOCK_STYLE_ID);
-    if(s) s.remove();
-  }
-  window.requireLiaraAdmin = async function(){
-    try{
-      const {data,error}=await supabaseClient.auth.getUser();
-      const email=String(data?.user?.email||"").toLowerCase();
-      if(error || !data?.user || email !== "info@liara.co.in"){
-        window.location.replace("company-login.html");
-        return false;
-      }
-      unlockPage();
-      return true;
-    }catch(e){
-      window.location.replace("company-login.html");
-      return false;
-    }
-  };
-  window.__liaraAdminAuthPromise = window.requireLiaraAdmin();
-})();
-
 
 const ADMIN_EMAIL =
 "info@liara.co.in";
@@ -7603,33 +7584,77 @@ function staffStatus(message, ok=false){
     el.textContent=message;
 }
 
+function generateStaffLoginId(){
+    const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const a=new Uint32Array(6); crypto.getRandomValues(a);
+    return "LIARA-"+Array.from(a,n=>chars[n%chars.length]).join("");
+}
+const STAFF_ROLE_ACCESS={
+  "Super Admin":["Orders","Sales","Stock","Products","Customers","Delivery","Reports","Notifications","Parties","Settings"],
+  "Admin":["Orders","Sales","Stock","Products","Customers","Delivery","Reports","Notifications","Parties"],
+  "Manager":["Orders","Sales","Stock","Products","Customers","Delivery","Reports","Parties"],
+  "Sales Manager":["Orders","Sales","Customers","Reports"],
+  "Sales Staff":["Orders","Sales","Customers"],
+  "Order Manager":["Orders","Delivery","Customers"],
+  "Order Staff":["Orders"],
+  "Accounts Manager":["Sales","Reports","Parties"],
+  "Accounts Staff":["Sales","Reports","Parties"],
+  "Inventory Manager":["Stock","Products","Reports"],
+  "Inventory Staff":["Stock","Products"],
+  "Customer Manager":["Customers","Orders"],
+  "Customer Support":["Customers","Orders"],
+  "Delivery Manager":["Delivery","Orders"],
+  "Delivery Staff":["Delivery","Orders"],
+  "Purchase Manager":["Stock","Products"],
+  "Purchase Staff":["Stock","Products"],
+  "Report Manager":["Reports","Sales","Orders","Stock"],
+  "Viewer":["Reports"],
+  "Custom Role":[]
+};
+function renderStaffRoleCheck(){
+    const role=document.getElementById("staffRole")?.value||"Viewer";
+    const access=STAFF_ROLE_ACCESS[role]||[];
+    const grid=document.getElementById("staffPermissionGrid");
+    const summary=document.getElementById("staffRoleSummary");
+    if(summary) summary.textContent=access.length ? access.length+" sections allowed" : (role==="Custom Role"?"Choose custom access":"Limited access");
+    if(!grid)return;
+    const all=["Orders","Sales","Stock","Products","Customers","Delivery","Reports","Notifications","Parties","Settings"];
+    grid.innerHTML=all.map(x=>`<label class="staff-permission-item ${access.includes(x)?"allowed":"blocked"}">
+      <input type="checkbox" class="staff-permission" value="${x}" ${access.includes(x)?"checked":""} ${role==="Custom Role"?"":"disabled"}>
+      <span class="staff-permission-icon">${access.includes(x)?"✓":"—"}</span><span>${x}</span>
+    </label>`).join("");
+}
+function getStaffPermissions(){
+    const role=document.getElementById("staffRole")?.value||"Viewer";
+    if(role==="Custom Role"){
+      const out={}; document.querySelectorAll(".staff-permission").forEach(x=>out[x.value]=x.checked); return out;
+    }
+    const out={}; (STAFF_ROLE_ACCESS[role]||[]).forEach(x=>out[x]=true); return out;
+}
 async function createStaffLogin(){
     const name=document.getElementById("staffName")?.value.trim();
     const email=document.getElementById("staffEmail")?.value.trim().toLowerCase();
     const password=document.getElementById("staffPassword")?.value || "";
-    const role=document.getElementById("staffRole")?.value || "Staff";
-
+    const role=document.getElementById("staffRole")?.value || "Viewer";
     if(!name || !email || !password){ staffStatus("Name, email and password are required."); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ staffStatus("Valid staff email pao."); return; }
     if(password.length < 8){ staffStatus("Password must be at least 8 characters."); return; }
-
     const {data:{session}}=await supabaseClient.auth.getSession();
     if(!session){ staffStatus("Your admin session has expired. Please sign in again."); return; }
-
+    const requestedLoginId=generateStaffLoginId();
+    const loginBox=document.getElementById("staffLoginId"); if(loginBox)loginBox.value=requestedLoginId;
     staffStatus("Creating staff login...", true);
     const {data,error}=await supabaseClient.functions.invoke("create-staff",{
-        body:{name,email,password,role,phone:"",permissions:{}}
+        body:{name,email,password,role,phone:"",permissions:getStaffPermissions(),staff_code:requestedLoginId,login_id:requestedLoginId}
     });
-
-    if(error){
-        staffStatus(data?.error || error.message || "Unable to create staff login.");
-        return;
-    }
+    if(error){ staffStatus(data?.error || error.message || "Unable to create staff login."); return; }
     if(data?.error){ staffStatus(data.error); return; }
-
+    const finalId=data?.login_id||data?.staff_code||requestedLoginId;
+    if(loginBox)loginBox.value=finalId;
     document.getElementById("staffName").value="";
     document.getElementById("staffEmail").value="";
     document.getElementById("staffPassword").value="";
-    staffStatus("Staff login created successfully.", true);
+    staffStatus("Staff login created. Login ID: "+finalId, true);
     await loadStaffAccounts();
 }
 
@@ -7640,7 +7665,7 @@ async function loadStaffAccounts(){
 
     const {data,error}=await supabaseClient
         .from("staff_profiles")
-        .select("id,name,email,role,active,created_at")
+        .select("id,name,email,role,active,created_at,staff_code,login_id")
         .order("created_at",{ascending:false});
 
     if(error){
@@ -7653,9 +7678,10 @@ async function loadStaffAccounts(){
     }
 
     box.innerHTML=`<div class="table-wrapper"><table class="data-table" style="min-width:700px">
-        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+        <thead><tr><th>Name</th><th>Login ID</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
         <tbody>${data.map(s=>`<tr>
             <td><strong>${escapeHtml(s.name || "")}</strong></td>
+            <td><strong style="letter-spacing:1px;color:#ad8232">${escapeHtml(s.login_id || s.staff_code || "—")}</strong></td>
             <td>${escapeHtml(s.email || "")}</td>
             <td>${escapeHtml(s.role || "Staff")}</td>
             <td><span class="badge ${s.active===false?'badge-red':'badge-green'}">${s.active===false?'Inactive':'Active'}</span></td>
@@ -8469,6 +8495,12 @@ function showStaffManagement(){
       </div>
 
       <div class="form-group">
+        <label>STAFF LOGIN ID</label>
+        <input id="staffLoginId" type="text" readonly placeholder="Auto-generated after creation">
+        <small style="display:block;margin-top:6px;color:#777;">Login ID auto-generate hovegi (LIARA-XXXXXX).</small>
+      </div>
+
+      <div class="form-group">
         <label>SECURE PASSWORD</label>
         <div style="display:flex;gap:7px;flex-wrap:wrap;">
           <input id="staffPassword" type="password" minlength="8"
@@ -8509,6 +8541,18 @@ function showStaffManagement(){
       </div>
     </div>
 
+    <div class="staff-role-check-card">
+      <div class="staff-role-check-head">
+        <div>
+          <span>ROLE CHECK</span>
+          <h3>Access & Permissions</h3>
+          <small>Selected role de hisaab naal staff nu access milega.</small>
+        </div>
+        <span id="staffRoleSummary" class="staff-role-summary">Viewer access</span>
+      </div>
+      <div id="staffPermissionGrid" class="staff-permission-grid"></div>
+    </div>
+
     <div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;">
       <button type="button" class="btn" onclick="createStaffLogin()">➕ Create Staff Login</button>
     </div>
@@ -8521,6 +8565,8 @@ function showStaffManagement(){
       </div>
     </div>
   </div>`;
+  renderStaffRoleCheck();
+  document.getElementById("staffRole")?.addEventListener("change",renderStaffRoleCheck);
   if(typeof loadStaffAccounts==="function") loadStaffAccounts();
 }
 </script>
