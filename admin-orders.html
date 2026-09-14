@@ -7355,9 +7355,48 @@ function openSettingsTab(tab, button){
 
     if(button) button.classList.add("active");
 
-    if(tab === "staff" && typeof loadStaffAccounts === "function"){
-        try { loadStaffAccounts(); } catch(e) { console.error(e); }
+    if(tab === "staff"){
+        if(typeof renderStaffManagementPanel === "function") renderStaffManagementPanel(panel);
+        if(typeof loadStaffAccounts === "function"){
+            try { loadStaffAccounts(); } catch(e) { console.error(e); }
+        }
     }
+}
+
+function renderStaffManagementPanel(panel){
+    if(!panel || panel.dataset.staffReady === "1") return;
+    panel.dataset.staffReady = "1";
+    panel.innerHTML = `
+      <div class="settings-card" style="padding:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;margin-bottom:16px;">
+          <div><div style="font-size:9px;letter-spacing:1.8px;font-weight:900;color:#ad8232;">STAFF & ACCESS</div>
+          <h2 style="margin:4px 0 4px;">👥 Staff Management</h2>
+          <p style="margin:0;color:#777;">Create staff login, auto-generate Login ID and control role access.</p></div>
+          <span style="padding:7px 11px;border-radius:999px;background:#f4ead6;color:#806226;font-size:10px;font-weight:900;">MAIN ADMIN</span>
+        </div>
+        <div class="settings-form">
+          <div class="settings-field"><label>STAFF NAME</label><input id="staffName" placeholder="Staff name"></div>
+          <div class="settings-field"><label>STAFF EMAIL</label><input id="staffEmail" type="email" placeholder="staff@example.com"></div>
+          <div class="settings-field"><label>STAFF LOGIN ID</label><input id="staffLoginId" type="text" readonly placeholder="Auto-generated"><small style="display:block;margin-top:5px;color:#777;">Auto-generated: LIARA-XXXXXX</small></div>
+          <div class="settings-field"><label>PASSWORD</label><div style="display:flex;gap:7px;flex-wrap:wrap;"><input id="staffPassword" type="password" minlength="8" placeholder="Minimum 8 characters" style="flex:1;min-width:180px;"><button type="button" class="btn outline-btn" onclick="generateStaffPassword()">🔐 Generate</button><button type="button" class="btn outline-btn" onclick="toggleStaffPassword()">👁 Show</button></div><small id="staffPasswordHint" style="display:block;margin-top:5px;color:#777;">Minimum 8 characters.</small></div>
+          <div class="settings-field"><label>ROLE</label><select id="staffRole">
+            <option value="Super Admin">Super Admin</option><option value="Admin">Admin</option><option value="Manager">Manager</option><option value="Sales Manager">Sales Manager</option><option value="Sales Staff">Sales Staff</option><option value="Order Manager">Order Manager</option><option value="Order Staff">Order Staff</option><option value="Accounts Manager">Accounts Manager</option><option value="Accounts Staff">Accounts Staff</option><option value="Inventory Manager">Inventory Manager</option><option value="Inventory Staff">Inventory Staff</option><option value="Customer Manager">Customer Manager</option><option value="Customer Support">Customer Support</option><option value="Delivery Manager">Delivery Manager</option><option value="Delivery Staff">Delivery Staff</option><option value="Purchase Manager">Purchase Manager</option><option value="Purchase Staff">Purchase Staff</option><option value="Report Manager">Report Manager</option><option value="Viewer">Viewer</option><option value="Custom Role">Custom Role</option>
+          </select></div>
+        </div>
+        <div class="staff-role-check-card" style="margin-top:16px;">
+          <div class="staff-role-check-head"><div><span>ROLE CHECK</span><h3>Access & Permissions</h3><small>Role change karde hi allowed / blocked access update hovega.</small></div><span id="staffRoleSummary" class="staff-role-summary">—</span></div>
+          <div id="staffPermissionGrid" class="staff-permission-grid"></div>
+        </div>
+        <div id="staffCreatedCard" class="staff-created-card"><div style="font-size:9px;letter-spacing:1.6px;font-weight:900;color:#287a3e;">STAFF LOGIN CREATED</div><div id="staffCreatedId" class="staff-created-id">—</div><div id="staffCreatedMeta" class="staff-created-meta"></div></div>
+        <div class="settings-actions" style="margin-top:14px;"><button class="btn" type="button" onclick="createStaffLogin()">➕ Create Staff Login</button><button class="btn outline-btn" type="button" onclick="loadStaffAccounts()">↻ Refresh Staff</button></div>
+        <div id="staffCreateStatus" class="settings-status" style="display:none;"></div>
+      </div>
+      <div class="settings-card"><h3>Staff Accounts</h3><p>Existing staff accounts and their Login IDs.</p><div id="staffAccountsList"><div class="message">Loading staff accounts...</div></div></div>
+    `;
+    const box=document.getElementById("staffLoginId");
+    if(box) box.value=generateStaffLoginId();
+    renderStaffRoleCheck();
+    document.getElementById("staffRole")?.addEventListener("change",renderStaffRoleCheck);
 }
 
 /* =========================================================
