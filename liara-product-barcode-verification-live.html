@@ -565,10 +565,6 @@ Records are loaded live from the Supabase database. Existing barcodes can be vie
 
 <script>
 
-/* =========================================================
-   ERROR HANDLING
-========================================================= */
-
 window.addEventListener("error",function(e){
 console.error("LIARA PAGE ERROR:",e.error||e.message);
 });
@@ -577,10 +573,6 @@ window.addEventListener("unhandledrejection",function(e){
 console.error("LIARA PROMISE ERROR:",e.reason);
 });
 
-
-/* =========================================================
-   SUPABASE
-========================================================= */
 
 const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
 
@@ -604,9 +596,7 @@ function unlockPage(){
 
 const lock=document.getElementById(LOCK_STYLE_ID);
 
-if(lock){
-lock.remove();
-}
+if(lock)lock.remove();
 
 }
 
@@ -620,7 +610,6 @@ return window.location.hash
 
 window.requireLiaraAdmin=async function(){
 
-/* QR verification is public */
 if(isPublicVerification()){
 
 unlockPage();
@@ -630,7 +619,8 @@ return true;
 
 try{
 
-const result=await supabaseClient.auth.getUser();
+const result=
+await supabaseClient.auth.getUser();
 
 const data=result.data;
 const error=result.error;
@@ -645,7 +635,9 @@ error||
 email!=="info@liara.co.in"
 ){
 
-window.location.replace("company-login.html");
+window.location.replace(
+"company-login.html"
+);
 
 return false;
 
@@ -657,9 +649,14 @@ return true;
 
 }catch(error){
 
-console.error("LIARA ADMIN AUTH ERROR:",error);
+console.error(
+"LIARA ADMIN AUTH ERROR:",
+error
+);
 
-window.location.replace("company-login.html");
+window.location.replace(
+"company-login.html"
+);
 
 return false;
 
@@ -672,10 +669,6 @@ window.requireLiaraAdmin();
 
 })();
 
-
-/* =========================================================
-   GLOBAL VARIABLES
-========================================================= */
 
 let lastCreatedCode="";
 let lastCreatedUrl="";
@@ -713,7 +706,9 @@ if(!v)return "—";
 
 try{
 
-return new Date(v+"T00:00:00").toLocaleDateString("en-IN");
+return new Date(
+v+"T00:00:00"
+).toLocaleDateString("en-IN");
 
 }catch(e){
 
@@ -725,9 +720,11 @@ return v;
 
 async function getSession(){
 
-const {data,error}=await supabaseClient.auth.getSession();
+const {data,error}=
+await supabaseClient.auth.getSession();
 
-if(error||!data?.session)return null;
+if(error||!data?.session)
+return null;
 
 return data.session;
 
@@ -743,12 +740,15 @@ if(!msg){
 
 el.className="status";
 el.textContent="";
+
 return;
 
 }
 
 el.textContent=msg;
-el.className="status "+(ok?"ok":"err");
+
+el.className=
+"status "+(ok?"ok":"err");
 
 }
 
@@ -759,25 +759,31 @@ el.className="status "+(ok?"ok":"err");
 
 function showTab(tab,btn){
 
-["create","batches","verify","records"].forEach(x=>{
+["create","batches","verify","records"]
+.forEach(x=>{
 
-const el=document.getElementById("tab-"+x);
+const el=
+document.getElementById("tab-"+x);
 
-if(el){
-
-el.classList.toggle("hidden",x!==tab);
-
-}
+if(el)
+el.classList.toggle(
+"hidden",
+x!==tab
+);
 
 });
 
-document.querySelectorAll(".tab").forEach(x=>{
+document.querySelectorAll(
+".tab"
+).forEach(x=>{
 x.classList.remove("active");
 });
 
-if(btn)btn.classList.add("active");
+if(btn)
+btn.classList.add("active");
 
-if(tab==="create")loadCreateProducts();
+if(tab==="create")
+loadCreateProducts();
 
 if(tab==="batches"){
 
@@ -786,7 +792,8 @@ loadBatches();
 
 }
 
-if(tab==="records")loadRecords();
+if(tab==="records")
+loadRecords();
 
 if(tab==="verify"){
 
@@ -794,14 +801,20 @@ const code=getHashCode();
 
 if(code){
 
-document.getElementById("verifyCode").value=code;
+document.getElementById(
+"verifyCode"
+).value=code;
+
 verifyProduct();
 
 }
 
 setTimeout(()=>{
 
-const input=document.getElementById("verifyCode");
+const input=
+document.getElementById(
+"verifyCode"
+);
 
 if(input)input.focus();
 
@@ -818,13 +831,16 @@ if(input)input.focus();
 
 async function loadProductsInto(selectId){
 
-const select=document.getElementById(selectId);
+const select=
+document.getElementById(selectId);
 
 if(!select)return;
 
-select.innerHTML="<option value=''>Loading Products...</option>";
+select.innerHTML=
+"<option value=''>Loading Products...</option>";
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("products")
 .select("id,name")
 .eq("active",true)
@@ -834,17 +850,20 @@ if(error){
 
 console.error(error);
 
-select.innerHTML="<option value=''>Unable to load products</option>";
+select.innerHTML=
+"<option value=''>Unable to load products</option>";
 
 return;
 
 }
 
-select.innerHTML="<option value=''>Select Product</option>";
+select.innerHTML=
+"<option value=''>Select Product</option>";
 
 (data||[]).forEach(product=>{
 
-const option=document.createElement("option");
+const option=
+document.createElement("option");
 
 option.value=product.id;
 option.textContent=product.name;
@@ -856,11 +875,19 @@ select.appendChild(option);
 }
 
 function loadCreateProducts(){
-return loadProductsInto("productSelect");
+
+return loadProductsInto(
+"productSelect"
+);
+
 }
 
 function loadBatchProducts(){
-return loadProductsInto("batchProductSelect");
+
+return loadProductsInto(
+"batchProductSelect"
+);
+
 }
 
 
@@ -872,15 +899,19 @@ async function fetchVariants(productId){
 
 if(!productId)return [];
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_stock_variants")
-.select("id,product_id,size,unit")
+.select(
+"id,product_id,size,unit"
+)
 .eq("product_id",productId)
 .order("size",{ascending:true});
 
 if(error){
 
 console.error(error);
+
 return [];
 
 }
@@ -893,15 +924,27 @@ function variantLabel(v){
 
 let size=v.size;
 
-if(size!==null&&size!==undefined){
+if(
+size!==null&&
+size!==undefined
+){
 
-if(Number(size)===Math.floor(Number(size))){
-size=String(Number(size));
+if(
+Number(size)===
+Math.floor(Number(size))
+){
+
+size=String(
+Number(size)
+);
+
 }
 
 }
 
-return String(size)+" "+String(v.unit||"PCS");
+return String(size)+
+" "+
+String(v.unit||"PCS");
 
 }
 
@@ -912,34 +955,52 @@ return String(size)+" "+String(v.unit||"PCS");
 
 async function loadCreateVariants(){
 
-const productId=document.getElementById("productSelect").value;
+const productId=
+document.getElementById(
+"productSelect"
+).value;
 
-const select=document.getElementById("variantSelect");
+const select=
+document.getElementById(
+"variantSelect"
+);
 
-select.innerHTML="<option value=''>Loading...</option>";
+select.innerHTML=
+"<option value=''>Loading...</option>";
 
-currentCreateVariants=await fetchVariants(productId);
+currentCreateVariants=
+await fetchVariants(productId);
 
-select.innerHTML="<option value=''>Select Variant / Size</option>";
+select.innerHTML=
+"<option value=''>Select Variant / Size</option>";
 
 currentCreateVariants.forEach(v=>{
 
-const option=document.createElement("option");
+const option=
+document.createElement("option");
 
 option.value=v.id;
-option.textContent=variantLabel(v);
+option.textContent=
+variantLabel(v);
 
 select.appendChild(option);
 
 });
 
-document.getElementById("batchSelect").innerHTML=
+document.getElementById(
+"batchSelect"
+).innerHTML=
 "<option value=''>Select Batch</option>";
 
 selectedBatch=null;
+
 hideSelectedBatch();
 
-setStatus("createStatus","",true);
+setStatus(
+"createStatus",
+"",
+true
+);
 
 }
 
@@ -950,28 +1011,41 @@ setStatus("createStatus","",true);
 
 async function loadBatchVariants(){
 
-const productId=document.getElementById("batchProductSelect").value;
+const productId=
+document.getElementById(
+"batchProductSelect"
+).value;
 
-const select=document.getElementById("batchVariantSelect");
+const select=
+document.getElementById(
+"batchVariantSelect"
+);
 
-select.innerHTML="<option value=''>Loading...</option>";
+select.innerHTML=
+"<option value=''>Loading...</option>";
 
-currentBatchVariants=await fetchVariants(productId);
+currentBatchVariants=
+await fetchVariants(productId);
 
-select.innerHTML="<option value=''>Select Variant / Size</option>";
+select.innerHTML=
+"<option value=''>Select Variant / Size</option>";
 
 currentBatchVariants.forEach(v=>{
 
-const option=document.createElement("option");
+const option=
+document.createElement("option");
 
 option.value=v.id;
-option.textContent=variantLabel(v);
+option.textContent=
+variantLabel(v);
 
 select.appendChild(option);
 
 });
 
-document.getElementById("batchFormulaSelect").innerHTML=
+document.getElementById(
+"batchFormulaSelect"
+).innerHTML=
 "<option value=''>Select Formula</option>";
 
 currentBatchFormulas=[];
@@ -988,16 +1062,23 @@ clearFormulaIngredients();
 async function loadBatchFormulas(){
 
 const productSelect=
-document.getElementById("batchProductSelect");
+document.getElementById(
+"batchProductSelect"
+);
 
 const productId=
 productSelect.value;
 
 const productName=
-productSelect.selectedOptions[0]?.textContent.trim()||"";
+productSelect
+.selectedOptions[0]
+?.textContent
+.trim()||"";
 
 const formulaSelect=
-document.getElementById("batchFormulaSelect");
+document.getElementById(
+"batchFormulaSelect"
+);
 
 formulaSelect.innerHTML=
 "<option value=''>Loading Formulas...</option>";
@@ -1015,7 +1096,8 @@ return;
 
 try{
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("formulas")
 .select(`
 id,
@@ -1029,7 +1111,10 @@ batch_size,
 batch_unit,
 created_at
 `)
-.order("created_at",{ascending:false});
+.order(
+"created_at",
+{ascending:false}
+);
 
 if(error){
 
@@ -1043,7 +1128,8 @@ formulaSelect.innerHTML=
 
 setStatus(
 "batchStatus",
-"Formula load failed: "+error.message,
+"Formula load failed: "+
+error.message,
 false
 );
 
@@ -1068,37 +1154,37 @@ const selectedProductId=
 normalize(productId);
 
 currentBatchFormulas=
-(data||[]).filter(formula=>{
+(data||[]).filter(
+formula=>{
 
 const formulaProductName=
-normalize(formula.product_name);
-
-const formulaProductReference=
-normalize(formula.product_reference);
-
-return(
-formulaProductName===selectedProductName
-||
-formulaProductReference===selectedProductId
-||
-formulaProductReference===selectedProductName
+normalize(
+formula.product_name
 );
 
-});
+const formulaProductReference=
+normalize(
+formula.product_reference
+);
+
+return(
+formulaProductName===
+selectedProductName
+||
+formulaProductReference===
+selectedProductId
+||
+formulaProductReference===
+selectedProductName
+);
+
+}
+);
 
 formulaSelect.innerHTML=
 "<option value=''>Select Formula</option>";
 
 if(!currentBatchFormulas.length){
-
-console.warn(
-"NO FORMULA MATCH FOUND",
-{
-productId:productId,
-productName:productName,
-allFormulas:data
-}
-);
 
 formulaSelect.innerHTML=
 "<option value=''>No Formula Found</option>";
@@ -1113,10 +1199,13 @@ return;
 
 }
 
-currentBatchFormulas.forEach(formula=>{
+currentBatchFormulas.forEach(
+formula=>{
 
 const option=
-document.createElement("option");
+document.createElement(
+"option"
+);
 
 option.value=formula.id;
 
@@ -1134,9 +1223,12 @@ formula.version
 :""
 );
 
-formulaSelect.appendChild(option);
+formulaSelect.appendChild(
+option
+);
 
-});
+}
+);
 
 setStatus(
 "batchStatus",
@@ -1146,11 +1238,6 @@ currentBatchFormulas.length+
 productName+
 ".",
 true
-);
-
-console.log(
-"MATCHED FORMULAS:",
-currentBatchFormulas
 );
 
 }catch(error){
@@ -1182,7 +1269,9 @@ false
 async function loadFormulaIngredients(){
 
 const formulaId=
-document.getElementById("batchFormulaSelect").value;
+document.getElementById(
+"batchFormulaSelect"
+).value;
 
 clearFormulaIngredients();
 
@@ -1194,7 +1283,10 @@ setStatus(
 true
 );
 
-const {data:formula,error:formulaError}=
+const {
+data:formula,
+error:formulaError
+}=
 await supabaseClient
 .from("formulas")
 .select("*")
@@ -1217,13 +1309,15 @@ return;
 }
 
 /*
-IMPORTANT:
-formula_ingredients table does NOT have created_at.
-Therefore we DO NOT use:
-.order("created_at",{ascending:true})
+IMPORTANT FIX:
+formula_ingredients DOES NOT HAVE created_at.
+So there is intentionally NO order("created_at") here.
 */
 
-const {data:ingredients,error}=
+const {
+data:ingredients,
+error
+}=
 await supabaseClient
 .from("formula_ingredients")
 .select("*")
@@ -1248,10 +1342,14 @@ currentFormulaIngredients=
 ingredients||[];
 
 const box=
-document.getElementById("formulaIngredientBox");
+document.getElementById(
+"formulaIngredientBox"
+);
 
 const list=
-document.getElementById("formulaIngredientList");
+document.getElementById(
+"formulaIngredientList"
+);
 
 box.style.display="block";
 
@@ -1260,9 +1358,11 @@ document.getElementById(
 ).textContent=
 (formula.formula_no||"Formula")+
 " • "+
-(formula.formula_name||
+(
+formula.formula_name||
 formula.product_name||
-"");
+""
+);
 
 document.getElementById(
 "selectedFormulaMeta"
@@ -1286,7 +1386,8 @@ return;
 }
 
 list.innerHTML=
-currentFormulaIngredients.map(
+currentFormulaIngredients
+.map(
 (ingredient,index)=>{
 
 const name=
@@ -1303,6 +1404,7 @@ const pct=
 ingredient.percentage??"";
 
 return `
+
 <div
 class="ingredient-row"
 id="ingredientRow_${index}"
@@ -1349,31 +1451,36 @@ disabled
 
 <option value="">Unit</option>
 
-<option value="KG"
+<option
+value="KG"
 ${unit==="KG"?"selected":""}
 >
 KG
 </option>
 
-<option value="Gram"
+<option
+value="Gram"
 ${unit==="Gram"?"selected":""}
 >
 Gram
 </option>
 
-<option value="Litre"
+<option
+value="Litre"
 ${unit==="Litre"?"selected":""}
 >
 Litre
 </option>
 
-<option value="ML"
+<option
+value="ML"
 ${unit==="ML"?"selected":""}
 >
 ML
 </option>
 
-<option value="PCS"
+<option
+value="PCS"
 ${unit==="PCS"?"selected":""}
 >
 PCS
@@ -1392,10 +1499,12 @@ disabled
 >
 
 </div>
+
 `;
 
 }
-).join("");
+)
+.join("");
 
 updateUsedCount();
 
@@ -1442,12 +1551,20 @@ document.getElementById(
 const enabled=
 !!check?.checked;
 
-if(qty)qty.disabled=!enabled;
-if(unit)unit.disabled=!enabled;
-if(pct)pct.disabled=!enabled;
+if(qty)
+qty.disabled=!enabled;
+
+if(unit)
+unit.disabled=!enabled;
+
+if(pct)
+pct.disabled=!enabled;
 
 if(row)
-row.classList.toggle("used",enabled);
+row.classList.toggle(
+"used",
+enabled
+);
 
 updateUsedCount();
 
@@ -1517,7 +1634,8 @@ document.getElementById(
 );
 
 if(title)
-title.textContent="Formula Ingredients";
+title.textContent=
+"Formula Ingredients";
 
 const meta=
 document.getElementById(
@@ -1536,7 +1654,8 @@ function getSelectedBatchIngredients(){
 
 const selected=[];
 
-currentFormulaIngredients.forEach(
+currentFormulaIngredients
+.forEach(
 (ingredient,index)=>{
 
 const check=
@@ -1603,10 +1722,12 @@ formula_ingredient_id:
 ingredient.id,
 
 ingredient_id:
-ingredient.ingredient_id||null,
+ingredient.ingredient_id||
+null,
 
 ingredient_name:
-ingredient.ingredient_name||"",
+ingredient.ingredient_name||
+"",
 
 quantity:
 Number(quantity),
@@ -1620,7 +1741,8 @@ percentage===""
 
 });
 
-});
+}
+);
 
 return selected;
 
@@ -1636,13 +1758,19 @@ function makeBatchNumber(){
 const d=new Date();
 
 const yy=
-String(d.getFullYear()).slice(-2);
+String(
+d.getFullYear()
+).slice(-2);
 
 const mm=
-String(d.getMonth()+1).padStart(2,"0");
+String(
+d.getMonth()+1
+).padStart(2,"0");
 
 const dd=
-String(d.getDate()).padStart(2,"0");
+String(
+d.getDate()
+).padStart(2,"0");
 
 const chars=
 "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -1654,13 +1782,19 @@ for(let i=0;i<4;i++){
 random+=
 chars[
 Math.floor(
-Math.random()*chars.length
+Math.random()*
+chars.length
 )
 ];
 
 }
 
-return "LPB-"+yy+mm+dd+"-"+random;
+return "LPB-"+
+yy+
+mm+
+dd+
+"-"+
+random;
 
 }
 
@@ -1681,7 +1815,10 @@ for(let attempt=0;attempt<10;attempt++){
 batchNumber=
 makeBatchNumber();
 
-const {data,error}=
+const {
+data,
+error
+}=
 await supabaseClient
 .from("product_batches")
 .select("id")
@@ -1882,17 +2019,6 @@ variantSelect
 .textContent
 .trim();
 
-const formulaSelect=
-document.getElementById(
-"batchFormulaSelect"
-);
-
-const formulaText=
-formulaSelect
-.selectedOptions[0]
-.textContent
-.trim();
-
 let batchNumber=
 document.getElementById(
 "generatedBatchNumber"
@@ -1957,7 +2083,8 @@ variant:variant,
 
 batch_number:batchNumber,
 
-total_batch_quantity:Number(quantity),
+total_batch_quantity:
+Number(quantity),
 
 batch_unit:unit,
 
@@ -1991,15 +2118,18 @@ return;
 }
 
 const ingredientRows=
-selectedIngredients.map(item=>({
+selectedIngredients.map(
+item=>({
 
 batch_id:data.id,
 
 formula_ingredient_id:
-item.formula_ingredient_id||null,
+item.formula_ingredient_id||
+null,
 
 ingredient_id:
-item.ingredient_id||null,
+item.ingredient_id||
+null,
 
 ingredient_name:
 item.ingredient_name,
@@ -2013,20 +2143,25 @@ item.unit,
 percentage:
 item.percentage
 
-}));
+})
+);
 
 const {
 error:ingredientError
 }=
 await supabaseClient
-.from("product_batch_ingredients")
+.from(
+"product_batch_ingredients"
+)
 .insert(
 ingredientRows
 );
 
 if(ingredientError){
 
-console.error(ingredientError);
+console.error(
+ingredientError
+);
 
 await supabaseClient
 .from("product_batches")
@@ -2190,7 +2325,10 @@ await supabaseClient
 .eq("product_id",productId)
 .eq("variant_id",variantId)
 .eq("status","Active")
-.order("created_at",{ascending:false});
+.order(
+"created_at",
+{ascending:false}
+);
 
 if(error){
 
@@ -2231,7 +2369,9 @@ return;
 data.forEach(batch=>{
 
 const option=
-document.createElement("option");
+document.createElement(
+"option"
+);
 
 option.value=batch.id;
 
@@ -2319,16 +2459,21 @@ data.batch_unit;
 document.getElementById(
 "selBatchMfg"
 ).textContent=
-fmtDate(data.manufacturing_date);
+fmtDate(
+data.manufacturing_date
+);
 
 document.getElementById(
 "selBatchExp"
 ).textContent=
-fmtDate(data.expiry_date);
+fmtDate(
+data.expiry_date
+);
 
 document.getElementById(
 "selectedBatchSummary"
-).style.display="block";
+).style.display=
+"block";
 
 setStatus(
 "createStatus",
@@ -2364,7 +2509,8 @@ crypto.getRandomValues(bytes);
 
 return "LPV-"+
 Array.from(bytes)
-.map(x=>
+.map(
+x=>
 x.toString(16)
 .padStart(2,"0")
 )
@@ -2426,7 +2572,10 @@ true
 
 const code=makeCode();
 
-const {data,error}=
+const {
+data,
+error
+}=
 await supabaseClient
 .from("product_verifications")
 .insert({
@@ -2623,7 +2772,10 @@ const {data,error}=
 await supabaseClient
 .from("product_batches")
 .select("*")
-.order("created_at",{ascending:false});
+.order(
+"created_at",
+{ascending:false}
+);
 
 if(error){
 
@@ -2690,7 +2842,11 @@ ${esc(batch.variant)}
 </td>
 
 <td>
-${esc(batch.formula_id?"Linked":"—")}
+${esc(
+batch.formula_id
+?"Linked"
+:"—"
+)}
 </td>
 
 <td>
@@ -2705,11 +2861,15 @@ ${esc(batch.batch_unit)}
 </td>
 
 <td>
-${fmtDate(batch.manufacturing_date)}
+${fmtDate(
+batch.manufacturing_date
+)}
 </td>
 
 <td>
-${fmtDate(batch.expiry_date)}
+${fmtDate(
+batch.expiry_date
+)}
 </td>
 
 <td>
@@ -2758,7 +2918,10 @@ async function viewBatch(batchId){
 
 if(!batchId)return;
 
-const {data:batch,error:batchError}=
+const {
+data:batch,
+error:batchError
+}=
 await supabaseClient
 .from("product_batches")
 .select("*")
@@ -2778,7 +2941,9 @@ return;
 
 if(!batch){
 
-alert("Batch not found.");
+alert(
+"Batch not found."
+);
 
 return;
 
@@ -2789,10 +2954,15 @@ data:ingredients,
 error:ingredientError
 }=
 await supabaseClient
-.from("product_batch_ingredients")
+.from(
+"product_batch_ingredients"
+)
 .select("*")
 .eq("batch_id",batchId)
-.order("created_at",{ascending:true});
+.order(
+"created_at",
+{ascending:true}
+);
 
 if(ingredientError){
 
@@ -2948,12 +3118,14 @@ ingredients?.length
 <table class="batch-ingredient-table">
 
 <thead>
+
 <tr>
 <th>Ingredient</th>
 <th>Quantity</th>
 <th>Unit</th>
 <th>Percentage</th>
 </tr>
+
 </thead>
 
 <tbody>
@@ -3020,6 +3192,7 @@ Close
 </button>
 
 </div>
+
 `;
 
 document.getElementById(
@@ -3067,7 +3240,8 @@ const formula=
 currentBatchDetail.formula;
 
 const rows=
-ingredients.map(item=>`
+ingredients.map(
+item=>`
 
 <tr>
 
@@ -3095,7 +3269,8 @@ item.percentage===""
 
 </tr>
 
-`).join("");
+`
+).join("");
 
 const printWindow=
 window.open(
@@ -3369,14 +3544,25 @@ code
 .replace(/\s+/g,"")
 .toUpperCase();
 
-const {data,error}=
+const {
+data,
+error
+}=
 await supabaseClient
-.from("product_verifications")
+.from(
+"product_verifications"
+)
 .select(
 "id,verification_code,product_name,variant,batch_number,manufacturing_date,expiry_date,status,scan_count,created_at"
 )
-.eq("verification_code",clean)
-.eq("status","Verified")
+.eq(
+"verification_code",
+clean
+)
+.eq(
+"status",
+"Verified"
+)
 .maybeSingle();
 
 if(error){
@@ -3411,7 +3597,9 @@ Number(data.scan_count||0)+1;
 try{
 
 await supabaseClient
-.from("product_verifications")
+.from(
+"product_verifications"
+)
 .update({
 
 scan_count:newCount,
@@ -3697,7 +3885,8 @@ window.addEventListener(
 "hashchange",
 async function(){
 
-const code=getHashCode();
+const code=
+getHashCode();
 
 if(!code)return;
 
@@ -3707,7 +3896,8 @@ code
 
 await verifyProduct();
 
-});
+}
+);
 
 
 /* =========================================================
@@ -3750,10 +3940,18 @@ box.innerHTML=
 
 const {data,error}=
 await supabaseClient
-.from("product_verifications")
+.from(
+"product_verifications"
+)
 .select("*")
-.eq("status","Verified")
-.order("created_at",{ascending:false});
+.eq(
+"status",
+"Verified"
+)
+.order(
+"created_at",
+{ascending:false}
+);
 
 if(error){
 
@@ -3916,11 +4114,19 @@ String(code||"")
 .replace(/\s+/g,"")
 .toUpperCase();
 
-const {data,error}=
+const {
+data,
+error
+}=
 await supabaseClient
-.from("product_verifications")
+.from(
+"product_verifications"
+)
 .select("*")
-.eq("verification_code",clean)
+.eq(
+"verification_code",
+clean
+)
 .maybeSingle();
 
 if(error){
@@ -4313,7 +4519,9 @@ type:
 );
 
 const url=
-URL.createObjectURL(blob);
+URL.createObjectURL(
+blob
+);
 
 const a=
 document.createElement("a");
@@ -4406,10 +4614,14 @@ QRCode.CorrectLevel.M
 setTimeout(()=>{
 
 const canvas=
-temp.querySelector("canvas");
+temp.querySelector(
+"canvas"
+);
 
 const img=
-temp.querySelector("img");
+temp.querySelector(
+"img"
+);
 
 let dataUrl="";
 
@@ -4474,6 +4686,7 @@ window.jspdf.jsPDF
 ){
 
 resolve();
+
 return;
 
 }
@@ -4493,7 +4706,8 @@ document.head.appendChild(
 script
 );
 
-});
+}
+);
 
 }
 
@@ -4525,7 +4739,9 @@ data
 async function downloadRecordPDF(code){
 
 const data=
-await getRecordByCode(code);
+await getRecordByCode(
+code
+);
 
 if(!data)return;
 
@@ -4650,9 +4866,14 @@ if(data.batch_id){
 
 const {data:bd}=
 await supabaseClient
-.from("product_batches")
+.from(
+"product_batches"
+)
 .select("*")
-.eq("id",data.batch_id)
+.eq(
+"id",
+data.batch_id
+)
 .maybeSingle();
 
 batchData=
@@ -4763,7 +4984,8 @@ await new Promise(
 
 barcodeImg.onload=resolve;
 barcodeImg.onerror=reject;
-barcodeImg.src=svgUrl;
+barcodeImg.src=
+svgUrl;
 
 }
 );
@@ -4944,7 +5166,7 @@ window.print();
 
 
 /* =========================================================
-   RECORD/BATCH MODAL CLICK
+   MODALS
 ========================================================= */
 
 document.getElementById(
@@ -4983,11 +5205,6 @@ try{
 const hashCode=
 getHashCode();
 
-
-/* ---------------------------------------------------------
-   PUBLIC QR MODE
---------------------------------------------------------- */
-
 if(hashCode){
 
 activatePublicVerifyMode(
@@ -5000,20 +5217,11 @@ return;
 
 }
 
-
-/* ---------------------------------------------------------
-   NORMAL ADMIN MODE
---------------------------------------------------------- */
-
 const adminAllowed=
 await window.__liaraAdminAuthPromise;
 
-if(!adminAllowed)return;
-
-
-/* ---------------------------------------------------------
-   SHOW ADMIN PAGE
---------------------------------------------------------- */
+if(!adminAllowed)
+return;
 
 const createTab=
 document.getElementById(
@@ -5075,11 +5283,6 @@ recordsTab.style.display="";
 
 }
 
-
-/* ---------------------------------------------------------
-   LOAD DATA
---------------------------------------------------------- */
-
 await loadCreateProducts();
 
 await loadBatchProducts();
@@ -5088,19 +5291,13 @@ await loadBatches();
 
 await generateBatchNumber(false);
 
-
-/* ---------------------------------------------------------
-   UNLOCK SAFETY
---------------------------------------------------------- */
-
 const lock=
 document.getElementById(
 "liara-admin-page-lock"
 );
 
-if(lock){
+if(lock)
 lock.remove();
-}
 
 }catch(error){
 
@@ -5109,22 +5306,13 @@ console.error(
 error
 );
 
-/*
-If a non-authentication runtime error occurs,
-do not leave the entire page permanently blank.
-Admin auth is still required before this point.
-*/
-
 const lock=
 document.getElementById(
 "liara-admin-page-lock"
 );
 
-if(lock){
-
+if(lock)
 lock.remove();
-
-}
 
 const status=
 document.getElementById(
