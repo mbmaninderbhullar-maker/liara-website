@@ -6,6 +6,20 @@
 html,body{visibility:hidden!important}
 </style>
 
+<script>
+(function(){
+
+window.addEventListener("error",function(e){
+    console.error("LIARA PAGE ERROR:",e.error||e.message);
+});
+
+window.addEventListener("unhandledrejection",function(e){
+    console.error("LIARA PROMISE ERROR:",e.reason);
+});
+
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
