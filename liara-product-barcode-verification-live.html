@@ -559,7 +559,7 @@ Records are loaded live from the Supabase database. Existing barcodes can be vie
 </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
@@ -987,257 +987,215 @@ clearFormulaIngredients();
 
 async function loadBatchFormulas(){
 
-    const productSelect =
-        document.getElementById("batchProductSelect");
+const productSelect=
+document.getElementById("batchProductSelect");
 
-    const productId =
-        productSelect.value;
+const productId=
+productSelect.value;
 
-    const productName =
-        productSelect.selectedOptions[0]?.textContent.trim() || "";
+const productName=
+productSelect.selectedOptions[0]?.textContent.trim()||"";
 
-    const formulaSelect =
-        document.getElementById("batchFormulaSelect");
+const formulaSelect=
+document.getElementById("batchFormulaSelect");
 
-    formulaSelect.innerHTML =
-        "<option value=''>Loading Formulas...</option>";
+formulaSelect.innerHTML=
+"<option value=''>Loading Formulas...</option>";
 
-    clearFormulaIngredients();
+clearFormulaIngredients();
 
-    if(!productId || !productName){
+if(!productId||!productName){
 
-        formulaSelect.innerHTML =
-            "<option value=''>Select Formula</option>";
+formulaSelect.innerHTML=
+"<option value=''>Select Formula</option>";
 
-        return;
-    }
-
-    try{
-
-        /* -----------------------------------------------------
-           LOAD ALL FORMULAS
-           Do NOT filter in Supabase by product_name because
-           product name may have different spacing/case/reference.
-        ----------------------------------------------------- */
-
-        const {data,error} = await supabaseClient
-            .from("formulas")
-            .select(`
-                id,
-                formula_no,
-                product_name,
-                product_reference,
-                formula_name,
-                version,
-                formula_date,
-                batch_size,
-                batch_unit,
-                created_at
-            `)
-            .order("created_at",{ascending:false});
-
-        if(error){
-
-            console.error(
-                "FORMULA LOAD ERROR:",
-                error
-            );
-
-            formulaSelect.innerHTML =
-                "<option value=''>Unable to load formulas</option>";
-
-            setStatus(
-                "batchStatus",
-                "Formula load failed: " +
-                error.message,
-                false
-            );
-
-            return;
-        }
-
-        /* -----------------------------------------------------
-           NORMALIZE TEXT
-        ----------------------------------------------------- */
-
-        function normalize(value){
-
-            return String(value || "")
-                .trim()
-                .toLowerCase()
-                .replace(/\s+/g," ")
-                .replace(/[–—]/g,"-");
-
-        }
-
-        const selectedProductName =
-            normalize(productName);
-
-        const selectedProductId =
-            normalize(productId);
-
-        /* -----------------------------------------------------
-           MATCH FORMULA WITH PRODUCT
-           
-           Match by:
-           1. Product Name
-           2. Product Reference = Product ID
-           3. Product Reference = Product Name
-        ----------------------------------------------------- */
-
-        currentBatchFormulas =
-            (data || []).filter(formula => {
-
-                const formulaProductName =
-                    normalize(
-                        formula.product_name
-                    );
-
-                const formulaProductReference =
-                    normalize(
-                        formula.product_reference
-                    );
-
-                return (
-
-                    formulaProductName ===
-                    selectedProductName
-
-                    ||
-
-                    formulaProductReference ===
-                    selectedProductId
-
-                    ||
-
-                    formulaProductReference ===
-                    selectedProductName
-
-                );
-
-            });
-
-        /* -----------------------------------------------------
-           CLEAR DROPDOWN
-        ----------------------------------------------------- */
-
-        formulaSelect.innerHTML =
-            "<option value=''>Select Formula</option>";
-
-        /* -----------------------------------------------------
-           NO FORMULA
-        ----------------------------------------------------- */
-
-        if(!currentBatchFormulas.length){
-
-            console.warn(
-                "NO FORMULA MATCH FOUND",
-                {
-                    productId: productId,
-                    productName: productName,
-                    allFormulas: data
-                }
-            );
-
-            formulaSelect.innerHTML =
-                "<option value=''>No Formula Found</option>";
-
-            setStatus(
-                "batchStatus",
-                "No formula found for this product. " +
-                "Formula Master vich Product Name / Reference check karo.",
-                false
-            );
-
-            return;
-        }
-
-        /* -----------------------------------------------------
-           SHOW FORMULAS
-        ----------------------------------------------------- */
-
-        currentBatchFormulas.forEach(formula => {
-
-            const option =
-                document.createElement("option");
-
-            option.value =
-                formula.id;
-
-            option.textContent =
-                (formula.formula_no || "Formula") +
-                " — " +
-                (
-                    formula.formula_name ||
-                    formula.product_name ||
-                    "Formula"
-                ) +
-                (
-                    formula.version
-                    ? " • v" + formula.version
-                    : ""
-                );
-
-            formulaSelect.appendChild(
-                option
-            );
-
-        });
-
-        /* -----------------------------------------------------
-           STATUS
-        ----------------------------------------------------- */
-
-        setStatus(
-            "batchStatus",
-            "✓ " +
-            currentBatchFormulas.length +
-            " Formula(s) found for " +
-            productName +
-            ".",
-            true
-        );
-
-        console.log(
-            "MATCHED FORMULAS:",
-            currentBatchFormulas
-        );
-
-    }catch(error){
-
-        console.error(
-            "FORMULA LOAD EXCEPTION:",
-            error
-        );
-
-        formulaSelect.innerHTML =
-            "<option value=''>Unable to load formulas</option>";
-
-        setStatus(
-            "batchStatus",
-            "Formula loading error: " +
-            (error.message || error),
-            false
-        );
-
-    }
+return;
 
 }
+
+try{
+
+const {data,error}=await supabaseClient
+.from("formulas")
+.select(`
+id,
+formula_no,
+product_name,
+product_reference,
+formula_name,
+version,
+formula_date,
+batch_size,
+batch_unit,
+created_at
+`)
+.order("created_at",{ascending:false});
+
+if(error){
+
+console.error(
+"FORMULA LOAD ERROR:",
+error
+);
+
+formulaSelect.innerHTML=
+"<option value=''>Unable to load formulas</option>";
+
+setStatus(
+"batchStatus",
+"Formula load failed: "+error.message,
+false
+);
+
+return;
+
+}
+
+function normalize(value){
+
+return String(value||"")
+.trim()
+.toLowerCase()
+.replace(/\s+/g," ")
+.replace(/[–—]/g,"-");
+
+}
+
+const selectedProductName=
+normalize(productName);
+
+const selectedProductId=
+normalize(productId);
+
+currentBatchFormulas=
+(data||[]).filter(formula=>{
+
+const formulaProductName=
+normalize(formula.product_name);
+
+const formulaProductReference=
+normalize(formula.product_reference);
+
+return(
+formulaProductName===selectedProductName
+||
+formulaProductReference===selectedProductId
+||
+formulaProductReference===selectedProductName
+);
+
+});
+
+formulaSelect.innerHTML=
+"<option value=''>Select Formula</option>";
+
+if(!currentBatchFormulas.length){
+
+console.warn(
+"NO FORMULA MATCH FOUND",
+{
+productId:productId,
+productName:productName,
+allFormulas:data
+}
+);
+
+formulaSelect.innerHTML=
+"<option value=''>No Formula Found</option>";
+
+setStatus(
+"batchStatus",
+"No formula found for this product. Formula Master vich Product Name / Reference check karo.",
+false
+);
+
+return;
+
+}
+
+currentBatchFormulas.forEach(formula=>{
+
+const option=
+document.createElement("option");
+
+option.value=formula.id;
+
+option.textContent=
+(formula.formula_no||"Formula")+
+" — "+
+(
+formula.formula_name||
+formula.product_name||
+"Formula"
+)+
+(
+formula.version
+?" • v"+formula.version
+:""
+);
+
+formulaSelect.appendChild(option);
+
+});
+
+setStatus(
+"batchStatus",
+"✓ "+
+currentBatchFormulas.length+
+" Formula(s) found for "+
+productName+
+".",
+true
+);
+
+console.log(
+"MATCHED FORMULAS:",
+currentBatchFormulas
+);
+
+}catch(error){
+
+console.error(
+"FORMULA LOAD EXCEPTION:",
+error
+);
+
+formulaSelect.innerHTML=
+"<option value=''>Unable to load formulas</option>";
+
+setStatus(
+"batchStatus",
+"Formula loading error: "+
+(error.message||error),
+false
+);
+
+}
+
+}
+
+
 /* =========================================================
    FORMULA INGREDIENTS
 ========================================================= */
 
 async function loadFormulaIngredients(){
 
-const formulaId=document.getElementById("batchFormulaSelect").value;
+const formulaId=
+document.getElementById("batchFormulaSelect").value;
 
 clearFormulaIngredients();
 
 if(!formulaId)return;
 
-setStatus("batchStatus","Loading Formula ingredients...",true);
+setStatus(
+"batchStatus",
+"Loading Formula ingredients...",
+true
+);
 
-const {data:formula,error:formulaError}=await supabaseClient
+const {data:formula,error:formulaError}=
+await supabaseClient
 .from("formulas")
 .select("*")
 .eq("id",formulaId)
@@ -1249,7 +1207,8 @@ console.error(formulaError);
 
 setStatus(
 "batchStatus",
-"Could not load formula: "+formulaError.message,
+"Could not load formula: "+
+formulaError.message,
 false
 );
 
@@ -1257,11 +1216,18 @@ return;
 
 }
 
-const {data:ingredients,error}=await supabaseClient
+/*
+IMPORTANT:
+formula_ingredients table does NOT have created_at.
+Therefore we DO NOT use:
+.order("created_at",{ascending:true})
+*/
+
+const {data:ingredients,error}=
+await supabaseClient
 .from("formula_ingredients")
 .select("*")
-.eq("formula_id",formulaId)
-.order("created_at",{ascending:true});
+.eq("formula_id",formulaId);
 
 if(error){
 
@@ -1269,7 +1235,8 @@ console.error(error);
 
 setStatus(
 "batchStatus",
-"Could not load formula ingredients: "+error.message,
+"Could not load formula ingredients: "+
+error.message,
 false
 );
 
@@ -1277,20 +1244,35 @@ return;
 
 }
 
-currentFormulaIngredients=ingredients||[];
+currentFormulaIngredients=
+ingredients||[];
 
-const box=document.getElementById("formulaIngredientBox");
-const list=document.getElementById("formulaIngredientList");
+const box=
+document.getElementById("formulaIngredientBox");
+
+const list=
+document.getElementById("formulaIngredientList");
 
 box.style.display="block";
 
-document.getElementById("selectedFormulaTitle").textContent=
-(formula.formula_no||"Formula")+" • "+(formula.formula_name||formula.product_name||"");
+document.getElementById(
+"selectedFormulaTitle"
+).textContent=
+(formula.formula_no||"Formula")+
+" • "+
+(formula.formula_name||
+formula.product_name||
+"");
 
-document.getElementById("selectedFormulaMeta").textContent=
-"Product: "+(formula.product_name||"")+
-" • Version: "+(formula.version||"—")+
-" • Master Ingredients: "+currentFormulaIngredients.length;
+document.getElementById(
+"selectedFormulaMeta"
+).textContent=
+"Product: "+
+(formula.product_name||"")+
+" • Version: "+
+(formula.version||"—")+
+" • Master Ingredients: "+
+currentFormulaIngredients.length;
 
 if(!currentFormulaIngredients.length){
 
@@ -1303,28 +1285,51 @@ return;
 
 }
 
-list.innerHTML=currentFormulaIngredients.map((ingredient,index)=>{
+list.innerHTML=
+currentFormulaIngredients.map(
+(ingredient,index)=>{
 
-const name=ingredient.ingredient_name||"Unnamed Ingredient";
-const qty=ingredient.quantity??"";
-const unit=ingredient.unit||"";
-const pct=ingredient.percentage??"";
+const name=
+ingredient.ingredient_name||
+"Unnamed Ingredient";
+
+const qty=
+ingredient.quantity??"";
+
+const unit=
+ingredient.unit||"";
+
+const pct=
+ingredient.percentage??"";
 
 return `
-<div class="ingredient-row" id="ingredientRow_${index}">
+<div
+class="ingredient-row"
+id="ingredientRow_${index}"
+>
 
 <input
 class="ingredient-check"
 type="checkbox"
 id="ingredientUse_${index}"
-onchange="toggleBatchIngredient(${index})">
+onchange="toggleBatchIngredient(${index})"
+>
 
 <div>
-<div class="ingredient-name">${esc(name)}</div>
-<div class="ingredient-original">
-Formula Qty: ${esc(qty)} ${esc(unit)}
-${pct!==""?` • ${esc(pct)}%`:""}
+
+<div class="ingredient-name">
+${esc(name)}
 </div>
+
+<div class="ingredient-original">
+Formula Qty:
+${esc(qty)}
+${esc(unit)}
+${pct!==""?
+` • ${esc(pct)}%`
+:""}
+</div>
+
 </div>
 
 <input
@@ -1334,16 +1339,45 @@ step="0.0001"
 min="0"
 value="${esc(qty)}"
 placeholder="Actual Qty"
-disabled>
+disabled
+>
 
-<select id="ingredientUnit_${index}" disabled>
+<select
+id="ingredientUnit_${index}"
+disabled
+>
 
 <option value="">Unit</option>
-<option value="KG" ${unit==="KG"?"selected":""}>KG</option>
-<option value="Gram" ${unit==="Gram"?"selected":""}>Gram</option>
-<option value="Litre" ${unit==="Litre"?"selected":""}>Litre</option>
-<option value="ML" ${unit==="ML"?"selected":""}>ML</option>
-<option value="PCS" ${unit==="PCS"?"selected":""}>PCS</option>
+
+<option value="KG"
+${unit==="KG"?"selected":""}
+>
+KG
+</option>
+
+<option value="Gram"
+${unit==="Gram"?"selected":""}
+>
+Gram
+</option>
+
+<option value="Litre"
+${unit==="Litre"?"selected":""}
+>
+Litre
+</option>
+
+<option value="ML"
+${unit==="ML"?"selected":""}
+>
+ML
+</option>
+
+<option value="PCS"
+${unit==="PCS"?"selected":""}
+>
+PCS
+</option>
 
 </select>
 
@@ -1354,12 +1388,14 @@ step="0.0001"
 min="0"
 value="${esc(pct)}"
 placeholder="%"
-disabled>
+disabled
+>
 
 </div>
 `;
 
-}).join("");
+}
+).join("");
 
 updateUsedCount();
 
@@ -1378,19 +1414,40 @@ true
 
 function toggleBatchIngredient(index){
 
-const check=document.getElementById("ingredientUse_"+index);
-const qty=document.getElementById("ingredientQty_"+index);
-const unit=document.getElementById("ingredientUnit_"+index);
-const pct=document.getElementById("ingredientPct_"+index);
-const row=document.getElementById("ingredientRow_"+index);
+const check=
+document.getElementById(
+"ingredientUse_"+index
+);
 
-const enabled=!!check?.checked;
+const qty=
+document.getElementById(
+"ingredientQty_"+index
+);
+
+const unit=
+document.getElementById(
+"ingredientUnit_"+index
+);
+
+const pct=
+document.getElementById(
+"ingredientPct_"+index
+);
+
+const row=
+document.getElementById(
+"ingredientRow_"+index
+);
+
+const enabled=
+!!check?.checked;
 
 if(qty)qty.disabled=!enabled;
 if(unit)unit.disabled=!enabled;
 if(pct)pct.disabled=!enabled;
 
-if(row)row.classList.toggle("used",enabled);
+if(row)
+row.classList.toggle("used",enabled);
 
 updateUsedCount();
 
@@ -1398,22 +1455,33 @@ updateUsedCount();
 
 function updateUsedCount(){
 
-const checks=document.querySelectorAll(
+const checks=
+document.querySelectorAll(
 "#formulaIngredientList .ingredient-check"
 );
 
 let count=0;
 
 checks.forEach(x=>{
+
 if(x.checked)count++;
+
 });
 
-const el=document.getElementById("formulaUsedCount");
+const el=
+document.getElementById(
+"formulaUsedCount"
+);
 
 if(el){
 
 el.textContent=
-count+(count===1?" ingredient selected":" ingredients selected");
+count+
+(
+count===1
+?" ingredient selected"
+:" ingredients selected"
+);
 
 }
 
@@ -1423,10 +1491,18 @@ function clearFormulaIngredients(){
 
 currentFormulaIngredients=[];
 
-const box=document.getElementById("formulaIngredientBox");
-const list=document.getElementById("formulaIngredientList");
+const box=
+document.getElementById(
+"formulaIngredientBox"
+);
 
-if(box)box.style.display="none";
+const list=
+document.getElementById(
+"formulaIngredientList"
+);
+
+if(box)
+box.style.display="none";
 
 if(list){
 
@@ -1435,11 +1511,22 @@ list.innerHTML=
 
 }
 
-const title=document.getElementById("selectedFormulaTitle");
-if(title)title.textContent="Formula Ingredients";
+const title=
+document.getElementById(
+"selectedFormulaTitle"
+);
 
-const meta=document.getElementById("selectedFormulaMeta");
-if(meta)meta.textContent="Select a formula to load ingredients.";
+if(title)
+title.textContent="Formula Ingredients";
+
+const meta=
+document.getElementById(
+"selectedFormulaMeta"
+);
+
+if(meta)
+meta.textContent=
+"Select a formula to load ingredients.";
 
 updateUsedCount();
 
@@ -1449,25 +1536,51 @@ function getSelectedBatchIngredients(){
 
 const selected=[];
 
-currentFormulaIngredients.forEach((ingredient,index)=>{
+currentFormulaIngredients.forEach(
+(ingredient,index)=>{
 
-const check=document.getElementById("ingredientUse_"+index);
+const check=
+document.getElementById(
+"ingredientUse_"+index
+);
 
 if(!check?.checked)return;
 
-const qtyEl=document.getElementById("ingredientQty_"+index);
-const unitEl=document.getElementById("ingredientUnit_"+index);
-const pctEl=document.getElementById("ingredientPct_"+index);
+const qtyEl=
+document.getElementById(
+"ingredientQty_"+index
+);
 
-const quantity=qtyEl?.value||"";
-const unit=unitEl?.value||"";
-const percentage=pctEl?.value||"";
+const unitEl=
+document.getElementById(
+"ingredientUnit_"+index
+);
 
-if(quantity===""||Number(quantity)<0){
+const pctEl=
+document.getElementById(
+"ingredientPct_"+index
+);
+
+const quantity=
+qtyEl?.value||"";
+
+const unit=
+unitEl?.value||"";
+
+const percentage=
+pctEl?.value||"";
+
+if(
+quantity===""||
+Number(quantity)<0
+){
 
 throw new Error(
 "Please enter a valid quantity for "+
-(ingredient.ingredient_name||"selected ingredient")+"."
+(
+ingredient.ingredient_name||
+"selected ingredient"
+)+"."
 );
 
 }
@@ -1476,19 +1589,34 @@ if(!unit){
 
 throw new Error(
 "Please select unit for "+
-(ingredient.ingredient_name||"selected ingredient")+"."
+(
+ingredient.ingredient_name||
+"selected ingredient"
+)+"."
 );
 
 }
 
 selected.push({
 
-formula_ingredient_id:ingredient.id,
-ingredient_id:ingredient.ingredient_id||null,
-ingredient_name:ingredient.ingredient_name||"",
-quantity:Number(quantity),
+formula_ingredient_id:
+ingredient.id,
+
+ingredient_id:
+ingredient.ingredient_id||null,
+
+ingredient_name:
+ingredient.ingredient_name||"",
+
+quantity:
+Number(quantity),
+
 unit:unit,
-percentage:percentage===""?null:Number(percentage)
+
+percentage:
+percentage===""
+?null
+:Number(percentage)
 
 });
 
@@ -1507,18 +1635,27 @@ function makeBatchNumber(){
 
 const d=new Date();
 
-const yy=String(d.getFullYear()).slice(-2);
-const mm=String(d.getMonth()+1).padStart(2,"0");
-const dd=String(d.getDate()).padStart(2,"0");
+const yy=
+String(d.getFullYear()).slice(-2);
 
-const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const mm=
+String(d.getMonth()+1).padStart(2,"0");
+
+const dd=
+String(d.getDate()).padStart(2,"0");
+
+const chars=
+"ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 let random="";
 
 for(let i=0;i<4;i++){
 
-random+=chars[
-Math.floor(Math.random()*chars.length)
+random+=
+chars[
+Math.floor(
+Math.random()*chars.length
+)
 ];
 
 }
@@ -1527,24 +1664,32 @@ return "LPB-"+yy+mm+dd+"-"+random;
 
 }
 
-async function generateBatchNumber(showMessage=false){
+async function generateBatchNumber(
+showMessage=false
+){
 
-const input=document.getElementById("generatedBatchNumber");
+const input=
+document.getElementById(
+"generatedBatchNumber"
+);
 
 let batchNumber="";
 let unique=false;
 
 for(let attempt=0;attempt<10;attempt++){
 
-batchNumber=makeBatchNumber();
+batchNumber=
+makeBatchNumber();
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_batches")
 .select("id")
 .eq("batch_number",batchNumber)
 .maybeSingle();
 
-if(error)console.error(error);
+if(error)
+console.error(error);
 
 if(!data){
 
@@ -1573,7 +1718,8 @@ if(showMessage){
 
 setStatus(
 "batchStatus",
-"New batch number generated: "+batchNumber,
+"New batch number generated: "+
+batchNumber,
 true
 );
 
@@ -1590,14 +1736,45 @@ return batchNumber;
 
 async function createBatch(){
 
-const productId=document.getElementById("batchProductSelect").value;
-const variantId=document.getElementById("batchVariantSelect").value;
-const formulaId=document.getElementById("batchFormulaSelect").value;
-const quantity=document.getElementById("batchQuantity").value;
-const unit=document.getElementById("batchUnit").value;
-const mfg=document.getElementById("batchMfg").value;
-const exp=document.getElementById("batchExp").value;
-const notes=document.getElementById("batchNotes").value.trim();
+const productId=
+document.getElementById(
+"batchProductSelect"
+).value;
+
+const variantId=
+document.getElementById(
+"batchVariantSelect"
+).value;
+
+const formulaId=
+document.getElementById(
+"batchFormulaSelect"
+).value;
+
+const quantity=
+document.getElementById(
+"batchQuantity"
+).value;
+
+const unit=
+document.getElementById(
+"batchUnit"
+).value;
+
+const mfg=
+document.getElementById(
+"batchMfg"
+).value;
+
+const exp=
+document.getElementById(
+"batchExp"
+).value;
+
+const notes=
+document.getElementById(
+"batchNotes"
+).value.trim();
 
 if(
 !productId||
@@ -1635,11 +1812,17 @@ let selectedIngredients=[];
 
 try{
 
-selectedIngredients=getSelectedBatchIngredients();
+selectedIngredients=
+getSelectedBatchIngredients();
 
 }catch(error){
 
-setStatus("batchStatus",error.message,false);
+setStatus(
+"batchStatus",
+error.message,
+false
+);
+
 return;
 
 }
@@ -1656,7 +1839,8 @@ return;
 
 }
 
-const session=await getSession();
+const session=
+await getSession();
 
 if(!session){
 
@@ -1670,29 +1854,64 @@ return;
 
 }
 
-setStatus("batchStatus","Saving production batch...",true);
+setStatus(
+"batchStatus",
+"Saving production batch...",
+true
+);
 
-const productSelect=document.getElementById("batchProductSelect");
-const productName=productSelect.selectedOptions[0].textContent.trim();
+const productSelect=
+document.getElementById(
+"batchProductSelect"
+);
 
-const variantSelect=document.getElementById("batchVariantSelect");
-const variant=variantSelect.selectedOptions[0].textContent.trim();
+const productName=
+productSelect
+.selectedOptions[0]
+.textContent
+.trim();
 
-const formulaSelect=document.getElementById("batchFormulaSelect");
-const formulaText=formulaSelect.selectedOptions[0].textContent.trim();
+const variantSelect=
+document.getElementById(
+"batchVariantSelect"
+);
+
+const variant=
+variantSelect
+.selectedOptions[0]
+.textContent
+.trim();
+
+const formulaSelect=
+document.getElementById(
+"batchFormulaSelect"
+);
+
+const formulaText=
+formulaSelect
+.selectedOptions[0]
+.textContent
+.trim();
 
 let batchNumber=
-document.getElementById("generatedBatchNumber").value.trim();
+document.getElementById(
+"generatedBatchNumber"
+).value.trim();
 
 if(!batchNumber){
 
-batchNumber=await generateBatchNumber(false);
+batchNumber=
+await generateBatchNumber(false);
 
 }
 
 if(!batchNumber)return;
 
-const {data:existingBatch,error:existingError}=await supabaseClient
+const {
+data:existingBatch,
+error:existingError
+}=
+await supabaseClient
 .from("product_batches")
 .select("id")
 .eq("batch_number",batchNumber)
@@ -1702,7 +1921,8 @@ if(existingError){
 
 setStatus(
 "batchStatus",
-"Could not check batch number: "+existingError.message,
+"Could not check batch number: "+
+existingError.message,
 false
 );
 
@@ -1712,27 +1932,43 @@ return;
 
 if(existingBatch){
 
-batchNumber=await generateBatchNumber(false);
+batchNumber=
+await generateBatchNumber(false);
 
 }
 
 if(!batchNumber)return;
 
-const {data,error}=await supabaseClient
+const {
+data,
+error
+}=
+await supabaseClient
 .from("product_batches")
 .insert({
 
 product_id:Number(productId),
+
 variant_id:Number(variantId),
+
 product_name:productName,
+
 variant:variant,
+
 batch_number:batchNumber,
+
 total_batch_quantity:Number(quantity),
+
 batch_unit:unit,
+
 manufacturing_date:mfg,
+
 expiry_date:exp,
+
 status:"Active",
+
 formula_id:formulaId,
+
 notes:notes||null
 
 })
@@ -1745,7 +1981,8 @@ console.error(error);
 
 setStatus(
 "batchStatus",
-"Batch save failed: "+error.message,
+"Batch save failed: "+
+error.message,
 false
 );
 
@@ -1753,21 +1990,39 @@ return;
 
 }
 
-const ingredientRows=selectedIngredients.map(item=>({
+const ingredientRows=
+selectedIngredients.map(item=>({
 
 batch_id:data.id,
-formula_ingredient_id:item.formula_ingredient_id||null,
-ingredient_id:item.ingredient_id||null,
-ingredient_name:item.ingredient_name,
-quantity:item.quantity,
-unit:item.unit,
-percentage:item.percentage
+
+formula_ingredient_id:
+item.formula_ingredient_id||null,
+
+ingredient_id:
+item.ingredient_id||null,
+
+ingredient_name:
+item.ingredient_name,
+
+quantity:
+item.quantity,
+
+unit:
+item.unit,
+
+percentage:
+item.percentage
 
 }));
 
-const {error:ingredientError}=await supabaseClient
+const {
+error:ingredientError
+}=
+await supabaseClient
 .from("product_batch_ingredients")
-.insert(ingredientRows);
+.insert(
+ingredientRows
+);
 
 if(ingredientError){
 
@@ -1792,7 +2047,8 @@ return;
 
 setStatus(
 "batchStatus",
-"✓ Batch "+data.batch_number+
+"✓ Batch "+
+data.batch_number+
 " saved successfully with "+
 selectedIngredients.length+
 " actual ingredient(s).",
@@ -1803,16 +2059,23 @@ clearBatchForm(false);
 
 await loadBatches();
 
-const productSelectCreate=document.getElementById("productSelect");
+const productSelectCreate=
+document.getElementById(
+"productSelect"
+);
 
 if(
 productSelectCreate &&
-productSelectCreate.value===String(productId)
+productSelectCreate.value===
+String(productId)
 ){
 
 await loadCreateVariants();
 
-document.getElementById("variantSelect").value=String(variantId);
+document.getElementById(
+"variantSelect"
+).value=
+String(variantId);
 
 await loadCreateBatches();
 
@@ -1825,28 +2088,58 @@ await loadCreateBatches();
    CLEAR BATCH
 ========================================================= */
 
-function clearBatchForm(clearMessage=true){
+function clearBatchForm(
+clearMessage=true
+){
 
-document.getElementById("batchProductSelect").value="";
+document.getElementById(
+"batchProductSelect"
+).value="";
 
-document.getElementById("batchVariantSelect").innerHTML=
+document.getElementById(
+"batchVariantSelect"
+).innerHTML=
 "<option value=''>Select Variant / Size</option>";
 
-document.getElementById("batchFormulaSelect").innerHTML=
+document.getElementById(
+"batchFormulaSelect"
+).innerHTML=
 "<option value=''>Select Formula</option>";
 
-document.getElementById("batchQuantity").value="";
-document.getElementById("batchUnit").value="KG";
-document.getElementById("batchMfg").value="";
-document.getElementById("batchExp").value="";
-document.getElementById("generatedBatchNumber").value="";
-document.getElementById("batchNotes").value="";
+document.getElementById(
+"batchQuantity"
+).value="";
+
+document.getElementById(
+"batchUnit"
+).value="KG";
+
+document.getElementById(
+"batchMfg"
+).value="";
+
+document.getElementById(
+"batchExp"
+).value="";
+
+document.getElementById(
+"generatedBatchNumber"
+).value="";
+
+document.getElementById(
+"batchNotes"
+).value="";
 
 currentBatchFormulas=[];
 
 clearFormulaIngredients();
 
-if(clearMessage)setStatus("batchStatus","",true);
+if(clearMessage)
+setStatus(
+"batchStatus",
+"",
+true
+);
 
 }
 
@@ -1857,24 +2150,39 @@ if(clearMessage)setStatus("batchStatus","",true);
 
 async function loadCreateBatches(){
 
-const productId=document.getElementById("productSelect").value;
-const variantId=document.getElementById("variantSelect").value;
+const productId=
+document.getElementById(
+"productSelect"
+).value;
 
-const select=document.getElementById("batchSelect");
+const variantId=
+document.getElementById(
+"variantSelect"
+).value;
+
+const select=
+document.getElementById(
+"batchSelect"
+);
 
 selectedBatch=null;
+
 hideSelectedBatch();
 
 if(!productId||!variantId){
 
-select.innerHTML="<option value=''>Select Batch</option>";
+select.innerHTML=
+"<option value=''>Select Batch</option>";
+
 return;
 
 }
 
-select.innerHTML="<option value=''>Loading Batches...</option>";
+select.innerHTML=
+"<option value=''>Loading Batches...</option>";
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_batches")
 .select(
 "id,batch_number,total_batch_quantity,batch_unit,manufacturing_date,expiry_date,product_name,variant,status"
@@ -1888,19 +2196,27 @@ if(error){
 
 console.error(error);
 
-select.innerHTML="<option value=''>Unable to load batches</option>";
+select.innerHTML=
+"<option value=''>Unable to load batches</option>";
 
-setStatus("createStatus","Batch load failed: "+error.message,false);
+setStatus(
+"createStatus",
+"Batch load failed: "+
+error.message,
+false
+);
 
 return;
 
 }
 
-select.innerHTML="<option value=''>Select Batch</option>";
+select.innerHTML=
+"<option value=''>Select Batch</option>";
 
 if(!data?.length){
 
-select.innerHTML="<option value=''>No Active Batch Found</option>";
+select.innerHTML=
+"<option value=''>No Active Batch Found</option>";
 
 setStatus(
 "createStatus",
@@ -1914,7 +2230,8 @@ return;
 
 data.forEach(batch=>{
 
-const option=document.createElement("option");
+const option=
+document.createElement("option");
 
 option.value=batch.id;
 
@@ -1938,17 +2255,23 @@ select.appendChild(option);
 
 async function selectBatchForBarcode(){
 
-const id=document.getElementById("batchSelect").value;
+const id=
+document.getElementById(
+"batchSelect"
+).value;
 
 if(!id){
 
 selectedBatch=null;
+
 hideSelectedBatch();
+
 return;
 
 }
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_batches")
 .select("*")
 .eq("id",id)
@@ -1958,7 +2281,8 @@ if(error){
 
 setStatus(
 "createStatus",
-"Could not load selected batch: "+error.message,
+"Could not load selected batch: "+
+error.message,
 false
 );
 
@@ -1968,25 +2292,43 @@ return;
 
 if(!data){
 
-setStatus("createStatus","Selected batch was not found.",false);
+setStatus(
+"createStatus",
+"Selected batch was not found.",
+false
+);
+
 return;
 
 }
 
 selectedBatch=data;
 
-document.getElementById("selBatchNo").textContent=data.batch_number;
+document.getElementById(
+"selBatchNo"
+).textContent=
+data.batch_number;
 
-document.getElementById("selBatchQty").textContent=
-data.total_batch_quantity+" "+data.batch_unit;
+document.getElementById(
+"selBatchQty"
+).textContent=
+data.total_batch_quantity+
+" "+
+data.batch_unit;
 
-document.getElementById("selBatchMfg").textContent=
+document.getElementById(
+"selBatchMfg"
+).textContent=
 fmtDate(data.manufacturing_date);
 
-document.getElementById("selBatchExp").textContent=
+document.getElementById(
+"selBatchExp"
+).textContent=
 fmtDate(data.expiry_date);
 
-document.getElementById("selectedBatchSummary").style.display="block";
+document.getElementById(
+"selectedBatchSummary"
+).style.display="block";
 
 setStatus(
 "createStatus",
@@ -1998,9 +2340,13 @@ true
 
 function hideSelectedBatch(){
 
-const box=document.getElementById("selectedBatchSummary");
+const box=
+document.getElementById(
+"selectedBatchSummary"
+);
 
-if(box)box.style.display="none";
+if(box)
+box.style.display="none";
 
 }
 
@@ -2011,12 +2357,17 @@ if(box)box.style.display="none";
 
 function makeCode(){
 
-const bytes=new Uint8Array(6);
+const bytes=
+new Uint8Array(6);
 
 crypto.getRandomValues(bytes);
 
-return "LPV-"+Array.from(bytes)
-.map(x=>x.toString(16).padStart(2,"0"))
+return "LPV-"+
+Array.from(bytes)
+.map(x=>
+x.toString(16)
+.padStart(2,"0")
+)
 .join("")
 .toUpperCase();
 
@@ -2024,9 +2375,12 @@ return "LPV-"+Array.from(bytes)
 
 function getVerificationUrl(code){
 
-const base=window.location.href.split("#")[0];
+const base=
+window.location.href.split("#")[0];
 
-return base+"#verify="+encodeURIComponent(code);
+return base+
+"#verify="+
+encodeURIComponent(code);
 
 }
 
@@ -2039,12 +2393,18 @@ async function createVerification(){
 
 if(!selectedBatch){
 
-setStatus("createStatus","Please select a batch first.",false);
+setStatus(
+"createStatus",
+"Please select a batch first.",
+false
+);
+
 return;
 
 }
 
-const session=await getSession();
+const session=
+await getSession();
 
 if(!session){
 
@@ -2066,18 +2426,32 @@ true
 
 const code=makeCode();
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_verifications")
 .insert({
 
 verification_code:code,
-product_name:selectedBatch.product_name,
-variant:selectedBatch.variant,
-batch_number:selectedBatch.batch_number,
-manufacturing_date:selectedBatch.manufacturing_date,
-expiry_date:selectedBatch.expiry_date,
+
+product_name:
+selectedBatch.product_name,
+
+variant:
+selectedBatch.variant,
+
+batch_number:
+selectedBatch.batch_number,
+
+manufacturing_date:
+selectedBatch.manufacturing_date,
+
+expiry_date:
+selectedBatch.expiry_date,
+
 status:"Verified",
-batch_id:selectedBatch.id
+
+batch_id:
+selectedBatch.id
 
 })
 .select()
@@ -2085,23 +2459,46 @@ batch_id:selectedBatch.id
 
 if(error){
 
-setStatus("createStatus","Save failed: "+error.message,false);
+setStatus(
+"createStatus",
+"Save failed: "+
+error.message,
+false
+);
+
 return;
 
 }
 
-lastCreatedCode=data.verification_code;
-lastCreatedUrl=getVerificationUrl(lastCreatedCode);
-
-document.getElementById("previewProduct").textContent=data.product_name;
-
-document.getElementById("previewVariant").textContent=
-data.variant+" • Batch: "+data.batch_number;
-
-document.getElementById("previewCode").textContent=
+lastCreatedCode=
 data.verification_code;
 
-JsBarcode("#barcode",data.verification_code,{
+lastCreatedUrl=
+getVerificationUrl(
+lastCreatedCode
+);
+
+document.getElementById(
+"previewProduct"
+).textContent=
+data.product_name;
+
+document.getElementById(
+"previewVariant"
+).textContent=
+data.variant+
+" • Batch: "+
+data.batch_number;
+
+document.getElementById(
+"previewCode"
+).textContent=
+data.verification_code;
+
+JsBarcode(
+"#barcode",
+data.verification_code,
+{
 
 format:"CODE128",
 lineColor:"#111",
@@ -2111,22 +2508,34 @@ displayValue:true,
 fontSize:13,
 margin:5
 
-});
+}
+);
 
-const qr=document.getElementById("qrcode");
+const qr=
+document.getElementById(
+"qrcode"
+);
 
 qr.innerHTML="";
 
-new QRCode(qr,{
+new QRCode(
+qr,
+{
 
 text:lastCreatedUrl,
 width:180,
 height:180,
-correctLevel:QRCode.CorrectLevel.M
+correctLevel:
+QRCode.CorrectLevel.M
 
-});
+}
+);
 
-document.getElementById("labelPreview").classList.remove("hidden");
+document.getElementById(
+"labelPreview"
+).classList.remove(
+"hidden"
+);
 
 setStatus(
 "createStatus",
@@ -2137,7 +2546,9 @@ true
 
 setTimeout(()=>{
 
-document.getElementById("labelPreview").scrollIntoView({
+document.getElementById(
+"labelPreview"
+).scrollIntoView({
 behavior:"smooth",
 block:"center"
 });
@@ -2148,27 +2559,46 @@ block:"center"
 
 function clearCreateForm(){
 
-document.getElementById("productSelect").value="";
+document.getElementById(
+"productSelect"
+).value="";
 
-document.getElementById("variantSelect").innerHTML=
+document.getElementById(
+"variantSelect"
+).innerHTML=
 "<option value=''>Select Variant / Size</option>";
 
-document.getElementById("batchSelect").innerHTML=
+document.getElementById(
+"batchSelect"
+).innerHTML=
 "<option value=''>Select Batch</option>";
 
 selectedBatch=null;
 
 hideSelectedBatch();
 
-document.getElementById("labelPreview").classList.add("hidden");
+document.getElementById(
+"labelPreview"
+).classList.add(
+"hidden"
+);
 
-setStatus("createStatus","",true);
+setStatus(
+"createStatus",
+"",
+true
+);
 
 lastCreatedCode="";
 lastCreatedUrl="";
 
-document.getElementById("barcode").innerHTML="";
-document.getElementById("qrcode").innerHTML="";
+document.getElementById(
+"barcode"
+).innerHTML="";
+
+document.getElementById(
+"qrcode"
+).innerHTML="";
 
 }
 
@@ -2179,13 +2609,18 @@ document.getElementById("qrcode").innerHTML="";
 
 async function loadBatches(){
 
-const box=document.getElementById("batchList");
+const box=
+document.getElementById(
+"batchList"
+);
 
 if(!box)return;
 
-box.innerHTML="<div class='empty'>Loading...</div>";
+box.innerHTML=
+"<div class='empty'>Loading...</div>";
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_batches")
 .select("*")
 .order("created_at",{ascending:false});
@@ -2198,7 +2633,8 @@ box.innerHTML="";
 
 setStatus(
 "batchStatus",
-"Batch load failed: "+error.message,
+"Batch load failed: "+
+error.message,
 false
 );
 
@@ -2208,7 +2644,9 @@ return;
 
 if(!data?.length){
 
-box.innerHTML="<div class='empty'>No batches created yet.</div>";
+box.innerHTML=
+"<div class='empty'>No batches created yet.</div>";
+
 return;
 
 }
@@ -2241,19 +2679,38 @@ ${data.map(batch=>`
 
 <tr>
 
-<td><strong>${esc(batch.product_name)}</strong></td>
+<td>
+<strong>
+${esc(batch.product_name)}
+</strong>
+</td>
 
-<td>${esc(batch.variant)}</td>
+<td>
+${esc(batch.variant)}
+</td>
 
-<td>${esc(batch.formula_id?"Linked":"—")}</td>
+<td>
+${esc(batch.formula_id?"Linked":"—")}
+</td>
 
-<td><strong>${esc(batch.batch_number)}</strong></td>
+<td>
+<strong>
+${esc(batch.batch_number)}
+</strong>
+</td>
 
-<td>${esc(batch.total_batch_quantity)} ${esc(batch.batch_unit)}</td>
+<td>
+${esc(batch.total_batch_quantity)}
+${esc(batch.batch_unit)}
+</td>
 
-<td>${fmtDate(batch.manufacturing_date)}</td>
+<td>
+${fmtDate(batch.manufacturing_date)}
+</td>
 
-<td>${fmtDate(batch.expiry_date)}</td>
+<td>
+${fmtDate(batch.expiry_date)}
+</td>
 
 <td>
 
@@ -2269,7 +2726,10 @@ batch.status==="Active"
 
 <td>
 
-<button class="blue" onclick="viewBatch('${esc(batch.id)}')">
+<button
+class="blue"
+onclick="viewBatch('${esc(batch.id)}')"
+>
 View
 </button>
 
@@ -2298,7 +2758,8 @@ async function viewBatch(batchId){
 
 if(!batchId)return;
 
-const {data:batch,error:batchError}=await supabaseClient
+const {data:batch,error:batchError}=
+await supabaseClient
 .from("product_batches")
 .select("*")
 .eq("id",batchId)
@@ -2306,7 +2767,11 @@ const {data:batch,error:batchError}=await supabaseClient
 
 if(batchError){
 
-alert("Could not load batch: "+batchError.message);
+alert(
+"Could not load batch: "+
+batchError.message
+);
+
 return;
 
 }
@@ -2314,11 +2779,16 @@ return;
 if(!batch){
 
 alert("Batch not found.");
+
 return;
 
 }
 
-const {data:ingredients,error:ingredientError}=await supabaseClient
+const {
+data:ingredients,
+error:ingredientError
+}=
+await supabaseClient
 .from("product_batch_ingredients")
 .select("*")
 .eq("batch_id",batchId)
@@ -2339,7 +2809,8 @@ let formula=null;
 
 if(batch.formula_id){
 
-const {data:f}=await supabaseClient
+const {data:f}=
+await supabaseClient
 .from("formulas")
 .select(
 "id,formula_no,formula_name,product_name,version,formula_date"
@@ -2357,7 +2828,10 @@ ingredients:ingredients||[],
 formula
 };
 
-const content=document.getElementById("batchDetailContent");
+const content=
+document.getElementById(
+"batchDetailContent"
+);
 
 content.innerHTML=`
 
@@ -2365,22 +2839,30 @@ content.innerHTML=`
 
 <div class="detail-box">
 <span>Batch Number</span>
-<strong>${esc(batch.batch_number)}</strong>
+<strong>
+${esc(batch.batch_number)}
+</strong>
 </div>
 
 <div class="detail-box">
 <span>Status</span>
-<strong>${esc(batch.status||"—")}</strong>
+<strong>
+${esc(batch.status||"—")}
+</strong>
 </div>
 
 <div class="detail-box">
 <span>Product</span>
-<strong>${esc(batch.product_name)}</strong>
+<strong>
+${esc(batch.product_name)}
+</strong>
 </div>
 
 <div class="detail-box">
 <span>Variant / Size</span>
-<strong>${esc(batch.variant)}</strong>
+<strong>
+${esc(batch.variant)}
+</strong>
 </div>
 
 <div class="detail-box">
@@ -2389,7 +2871,8 @@ content.innerHTML=`
 ${
 formula
 ?esc(
-formula.formula_no+" — "+
+formula.formula_no+
+" — "+
 (formula.formula_name||"")
 )
 :"—"
@@ -2399,7 +2882,9 @@ formula.formula_no+" — "+
 
 <div class="detail-box">
 <span>Formula Version</span>
-<strong>${esc(formula?.version||"—")}</strong>
+<strong>
+${esc(formula?.version||"—")}
+</strong>
 </div>
 
 <div class="detail-box">
@@ -2412,17 +2897,23 @@ ${esc(batch.batch_unit)}
 
 <div class="detail-box">
 <span>Manufacturing Date</span>
-<strong>${fmtDate(batch.manufacturing_date)}</strong>
+<strong>
+${fmtDate(batch.manufacturing_date)}
+</strong>
 </div>
 
 <div class="detail-box">
 <span>Expiry Date</span>
-<strong>${fmtDate(batch.expiry_date)}</strong>
+<strong>
+${fmtDate(batch.expiry_date)}
+</strong>
 </div>
 
 <div class="detail-box">
 <span>Actual Ingredients</span>
-<strong>${ingredients?.length||0}</strong>
+<strong>
+${ingredients?.length||0}
+</strong>
 </div>
 
 </div>
@@ -2430,9 +2921,16 @@ ${esc(batch.batch_unit)}
 ${
 batch.notes
 ?`
-<div class="detail-box" style="margin-top:10px">
+<div
+class="detail-box"
+style="margin-top:10px"
+>
 <span>Batch Notes</span>
-<strong style="white-space:pre-wrap">${esc(batch.notes)}</strong>
+<strong
+style="white-space:pre-wrap"
+>
+${esc(batch.notes)}
+</strong>
 </div>
 `
 :""
@@ -2464,11 +2962,19 @@ ${ingredients.map(item=>`
 
 <tr>
 
-<td><strong>${esc(item.ingredient_name)}</strong></td>
+<td>
+<strong>
+${esc(item.ingredient_name)}
+</strong>
+</td>
 
-<td>${esc(item.quantity??"—")}</td>
+<td>
+${esc(item.quantity??"—")}
+</td>
 
-<td>${esc(item.unit||"—")}</td>
+<td>
+${esc(item.unit||"—")}
+</td>
 
 <td>
 ${
@@ -2499,24 +3005,36 @@ No actual ingredients saved for this batch.
 
 <div class="actions">
 
-<button class="black" onclick="printBatchDetails()">
+<button
+class="black"
+onclick="printBatchDetails()"
+>
 🖨 Print Batch
 </button>
 
-<button class="light" onclick="closeBatchDetailModal()">
+<button
+class="light"
+onclick="closeBatchDetailModal()"
+>
 Close
 </button>
 
 </div>
 `;
 
-document.getElementById("batchDetailModal").classList.add("show");
+document.getElementById(
+"batchDetailModal"
+).classList.add("show");
 
 }
 
 function closeBatchDetailModal(){
 
-document.getElementById("batchDetailModal").classList.remove("show");
+document.getElementById(
+"batchDetailModal"
+).classList.remove(
+"show"
+);
 
 currentBatchDetail=null;
 
@@ -2531,22 +3049,39 @@ function printBatchDetails(){
 
 if(!currentBatchDetail){
 
-alert("Batch details not loaded.");
+alert(
+"Batch details not loaded."
+);
+
 return;
 
 }
 
-const batch=currentBatchDetail.batch;
-const ingredients=currentBatchDetail.ingredients||[];
-const formula=currentBatchDetail.formula;
+const batch=
+currentBatchDetail.batch;
 
-const rows=ingredients.map(item=>`
+const ingredients=
+currentBatchDetail.ingredients||[];
+
+const formula=
+currentBatchDetail.formula;
+
+const rows=
+ingredients.map(item=>`
 
 <tr>
 
-<td>${esc(item.ingredient_name)}</td>
-<td>${esc(item.quantity??"—")}</td>
-<td>${esc(item.unit||"—")}</td>
+<td>
+${esc(item.ingredient_name)}
+</td>
+
+<td>
+${esc(item.quantity??"—")}
+</td>
+
+<td>
+${esc(item.unit||"—")}
+</td>
 
 <td>
 ${
@@ -2562,7 +3097,8 @@ item.percentage===""
 
 `).join("");
 
-const printWindow=window.open(
+const printWindow=
+window.open(
 "",
 "_blank",
 "width=850,height=900"
@@ -2570,7 +3106,10 @@ const printWindow=window.open(
 
 if(!printWindow){
 
-alert("Please allow popups to print the batch.");
+alert(
+"Please allow popups to print the batch."
+);
+
 return;
 
 }
@@ -2583,7 +3122,10 @@ printWindow.document.write(`
 
 <head>
 
-<title>Liara Batch ${esc(batch.batch_number)}</title>
+<title>
+Liara Batch
+${esc(batch.batch_number)}
+</title>
 
 <style>
 
@@ -2593,8 +3135,15 @@ padding:30px;
 color:#111
 }
 
-h1{text-align:center;font-size:22px}
-h2{font-size:17px;margin-top:25px}
+h1{
+text-align:center;
+font-size:22px
+}
+
+h2{
+font-size:17px;
+margin-top:25px
+}
 
 .meta{
 display:grid;
@@ -2616,7 +3165,9 @@ color:#777;
 margin-bottom:4px
 }
 
-.box strong{font-size:13px}
+.box strong{
+font-size:13px
+}
 
 table{
 width:100%;
@@ -2655,7 +3206,9 @@ body{padding:10mm}
 
 <body>
 
-<h1>LIARA PROFESSIONAL™</h1>
+<h1>
+LIARA PROFESSIONAL™
+</h1>
 
 <div style="text-align:center">
 Batch Production Record
@@ -2665,22 +3218,30 @@ Batch Production Record
 
 <div class="box">
 <span>Batch Number</span>
-<strong>${esc(batch.batch_number)}</strong>
+<strong>
+${esc(batch.batch_number)}
+</strong>
 </div>
 
 <div class="box">
 <span>Status</span>
-<strong>${esc(batch.status||"—")}</strong>
+<strong>
+${esc(batch.status||"—")}
+</strong>
 </div>
 
 <div class="box">
 <span>Product</span>
-<strong>${esc(batch.product_name)}</strong>
+<strong>
+${esc(batch.product_name)}
+</strong>
 </div>
 
 <div class="box">
 <span>Variant</span>
-<strong>${esc(batch.variant)}</strong>
+<strong>
+${esc(batch.variant)}
+</strong>
 </div>
 
 <div class="box">
@@ -2689,7 +3250,8 @@ Batch Production Record
 ${
 formula
 ?esc(
-formula.formula_no+" — "+
+formula.formula_no+
+" — "+
 (formula.formula_name||"")
 )
 :"—"
@@ -2707,17 +3269,23 @@ ${esc(batch.batch_unit)}
 
 <div class="box">
 <span>Manufacturing Date</span>
-<strong>${fmtDate(batch.manufacturing_date)}</strong>
+<strong>
+${fmtDate(batch.manufacturing_date)}
+</strong>
 </div>
 
 <div class="box">
 <span>Expiry Date</span>
-<strong>${fmtDate(batch.expiry_date)}</strong>
+<strong>
+${fmtDate(batch.expiry_date)}
+</strong>
 </div>
 
 </div>
 
-<h2>Ingredients Actually Used</h2>
+<h2>
+Ingredients Actually Used
+</h2>
 
 <table>
 
@@ -2744,7 +3312,8 @@ ${
 batch.notes
 ?`
 <div class="notes">
-<strong>Notes</strong><br><br>
+<strong>Notes</strong>
+<br><br>
 ${esc(batch.notes)}
 </div>
 `
@@ -2774,11 +3343,15 @@ printWindow.document.close();
 
 async function verifyProduct(){
 
-const input=document.getElementById("verifyCode");
+const input=
+document.getElementById(
+"verifyCode"
+);
 
 if(!input)return;
 
-const code=input.value.trim();
+const code=
+input.value.trim();
 
 if(!code){
 
@@ -2791,9 +3364,13 @@ return;
 
 }
 
-const clean=code.replace(/\s+/g,"").toUpperCase();
+const clean=
+code
+.replace(/\s+/g,"")
+.toUpperCase();
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_verifications")
 .select(
 "id,verification_code,product_name,variant,batch_number,manufacturing_date,expiry_date,status,scan_count,created_at"
@@ -2808,7 +3385,8 @@ console.error(error);
 
 showVerifyResult(
 false,
-"Verification service error: "+error.message
+"Verification service error: "+
+error.message
 );
 
 return;
@@ -2827,21 +3405,29 @@ return;
 
 }
 
-const newCount=Number(data.scan_count||0)+1;
+const newCount=
+Number(data.scan_count||0)+1;
 
 try{
 
 await supabaseClient
 .from("product_verifications")
 .update({
+
 scan_count:newCount,
-updated_at:new Date().toISOString()
+
+updated_at:
+new Date().toISOString()
+
 })
 .eq("id",data.id);
 
 }catch(e){
 
-console.warn("Scan count update skipped:",e);
+console.warn(
+"Scan count update skipped:",
+e
+);
 
 }
 
@@ -2854,15 +3440,24 @@ data
 
 }
 
-function showVerifyResult(ok,title,message,data){
+function showVerifyResult(
+ok,
+title,
+message,
+data
+){
 
-const box=document.getElementById("verifyResult");
+const box=
+document.getElementById(
+"verifyResult"
+);
 
 if(!box)return;
 
 if(!ok){
 
-box.className="verify-result bad";
+box.className=
+"verify-result bad";
 
 box.innerHTML=
 "<div class='verify-title'>✕ "+
@@ -2876,7 +3471,8 @@ return;
 
 }
 
-box.className="verify-result ok";
+box.className=
+"verify-result ok";
 
 box.innerHTML=`
 
@@ -2884,23 +3480,31 @@ box.innerHTML=`
 ✓ ${esc(title)}
 </div>
 
-<div style="font-weight:700;margin-bottom:10px">
+<div
+style="font-weight:700;margin-bottom:10px"
+>
 VERIFIED BY LIARA PROFESSIONAL™
 </div>
 
 <div class="verify-row">
 <strong>Product</strong>
-<span>${esc(data.product_name)}</span>
+<span>
+${esc(data.product_name)}
+</span>
 </div>
 
 <div class="verify-row">
 <strong>Variant / Size</strong>
-<span>${esc(data.variant)}</span>
+<span>
+${esc(data.variant)}
+</span>
 </div>
 
 <div class="verify-row">
 <strong>Verification Code</strong>
-<span>${esc(data.verification_code)}</span>
+<span>
+${esc(data.verification_code)}
+</span>
 </div>
 
 ${
@@ -2908,7 +3512,9 @@ data.batch_number
 ?`
 <div class="verify-row">
 <strong>Batch Number</strong>
-<span>${esc(data.batch_number)}</span>
+<span>
+${esc(data.batch_number)}
+</span>
 </div>
 `
 :""
@@ -2919,7 +3525,9 @@ data.manufacturing_date
 ?`
 <div class="verify-row">
 <strong>Manufacturing Date</strong>
-<span>${fmtDate(data.manufacturing_date)}</span>
+<span>
+${fmtDate(data.manufacturing_date)}
+</span>
 </div>
 `
 :""
@@ -2930,7 +3538,9 @@ data.expiry_date
 ?`
 <div class="verify-row">
 <strong>Expiry Date</strong>
-<span>${fmtDate(data.expiry_date)}</span>
+<span>
+${fmtDate(data.expiry_date)}
+</span>
 </div>
 `
 :""
@@ -2938,7 +3548,11 @@ data.expiry_date
 
 <div class="verify-row">
 <strong>Status</strong>
-<span><span class="badge">Verified</span></span>
+<span>
+<span class="badge">
+Verified
+</span>
+</span>
 </div>
 
 `;
@@ -2947,11 +3561,16 @@ data.expiry_date
 
 function clearVerifyResult(){
 
-const box=document.getElementById("verifyResult");
+const box=
+document.getElementById(
+"verifyResult"
+);
 
 if(!box)return;
 
-box.className="verify-result";
+box.className=
+"verify-result";
+
 box.innerHTML="";
 
 }
@@ -2963,13 +3582,17 @@ box.innerHTML="";
 
 function getHashCode(){
 
-const hash=window.location.hash||"";
+const hash=
+window.location.hash||"";
 
-if(!hash.startsWith("#verify="))return "";
+if(!hash.startsWith("#verify="))
+return "";
 
 try{
 
-return decodeURIComponent(hash.substring(8));
+return decodeURIComponent(
+hash.substring(8)
+);
 
 }catch(e){
 
@@ -2988,15 +3611,23 @@ function activatePublicVerifyMode(code){
 
 if(!code)return;
 
-document.body.classList.add("customer-verify-mode");
+document.body.classList.add(
+"customer-verify-mode"
+);
 
-const tabs=document.querySelector(".tabs");
+const tabs=
+document.querySelector(".tabs");
 
-if(tabs)tabs.style.display="none";
+if(tabs)
+tabs.style.display="none";
 
-["create","batches","records"].forEach(name=>{
+["create","batches","records"]
+.forEach(name=>{
 
-const el=document.getElementById("tab-"+name);
+const el=
+document.getElementById(
+"tab-"+name
+);
 
 if(el){
 
@@ -3007,30 +3638,53 @@ el.style.display="none";
 
 });
 
-const verifyTab=document.getElementById("tab-verify");
+const verifyTab=
+document.getElementById(
+"tab-verify"
+);
 
 if(verifyTab){
 
-verifyTab.classList.remove("hidden");
+verifyTab.classList.remove(
+"hidden"
+);
+
 verifyTab.style.display="block";
 
 }
 
-const scanner=document.querySelector("#tab-verify .scanner-box");
+const scanner=
+document.querySelector(
+"#tab-verify .scanner-box"
+);
 
-if(scanner)scanner.style.display="none";
+if(scanner)
+scanner.style.display="none";
 
-const heading=document.querySelector("#tab-verify h2");
+const heading=
+document.querySelector(
+"#tab-verify h2"
+);
 
-if(heading)heading.textContent="Product Verification";
+if(heading)
+heading.textContent=
+"Product Verification";
 
-const note=document.querySelector("#tab-verify .note");
+const note=
+document.querySelector(
+"#tab-verify .note"
+);
 
-if(note)note.style.display="none";
+if(note)
+note.style.display="none";
 
-const input=document.getElementById("verifyCode");
+const input=
+document.getElementById(
+"verifyCode"
+);
 
-if(input)input.value=code;
+if(input)
+input.value=code;
 
 }
 
@@ -3039,13 +3693,17 @@ if(input)input.value=code;
    HASH CHANGE
 ========================================================= */
 
-window.addEventListener("hashchange",async function(){
+window.addEventListener(
+"hashchange",
+async function(){
 
 const code=getHashCode();
 
 if(!code)return;
 
-activatePublicVerifyMode(code);
+activatePublicVerifyMode(
+code
+);
 
 await verifyProduct();
 
@@ -3056,13 +3714,16 @@ await verifyProduct();
    SCANNER ENTER
 ========================================================= */
 
-document.getElementById("verifyCode").addEventListener(
+document.getElementById(
+"verifyCode"
+).addEventListener(
 "keydown",
 function(e){
 
 if(e.key==="Enter"){
 
 e.preventDefault();
+
 verifyProduct();
 
 }
@@ -3077,13 +3738,18 @@ verifyProduct();
 
 async function loadRecords(){
 
-const box=document.getElementById("recordsList");
+const box=
+document.getElementById(
+"recordsList"
+);
 
 if(!box)return;
 
-box.innerHTML="<div class='empty'>Loading...</div>";
+box.innerHTML=
+"<div class='empty'>Loading...</div>";
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_verifications")
 .select("*")
 .eq("status","Verified")
@@ -3097,7 +3763,8 @@ box.innerHTML="";
 
 setStatus(
 "recordsStatus",
-"Load failed: "+error.message,
+"Load failed: "+
+error.message,
 false
 );
 
@@ -3113,7 +3780,9 @@ true
 
 if(!data?.length){
 
-box.innerHTML="<div class='empty'>No barcode records created yet.</div>";
+box.innerHTML=
+"<div class='empty'>No barcode records created yet.</div>";
+
 return;
 
 }
@@ -3145,22 +3814,42 @@ ${data.map(x=>`
 
 <tr>
 
-<td><strong>${esc(x.product_name)}</strong></td>
+<td>
+<strong>
+${esc(x.product_name)}
+</strong>
+</td>
 
-<td>${esc(x.variant)}</td>
+<td>
+${esc(x.variant)}
+</td>
 
-<td><strong>${esc(x.verification_code)}</strong></td>
+<td>
+<strong>
+${esc(x.verification_code)}
+</strong>
+</td>
 
-<td>${esc(x.batch_number||"—")}</td>
+<td>
+${esc(x.batch_number||"—")}
+</td>
 
-<td><span class="badge">Verified</span></td>
+<td>
+<span class="badge">
+Verified
+</span>
+</td>
 
-<td>${Number(x.scan_count||0)}</td>
+<td>
+${Number(x.scan_count||0)}
+</td>
 
 <td>
 ${
 x.created_at
-?new Date(x.created_at).toLocaleString("en-IN")
+?new Date(
+x.created_at
+).toLocaleString("en-IN")
 :"—"
 }
 </td>
@@ -3169,19 +3858,31 @@ x.created_at
 
 <div class="record-actions">
 
-<button class="blue" onclick="viewRecord('${esc(x.verification_code)}')">
+<button
+class="blue"
+onclick="viewRecord('${esc(x.verification_code)}')"
+>
 View
 </button>
 
-<button class="light" onclick="downloadRecordBarcode('${esc(x.verification_code)}')">
+<button
+class="light"
+onclick="downloadRecordBarcode('${esc(x.verification_code)}')"
+>
 Barcode
 </button>
 
-<button class="gold" onclick="downloadRecordQR('${esc(x.verification_code)}')">
+<button
+class="gold"
+onclick="downloadRecordQR('${esc(x.verification_code)}')"
+>
 QR
 </button>
 
-<button class="black" onclick="downloadRecordPDF('${esc(x.verification_code)}')">
+<button
+class="black"
+onclick="downloadRecordPDF('${esc(x.verification_code)}')"
+>
 PDF
 </button>
 
@@ -3210,11 +3911,13 @@ PDF
 
 async function getRecordByCode(code){
 
-const clean=String(code||"")
+const clean=
+String(code||"")
 .replace(/\s+/g,"")
 .toUpperCase();
 
-const {data,error}=await supabaseClient
+const {data,error}=
+await supabaseClient
 .from("product_verifications")
 .select("*")
 .eq("verification_code",clean)
@@ -3222,14 +3925,21 @@ const {data,error}=await supabaseClient
 
 if(error){
 
-alert("Could not load record: "+error.message);
+alert(
+"Could not load record: "+
+error.message
+);
+
 return null;
 
 }
 
 if(!data){
 
-alert("Barcode record not found.");
+alert(
+"Barcode record not found."
+);
+
 return null;
 
 }
@@ -3240,14 +3950,22 @@ return data;
 
 async function viewRecord(code){
 
-const data=await getRecordByCode(code);
+const data=
+await getRecordByCode(code);
 
 if(!data)return;
 
 currentRecord=data;
 
-const modal=document.getElementById("recordModal");
-const content=document.getElementById("recordModalContent");
+const modal=
+document.getElementById(
+"recordModal"
+);
+
+const content=
+document.getElementById(
+"recordModalContent"
+);
 
 content.innerHTML=`
 
@@ -3265,39 +3983,65 @@ ${esc(data.product_name)}
 ${esc(data.variant||"")}
 </div>
 
-<div style="margin-top:5px;color:#666;font-size:13px">
-Batch: ${esc(data.batch_number||"—")}
+<div
+style="margin-top:5px;color:#666;font-size:13px"
+>
+Batch:
+${esc(data.batch_number||"—")}
 </div>
 
-<div id="recordModalBarcode" class="barcode-box">
+<div
+id="recordModalBarcode"
+class="barcode-box"
+>
+
 <svg id="recordBarcodeSvg"></svg>
+
 </div>
 
 <div class="code-text">
 ${esc(data.verification_code)}
 </div>
 
-<div id="recordModalQR" class="qr-box"></div>
+<div
+id="recordModalQR"
+class="qr-box"
+></div>
 
 <div class="small">
 Scan QR to verify authenticity online
 </div>
 
-<div class="actions no-print" style="justify-content:center">
+<div
+class="actions no-print"
+style="justify-content:center"
+>
 
-<button class="black" onclick="printRecordModal()">
+<button
+class="black"
+onclick="printRecordModal()"
+>
 🖨 Print
 </button>
 
-<button class="blue" onclick="downloadRecordBarcode('${esc(data.verification_code)}')">
+<button
+class="blue"
+onclick="downloadRecordBarcode('${esc(data.verification_code)}')"
+>
 ⬇ Barcode
 </button>
 
-<button class="gold" onclick="downloadRecordQR('${esc(data.verification_code)}')">
+<button
+class="gold"
+onclick="downloadRecordQR('${esc(data.verification_code)}')"
+>
 ⬇ QR Code
 </button>
 
-<button class="light" onclick="downloadRecordPDF('${esc(data.verification_code)}')">
+<button
+class="light"
+onclick="downloadRecordPDF('${esc(data.verification_code)}')"
+>
 📄 PDF
 </button>
 
@@ -3307,7 +4051,10 @@ Scan QR to verify authenticity online
 
 `;
 
-JsBarcode("#recordBarcodeSvg",data.verification_code,{
+JsBarcode(
+"#recordBarcodeSvg",
+data.verification_code,
+{
 
 format:"CODE128",
 lineColor:"#111",
@@ -3317,16 +4064,25 @@ displayValue:true,
 fontSize:13,
 margin:5
 
-});
+}
+);
 
 new QRCode(
-document.getElementById("recordModalQR"),
+document.getElementById(
+"recordModalQR"
+),
 {
 
-text:getVerificationUrl(data.verification_code),
+text:
+getVerificationUrl(
+data.verification_code
+),
+
 width:180,
 height:180,
-correctLevel:QRCode.CorrectLevel.M
+
+correctLevel:
+QRCode.CorrectLevel.M
 
 }
 );
@@ -3337,7 +4093,11 @@ modal.classList.add("show");
 
 function closeRecordModal(){
 
-document.getElementById("recordModal").classList.remove("show");
+document.getElementById(
+"recordModal"
+).classList.remove(
+"show"
+);
 
 currentRecord=null;
 
@@ -3352,14 +4112,21 @@ function printRecordModal(){
 
 if(!currentRecord){
 
-alert("Record not loaded.");
+alert(
+"Record not loaded."
+);
+
 return;
 
 }
 
-const content=document.getElementById("recordModalContent").innerHTML;
+const content=
+document.getElementById(
+"recordModalContent"
+).innerHTML;
 
-const printWindow=window.open(
+const printWindow=
+window.open(
 "",
 "_blank",
 "width=800,height=900"
@@ -3367,7 +4134,10 @@ const printWindow=window.open(
 
 if(!printWindow){
 
-alert("Please allow popups to print the record.");
+alert(
+"Please allow popups to print the record."
+);
+
 return;
 
 }
@@ -3381,7 +4151,8 @@ printWindow.document.write(`
 <head>
 
 <title>
-Liara Barcode ${esc(currentRecord.verification_code)}
+Liara Barcode
+${esc(currentRecord.verification_code)}
 </title>
 
 <style>
@@ -3413,7 +4184,9 @@ font-weight:700
 margin:25px auto 10px
 }
 
-.barcode-box svg{max-width:100%}
+.barcode-box svg{
+max-width:100%
+}
 
 .qr-box{
 display:flex;
@@ -3421,7 +4194,9 @@ justify-content:center;
 margin:18px
 }
 
-.actions{display:none!important}
+.actions{
+display:none!important
+}
 
 </style>
 
@@ -3456,12 +4231,17 @@ function downloadBarcode(){
 
 if(!lastCreatedCode){
 
-alert("Create a barcode first.");
+alert(
+"Create a barcode first."
+);
+
 return;
 
 }
 
-downloadBarcodeFromCode(lastCreatedCode);
+downloadBarcodeFromCode(
+lastCreatedCode
+);
 
 }
 
@@ -3475,12 +4255,16 @@ function downloadBarcodeFromCode(code){
 
 if(!code){
 
-alert("Barcode code not available.");
+alert(
+"Barcode code not available."
+);
+
 return;
 
 }
 
-const tempSvg=document.createElementNS(
+const tempSvg=
+document.createElementNS(
 "http://www.w3.org/2000/svg",
 "svg"
 );
@@ -3493,9 +4277,14 @@ tempSvg.setAttribute(
 tempSvg.style.position="fixed";
 tempSvg.style.left="-10000px";
 
-document.body.appendChild(tempSvg);
+document.body.appendChild(
+tempSvg
+);
 
-JsBarcode(tempSvg,code,{
+JsBarcode(
+tempSvg,
+code,
+{
 
 format:"CODE128",
 lineColor:"#111",
@@ -3505,28 +4294,43 @@ displayValue:true,
 fontSize:13,
 margin:8
 
-});
-
-const source=
-new XMLSerializer().serializeToString(tempSvg);
-
-const blob=new Blob(
-[source],
-{type:"image/svg+xml;charset=utf-8"}
+}
 );
 
-const url=URL.createObjectURL(blob);
+const source=
+new XMLSerializer()
+.serializeToString(
+tempSvg
+);
 
-const a=document.createElement("a");
+const blob=
+new Blob(
+[source],
+{
+type:
+"image/svg+xml;charset=utf-8"
+}
+);
+
+const url=
+URL.createObjectURL(blob);
+
+const a=
+document.createElement("a");
 
 a.href=url;
-a.download=code+"_barcode.svg";
+
+a.download=
+code+"_barcode.svg";
 
 document.body.appendChild(a);
+
 a.click();
+
 a.remove();
 
 URL.revokeObjectURL(url);
+
 tempSvg.remove();
 
 }
@@ -3540,12 +4344,17 @@ function downloadQRCode(){
 
 if(!lastCreatedCode){
 
-alert("Create a barcode + QR first.");
+alert(
+"Create a barcode + QR first."
+);
+
 return;
 
 }
 
-downloadQRFromCode(lastCreatedCode);
+downloadQRFromCode(
+lastCreatedCode
+);
 
 }
 
@@ -3559,38 +4368,57 @@ function downloadQRFromCode(code){
 
 if(!code){
 
-alert("QR code not available.");
+alert(
+"QR code not available."
+);
+
 return;
 
 }
 
-const temp=document.createElement("div");
+const temp=
+document.createElement("div");
 
 temp.style.position="fixed";
 temp.style.left="-10000px";
 temp.style.top="0";
 
-document.body.appendChild(temp);
+document.body.appendChild(
+temp
+);
 
-new QRCode(temp,{
+new QRCode(
+temp,
+{
 
-text:getVerificationUrl(code),
+text:
+getVerificationUrl(code),
+
 width:300,
 height:300,
-correctLevel:QRCode.CorrectLevel.M
 
-});
+correctLevel:
+QRCode.CorrectLevel.M
+
+}
+);
 
 setTimeout(()=>{
 
-const canvas=temp.querySelector("canvas");
-const img=temp.querySelector("img");
+const canvas=
+temp.querySelector("canvas");
+
+const img=
+temp.querySelector("img");
 
 let dataUrl="";
 
 if(canvas){
 
-dataUrl=canvas.toDataURL("image/png");
+dataUrl=
+canvas.toDataURL(
+"image/png"
+);
 
 }else if(img){
 
@@ -3600,19 +4428,28 @@ dataUrl=img.src;
 
 if(!dataUrl){
 
-alert("Could not create QR image.");
+alert(
+"Could not create QR image."
+);
+
 temp.remove();
+
 return;
 
 }
 
-const a=document.createElement("a");
+const a=
+document.createElement("a");
 
 a.href=dataUrl;
-a.download=code+"_QR.png";
+
+a.download=
+code+"_QR.png";
 
 document.body.appendChild(a);
+
 a.click();
+
 a.remove();
 
 temp.remove();
@@ -3628,16 +4465,23 @@ temp.remove();
 
 function loadJsPDF(){
 
-return new Promise((resolve,reject)=>{
+return new Promise(
+(resolve,reject)=>{
 
-if(window.jspdf&&window.jspdf.jsPDF){
+if(
+window.jspdf&&
+window.jspdf.jsPDF
+){
 
 resolve();
 return;
 
 }
 
-const script=document.createElement("script");
+const script=
+document.createElement(
+"script"
+);
 
 script.src=
 "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
@@ -3645,7 +4489,9 @@ script.src=
 script.onload=resolve;
 script.onerror=reject;
 
-document.head.appendChild(script);
+document.head.appendChild(
+script
+);
 
 });
 
@@ -3655,50 +4501,75 @@ async function downloadPDF(){
 
 if(!lastCreatedCode){
 
-alert("Create a barcode + QR first.");
+alert(
+"Create a barcode + QR first."
+);
+
 return;
 
 }
 
-const data=await getRecordByCode(lastCreatedCode);
+const data=
+await getRecordByCode(
+lastCreatedCode
+);
 
 if(!data)return;
 
-await createPDFForRecord(data);
+await createPDFForRecord(
+data
+);
 
 }
 
 async function downloadRecordPDF(code){
 
-const data=await getRecordByCode(code);
+const data=
+await getRecordByCode(code);
 
 if(!data)return;
 
-await createPDFForRecord(data);
+await createPDFForRecord(
+data
+);
 
 }
 
-async function createPDFForRecord(data){
+async function createPDFForRecord(
+data
+){
 
 try{
 
-if(!window.jspdf||!window.jspdf.jsPDF){
+if(
+!window.jspdf||
+!window.jspdf.jsPDF
+){
 
 await loadJsPDF();
 
 }
 
-const {jsPDF}=window.jspdf;
+const {jsPDF}=
+window.jspdf;
 
-const pdf=new jsPDF({
+const pdf=
+new jsPDF({
+
 orientation:"portrait",
 unit:"mm",
 format:"a4"
+
 });
 
-const pageWidth=pdf.internal.pageSize.getWidth();
+const pageWidth=
+pdf.internal.pageSize.getWidth();
 
-pdf.setFont("helvetica","bold");
+pdf.setFont(
+"helvetica",
+"bold"
+);
+
 pdf.setFontSize(20);
 
 pdf.text(
@@ -3709,7 +4580,11 @@ pageWidth/2,
 );
 
 pdf.setFontSize(11);
-pdf.setFont("helvetica","normal");
+
+pdf.setFont(
+"helvetica",
+"normal"
+);
 
 pdf.text(
 "Product Barcode & QR Verification",
@@ -3721,32 +4596,50 @@ pageWidth/2,
 let y=45;
 
 pdf.setFontSize(12);
-pdf.setFont("helvetica","bold");
 
-pdf.text("Product Details",20,y);
+pdf.setFont(
+"helvetica",
+"bold"
+);
+
+pdf.text(
+"Product Details",
+20,
+y
+);
 
 y+=9;
 
-pdf.setFont("helvetica","normal");
+pdf.setFont(
+"helvetica",
+"normal"
+);
+
 pdf.setFontSize(11);
 
 pdf.text(
-"Product: "+String(data.product_name||""),
-20,y
+"Product: "+
+String(data.product_name||""),
+20,
+y
 );
 
 y+=7;
 
 pdf.text(
-"Variant / Size: "+String(data.variant||""),
-20,y
+"Variant / Size: "+
+String(data.variant||""),
+20,
+y
 );
 
 y+=7;
 
 pdf.text(
-"Batch Number: "+String(data.batch_number||"—"),
-20,y
+"Batch Number: "+
+String(data.batch_number||"—"),
+20,
+y
 );
 
 y+=7;
@@ -3755,13 +4648,15 @@ let batchData=null;
 
 if(data.batch_id){
 
-const {data:bd}=await supabaseClient
+const {data:bd}=
+await supabaseClient
 .from("product_batches")
 .select("*")
 .eq("id",data.batch_id)
 .maybeSingle();
 
-batchData=bd||null;
+batchData=
+bd||null;
 
 }
 
@@ -3769,10 +4664,15 @@ if(batchData){
 
 pdf.text(
 "Total Batch: "+
-String(batchData.total_batch_quantity||"")+
+String(
+batchData.total_batch_quantity||""
+)+
 " "+
-String(batchData.batch_unit||""),
-20,y
+String(
+batchData.batch_unit||""
+),
+20,
+y
 );
 
 y+=7;
@@ -3780,28 +4680,41 @@ y+=7;
 }
 
 pdf.text(
-"Manufacturing Date: "+fmtDate(data.manufacturing_date),
-20,y
+"Manufacturing Date: "+
+fmtDate(
+data.manufacturing_date
+),
+20,
+y
 );
 
 y+=7;
 
 pdf.text(
-"Expiry Date: "+fmtDate(data.expiry_date),
-20,y
+"Expiry Date: "+
+fmtDate(
+data.expiry_date
+),
+20,
+y
 );
 
 y+=7;
 
 pdf.text(
-"Verification Code: "+String(data.verification_code||""),
-20,y
+"Verification Code: "+
+String(
+data.verification_code||""
+),
+20,
+y
 );
 
 
 /* BARCODE */
 
-const barcodeSvg=document.createElementNS(
+const barcodeSvg=
+document.createElementNS(
 "http://www.w3.org/2000/svg",
 "svg"
 );
@@ -3823,29 +4736,50 @@ margin:8
 );
 
 const svgSource=
-new XMLSerializer().serializeToString(barcodeSvg);
-
-const svgBlob=new Blob(
-[svgSource],
-{type:"image/svg+xml;charset=utf-8"}
+new XMLSerializer()
+.serializeToString(
+barcodeSvg
 );
 
-const svgUrl=URL.createObjectURL(svgBlob);
+const svgBlob=
+new Blob(
+[svgSource],
+{
+type:
+"image/svg+xml;charset=utf-8"
+}
+);
 
-const barcodeImg=new Image();
+const svgUrl=
+URL.createObjectURL(
+svgBlob
+);
 
-await new Promise((resolve,reject)=>{
+const barcodeImg=
+new Image();
+
+await new Promise(
+(resolve,reject)=>{
 
 barcodeImg.onload=resolve;
 barcodeImg.onerror=reject;
 barcodeImg.src=svgUrl;
 
-});
+}
+);
 
-pdf.setFont("helvetica","bold");
+pdf.setFont(
+"helvetica",
+"bold"
+);
+
 pdf.setFontSize(12);
 
-pdf.text("Barcode",20,y+18);
+pdf.text(
+"Barcode",
+20,
+y+18
+);
 
 pdf.addImage(
 barcodeImg,
@@ -3856,46 +4790,82 @@ y+22,
 30
 );
 
-URL.revokeObjectURL(svgUrl);
+URL.revokeObjectURL(
+svgUrl
+);
 
 
 /* QR */
 
-const qrHolder=document.createElement("div");
+const qrHolder=
+document.createElement(
+"div"
+);
 
 qrHolder.style.position="fixed";
 qrHolder.style.left="-10000px";
 qrHolder.style.top="0";
 
-document.body.appendChild(qrHolder);
+document.body.appendChild(
+qrHolder
+);
 
-new QRCode(qrHolder,{
+new QRCode(
+qrHolder,
+{
 
-text:getVerificationUrl(data.verification_code),
+text:
+getVerificationUrl(
+data.verification_code
+),
+
 width:300,
 height:300,
-correctLevel:QRCode.CorrectLevel.M
 
-});
+correctLevel:
+QRCode.CorrectLevel.M
 
-await new Promise(resolve=>setTimeout(resolve,150));
+}
+);
 
-const qrCanvas=qrHolder.querySelector("canvas");
+await new Promise(
+resolve=>
+setTimeout(
+resolve,
+150
+)
+);
+
+const qrCanvas=
+qrHolder.querySelector(
+"canvas"
+);
 
 let qrDataUrl="";
 
 if(qrCanvas){
 
-qrDataUrl=qrCanvas.toDataURL("image/png");
+qrDataUrl=
+qrCanvas.toDataURL(
+"image/png"
+);
 
 }
 
 if(qrDataUrl){
 
-pdf.setFont("helvetica","bold");
+pdf.setFont(
+"helvetica",
+"bold"
+);
+
 pdf.setFontSize(12);
 
-pdf.text("QR Code",140,y+18);
+pdf.text(
+"QR Code",
+140,
+y+18
+);
 
 pdf.addImage(
 qrDataUrl,
@@ -3910,7 +4880,11 @@ y+22,
 
 qrHolder.remove();
 
-pdf.setFont("helvetica","normal");
+pdf.setFont(
+"helvetica",
+"normal"
+);
+
 pdf.setFontSize(9);
 
 pdf.text(
@@ -3928,7 +4902,9 @@ pageWidth/2,
 );
 
 pdf.save(
-String(data.verification_code)+
+String(
+data.verification_code
+)+
 "_Barcode_QR.pdf"
 );
 
@@ -3954,7 +4930,10 @@ function printLabel(){
 
 if(!lastCreatedCode){
 
-alert("Create a barcode first.");
+alert(
+"Create a barcode first."
+);
+
 return;
 
 }
@@ -3968,20 +4947,26 @@ window.print();
    RECORD/BATCH MODAL CLICK
 ========================================================= */
 
-document.getElementById("recordModal").addEventListener(
+document.getElementById(
+"recordModal"
+).addEventListener(
 "click",
 function(e){
 
-if(e.target===this)closeRecordModal();
+if(e.target===this)
+closeRecordModal();
 
 }
 );
 
-document.getElementById("batchDetailModal").addEventListener(
+document.getElementById(
+"batchDetailModal"
+).addEventListener(
 "click",
 function(e){
 
-if(e.target===this)closeBatchDetailModal();
+if(e.target===this)
+closeBatchDetailModal();
 
 }
 );
@@ -3995,7 +4980,8 @@ if(e.target===this)closeBatchDetailModal();
 
 try{
 
-const hashCode=getHashCode();
+const hashCode=
+getHashCode();
 
 
 /* ---------------------------------------------------------
@@ -4004,7 +4990,9 @@ const hashCode=getHashCode();
 
 if(hashCode){
 
-activatePublicVerifyMode(hashCode);
+activatePublicVerifyMode(
+hashCode
+);
 
 await verifyProduct();
 
@@ -4027,35 +5015,62 @@ if(!adminAllowed)return;
    SHOW ADMIN PAGE
 --------------------------------------------------------- */
 
-const createTab=document.getElementById("tab-create");
-const batchesTab=document.getElementById("tab-batches");
-const verifyTab=document.getElementById("tab-verify");
-const recordsTab=document.getElementById("tab-records");
+const createTab=
+document.getElementById(
+"tab-create"
+);
+
+const batchesTab=
+document.getElementById(
+"tab-batches"
+);
+
+const verifyTab=
+document.getElementById(
+"tab-verify"
+);
+
+const recordsTab=
+document.getElementById(
+"tab-records"
+);
 
 if(createTab){
 
-createTab.classList.remove("hidden");
+createTab.classList.remove(
+"hidden"
+);
+
 createTab.style.display="";
 
 }
 
 if(batchesTab){
 
-batchesTab.classList.add("hidden");
+batchesTab.classList.add(
+"hidden"
+);
+
 batchesTab.style.display="";
 
 }
 
 if(verifyTab){
 
-verifyTab.classList.add("hidden");
+verifyTab.classList.add(
+"hidden"
+);
+
 verifyTab.style.display="";
 
 }
 
 if(recordsTab){
 
-recordsTab.classList.add("hidden");
+recordsTab.classList.add(
+"hidden"
+);
+
 recordsTab.style.display="";
 
 }
@@ -4078,7 +5093,8 @@ await generateBatchNumber(false);
    UNLOCK SAFETY
 --------------------------------------------------------- */
 
-const lock=document.getElementById(
+const lock=
+document.getElementById(
 "liara-admin-page-lock"
 );
 
@@ -4099,7 +5115,8 @@ do not leave the entire page permanently blank.
 Admin auth is still required before this point.
 */
 
-const lock=document.getElementById(
+const lock=
+document.getElementById(
 "liara-admin-page-lock"
 );
 
@@ -4109,11 +5126,16 @@ lock.remove();
 
 }
 
-const status=document.getElementById("batchStatus");
+const status=
+document.getElementById(
+"batchStatus"
+);
 
 if(status){
 
-status.className="status err";
+status.className=
+"status err";
+
 status.textContent=
 "Liara page error: "+
 (error.message||error);
