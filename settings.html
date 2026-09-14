@@ -240,6 +240,14 @@ h1{margin:5px 0 0;font-size:30px}
 </select>
 
 </div>
+
+<div class="field">
+<label>STAFF LOGIN ID</label>
+<input id="staffLoginId" readonly>
+<small style="display:block;color:#888;font-size:9px;margin-top:5px">
+Auto-generated unique staff login ID.
+</small>
+</div>
 </div>
 
 <div style="margin-top:15px">
@@ -249,6 +257,17 @@ h1{margin:5px 0 0;font-size:30px}
 
 </div>
 
+<div id="staffCreatedCard" style="display:none;margin-bottom:15px;padding:18px;background:#edf7ef;border:1px solid #cfe5d2;color:#287a3e">
+<strong style="display:block;font-size:12px;letter-spacing:1px">✓ STAFF LOGIN CREATED</strong>
+<div style="margin-top:10px;font-size:10px;line-height:1.8">
+Login ID: <b id="createdStaffLoginId">—</b><br>
+Role: <b id="createdStaffRole">—</b><br>
+Permissions: <b id="createdStaffPermissions">0</b> rights
+</div>
+<div style="margin-top:8px;font-size:9px;color:#5f7f66">
+Staff account is now created and ready for login.
+</div>
+</div>
 
 <div class="card">
 
@@ -2575,13 +2594,40 @@ e.type="text";
    STAFF
    ========================================================= */
 
+async function generateStaffLoginId(){
+try{
+const arr=new Uint32Array(6);
+crypto.getRandomValues(arr);
+return "LIARA-"+Array.from(arr,n=>(n%36).toString(36)).join("").toUpperCase();
+}catch(e){
+return "LIARA-"+Date.now().toString(36).slice(-6).toUpperCase();
+}
+}
+
+function showStaffCreatedCard(loginId,role,permissions){
+const card=document.getElementById("staffCreatedCard");
+if(!card)return;
+
+document.getElementById("createdStaffLoginId").textContent=loginId||"—";
+document.getElementById("createdStaffRole").textContent=role||"—";
+
+const count=Object.values(permissions||{}).reduce(
+(n,x)=>n+Object.values(x||{}).filter(Boolean).length,
+0
+);
+
+document.getElementById("createdStaffPermissions").textContent=count;
+card.style.display="block";
+card.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
 async function createStaff(){
 
 const name=
 val("staffName").trim();
 
 const email=
-val("staffEmail").trim();
+val("staffEmail").trim().toLowerCase();
 
 const password=
 val("staffPassword");
@@ -2600,25 +2646,107 @@ alert(
 );
 
 return;
-
 }
 
-alert(
-"Staff permission set is ready.\n\n"+
-"Role: "+role+
-"\nPermissions: "+
-Object.values(
-collectPermissions()
-).reduce(
-(n,x)=>
-n+
-Object.values(x)
-.filter(Boolean)
-.length,
-0
-)+
-" selected rights."
+const permissions=
+collectPermissions();
+
+const button=
+document.querySelector(
+'button[onclick="createStaff()"]'
 );
+
+if(button){
+button.disabled=true;
+button.textContent="CREATING...";
+}
+
+try{
+
+const {
+data:{
+session
+}={}
+}=await supabaseClient.auth.getSession();
+
+if(!session){
+throw new Error("Admin login session not found.");
+}
+
+const loginId=
+await generateStaffLoginId();
+
+setVal("staffLoginId",loginId);
+
+const {
+data,
+error
+}=
+await supabaseClient.functions.invoke(
+"create-staff",
+{
+body:{
+name,
+email,
+password,
+role,
+phone:"",
+permissions,
+staff_code:loginId,
+login_id:loginId
+}
+}
+);
+
+if(error){
+throw error;
+}
+
+if(!data?.ok){
+throw new Error(
+data?.error ||
+"Staff account create nahi ho saka."
+);
+}
+
+const finalLoginId=
+data?.login_id ||
+data?.staff_code ||
+loginId;
+
+setVal("staffLoginId",finalLoginId);
+
+showStaffCreatedCard(
+finalLoginId,
+role,
+permissions
+);
+
+document.getElementById("staffName").value="";
+document.getElementById("staffEmail").value="";
+document.getElementById("staffPassword").value="";
+
+showNotice(
+"✓ Staff account created successfully. Login ID: "+finalLoginId
+);
+
+}catch(error){
+
+console.error("createStaff error:",error);
+
+alert(
+"Staff account create nahi ho saka.\n\n"+
+(error?.message||"Please try again.")
+);
+
+}finally{
+
+if(button){
+button.disabled=false;
+button.textContent="CREATE STAFF";
+}
+
+}
 
 }
 
@@ -2733,6 +2861,11 @@ applyRolePermissions
 }
 
 renderPermissions();
+
+setVal(
+"staffLoginId",
+await generateStaffLoginId()
+);
 
 await loadSettings();
 
