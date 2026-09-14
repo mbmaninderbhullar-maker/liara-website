@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -27,156 +28,617 @@
 </style>
 </head>
 <body>
+
 <header>
-<a href="/" class="logo"><span>LIARA</span><small>PROFESSIONAL™</small></a>
+<a href="/" class="logo">
+<span>LIARA</span>
+<small>PROFESSIONAL™</small>
+</a>
 </header>
 
 <section class="company-login-section">
 <div class="company-login-box">
+
 <p>LIARA PROFESSIONAL™</p>
+
 <h2 id="loginTitle">Admin Login</h2>
-<p class="company-subtitle" id="loginSubtitle">Secure Company / Admin Access</p>
+
+<p class="company-subtitle" id="loginSubtitle">
+Secure Company / Admin Access
+</p>
 
 <div class="login-switch">
-<button type="button" id="adminTab" class="active" onclick="setLoginMode('admin')">Admin Login</button>
-<button type="button" id="staffTab" onclick="setLoginMode('staff')">Staff Login</button>
+<button type="button" id="adminTab" class="active" onclick="setLoginMode('admin')">
+Admin Login
+</button>
+
+<button type="button" id="staffTab" onclick="setLoginMode('staff')">
+Staff Login
+</button>
 </div>
 
-<p class="login-mode-note" id="loginModeNote">Use company email and password.</p>
+<p class="login-mode-note" id="loginModeNote">
+Use company email and password.
+</p>
 
 <form id="companyLoginForm">
+
 <div class="form-group">
 <label id="loginIdLabel" for="email">Company Email</label>
-<input type="email" id="email" value="info@liara.co.in" autocomplete="username" required>
+
+<input
+type="email"
+id="email"
+value="[info@liara.co.in](mailto:info@liara.co.in)"
+autocomplete="username"
+required
+
+>
+
 </div>
 
 <div class="form-group">
+
 <label for="password">Password</label>
-<input type="password" id="password" placeholder="Enter company password" autocomplete="current-password" required>
+
+<input
+type="password"
+id="password"
+placeholder="Enter company password"
+autocomplete="current-password"
+required
+
+>
+
 </div>
 
-<button type="submit" class="btn company-login-btn" id="loginButton">Admin Login</button>
+<button
+type="submit"
+class="btn company-login-btn"
+id="loginButton"
+
+>
+
+Admin Login </button>
+
 <div id="message" class="company-message"></div>
+
 </form>
 
-<a href="/" class="back-home">← Back to Website</a>
+<a href="/" class="back-home">
+← Back to Website
+</a>
+
 </div>
 </section>
 
 <footer>
-<div class="footer-brand">LIARA <small>PROFESSIONAL™</small></div>
-<p>© 2026 Liara Group Private Limited. All Rights Reserved.</p>
+<div class="footer-brand">
+LIARA <small>PROFESSIONAL™</small>
+</div>
+
+<p>
+© 2026 Liara Group Private Limited. All Rights Reserved.
+</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
-const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const ADMIN_EMAIL="info@liara.co.in";
+
+const SUPABASE_URL =
+"https://oinafbuicwhleudztzyz.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+const ADMIN_EMAIL =
+"info@liara.co.in";
+
 let loginMode="admin";
 
+
+/* =========================
+   LOGIN MODE
+========================= */
+
 function setLoginMode(mode){
-    loginMode=mode;
-    const admin=mode==="admin";
-    document.getElementById("adminTab").classList.toggle("active",admin);
-    document.getElementById("staffTab").classList.toggle("active",!admin);
-    document.getElementById("loginTitle").innerText=admin?"Admin Login":"Staff Login";
-    document.getElementById("loginSubtitle").innerText=admin?"Secure Company / Admin Access":"Secure Staff Access";
-    document.getElementById("loginModeNote").innerText=admin?"Use company email and password.":"Use your Staff Login ID (LIARA-XXXXXX) and staff password.";
-    document.getElementById("loginIdLabel").innerText=admin?"Company Email":"Staff Login ID";
-    const input=document.getElementById("email");
-    input.type=admin?"email":"text";
-    input.value=admin?ADMIN_EMAIL:"";
-    input.placeholder=admin?"":"LIARA-XXXXXX";
-    input.autocomplete="username";
-    document.getElementById("loginButton").innerText=admin?"Admin Login":"Staff Login";
-    document.getElementById("message").innerText="";
+
+loginMode=mode;
+
+const admin=mode==="admin";
+
+document
+.getElementById("adminTab")
+.classList
+.toggle("active",admin);
+
+document
+.getElementById("staffTab")
+.classList
+.toggle("active",!admin);
+
+document.getElementById("loginTitle").innerText =
+admin ? "Admin Login" : "Staff Login";
+
+document.getElementById("loginSubtitle").innerText =
+admin
+? "Secure Company / Admin Access"
+: "Secure Staff Access";
+
+document.getElementById("loginModeNote").innerText =
+admin
+? "Use company email and password."
+: "Use your Staff Login ID (LIARA-XXXXXX) and staff password.";
+
+document.getElementById("loginIdLabel").innerText =
+admin
+? "Company Email"
+: "Staff Login ID";
+
+const input=document.getElementById("email");
+
+input.type =
+admin ? "email" : "text";
+
+input.value =
+admin ? ADMIN_EMAIL : "";
+
+input.placeholder =
+admin ? "" : "LIARA-XXXXXX";
+
+input.autocomplete="username";
+
+document.getElementById("password").value="";
+
+document.getElementById("password").placeholder =
+admin
+? "Enter company password"
+: "Enter staff password";
+
+document.getElementById("loginButton").innerText =
+admin ? "Admin Login" : "Staff Login";
+
+document.getElementById("message").innerText="";
+
 }
 
-document.getElementById("companyLoginForm").addEventListener("submit",async function(event){
-    event.preventDefault();
 
-    const loginValue=document.getElementById("email").value.trim();
-    const password=document.getElementById("password").value;
-    const button=document.getElementById("loginButton");
-    const message=document.getElementById("message");
+/* =========================
+   FIND STAFF PROFILE
+========================= */
 
-    message.innerText="";
-    button.disabled=true;
-    button.innerText="Logging in...";
+async function findStaffByLoginId(loginId){
 
-    try{
-        let email=loginValue;
+const cleanLoginId =
+String(loginId || "")
+.trim()
+.toUpperCase();
 
-        if(loginMode==="admin"){
-            if(email.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
-                throw new Error("This account is not authorized.");
-            }
-        }else{
-            const loginId=loginValue.toUpperCase();
+if(!/^LIARA-[A-Z0-9]{6}$/.test(cleanLoginId)){
 
-            if(!/^LIARA-[A-Z0-9]{6}$/.test(loginId)){
-                throw new Error("Enter a valid Staff Login ID, e.g. LIARA-ABC123.");
-            }
+throw new Error(
+"Enter a valid Staff Login ID, e.g. LIARA-ABC123."
+);
 
-            const {data:profile,error:profileError}=await supabaseClient
-                .from("staff_profiles")
-                .select("user_id,email,login_id,staff_code,active")
-                .or("login_id.eq."+loginId+",staff_code.eq."+loginId)
-                .maybeSingle();
+}
 
-            if(profileError) throw profileError;
-            if(!profile) throw new Error("Staff Login ID not found.");
-            if(profile.active===false) throw new Error("This staff account is inactive.");
 
-            email=profile.email;
-        }
+/*
+  First try exact login_id.
+*/
 
-        const {data,error}=await supabaseClient.auth.signInWithPassword({
-            email:email,
-            password:password
-        });
+let {data:profile,error:profileError} =
+await supabaseClient
+.from("staff_profiles")
+.select(`
+id,
+user_id,
+name,
+email,
+role,
+permissions,
+active,
+login_id,
+staff_code
+`)
+.eq("login_id",cleanLoginId)
+.maybeSingle();
 
-        if(error) throw error;
-        if(!data || !data.user) throw new Error("Login failed.");
+if(profileError){
+throw profileError;
+}
 
-        if(loginMode==="admin"){
-            if(data.user.email.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
-                await supabaseClient.auth.signOut();
-                throw new Error("This account is not authorized as Admin.");
-            }
-            message.innerText="Admin login successful ✓";
-            button.innerText="Opening Orders...";
-            setTimeout(()=>window.location.href="admin-orders.html",700);
-        }else{
-            const {data:staff,error:staffError}=await supabaseClient
-                .from("staff_profiles")
-                .select("id,user_id,name,role,permissions,active,login_id,staff_code")
-                .eq("user_id",data.user.id)
-                .maybeSingle();
 
-            if(staffError || !staff){
-                await supabaseClient.auth.signOut();
-                throw new Error("Staff profile not found.");
-            }
-            if(staff.active===false){
-                await supabaseClient.auth.signOut();
-                throw new Error("This staff account is inactive.");
-            }
+/*
+  If login_id was not found,
+  try staff_code as fallback.
+*/
 
-            sessionStorage.setItem("liaraStaffProfile",JSON.stringify(staff));
-            message.innerText="Staff login successful ✓";
-            button.innerText="Opening Staff Panel...";
-            setTimeout(()=>window.location.href="admin-orders.html",700);
-        }
-    }catch(error){
-        console.error("Login Error:",error);
-        message.innerText=error.message||"Login failed.";
-        button.disabled=false;
-        button.innerText=loginMode==="admin"?"Admin Login":"Staff Login";
-    }
+if(!profile){
+
+const fallback =
+await supabaseClient
+.from("staff_profiles")
+.select(`
+id,
+user_id,
+name,
+email,
+role,
+permissions,
+active,
+login_id,
+staff_code
+`)
+.eq("staff_code",cleanLoginId)
+.maybeSingle();
+
+if(fallback.error){
+throw fallback.error;
+}
+
+profile=fallback.data;
+
+}
+
+
+/*
+  No profile found.
+*/
+
+if(!profile){
+
+throw new Error(
+"Staff Login ID not found."
+);
+
+}
+
+
+/*
+  Account inactive.
+*/
+
+if(profile.active===false){
+
+throw new Error(
+"This staff account is inactive."
+);
+
+}
+
+
+/*
+  Email is required because Supabase
+  password authentication uses email/phone,
+  not custom Login ID.
+*/
+
+if(!profile.email){
+
+throw new Error(
+"Staff account email is missing. Please contact Admin."
+);
+
+}
+
+return profile;
+
+}
+
+
+/* =========================
+   LOGIN FORM
+========================= */
+
+document
+.getElementById("companyLoginForm")
+.addEventListener(
+"submit",
+async function(event){
+
+event.preventDefault();
+
+const loginValue =
+document
+.getElementById("email")
+.value
+.trim();
+
+const password =
+document
+.getElementById("password")
+.value;
+
+const button =
+document.getElementById("loginButton");
+
+const message =
+document.getElementById("message");
+
+message.innerText="";
+
+button.disabled=true;
+
+button.innerText="Logging in...";
+
+
+try{
+
+let email=loginValue;
+
+let staffProfile=null;
+
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+if(loginMode==="admin"){
+
+if(
+email.toLowerCase() !==
+ADMIN_EMAIL.toLowerCase()
+){
+
+throw new Error(
+"This account is not authorized."
+);
+
+}
+
+}
+
+
+/* =========================
+   STAFF LOGIN
+========================= */
+
+else{
+
+staffProfile =
+await findStaffByLoginId(loginValue);
+
+email =
+staffProfile.email.trim();
+
+}
+
+
+/* =========================
+   SUPABASE AUTH LOGIN
+========================= */
+
+const {
+data,
+error
+} =
+await supabaseClient.auth.signInWithPassword({
+
+email:email,
+
+password:password
+
 });
+
+
+if(error){
+
+throw error;
+
+}
+
+
+if(
+!data ||
+!data.user
+){
+
+throw new Error(
+"Login failed."
+);
+
+}
+
+
+/* =========================
+   ADMIN VERIFY
+========================= */
+
+if(loginMode==="admin"){
+
+if(
+!data.user.email ||
+data.user.email.toLowerCase() !==
+ADMIN_EMAIL.toLowerCase()
+){
+
+await supabaseClient.auth.signOut();
+
+throw new Error(
+"This account is not authorized as Admin."
+);
+
+}
+
+message.innerText =
+"Admin login successful ✓";
+
+button.innerText =
+"Opening Orders...";
+
+setTimeout(
+()=>{
+window.location.href="admin-orders.html";
+},
+700
+);
+
+return;
+
+}
+
+
+/* =========================
+   STAFF VERIFY
+========================= */
+
+if(
+!staffProfile ||
+!staffProfile.user_id
+){
+
+await supabaseClient.auth.signOut();
+
+throw new Error(
+"Staff profile not found."
+);
+
+}
+
+
+/*
+  Extra security check:
+  The Auth user must belong to the
+  same staff profile selected by Login ID.
+*/
+
+if(
+String(staffProfile.user_id) !==
+String(data.user.id)
+){
+
+await supabaseClient.auth.signOut();
+
+throw new Error(
+"This Staff Login ID is not linked to the authenticated account."
+);
+
+}
+
+
+/*
+  Re-check active status.
+*/
+
+if(
+staffProfile.active===false
+){
+
+await supabaseClient.auth.signOut();
+
+throw new Error(
+"This staff account is inactive."
+);
+
+}
+
+
+/*
+  Save complete staff profile locally
+  for existing staff/admin pages.
+*/
+
+sessionStorage.setItem(
+"liaraStaffProfile",
+JSON.stringify(staffProfile)
+);
+
+
+/*
+  Also save basic staff identity.
+  Existing pages can use either key.
+*/
+
+sessionStorage.setItem(
+"liaraStaffLoginId",
+staffProfile.login_id ||
+staffProfile.staff_code ||
+""
+);
+
+sessionStorage.setItem(
+"liaraStaffRole",
+staffProfile.role ||
+"Staff"
+);
+
+
+/* =========================
+   SUCCESS
+========================= */
+
+message.innerText =
+"Staff login successful ✓";
+
+button.innerText =
+"Opening Staff Panel...";
+
+setTimeout(
+()=>{
+window.location.href="admin-orders.html";
+},
+700
+);
+
+}
+
+catch(error){
+
+console.error(
+"Login Error:",
+error
+);
+
+
+/*
+  Convert common Supabase auth errors
+  into cleaner messages.
+*/
+
+let errorMessage =
+error?.message ||
+"Login failed.";
+
+if(
+errorMessage.toLowerCase()
+.includes("invalid login credentials")
+){
+
+errorMessage =
+"Invalid password.";
+}
+
+else if(
+errorMessage.toLowerCase()
+.includes("email not confirmed")
+){
+
+errorMessage =
+"Staff account email is not confirmed.";
+}
+
+message.innerText=errorMessage;
+
+button.disabled=false;
+
+button.innerText =
+loginMode==="admin"
+? "Admin Login"
+: "Staff Login";
+
+}
+
+});
+
 </script>
+
 </body>
 </html>
