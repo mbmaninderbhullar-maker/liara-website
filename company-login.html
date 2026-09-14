@@ -1,457 +1,182 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>
-    Liara Professional™ | Company Login
-</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liara Professional™ | Login</title>
 <link rel="stylesheet" href="style.css">
-
 <style>
-
-    .company-login-section {
-        min-height: 75vh;
-        padding: 80px 5%;
-        background: #faf8f5;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .company-login-box {
-        width: 100%;
-        max-width: 450px;
-
-        background: white;
-
-        padding: 40px;
-
-        border-radius: 18px;
-
-        box-shadow:
-            0 10px 35px
-            rgba(0,0,0,.08);
-    }
-
-    .company-login-box > p:first-child {
-        color: #ad8232;
-        font-weight: bold;
-        letter-spacing: 2px;
-        margin-bottom: 8px;
-    }
-
-    .company-login-box h2 {
-        margin: 0 0 8px;
-    }
-
-    .company-subtitle {
-        color: #777;
-        margin-bottom: 30px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 13px 15px;
-
-        border: 1px solid #ddd;
-        border-radius: 8px;
-
-        box-sizing: border-box;
-
-        font-size: 15px;
-        outline: none;
-    }
-
-    .form-group input:focus {
-        border-color: #ad8232;
-    }
-
-    .company-login-btn {
-        width: 100%;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 5px;
-    }
-
-    .company-login-btn:disabled {
-        opacity: .6;
-        cursor: not-allowed;
-    }
-
-    .company-message {
-        text-align: center;
-        margin-top: 18px;
-        font-weight: bold;
-        min-height: 22px;
-    }
-
-    .back-home {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        color: #ad8232;
-        text-decoration: none;
-        font-size: 14px;
-    }
-
-    .back-home:hover {
-        text-decoration: underline;
-    }
-
+.company-login-section{min-height:75vh;padding:80px 5%;background:#faf8f5;display:flex;align-items:center;justify-content:center}
+.company-login-box{width:100%;max-width:450px;background:white;padding:40px;border-radius:18px;box-shadow:0 10px 35px rgba(0,0,0,.08)}
+.company-login-box>p:first-child{color:#ad8232;font-weight:bold;letter-spacing:2px;margin-bottom:8px}
+.company-login-box h2{margin:0 0 8px}
+.company-subtitle{color:#777;margin-bottom:30px}
+.login-switch{display:flex;gap:8px;background:#f4f1ec;padding:6px;border-radius:12px;margin:0 0 28px}
+.login-switch button{flex:1;border:0;background:transparent;padding:12px 10px;border-radius:9px;font-weight:700;cursor:pointer;font-size:14px}
+.login-switch button.active{background:#ad8232;color:#fff}
+.login-mode-note{font-size:13px;color:#777;margin:-16px 0 22px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:8px;font-weight:600}
+.form-group input{width:100%;padding:13px 15px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-size:15px;outline:none}
+.form-group input:focus{border-color:#ad8232}
+.company-login-btn{width:100%;border:none;cursor:pointer;font-size:16px;margin-top:5px}
+.company-login-btn:disabled{opacity:.6;cursor:not-allowed}
+.company-message{text-align:center;margin-top:18px;font-weight:bold;min-height:22px}
+.back-home{display:block;text-align:center;margin-top:20px;color:#ad8232;text-decoration:none;font-size:14px}
+.back-home:hover{text-decoration:underline}
 </style>
-
-
 </head>
-
 <body>
-
-<!-- HEADER -->
-
 <header>
-
-
-<a href="/" class="logo">
-
-    <span>
-        LIARA
-    </span>
-
-    <small>
-        PROFESSIONAL™
-    </small>
-
-</a>
-
-
+<a href="/" class="logo"><span>LIARA</span><small>PROFESSIONAL™</small></a>
 </header>
 
-<!-- COMPANY LOGIN -->
-
 <section class="company-login-section">
-
-
 <div class="company-login-box">
+<p>LIARA PROFESSIONAL™</p>
+<h2 id="loginTitle">Admin Login</h2>
+<p class="company-subtitle" id="loginSubtitle">Secure Company / Admin Access</p>
 
-
-    <p>
-        LIARA PROFESSIONAL™
-    </p>
-
-
-    <h2>
-        Company Login
-    </h2>
-
-
-    <p class="company-subtitle">
-        Secure Company / Admin Access
-    </p>
-
-
-
-    <form id="companyLoginForm">
-
-
-        <div class="form-group">
-
-            <label for="email">
-                Company Email
-            </label>
-
-            <input
-                type="email"
-                id="email"
-                value="info@liara.co.in"
-                autocomplete="username"
-                required>
-
-        </div>
-
-
-
-        <div class="form-group">
-
-            <label for="password">
-                Password
-            </label>
-
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter company password"
-                autocomplete="current-password"
-                required>
-
-        </div>
-
-
-
-        <button
-            type="submit"
-            class="btn company-login-btn"
-            id="loginButton">
-
-            Company Login
-
-        </button>
-
-
-
-        <div
-            id="message"
-            class="company-message">
-        </div>
-
-
-    </form>
-
-
-
-    <a
-        href="/"
-        class="back-home">
-
-        ← Back to Website
-
-    </a>
-
-
+<div class="login-switch">
+<button type="button" id="adminTab" class="active" onclick="setLoginMode('admin')">Admin Login</button>
+<button type="button" id="staffTab" onclick="setLoginMode('staff')">Staff Login</button>
 </div>
 
+<p class="login-mode-note" id="loginModeNote">Use company email and password.</p>
 
+<form id="companyLoginForm">
+<div class="form-group">
+<label id="loginIdLabel" for="email">Company Email</label>
+<input type="email" id="email" value="info@liara.co.in" autocomplete="username" required>
+</div>
+
+<div class="form-group">
+<label for="password">Password</label>
+<input type="password" id="password" placeholder="Enter company password" autocomplete="current-password" required>
+</div>
+
+<button type="submit" class="btn company-login-btn" id="loginButton">Admin Login</button>
+<div id="message" class="company-message"></div>
+</form>
+
+<a href="/" class="back-home">← Back to Website</a>
+</div>
 </section>
 
-<!-- FOOTER -->
-
 <footer>
-
-
-<div class="footer-brand">
-
-    LIARA
-
-    <small>
-        PROFESSIONAL™
-    </small>
-
-</div>
-
-
-<p>
-
-    © 2026 Liara Group Private Limited.
-    All Rights Reserved.
-
-</p>
-
-
+<div class="footer-brand">LIARA <small>PROFESSIONAL™</small></div>
+<p>© 2026 Liara Group Private Limited. All Rights Reserved.</p>
 </footer>
 
-<!-- SUPABASE -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
+const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
+const SUPABASE_KEY="sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const ADMIN_EMAIL="info@liara.co.in";
+let loginMode="admin";
 
+function setLoginMode(mode){
+    loginMode=mode;
+    const admin=mode==="admin";
+    document.getElementById("adminTab").classList.toggle("active",admin);
+    document.getElementById("staffTab").classList.toggle("active",!admin);
+    document.getElementById("loginTitle").innerText=admin?"Admin Login":"Staff Login";
+    document.getElementById("loginSubtitle").innerText=admin?"Secure Company / Admin Access":"Secure Staff Access";
+    document.getElementById("loginModeNote").innerText=admin?"Use company email and password.":"Use your Staff Login ID (LIARA-XXXXXX) and staff password.";
+    document.getElementById("loginIdLabel").innerText=admin?"Company Email":"Staff Login ID";
+    const input=document.getElementById("email");
+    input.type=admin?"email":"text";
+    input.value=admin?ADMIN_EMAIL:"";
+    input.placeholder=admin?"":"LIARA-XXXXXX";
+    input.autocomplete="username";
+    document.getElementById("loginButton").innerText=admin?"Admin Login":"Staff Login";
+    document.getElementById("message").innerText="";
+}
 
-/* =====================================
-   SUPABASE CONNECTION
-===================================== */
+document.getElementById("companyLoginForm").addEventListener("submit",async function(event){
+    event.preventDefault();
 
-const SUPABASE_URL =
-    "https://oinafbuicwhleudztzyz.supabase.co";
+    const loginValue=document.getElementById("email").value.trim();
+    const password=document.getElementById("password").value;
+    const button=document.getElementById("loginButton");
+    const message=document.getElementById("message");
 
+    message.innerText="";
+    button.disabled=true;
+    button.innerText="Logging in...";
 
-const SUPABASE_KEY =
-    "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+    try{
+        let email=loginValue;
 
+        if(loginMode==="admin"){
+            if(email.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+                throw new Error("This account is not authorized.");
+            }
+        }else{
+            const loginId=loginValue.toUpperCase();
 
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-
-
-/* =====================================
-   COMPANY ADMIN EMAIL
-===================================== */
-
-const ADMIN_EMAIL =
-    "info@liara.co.in";
-
-
-
-/* =====================================
-   LOGIN FORM
-===================================== */
-
-document
-    .getElementById("companyLoginForm")
-    .addEventListener(
-        "submit",
-        async function(event) {
-
-
-            event.preventDefault();
-
-
-            const email =
-                document
-                    .getElementById("email")
-                    .value
-                    .trim();
-
-
-            const password =
-                document
-                    .getElementById("password")
-                    .value;
-
-
-            const button =
-                document
-                    .getElementById("loginButton");
-
-
-            const message =
-                document
-                    .getElementById("message");
-
-
-            message.innerText = "";
-
-
-            button.disabled = true;
-
-            button.innerText =
-                "Logging in...";
-
-
-            /* =============================
-               CHECK EMAIL
-            ============================= */
-
-            if (
-                email.toLowerCase() !==
-                ADMIN_EMAIL.toLowerCase()
-            ) {
-
-                message.innerText =
-                    "This account is not authorized.";
-
-                button.disabled = false;
-
-                button.innerText =
-                    "Company Login";
-
-                return;
-
+            if(!/^LIARA-[A-Z0-9]{6}$/.test(loginId)){
+                throw new Error("Enter a valid Staff Login ID, e.g. LIARA-ABC123.");
             }
 
+            const {data:profile,error:profileError}=await supabaseClient
+                .from("staff_profiles")
+                .select("user_id,email,login_id,staff_code,active")
+                .or("login_id.eq."+loginId+",staff_code.eq."+loginId)
+                .maybeSingle();
 
-            /* =============================
-               SUPABASE LOGIN
-            ============================= */
+            if(profileError) throw profileError;
+            if(!profile) throw new Error("Staff Login ID not found.");
+            if(profile.active===false) throw new Error("This staff account is inactive.");
 
-            const {
-                data,
-                error
-            } = await supabaseClient
-                .auth
-                .signInWithPassword({
-
-                    email: email,
-
-                    password: password
-
-                });
-
-
-            /* =============================
-               LOGIN ERROR
-            ============================= */
-
-            if (error) {
-
-                console.log(
-                    "Supabase Login Error:",
-                    error
-                );
-
-
-                message.innerText =
-                    error.message;
-
-
-                button.disabled =
-                    false;
-
-
-                button.innerText =
-                    "Company Login";
-
-
-                return;
-
-            }
-
-
-            /* =============================
-               SUCCESS
-            ============================= */
-
-            if (data && data.user) {
-
-
-                message.innerText =
-                    "Company login successful ✓";
-
-
-                button.innerText =
-                    "Opening Orders...";
-
-
-                setTimeout(
-                    function() {
-
-                        window.location.href =
-                            "admin-orders.html";
-
-                    },
-                    700
-                );
-
-
-            }
-
+            email=profile.email;
         }
-    );
 
+        const {data,error}=await supabaseClient.auth.signInWithPassword({
+            email:email,
+            password:password
+        });
 
+        if(error) throw error;
+        if(!data || !data.user) throw new Error("Login failed.");
+
+        if(loginMode==="admin"){
+            if(data.user.email.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){
+                await supabaseClient.auth.signOut();
+                throw new Error("This account is not authorized as Admin.");
+            }
+            message.innerText="Admin login successful ✓";
+            button.innerText="Opening Orders...";
+            setTimeout(()=>window.location.href="admin-orders.html",700);
+        }else{
+            const {data:staff,error:staffError}=await supabaseClient
+                .from("staff_profiles")
+                .select("id,user_id,name,role,permissions,active,login_id,staff_code")
+                .eq("user_id",data.user.id)
+                .maybeSingle();
+
+            if(staffError || !staff){
+                await supabaseClient.auth.signOut();
+                throw new Error("Staff profile not found.");
+            }
+            if(staff.active===false){
+                await supabaseClient.auth.signOut();
+                throw new Error("This staff account is inactive.");
+            }
+
+            sessionStorage.setItem("liaraStaffProfile",JSON.stringify(staff));
+            message.innerText="Staff login successful ✓";
+            button.innerText="Opening Staff Panel...";
+            setTimeout(()=>window.location.href="admin-orders.html",700);
+        }
+    }catch(error){
+        console.error("Login Error:",error);
+        message.innerText=error.message||"Login failed.";
+        button.disabled=false;
+        button.innerText=loginMode==="admin"?"Admin Login":"Staff Login";
+    }
+});
 </script>
-
 </body>
-
 </html>
