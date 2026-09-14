@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style id="liara-admin-page-lock">html,body{visibility:hidden!important}</style>
 
 <meta charset="UTF-8">
 
@@ -709,6 +710,35 @@ const supabaseClient =
         SUPABASE_URL,
         SUPABASE_KEY
     );
+
+/* =========================================================
+   LIARA ADMIN PAGE LOCK — DIRECT URL PROTECTION
+   Requires an authenticated Liara admin session.
+========================================================= */
+(function(){
+  const LOCK_STYLE_ID="liara-admin-page-lock";
+  function unlockPage(){
+    const s=document.getElementById(LOCK_STYLE_ID);
+    if(s) s.remove();
+  }
+  window.requireLiaraAdmin = async function(){
+    try{
+      const {data,error}=await supabaseClient.auth.getUser();
+      const email=String(data?.user?.email||"").toLowerCase();
+      if(error || !data?.user || email !== "info@liara.co.in"){
+        window.location.replace("company-login.html");
+        return false;
+      }
+      unlockPage();
+      return true;
+    }catch(e){
+      window.location.replace("company-login.html");
+      return false;
+    }
+  };
+  window.__liaraAdminAuthPromise = window.requireLiaraAdmin();
+})();
+
 
 
 const ADMIN_EMAIL =
