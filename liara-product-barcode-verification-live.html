@@ -18,7 +18,7 @@ button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:7
 .label-preview{max-width:560px;margin:22px auto 0;border:1px solid #ddd;border-radius:14px;padding:22px;text-align:center;background:#fff}.label-brand{font-weight:800;font-size:18px;letter-spacing:.5px}.label-product{font-size:18px;font-weight:700;margin-top:8px}
 .barcode-box{margin:18px auto 8px;min-height:75px;display:flex;align-items:center;justify-content:center}.barcode-box svg{max-width:100%;height:auto}.qr-box{display:flex;justify-content:center;margin:14px 0}.qr-box img,.qr-box canvas{max-width:180px!important;height:auto!important}.code-text{font-size:13px;font-weight:700;letter-spacing:1px;margin-top:8px}
 .verify-result{margin-top:18px;padding:18px;border-radius:12px;display:none}.verify-result.ok{display:block;background:#eaf8ef;border:1px solid #b9e5c6}.verify-result.bad{display:block;background:#fff0f0;border:1px solid #efbaba}.verify-title{font-size:20px;font-weight:800;margin-bottom:10px}.verify-row{display:grid;grid-template-columns:170px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.08);font-size:14px}.verify-row:last-child{border-bottom:0}
-.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:900px}th{background:#111;color:#fff;padding:11px;text-align:left;font-size:13px}td{padding:10px;border-bottom:1px solid #eee;font-size:13px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#e8f7ed;color:#176b32}.empty{text-align:center;color:#888;padding:25px}.scanner-box{background:#f7f7f7;border:1px solid #ddd;border-radius:12px;padding:16px;margin-top:15px}.small{font-size:12px;color:#777}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:900px}th{background:#111;color:#fff;padding:11px;text-align:left;font-size:13px}td{padding:10px;border-bottom:1px solid #eee;font-size:13px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#e8f7ed;color:#176b32}.empty{text-align:center;color:#888;padding:25px}.scanner-box{background:#f7f7f7;border:1px solid #ddd;border-radius:12px;padding:16px;margin-top:15px}.small{font-size:12px;color:#777}.formula-box{margin-top:15px;background:#f7faf8;border:1px solid #d9e8df;border-radius:12px;padding:15px}.formula-box h3{font-size:16px;margin-bottom:6px;color:#173b2d}.formula-meta{font-size:12px;color:#777;margin-bottom:12px}.ingredient-table{width:100%;min-width:650px;border-collapse:collapse}.ingredient-table th{background:#173b2d}.ingredient-table td,.ingredient-table th{padding:9px;border-bottom:1px solid #e5e5e5;font-size:13px;text-align:left}.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.open{display:flex}.modal-card{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:15px}.modal-head h2{margin:0;font-size:20px}.close-btn{background:#eee;color:#111;padding:8px 12px}.batch-detail-head{background:#faf8f2;border:1px solid #eadfbd;border-radius:12px;padding:14px;margin-bottom:15px}.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.detail-item{font-size:12px;color:#777}.detail-item b{display:block;color:#111;font-size:14px;margin-top:3px}@media(max-width:700px){.detail-grid{grid-template-columns:1fr 1fr}}
 .batch-summary{background:#faf8f2;border:1px solid #eadfbd;border-radius:12px;padding:14px;margin-top:14px}.batch-summary strong{color:#8b6b18}.batch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}.batch-meta{font-size:12px;color:#777}.batch-meta b{display:block;color:#111;font-size:14px;margin-top:3px}
 .customer-verify-mode{background:#f4f5f7}.customer-verify-mode .header{display:block;text-align:center;margin-bottom:20px}.customer-verify-mode .tabs{display:none!important}.customer-verify-mode #tab-create,.customer-verify-mode #tab-batches,.customer-verify-mode #tab-records{display:none!important}.customer-verify-mode #tab-verify{display:block!important}.customer-verify-mode #tab-verify .scanner-box{display:none!important}.customer-verify-mode #tab-verify .card{max-width:720px;margin:30px auto;text-align:center}.customer-verify-mode #verifyResult{text-align:left;display:block!important;max-width:720px;margin:18px auto}.customer-verify-mode #tab-verify h2{text-align:center}.customer-verify-mode #tab-verify .note{display:none}
 @media(max-width:700px){body{padding:10px}.grid{grid-template-columns:1fr}.card{padding:17px}.verify-row{grid-template-columns:1fr;gap:2px}.batch-grid{grid-template-columns:repeat(2,1fr)}}
@@ -58,15 +58,17 @@ button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:7
 <section id="tab-batches" class="hidden">
 <div class="card">
 <h2>Batch Management</h2>
-<p class="note">Create the production batch here first. The batch is stored in Supabase using the existing product_verifications table with a dedicated Batch record. Barcode creation only selects from these saved batches.</p>
+<p class="note">Create the production batch here first. Select the Formula used for manufacturing. Its ingredients are loaded from your existing Formula Manager and the required quantities are automatically scaled to the actual batch size. The ingredient snapshot is saved with the batch.</p>
 <div class="grid">
-<div class="field"><label>Product Name *</label><select id="batchProductSelect" onchange="loadVariantsForProduct('batchProductSelect','batchVariantSelect','batchFormSelect','batchFormSummary')"><option value="">Loading products...</option></select></div>
+<div class="field"><label>Product Name *</label><select id="batchProductSelect" onchange="loadVariantsForProduct('batchProductSelect','batchVariantSelect','batchFormSelect','batchFormulaBox');loadFormulasForProduct()"><option value="">Loading products...</option></select></div>
 <div class="field"><label>Variant / Size *</label><select id="batchVariantSelect" onchange="loadBatchFormProductStock()"><option value="">Select product first</option></select></div>
-<div class="field"><label>Total Batch Quantity *</label><input id="batchQuantity" type="number" min="0.001" step="0.001" placeholder="e.g. 25"></div>
-<div class="field"><label>Batch Unit *</label><select id="batchUnit"><option value="kg">KG</option><option value="g">Gram</option><option value="ltr">Litre</option><option value="ml">ML</option><option value="pcs">PCS</option></select></div>
+<div class="field"><label>Formula *</label><select id="batchFormSelect" onchange="loadSelectedFormulaForBatch()"><option value="">Select Product first</option></select></div>
+<div class="field"><label>Total Batch Quantity *</label><input id="batchQuantity" type="number" min="0.001" step="0.001" placeholder="e.g. 25" oninput="refreshFormulaScaling()"></div>
+<div class="field"><label>Batch Unit *</label><select id="batchUnit" onchange="refreshFormulaScaling()"><option value="kg">KG</option><option value="g">Gram</option><option value="ltr">Litre</option><option value="ml">ML</option><option value="pcs">PCS</option></select></div>
 <div class="field"><label>Manufacturing Date</label><input id="batchMfg" type="date"></div>
 <div class="field"><label>Expiry Date</label><input id="batchExp" type="date"></div>
 </div>
+<div id="batchFormulaBox" class="formula-box hidden"></div>
 <div class="actions"><button class="black" onclick="createBatch()">＋ Save New Batch</button><button class="light" onclick="clearBatchForm()">Clear</button><button class="blue" onclick="loadBatches()">↻ Refresh Batches</button></div>
 <div id="batchStatus" class="status"></div>
 <div id="batchList" style="margin-top:18px"></div>
@@ -80,6 +82,14 @@ button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:7
 </section>
 
 <section id="tab-records" class="hidden"><div class="card"><h2>Barcode Records</h2><p class="note">Records are loaded live from the Supabase database. Barcode records show the batch selected at creation time.</p><div class="actions"><button class="blue" onclick="loadRecords()">↻ Refresh</button></div><div id="recordsStatus" class="status"></div><div id="recordsList" style="margin-top:15px"></div></div></section>
+</div>
+
+<div id="batchDetailModal" class="modal-backdrop no-print" onclick="if(event.target===this)closeBatchDetails()">
+<div class="modal-card">
+<div class="modal-head"><h2>Batch Manufacturing Record</h2><button class="close-btn" onclick="closeBatchDetails()">✕ Close</button></div>
+<div id="batchDetailContent"></div>
+<div class="actions"><button class="black" onclick="printBatchDetails()">🖨 Print Batch Record</button><button class="light" onclick="closeBatchDetails()">Close</button></div>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -132,23 +142,121 @@ function variantTextById(id){const v=currentVariants.find(x=>String(x.id)===Stri
 function showSelectedBatch(){const b=currentBatches.find(x=>x.batch_number===document.getElementById('batchSelect').value);const box=document.getElementById('createBatchSummary');if(!b){box.classList.add('hidden');box.innerHTML='';return}box.classList.remove('hidden');box.innerHTML='<div><strong>'+esc(b.batch_number)+'</strong> • '+esc(b.product_name)+' • '+esc(b.variant)+'</div><div class="batch-grid"><div class="batch-meta">Total Batch<b>'+esc(b.total_batch_quantity)+' '+esc(b.batch_unit||'kg')+'</b></div><div class="batch-meta">MFG Date<b>'+esc(b.manufacturing_date||'—')+'</b></div><div class="batch-meta">EXP Date<b>'+esc(b.expiry_date||'—')+'</b></div><div class="batch-meta">Status<b>'+esc(b.status)+'</b></div></div>'}
 function loadBatchFormProductStock(){/* variant is already enough for batch master; kept as a separate hook for future stock integration */}
 
+async function loadFormulasForProduct(){
+if(!supabaseClient)return;
+const pid=document.getElementById('batchProductSelect').value;
+const fs=document.getElementById('batchFormSelect');
+const box=document.getElementById('batchFormulaBox');
+fs.innerHTML='<option value="">Loading formulas...</option>';
+box.classList.add('hidden');box.innerHTML='';
+if(!pid){fs.innerHTML='<option value="">Select Product first</option>';return}
+const p=currentProducts.find(x=>String(x.id)===String(pid));
+if(!p){fs.innerHTML='<option value="">Product not found</option>';return}
+const {data,error}=await supabaseClient.from('formulas').select('*, formula_ingredients(*)').ilike('product_name',p.name).order('created_at',{ascending:false});
+if(error){console.error(error);fs.innerHTML='<option value="">Unable to load formulas</option>';return}
+currentFormulas=data||[];
+fs.innerHTML='<option value="">Select Formula</option>'+currentFormulas.map(f=>optionHtml(f.id,(f.formula_no||'Formula')+' — '+(f.formula_name||f.product_name||'Unnamed'))).join('');
+}
+
+let currentFormulas=[];
+let selectedBatchFormula=null;
+let currentBatchDetails=null;
+let batchPrintHtml='';
+
+function loadBatchFormProductStock(){
+loadFormulasForProduct();
+}
+
+function convertToBase(value,unit){
+const n=Number(value||0);const u=String(unit||'').toLowerCase().trim();
+if(['kg','kgs','kilogram','kilograms'].includes(u))return n*1000;
+if(['g','gram','grams'].includes(u))return n;
+if(['l','ltr','litre','litres','liter','liters'].includes(u))return n*1000;
+if(['ml','millilitre','milliliter'].includes(u))return n;
+return n;
+}
+function formatQty(n){return Number.isFinite(Number(n))?Number(n).toFixed(6).replace(/\.?(0+)$/,'').replace(/\.$/,''):''}
+
+function getSelectedBatchSizeInFormulaUnit(formula){
+const actual=Number(document.getElementById('batchQuantity').value||0);
+const actualUnit=document.getElementById('batchUnit').value;
+if(!actual||actual<=0)return 0;
+const formulaUnit=formula?.batch_unit||actualUnit;
+const base=convertToBase(actual,actualUnit);
+if(['pcs','pc','piece','pieces'].includes(String(formulaUnit).toLowerCase()))return actual;
+return convertToBase(base,'g')/convertToBase(1,formulaUnit);
+}
+
+function buildScaledIngredients(formula, actualQty, actualUnit){
+const rows=Array.isArray(formula?.formula_ingredients)?formula.formula_ingredients:[];
+let formulaBase=convertToBase(formula?.batch_size,formula?.batch_unit);
+if(!formulaBase){
+formulaBase=rows.reduce((sum,r)=>sum+convertToBase(r.quantity,r.unit),0);
+}
+const actualBase=convertToBase(actualQty,actualUnit);
+const scale=formulaBase>0?actualBase/formulaBase:1;
+return rows.map(r=>({
+ingredient_name:r.ingredient_name||'',
+quantity:r.quantity==null?null:Number(r.quantity)*scale,
+unit:r.unit||formula?.batch_unit||actualUnit,
+percentage:r.percentage==null?null:Number(r.percentage)
+}));
+}
+
+function renderFormulaBox(formula){
+const box=document.getElementById('batchFormulaBox');
+if(!formula){box.classList.add('hidden');box.innerHTML='';return}
+selectedBatchFormula=formula;
+const qty=Number(document.getElementById('batchQuantity').value||0),unit=document.getElementById('batchUnit').value;
+const ingredients=buildScaledIngredients(formula,qty,unit);
+box.classList.remove('hidden');
+box.innerHTML='<h3>Formula: '+esc(formula.formula_no||'—')+' '+(formula.formula_name?'• '+esc(formula.formula_name):'')+'</h3>'+
+'<div class="formula-meta">Formula batch: <b>'+esc(formula.batch_size??'—')+' '+esc(formula.batch_unit||'')+'</b> • Actual production batch: <b>'+esc(qty||'—')+' '+esc(unit)+'</b></div>'+
+(ingredients.length?'<div class="table-wrap"><table class="ingredient-table"><thead><tr><th>Ingredient</th><th>Required Qty</th><th>Unit</th><th>%</th></tr></thead><tbody>'+ingredients.map(x=>'<tr><td>'+esc(x.ingredient_name)+'</td><td><strong>'+esc(formatQty(x.quantity))+'</strong></td><td>'+esc(x.unit)+'</td><td>'+esc(x.percentage??'—')+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty">No ingredients found in this formula.</div>');
+}
+function loadSelectedFormulaForBatch(){
+const id=document.getElementById('batchFormSelect').value;
+const f=currentFormulas.find(x=>String(x.id)===String(id));
+renderFormulaBox(f||null);
+}
+function refreshFormulaScaling(){if(selectedBatchFormula)renderFormulaBox(selectedBatchFormula)}
+
 async function createBatch(){
 const session=await getSession();if(!session)return;
-const pid=document.getElementById('batchProductSelect').value,vid=document.getElementById('batchVariantSelect').value,qty=Number(document.getElementById('batchQuantity').value),unit=document.getElementById('batchUnit').value,mfg=document.getElementById('batchMfg').value||null,exp=document.getElementById('batchExp').value||null;
-if(!pid||!vid||!qty||qty<=0){setStatus('batchStatus','Please select Product, Variant and enter a valid Total Batch Quantity.',false);return}
-const p=currentProducts.find(x=>String(x.id)===String(pid)),v=currentVariants.find(x=>String(x.id)===String(vid));if(!p||!v){setStatus('batchStatus','Product or Variant could not be resolved.',false);return}
+const pid=document.getElementById('batchProductSelect').value,vid=document.getElementById('batchVariantSelect').value,formulaId=document.getElementById('batchFormSelect').value,qty=Number(document.getElementById('batchQuantity').value),unit=document.getElementById('batchUnit').value,mfg=document.getElementById('batchMfg').value||null,exp=document.getElementById('batchExp').value||null;
+if(!pid||!vid||!formulaId||!qty||qty<=0){setStatus('batchStatus','Please select Product, Variant, Formula and enter a valid Total Batch Quantity.',false);return}
+const p=currentProducts.find(x=>String(x.id)===String(pid)),v=currentVariants.find(x=>String(x.id)===String(vid)),formula=currentFormulas.find(x=>String(x.id)===String(formulaId));
+if(!p||!v||!formula){setStatus('batchStatus','Product, Variant or Formula could not be resolved.',false);return}
+const ingredientSnapshot=buildScaledIngredients(formula,qty,unit);
+if(!ingredientSnapshot.length){setStatus('batchStatus','Selected formula has no ingredients. Add ingredients in Formula Manager first.',false);return}
 let batchNo=makeBatchNumber();for(let i=0;i<5;i++){const {data}=await supabaseClient.from('product_verifications').select('id').eq('batch_number',batchNo).limit(1);if(!data?.length)break;batchNo=makeBatchNumber()}
-const {error}=await supabaseClient.from('product_verifications').insert({verification_code:'BATCH-'+batchNo,product_name:p.name,variant:(v.size??'')+(v.unit?' '+v.unit:''),batch_number:batchNo,manufacturing_date:mfg,expiry_date:exp,status:'Batch',scan_count:0,total_batch_quantity:qty,batch_unit:unit});
+const {error}=await supabaseClient.from('product_verifications').insert({verification_code:'BATCH-'+batchNo,product_name:p.name,variant:(v.size??'')+(v.unit?' '+v.unit:''),batch_number:batchNo,manufacturing_date:mfg,expiry_date:exp,status:'Batch',scan_count:0,total_batch_quantity:qty,batch_unit:unit,formula_id:formula.id,formula_no:formula.formula_no||null,formula_name:formula.formula_name||null,ingredients_snapshot:ingredientSnapshot});
 if(error){console.error(error);setStatus('batchStatus','Batch save failed: '+error.message,false);return}
-setStatus('batchStatus','Batch '+batchNo+' saved successfully. It is now available in Select Batch on the barcode page.',true);clearBatchForm(false);await loadBatches();await loadBatches('create')
+setStatus('batchStatus','Batch '+batchNo+' saved with formula and '+ingredientSnapshot.length+' ingredients.',true);clearBatchForm(false);await loadBatches();await loadBatches('create')
 }
-function clearBatchForm(show=true){['batchQuantity','batchMfg','batchExp'].forEach(id=>document.getElementById(id).value='');document.getElementById('batchUnit').value='kg';if(show)setStatus('batchStatus','',true)}
-function renderBatchList(data){const box=document.getElementById('batchList');if(!data.length){box.innerHTML='<div class="empty">No batches created yet.</div>';return}box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Batch</th><th>Product</th><th>Variant</th><th>Total Batch</th><th>MFG</th><th>EXP</th><th>Status</th></tr></thead><tbody>'+data.map(x=>'<tr><td><strong>'+esc(x.batch_number)+'</strong></td><td>'+esc(x.product_name)+'</td><td>'+esc(x.variant)+'</td><td>'+esc(x.total_batch_quantity??'—')+' '+esc(x.batch_unit||'')+'</td><td>'+esc(x.manufacturing_date||'—')+'</td><td>'+esc(x.expiry_date||'—')+'</td><td><span class="badge">'+esc(x.status)+'</span></td></tr>').join('')+'</tbody></table></div>'}
+function clearBatchForm(show=true){['batchQuantity','batchMfg','batchExp'].forEach(id=>document.getElementById(id).value='');document.getElementById('batchUnit').value='kg';document.getElementById('batchFormSelect').innerHTML='<option value="">Select Product first</option>';document.getElementById('batchFormulaBox').classList.add('hidden');document.getElementById('batchFormulaBox').innerHTML='';selectedBatchFormula=null;if(show)setStatus('batchStatus','',true)}
+
+function renderBatchList(data){const box=document.getElementById('batchList');if(!data.length){box.innerHTML='<div class="empty">No batches created yet.</div>';return}box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Batch</th><th>Product</th><th>Variant</th><th>Formula</th><th>Total Batch</th><th>MFG</th><th>EXP</th><th>Status</th><th>Action</th></tr></thead><tbody>'+data.map(x=>'<tr><td><strong>'+esc(x.batch_number)+'</strong></td><td>'+esc(x.product_name)+'</td><td>'+esc(x.variant)+'</td><td>'+esc(x.formula_no||x.formula_name||'—')+'</td><td>'+esc(x.total_batch_quantity??'—')+' '+esc(x.batch_unit||'')+'</td><td>'+esc(x.manufacturing_date||'—')+'</td><td>'+esc(x.expiry_date||'—')+'</td><td><span class="badge">'+esc(x.status)+'</span></td><td><button class="blue" onclick="openBatchDetails(\''+String(x.id).replace(/'/g,"\\'")+'\')">View Details</button></td></tr>').join('')+'</tbody></table></div>'}
+
+async function openBatchDetails(id){
+const b=currentBatches.find(x=>String(x.id)===String(id));
+if(!b){const {data}=await supabaseClient.from('product_verifications').select('*').eq('id',id).maybeSingle();currentBatchDetails=data||null}else currentBatchDetails=b;
+if(!currentBatchDetails){alert('Batch not found.');return}
+const x=currentBatchDetails;const ing=Array.isArray(x.ingredients_snapshot)?x.ingredients_snapshot:[];
+const content=document.getElementById('batchDetailContent');
+content.innerHTML='<div class="batch-detail-head"><div class="detail-grid">'+
+'<div class="detail-item">Batch Number<b>'+esc(x.batch_number||'—')+'</b></div><div class="detail-item">Product<b>'+esc(x.product_name||'—')+'</b></div><div class="detail-item">Variant<b>'+esc(x.variant||'—')+'</b></div><div class="detail-item">Formula<b>'+esc(x.formula_no||'—')+'</b></div><div class="detail-item">Formula Name<b>'+esc(x.formula_name||'—')+'</b></div><div class="detail-item">Batch Quantity<b>'+esc(x.total_batch_quantity??'—')+' '+esc(x.batch_unit||'')+'</b></div><div class="detail-item">MFG Date<b>'+esc(x.manufacturing_date||'—')+'</b></div><div class="detail-item">EXP Date<b>'+esc(x.expiry_date||'—')+'</b></div><div class="detail-item">Status<b>'+esc(x.status||'—')+'</b></div></div></div>'+
+'<h3 style="margin:12px 0 8px">Ingredients Used in This Batch</h3>'+
+(ing.length?'<div class="table-wrap"><table class="ingredient-table"><thead><tr><th>#</th><th>Ingredient</th><th>Required Qty</th><th>Unit</th><th>%</th></tr></thead><tbody>'+ing.map((r,i)=>'<tr><td>'+ (i+1) +'</td><td><strong>'+esc(r.ingredient_name||r.name||'')+'</strong></td><td>'+esc(formatQty(Number(r.quantity)))+'</td><td>'+esc(r.unit||'')+'</td><td>'+esc(r.percentage??'—')+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty">No ingredient snapshot is stored for this batch.</div>');
+batchPrintHtml=content.innerHTML;document.getElementById('batchDetailModal').classList.add('open')
+}
+function closeBatchDetails(){document.getElementById('batchDetailModal').classList.remove('open')}
+function printBatchDetails(){if(!currentBatchDetails)return;const x=currentBatchDetails;const ing=Array.isArray(x.ingredients_snapshot)?x.ingredients_snapshot:[];const w=window.open('','_blank','width=900,height=800');if(!w){alert('Please allow pop-ups to print the batch record.');return}w.document.write('<!doctype html><html><head><title>Liara Batch '+esc(x.batch_number)+'</title><style>body{font-family:Arial,sans-serif;padding:25px;color:#111}h1{color:#173b2d;margin-bottom:4px}h2{margin-top:24px}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.item{border:1px solid #ddd;padding:10px}.item small{display:block;color:#777}.item b{display:block;margin-top:4px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:8px;text-align:left}th{background:#eee}.foot{margin-top:25px;border-top:1px solid #999;padding-top:8px;text-align:center;font-size:11px;color:#666}@media print{body{padding:10mm}}</style></head><body><h1>Liara Professional™</h1><div>ADVANCED HERBAL • BATCH MANUFACTURING RECORD</div><div class="meta"><div class="item"><small>Batch Number</small><b>'+esc(x.batch_number||'—')+'</b></div><div class="item"><small>Product</small><b>'+esc(x.product_name||'—')+'</b></div><div class="item"><small>Variant</small><b>'+esc(x.variant||'—')+'</b></div><div class="item"><small>Formula</small><b>'+esc(x.formula_no||'—')+'</b></div><div class="item"><small>Batch Quantity</small><b>'+esc(x.total_batch_quantity??'—')+' '+esc(x.batch_unit||'')+'</b></div><div class="item"><small>MFG / EXP</small><b>'+esc(x.manufacturing_date||'—')+' / '+esc(x.expiry_date||'—')+'</b></div></div><h2>Ingredients Used</h2><table><thead><tr><th>#</th><th>Ingredient</th><th>Required Qty</th><th>Unit</th><th>%</th></tr></thead><tbody>'+ing.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ingredient_name||r.name||'')+'</td><td>'+esc(formatQty(Number(r.quantity)))+'</td><td>'+esc(r.unit||'')+'</td><td>'+esc(r.percentage??'—')+'</td></tr>').join('')+'</tbody></table><div class="foot">Liara Professional™ • Batch Manufacturing Record</div></body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),250)}
 
 async function createVerification(){if(typeof JsBarcode!=='function'){setStatus('createStatus','Barcode library could not be loaded. Please refresh the page.',false);return}if(typeof QRCode!=='function'){setStatus('createStatus','QR library could not be loaded. Please refresh the page.',false);return}
 const session=await getSession();if(!session)return;const batchNo=document.getElementById('batchSelect').value;if(!batchNo){setStatus('createStatus','Please select a Batch first. Create the batch from Batch Management if it does not exist.',false);return}
 const b=currentBatches.find(x=>x.batch_number===batchNo);if(!b){setStatus('createStatus','Selected batch could not be loaded. Refresh batches and try again.',false);return}
-const code=makeCode();const {data,error}=await supabaseClient.from('product_verifications').insert({verification_code:code,product_name:b.product_name,variant:b.variant,batch_number:b.batch_number,manufacturing_date:b.manufacturing_date,expiry_date:b.expiry_date,status:'Verified',scan_count:0}).select().single();
+const code=makeCode();const {data,error}=await supabaseClient.from('product_verifications').insert({verification_code:code,product_name:b.product_name,variant:b.variant,batch_number:b.batch_number,manufacturing_date:b.manufacturing_date,expiry_date:b.expiry_date,status:'Verified',scan_count:0,batch_id:b.id,formula_id:b.formula_id||null,formula_no:b.formula_no||null,formula_name:b.formula_name||null,ingredients_snapshot:b.ingredients_snapshot||null}).select().single();
 if(error){console.error(error);setStatus('createStatus','Save failed: '+error.message,false);return}
 lastCreatedCode=data.verification_code;lastCreatedUrl=getVerificationUrl(lastCreatedCode);document.getElementById('previewProduct').textContent=data.product_name;document.getElementById('previewVariant').textContent=data.variant;document.getElementById('previewBatch').textContent='Batch: '+(data.batch_number||'—');document.getElementById('previewCode').textContent=data.verification_code;
 JsBarcode('#barcode',data.verification_code,{format:'CODE128',lineColor:'#111',width:2,height:65,displayValue:true,fontSize:13,margin:5});const qr=document.getElementById('qrcode');qr.innerHTML='';new QRCode(qr,{text:lastCreatedUrl,width:180,height:180,correctLevel:QRCode.CorrectLevel.M});document.getElementById('labelPreview').classList.remove('hidden');setStatus('createStatus','Barcode + QR created successfully and linked to batch '+data.batch_number+'.',true)
