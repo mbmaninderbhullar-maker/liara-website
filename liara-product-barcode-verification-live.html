@@ -133,7 +133,7 @@ currentVariants=data||[];vs.innerHTML='<option value="">Select Variant / Size</o
 }
 async function loadBatchesForCreate(){await loadBatches('create')}
 async function loadBatches(mode='all'){if(!supabaseClient){setStatus(mode==='create'?'createStatus':'batchStatus','Supabase library could not be loaded. Please refresh the page.',false);return}
-const variantId=document.getElementById('variantSelect')?.value;const bs=document.getElementById('batchSelect');
+const variantId=mode==='create'?document.getElementById('variantSelect')?.value:'';const bs=document.getElementById('batchSelect');
 if(mode==='create'&&!variantId){bs.innerHTML='<option value="">Select variant first</option>';return}
 let q=supabaseClient.from('product_verifications').select('*').eq('status','Batch').order('created_at',{ascending:false});if(variantId)q=q.eq('variant',variantTextById(variantId));
 const {data,error}=await q;if(error){console.error(error);if(mode==='create')bs.innerHTML='<option value="">Unable to load batches</option>';return}
