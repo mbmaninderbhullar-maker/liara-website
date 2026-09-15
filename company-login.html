@@ -69,12 +69,10 @@ Use company email and password.
 <input
 type="email"
 id="email"
-value="[info@liara.co.in](mailto:info@liara.co.in)"
+value="info@liara.co.in"
 autocomplete="username"
 required
-
 >
-
 </div>
 
 <div class="form-group">
@@ -87,19 +85,16 @@ id="password"
 placeholder="Enter company password"
 autocomplete="current-password"
 required
-
 >
-
 </div>
 
 <button
 type="submit"
 class="btn company-login-btn"
 id="loginButton"
-
 >
-
-Admin Login </button>
+Admin Login
+</button>
 
 <div id="message" class="company-message"></div>
 
@@ -231,75 +226,53 @@ throw new Error(
 
 
 /*
-  First try exact login_id.
+  staff_profiles is protected by RLS.
+  Use secure Edge Function for lookup.
 */
 
-let {data:profile,error:profileError} =
-await supabaseClient
-.from("staff_profiles")
-.select(`
-id,
-user_id,
-name,
-email,
-role,
-permissions,
-active,
-login_id,
-staff_code
-`)
-.eq("login_id",cleanLoginId)
-.maybeSingle();
-
-if(profileError){
-throw profileError;
+const {
+data,
+error
+} =
+await supabaseClient.functions.invoke(
+"staff-login-lookup",
+{
+body:{
+login_id:cleanLoginId
 }
-
-
-/*
-  If login_id was not found,
-  try staff_code as fallback.
-*/
-
-if(!profile){
-
-const fallback =
-await supabaseClient
-.from("staff_profiles")
-.select(`
-id,
-user_id,
-name,
-email,
-role,
-permissions,
-active,
-login_id,
-staff_code
-`)
-.eq("staff_code",cleanLoginId)
-.maybeSingle();
-
-if(fallback.error){
-throw fallback.error;
 }
-
-profile=fallback.data;
-
-}
+);
 
 
-/*
-  No profile found.
-*/
+if(error){
 
-if(!profile){
+console.error(
+"Staff lookup error:",
+error
+);
 
 throw new Error(
+"Unable to find staff account. Please try again."
+);
+
+}
+
+
+if(
+!data ||
+!data.profile
+){
+
+throw new Error(
+data?.error ||
 "Staff Login ID not found."
 );
 
 }
+
+
+const profile =
+data.profile;
 
 
 /*
@@ -317,8 +290,7 @@ throw new Error(
 
 /*
   Email is required because Supabase
-  password authentication uses email/phone,
-  not custom Login ID.
+  password authentication uses email.
 */
 
 if(!profile.email){
@@ -506,8 +478,8 @@ throw new Error(
 
 /*
   Extra security check:
-  The Auth user must belong to the
-  same staff profile selected by Login ID.
+  Auth user must belong to
+  the selected Staff profile.
 */
 
 if(
@@ -542,8 +514,7 @@ throw new Error(
 
 
 /*
-  Save complete staff profile locally
-  for existing staff/admin pages.
+  Save complete staff profile.
 */
 
 sessionStorage.setItem(
@@ -553,8 +524,7 @@ JSON.stringify(staffProfile)
 
 
 /*
-  Also save basic staff identity.
-  Existing pages can use either key.
+  Save Staff Login ID.
 */
 
 sessionStorage.setItem(
@@ -563,6 +533,11 @@ staffProfile.login_id ||
 staffProfile.staff_code ||
 ""
 );
+
+
+/*
+  Save Staff Role.
+*/
 
 sessionStorage.setItem(
 "liaraStaffRole",
@@ -598,14 +573,10 @@ error
 );
 
 
-/*
-  Convert common Supabase auth errors
-  into cleaner messages.
-*/
-
 let errorMessage =
 error?.message ||
 "Login failed.";
+
 
 if(
 errorMessage.toLowerCase()
@@ -614,7 +585,9 @@ errorMessage.toLowerCase()
 
 errorMessage =
 "Invalid password.";
+
 }
+
 
 else if(
 errorMessage.toLowerCase()
@@ -623,7 +596,9 @@ errorMessage.toLowerCase()
 
 errorMessage =
 "Staff account email is not confirmed.";
+
 }
+
 
 message.innerText=errorMessage;
 
