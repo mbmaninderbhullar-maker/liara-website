@@ -1451,6 +1451,26 @@ body{
     }
 }
 
+/* ================= ZOHO MAIL BUTTON ================= */
+.zoho-mail-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    border:0;
+    background:#ad8232;
+    color:#fff;
+    padding:9px 13px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:11px;
+    text-decoration:none;
+    white-space:nowrap;
+    transition:.2s;
+}
+.zoho-mail-btn:hover{background:#886527;transform:translateY(-1px)}
+
 .email-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:12px;margin-top:14px;width:100%;min-width:0}.email-nav{display:flex;flex-direction:column;gap:6px}.email-nav-btn{border:1px solid #e5e5e5;background:#fff;border-radius:8px;padding:11px 12px;text-align:left;cursor:pointer;font-weight:600}.email-nav-btn.active,.email-nav-btn:hover{background:#111;color:#fff}.email-main,.email-reader{border:1px solid #e7e7e7;border-radius:10px;overflow:hidden;background:#fff;min-height:430px}.email-toolbar{display:flex;gap:8px;align-items:center;padding:10px;border-bottom:1px solid #eee}.email-list-row{padding:12px;border-bottom:1px solid #eee;cursor:pointer}.email-list-row:hover{background:#fafafa}.email-list-row.unread{font-weight:700}.email-subject{display:block;margin-bottom:4px}.email-meta{font-size:12px;color:#777}.email-preview{font-size:12px;color:#666;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.email-reader{padding:18px}.email-reader h3{margin:0 0 8px}.email-reader .reader-meta{font-size:12px;color:#777;margin-bottom:16px}.email-body{line-height:1.6;overflow:auto}@media(max-width:1000px){.email-layout{grid-template-columns:140px 1fr}.email-reader{grid-column:1/-1}}@media(max-width:650px){.email-layout{grid-template-columns:1fr}.email-nav{display:grid;grid-template-columns:repeat(3,1fr)}}
 /* ================= GMAIL-LIKE EMAIL UI ================= */
 
@@ -1921,6 +1941,7 @@ body{
 </aside>
 <section class="email-main">
 <div class="email-toolbar-gmail">
+<a class="zoho-mail-btn" href="https://mail.zoho.in/" target="_blank" rel="noopener noreferrer">✉ Open Zoho Mail</a>
   <input id="emailSearch" class="search-input" placeholder="🔍 Search mail" oninput="filterEmailList()">
   <button class="table-btn print-btn" type="button" onclick="loadZohoMail()">↻</button>
   <span id="emailStatus" style="font-size:12px;color:#777;white-space:nowrap"></span>
