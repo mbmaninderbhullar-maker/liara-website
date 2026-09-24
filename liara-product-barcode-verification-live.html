@@ -336,14 +336,212 @@ window.addEventListener('hashchange',()=>{const code=getHashCode();if(code){docu
 
 document.getElementById('verifyCode')?.addEventListener('keydown',e=>{if(e.key==='Enter')verifyProduct()});
 
-async function loadRecords(){const box=document.getElementById('recordsList');box.innerHTML='<div class="empty">Loading...</div>';const {data,error}=await supabaseClient.from('product_verifications').select('*').eq('status','Verified').order('created_at',{ascending:false});if(error){box.innerHTML='';setStatus('recordsStatus','Load failed: '+error.message,false);return}setStatus('recordsStatus','Loaded '+data.length+' barcode records.',true);if(!data.length){box.innerHTML='<div class="empty">No barcode records created yet.</div>';return}box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Product</th><th>Variant</th><th>Verification Code</th><th>Batch</th><th>Status</th><th>Scans</th><th>Created</th><th>Action</th></tr></thead><tbody>'+data.map(x=>'<tr><td><strong>'+esc(x.product_name)+'</strong></td><td>'+esc(x.variant)+'</td><td><strong>'+esc(x.verification_code)+'</strong></td><td>'+esc(x.batch_number||'—')+'</td><td><span class="badge">Verified</span></td><td>'+Number(x.scan_count||0)+'</td><td>'+ (x.created_at?new Date(x.created_at).toLocaleString('en-IN'):'—')+'</td><td><div class="record-actions"><button class="blue" onclick="useRecord(\''+esc(x.verification_code)+'\')">Verify</button><button class="black" onclick="downloadRecordBarcodePDF(\''+esc(x.verification_code)+'\')">PDF</button><button class="gold" onclick="downloadRecordBarcodeJPG(\''+esc(x.verification_code)+'\')">JPG</button></div></td></tr>').join('')+'</tbody></table></div>'}
-function useRecord(code){document.getElementById('verifyCode'function makeBarcodeCanvas(code){return new Promise((resolve,reject)=>{const canvas=document.createElement('canvas');const ctx=canvas.getContext('2d');canvas.width=900;canvas.height=330;ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111';ctx.textAlign='center';ctx.font='bold 30px Arial';ctx.fillText('LIARA PROFESSIONAL™',450,38);const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');try{JsBarcode(svg,code,{format:'CODE128',lineColor:'#111',width:3,height:120,displayValue:true,fontSize:20,margin:10});const xml=new XMLSerializer().serializeToString(svg);const img=new Image();img.onload=()=>{ctx.drawImage(img,75,55,750,150);ctx.font='bold 24px Arial';ctx.fillText(code,450,240);resolve(canvas)};img.onerror=reject;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml)}catch(e){reject(e)}})}
-function makeQRCanvas(code){return new Promise((resolve,reject)=>{const holder=document.createElement('div');holder.style.position='fixed';holder.style.left='-10000px';holder.style.top='-10000px';holder.style.background='#fff';document.body.appendChild(holder);const url=getVerificationUrl(code);try{new QRCode(holder,{text:url,width:300,height:300,correctLevel:QRCode.CorrectLevel.M});setTimeout(()=>{const src=holder.querySelector('canvas')||holder.querySelector('img');if(!src){holder.remove();reject(new Error('QR could not be generated'));return}const canvas=document.createElement('canvas');canvas.width=360;canvas.height=420;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#111';ctx.textAlign='center';ctx.font='bold 24px Arial';ctx.fillText('LIARA PROFESSIONAL™',180,30);ctx.drawImage(src,30,50,300,300);ctx.font='bold 18px Arial';ctx.fillText(code,180,385);holder.remove();resolve(canvas)},250)}catch(e){holder.remove();reject(e)}})}
-async function makeCombinedCanvas(code){const [bar,qr]=await Promise.all([makeBarcodeCanvas(code),makeQRCanvas(code)]);const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=520;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(bar,20,80,820,300);ctx.drawImage(qr,870,50,300,420);ctx.fillStyle='#111';ctx.textAlign='center';ctx.font='bold 32px Arial';ctx.fillText('LIARA PROFESSIONAL™ • AUTHENTICITY VERIFICATION',600,45);return canvas}
-async function downloadRecordJPG(code){try{const canvas=await makeCombinedCanvas(code);const a=document.createElement('a');a.download='LIARA-'+code+'-BARCODE-QR.jpg';a.href=canvas.toDataURL('image/jpeg',0.95);a.click()}catch(e){console.error(e);alert('JPG download failed. Please refresh and try again.')}}
-async function downloadRecordPDF(code){try{if(!window.jspdf||!window.jspdf.jsPDF){alert('PDF library could not be loaded. Please refresh the page.');return}const canvas=await makeCombinedCanvas(code);const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:[150,80]});pdf.setFontSize(13);pdf.text('LIARA PROFESSIONAL™ • BARCODE + QR',75,8,{align:'center'});pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',6,12,138,60);pdf.save('LIARA-'+code+'-BARCODE-QR.pdf')}catch(e){console.error(e);alert('PDF download failed. Please refresh and try again.')}}
-function downloadBarcode(){if(!lastCreatedCode){alert('Create a barcode first.');return}downloadRecordJPG(lastCreatedCode)}
-}await loadProducts();await loadBatches()}window.addEventListener('DOMContentLoaded',init);
+async async function loadRecords(){
+  const box=document.getElementById('recordsList');
+  if(!box)return;
+  box.innerHTML='<div class="empty">Loading...</div>';
+  if(!supabaseClient){box.innerHTML='';setStatus('recordsStatus','Supabase library could not be loaded. Please refresh the page.',false);return}
+  const {data,error}=await supabaseClient.from('product_verifications').select('*').eq('status','Verified').order('created_at',{ascending:false});
+  if(error){box.innerHTML='';setStatus('recordsStatus','Load failed: '+error.message,false);return}
+  setStatus('recordsStatus','Loaded '+data.length+' barcode records.',true);
+  if(!data.length){box.innerHTML='<div class="empty">No barcode records created yet.</div>';return}
+  box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Product</th><th>Variant</th><th>Verification Code</th><th>Batch</th><th>Status</th><th>Scans</th><th>Created</th><th>Action</th></tr></thead><tbody>'+
+    data.map(x=>'<tr><td><strong>'+esc(x.product_name)+'</strong></td><td>'+esc(x.variant)+'</td><td><strong>'+esc(x.verification_code)+'</strong></td><td>'+esc(x.batch_number||'—')+'</td><td><span class="badge">Verified</span></td><td>'+Number(x.scan_count||0)+'</td><td>'+(x.created_at?new Date(x.created_at).toLocaleString('en-IN'):'—')+
+    '</td><td><div class="record-actions">'+
+    '<button class="blue" onclick="useRecord(\''+esc(x.verification_code)+'\')">Verify</button>'+
+    '<button class="black" onclick="downloadRecordPDF(\''+esc(x.verification_code)+'\')">PDF</button>'+
+    '<button class="gold" onclick="downloadRecordJPG(\''+esc(x.verification_code)+'\')">JPG</button>'+
+    '</div></td></tr>').join('')+
+    '</tbody></table></div>';
+}
+
+function useRecord(code){
+  showTab('verify',document.querySelector('.tab:nth-child(3)'));
+  const input=document.getElementById('verifyCode');
+  if(input){input.value=code;input.focus();}
+  verifyProduct();
+}
+
+function makeBarcodeCanvas(code){
+  return new Promise((resolve,reject)=>{
+    const canvas=document.createElement('canvas');
+    const ctx=canvas.getContext('2d');
+    canvas.width=900;canvas.height=330;
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#111';ctx.textAlign='center';ctx.font='bold 30px Arial';
+    ctx.fillText('LIARA PROFESSIONAL™',450,38);
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    try{
+      JsBarcode(svg,code,{format:'CODE128',lineColor:'#111',width:3,height:120,displayValue:true,fontSize:20,margin:10});
+      const xml=new XMLSerializer().serializeToString(svg);
+      const img=new Image();
+      img.onload=()=>{
+        ctx.drawImage(img,75,55,750,150);
+        ctx.font='bold 24px Arial';
+        ctx.fillText(code,450,240);
+        resolve(canvas);
+      };
+      img.onerror=reject;
+      img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);
+    }catch(e){reject(e)}
+  });
+}
+
+function makeQRCanvas(code){
+  return new Promise((resolve,reject)=>{
+    const holder=document.createElement('div');
+    holder.style.position='fixed';holder.style.left='-10000px';holder.style.top='-10000px';holder.style.background='#fff';
+    document.body.appendChild(holder);
+    const url=getVerificationUrl(code);
+    try{
+      new QRCode(holder,{text:url,width:300,height:300,correctLevel:QRCode.CorrectLevel.M});
+      setTimeout(()=>{
+        const src=holder.querySelector('canvas')||holder.querySelector('img');
+        if(!src){holder.remove();reject(new Error('QR could not be generated'));return}
+        const canvas=document.createElement('canvas');
+        canvas.width=360;canvas.height=420;
+        const ctx=canvas.getContext('2d');
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle='#111';ctx.textAlign='center';ctx.font='bold 24px Arial';
+        ctx.fillText('LIARA PROFESSIONAL™',180,30);
+        ctx.drawImage(src,30,50,300,300);
+        ctx.font='bold 18px Arial';ctx.fillText(code,180,385);
+        holder.remove();resolve(canvas);
+      },250);
+    }catch(e){holder.remove();reject(e)}
+  });
+}
+
+async function makeCombinedCanvas(code){
+  const [bar,qr]=await Promise.all([makeBarcodeCanvas(code),makeQRCanvas(code)]);
+  const canvas=document.createElement('canvas');
+  canvas.width=1200;canvas.height=520;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(bar,20,80,820,300);
+  ctx.drawImage(qr,870,50,300,420);
+  ctx.fillStyle='#111';ctx.textAlign='center';ctx.font='bold 32px Arial';
+  ctx.fillText('LIARA PROFESSIONAL™ • AUTHENTICITY VERIFICATION',600,45);
+  return canvas;
+}
+
+async function downloadRecordJPG(code){
+  try{
+    if(!code){alert('Verification code not found.');return}
+    const canvas=await makeCombinedCanvas(code);
+    const a=document.createElement('a');
+    a.download='LIARA-'+code+'-BARCODE-QR.jpg';
+    a.href=canvas.toDataURL('image/jpeg',0.95);
+    document.body.appendChild(a);a.click();a.remove();
+  }catch(e){console.error(e);alert('JPG download failed. Please refresh and try again.')}
+}
+
+async function downloadRecordPDF(code){
+  try{
+    if(!code){alert('Verification code not found.');return}
+    if(!window.jspdf||!window.jspdf.jsPDF){alert('PDF library could not be loaded. Please refresh the page.');return}
+    const canvas=await makeCombinedCanvas(code);
+    const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:[150,80]});
+    pdf.setFontSize(13);
+    pdf.text('LIARA PROFESSIONAL™ • BARCODE + QR',75,8,{align:'center'});
+    pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',6,12,138,60);
+    pdf.save('LIARA-'+code+'-BARCODE-QR.pdf');
+  }catch(e){console.error(e);alert('PDF download failed. Please refresh and try again.')}
+}
+
+function downloadBarcode(){
+  if(!lastCreatedCode){alert('Create a barcode first.');return}
+  downloadRecordJPG(lastCreatedCode);
+}
+
+async function startCameraScanner(){
+  if(typeof Html5Qrcode!=='function'){
+    alert('Camera scanner library could not be loaded. Please refresh the page.');
+    return;
+  }
+  try{
+    if(window.liaraQrScanner){await stopCameraScanner();}
+    const el=document.getElementById('qrReader');
+    if(!el)return;
+    window.liaraQrScanner=new Html5Qrcode('qrReader');
+    await window.liaraQrScanner.start(
+      {facingMode:'environment'},
+      {fps:10,qrbox:{width:250,height:250}},
+      async decodedText=>{
+        let code=decodedText||'';
+        try{
+          const u=new URL(code,window.location.href);
+          const hashCode=u.hash&&u.hash.startsWith('#verify=')?decodeURIComponent(u.hash.substring(8)):'';
+          if(hashCode)code=hashCode;
+        }catch(e){}
+        const match=String(code).match(/LPV-[A-Z0-9]+/i);
+        if(match)code=match[0].toUpperCase();
+        const input=document.getElementById('verifyCode');
+        if(input)input.value=code;
+        await verifyProduct();
+        await stopCameraScanner();
+      },
+      ()=>{}
+    );
+  }catch(e){
+    console.error(e);
+    alert('Could not open camera. Please allow camera permission and try again.');
+  }
+}
+
+async function stopCameraScanner(){
+  try{
+    if(window.liaraQrScanner){
+      const scanner=window.liaraQrScanner;
+      window.liaraQrScanner=null;
+      if(scanner.isScanning)await scanner.stop();
+      await scanner.clear();
+    }
+  }catch(e){console.warn(e)}
+}
+
+async function init(){
+  await loadProducts();
+  await loadBatches();
+  const code=getHashCode();
+  if(code){
+    document.body.classList.add('customer-verify-mode');
+    document.querySelector('.tabs')?.style.setProperty('display','none','important');
+    ['create','batches','records'].forEach(x=>{
+      const el=document.getElementById('tab-'+x);
+      if(el){el.classList.add('hidden');el.style.display='none'}
+    });
+    const v=document.getElementById('tab-verify');
+    if(v){v.classList.remove('hidden');v.style.display='block'}
+    const input=document.getElementById('verifyCode');
+    if(input)input.value=code;
+    setTimeout(()=>{verifyProduct();startCameraScanner()},400);
+  }
+}
+
+window.addEventListener('hashchange',()=>{
+  const code=getHashCode();
+  if(code){
+    document.body.classList.add('customer-verify-mode');
+    document.querySelector('.tabs')?.style.setProperty('display','none','important');
+    ['create','batches','records'].forEach(x=>{
+      const el=document.getElementById('tab-'+x);
+      if(el){el.classList.add('hidden');el.style.display='none'}
+    });
+    const v=document.getElementById('tab-verify');
+    if(v){v.classList.remove('hidden');v.style.display='block'}
+    const input=document.getElementById('verifyCode');
+    if(input)input.value=code;
+    verifyProduct();
+    setTimeout(()=>startCameraScanner(),400);
+  }
+});
+
+document.getElementById('verifyCode')?.addEventListener('keydown',e=>{
+  if(e.key==='Enter')verifyProduct();
+});
+
+window.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
