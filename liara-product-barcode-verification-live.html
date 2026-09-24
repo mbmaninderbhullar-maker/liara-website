@@ -4,2333 +4,323 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Liara Professional™ | Product Barcode & Verification</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#f4f5f7;color:#161616;padding:20px}
-.container{max-width:1150px;margin:auto}
-.header{background:#111;color:#fff;padding:24px;border-radius:16px;margin-bottom:20px}
-.header h1{font-size:27px}
-.header p{color:#bbb;margin-top:6px;font-size:14px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-.tab{background:#eee;color:#111}
-.tab.active{background:#111;color:#fff}
-.card{background:#fff;border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 5px 20px rgba(0,0,0,.06)}
-.card h2{font-size:20px;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.field label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:7px}
-input,select{width:100%;height:44px;border:1px solid #ddd;border-radius:9px;padding:0 12px;font-size:15px;outline:none;background:#fff}
-input:focus,select:focus{border-color:#111}
-button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:700;cursor:pointer}
-button:disabled{opacity:.55;cursor:not-allowed}
-.black{background:#111;color:#fff}
-.gold{background:#c49a22;color:#fff}
-.light{background:#eee;color:#111}
-.blue{background:#1769aa;color:#fff}
-.red{background:#dc3545;color:#fff}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
-.note{font-size:13px;color:#777;margin-bottom:15px;line-height:1.55}
-.hidden{display:none!important}
-.status{margin-top:14px;padding:12px;border-radius:9px;display:none;font-size:14px;line-height:1.5}
-.status.ok{display:block;background:#e8f7ed;color:#176b32}
-.status.err{display:block;background:#fdeaea;color:#a51d1d}
-.label-preview{max-width:560px;margin:22px auto 0;border:1px solid #ddd;border-radius:14px;padding:22px;text-align:center;background:#fff}
-.label-brand{font-weight:800;font-size:18px;letter-spacing:.5px}
-.label-product{font-size:18px;font-weight:700;margin-top:8px}
-.barcode-box{margin:18px auto 8px;min-height:75px;display:flex;align-items:center;justify-content:center}
-.barcode-box svg{max-width:100%;height:auto}
-.qr-box{display:flex;justify-content:center;margin:14px 0}
-.qr-box img,.qr-box canvas{max-width:180px!important;height:auto!important}
-.code-text{font-size:13px;font-weight:700;letter-spacing:1px;margin-top:8px}
-.verify-result{margin-top:18px;padding:18px;border-radius:12px;display:none}
-.verify-result.ok{display:block;background:#eaf8ef;border:1px solid #b9e5c6}
-.verify-result.bad{display:block;background:#fff0f0;border:1px solid #efbaba}
-.verify-title{font-size:20px;font-weight:800;margin-bottom:10px}
-.verify-row{display:grid;grid-template-columns:170px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.08);font-size:14px}
-.verify-row:last-child{border-bottom:0}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:900px}
-th{background:#111;color:#fff;padding:11px;text-align:left;font-size:13px}
-td{padding:10px;border-bottom:1px solid #eee;font-size:13px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#e8f7ed;color:#176b32}
-.empty{text-align:center;color:#888;padding:25px}
-.scanner-box{background:#f7f7f7;border:1px solid #ddd;border-radius:12px;padding:16px;margin-top:15px}
-.small{font-size:12px;color:#777}
-.formula-box{margin-top:15px;background:#f7faf8;border:1px solid #d9e8df;border-radius:12px;padding:15px}
-.formula-box h3{font-size:16px;margin-bottom:6px;color:#173b2d}
-.formula-meta{font-size:12px;color:#777;margin-bottom:12px}
-.ingredient-table{width:100%;min-width:650px;border-collapse:collapse}
-.ingredient-table th{background:#173b2d}
-.ingredient-table td,.ingredient-table th{padding:9px;border-bottom:1px solid #e5e5e5;font-size:13px;text-align:left}
-.ingredient-select-row{display:grid;grid-template-columns:34px 2fr 1.2fr 110px 80px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #e5e5e5}
-.ingredient-select-row:last-child{border-bottom:0}
-.ingredient-select-row input[type=number],.ingredient-select-row select{height:38px}
-.ingredient-select-row input[type=checkbox]{width:18px;height:18px;accent-color:#173b2d;cursor:pointer}
-.ingredient-select-head{display:grid;grid-template-columns:34px 2fr 1.2fr 110px 80px;gap:8px;font-size:12px;font-weight:700;padding:7px 0;background:#f5f7f8;border-radius:7px}
-.selection-note{font-size:12px;color:#777;margin:8px 0}
-.selected-count{font-weight:700;color:#173b2d}
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;display:none;align-items:center;justify-content:center;padding:18px}
-.modal-backdrop.open{display:flex}
-.modal-card{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:15px}
-.modal-head h2{margin:0;font-size:20px}
-.close-btn{background:#eee;color:#111;padding:8px 12px}
-.batch-detail-head{background:#faf8f2;border:1px solid #eadfbd;border-radius:12px;padding:14px;margin-bottom:15px}
-.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.detail-item{font-size:12px;color:#777}
-.detail-item b{display:block;color:#111;font-size:14px;margin-top:3px}
-.batch-summary{background:#faf8f2;border:1px solid #eadfbd;border-radius:12px;padding:14px;margin-top:14px}
-.batch-summary strong{color:#8b6b18}
-.batch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-.batch-meta{font-size:12px;color:#777}
-.batch-meta b{display:block;color:#111;font-size:14px;margin-top:3px}
-.customer-verify-mode{background:#f4f5f7}
-.customer-verify-mode .header{display:block;text-align:center;margin-bottom:20px}
-.customer-verify-mode .tabs{display:none!important}
-.customer-verify-mode #tab-create,.customer-verify-mode #tab-batches,.customer-verify-mode #tab-records{display:none!important}
-.customer-verify-mode #tab-verify{display:block!important}
-.customer-verify-mode #tab-verify .scanner-box{display:none!important}
-.customer-verify-mode #tab-verify .card{max-width:720px;margin:30px auto;text-align:center}
-.customer-verify-mode #verifyResult{text-align:left;display:block!important;max-width:720px;margin:18px auto}
-.customer-verify-mode #tab-verify h2{text-align:center}
-.customer-verify-mode #tab-verify .note{display:none}
-.customer-verify-mode #cameraScanner{display:block!important}
-.camera-scanner{margin-top:15px;background:#f7f7f7;border:1px solid #ddd;border-radius:12px;padding:16px}
-.camera-reader{width:100%;max-width:520px;margin:auto}
-.camera-help{font-size:12px;color:#777;text-align:center;margin-top:8px}
-.record-actions{display:flex;gap:6px;flex-wrap:wrap}
-.record-actions button{padding:9px 11px;font-size:12px}
-.record-code{font-weight:700;font-family:monospace}
-.loading{text-align:center;padding:25px;color:#777}
-@media(max-width:700px){
-body{padding:10px}
-.grid{grid-template-columns:1fr}
-.card{padding:17px}
-.verify-row{grid-template-columns:1fr;gap:2px}
-.batch-grid{grid-template-columns:repeat(2,1fr)}
-.ingredient-select-row,.ingredient-select-head{grid-template-columns:30px 1fr 1fr 90px 65px;font-size:12px}
-.ingredient-select-row input[type=number],.ingredient-select-row select{font-size:12px;padding:0 6px}
-.detail-grid{grid-template-columns:1fr 1fr}
-}
-@media print{
-body{background:#fff;padding:0}
-.no-print{display:none!important}
-.container{max-width:none}
-.label-preview{border:0;box-shadow:none;margin:0 auto;padding:10mm}
-}
+.container{max-width:1150px;margin:auto}.header{background:#111;color:#fff;padding:24px;border-radius:16px;margin-bottom:20px}.header h1{font-size:27px}.header p{color:#bbb;margin-top:6px;font-size:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{background:#eee;color:#111}.tab.active{background:#111;color:#fff}
+.card{background:#fff;border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 5px 20px rgba(0,0,0,.06)}.card h2{font-size:20px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:7px}
+input,select{width:100%;height:44px;border:1px solid #ddd;border-radius:9px;padding:0 12px;font-size:15px;outline:none;background:#fff}input:focus,select:focus{border-color:#111}
+button{border:0;border-radius:9px;padding:12px 17px;font-size:14px;font-weight:700;cursor:pointer}.black{background:#111;color:#fff}.gold{background:#c49a22;color:#fff}.light{background:#eee;color:#111}.blue{background:#1769aa;color:#fff}.red{background:#dc3545;color:#fff}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}.note{font-size:13px;color:#777;margin-bottom:15px;line-height:1.55}.hidden{display:none!important}
+.status{margin-top:14px;padding:12px;border-radius:9px;display:none;font-size:14px;line-height:1.5}.status.ok{display:block;background:#e8f7ed;color:#176b32}.status.err{display:block;background:#fdeaea;color:#a51d1d}
+.label-preview{max-width:560px;margin:22px auto 0;border:1px solid #ddd;border-radius:14px;padding:22px;text-align:center;background:#fff}.label-brand{font-weight:800;font-size:18px;letter-spacing:.5px}.label-product{font-size:18px;font-weight:700;margin-top:8px}
+.barcode-box{margin:18px auto 8px;min-height:75px;display:flex;align-items:center;justify-content:center}.barcode-box svg{max-width:100%;height:auto}.qr-box{display:flex;justify-content:center;margin:14px 0}.qr-box img,.qr-box canvas{max-width:180px!important;height:auto!important}.code-text{font-size:13px;font-weight:700;letter-spacing:1px;margin-top:8px}
+.verify-result{margin-top:18px;padding:18px;border-radius:12px;display:none}.verify-result.ok{display:block;background:#eaf8ef;border:1px solid #b9e5c6}.verify-result.bad{display:block;background:#fff0f0;border:1px solid #efbaba}.verify-title{font-size:20px;font-weight:800;margin-bottom:10px}.verify-row{display:grid;grid-template-columns:170px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.08);font-size:14px}.verify-row:last-child{border-bottom:0}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:900px}th{background:#111;color:#fff;padding:11px;text-align:left;font-size:13px}td{padding:10px;border-bottom:1px solid #eee;font-size:13px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#e8f7ed;color:#176b32}.empty{text-align:center;color:#888;padding:25px}.scanner-box{background:#f7f7f7;border:1px solid #ddd;border-radius:12px;padding:16px;margin-top:15px}.small{font-size:12px;color:#777}.formula-box{margin-top:15px;background:#f7faf8;border:1px solid #d9e8df;border-radius:12px;padding:15px}.formula-box h3{font-size:16px;margin-bottom:6px;color:#173b2d}.formula-meta{font-size:12px;color:#777;margin-bottom:12px}.ingredient-table{width:100%;min-width:650px;border-collapse:collapse}.ingredient-table th{background:#173b2d}.ingredient-table td,.ingredient-table th{padding:9px;border-bottom:1px solid #e5e5e5;font-size:13px;text-align:left}.ingredient-select-row{display:grid;grid-template-columns:34px 2fr 1.2fr 110px 80px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #e5e5e5}.ingredient-select-row:last-child{border-bottom:0}.ingredient-select-row input[type=number],.ingredient-select-row select{height:38px}.ingredient-select-row input[type=checkbox]{width:18px;height:18px;accent-color:#173b2d;cursor:pointer}.ingredient-select-head{display:grid;grid-template-columns:34px 2fr 1.2fr 110px 80px;gap:8px;font-size:12px;font-weight:700;padding:7px 0;background:#f5f7f8;border-radius:7px}.selection-note{font-size:12px;color:#777;margin:8px 0}.selected-count{font-weight:700;color:#173b2d}@media(max-width:700px){.ingredient-select-row,.ingredient-select-head{grid-template-columns:30px 1fr 1fr 90px 65px;font-size:12px}.ingredient-select-row input[type=number],.ingredient-select-row select{font-size:12px;padding:0 6px}}.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:3000;display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.open{display:flex}.modal-card{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:15px}.modal-head h2{margin:0;font-size:20px}.close-btn{background:#eee;color:#111;padding:8px 12px}.batch-detail-head{background:#faf8f2;border:1px solid #eadfbd;border-radius:12px;padding:14px;margin-bottom:15px}.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.detail-item{font-size:12px;color:#777}.detail-item b{display:block;color:#111;font-size:14px;margin-top:3px}@media(max-width:700px){.detail-grid{grid-template-columns:1fr 1fr}}
+.batch-summary{background:#faf8f2;border:1px solid #eadfbd;border-radius:12px;padding:14px;margin-top:14px}.batch-summary strong{color:#8b6b18}.batch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}.batch-meta{font-size:12px;color:#777}.batch-meta b{display:block;color:#111;font-size:14px;margin-top:3px}
+.customer-verify-mode{background:#f4f5f7}.customer-verify-mode .header{display:block;text-align:center;margin-bottom:20px}.customer-verify-mode .tabs{display:none!important}.customer-verify-mode #tab-create,.customer-verify-mode #tab-batches,.customer-verify-mode #tab-records{display:none!important}.customer-verify-mode #tab-verify{display:block!important}.customer-verify-mode #tab-verify .scanner-box{display:none!important}.customer-verify-mode #tab-verify .card{max-width:720px;margin:30px auto;text-align:center}.customer-verify-mode #verifyResult{text-align:left;display:block!important;max-width:720px;margin:18px auto}.customer-verify-mode #tab-verify h2{text-align:center}.customer-verify-mode #tab-verify .note{display:none}
+@media(max-width:700px){body{padding:10px}.grid{grid-template-columns:1fr}.card{padding:17px}.verify-row{grid-template-columns:1fr;gap:2px}.batch-grid{grid-template-columns:repeat(2,1fr)}}
+@media print{body{background:#fff;padding:0}.no-print{display:none!important}.container{max-width:none}.label-preview{border:0;box-shadow:none;margin:0 auto;padding:10mm}}
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
-<div class="header no-print">
-<h1>LIARA PROFESSIONAL™</h1>
-<p>Product Barcode • Batch Management • QR Verification • Store Scanner</p>
-</div>
-
+<div class="header no-print"><h1>LIARA PROFESSIONAL™</h1><p>Product Barcode • Batch Management • QR Verification • Store Scanner</p></div>
 <div class="tabs no-print">
-<button type="button" class="tab active" onclick="showTab('create',this)">Create Barcode + QR</button>
-<button type="button" class="tab" onclick="showTab('batches',this)">Batch Management</button>
-<button type="button" class="tab" onclick="showTab('verify',this)">Verify Product</button>
-<button type="button" class="tab" onclick="showTab('records',this)">Barcode Records</button>
+<button class="tab active" onclick="showTab('create',this)">Create Barcode + QR</button>
+<button class="tab" onclick="showTab('batches',this)">Batch Management</button>
+<button class="tab" onclick="showTab('verify',this)">Verify Product</button>
+<button class="tab" onclick="showTab('records',this)">Barcode Records</button>
 </div>
 
 <section id="tab-create">
-
 <div class="card">
-
 <h2>Create Product Barcode + QR</h2>
-
-<p class="note">
-Select an existing product, variant and batch. Batch numbers are never typed here.
-The selected batch is linked to the new verification barcode and QR code.
-</p>
-
+<p class="note">Select an existing product, variant and batch. Batch numbers are never typed here. The selected batch is linked to the new verification barcode and QR code.</p>
 <div class="grid">
-
-<div class="field">
-<label>Product Name *</label>
-<select id="productSelect"
-onchange="loadVariantsForProduct('productSelect','variantSelect','batchSelect','createBatchSummary')">
-<option value="">Loading products...</option>
-</select>
+<div class="field"><label>Product Name *</label><select id="productSelect" onchange="loadVariantsForProduct('productSelect','variantSelect','batchSelect','createBatchSummary')"><option value="">Loading products...</option></select></div>
+<div class="field"><label>Variant / Size *</label><select id="variantSelect" onchange="loadBatchesForCreate()"><option value="">Select product first</option></select></div>
+<div class="field" style="grid-column:1/-1"><label>Select Batch *</label><select id="batchSelect" onchange="showSelectedBatch()"><option value="">Select Product + Variant first</option></select></div>
 </div>
-
-<div class="field">
-<label>Variant / Size *</label>
-<select id="variantSelect" onchange="loadBatchesForCreate()">
-<option value="">Select product first</option>
-</select>
-</div>
-
-<div class="field" style="grid-column:1/-1">
-<label>Select Batch *</label>
-<select id="batchSelect" onchange="showSelectedBatch()">
-<option value="">Select Product + Variant first</option>
-</select>
-</div>
-
-</div>
-
 <div id="createBatchSummary" class="batch-summary hidden"></div>
-
-<div class="actions">
-<button type="button" class="black" onclick="createVerification()">Create Barcode + QR</button>
-<button type="button" class="light" onclick="clearCreateForm()">Clear</button>
-</div>
-
+<div class="actions"><button class="black" onclick="createVerification()">Create Barcode + QR</button><button class="light" onclick="clearCreateForm()">Clear</button></div>
 <div id="createStatus" class="status"></div>
-
 <div id="labelPreview" class="label-preview hidden">
-
-<div class="label-brand">LIARA PROFESSIONAL™</div>
-<div id="previewProduct" class="label-product"></div>
-<div id="previewVariant" style="margin-top:4px;color:#666"></div>
-<div id="previewBatch" style="margin-top:5px;font-weight:700"></div>
-
-<div class="barcode-box">
-<svg id="barcode"></svg>
-</div>
-
-<div id="previewCode" class="code-text"></div>
-<div class="qr-box" id="qrcode"></div>
-<div class="small">Scan QR to verify authenticity online</div>
-
-<div class="actions no-print" style="justify-content:center">
-<button type="button" class="black" onclick="printLabel()">🖨 Print Label</button>
-<button type="button" class="blue" onclick="downloadRecordJPG(lastCreatedCode)">⬇ Download JPG (Barcode + QR)</button>
-<button type="button" class="gold" onclick="downloadRecordPDF(lastCreatedCode)">⬇ Download PDF (Barcode + QR)</button>
-</div>
-
+<div class="label-brand">LIARA PROFESSIONAL™</div><div id="previewProduct" class="label-product"></div><div id="previewVariant" style="margin-top:4px;color:#666"></div><div id="previewBatch" style="margin-top:5px;font-weight:700"></div>
+<div class="barcode-box"><svg id="barcode"></svg></div><div id="previewCode" class="code-text"></div><div class="qr-box" id="qrcode"></div><div class="small">Scan QR to verify authenticity online</div>
+<div class="actions no-print" style="justify-content:center"><button class="black" onclick="printLabel()">🖨 Print Label</button><button class="blue" onclick="downloadBarcode()">⬇ Download Barcode</button></div>
 </div>
 </div>
 </section>
 
 <section id="tab-batches" class="hidden">
-
 <div class="card">
-
 <h2>Batch Management</h2>
-
-<p class="note">
-Create the production batch here first. Select the Formula used for manufacturing.
-Its ingredients are loaded from your existing Formula Manager and the required quantities
-are automatically scaled to the actual batch size. The ingredient snapshot is saved with the batch.
-</p>
-
+<p class="note">Create the production batch here first. Select the Formula used for manufacturing. Its ingredients are loaded from your existing Formula Manager and the required quantities are automatically scaled to the actual batch size. The ingredient snapshot is saved with the batch.</p>
 <div class="grid">
-
-<div class="field">
-<label>Product Name *</label>
-<select id="batchProductSelect"
-onchange="loadVariantsForProduct('batchProductSelect','batchVariantSelect','batchFormSelect','batchFormulaBox');loadFormulasForProduct()">
-<option value="">Loading products...</option>
-</select>
+<div class="field"><label>Product Name *</label><select id="batchProductSelect" onchange="loadVariantsForProduct('batchProductSelect','batchVariantSelect','batchFormSelect','batchFormulaBox');loadFormulasForProduct()"><option value="">Loading products...</option></select></div>
+<div class="field"><label>Variant / Size *</label><select id="batchVariantSelect" onchange="loadBatchFormProductStock()"><option value="">Select product first</option></select></div>
+<div class="field"><label>Formula *</label><select id="batchFormSelect" onchange="loadSelectedFormulaForBatch()"><option value="">Select Product first</option></select></div>
+<div class="field"><label>Total Batch Quantity *</label><input id="batchQuantity" type="number" min="0.001" step="0.001" placeholder="e.g. 25" oninput="refreshFormulaScaling()"></div>
+<div class="field"><label>Batch Unit *</label><select id="batchUnit" onchange="refreshFormulaScaling()"><option value="kg">KG</option><option value="g">Gram</option><option value="ltr">Litre</option><option value="ml">ML</option><option value="pcs">PCS</option></select></div>
+<div class="field"><label>Manufacturing Date</label><input id="batchMfg" type="date"></div>
+<div class="field"><label>Expiry Date</label><input id="batchExp" type="date"></div>
 </div>
-
-<div class="field">
-<label>Variant / Size *</label>
-<select id="batchVariantSelect" onchange="loadBatchFormProductStock()">
-<option value="">Select product first</option>
-</select>
-</div>
-
-<div class="field">
-<label>Formula *</label>
-<select id="batchFormSelect" onchange="loadSelectedFormulaForBatch()">
-<option value="">Select Product first</option>
-</select>
-</div>
-
-<div class="field">
-<label>Total Batch Quantity *</label>
-<input id="batchQuantity" type="number" min="0.001" step="0.001" placeholder="e.g. 25" oninput="refreshFormulaScaling()">
-</div>
-
-<div class="field">
-<label>Batch Unit *</label>
-<select id="batchUnit" onchange="refreshFormulaScaling()">
-<option value="kg">KG</option>
-<option value="g">Gram</option>
-<option value="ltr">Litre</option>
-<option value="ml">ML</option>
-<option value="pcs">PCS</option>
-</select>
-</div>
-
-<div class="field">
-<label>Manufacturing Date</label>
-<input id="batchMfg" type="date">
-</div>
-
-<div class="field">
-<label>Expiry Date</label>
-<input id="batchExp" type="date">
-</div>
-
-</div>
-
 <div id="batchFormulaBox" class="formula-box hidden"></div>
-
-<div class="actions">
-<button type="button" class="black" onclick="createBatch()">＋ Save New Batch</button>
-<button type="button" class="light" onclick="clearBatchForm()">Clear</button>
-<button type="button" class="blue" onclick="loadBatches()">↻ Refresh Batches</button>
-</div>
-
+<div class="actions"><button class="black" onclick="createBatch()">＋ Save New Batch</button><button class="light" onclick="clearBatchForm()">Clear</button><button class="blue" onclick="loadBatches()">↻ Refresh Batches</button></div>
 <div id="batchStatus" class="status"></div>
 <div id="batchList" style="margin-top:18px"></div>
-
 </div>
 </section>
 
 <section id="tab-verify" class="hidden">
-
-<div class="card">
-
-<h2>Verify Product</h2>
-
-<p class="note">
-Scan the product QR / Barcode with camera, or enter the verification code manually.
-</p>
-
-<div id="cameraScanner" class="camera-scanner">
-
-<h3 style="font-size:17px;margin-bottom:10px">📷 Scan Product</h3>
-
-<div id="qrReader" class="camera-reader"></div>
-
-<div class="camera-help">
-Allow camera permission when browser asks.
-Verification will start automatically after a successful scan.
-</div>
-
-<div class="actions" style="justify-content:center">
-<button type="button" class="black" onclick="startCameraScanner()">📷 Open Camera</button>
-<button type="button" class="light" onclick="stopCameraScanner()">✕ Stop Camera</button>
-</div>
-
-</div>
-
-<div class="scanner-box">
-
-<label style="display:block;font-weight:700;font-size:13px;margin-bottom:7px">
-Barcode / Verification Code
-</label>
-
-<input id="verifyCode" autocomplete="off" autofocus placeholder="Scan barcode or enter code e.g. LPV-...">
-
-<div class="actions">
-<button type="button" class="black" onclick="verifyProduct()">Verify</button>
-<button type="button" class="light" onclick="clearVerifyInput()">Clear</button>
-</div>
-
-</div>
-
-<div id="verifyResult" class="verify-result"></div>
-
-</div>
+<div class="card"><h2>Verify Product</h2><p class="note">Use this screen at the shop counter. A USB/Bluetooth retail scanner normally types the CODE128 value into the field and sends Enter automatically.</p>
+<div class="scanner-box"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:7px">Barcode / Verification Code</label><input id="verifyCode" autocomplete="off" autofocus placeholder="Scan barcode or enter code e.g. LPV-..."><div class="actions"><button class="black" onclick="verifyProduct()">Verify</button><button class="light" onclick="document.getElementById('verifyCode').value='';clearVerifyResult();document.getElementById('verifyCode').focus()">Clear</button></div></div>
+<div id="verifyResult" class="verify-result"></div></div>
 </section>
 
-<section id="tab-records" class="hidden">
-
-<div class="card">
-
-<h2>Barcode Records</h2>
-
-<p class="note">
-Records are loaded live from the Supabase database.
-Barcode records show the batch selected at creation time.
-</p>
-
-<div class="actions">
-<button type="button" class="blue" onclick="loadRecords()">↻ Refresh</button>
-</div>
-
-<div id="recordsStatus" class="status"></div>
-<div id="recordsList" style="margin-top:15px"></div>
-
-</div>
-</section>
-
+<section id="tab-records" class="hidden"><div class="card"><h2>Barcode Records</h2><p class="note">Records are loaded live from the Supabase database. Barcode records show the batch selected at creation time.</p><div class="actions"><button class="blue" onclick="loadRecords()">↻ Refresh</button></div><div id="recordsStatus" class="status"></div><div id="recordsList" style="margin-top:15px"></div></div></section>
 </div>
 
 <div id="batchDetailModal" class="modal-backdrop no-print" onclick="if(event.target===this)closeBatchDetails()">
-
 <div class="modal-card">
-
-<div class="modal-head">
-<h2>Batch Manufacturing Record</h2>
-<button type="button" class="close-btn" onclick="closeBatchDetails()">✕ Close</button>
-</div>
-
+<div class="modal-head"><h2>Batch Manufacturing Record</h2><button class="close-btn" onclick="closeBatchDetails()">✕ Close</button></div>
 <div id="batchDetailContent"></div>
-
-<div class="actions">
-<button type="button" class="black" onclick="printBatchDetails()">🖨 Print Batch Record</button>
-<button type="button" class="light" onclick="closeBatchDetails()">Close</button>
-</div>
-
+<div class="actions"><button class="black" onclick="printBatchDetails()">🖨 Print Batch Record</button><button class="light" onclick="closeBatchDetails()">Close</button></div>
 </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
-
 const SUPABASE_URL="https://oinafbuicwhleudztzyz.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_EDcfAx97hUu3VUgS1K1XXA_yK_Jn5Gu";
-
 let supabaseClient=null;
-let lastCreatedCode="";
-let lastCreatedUrl="";
-let currentProducts=[];
-let currentVariants=[];
-let currentBatches=[];
+if(window.supabase && typeof window.supabase.createClient==='function'){supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)}
+let lastCreatedCode="",lastCreatedUrl="",currentProducts=[],currentVariants=[],currentBatches=[];
+
+function showTab(tab,btn){
+['create','batches','verify','records'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('hidden',x!==tab));
+document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
+if(tab==='records')loadRecords();if(tab==='batches')loadBatches();
+if(tab==='verify'){const c=getHashCode();if(c){document.getElementById('verifyCode').value=c;verifyProduct()}setTimeout(()=>document.getElementById('verifyCode').focus(),100)}
+}
+function setStatus(id,msg,ok=true){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='status '+(ok?'ok':'err')}
+function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
+function makeCode(){const bytes=new Uint8Array(6);crypto.getRandomValues(bytes);return 'LPV-'+Array.from(bytes).map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase()}
+function makeBatchNumber(){const d=new Date();const y=String(d.getFullYear()).slice(-2),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='';for(let i=0;i<4;i++)r+=chars[Math.floor(Math.random()*chars.length)];return 'LPB-'+y+m+day+'-'+r}
+function getVerificationUrl(code){return window.location.href.split('#')[0]+'#verify='+encodeURIComponent(code)}
+function optionHtml(value,text){return '<option value="'+esc(value)+'">'+esc(text)+'</option>'}
+
+async function getSession(){if(!supabaseClient){setStatus('batchStatus','Supabase library could not be loaded. Please refresh the page.',false);return null}const {data,error}=await supabaseClient.auth.getSession();if(error||!data.session){setStatus('batchStatus','Admin session not found. Please login to Liara Admin first.',false);return null}return data.session}
+
+async function loadProducts(){if(!supabaseClient){setStatus('createStatus','Supabase library could not be loaded. Please refresh the page.',false);return}
+const selects=[document.getElementById('productSelect'),document.getElementById('batchProductSelect')];
+selects.forEach(s=>s.innerHTML='<option value="">Loading products...</option>');
+const {data,error}=await supabaseClient.from('products').select('id,name,active').order('name');
+if(error){selects.forEach(s=>s.innerHTML='<option value="">Unable to load products</option>');console.error(error);return}
+currentProducts=data||[];const html='<option value="">Select Product</option>'+currentProducts.filter(x=>x.active!==false).map(x=>optionHtml(x.id,x.name)).join('');selects.forEach(s=>s.innerHTML=html)
+}
+
+async function loadVariantsForProduct(productSelectId,variantSelectId,batchSelectId,summaryId){if(!supabaseClient){setStatus('createStatus','Supabase library could not be loaded. Please refresh the page.',false);return}
+const productId=document.getElementById(productSelectId).value;const vs=document.getElementById(variantSelectId),bs=document.getElementById(batchSelectId),sum=document.getElementById(summaryId);vs.innerHTML='<option value="">Loading variants...</option>';bs.innerHTML='<option value="">Select variant first</option>';sum.classList.add('hidden');if(!productId){vs.innerHTML='<option value="">Select product first</option>';return}
+const {data,error}=await supabaseClient.from('product_stock_variants').select('id,product_id,size,unit').eq('product_id',productId).order('size');
+if(error){console.error(error);vs.innerHTML='<option value="">Unable to load variants</option>';return}
+currentVariants=data||[];vs.innerHTML='<option value="">Select Variant / Size</option>'+currentVariants.map(x=>optionHtml(x.id,(x.size??'')+(x.unit?' '+x.unit:''))).join('');
+}
+async function loadBatchesForCreate(){await loadBatches('create')}
+async function loadBatches(mode='all'){if(!supabaseClient){setStatus(mode==='create'?'createStatus':'batchStatus','Supabase library could not be loaded. Please refresh the page.',false);return}
+const variantId=document.getElementById('variantSelect')?.value;const bs=document.getElementById('batchSelect');
+if(mode==='create'&&!variantId){bs.innerHTML='<option value="">Select variant first</option>';return}
+let q=supabaseClient.from('product_verifications').select('*').eq('status','Batch').order('created_at',{ascending:false});if(variantId)q=q.eq('variant',variantTextById(variantId));
+const {data,error}=await q;if(error){console.error(error);if(mode==='create')bs.innerHTML='<option value="">Unable to load batches</option>';return}
+currentBatches=data||[];if(mode==='create'){bs.innerHTML='<option value="">Select Batch</option>'+currentBatches.map(x=>optionHtml(x.batch_number,x.batch_number+' — '+(x.total_batch_quantity??'')+' '+(x.batch_unit||'kg'))).join('');showSelectedBatch()}else renderBatchList(currentBatches)}
+function variantTextById(id){const v=currentVariants.find(x=>String(x.id)===String(id));return v?(v.size??'')+(v.unit?' '+v.unit:''):''}
+function showSelectedBatch(){const b=currentBatches.find(x=>x.batch_number===document.getElementById('batchSelect').value);const box=document.getElementById('createBatchSummary');if(!b){box.classList.add('hidden');box.innerHTML='';return}box.classList.remove('hidden');box.innerHTML='<div><strong>'+esc(b.batch_number)+'</strong> • '+esc(b.product_name)+' • '+esc(b.variant)+'</div><div class="batch-grid"><div class="batch-meta">Total Batch<b>'+esc(b.total_batch_quantity)+' '+esc(b.batch_unit||'kg')+'</b></div><div class="batch-meta">MFG Date<b>'+esc(b.manufacturing_date||'—')+'</b></div><div class="batch-meta">EXP Date<b>'+esc(b.expiry_date||'—')+'</b></div><div class="batch-meta">Status<b>'+esc(b.status)+'</b></div></div>'}
+function loadBatchFormProductStock(){/* variant is already enough for batch master; kept as a separate hook for future stock integration */}
+
+async function loadFormulasForProduct(){
+if(!supabaseClient)return;
+const pid=document.getElementById('batchProductSelect').value;
+const fs=document.getElementById('batchFormSelect');
+const box=document.getElementById('batchFormulaBox');
+fs.innerHTML='<option value="">Loading formulas...</option>';
+box.classList.add('hidden');box.innerHTML='';
+if(!pid){fs.innerHTML='<option value="">Select Product first</option>';return}
+const p=currentProducts.find(x=>String(x.id)===String(pid));
+if(!p){fs.innerHTML='<option value="">Product not found</option>';return}
+const {data,error}=await supabaseClient.from('formulas').select('*, formula_ingredients(*)').ilike('product_name',p.name).order('created_at',{ascending:false});
+if(error){console.error(error);fs.innerHTML='<option value="">Unable to load formulas</option>';return}
+currentFormulas=data||[];
+fs.innerHTML='<option value="">Select Formula</option>'+currentFormulas.map(f=>optionHtml(f.id,(f.formula_no||'Formula')+' — '+(f.formula_name||f.product_name||'Unnamed'))).join('');
+}
+
 let currentFormulas=[];
 let selectedBatchFormula=null;
 let currentBatchDetails=null;
-let batchPrintHtml="";
-let cameraStarting=false;
-let html5QrCode=null;
+let batchPrintHtml='';
 
-
-/* =========================
-   SAFE HELPERS
-========================= */
-
-function byId(id){
-return document.getElementById(id);
+function loadBatchFormProductStock(){
+loadFormulasForProduct();
 }
 
-function esc(v){
-return String(v??'').replace(/[&<>"']/g,s=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#39;'
-}[s]));
+function convertToBase(value,unit){
+const n=Number(value||0);const u=String(unit||'').toLowerCase().trim();
+if(['kg','kgs','kilogram','kilograms'].includes(u))return n*1000;
+if(['g','gram','grams'].includes(u))return n;
+if(['l','ltr','litre','litres','liter','liters'].includes(u))return n*1000;
+if(['ml','millilitre','milliliter'].includes(u))return n;
+return n;
+}
+function formatQty(n){return Number.isFinite(Number(n))?Number(n).toFixed(6).replace(/\.?(0+)$/,'').replace(/\.$/,''):''}
+
+function getSelectedBatchSizeInFormulaUnit(formula){
+const actual=Number(document.getElementById('batchQuantity').value||0);
+const actualUnit=document.getElementById('batchUnit').value;
+if(!actual||actual<=0)return 0;
+const formulaUnit=formula?.batch_unit||actualUnit;
+const base=convertToBase(actual,actualUnit);
+if(['pcs','pc','piece','pieces'].includes(String(formulaUnit).toLowerCase()))return actual;
+return convertToBase(base,'g')/convertToBase(1,formulaUnit);
 }
 
-function setStatus(id,msg,ok=true){
-const el=byId(id);
-if(!el)return;
-if(!msg){
-el.textContent="";
-el.className="status";
-return;
-}
-el.textContent=msg;
-el.className="status "+(ok?"ok":"err");
+function getFormulaScale(formula, actualQty, actualUnit){
+const rows=Array.isArray(formula?.formula_ingredients)?formula.formula_ingredients:[];
+let formulaBase=convertToBase(formula?.batch_size,formula?.batch_unit);
+if(!formulaBase){formulaBase=rows.reduce((sum,r)=>sum+convertToBase(r.quantity,r.unit),0)}
+const actualBase=convertToBase(actualQty,actualUnit);
+return formulaBase>0?actualBase/formulaBase:1;
 }
 
-function optionHtml(value,text){
-return '<option value="'+esc(value)+'">'+esc(text)+'</option>';
+function buildScaledIngredients(formula, actualQty, actualUnit){
+const rows=Array.isArray(formula?.formula_ingredients)?formula.formula_ingredients:[];
+const scale=getFormulaScale(formula,actualQty,actualUnit);
+return rows.map((r,i)=>({
+index:i,
+ingredient_name:r.ingredient_name||'',
+quantity:r.quantity==null?null:Number(r.quantity)*scale,
+unit:r.unit||formula?.batch_unit||actualUnit,
+percentage:r.percentage==null?null:Number(r.percentage)
+}));
 }
 
-function makeCode(){
-const bytes=new Uint8Array(6);
-if(window.crypto && crypto.getRandomValues){
-crypto.getRandomValues(bytes);
-}else{
-for(let i=0;i<bytes.length;i++)bytes[i]=Math.floor(Math.random()*256);
-}
-return 'LPV-'+Array.from(bytes).map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase();
-}
-
-function makeBatchNumber(){
-const d=new Date();
-const y=String(d.getFullYear()).slice(-2);
-const m=String(d.getMonth()+1).padStart(2,'0');
-const day=String(d.getDate()).padStart(2,'0');
-const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-let r='';
-for(let i=0;i<4;i++)r+=chars[Math.floor(Math.random()*chars.length)];
-return 'LPB-'+y+m+day+'-'+r;
+function captureBatchIngredientSelection(){
+const box=document.getElementById('batchFormulaBox');
+if(!box)return [];
+return Array.from(box.querySelectorAll('.ingredient-select-row')).map(row=>({
+index:Number(row.dataset.index),
+selected:!!row.querySelector('.batch-ing-check')?.checked,
+quantity:row.querySelector('.batch-ing-qty')?.value ?? '',
+unit:row.querySelector('.batch-ing-unit')?.value ?? ''
+}));
 }
 
-function getVerificationUrl(code){
-return window.location.href.split('#')[0]+'#verify='+encodeURIComponent(code);
+function ingredientUnitOptions(selected){
+const units=['g','kg','ml','L','pcs'];
+return units.map(u=>'<option value="'+esc(u)+'" '+(String(u).toLowerCase()===String(selected||'').toLowerCase()?'selected':'')+'>'+esc(u)+'</option>').join('');
 }
 
-function getHashCode(){
-const h=window.location.hash||'';
-const m=h.match(/^#verify=(.+)$/i);
-return m?decodeURIComponent(m[1]):'';
+function getSelectedIngredientsFromFormulaBox(){
+if(!selectedBatchFormula)return [];
+const rows=Array.isArray(selectedBatchFormula.formula_ingredients)?selectedBatchFormula.formula_ingredients:[];
+return Array.from(document.querySelectorAll('#batchFormulaBox .ingredient-select-row')).filter(row=>row.querySelector('.batch-ing-check')?.checked).map(row=>{
+const i=Number(row.dataset.index);const r=rows[i]||{};
+return {
+ingredient_name:r.ingredient_name||'',
+quantity:Number(row.querySelector('.batch-ing-qty')?.value||0),
+unit:row.querySelector('.batch-ing-unit')?.value||r.unit||'',
+percentage:r.percentage==null?null:Number(r.percentage)
+};
+}).filter(x=>x.ingredient_name && Number.isFinite(x.quantity) && x.quantity>=0);
 }
 
-
-/* =========================
-   SESSION
-========================= */
-
-async function getSession(){
-
-if(!supabaseClient){
-setStatus('batchStatus','Supabase library could not be loaded. Please refresh the page.',false);
-setStatus('createStatus','Supabase library could not be loaded. Please refresh the page.',false);
-return null;
+function renderFormulaBox(formula){
+const box=document.getElementById('batchFormulaBox');
+if(!formula){box.classList.add('hidden');box.innerHTML='';selectedBatchFormula=null;return}
+selectedBatchFormula=formula;
+const qty=Number(document.getElementById('batchQuantity').value||0),unit=document.getElementById('batchUnit').value;
+const ingredients=buildScaledIngredients(formula,qty,unit);
+const oldSelection=captureBatchIngredientSelection();
+const oldMap=new Map(oldSelection.map(x=>[x.index,x]));
+box.classList.remove('hidden');
+box.innerHTML='<h3>Formula: '+esc(formula.formula_no||'—')+' '+(formula.formula_name?'• '+esc(formula.formula_name):'')+'</h3>'+
+'<div class="formula-meta">Formula batch: <b>'+esc(formula.batch_size??'—')+' '+esc(formula.batch_unit||'')+'</b> • Actual production batch: <b>'+esc(qty||'—')+' '+esc(unit)+'</b></div>'+
+'<div class="selection-note">Select only the ingredients actually used in this batch. You can change the quantity and unit before saving. <span class="selected-count" id="batchSelectedCount">0 selected</span></div>'+
+(ingredients.length?'<div class="ingredient-select-head"><span>Use</span><span>Ingredient</span><span>Required Qty</span><span>Unit</span><span>%</span></div><div>'+ingredients.map((x,i)=>{const old=oldMap.get(i);const checked=old?old.selected:false;const q=old&&old.quantity!==''?old.quantity:formatQty(x.quantity);const u=old&&old.unit?old.unit:x.unit;return '<div class="ingredient-select-row" data-index="'+i+'"><div><input type="checkbox" class="batch-ing-check" '+(checked?'checked':'')+' onchange="updateBatchSelectedCount()" aria-label="Use '+esc(x.ingredient_name)+'"></div><div><strong>'+esc(x.ingredient_name)+'</strong></div><div><input class="batch-ing-qty" type="number" min="0" step="any" value="'+esc(q)+'"></div><div><select class="batch-ing-unit">'+ingredientUnitOptions(u)+'</select></div><div>'+esc(x.percentage??'—')+'</div></div>'}).join('')+'</div>':'<div class="empty">No ingredients found in this formula.</div>');
+updateBatchSelectedCount();
 }
 
-const {data,error}=await supabaseClient.auth.getSession();
-
-if(error){
-console.error(error);
-setStatus('createStatus','Unable to check login session: '+error.message,false);
-setStatus('batchStatus','Unable to check login session: '+error.message,false);
-return null;
+function updateBatchSelectedCount(){
+const n=document.querySelectorAll('#batchFormulaBox .batch-ing-check:checked').length;const el=document.getElementById('batchSelectedCount');if(el)el.textContent=n+' selected';
 }
-
-if(!data || !data.session){
-setStatus('batchStatus','Admin session not found. Please login to Liara Admin first.',false);
-setStatus('createStatus','Admin session not found. Please login to Liara Admin first.',false);
-return null;
-}
-
-return data.session;
-}
-
-
-/* =========================
-   TABS
-========================= */
-
-function showTab(tab,btn){
-
-['create','batches','verify','records'].forEach(x=>{
-const el=byId('tab-'+x);
-if(el)el.classList.toggle('hidden',x!==tab);
-});
-
-document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-
-if(btn)btn.classList.add('active');
-
-if(tab==='records')loadRecords();
-if(tab==='batches')loadBatches();
-
-if(tab!=='verify')stopCameraScanner();
-
-if(tab==='verify'){
-const c=getHashCode();
-if(c){
-byId('verifyCode').value=c;
-verifyProduct();
-}
-setTimeout(()=>{
-const input=byId('verifyCode');
-if(input)input.focus();
-},150);
-}
-
-}
-
-
-/* =========================
-   PRODUCTS
-========================= */
-
-async function loadProducts(){
-
-if(!supabaseClient)return;
-
-const selects=[byId('productSelect'),byId('batchProductSelect')];
-
-selects.forEach(s=>{
-if(s)s.innerHTML='<option value="">Loading products...</option>';
-});
-
-const {data,error}=await supabaseClient
-.from('products')
-.select('id,name,active')
-.order('name');
-
-if(error){
-console.error(error);
-selects.forEach(s=>{
-if(s)s.innerHTML='<option value="">Unable to load products</option>';
-});
-setStatus('createStatus','Unable to load products: '+error.message,false);
-return;
-}
-
-currentProducts=data||[];
-
-const html=
-'<option value="">Select Product</option>'+
-currentProducts
-.filter(x=>x.active!==false)
-.map(x=>optionHtml(x.id,x.name))
-.join('');
-
-selects.forEach(s=>{
-if(s)s.innerHTML=html;
-});
-
-}
-
-
-/* =========================
-   VARIANTS
-========================= */
-
-async function loadVariantsForProduct(productSelectId,variantSelectId,batchSelectId,summaryId){
-
-if(!supabaseClient)return;
-
-const productEl=byId(productSelectId);
-const vs=byId(variantSelectId);
-const bs=byId(batchSelectId);
-const sum=byId(summaryId);
-
-if(!productEl || !vs)return;
-
-const productId=productEl.value;
-
-vs.innerHTML='<option value="">Loading variants...</option>';
-
-if(bs)bs.innerHTML='<option value="">Select variant first</option>';
-if(sum)sum.classList.add('hidden');
-
-if(!productId){
-vs.innerHTML='<option value="">Select product first</option>';
-return;
-}
-
-const {data,error}=await supabaseClient
-.from('product_stock_variants')
-.select('id,product_id,size,unit')
-.eq('product_id',productId)
-.order('size');
-
-if(error){
-console.error(error);
-vs.innerHTML='<option value="">Unable to load variants</option>';
-setStatus('createStatus','Unable to load variants: '+error.message,false);
-return;
-}
-
-currentVariants=data||[];
-
-vs.innerHTML=
-'<option value="">Select Variant / Size</option>'+
-currentVariants.map(x=>optionHtml(
-x.id,
-(x.size??'')+(x.unit?' '+x.unit:'')
-)).join('');
-
-}
-
-
-/* =========================
-   BATCH LOADING
-========================= */
-
-async function loadBatchesForCreate(){
-await loadBatches('create');
-}
-
-async function loadBatches(mode='all'){
-
-if(!supabaseClient)return;
-
-const session=await getSession();
-if(!session)return;
-
-if(mode==='create'){
-
-const variantId=byId('variantSelect')?.value;
-
-const bs=byId('batchSelect');
-const summary=byId('createBatchSummary');
-
-if(!bs)return;
-
-if(!variantId){
-bs.innerHTML='<option value="">Select Variant first</option>';
-if(summary)summary.classList.add('hidden');
-return;
-}
-
-bs.innerHTML='<option value="">Loading batches...</option>';
-
-const {data,error}=await supabaseClient
-.from('product_verifications')
-.select('*')
-.eq('status','Batch')
-.eq('variant_id',variantId)
-.order('created_at',{ascending:false});
-
-if(error){
-console.error(error);
-bs.innerHTML='<option value="">Unable to load batches</option>';
-setStatus('createStatus','Unable to load batches: '+error.message,false);
-return;
-}
-
-currentBatches=data||[];
-
-bs.innerHTML=
-'<option value="">Select Batch</option>'+
-currentBatches.map(b=>optionHtml(
-b.id,
-(b.batch_number||'Batch')+
-' • '+
-(b.total_batch_quantity??'')+
-' '+
-(b.batch_unit||'')
-)).join('');
-
-return;
-}
-
-
-/* all batches for manager */
-
-const list=byId('batchList');
-
-if(list)list.innerHTML='<div class="loading">Loading batches...</div>';
-
-const {data,error}=await supabaseClient
-.from('product_verifications')
-.select('*')
-.eq('status','Batch')
-.order('created_at',{ascending:false});
-
-if(error){
-console.error(error);
-if(list)list.innerHTML='<div class="empty">Unable to load batches.<br>'+esc(error.message)+'</div>';
-setStatus('batchStatus','Unable to load batches: '+error.message,false);
-return;
-}
-
-currentBatches=data||[];
-renderBatchList();
-
-}
-
-
-/* =========================
-   CREATE BATCH SUMMARY
-========================= */
-
-function showSelectedBatch(){
-
-const id=byId('batchSelect')?.value;
-const summary=byId('createBatchSummary');
-
-if(!summary)return;
-
-const b=currentBatches.find(x=>String(x.id)===String(id));
-
-if(!b){
-summary.classList.add('hidden');
-summary.innerHTML='';
-return;
-}
-
-summary.classList.remove('hidden');
-
-summary.innerHTML=`
-<strong>Selected Batch</strong>
-<div class="batch-grid">
-<div class="batch-meta">Batch Number<b>${esc(b.batch_number||'—')}</b></div>
-<div class="batch-meta">Quantity<b>${esc(b.total_batch_quantity??'—')} ${esc(b.batch_unit||'')}</b></div>
-<div class="batch-meta">MFG Date<b>${esc(b.manufacturing_date||'—')}</b></div>
-<div class="batch-meta">EXP Date<b>${esc(b.expiry_date||'—')}</b></div>
-</div>
-`;
-}
-
-function variantTextById(id){
-const v=currentVariants.find(x=>String(x.id)===String(id));
-return v ? ((v.size??'')+(v.unit?' '+v.unit:'')) : '';
-}
-
-
-/* =========================
-   FORMULA LOADING
-========================= */
-
-async function loadBatchFormProductStock(){
-await loadFormulasForProduct();
-}
-
-async function loadFormulasForProduct(){
-
-if(!supabaseClient)return;
-
-const productId=byId('batchProductSelect')?.value;
-const fs=byId('batchFormSelect');
-const box=byId('batchFormulaBox');
-
-if(!fs)return;
-
-fs.innerHTML='<option value="">Loading formulas...</option>';
-
-if(box){
-box.classList.add('hidden');
-box.innerHTML='';
-}
-
-if(!productId){
-fs.innerHTML='<option value="">Select Product first</option>';
-return;
-}
-
-let result=await supabaseClient
-.from('formulas')
-.select('*,formula_ingredients(*)')
-.order('created_at',{ascending:false});
-
-if(result.error){
-console.error(result.error);
-fs.innerHTML='<option value="">Unable to load formulas</option>';
-return;
-}
-
-currentFormulas=(result.data||[]).filter(f=>{
-
-const pid=String(f.product_id??'');
-
-return !pid || pid===String(productId);
-});
-
-fs.innerHTML=
-'<option value="">Select Formula</option>'+
-currentFormulas.map(f=>optionHtml(
-f.id,
-(f.formula_no||f.id||'Formula')+
-' • '+
-(f.product_name||f.formula_name||'')
-)).join('');
-
-}
-
-
-function getFormulaIngredients(formula){
-
-if(!formula)return [];
-
-let rows=formula.formula_ingredients||formula.ingredients||[];
-
-if(!Array.isArray(rows))rows=[];
-
-return rows;
-}
-
-
-function getIngredientName(row){
-
-return row.ingredient_name||
-row.name||
-row.ingredient||
-row.title||
-'Ingredient';
-}
-
-
-function getIngredientPercent(row){
-
-const v=
-row.percentage ??
-row.percent ??
-row.qty_percent ??
-row.quantity_percent ??
-row.pct ??
-0;
-
-return Number(v)||0;
-}
-
-
-function getFormulaBaseQty(formula){
-
-const candidates=[
-formula.batch_size,
-formula.batch_quantity,
-formula.base_quantity,
-formula.total_quantity,
-formula.quantity
-];
-
-for(const x of candidates){
-if(Number(x)>0)return Number(x);
-}
-
-const ingredients=getFormulaIngredients(formula);
-
-const total=ingredients.reduce((s,r)=>s+getIngredientPercent(r),0);
-
-return total>0?100:1;
-}
-
 
 function loadSelectedFormulaForBatch(){
-
-const id=byId('batchFormSelect')?.value;
-selectedBatchFormula=currentFormulas.find(x=>String(x.id)===String(id))||null;
-
-renderFormulaBox();
-refreshFormulaScaling();
-
+const id=document.getElementById('batchFormSelect').value;
+const f=currentFormulas.find(x=>String(x.id)===String(id));
+renderFormulaBox(f||null);
 }
-
-
-function renderFormulaBox(){
-
-const box=byId('batchFormulaBox');
-
-if(!box)return;
-
-if(!selectedBatchFormula){
-box.classList.add('hidden');
-box.innerHTML='';
-return;
-}
-
-const ingredients=getFormulaIngredients(selectedBatchFormula);
-
-box.classList.remove('hidden');
-
-box.innerHTML=`
-<h3>${esc(selectedBatchFormula.formula_name||selectedBatchFormula.name||'Formula')}</h3>
-<div class="formula-meta">
-Formula No: ${esc(selectedBatchFormula.formula_no||'—')}
-&nbsp; • &nbsp;
-${ingredients.length} ingredient(s)
-</div>
-<div class="selection-note">
-<span class="selected-count" id="selectedIngredientCount">${ingredients.length}</span>
-ingredient(s) loaded from Formula Manager.
-</div>
-<div class="table-wrap">
-<table class="ingredient-table">
-<thead>
-<tr>
-<th>Ingredient</th>
-<th>Percentage</th>
-<th>Scaled Quantity</th>
-</tr>
-</thead>
-<tbody>
-${ingredients.map((r,i)=>`
-<tr>
-<td>${esc(getIngredientName(r))}</td>
-<td>${getIngredientPercent(r)}%</td>
-<td id="scaledIng_${i}">—</td>
-</tr>
-`).join('')}
-</tbody>
-</table>
-</div>
-`;
-
-refreshFormulaScaling();
-
-}
-
-
-function refreshFormulaScaling(){
-
-if(!selectedBatchFormula)return;
-
-const quantity=Number(byId('batchQuantity')?.value)||0;
-const unit=byId('batchUnit')?.value||'kg';
-
-const ingredients=getFormulaIngredients(selectedBatchFormula);
-const base=getFormulaBaseQty(selectedBatchFormula);
-
-let factor=0;
-
-if(quantity>0){
-factor=quantity/base;
-
-if(unit==='kg' && base<=1000){
-factor=(quantity*1000)/base;
-}
-
-if(unit==='ltr' && base<=1000){
-factor=(quantity*1000)/base;
-}
-
-if(unit==='ml' && base>1000){
-factor=quantity/base;
-}
-
-if(unit==='g' && base<=1000){
-factor=quantity/base;
-}
-}
-
-ingredients.forEach((r,i)=>{
-
-const p=getIngredientPercent(r);
-const el=byId('scaledIng_'+i);
-
-if(!el)return;
-
-if(!quantity){
-el.textContent='—';
-return;
-}
-
-let q;
-
-if(base===100 || base===1){
-q=(p/100)*quantity;
-}else{
-q=p*factor;
-}
-
-el.textContent=(Number(q)||0).toFixed(4)+' '+unit;
-
-});
-
-}
-
-
-/* =========================
-   CREATE NEW BATCH
-========================= */
+function refreshFormulaScaling(){if(selectedBatchFormula)renderFormulaBox(selectedBatchFormula)}
 
 async function createBatch(){
-
-setStatus('batchStatus','');
-
-const session=await getSession();
-if(!session)return;
-
-const productId=byId('batchProductSelect')?.value;
-const variantId=byId('batchVariantSelect')?.value;
-const formulaId=byId('batchFormSelect')?.value;
-const quantity=Number(byId('batchQuantity')?.value);
-const unit=byId('batchUnit')?.value||'kg';
-const mfg=byId('batchMfg')?.value||null;
-const exp=byId('batchExp')?.value||null;
-
-if(!productId || !variantId || !formulaId || !quantity || quantity<=0){
-setStatus('batchStatus','Please select Product, Variant, Formula and enter Batch Quantity.',false);
-return;
+const session=await getSession();if(!session)return;
+const pid=document.getElementById('batchProductSelect').value,vid=document.getElementById('batchVariantSelect').value,formulaId=document.getElementById('batchFormSelect').value,qty=Number(document.getElementById('batchQuantity').value),unit=document.getElementById('batchUnit').value,mfg=document.getElementById('batchMfg').value||null,exp=document.getElementById('batchExp').value||null;
+if(!pid||!vid||!formulaId||!qty||qty<=0){setStatus('batchStatus','Please select Product, Variant, Formula and enter a valid Total Batch Quantity.',false);return}
+const p=currentProducts.find(x=>String(x.id)===String(pid)),v=currentVariants.find(x=>String(x.id)===String(vid)),formula=currentFormulas.find(x=>String(x.id)===String(formulaId));
+if(!p||!v||!formula){setStatus('batchStatus','Product, Variant or Formula could not be resolved.',false);return}
+const ingredientSnapshot=getSelectedIngredientsFromFormulaBox();
+if(!ingredientSnapshot.length){setStatus('batchStatus','Please select at least one ingredient actually used in this batch.',false);return}
+let batchNo=makeBatchNumber();for(let i=0;i<5;i++){const {data}=await supabaseClient.from('product_verifications').select('id').eq('batch_number',batchNo).limit(1);if(!data?.length)break;batchNo=makeBatchNumber()}
+const {error}=await supabaseClient.from('product_verifications').insert({verification_code:'BATCH-'+batchNo,product_name:p.name,variant:(v.size??'')+(v.unit?' '+v.unit:''),batch_number:batchNo,manufacturing_date:mfg,expiry_date:exp,status:'Batch',scan_count:0,total_batch_quantity:qty,batch_unit:unit,formula_id:formula.id,formula_no:formula.formula_no||null,formula_name:formula.formula_name||null,ingredients_snapshot:ingredientSnapshot});
+if(error){console.error(error);setStatus('batchStatus','Batch save failed: '+error.message,false);return}
+setStatus('batchStatus','Batch '+batchNo+' saved with formula and '+ingredientSnapshot.length+' ingredients.',true);clearBatchForm(false);await loadBatches();await loadBatches('create')
 }
+function clearBatchForm(show=true){['batchQuantity','batchMfg','batchExp'].forEach(id=>document.getElementById(id).value='');document.getElementById('batchUnit').value='kg';document.getElementById('batchFormSelect').innerHTML='<option value="">Select Product first</option>';document.getElementById('batchFormulaBox').classList.add('hidden');document.getElementById('batchFormulaBox').innerHTML='';selectedBatchFormula=null;if(show)setStatus('batchStatus','',true)}
 
-const product=currentProducts.find(x=>String(x.id)===String(productId));
-const variant=currentVariants.find(x=>String(x.id)===String(variantId));
-const formula=currentFormulas.find(x=>String(x.id)===String(formulaId))||selectedBatchFormula;
+function renderBatchList(data){const box=document.getElementById('batchList');if(!data.length){box.innerHTML='<div class="empty">No batches created yet.</div>';return}box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Batch</th><th>Product</th><th>Variant</th><th>Formula</th><th>Total Batch</th><th>MFG</th><th>EXP</th><th>Status</th><th>Action</th></tr></thead><tbody>'+data.map(x=>'<tr><td><strong>'+esc(x.batch_number)+'</strong></td><td>'+esc(x.product_name)+'</td><td>'+esc(x.variant)+'</td><td>'+esc(x.formula_no||x.formula_name||'—')+'</td><td>'+esc(x.total_batch_quantity??'—')+' '+esc(x.batch_unit||'')+'</td><td>'+esc(x.manufacturing_date||'—')+'</td><td>'+esc(x.expiry_date||'—')+'</td><td><span class="badge">'+esc(x.status)+'</span></td><td><button class="blue" onclick="openBatchDetails(\''+String(x.id).replace(/'/g,"\\'")+'\')">View Details</button></td></tr>').join('')+'</tbody></table></div>'}
 
-if(!product || !variant || !formula){
-setStatus('batchStatus','Required product, variant or formula data not found.',false);
-return;
-}
-
-const ingredients=getFormulaIngredients(formula);
-
-const snapshot=ingredients.map((r,i)=>({
-ingredient_name:getIngredientName(r),
-percentage:getIngredientPercent(r),
-scaled_quantity:calculateScaledQuantity(r,formula,quantity,unit),
-unit:unit
-}));
-
-const batchNumber=makeBatchNumber();
-
-const payload={
-verification_code:makeCode(),
-product_id:product.id,
-variant_id:variant.id,
-product_name:product.name,
-variant:(variant.size??'')+(variant.unit?' '+variant.unit:''),
-batch_number:batchNumber,
-manufacturing_date:mfg,
-expiry_date:exp,
-status:'Batch',
-scan_count:0,
-total_batch_quantity:quantity,
-batch_unit:unit,
-formula_id:formula.id,
-formula_no:formula.formula_no||null,
-formula_name:formula.formula_name||formula.name||null,
-ingredients_snapshot:snapshot
-};
-
-const {data,error}=await supabaseClient
-.from('product_verifications')
-.insert(payload)
-.select()
-.single();
-
-if(error){
-console.error(error);
-setStatus('batchStatus','Unable to save batch: '+error.message,false);
-return;
-}
-
-setStatus('batchStatus','Batch '+(data.batch_number||batchNumber)+' saved successfully.',true);
-
-clearBatchForm(false);
-await loadBatches();
-
-}
-
-
-function calculateScaledQuantity(row,formula,quantity,unit){
-
-const p=getIngredientPercent(row);
-const base=getFormulaBaseQty(formula);
-
-if(base===100 || base===1){
-return Number(((p/100)*quantity).toFixed(6));
-}
-
-return Number((p*(quantity/base)).toFixed(6));
-}
-
-
-function clearBatchForm(show=true){
-
-if(byId('batchProductSelect'))byId('batchProductSelect').value='';
-if(byId('batchVariantSelect'))byId('batchVariantSelect').innerHTML='<option value="">Select product first</option>';
-if(byId('batchFormSelect'))byId('batchFormSelect').innerHTML='<option value="">Select Product first</option>';
-if(byId('batchQuantity'))byId('batchQuantity').value='';
-if(byId('batchMfg'))byId('batchMfg').value='';
-if(byId('batchExp'))byId('batchExp').value='';
-
-selectedBatchFormula=null;
-
-const box=byId('batchFormulaBox');
-if(box){
-box.classList.add('hidden');
-box.innerHTML='';
-}
-
-if(show)setStatus('batchStatus','');
-
-}
-
-
-/* =========================
-   BATCH LIST
-========================= */
-
-function renderBatchList(){
-
-const list=byId('batchList');
-if(!list)return;
-
-if(!currentBatches.length){
-list.innerHTML='<div class="empty">No production batches found.</div>';
-return;
-}
-
-list.innerHTML=`
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Batch No.</th>
-<th>Product</th>
-<th>Variant</th>
-<th>Quantity</th>
-<th>MFG</th>
-<th>EXP</th>
-<th>Formula</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-${currentBatches.map(b=>`
-<tr>
-<td class="record-code">${esc(b.batch_number||'—')}</td>
-<td>${esc(b.product_name||'—')}</td>
-<td>${esc(b.variant||'—')}</td>
-<td>${esc(b.total_batch_quantity??'—')} ${esc(b.batch_unit||'')}</td>
-<td>${esc(b.manufacturing_date||'—')}</td>
-<td>${esc(b.expiry_date||'—')}</td>
-<td>${esc(b.formula_no||b.formula_name||'—')}</td>
-<td>
-<button type="button" class="black" onclick="openBatchDetails('${String(b.id).replace(/'/g,"\\'")}')">
-View
-</button>
-</td>
-</tr>
-`).join('')}
-</tbody>
-</table>
-</div>
-`;
-
-}
-
-
-function openBatchDetails(id){
-
+async function openBatchDetails(id){
 const b=currentBatches.find(x=>String(x.id)===String(id));
-
-if(!b)return;
-
-currentBatchDetails=b;
-
-const ingredients=Array.isArray(b.ingredients_snapshot)?b.ingredients_snapshot:[];
-
-const content=byId('batchDetailContent');
-
-content.innerHTML=`
-<div class="batch-detail-head">
-<div class="detail-grid">
-<div class="detail-item">Batch Number<b>${esc(b.batch_number||'—')}</b></div>
-<div class="detail-item">Product<b>${esc(b.product_name||'—')}</b></div>
-<div class="detail-item">Variant<b>${esc(b.variant||'—')}</b></div>
-<div class="detail-item">Quantity<b>${esc(b.total_batch_quantity??'—')} ${esc(b.batch_unit||'')}</b></div>
-<div class="detail-item">MFG Date<b>${esc(b.manufacturing_date||'—')}</b></div>
-<div class="detail-item">EXP Date<b>${esc(b.expiry_date||'—')}</b></div>
-<div class="detail-item">Formula No.<b>${esc(b.formula_no||'—')}</b></div>
-<div class="detail-item">Formula Name<b>${esc(b.formula_name||'—')}</b></div>
-<div class="detail-item">Created<b>${esc(formatDateTime(b.created_at))}</b></div>
-</div>
-</div>
-
-<h3 style="margin:15px 0 10px">Ingredient Snapshot</h3>
-
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Ingredient</th>
-<th>Percentage</th>
-<th>Quantity</th>
-<th>Unit</th>
-</tr>
-</thead>
-<tbody>
-${ingredients.length
-?ingredients.map(x=>`
-<tr>
-<td>${esc(x.ingredient_name||'—')}</td>
-<td>${esc(x.percentage??'—')}%</td>
-<td>${esc(x.scaled_quantity??'—')}</td>
-<td>${esc(x.unit||'')}</td>
-</tr>
-`).join('')
-:'<tr><td colspan="4" class="empty">No ingredient snapshot available.</td></tr>'
-}
-</tbody>
-</table>
-</div>
-`;
-
-byId('batchDetailModal').classList.add('open');
-
-}
-
-
-function closeBatchDetails(){
-byId('batchDetailModal').classList.remove('open');
-currentBatchDetails=null;
-}
-
-
-function printBatchDetails(){
-
-if(!currentBatchDetails)return;
-
-const b=currentBatchDetails;
-const ingredients=Array.isArray(b.ingredients_snapshot)?b.ingredients_snapshot:[];
-
-const html=`
-<!DOCTYPE html>
-<html>
-<head>
-<title>Batch Record ${esc(b.batch_number)}</title>
-<style>
-body{font-family:Arial;padding:25px;color:#111}
-h1{font-size:22px}
-h2{font-size:18px;margin-top:20px}
-.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
-.item{border:1px solid #ddd;padding:10px}
-.item small{color:#777;display:block}
-.item b{display:block;margin-top:4px}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{border:1px solid #ccc;padding:8px;text-align:left}
-th{background:#111;color:#fff}
-</style>
-</head>
-<body>
-<h1>LIARA PROFESSIONAL™</h1>
-<h2>Batch Manufacturing Record</h2>
-<div class="meta">
-<div class="item"><small>Batch Number</small><b>${esc(b.batch_number||'')}</b></div>
-<div class="item"><small>Product</small><b>${esc(b.product_name||'')}</b></div>
-<div class="item"><small>Variant</small><b>${esc(b.variant||'')}</b></div>
-<div class="item"><small>Quantity</small><b>${esc(b.total_batch_quantity||'')} ${esc(b.batch_unit||'')}</b></div>
-<div class="item"><small>MFG</small><b>${esc(b.manufacturing_date||'')}</b></div>
-<div class="item"><small>EXP</small><b>${esc(b.expiry_date||'')}</b></div>
-<div class="item"><small>Formula No.</small><b>${esc(b.formula_no||'')}</b></div>
-<div class="item"><small>Formula</small><b>${esc(b.formula_name||'')}</b></div>
-</div>
-<h2>Ingredient Snapshot</h2>
-<table>
-<thead><tr><th>Ingredient</th><th>Percentage</th><th>Quantity</th><th>Unit</th></tr></thead>
-<tbody>
-${ingredients.map(x=>`
-<tr>
-<td>${esc(x.ingredient_name||'')}</td>
-<td>${esc(x.percentage??'')}%</td>
-<td>${esc(x.scaled_quantity??'')}</td>
-<td>${esc(x.unit||'')}</td>
-</tr>`).join('')}
-</tbody>
-</table>
-</body>
-</html>
-`;
-
-const w=window.open('','_blank');
-
-if(!w){
-setStatus('batchStatus','Please allow popups to print the batch record.',false);
-return;
-}
-
-w.document.write(html);
-w.document.close();
-w.focus();
-setTimeout(()=>w.print(),300);
-
-}
-
-
-/* =========================
-   CREATE VERIFICATION
-========================= */
-
-async function createVerification(){
-
-setStatus('createStatus','');
-
-const session=await getSession();
-if(!session)return;
-
-const productId=byId('productSelect')?.value;
-const variantId=byId('variantSelect')?.value;
-const batchId=byId('batchSelect')?.value;
-
-if(!productId || !variantId || !batchId){
-setStatus('createStatus','Please select Product, Variant and Batch first.',false);
-return;
-}
-
-const batch=currentBatches.find(x=>String(x.id)===String(batchId));
-
-if(!batch){
-setStatus('createStatus','Selected batch could not be found. Please refresh batches.',false);
-return;
-}
-
-const product=currentProducts.find(x=>String(x.id)===String(productId));
-const variant=currentVariants.find(x=>String(x.id)===String(variantId));
-
-const code=makeCode();
-const url=getVerificationUrl(code);
-
-const payload={
-verification_code:code,
-verification_url:url,
-product_id:product?.id||batch.product_id,
-variant_id:variant?.id||batch.variant_id,
-product_name:product?.name||batch.product_name||'',
-variant:variant?((variant.size??'')+(variant.unit?' '+variant.unit:'')):batch.variant||'',
-batch_number:batch.batch_number||'',
-manufacturing_date:batch.manufacturing_date||null,
-expiry_date:batch.expiry_date||null,
-status:'Verified',
-scan_count:0,
-total_batch_quantity:batch.total_batch_quantity??null,
-batch_unit:batch.batch_unit||null,
-formula_id:batch.formula_id||null,
-formula_no:batch.formula_no||null,
-formula_name:batch.formula_name||null,
-ingredients_snapshot:batch.ingredients_snapshot||[]
-};
-
-const {data,error}=await supabaseClient
-.from('product_verifications')
-.insert(payload)
-.select()
-.single();
-
-if(error){
-console.error(error);
-setStatus('createStatus','Unable to create barcode: '+error.message,false);
-return;
-}
-
-lastCreatedCode=data.verification_code||code;
-lastCreatedUrl=data.verification_url||url;
-
-byId('previewProduct').textContent=payload.product_name;
-byId('previewVariant').textContent=payload.variant;
-byId('previewBatch').textContent='Batch: '+payload.batch_number;
-byId('previewCode').textContent=lastCreatedCode;
-
-byId('labelPreview').classList.remove('hidden');
-
-renderBarcode(lastCreatedCode);
-renderQRCode(lastCreatedUrl);
-
-setStatus('createStatus','Barcode + QR created successfully.',true);
-
-}
-
-
-function clearCreateForm(){
-
-if(byId('productSelect'))byId('productSelect').value='';
-if(byId('variantSelect'))byId('variantSelect').innerHTML='<option value="">Select product first</option>';
-if(byId('batchSelect'))byId('batchSelect').innerHTML='<option value="">Select Product + Variant first</option>';
-
-const summary=byId('createBatchSummary');
-
-if(summary){
-summary.classList.add('hidden');
-summary.innerHTML='';
-}
-
-byId('labelPreview')?.classList.add('hidden');
-
-byId('barcode').innerHTML='';
-byId('qrcode').innerHTML='';
-
-lastCreatedCode='';
-lastCreatedUrl='';
-
-setStatus('createStatus','');
-
-}
-
-
-/* =========================
-   BARCODE + QR
-========================= */
-
-function renderBarcode(code){
-
-const svg=byId('barcode');
-
-if(!svg || !code)return;
-
-svg.innerHTML='';
-
-if(typeof JsBarcode!=='function'){
-setStatus('createStatus','Barcode library is still loading. Please try again.',false);
-return;
-}
-
-try{
-
-JsBarcode(svg,code,{
-format:'CODE128',
-displayValue:false,
-height:65,
-width:2,
-margin:8
-});
-
-}catch(e){
-console.error(e);
-setStatus('createStatus','Unable to generate barcode.',false);
-}
-
-}
-
-
-function renderQRCode(url){
-
-const box=byId('qrcode');
-
-if(!box)return;
-
-box.innerHTML='';
-
-if(typeof QRCode!=='function'){
-setStatus('createStatus','QR library is still loading. Please try again.',false);
-return;
-}
-
-try{
-
-new QRCode(box,{
-text:url,
-width:180,
-height:180,
-correctLevel:QRCode.CorrectLevel.M
-});
-
-}catch(e){
-console.error(e);
-}
-
-}
-
-
-function printLabel(){
-
-const preview=byId('labelPreview');
-
-if(!preview || preview.classList.contains('hidden')){
-setStatus('createStatus','Create a barcode first.',false);
-return;
-}
-
-window.print();
-
-}
-
-
-/* =========================
-   CANVAS DOWNLOAD
-========================= */
-
-function makeBarcodeCanvas(code){
-
-return new Promise((resolve,reject)=>{
-
-if(!code){
-reject(new Error('Barcode code missing'));
-return;
-}
-
-const canvas=document.createElement('canvas');
-
-canvas.width=800;
-canvas.height=260;
-
-const ctx=canvas.getContext('2d');
-
-ctx.fillStyle='#fff';
-ctx.fillRect(0,0,canvas.width,canvas.height);
-
-ctx.fillStyle='#111';
-ctx.textAlign='center';
-ctx.font='bold 24px Arial';
-ctx.fillText('LIARA PROFESSIONAL™',400,35);
-
-const temp=document.createElement('svg');
-
-try{
-
-JsBarcode(temp,code,{
-format:'CODE128',
-displayValue:false,
-height:120,
-width:3,
-margin:10
-});
-
-const svgText=new XMLSerializer().serializeToString(temp);
-const blob=new Blob([svgText],{type:'image/svg+xml;charset=utf-8'});
-const url=URL.createObjectURL(blob);
-const img=new Image();
-
-img.onload=()=>{
-
-ctx.drawImage(img,70,60,660,120);
-
-ctx.font='bold 22px Arial';
-ctx.fillText(code,400,220);
-
-URL.revokeObjectURL(url);
-resolve(canvas);
-
-};
-
-img.onerror=reject;
-img.src=url;
-
-}catch(e){
-reject(e);
-}
-
-});
-
-}
-
-
-function makeQRCanvas(url){
-
-return new Promise((resolve,reject)=>{
-
-const temp=document.createElement('div');
-temp.style.position='fixed';
-temp.style.left='-10000px';
-temp.style.top='-10000px';
-
-document.body.appendChild(temp);
-
-try{
-
-new QRCode(temp,{
-text:url,
-width:220,
-height:220
-});
-
-setTimeout(()=>{
-
-const source=temp.querySelector('canvas');
-
-if(!source){
-document.body.removeChild(temp);
-reject(new Error('QR generation failed'));
-return;
-}
-
-const canvas=document.createElement('canvas');
-
-canvas.width=800;
-canvas.height=800;
-
-const ctx=canvas.getContext('2d');
-
-ctx.fillStyle='#fff';
-ctx.fillRect(0,0,800,800);
-
-ctx.fillStyle='#111';
-ctx.textAlign='center';
-ctx.font='bold 28px Arial';
-ctx.fillText('LIARA PROFESSIONAL™',400,45);
-
-ctx.drawImage(source,290,80,220,220);
-
-ctx.font='bold 20px Arial';
-ctx.fillText('VERIFY PRODUCT',400,350);
-
-ctx.font='16px Arial';
-
-const shortUrl=url.length>75?url.substring(0,72)+'...':url;
-ctx.fillText(shortUrl,400,390);
-
-document.body.removeChild(temp);
-resolve(canvas);
-
-},300);
-
-}catch(e){
-
-if(temp.parentNode)temp.parentNode.removeChild(temp);
-reject(e);
-
-}
-
-});
-
-}
-
-
-async function makeCombinedCanvas(code,url){
-
-const canvas=document.createElement('canvas');
-
-canvas.width=1200;
-canvas.height=800;
-
-const ctx=canvas.getContext('2d');
-
-ctx.fillStyle='#fff';
-ctx.fillRect(0,0,canvas.width,canvas.height);
-
-ctx.fillStyle='#111';
-ctx.textAlign='center';
-ctx.font='bold 34px Arial';
-ctx.fillText('LIARA PROFESSIONAL™',600,55);
-
-const barcodeCanvas=await makeBarcodeCanvas(code);
-const qrCanvas=await makeQRCanvas(url);
-
-ctx.drawImage(barcodeCanvas,40,100,700,230);
-ctx.drawImage(qrCanvas,790,100,350,350);
-
-ctx.font='bold 22px Arial';
-ctx.fillText(code,390,365);
-
-ctx.font='16px Arial';
-ctx.fillText('Scan QR to verify authenticity online',600,500);
-
-return canvas;
-
-}
-
-
-/* =========================
-   DOWNLOAD JPG
-========================= */
-
-async function downloadRecordJPG(code){
-
-if(!code){
-setStatus('createStatus','No barcode available to download.',false);
-return;
-}
-
-try{
-
-const url=lastCreatedUrl||getVerificationUrl(code);
-const canvas=await makeCombinedCanvas(code,url);
-
-const a=document.createElement('a');
-a.href=canvas.toDataURL('image/jpeg',.95);
-a.download='LIARA-'+code+'.jpg';
-document.body.appendChild(a);
-a.click();
-a.remove();
-
-}catch(e){
-
-console.error(e);
-setStatus('createStatus','Unable to create JPG: '+e.message,false);
-
-}
-
-}
-
-
-/* =========================
-   DOWNLOAD PDF
-========================= */
-
-async function downloadRecordPDF(code){
-
-if(!code){
-setStatus('createStatus','No barcode available to download.',false);
-return;
-}
-
-if(!window.jspdf || !window.jspdf.jsPDF){
-setStatus('createStatus','PDF library is still loading. Please try again.',false);
-return;
-}
-
-try{
-
-const url=lastCreatedUrl||getVerificationUrl(code);
-const canvas=await makeCombinedCanvas(code,url);
-const img=canvas.toDataURL('image/jpeg',.95);
-
-const PDF=window.jspdf.jsPDF;
-
-const pdf=new PDF({
-orientation:'portrait',
-unit:'mm',
-format:'a4'
-});
-
-const pageW=210;
-const margin=15;
-const width=pageW-margin*2;
-const height=width*(canvas.height/canvas.width);
-
-pdf.text('LIARA PROFESSIONAL™',margin,15);
-pdf.addImage(img,'JPEG',margin,22,width,height);
-pdf.save('LIARA-'+code+'.pdf');
-
-}catch(e){
-
-console.error(e);
-setStatus('createStatus','Unable to create PDF: '+e.message,false);
-
-}
-
-}
-
-
-/* =========================
-   VERIFY
-========================= */
-
-async function verifyProduct(codeOverride){
-
-const input=byId('verifyCode');
-
-let code=String(codeOverride||input?.value||'').trim();
-
-if(!code){
-setStatus('recordsStatus','');
-showVerifyBad('Please enter or scan a verification code.');
-return;
-}
-
-code=code.replace(/^.*#verify=/i,'').trim();
-
-try{
-code=decodeURIComponent(code);
-}catch(e){}
-
-if(input)input.value=code;
-
-showVerifyLoading();
-
-if(!supabaseClient){
-showVerifyBad('Verification service is currently unavailable.');
-return;
-}
-
-const {data,error}=await supabaseClient
-.from('product_verifications')
-.select('*')
-.eq('verification_code',code)
-.eq('status','Verified')
-.maybeSingle();
-
-if(error){
-console.error(error);
-showVerifyBad('Verification failed: '+error.message);
-return;
-}
-
-if(!data){
-showVerifyBad('Product verification code was not found.');
-return;
-}
-
-try{
-
-await supabaseClient
-.from('product_verifications')
-.update({
-scan_count:(Number(data.scan_count)||0)+1,
-updated_at:new Date().toISOString()
-})
-.eq('id',data.id);
-
-}catch(e){
-console.warn('scan count update failed',e);
-}
-
-showVerifyResult(data);
-
-}
-
-
-function showVerifyLoading(){
-
-const box=byId('verifyResult');
-
-box.className='verify-result ok';
-box.innerHTML='<div class="verify-title">Checking Product...</div><div>Please wait while we verify the code.</div>';
-
-}
-
-
-function showVerifyBad(message){
-
-const box=byId('verifyResult');
-
-box.className='verify-result bad';
-
-box.innerHTML=`
-<div class="verify-title">❌ Verification Failed</div>
-<div>${esc(message)}</div>
-`;
-
-}
-
-
-function showVerifyResult(data){
-
-const box=byId('verifyResult');
-
-box.className='verify-result ok';
-
-const ingredients=Array.isArray(data.ingredients_snapshot)
-?data.ingredients_snapshot
-:[];
-
-box.innerHTML=`
-<div class="verify-title">✓ Product Verified</div>
-
-<div class="verify-row">
-<strong>Product</strong>
-<span>${esc(data.product_name||'—')}</span>
-</div>
-
-<div class="verify-row">
-<strong>Variant</strong>
-<span>${esc(data.variant||'—')}</span>
-</div>
-
-<div class="verify-row">
-<strong>Batch Number</strong>
-<span>${esc(data.batch_number||'—')}</span>
-</div>
-
-<div class="verify-row">
-<strong>Manufacturing Date</strong>
-<span>${esc(formatDate(data.manufacturing_date))}</span>
-</div>
-
-<div class="verify-row">
-<strong>Expiry Date</strong>
-<span>${esc(formatDate(data.expiry_date))}</span>
-</div>
-
-<div class="verify-row">
-<strong>Formula</strong>
-<span>${esc(data.formula_no||data.formula_name||'—')}</span>
-</div>
-
-<div class="verify-row">
-<strong>Verification Code</strong>
-<span class="record-code">${esc(data.verification_code||'—')}</span>
-</div>
-
-<div class="verify-row">
-<strong>Status</strong>
-<span><span class="badge">VERIFIED</span></span>
-</div>
-
-${ingredients.length?`
-<div style="margin-top:18px">
-<strong>Batch Ingredient Snapshot</strong>
-<div class="table-wrap" style="margin-top:8px">
-<table>
-<thead>
-<tr>
-<th>Ingredient</th>
-<th>Percentage</th>
-<th>Quantity</th>
-<th>Unit</th>
-</tr>
-</thead>
-<tbody>
-${ingredients.map(x=>`
-<tr>
-<td>${esc(x.ingredient_name||'—')}</td>
-<td>${esc(x.percentage??'—')}%</td>
-<td>${esc(x.scaled_quantity??'—')}</td>
-<td>${esc(x.unit||'')}</td>
-</tr>
-`).join('')}
-</tbody>
-</table>
-</div>
-</div>
-`:''}
-`;
-
-}
-
-
-function clearVerifyResult(){
-const box=byId('verifyResult');
-if(box){
-box.className='verify-result';
-box.innerHTML='';
-}
-}
-
-
-function clearVerifyInput(){
-
-if(byId('verifyCode'))byId('verifyCode').value='';
-clearVerifyResult();
-
-if(byId('verifyCode'))byId('verifyCode').focus();
-
-}
-
-
-/* =========================
-   RECORDS
-========================= */
-
-async function loadRecords(){
-
-const list=byId('recordsList');
-
-if(list)list.innerHTML='<div class="loading">Loading barcode records...</div>';
-
-if(!supabaseClient){
-setStatus('recordsStatus','Supabase library could not be loaded.',false);
-return;
-}
-
-const session=await getSession();
-
-if(!session){
-if(list)list.innerHTML='<div class="empty">Admin login required to view barcode records.</div>';
-return;
-}
-
-const {data,error}=await supabaseClient
-.from('product_verifications')
-.select('*')
-.eq('status','Verified')
-.order('created_at',{ascending:false});
-
-if(error){
-
-console.error(error);
-
-if(list)list.innerHTML='<div class="empty">Unable to load records.<br>'+esc(error.message)+'</div>';
-
-setStatus('recordsStatus','Unable to load records: '+error.message,false);
-
-return;
-
-}
-
-setStatus('recordsStatus','');
-
-const records=data||[];
-
-if(!records.length){
-
-if(list)list.innerHTML='<div class="empty">No barcode records found.</div>';
-
-return;
-
-}
-
-list.innerHTML=`
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-<th>Verification Code</th>
-<th>Product</th>
-<th>Variant</th>
-<th>Batch</th>
-<th>Created</th>
-<th>Scans</th>
-<th>Actions</th>
-</tr>
-</thead>
-<tbody>
-${records.map(r=>`
-<tr>
-<td class="record-code">${esc(r.verification_code||'—')}</td>
-<td>${esc(r.product_name||'—')}</td>
-<td>${esc(r.variant||'—')}</td>
-<td>${esc(r.batch_number||'—')}</td>
-<td>${esc(formatDateTime(r.created_at))}</td>
-<td>${esc(r.scan_count??0)}</td>
-<td>
-<div class="record-actions">
-<button type="button" class="blue" onclick="useRecord('${String(r.verification_code||'').replace(/'/g,"\\'")}')">Verify</button>
-<button type="button" class="black" onclick="downloadRecordJPG('${String(r.verification_code||'').replace(/'/g,"\\'")}')">JPG</button>
-<button type="button" class="gold" onclick="downloadRecordPDF('${String(r.verification_code||'').replace(/'/g,"\\'")}')">PDF</button>
-</div>
-</td>
-</tr>
-`).join('')}
-</tbody>
-</table>
-</div>
-`;
-
-}
-
-
-function useRecord(code){
-
-lastCreatedCode=code;
-lastCreatedUrl=getVerificationUrl(code);
-
-showTab('verify',document.querySelectorAll('.tab')[2]);
-
-byId('verifyCode').value=code;
-
-verifyProduct(code);
-
-}
-
-
-/* =========================
-   CAMERA
-========================= */
-
-async function startCameraScanner(){
-
-if(cameraStarting)return;
-
-if(typeof Html5Qrcode!=='function'){
-setStatus('createStatus','Camera scanner library is still loading. Please refresh.',false);
-return;
-}
-
-if(html5QrCode){
-await stopCameraScanner();
-}
-
-cameraStarting=true;
-
-try{
-
-html5QrCode=new Html5Qrcode('qrReader');
-
-const config={
-fps:10,
-qrbox:{width:250,height:250},
-aspectRatio:1
-};
-
-await html5QrCode.start(
-{facingMode:'environment'},
-config,
-(decodedText)=>{
-handleCameraResult(decodedText);
-},
-()=>{
-/* scanning continues */
-}
-);
-
-}catch(e){
-
-console.error(e);
-
-html5QrCode=null;
-
-const msg=String(e?.message||e);
-
-if(msg.toLowerCase().includes('permission')){
-showVerifyBad('Camera permission was denied. Please allow camera access in your browser.');
-}else{
-showVerifyBad('Unable to open camera: '+msg);
-}
-
-}finally{
-cameraStarting=false;
-}
-
-}
-
-
-async function stopCameraScanner(){
-
-if(!html5QrCode)return;
-
-try{
-
-if(html5QrCode.isScanning){
-await html5QrCode.stop();
-}
-
-}catch(e){
-console.warn(e);
-}
-
-try{
-html5QrCode.clear();
-}catch(e){}
-
-html5QrCode=null;
-
-}
-
-
-function handleCameraResult(text){
-
-if(!text)return;
-
-let code=String(text).trim();
-
-if(code.includes('#verify=')){
-code=code.split('#verify=')[1];
-try{code=decodeURIComponent(code)}catch(e){}
-}
-
-if(byId('verifyCode'))byId('verifyCode').value=code;
-
-stopCameraScanner();
-
-verifyProduct(code);
-
-}
-
-
-/* =========================
-   DATE HELPERS
-========================= */
-
-function formatDate(v){
-
-if(!v)return '—';
-
-const s=String(v);
-
-if(/^\d{4}-\d{2}-\d{2}$/.test(s)){
-const [y,m,d]=s.split('-');
-return d+'/'+m+'/'+y;
-}
-
-return s;
-
-}
-
-
-function formatDateTime(v){
-
-if(!v)return '—';
-
-try{
-return new Date(v).toLocaleString('en-IN');
-}catch(e){
-return String(v);
-}
-
-}
-
-
-/* =========================
-   CUSTOMER VERIFY MODE
-========================= */
-
-function applyCustomerVerifyMode(){
-
-const code=getHashCode();
-
-if(!code)return;
-
-document.body.classList.add('customer-verify-mode');
-
-showTab('verify',null);
-
-const input=byId('verifyCode');
-
-if(input)input.value=code;
-
-setTimeout(()=>verifyProduct(code),250);
-
-}
-
-
-/* =========================
-   INITIALIZE
-========================= */
-
-async function init(){
-
-try{
-
-if(
-window.supabase &&
-typeof window.supabase.createClient==='function'
-){
-
-supabaseClient=window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_ANON_KEY
-);
-
-}else{
-
-setStatus(
-'createStatus',
-'Supabase library could not be loaded. Please refresh the page.',
-false
-);
-
-return;
-
-}
-
-await loadProducts();
-
-if(getHashCode()){
-applyCustomerVerifyMode();
-}else{
-showTab('create',document.querySelector('.tab'));
-}
-
-}catch(e){
-
-console.error('Initialization error:',e);
-
-setStatus(
-'createStatus',
-'Page initialization error: '+e.message,
-false
-);
-
-}
-
-}
-
-
-/* =========================
-   KEYBOARD SCANNER
-========================= */
-
-document.addEventListener('keydown',function(e){
-
-if(e.key==='Enter'){
-
-const active=document.activeElement;
-
-if(active && active.id==='verifyCode'){
-e.preventDefault();
-verifyProduct();
-}
-
-}
-
-});
-
-
-/* =========================
-   HASH CHANGE
-========================= */
-
-window.addEventListener('hashchange',function(){
-
-const code=getHashCode();
-
-if(code){
-
-document.body.classList.add('customer-verify-mode');
-
-showTab('verify',null);
-
-if(byId('verifyCode')){
-byId('verifyCode').value=code;
-}
-
-verifyProduct(code);
-
-}else{
-
-document.body.classList.remove('customer-verify-mode');
-
-showTab('create',document.querySelector('.tab'));
-
-}
-
-});
-
-
-/* =========================
-   START
-========================= */
-
-if(document.readyState==='loading'){
-
-document.addEventListener('DOMContentLoaded',init);
-
-}else{
-
-init();
-
-}
-
+if(!b){const {data}=await supabaseClient.from('product_verifications').select('*').eq('id',id).maybeSingle();currentBatchDetails=data||null}else currentBatchDetails=b;
+if(!currentBatchDetails){alert('Batch not found.');return}
+const x=currentBatchDetails;const ing=Array.isArray(x.ingredients_snapshot)?x.ingredients_snapshot:[];
+const content=document.getElementById('batchDetailContent');
+content.innerHTML='<div class="batch-detail-head"><div class="detail-grid">'+
+'<div class="detail-item">Batch Number<b>'+esc(x.batch_number||'—')+'</b></div><div class="detail-item">Product<b>'+esc(x.product_name||'—')+'</b></div><div class="detail-item">Variant<b>'+esc(x.variant||'—')+'</b></div><div class="detail-item">Formula<b>'+esc(x.formula_no||'—')+'</b></div><div class="detail-item">Formula Name<b>'+esc(x.formula_name||'—')+'</b></div><div class="detail-item">Batch Quantity<b>'+esc(x.total_batch_quantity??'—')+' '+esc(x.batch_unit||'')+'</b></div><div class="detail-item">MFG Date<b>'+esc(x.manufacturing_date||'—')+'</b></div><div class="detail-item">EXP Date<b>'+esc(x.expiry_date||'—')+'</b></div><div class="detail-item">Status<b>'+esc(x.status||'—')+'</b></div></div></div>'+
+'<h3 style="margin:12px 0 8px">Ingredients Used in This Batch</h3>'+
+(ing.length?'<div class="table-wrap"><table class="ingredient-table"><thead><tr><th>#</th><th>Ingredient</th><th>Required Qty</th><th>Unit</th><th>%</th></tr></thead><tbody>'+ing.map((r,i)=>'<tr><td>'+ (i+1) +'</td><td><strong>'+esc(r.ingredient_name||r.name||'')+'</strong></td><td>'+esc(formatQty(Number(r.quantity)))+'</td><td>'+esc(r.unit||'')+'</td><td>'+esc(r.percentage??'—')+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty">No ingredient snapshot is stored for this batch.</div>');
+batchPrintHtml=content.innerHTML;document.getElementById('batchDetailModal').classList.add('open')
+}
+function closeBatchDetails(){document.getElementById('batchDetailModal').classList.remove('open')}
+function printBatchDetails(){if(!currentBatchDetails)return;const x=currentBatchDetails;const ing=Array.isArray(x.ingredients_snapshot)?x.ingredients_snapshot:[];const w=window.open('','_blank','width=900,height=800');if(!w){alert('Please allow pop-ups to print the batch record.');return}w.document.write('<!doctype html><html><head><title>Liara Batch '+esc(x.batch_number)+'</title><style>body{font-family:Arial,sans-serif;padding:25px;color:#111}h1{color:#173b2d;margin-bottom:4px}h2{margin-top:24px}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.item{border:1px solid #ddd;padding:10px}.item small{display:block;color:#777}.item b{display:block;margin-top:4px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:8px;text-align:left}th{background:#eee}.foot{margin-top:25px;border-top:1px solid #999;padding-top:8px;text-align:center;font-size:11px;color:#666}@media print{body{padding:10mm}}</style></head><body><h1>Liara Professional™</h1><div>ADVANCED HERBAL • BATCH MANUFACTURING RECORD</div><div class="meta"><div class="item"><small>Batch Number</small><b>'+esc(x.batch_number||'—')+'</b></div><div class="item"><small>Product</small><b>'+esc(x.product_name||'—')+'</b></div><div class="item"><small>Variant</small><b>'+esc(x.variant||'—')+'</b></div><div class="item"><small>Formula</small><b>'+esc(x.formula_no||'—')+'</b></div><div class="item"><small>Batch Quantity</small><b>'+esc(x.total_batch_quantity??'—')+' '+esc(x.batch_unit||'')+'</b></div><div class="item"><small>MFG / EXP</small><b>'+esc(x.manufacturing_date||'—')+' / '+esc(x.expiry_date||'—')+'</b></div></div><h2>Ingredients Used</h2><table><thead><tr><th>#</th><th>Ingredient</th><th>Required Qty</th><th>Unit</th><th>%</th></tr></thead><tbody>'+ing.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.ingredient_name||r.name||'')+'</td><td>'+esc(formatQty(Number(r.quantity)))+'</td><td>'+esc(r.unit||'')+'</td><td>'+esc(r.percentage??'—')+'</td></tr>').join('')+'</tbody></table><div class="foot">Liara Professional™ • Batch Manufacturing Record</div></body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),250)}
+
+async function createVerification(){if(typeof JsBarcode!=='function'){setStatus('createStatus','Barcode library could not be loaded. Please refresh the page.',false);return}if(typeof QRCode!=='function'){setStatus('createStatus','QR library could not be loaded. Please refresh the page.',false);return}
+const session=await getSession();if(!session)return;const batchNo=document.getElementById('batchSelect').value;if(!batchNo){setStatus('createStatus','Please select a Batch first. Create the batch from Batch Management if it does not exist.',false);return}
+const b=currentBatches.find(x=>x.batch_number===batchNo);if(!b){setStatus('createStatus','Selected batch could not be loaded. Refresh batches and try again.',false);return}
+const code=makeCode();const {data,error}=await supabaseClient.from('product_verifications').insert({verification_code:code,product_name:b.product_name,variant:b.variant,batch_number:b.batch_number,manufacturing_date:b.manufacturing_date,expiry_date:b.expiry_date,status:'Verified',scan_count:0,batch_id:b.id,formula_id:b.formula_id||null,formula_no:b.formula_no||null,formula_name:b.formula_name||null,ingredients_snapshot:b.ingredients_snapshot||null}).select().single();
+if(error){console.error(error);setStatus('createStatus','Save failed: '+error.message,false);return}
+lastCreatedCode=data.verification_code;lastCreatedUrl=getVerificationUrl(lastCreatedCode);document.getElementById('previewProduct').textContent=data.product_name;document.getElementById('previewVariant').textContent=data.variant;document.getElementById('previewBatch').textContent='Batch: '+(data.batch_number||'—');document.getElementById('previewCode').textContent=data.verification_code;
+JsBarcode('#barcode',data.verification_code,{format:'CODE128',lineColor:'#111',width:2,height:65,displayValue:true,fontSize:13,margin:5});const qr=document.getElementById('qrcode');qr.innerHTML='';new QRCode(qr,{text:lastCreatedUrl,width:180,height:180,correctLevel:QRCode.CorrectLevel.M});document.getElementById('labelPreview').classList.remove('hidden');setStatus('createStatus','Barcode + QR created successfully and linked to batch '+data.batch_number+'.',true)
+}
+function clearCreateForm(){document.getElementById('productSelect').value='';document.getElementById('variantSelect').innerHTML='<option value="">Select product first</option>';document.getElementById('batchSelect').innerHTML='<option value="">Select Product + Variant first</option>';document.getElementById('createBatchSummary').classList.add('hidden');document.getElementById('labelPreview').classList.add('hidden');setStatus('createStatus','',true);lastCreatedCode='';lastCreatedUrl=''}
+
+async function verifyProduct(){if(!supabaseClient){showVerifyResult(false,'Verification service unavailable','Please refresh the page and try again.');return}const input=document.getElementById('verifyCode');if(!input){return}const code=input.value.trim();if(!code){showVerifyResult(false,'Please scan or enter a barcode / verification code.');return}const clean=code.replace(/\s+/g,'').toUpperCase(); const {data,error}=await supabaseClient.from('product_verifications').select('id,verification_code,product_name,variant,batch_number,manufacturing_date,expiry_date,status,scan_count,created_at').eq('verification_code',clean).eq('status','Verified').maybeSingle();if(error){console.error(error);showVerifyResult(false,'Verification service error: '+error.message);return}if(!data){showVerifyResult(false,'PRODUCT NOT VERIFIED','The scanned code is not found as an active verified Liara product.');return}const newCount=Number(data.scan_count||0)+1;await supabaseClient.from('product_verifications').update({scan_count:newCount,updated_at:new Date().toISOString()}).eq('id',data.id);showVerifyResult(true,'AUTHENTIC PRODUCT',null,data)}
+function showVerifyResult(ok,title,message,data){const box=document.getElementById('verifyResult');if(!ok){box.className='verify-result bad';box.innerHTML='<div class="verify-title">✕ '+esc(title)+'</div><div>'+esc(message||'')+'</div>';return}box.className='verify-result ok';box.innerHTML='<div class="verify-title">✓ '+esc(title)+'</div><div style="font-weight:700;margin-bottom:10px">VERIFIED BY LIARA PROFESSIONAL™</div><div class="verify-row"><strong>Product</strong><span>'+esc(data.product_name)+'</span></div><div class="verify-row"><strong>Variant / Size</strong><span>'+esc(data.variant)+'</span></div><div class="verify-row"><strong>Verification Code</strong><span>'+esc(data.verification_code)+'</span></div>'+(data.batch_number?'<div class="verify-row"><strong>Batch Number</strong><span>'+esc(data.batch_number)+'</span></div>':'')+(data.manufacturing_date?'<div class="verify-row"><strong>Manufacturing Date</strong><span>'+esc(data.manufacturing_date)+'</span></div>':'')+(data.expiry_date?'<div class="verify-row"><strong>Expiry Date</strong><span>'+esc(data.expiry_date)+'</span></div>':'')+'<div class="verify-row"><strong>Status</strong><span><span class="badge">Verified</span></span></div>'}
+function clearVerifyResult(){const box=document.getElementById('verifyResult');box.className='verify-result';box.innerHTML=''}
+function getHashCode(){const hash=window.location.hash||'';if(!hash.startsWith('#verify='))return '';try{return decodeURIComponent(hash.substring(8))}catch(e){return hash.substring(8)}}
+
+window.addEventListener('hashchange',()=>{const code=getHashCode();if(code){document.body.classList.add('customer-verify-mode');document.querySelector('.tabs')?.style.setProperty('display','none','important');['create','batches','records'].forEach(x=>{const e=document.getElementById('tab-'+x);if(e){e.classList.add('hidden');e.style.display='none'}});const v=document.getElementById('tab-verify');v.classList.remove('hidden');v.style.display='block';document.querySelector('#tab-verify .scanner-box')?.style.setProperty('display','none','important');document.querySelector('#tab-verify .note')?.style.setProperty('display','none','important');document.getElementById('verifyCode').value=code;verifyProduct()}})
+
+document.getElementById('verifyCode')?.addEventListener('keydown',e=>{if(e.key==='Enter')verifyProduct()});
+
+async function loadRecords(){const box=document.getElementById('recordsList');box.innerHTML='<div class="empty">Loading...</div>';const {data,error}=await supabaseClient.from('product_verifications').select('*').eq('status','Verified').order('created_at',{ascending:false});if(error){box.innerHTML='';setStatus('recordsStatus','Load failed: '+error.message,false);return}setStatus('recordsStatus','Loaded '+data.length+' barcode records.',true);if(!data.length){box.innerHTML='<div class="empty">No barcode records created yet.</div>';return}box.innerHTML='<div class="table-wrap"><table><thead><tr><th>Product</th><th>Variant</th><th>Verification Code</th><th>Batch</th><th>Status</th><th>Scans</th><th>Created</th><th>Action</th></tr></thead><tbody>'+data.map(x=>'<tr><td><strong>'+esc(x.product_name)+'</strong></td><td>'+esc(x.variant)+'</td><td><strong>'+esc(x.verification_code)+'</strong></td><td>'+esc(x.batch_number||'—')+'</td><td><span class="badge">Verified</span></td><td>'+Number(x.scan_count||0)+'</td><td>'+ (x.created_at?new Date(x.created_at).toLocaleString('en-IN'):'—')+'</td><td><button class="blue" onclick="useRecord(\''+esc(x.verification_code)+'\')">Verify</button></td></tr>').join('')+'</tbody></table></div>'}
+function useRecord(code){document.getElementById('verifyCode').value=code;showTab('verify',document.querySelectorAll('.tab')[2]);verifyProduct()}
+function printLabel(){if(!lastCreatedCode){alert('Create a barcode first.');return}window.print()}
+function downloadBarcode(){const svg=document.getElementById('barcode');if(!svg||!lastCreatedCode){alert('Create a barcode first.');return}const source=new XMLSerializer().serializeToString(svg);const blob=new Blob([source],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=lastCreatedCode+'_barcode.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+
+async function init(){const hashCode=getHashCode();if(!supabaseClient){setStatus('createStatus','Unable to load Supabase. Please refresh the page.',false);return}if(hashCode){document.body.classList.add('customer-verify-mode');document.querySelector('.tabs')?.style.setProperty('display','none','important');['create','batches','records'].forEach(x=>{const e=document.getElementById('tab-'+x);if(e){e.classList.add('hidden');e.style.display='none'}});const v=document.getElementById('tab-verify');if(v){v.classList.remove('hidden');v.style.display='block'}document.querySelector('#tab-verify .scanner-box')?.style.setProperty('display','none','important');document.querySelector('#tab-verify .note')?.style.setProperty('display','none','important');const input=document.getElementById('verifyCode');if(input)input.value=hashCode;await verifyProduct();return}await loadProducts();await loadBatches()}window.addEventListener('DOMContentLoaded',init);
 </script>
-
 </body>
 </html>
-```
