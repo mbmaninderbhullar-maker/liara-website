@@ -336,7 +336,8 @@ window.addEventListener('hashchange',()=>{const code=getHashCode();if(code){docu
 
 document.getElementById('verifyCode')?.addEventListener('keydown',e=>{if(e.key==='Enter')verifyProduct()});
 
-async async function loadRecords(){
+async function loadRecords(){
+
   const box=document.getElementById('recordsList');
   if(!box)return;
   box.innerHTML='<div class="empty">Loading...</div>';
