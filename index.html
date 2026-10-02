@@ -6,25 +6,21 @@
 
 <meta name="description" content="Liara Professional™ — Advanced Herbal beauty, skincare and personal care.">
 
-<title>Liara Professional™ | Advanced Herbal Care</title>
+<title>Liara Professional™ | Advanced Herbal</title>
 
 <style>
-
 :root{
-  --green:#173f32;
-  --green2:#245847;
-  --green3:#356c58;
-  --green4:#e9f0e9;
+  --green:#1d513e;
+  --green-dark:#123a2d;
+  --green-soft:#edf4ef;
   --gold:#b58a3c;
-  --gold2:#d7bd78;
-  --cream:#f7f3e9;
-  --cream2:#eee8da;
+  --gold-light:#d8bd7a;
+  --cream:#f8f5ed;
+  --black:#151817;
+  --text:#303733;
+  --muted:#737b76;
+  --line:#e3e6e0;
   --white:#fff;
-  --black:#101613;
-  --text:#27312d;
-  --muted:#727a75;
-  --line:#e1e5df;
-  --soft:#f3f6f1;
 }
 
 *{
@@ -41,7 +37,12 @@ body{
   font-family:Arial,Helvetica,sans-serif;
   background:#fff;
   color:var(--black);
-  line-height:1.6;
+  line-height:1.5;
+}
+
+button,
+a{
+  font-family:inherit;
 }
 
 a{
@@ -50,7 +51,6 @@ a{
 }
 
 button{
-  font-family:inherit;
   cursor:pointer;
 }
 
@@ -65,12 +65,16 @@ img{
 ========================= */
 
 .topbar{
-  background:var(--green);
-  color:#edf3ef;
-  text-align:center;
-  padding:8px 15px;
-  font-size:9px;
-  letter-spacing:2.5px;
+  height:32px;
+  background:var(--green-dark);
+  color:#e9eee9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 15px;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:2.2px;
 }
 
 
@@ -82,28 +86,28 @@ header{
   position:sticky;
   top:0;
   z-index:1000;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(23,63,50,.08);
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid #e8ebe7;
 }
 
 .header-inner{
-  max-width:1400px;
-  min-height:82px;
+  max-width:1380px;
+  min-height:78px;
   margin:auto;
   padding:0 5%;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:30px;
+  gap:25px;
 }
 
 
 /* LOGO */
 
 .logo{
-  display:grid !important;
-  grid-template-columns:43px auto;
+  display:grid;
+  grid-template-columns:42px auto;
   grid-template-rows:auto auto;
   column-gap:9px;
   align-items:center;
@@ -111,35 +115,31 @@ header{
 }
 
 .logo-mark{
+  width:42px;
+  height:42px;
   grid-row:1 / span 2;
-  width:43px;
-  height:43px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
 .logo-mark svg{
-  width:43px;
-  height:43px;
+  width:100%;
+  height:100%;
 }
 
 .logo-word{
   font-family:Georgia,"Times New Roman",serif;
-  font-size:27px;
+  font-size:26px;
   font-weight:700;
-  letter-spacing:7px;
+  letter-spacing:6px;
+  color:var(--green-dark);
   line-height:1;
-  color:var(--green);
 }
 
 .logo small{
-  grid-column:2;
-  margin-top:5px;
   font-size:7px;
   font-weight:700;
-  letter-spacing:4px;
+  letter-spacing:3.5px;
   color:var(--gold);
+  margin-top:4px;
 }
 
 
@@ -148,31 +148,31 @@ header{
 nav{
   display:flex;
   align-items:center;
-  gap:23px;
+  gap:21px;
 }
 
 nav a{
-  color:#3e4743;
   font-size:10px;
   font-weight:700;
-  transition:.25s;
+  color:#4a514d;
   white-space:nowrap;
+  transition:.2s;
 }
 
 nav a:hover{
-  color:var(--green3);
+  color:var(--green);
 }
 
 .nav-cart{
-  padding:10px 14px;
-  border:1px solid var(--green);
-  border-radius:3px;
   color:var(--green)!important;
+  border:1px solid var(--green);
+  padding:9px 13px;
+  border-radius:3px;
 }
 
 .nav-cart:hover{
-  background:var(--green);
   color:#fff!important;
+  background:var(--green);
 }
 
 
@@ -183,109 +183,105 @@ nav a:hover{
 .hero{
   position:relative;
   overflow:hidden;
-  min-height:690px;
-  padding:75px 6%;
-  background:
-    radial-gradient(
-      circle at 85% 45%,
-      rgba(181,138,60,.17),
-      transparent 27%
-    ),
-    linear-gradient(
-      125deg,
-      #f8f5ec 0%,
-      #eef3eb 55%,
-      #e4eee5 100%
-    );
+  min-height:650px;
+  padding:70px 6%;
   display:grid;
   grid-template-columns:1.05fr .95fr;
   align-items:center;
-  gap:50px;
+  gap:45px;
+  background:
+    radial-gradient(
+      circle at 80% 48%,
+      rgba(181,138,60,.16),
+      transparent 28%
+    ),
+    linear-gradient(
+      125deg,
+      #faf7ef,
+      #eef4ee
+    );
 }
 
-.hero:before{
+.hero:after{
   content:"LIARA";
   position:absolute;
-  right:-40px;
-  top:15px;
+  right:-45px;
+  top:25px;
   font-family:Georgia,serif;
-  font-size:clamp(130px,18vw,270px);
+  font-size:220px;
   font-weight:700;
-  letter-spacing:15px;
-  color:rgba(23,63,50,.045);
-  white-space:nowrap;
+  color:rgba(29,81,62,.045);
   pointer-events:none;
 }
 
 .hero-content{
   position:relative;
   z-index:2;
-  max-width:660px;
+  max-width:650px;
 }
 
 .kicker{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:11px;
   color:var(--gold);
-  font-size:10px;
+  font-size:9px;
   font-weight:700;
-  letter-spacing:3.5px;
-  margin-bottom:20px;
+  letter-spacing:3px;
+  margin-bottom:19px;
 }
 
 .kicker:before{
   content:"";
-  width:38px;
+  width:34px;
   height:1px;
   background:var(--gold);
 }
 
 .hero h1{
   font-family:Georgia,"Times New Roman",serif;
-  font-size:clamp(52px,6.4vw,84px);
+  color:var(--green-dark);
+  font-size:clamp(48px,6vw,78px);
   line-height:.98;
-  letter-spacing:-4px;
-  font-weight:700;
-  color:var(--green);
-  margin-bottom:26px;
+  letter-spacing:-3px;
+  margin-bottom:24px;
 }
 
 .hero h1 span{
   display:block;
   color:var(--gold);
   font-style:italic;
-  font-weight:500;
+  font-weight:400;
 }
 
 .hero p{
   max-width:570px;
-  color:#68736d;
-  font-size:15px;
-  line-height:1.95;
-  margin-bottom:31px;
+  color:#6f7772;
+  font-size:14px;
+  line-height:1.9;
+  margin-bottom:28px;
 }
 
 .hero-buttons{
   display:flex;
-  gap:11px;
   flex-wrap:wrap;
+  gap:10px;
 }
 
 .btn{
-  min-height:47px;
-  padding:13px 24px;
   display:inline-flex;
-  justify-content:center;
   align-items:center;
-  border-radius:3px;
+  justify-content:center;
+  min-height:45px;
+  padding:12px 22px;
   background:var(--green);
   border:1px solid var(--green);
   color:#fff;
-  font-size:9px;
+  border-radius:3px;
+  font-size:8px;
   font-weight:700;
   letter-spacing:1.5px;
-  transition:.3s;
+  transition:.25s;
 }
 
 .btn:hover{
@@ -297,18 +293,15 @@ nav a:hover{
 .btn-light{
   background:rgba(255,255,255,.55);
   color:var(--green);
-  border-color:#c8d0c6;
+  border-color:#c8d2ca;
 }
 
 
-/* =========================
-   HERO GALLERY
-========================= */
+/* HERO PRODUCT */
 
 .hero-product{
   position:relative;
   z-index:2;
-  min-height:510px;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -317,166 +310,156 @@ nav a:hover{
 .hero-product:before{
   content:"";
   position:absolute;
-  width:470px;
-  height:470px;
+  width:430px;
+  height:430px;
   border-radius:50%;
-  background:
-    radial-gradient(
-      circle,
-      rgba(181,138,60,.36),
-      rgba(181,138,60,.04) 65%,
-      transparent 70%
-    );
+  background:radial-gradient(
+    circle,
+    rgba(181,138,60,.28),
+    rgba(181,138,60,.04) 66%,
+    transparent 70%
+  );
 }
 
 .hero-product-card{
   position:relative;
-  width:360px;
-  height:480px;
+  width:350px;
+  height:455px;
   overflow:hidden;
-  border-radius:12px;
+  border-radius:10px;
   background:#fff;
-  border:1px solid rgba(181,138,60,.38);
+  border:1px solid rgba(181,138,60,.35);
   box-shadow:
-    0 35px 90px rgba(23,63,50,.18),
-    0 10px 30px rgba(0,0,0,.08);
+    0 28px 70px rgba(18,58,45,.15),
+    0 7px 25px rgba(0,0,0,.07);
 }
 
 .hero-slideshow{
+  position:relative;
   width:100%;
   height:100%;
-  position:relative;
   overflow:hidden;
-  background:linear-gradient(145deg,#f8f8f3,#e8eee6);
+  background:#f0f4ee;
 }
 
 .hero-slide{
   position:absolute;
   inset:0;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   opacity:0;
-  transform:scale(1.05);
-  filter:blur(4px);
-  transition:
-    opacity .8s ease,
-    transform 2s ease,
-    filter .8s ease;
+  transition:opacity .7s ease;
 }
 
 .hero-slide.active{
   opacity:1;
-  transform:scale(1);
-  filter:blur(0);
   z-index:2;
 }
 
 .hero-slide:before{
   content:"";
   position:absolute;
-  inset:-40px;
-  background:var(--hero-bg) center/cover no-repeat;
-  filter:blur(30px);
-  opacity:.18;
+  inset:-30px;
+  background:var(--hero-bg) center/cover;
+  filter:blur(28px);
+  opacity:.15;
   transform:scale(1.15);
 }
 
 .hero-slide img{
   position:relative;
-  z-index:3;
+  z-index:2;
   width:100%;
   height:100%;
-  padding:15px;
+  padding:14px;
   object-fit:contain;
 }
 
 .hero-brand-badge{
   position:absolute;
-  top:17px;
-  left:17px;
-  z-index:15;
+  top:15px;
+  left:15px;
+  z-index:10;
+  padding:7px 9px;
   background:rgba(255,255,255,.9);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(181,138,60,.28);
-  border-radius:3px;
-  padding:8px 10px;
+  border:1px solid rgba(181,138,60,.25);
   color:var(--green);
   font-size:7px;
   font-weight:700;
-  letter-spacing:1.5px;
+  letter-spacing:1.3px;
+  border-radius:3px;
 }
 
 .hero-slide-dots{
   position:absolute;
-  z-index:20;
-  bottom:15px;
+  z-index:10;
+  bottom:13px;
   left:50%;
   transform:translateX(-50%);
   display:flex;
-  gap:7px;
-  padding:7px 10px;
+  gap:6px;
+  padding:6px 9px;
+  background:rgba(255,255,255,.88);
   border-radius:20px;
-  background:rgba(255,255,255,.85);
-  backdrop-filter:blur(10px);
 }
 
 .hero-slide-dot{
   width:7px;
   height:7px;
-  border:1px solid var(--gold);
-  background:#fff;
-  border-radius:50%;
   padding:0;
+  border:1px solid var(--gold);
+  border-radius:50%;
+  background:#fff;
 }
 
 .hero-slide-dot.active{
-  width:20px;
-  border-radius:10px;
+  width:18px;
+  border-radius:8px;
   background:var(--gold);
 }
 
 
 /* =========================
-   SECTION
+   GENERAL SECTIONS
 ========================= */
 
 .section{
-  padding:95px 6%;
+  padding:82px 6%;
 }
 
 .heading{
+  max-width:700px;
   text-align:center;
-  max-width:720px;
-  margin:0 auto 48px;
+  margin:0 auto 38px;
 }
 
 .heading p{
   color:var(--gold);
-  font-size:9px;
+  font-size:8px;
   font-weight:700;
   letter-spacing:3px;
   margin-bottom:9px;
 }
 
 .heading h2{
-  font-family:Georgia,serif;
-  color:var(--green);
-  font-size:clamp(33px,4vw,48px);
+  color:var(--green-dark);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(32px,4vw,46px);
   line-height:1.1;
 }
 
 .heading .sub{
-  max-width:600px;
-  margin:13px auto 0;
-  color:#7a817d;
-  font-size:12px;
+  max-width:570px;
+  margin:11px auto 0;
+  color:#7b827e;
+  font-size:11px;
   line-height:1.8;
 }
 
 
 /* =========================
-   SHOP
+   PRODUCT SECTION
 ========================= */
 
 #products{
@@ -485,96 +468,124 @@ nav a:hover{
 
 .shopbar{
   max-width:1260px;
-  margin:0 auto 27px;
+  margin:0 auto 18px;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
 }
 
 .shopbar span{
-  color:#818883;
-  font-size:10px;
+  color:#858b87;
+  font-size:9px;
 }
 
 
-/* =========================
-   PRODUCT GRID
-========================= */
+/* PRODUCT GRID */
 
 .product-grid{
   max-width:1260px;
   margin:auto;
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:22px;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:18px;
 }
+
+
+/* PRODUCT CARD */
 
 .product-card{
   position:relative;
+  min-width:0;
   background:#fff;
-  border:1px solid #e1e5df;
-  border-radius:12px;
+  border:1px solid #e2e5e0;
+  border-radius:9px;
   overflow:hidden;
-  transition:.35s;
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    border-color .25s ease;
 }
 
 .product-card:hover{
-  transform:translateY(-7px);
-  border-color:#cfc6ad;
-  box-shadow:0 25px 55px rgba(23,63,50,.11);
+  transform:translateY(-5px);
+  border-color:#d6c8a7;
+  box-shadow:0 18px 42px rgba(18,58,45,.10);
 }
 
 
-/* =========================
-   PRODUCT GALLERY
-========================= */
+/* PRODUCT IMAGE AREA */
 
 .product-gallery{
   position:relative;
   background:
     linear-gradient(
       145deg,
-      #f4f6f0,
-      #e9eee5
+      #f5f7f2,
+      #e9f0e9
     );
-  overflow:hidden;
 }
 
+
+/*
+  IMPORTANT:
+  Compact height so cards don't become huge.
+*/
+
 .product-main-image{
-  height:290px;
-  width:100%;
   position:relative;
+  width:100%;
+  height:245px;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
   cursor:pointer;
-}
-
-.product-main-image:after{
-  content:"LIARA";
-  position:absolute;
-  bottom:8px;
-  left:12px;
-  font-family:Georgia,serif;
-  font-size:42px;
-  font-weight:700;
-  color:rgba(23,63,50,.035);
-  pointer-events:none;
 }
 
 .product-main-image img{
   width:100%;
   height:100%;
-  padding:10px;
+  padding:8px;
   object-fit:contain;
-  position:relative;
-  z-index:2;
-  transition:.45s;
+  transition:transform .35s ease;
 }
 
-.product-card:hover .product-main-image img{
-  transform:scale(1.035);
+.product-card:hover
+.product-main-image img{
+  transform:scale(1.025);
+}
+
+
+/* SALE BADGE */
+
+.product-sale-badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  z-index:12;
+  padding:6px 8px;
+  background:var(--gold);
+  color:#fff;
+  border-radius:2px;
+  font-size:7px;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+
+/* PHOTO COUNT */
+
+.photo-counter{
+  position:absolute;
+  top:10px;
+  right:10px;
+  z-index:12;
+  padding:4px 7px;
+  background:rgba(18,58,45,.86);
+  color:#fff;
+  border-radius:10px;
+  font-size:7px;
+  font-weight:700;
 }
 
 
@@ -582,22 +593,22 @@ nav a:hover{
 
 .gallery-arrow{
   position:absolute;
-  z-index:10;
   top:50%;
+  z-index:15;
   transform:translateY(-50%);
-  width:31px;
-  height:31px;
-  border:1px solid rgba(23,63,50,.14);
-  background:rgba(255,255,255,.86);
-  backdrop-filter:blur(8px);
-  color:var(--green);
-  border-radius:50%;
+  width:27px;
+  height:27px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:15px;
+  padding:0;
+  border:1px solid rgba(18,58,45,.12);
+  border-radius:50%;
+  background:rgba(255,255,255,.9);
+  color:var(--green);
+  font-size:16px;
   opacity:0;
-  transition:.25s;
+  transition:.2s;
 }
 
 .product-card:hover .gallery-arrow{
@@ -605,11 +616,11 @@ nav a:hover{
 }
 
 .gallery-prev{
-  left:9px;
+  left:8px;
 }
 
 .gallery-next{
-  right:9px;
+  right:8px;
 }
 
 .gallery-arrow:hover{
@@ -618,45 +629,35 @@ nav a:hover{
 }
 
 
-/* PHOTO COUNTER */
-
-.photo-counter{
-  position:absolute;
-  top:11px;
-  right:11px;
-  z-index:12;
-  background:rgba(23,63,50,.86);
-  color:#fff;
-  border-radius:12px;
-  padding:4px 8px;
-  font-size:7px;
-  font-weight:700;
-  letter-spacing:.7px;
-}
-
-
 /* THUMBNAILS */
 
 .product-thumbnails{
-  min-height:60px;
-  padding:9px 11px;
+  min-height:51px;
+  padding:6px 9px;
   display:flex;
+  align-items:center;
   justify-content:center;
-  gap:7px;
-  background:rgba(255,255,255,.72);
-  border-top:1px solid rgba(23,63,50,.07);
+  gap:5px;
+  border-top:1px solid #e7ebe6;
+  background:#fff;
 }
 
 .product-thumb{
-  width:43px;
-  height:43px;
-  border-radius:5px;
-  overflow:hidden;
-  border:1px solid #dce1da;
-  background:#fff;
+  width:38px;
+  height:38px;
   padding:0;
-  opacity:.65;
+  overflow:hidden;
+  border:1px solid #dfe4de;
+  border-radius:4px;
+  background:#fff;
+  opacity:.6;
   transition:.2s;
+}
+
+.product-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .product-thumb:hover{
@@ -666,116 +667,120 @@ nav a:hover{
 .product-thumb.active{
   opacity:1;
   border:1.5px solid var(--gold);
-  box-shadow:0 0 0 2px rgba(181,138,60,.09);
-}
-
-.product-thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
 }
 
 
-/* PRODUCT INFO */
+/* PRODUCT INFORMATION */
 
 .product-info{
-  padding:18px 17px 17px;
+  padding:14px 14px 13px;
 }
 
 .product-name{
-  color:var(--green);
-  font-family:Georgia,serif;
-  font-size:18px;
+  color:var(--green-dark);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:17px;
+  line-height:1.2;
   font-weight:700;
-  margin-bottom:6px;
+  margin-bottom:5px;
 }
 
 .product-desc{
-  min-height:39px;
-  color:#777f7a;
-  font-size:10px;
-  line-height:1.65;
+  height:34px;
+  overflow:hidden;
+  color:#7b827d;
+  font-size:9px;
+  line-height:1.6;
 }
 
+
+/* PRICE */
+
 .product-meta{
-  margin-top:15px;
+  min-height:39px;
+  margin-top:9px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:8px;
+  gap:5px;
 }
 
 .price-box{
+  min-width:0;
   display:flex;
   align-items:center;
-  gap:6px;
   flex-wrap:wrap;
+  gap:5px;
 }
 
 .original-price{
   color:#999;
-  font-size:11px;
+  font-size:9px;
   text-decoration:line-through;
-}
-
-.sale-label{
-  background:var(--green);
-  color:#fff;
-  border-radius:2px;
-  padding:4px 6px;
-  font-size:7px;
-  font-weight:700;
-  letter-spacing:1px;
 }
 
 .sale-price{
   color:var(--gold);
-  font-size:18px;
+  font-size:17px;
   font-weight:700;
 }
 
-.discount-label{
-  background:#f0eadb;
-  color:#8d6d36;
-  padding:4px 6px;
+.sale-label{
+  padding:3px 5px;
   border-radius:2px;
-  font-size:7px;
+  background:var(--green);
+  color:#fff;
+  font-size:6px;
+  font-weight:700;
+  letter-spacing:.8px;
+}
+
+.discount-label{
+  padding:3px 5px;
+  border-radius:2px;
+  background:#f2ecdd;
+  color:#8d6b31;
+  font-size:6px;
   font-weight:700;
 }
 
 .stock{
-  color:#36704e;
-  font-size:8px;
+  color:#34704e;
+  font-size:7px;
   font-weight:700;
   white-space:nowrap;
 }
 
 .stock.out{
-  color:#a34b4b;
+  color:#a04c4c;
 }
+
+
+/* BUTTONS */
 
 .product-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:7px;
-  margin-top:15px;
+  gap:6px;
+  margin-top:9px;
 }
 
 .product-actions button{
-  min-height:39px;
+  min-height:34px;
+  padding:8px 5px;
   border-radius:3px;
-  background:var(--green);
   border:1px solid var(--green);
+  background:var(--green);
   color:#fff;
-  font-size:8px;
+  font-size:7px;
   font-weight:700;
-  letter-spacing:.7px;
+  letter-spacing:.6px;
+  transition:.2s;
 }
 
 .product-actions .outline{
   background:#fff;
   color:var(--green);
-  border-color:#cbd3ca;
 }
 
 .product-actions button:hover{
@@ -790,72 +795,78 @@ nav a:hover{
 ========================= */
 
 .categories{
-  background:linear-gradient(135deg,#f2f1e8,#edf2ea);
+  background:
+    linear-gradient(
+      135deg,
+      #f4f3eb,
+      #edf3ed
+    );
 }
 
 .category-grid{
-  max-width:1150px;
+  max-width:1160px;
   margin:auto;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:20px;
+  gap:18px;
 }
 
 .category{
-  min-height:190px;
   position:relative;
+  min-height:170px;
   overflow:hidden;
-  padding:30px;
-  background:#fff;
-  border:1px solid #deded3;
-  border-radius:8px;
+  padding:27px;
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
-  transition:.3s;
+  background:#fff;
+  border:1px solid #e0e2dc;
+  border-radius:8px;
+  transition:.25s;
+}
+
+.category:hover{
+  transform:translateY(-5px);
+  border-color:#d4c29d;
+  box-shadow:0 15px 35px rgba(18,58,45,.08);
 }
 
 .category:before{
   content:"";
   position:absolute;
-  width:130px;
-  height:130px;
-  right:-35px;
-  top:-35px;
+  width:120px;
+  height:120px;
+  right:-30px;
+  top:-30px;
   border-radius:50%;
   background:rgba(181,138,60,.08);
 }
 
-.category:hover{
-  transform:translateY(-6px);
-  border-color:var(--gold);
-  box-shadow:0 20px 45px rgba(23,63,50,.08);
-}
-
 .category span{
+  position:relative;
   color:var(--gold);
-  font-size:9px;
+  font-size:8px;
   font-weight:700;
   letter-spacing:2px;
 }
 
 .category h3{
   position:relative;
-  color:var(--green);
+  color:var(--green-dark);
   font-family:Georgia,serif;
-  font-size:25px;
-  margin:4px 0;
+  font-size:24px;
+  margin:3px 0;
 }
 
 .category p{
   position:relative;
   color:#777;
-  font-size:10px;
+  font-size:9px;
 }
 
 
 /* =========================
-   WHY
+   WHY LIARA
 ========================= */
 
 .why-grid{
@@ -863,42 +874,42 @@ nav a:hover{
   margin:auto;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:20px;
+  gap:18px;
 }
 
 .why-card{
-  padding:40px 28px;
+  padding:32px 25px;
   text-align:center;
-  background:#f6f5ee;
-  border:1px solid #e5e2d8;
+  background:#f7f7f2;
+  border:1px solid #e4e4db;
   border-radius:8px;
 }
 
 .icon{
-  width:52px;
-  height:52px;
-  margin:0 auto 17px;
-  border-radius:50%;
+  width:47px;
+  height:47px;
+  margin:0 auto 14px;
   display:flex;
   align-items:center;
   justify-content:center;
+  border-radius:50%;
   background:var(--green);
-  color:var(--gold2);
-  font-size:10px;
+  color:var(--gold-light);
+  font-size:8px;
   font-weight:700;
 }
 
 .why-card h3{
-  color:var(--green);
+  color:var(--green-dark);
   font-family:Georgia,serif;
-  font-size:18px;
-  margin-bottom:9px;
+  font-size:17px;
+  margin-bottom:7px;
 }
 
 .why-card p{
   color:#777;
-  font-size:11px;
-  line-height:1.8;
+  font-size:10px;
+  line-height:1.75;
 }
 
 
@@ -907,69 +918,70 @@ nav a:hover{
 ========================= */
 
 .story{
-  padding:100px 6%;
-  background:var(--green);
-  color:#fff;
   position:relative;
   overflow:hidden;
+  padding:85px 6%;
+  background:var(--green-dark);
+  color:#fff;
 }
 
 .story:after{
   content:"HERBAL";
   position:absolute;
   right:-60px;
-  bottom:-40px;
+  bottom:-45px;
   font-family:Georgia,serif;
-  font-size:170px;
+  font-size:160px;
   font-weight:700;
   color:rgba(255,255,255,.025);
 }
 
 .story-inner{
-  max-width:1160px;
-  margin:auto;
   position:relative;
   z-index:2;
+  max-width:1160px;
+  margin:auto;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:80px;
+  gap:70px;
   align-items:center;
 }
 
 .story .kicker{
-  color:var(--gold2);
+  color:var(--gold-light);
 }
 
 .story h2{
   font-family:Georgia,serif;
-  font-size:clamp(38px,5vw,58px);
-  line-height:1.02;
-  margin:12px 0 22px;
+  font-size:clamp(37px,4.5vw,57px);
+  line-height:1;
+  margin:10px 0 20px;
 }
 
 .story h2 span{
   display:block;
-  color:var(--gold2);
+  color:var(--gold-light);
   font-style:italic;
+  font-weight:400;
 }
 
 .story p{
   color:#c5d0ca;
-  font-size:12px;
-  line-height:1.9;
-  margin-bottom:13px;
+  font-size:11px;
+  line-height:1.85;
+  margin-bottom:10px;
 }
 
 .story-card{
-  padding:27px 30px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.15);
+  padding:23px 26px;
+  border:1px solid rgba(255,255,255,.14);
   border-radius:7px;
+  background:rgba(255,255,255,.035);
 }
 
 .story-card div{
-  padding:18px 0;
-  border-bottom:1px solid rgba(255,255,255,.12);
+  padding:15px 0;
+  border-bottom:1px solid rgba(255,255,255,.11);
 }
 
 .story-card div:last-child{
@@ -977,15 +989,15 @@ nav a:hover{
 }
 
 .story-card strong{
-  color:var(--gold2);
-  font-size:9px;
+  color:var(--gold-light);
+  font-size:8px;
   letter-spacing:2px;
 }
 
 .story-card h3{
   font-family:Georgia,serif;
-  font-size:18px;
-  margin:4px 0;
+  font-size:17px;
+  margin:3px 0;
 }
 
 .story-card p{
@@ -998,7 +1010,7 @@ nav a:hover{
 ========================= */
 
 .faq{
-  background:#f5f3eb;
+  background:#f7f5ed;
 }
 
 .faq-container{
@@ -1007,26 +1019,26 @@ nav a:hover{
 }
 
 details{
-  border-bottom:1px solid #dad8cf;
-  padding:20px 0;
+  border-bottom:1px solid #dcdcd3;
+  padding:18px 0;
 }
 
 details:first-child{
-  border-top:1px solid #dad8cf;
+  border-top:1px solid #dcdcd3;
 }
 
 summary{
+  color:var(--green-dark);
   cursor:pointer;
-  color:var(--green);
-  font-size:13px;
+  font-size:12px;
   font-weight:700;
 }
 
 details p{
   color:#777;
-  font-size:11px;
+  font-size:10px;
   line-height:1.8;
-  padding-top:12px;
+  padding-top:10px;
 }
 
 
@@ -1035,30 +1047,30 @@ details p{
 ========================= */
 
 .contact{
+  padding:82px 6%;
   text-align:center;
-  padding:90px 6%;
   background:
     radial-gradient(
       circle at center,
-      rgba(181,138,60,.13),
+      rgba(181,138,60,.12),
       transparent 35%
     ),
-    #faf8f1;
+    #fbfaf5;
 }
 
 .contact p{
-  max-width:560px;
-  margin:10px auto 18px;
+  max-width:550px;
+  margin:9px auto 16px;
   color:#777;
-  font-size:12px;
+  font-size:11px;
 }
 
 .contact-email{
   display:block;
   color:var(--green);
-  font-size:14px;
+  font-size:13px;
   font-weight:700;
-  margin-bottom:22px;
+  margin-bottom:19px;
 }
 
 
@@ -1067,9 +1079,9 @@ details p{
 ========================= */
 
 footer{
-  background:#0e241d;
-  color:#89958f;
-  padding:58px 6% 23px;
+  padding:55px 6% 20px;
+  background:#0d251d;
+  color:#7c8982;
 }
 
 .footer-grid{
@@ -1077,71 +1089,63 @@ footer{
   margin:auto;
   display:grid;
   grid-template-columns:1.7fr 1fr 1fr 1.2fr;
-  gap:40px;
-  padding-bottom:38px;
-  border-bottom:1px solid rgba(255,255,255,.1);
+  gap:35px;
+  padding-bottom:32px;
+  border-bottom:1px solid rgba(255,255,255,.09);
 }
 
 .footer-logo{
-  font-family:Georgia,serif;
   color:#fff;
-  font-size:27px;
+  font-family:Georgia,serif;
+  font-size:25px;
   font-weight:700;
-  letter-spacing:7px;
+  letter-spacing:6px;
 }
 
 .footer-brand p{
   max-width:310px;
-  margin-top:15px;
-  color:#738079;
-  font-size:10px;
+  margin-top:12px;
+  color:#6f7c75;
+  font-size:9px;
   line-height:1.8;
 }
 
 .footer-grid h4{
   color:#fff;
-  font-size:9px;
+  font-size:8px;
   letter-spacing:2px;
-  margin-bottom:17px;
+  margin-bottom:14px;
 }
 
 .footer-grid a{
   display:block;
-  color:#718079;
-  font-size:10px;
-  margin-bottom:11px;
-  transition:.2s;
+  color:#718078;
+  font-size:9px;
+  margin-bottom:9px;
 }
 
 .footer-grid a:hover{
-  color:var(--gold2);
+  color:var(--gold-light);
 }
 
 .admin-login-btn{
   display:inline-flex!important;
-  width:auto;
-  padding:7px 13px;
-  border:1px solid #52665d;
+  padding:6px 10px;
+  border:1px solid #4e6259;
   border-radius:3px;
-  color:#aebbb4!important;
-  font-size:8px!important;
-  font-weight:700;
+  color:#aab5af!important;
+  font-size:7px!important;
   letter-spacing:1px;
-}
-
-.admin-login-btn:hover{
-  border-color:var(--gold);
 }
 
 .footer-bottom{
   max-width:1200px;
-  margin:20px auto 0;
+  margin:18px auto 0;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:15px;
-  color:#52645c;
-  font-size:8px;
+  color:#50635a;
+  font-size:7px;
 }
 
 
@@ -1150,38 +1154,34 @@ footer{
 .loading,
 .empty{
   grid-column:1/-1;
+  padding:55px 15px;
   text-align:center;
-  padding:70px 15px;
-  color:#7d8580;
+  color:#7c837f;
+  font-size:11px;
 }
 
 
 /* =========================
-   TABLET
+   RESPONSIVE
 ========================= */
 
 @media(max-width:1050px){
+
+  nav{
+    gap:13px;
+  }
 
   .product-grid{
     grid-template-columns:repeat(3,1fr);
   }
 
-  nav{
-    gap:14px;
-  }
-
 }
 
-
-/* =========================
-   MOBILE
-========================= */
 
 @media(max-width:800px){
 
   .header-inner{
-    min-height:auto;
-    padding:15px 5%;
+    padding:13px 5%;
     flex-direction:column;
     align-items:flex-start;
   }
@@ -1189,14 +1189,14 @@ footer{
   nav{
     width:100%;
     overflow-x:auto;
-    padding-bottom:3px;
-    gap:18px;
+    padding-bottom:2px;
+    gap:17px;
   }
 
   .hero{
     grid-template-columns:1fr;
     text-align:center;
-    padding:65px 5% 75px;
+    padding:60px 5% 70px;
   }
 
   .hero-content{
@@ -1217,7 +1217,7 @@ footer{
   }
 
   .hero-product{
-    min-height:430px;
+    min-height:400px;
   }
 
   .product-grid{
@@ -1241,33 +1241,28 @@ footer{
 }
 
 
-/* =========================
-   SMALL MOBILE
-========================= */
-
 @media(max-width:520px){
 
   .topbar{
-    font-size:7px;
-    letter-spacing:1.5px;
+    font-size:6px;
+    letter-spacing:1.2px;
   }
 
   .logo-word{
-    font-size:24px;
-    letter-spacing:6px;
+    font-size:23px;
   }
 
   .hero{
-    padding:55px 5% 65px;
+    padding:52px 5% 60px;
   }
 
   .hero h1{
-    font-size:45px;
+    font-size:44px;
     letter-spacing:-2px;
   }
 
   .hero-product{
-    min-height:390px;
+    min-height:370px;
   }
 
   .hero-product-card{
@@ -1281,20 +1276,19 @@ footer{
   }
 
   .section{
-    padding:70px 5%;
+    padding:65px 5%;
   }
 
   .product-grid{
     grid-template-columns:1fr;
   }
 
-  .product-main-image{
-    height:320px;
-  }
+  /*
+    Mobile product image still compact
+  */
 
-  .product-thumb{
-    width:46px;
-    height:46px;
+  .product-main-image{
+    height:285px;
   }
 
   .gallery-arrow{
@@ -1302,13 +1296,11 @@ footer{
   }
 
   .shopbar{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
+    gap:8px;
   }
 
   .story{
-    padding:75px 5%;
+    padding:70px 5%;
   }
 
   .footer-grid{
@@ -1321,11 +1313,11 @@ footer{
 
   .footer-bottom{
     flex-direction:column;
+    gap:10px;
     text-align:center;
   }
 
 }
-
 </style>
 </head>
 
@@ -1336,7 +1328,7 @@ footer{
 <!-- TOP BAR -->
 
 <div class="topbar">
-LIARA PROFESSIONAL™ &nbsp; • &nbsp; ADVANCED HERBAL &nbsp; • &nbsp; QUALITY &nbsp; • &nbsp; CARE &nbsp; • &nbsp; CONFIDENCE
+LIARA PROFESSIONAL™ • ADVANCED HERBAL • QUALITY • CARE • CONFIDENCE
 </div>
 
 
@@ -1345,6 +1337,7 @@ LIARA PROFESSIONAL™ &nbsp; • &nbsp; ADVANCED HERBAL &nbsp; • &nbsp; QUALIT
 <header>
 
 <div class="header-inner">
+
 
 <a href="#home" class="logo">
 
@@ -1417,14 +1410,20 @@ PROFESSIONAL
 <nav>
 
 <a href="#home">Home</a>
+
 <a href="#products">Shop</a>
+
 <a href="#categories">Categories</a>
+
 <a href="#why-us">Why Liara</a>
+
 <a href="#about">About</a>
+
 <a href="account.html">My Account</a>
+
 <a href="track-order.html">Track Order</a>
 
-<a class="nav-cart" href="cart.html">
+<a href="cart.html" class="nav-cart">
 Cart 🛒
 </a>
 
@@ -1435,9 +1434,13 @@ Cart 🛒
 </header>
 
 
-<!-- HERO -->
+
+<!-- =========================
+     HERO
+========================= -->
 
 <section id="home" class="hero">
+
 
 <div class="hero-content">
 
@@ -1446,8 +1449,8 @@ ADVANCED HERBAL BEAUTY
 </div>
 
 <h1>
-Care Inspired
-<span>By Nature.</span>
+Advanced Herbal
+<span>Care.</span>
 </h1>
 
 <p>
@@ -1457,10 +1460,11 @@ created around an Advanced Herbal approach for
 your everyday self-care ritual.
 </p>
 
+
 <div class="hero-buttons">
 
 <a href="#products" class="btn">
-SHOP COLLECTION
+SHOP PRODUCTS
 </a>
 
 <a href="#about" class="btn btn-light">
@@ -1472,6 +1476,7 @@ DISCOVER LIARA
 </div>
 
 
+
 <div class="hero-product">
 
 <div class="hero-product-card">
@@ -1481,14 +1486,13 @@ LIARA PROFESSIONAL™
 </div>
 
 <div
-class="hero-slideshow"
-id="heroSlideshow">
-
+id="heroSlideshow"
+class="hero-slideshow">
 </div>
 
 <div
-class="hero-slide-dots"
-id="heroSlideDots">
+id="heroSlideDots"
+class="hero-slide-dots">
 </div>
 
 </div>
@@ -1498,21 +1502,25 @@ id="heroSlideDots">
 </section>
 
 
-<!-- PRODUCTS -->
+
+<!-- =========================
+     PRODUCTS
+========================= -->
 
 <section id="products" class="section">
 
+
 <div class="heading">
 
-<p>SHOP LIARA</p>
+<p>LIARA COLLECTION</p>
 
 <h2>
-Our Collection
+Featured Products
 </h2>
 
 <div class="sub">
-Thoughtfully developed beauty and personal-care
-essentials for a refined everyday routine.
+Explore our beauty, skincare and personal-care
+essentials created with a modern herbal approach.
 </div>
 
 </div>
@@ -1527,7 +1535,7 @@ Loading products...
 <a
 href="#products"
 class="btn"
-style="min-height:38px;padding:10px 17px">
+style="min-height:35px;padding:8px 15px">
 
 VIEW ALL
 
@@ -1549,18 +1557,22 @@ Loading products...
 </section>
 
 
-<!-- CATEGORIES -->
+
+<!-- =========================
+     CATEGORIES
+========================= -->
 
 <section
 id="categories"
 class="section categories">
 
+
 <div class="heading">
 
-<p>SHOP BY CATEGORY</p>
+<p>EXPLORE</p>
 
 <h2>
-Your Everyday Care
+Shop By Category
 </h2>
 
 </div>
@@ -1568,7 +1580,10 @@ Your Everyday Care
 
 <div class="category-grid">
 
-<a class="category" href="#products">
+
+<a
+href="#products"
+class="category">
 
 <span>01</span>
 
@@ -1577,13 +1592,15 @@ Skincare
 </h3>
 
 <p>
-Daily essentials for a thoughtful skincare routine.
+Daily skincare essentials for your routine.
 </p>
 
 </a>
 
 
-<a class="category" href="#products">
+<a
+href="#products"
+class="category">
 
 <span>02</span>
 
@@ -1592,13 +1609,15 @@ Body Care
 </h3>
 
 <p>
-Everyday cleansing and body-care essentials.
+Everyday cleansing and personal-care essentials.
 </p>
 
 </a>
 
 
-<a class="category" href="#products">
+<a
+href="#products"
+class="category">
 
 <span>03</span>
 
@@ -1607,33 +1626,38 @@ Beauty Care
 </h3>
 
 <p>
-Modern beauty products with a nature-inspired approach.
+Modern beauty products inspired by nature.
 </p>
 
 </a>
+
 
 </div>
 
 </section>
 
 
-<!-- WHY -->
+
+<!-- =========================
+     WHY LIARA
+========================= -->
 
 <section
 id="why-us"
 class="section">
+
 
 <div class="heading">
 
 <p>THE LIARA DIFFERENCE</p>
 
 <h2>
-Why Liara?
+Why Liara
 </h2>
 
 <div class="sub">
-A modern approach to beauty built around thoughtful
-development, quality and everyday care.
+Thoughtful development, quality and customer-focused
+care are at the heart of Liara Professional™.
 </div>
 
 </div>
@@ -1689,7 +1713,7 @@ Customer First
 </h3>
 
 <p>
-We aim to build long-term trust through quality,
+We aim to build lasting trust through quality,
 service and a refined shopping experience.
 </p>
 
@@ -1701,11 +1725,13 @@ service and a refined shopping experience.
 </section>
 
 
-<!-- STORY -->
 
-<section
-id="about"
-class="story">
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section id="about" class="story">
+
 
 <div class="story-inner">
 
@@ -1738,7 +1764,7 @@ quality and everyday self-care.
 <a
 href="#products"
 class="btn"
-style="margin-top:12px;background:var(--gold);border-color:var(--gold)">
+style="margin-top:10px;background:var(--gold);border-color:var(--gold)">
 
 EXPLORE LIARA
 
@@ -1805,11 +1831,13 @@ long-term customer relationships.
 </section>
 
 
-<!-- FAQ -->
 
-<section
-id="faq"
-class="section faq">
+<!-- =========================
+     FAQ
+========================= -->
+
+<section id="faq" class="section faq">
+
 
 <div class="heading">
 
@@ -1848,7 +1876,7 @@ What products does Liara offer?
 
 <p>
 Our collection focuses on beauty, skincare and
-personal-care products with a modern
+personal-care products with a modern,
 herbal-inspired approach.
 </p>
 
@@ -1902,11 +1930,13 @@ info@liara.co.in.
 </section>
 
 
-<!-- CONTACT -->
 
-<section
-id="contact"
-class="contact">
+<!-- =========================
+     CONTACT
+========================= -->
+
+<section id="contact" class="contact">
+
 
 <div class="heading">
 
@@ -1942,9 +1972,13 @@ CONTACT US
 </section>
 
 
-<!-- FOOTER -->
+
+<!-- =========================
+     FOOTER
+========================= -->
 
 <footer>
+
 
 <div class="footer-grid">
 
@@ -2022,19 +2056,6 @@ Shipping Policy
 Refund / Return Policy
 </a>
 
-</div>
-
-
-</div>
-
-
-<div class="footer-bottom">
-
-<span>
-© 2026 Liara Group Private Limited.
-All Rights Reserved.
-</span>
-
 <a
 href="company-login.html"
 class="admin-login-btn">
@@ -2045,7 +2066,24 @@ Admin Login
 
 </div>
 
+
+</div>
+
+
+<div class="footer-bottom">
+
+<span>
+© 2026 Liara Group Private Limited. All Rights Reserved.
+</span>
+
+<span>
+LIARA PROFESSIONAL™
+</span>
+
+</div>
+
 </footer>
+
 
 
 <!-- SUPABASE -->
@@ -2055,13 +2093,17 @@ Admin Login
 
 <script>
 
+/* =========================
+   SUPABASE
+========================= */
+
 const SUPABASE_URL =
 "https://oinafbuicwhleudztzyz.supabase.co";
 
 const SUPABASE_KEY =
 "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
-let supabaseClient=null;
+let supabaseClient;
 
 
 /* =========================
@@ -2082,15 +2124,19 @@ return String(value ?? "")
 
 function toNumber(value){
 
-if(value===null || value===undefined)
+if(
+value===null ||
+value===undefined ||
+value===""
+){
 return 0;
+}
 
-const cleaned=
+const number=
+Number(
 String(value)
 .replace(/[₹,\s]/g,"")
-.trim();
-
-const number=Number(cleaned);
+);
 
 return Number.isFinite(number)
 ?number
@@ -2099,102 +2145,127 @@ return Number.isFinite(number)
 }
 
 
-function getProductImage(p){
+/* =========================
+   PRODUCT IMAGE
+========================= */
 
-if(!p)
-return "";
+function getProductImages(product){
 
-return p.image_url ||
-p.photo_url ||
-p.image ||
-p.photo ||
-p.product_image ||
-p.imageUrl ||
-"";
-
-}
-
-
-function getProductImages(p){
-
-if(!p)
+if(!product)
 return [];
 
-const possible=[
 
-p.image_url,
-p.image_url_2,
-p.image_url_3,
-p.image_url_4
+/*
+   EXACTLY THE 4 ADMIN PHOTO FIELDS
+*/
+
+const fields=[
+
+product.image_url,
+product.image_url_2,
+product.image_url_3,
+product.image_url_4
 
 ];
 
-const result=[];
+const images=[];
 
-possible.forEach(url=>{
+
+fields.forEach(url=>{
 
 const clean=
 String(url || "").trim();
 
 if(
 clean &&
-!result.includes(clean)
+!images.includes(clean)
 ){
 
-result.push(clean);
+images.push(clean);
 
 }
 
 });
 
-return result;
+
+/*
+   OLD FIELD FALLBACK
+*/
+
+if(!images.length){
+
+const oldImage=
+product.photo_url ||
+product.image ||
+product.photo ||
+product.product_image ||
+product.imageUrl ||
+"";
+
+if(oldImage){
+
+images.push(
+String(oldImage).trim()
+);
+
+}
 
 }
 
 
-function getProductName(p){
+return images;
 
-if(!p)
-return "Liara Product";
+}
 
-return p.name ||
-p.product_name ||
-p.title ||
-p.product_title ||
+
+function getProductImage(product){
+
+const images=
+getProductImages(product);
+
+return images[0] || "";
+
+}
+
+
+/* =========================
+   PRODUCT DATA
+========================= */
+
+function getProductName(product){
+
+return product?.name ||
+product?.product_name ||
+product?.title ||
+product?.product_title ||
 "Liara Product";
 
 }
 
 
-function getProductDescription(p){
+function getProductDescription(product){
 
-if(!p)
-return "";
-
-return p.description ||
-p.details ||
-p.product_description ||
-"Premium Advanced Herbal beauty and personal care product.";
+return product?.description ||
+product?.details ||
+product?.product_description ||
+"Advanced Herbal beauty and personal care.";
 
 }
 
 
-function getSalePrice(p){
-
-if(!p)
-return 0;
+function getSalePrice(product){
 
 return toNumber(
 
-p.sale_price ??
-p.salePrice ??
-p.discount_price ??
-p.discountPrice ??
-p.discounted_price ??
-p.discountedPrice ??
-p.selling_price ??
-p.sellingPrice ??
-p.price ??
+product?.sale_price ??
+product?.salePrice ??
+product?.discount_price ??
+product?.discountPrice ??
+product?.discounted_price ??
+product?.discountedPrice ??
+product?.selling_price ??
+product?.sellingPrice ??
+product?.price ??
 0
 
 );
@@ -2202,48 +2273,43 @@ p.price ??
 }
 
 
-function getOriginalPrice(p){
+function getOriginalPrice(product){
 
-if(!p)
-return 0;
-
-const salePrice=getSalePrice(p);
+const sale=
+getSalePrice(product);
 
 const original=
 toNumber(
 
-p.original_price ??
-p.originalPrice ??
-p.mrp ??
-p.MRP ??
-p.compare_at_price ??
-p.compareAtPrice ??
-p.regular_price ??
-p.regularPrice ??
-p.old_price ??
-p.mrp_price ??
-p.mrpPrice ??
+product?.original_price ??
+product?.originalPrice ??
+product?.mrp ??
+product?.MRP ??
+product?.compare_at_price ??
+product?.compareAtPrice ??
+product?.regular_price ??
+product?.regularPrice ??
+product?.old_price ??
+product?.mrp_price ??
+product?.mrpPrice ??
 0
 
 );
 
-return original>salePrice
+return original>sale
 ?original
 :0;
 
 }
 
 
-function getProductStock(p){
-
-if(!p)
-return 0;
+function getProductStock(product){
 
 return toNumber(
 
-p.stock ??
-p.quantity ??
-p.inventory ??
+product?.stock ??
+product?.quantity ??
+product?.inventory ??
 1
 
 );
@@ -2251,23 +2317,27 @@ p.inventory ??
 }
 
 
+/* =========================
+   PRICE HTML
+========================= */
+
 function getProductPriceHtml(product){
 
-const salePrice=
+const sale=
 getSalePrice(product);
 
-const originalPrice=
+const mrp=
 getOriginalPrice(product);
 
+
 if(
-originalPrice>salePrice &&
-salePrice>0
+mrp>sale &&
+sale>0
 ){
 
 const discount=
 Math.round(
-((originalPrice-salePrice) /
-originalPrice)*100
+((mrp-sale)/mrp)*100
 );
 
 return`
@@ -2275,7 +2345,7 @@ return`
 <div class="price-box">
 
 <span class="original-price">
-₹${originalPrice.toLocaleString("en-IN")}
+₹${mrp.toLocaleString("en-IN")}
 </span>
 
 <span class="sale-label">
@@ -2283,7 +2353,7 @@ SALE
 </span>
 
 <span class="sale-price">
-₹${salePrice.toLocaleString("en-IN")}
+₹${sale.toLocaleString("en-IN")}
 </span>
 
 <span class="discount-label">
@@ -2296,36 +2366,18 @@ ${discount}% OFF
 
 }
 
+
 return`
 
 <div class="price-box">
 
 <span class="sale-price">
-₹${salePrice.toLocaleString("en-IN")}
+₹${sale.toLocaleString("en-IN")}
 </span>
 
 </div>
 
 `;
-
-}
-
-
-/* =========================
-   PRODUCT PAGE
-========================= */
-
-function openProduct(productId){
-
-if(!productId)
-return;
-
-localStorage.setItem(
-"selectedProductId",
-productId
-);
-
-window.location.href="product.html";
 
 }
 
@@ -2337,7 +2389,11 @@ window.location.href="product.html";
 function addToCart(product){
 
 const id=
-product.id || "";
+product.id;
+
+if(!id)
+return;
+
 
 const item={
 
@@ -2354,6 +2410,7 @@ image:getProductImage(product),
 quantity:1
 
 };
+
 
 let cart=[];
 
@@ -2373,12 +2430,14 @@ cart=[];
 
 }
 
+
 const existing=
 cart.find(
-x=>
-String(x.id)===String(id) ||
-String(x.product_id)===String(id)
+item2=>
+String(item2.id)===String(id) ||
+String(item2.product_id)===String(id)
 );
+
 
 if(existing){
 
@@ -2391,41 +2450,501 @@ cart.push(item);
 
 }
 
+
 localStorage.setItem(
 "cart",
 JSON.stringify(cart)
 );
 
-window.location.href="cart.html";
+
+window.location.href=
+"cart.html";
 
 }
 
 
 function buyNow(product){
 
-const id=
-product.id || "";
-
-if(!id)
+if(!product?.id)
 return;
 
 localStorage.setItem(
 "selectedProductId",
-id
+product.id
 );
 
-window.location.href="product.html";
+window.location.href=
+"product.html";
+
+}
+
+
+function openProduct(productId){
+
+if(!productId)
+return;
+
+localStorage.setItem(
+"selectedProductId",
+productId
+);
+
+window.location.href=
+"product.html";
 
 }
 
 
 /* =========================
-   HERO SLIDESHOW
+   PRODUCT GALLERY
 ========================= */
 
-let heroTimer=null;
+function createProductCard(product){
 
-function renderHeroSlideshow(products){
+const images=
+getProductImages(product);
+
+const name=
+getProductName(product);
+
+const description=
+getProductDescription(product);
+
+const stock=
+getProductStock(product);
+
+const mrp=
+getOriginalPrice(product);
+
+const sale=
+getSalePrice(product);
+
+let saleBadge="";
+
+
+if(
+mrp>sale &&
+sale>0
+){
+
+saleBadge=`
+
+<div class="product-sale-badge">
+SALE
+</div>
+
+`;
+
+}
+
+
+const card=
+document.createElement("article");
+
+card.className=
+"product-card";
+
+
+/*
+   GALLERY
+*/
+
+let galleryHtml="";
+
+
+if(images.length){
+
+galleryHtml=`
+
+<div class="product-gallery">
+
+${saleBadge}
+
+${
+images.length>1
+?`
+
+<div class="photo-counter">
+1 / ${images.length}
+</div>
+
+<button
+type="button"
+class="gallery-arrow gallery-prev"
+aria-label="Previous image">
+
+‹
+
+</button>
+
+<button
+type="button"
+class="gallery-arrow gallery-next"
+aria-label="Next image">
+
+›
+
+</button>
+
+`
+:""
+}
+
+
+<div class="product-main-image">
+
+<img
+class="gallery-main-img"
+src="${escapeHtml(images[0])}"
+alt="${escapeHtml(name)}"
+loading="lazy"
+>
+
+</div>
+
+
+${
+images.length>1
+?`
+
+<div class="product-thumbnails">
+
+${images.map(
+(url,index)=>`
+
+<button
+type="button"
+class="product-thumb ${
+index===0 ? "active":""
+}"
+data-index="${index}"
+aria-label="Product photo ${index+1}">
+
+<img
+src="${escapeHtml(url)}"
+alt=""
+loading="lazy"
+>
+
+</button>
+
+`
+).join("")}
+
+</div>
+
+`
+:""
+}
+
+</div>
+
+`;
+
+}else{
+
+galleryHtml=`
+
+<div class="product-gallery">
+
+${saleBadge}
+
+<div class="product-main-image">
+
+<div style="
+font-family:Georgia,serif;
+font-size:26px;
+font-weight:700;
+color:#1d513e;
+">
+LIARA
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+card.innerHTML=
+
+galleryHtml+
+
+`
+
+<div class="product-info">
+
+
+<div class="product-name">
+${escapeHtml(name)}
+</div>
+
+
+<div class="product-desc">
+${escapeHtml(description)}
+</div>
+
+
+<div class="product-meta">
+
+${getProductPriceHtml(product)}
+
+
+<span class="stock ${
+stock>0 ? "" : "out"
+}">
+
+${
+stock>0
+?"IN STOCK"
+:"OUT OF STOCK"
+}
+
+</span>
+
+</div>
+
+
+${
+stock>0
+?`
+
+<div class="product-actions">
+
+<button
+type="button"
+class="outline add-cart-btn">
+
+ADD TO CART
+
+</button>
+
+<button
+type="button"
+class="buy-now-btn">
+
+BUY NOW
+
+</button>
+
+</div>
+
+`
+:""
+}
+
+
+</div>
+
+`;
+
+
+/* MAIN IMAGE */
+
+const mainImage=
+card.querySelector(
+".gallery-main-img"
+);
+
+if(mainImage){
+
+mainImage.addEventListener(
+"click",
+()=>openProduct(product.id)
+);
+
+}
+
+
+/* GALLERY STATE */
+
+let current=0;
+
+
+function showImage(index){
+
+if(!images.length)
+return;
+
+current=
+(index+images.length)%images.length;
+
+
+if(mainImage){
+
+mainImage.src=
+images[current];
+
+}
+
+
+const counter=
+card.querySelector(
+".photo-counter"
+);
+
+if(counter){
+
+counter.textContent=
+`${current+1} / ${images.length}`;
+
+}
+
+
+card
+.querySelectorAll(".product-thumb")
+.forEach(
+(thumb,i)=>{
+
+thumb.classList.toggle(
+"active",
+i===current
+);
+
+}
+);
+
+}
+
+
+/* THUMBNAILS */
+
+card
+.querySelectorAll(".product-thumb")
+.forEach(
+thumb=>{
+
+thumb.addEventListener(
+"click",
+function(e){
+
+e.preventDefault();
+e.stopPropagation();
+
+showImage(
+Number(
+this.dataset.index
+)
+);
+
+}
+);
+
+}
+);
+
+
+/* PREVIOUS */
+
+const previous=
+card.querySelector(
+".gallery-prev"
+);
+
+if(previous){
+
+previous.addEventListener(
+"click",
+function(e){
+
+e.preventDefault();
+e.stopPropagation();
+
+showImage(current-1);
+
+}
+);
+
+}
+
+
+/* NEXT */
+
+const next=
+card.querySelector(
+".gallery-next"
+);
+
+if(next){
+
+next.addEventListener(
+"click",
+function(e){
+
+e.preventDefault();
+e.stopPropagation();
+
+showImage(current+1);
+
+}
+);
+
+}
+
+
+/* ADD CART */
+
+const addButton=
+card.querySelector(
+".add-cart-btn"
+);
+
+if(addButton){
+
+addButton.addEventListener(
+"click",
+function(e){
+
+e.preventDefault();
+e.stopPropagation();
+
+addToCart(product);
+
+}
+);
+
+}
+
+
+/* BUY NOW */
+
+const buyButton=
+card.querySelector(
+".buy-now-btn"
+);
+
+if(buyButton){
+
+buyButton.addEventListener(
+"click",
+function(e){
+
+e.preventDefault();
+e.stopPropagation();
+
+buyNow(product);
+
+}
+);
+
+}
+
+
+return card;
+
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+let heroInterval=null;
+
+function renderHero(products){
 
 const box=
 document.getElementById(
@@ -2440,42 +2959,49 @@ document.getElementById(
 if(!box || !dots)
 return;
 
-if(heroTimer){
 
-clearInterval(heroTimer);
+if(heroInterval){
 
-heroTimer=null;
+clearInterval(
+heroInterval
+);
+
+heroInterval=null;
 
 }
 
-
-/*
-  FIRST 4 UNIQUE PHOTOS
-  FROM SUPABASE PRODUCTS
-*/
 
 const images=[];
 
-products.forEach(product=>{
+
+/*
+  ONLY FIRST 4 UNIQUE PHOTOS
+*/
+
+for(
+const product of products
+){
 
 if(images.length>=4)
-return;
+break;
 
-getProductImages(product)
-.forEach(url=>{
+
+for(
+const image of getProductImages(product)
+){
 
 if(
 images.length<4 &&
-!images.includes(url)
+!images.includes(image)
 ){
 
-images.push(url);
+images.push(image);
 
 }
 
-});
+}
 
-});
+}
 
 
 if(!images.length){
@@ -2489,8 +3015,8 @@ align-items:center;
 justify-content:center;
 font-family:Georgia,serif;
 font-size:30px;
-font-weight:bold;
-color:#173f32;
+font-weight:700;
+color:#1d513e;
 ">
 
 LIARA
@@ -2510,7 +3036,9 @@ box.innerHTML="";
 dots.innerHTML="";
 
 
-images.forEach((url,index)=>{
+images.forEach(
+(image,index)=>{
+
 
 const slide=
 document.createElement("div");
@@ -2521,14 +3049,14 @@ slide.className=
 
 slide.style.setProperty(
 "--hero-bg",
-`url("${url.replace(/"/g,'\\"')}")`
+`url("${image.replace(/"/g,'\\"')}")`
 );
 
 
 const img=
 document.createElement("img");
 
-img.src=url;
+img.src=image;
 
 img.alt=
 "Liara Professional product";
@@ -2538,7 +3066,9 @@ index===0
 ?"eager"
 :"lazy";
 
-img.onerror=function(){
+
+img.onerror=
+function(){
 
 this.style.display="none";
 
@@ -2561,11 +3091,6 @@ dot.className=
 
 dot.dataset.index=index;
 
-dot.setAttribute(
-"aria-label",
-"Show product photo "+(index+1)
-);
-
 dots.appendChild(dot);
 
 });
@@ -2574,18 +3099,25 @@ dots.appendChild(dot);
 let current=0;
 
 
-function showSlide(index){
+function showHero(index){
 
 const slides=
 box.querySelectorAll(
 ".hero-slide"
 );
 
+const heroDots=
+dots.querySelectorAll(
+".hero-slide-dot"
+);
+
 if(!slides.length)
 return;
 
+
 current=
 (index+slides.length)%slides.length;
+
 
 slides.forEach(
 (slide,i)=>{
@@ -2599,9 +3131,7 @@ i===current
 );
 
 
-dots
-.querySelectorAll(".hero-slide-dot")
-.forEach(
+heroDots.forEach(
 (dot,i)=>{
 
 dot.classList.toggle(
@@ -2615,7 +3145,9 @@ i===current
 }
 
 
-dots.onclick=function(e){
+dots.addEventListener(
+"click",
+function(e){
 
 const dot=
 e.target.closest(
@@ -2625,310 +3157,20 @@ e.target.closest(
 if(!dot)
 return;
 
-showSlide(
+showHero(
 Number(dot.dataset.index)
 );
 
-};
+}
+);
 
 
 if(images.length>1){
 
-heroTimer=
+heroInterval=
 setInterval(
-()=>showSlide(current+1),
+()=>showHero(current+1),
 3500
-);
-
-}
-
-}
-
-
-/* =========================
-   PRODUCT CARD GALLERY
-========================= */
-
-function createProductGallery(product){
-
-const images=
-getProductImages(product);
-
-if(!images.length){
-
-return`
-
-<div class="product-gallery">
-
-<div class="product-main-image">
-
-<div style="
-font-family:Georgia,serif;
-font-size:28px;
-font-weight:bold;
-color:#173f32;
-">
-
-LIARA
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-}
-
-
-const galleryId=
-"gallery_"+String(
-product.id || Math.random()
-).replace(
-/[^a-zA-Z0-9_-]/g,
-""
-);
-
-
-return`
-
-<div
-class="product-gallery"
-data-gallery="${galleryId}"
-data-images='${JSON.stringify(images).replace(/'/g,"&#39;")}'>
-
-
-<div class="product-main-image">
-
-<img
-class="gallery-main-img"
-src="${escapeHtml(images[0])}"
-alt="${escapeHtml(getProductName(product))}"
-loading="lazy"
->
-
-${
-images.length>1
-?`
-
-<button
-type="button"
-class="gallery-arrow gallery-prev"
-aria-label="Previous photo">
-
-‹
-
-</button>
-
-<button
-type="button"
-class="gallery-arrow gallery-next"
-aria-label="Next photo">
-
-›
-
-</button>
-
-<div class="photo-counter">
-
-1 / ${images.length}
-
-</div>
-
-`
-:""
-
-}
-
-</div>
-
-
-${
-images.length>1
-
-?`
-
-<div class="product-thumbnails">
-
-${images.map(
-(url,i)=>`
-
-<button
-type="button"
-class="product-thumb ${
-i===0 ? "active":""
-}"
-data-index="${i}">
-
-<img
-src="${escapeHtml(url)}"
-alt="Product photo ${i+1}"
-loading="lazy"
->
-
-</button>
-
-`
-).join("")}
-
-</div>
-
-`
-:""
-
-}
-
-</div>
-
-`;
-
-}
-
-
-/* =========================
-   SETUP GALLERY
-========================= */
-
-function setupProductGallery(card,product){
-
-const gallery=
-card.querySelector(
-".product-gallery"
-);
-
-if(!gallery)
-return;
-
-const images=
-getProductImages(product);
-
-if(!images.length)
-return;
-
-let current=0;
-
-const mainImg=
-gallery.querySelector(
-".gallery-main-img"
-);
-
-const counter=
-gallery.querySelector(
-".photo-counter"
-);
-
-const thumbs=
-gallery.querySelectorAll(
-".product-thumb"
-);
-
-
-function show(index){
-
-current=
-(index+images.length)%images.length;
-
-if(mainImg){
-
-mainImg.src=
-images[current];
-
-}
-
-if(counter){
-
-counter.textContent=
-`${current+1} / ${images.length}`;
-
-}
-
-thumbs.forEach(
-(thumb,i)=>{
-
-thumb.classList.toggle(
-"active",
-i===current
-);
-
-});
-
-}
-
-
-thumbs.forEach(
-thumb=>{
-
-thumb.addEventListener(
-"click",
-e=>{
-
-e.preventDefault();
-e.stopPropagation();
-
-show(
-Number(
-thumb.dataset.index || 0
-)
-);
-
-}
-);
-
-}
-);
-
-
-const prev=
-gallery.querySelector(
-".gallery-prev"
-);
-
-const next=
-gallery.querySelector(
-".gallery-next"
-);
-
-
-if(prev){
-
-prev.addEventListener(
-"click",
-e=>{
-
-e.preventDefault();
-e.stopPropagation();
-
-show(current-1);
-
-}
-);
-
-}
-
-
-if(next){
-
-next.addEventListener(
-"click",
-e=>{
-
-e.preventDefault();
-e.stopPropagation();
-
-show(current+1);
-
-}
-);
-
-}
-
-
-if(mainImg){
-
-mainImg.addEventListener(
-"click",
-()=>openProduct(product.id)
 );
 
 }
@@ -2942,30 +3184,18 @@ mainImg.addEventListener(
 
 async function loadHomepageProducts(){
 
-const box=
+const productBox=
 document.getElementById(
 "dynamicProducts"
 );
 
-const count=
+const productCount=
 document.getElementById(
 "productCount"
 );
 
-if(!box || !count)
-return;
-
 
 try{
-
-if(!window.supabase){
-
-throw new Error(
-"Supabase library failed."
-);
-
-}
-
 
 supabaseClient=
 window.supabase.createClient(
@@ -2995,19 +3225,24 @@ Array.isArray(data)
 
 /* HERO */
 
-renderHeroSlideshow(
-products
-);
+renderHero(products);
 
 
-/* NO PRODUCTS */
+/* COUNT */
+
+productCount.textContent=
+`${products.length} ${
+products.length===1
+?"product"
+:"products"
+}`;
+
+
+/* EMPTY */
 
 if(!products.length){
 
-count.textContent=
-"0 products";
-
-box.innerHTML=`
+productBox.innerHTML=`
 
 <div class="empty">
 
@@ -3022,192 +3257,24 @@ return;
 }
 
 
-count.textContent=
-products.length+
-(
-products.length===1
-?" product"
-:" products"
-);
+/*
+   IMPORTANT:
+   DON'T REMOVE ANY PRODUCTS
+*/
+
+productBox.innerHTML="";
 
 
-box.innerHTML="";
-
-
-/* EVERY PRODUCT */
-
-products.forEach(product=>{
-
-const id=
-product.id || "";
-
-const name=
-getProductName(product);
-
-const desc=
-getProductDescription(product);
-
-const stock=
-getProductStock(product);
-
+products.forEach(
+product=>{
 
 const card=
-document.createElement(
-"article"
-);
+createProductCard(product);
 
-card.className=
-"product-card";
-
-
-/* GALLERY */
-
-const gallery=
-createProductGallery(
-product
-);
-
-
-/* PRODUCT CONTENT */
-
-card.innerHTML=
-
-gallery+
-
-`
-
-<div class="product-info">
-
-
-<div class="product-name">
-
-${escapeHtml(name)}
-
-</div>
-
-
-<div class="product-desc">
-
-${escapeHtml(desc)}
-
-</div>
-
-
-<div class="product-meta">
-
-${getProductPriceHtml(product)}
-
-<span class="stock ${
-stock>0 ? "" : "out"
-}">
-
-${
-stock>0
-?"IN STOCK"
-:"OUT OF STOCK"
-}
-
-</span>
-
-</div>
-
-
-${
-stock>0
-
-?`
-
-<div class="product-actions">
-
-<button
-class="outline add-cart-btn"
-type="button">
-
-ADD TO CART
-
-</button>
-
-<button
-class="buy-now-btn"
-type="button">
-
-BUY NOW
-
-</button>
-
-</div>
-
-`
-
-:""
-
-}
-
-
-</div>
-
-`;
-
-
-/* ADD TO CART */
-
-const addButton=
-card.querySelector(
-".add-cart-btn"
-);
-
-if(addButton){
-
-addButton.addEventListener(
-"click",
-e=>{
-
-e.preventDefault();
-e.stopPropagation();
-
-addToCart(product);
+productBox.appendChild(card);
 
 }
 );
-
-}
-
-
-/* BUY NOW */
-
-const buyButton=
-card.querySelector(
-".buy-now-btn"
-);
-
-if(buyButton){
-
-buyButton.addEventListener(
-"click",
-e=>{
-
-e.preventDefault();
-e.stopPropagation();
-
-buyNow(product);
-
-}
-);
-
-}
-
-
-/* GALLERY */
-
-setupProductGallery(
-card,
-product
-);
-
-
-box.appendChild(card);
-
-});
 
 
 }catch(error){
@@ -3217,10 +3284,12 @@ console.error(
 error
 );
 
-count.textContent=
+
+productCount.textContent=
 "Products unavailable";
 
-box.innerHTML=`
+
+productBox.innerHTML=`
 
 <div class="empty">
 
