@@ -197,9 +197,6 @@ nav a:hover{
     linear-gradient(125deg,#fcfbf8,#f1ebdf);
 }
 
-/* =========================================
-   HERO BRAND WATERMARK
-   ========================================= */
 .hero{
   position:relative;
   isolation:isolate;
@@ -668,6 +665,7 @@ nav a:hover{
   display:flex;
   align-items:center;
   justify-content:center;
+  position:relative;
 }
 
 .product-image img{
@@ -680,6 +678,135 @@ nav a:hover{
   object-fit:contain;
   padding:10px;
 }
+
+
+/* =========================================
+   PRODUCT MULTI IMAGE GALLERY
+   ========================================= */
+
+.product-gallery{
+  position:relative;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#f5f1e9;
+}
+
+.product-gallery-slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .35s ease;
+  cursor:pointer;
+}
+
+.product-gallery-slide.active{
+  opacity:1;
+  visibility:visible;
+}
+
+.product-gallery-slide img{
+  width:100%;
+  height:100%;
+  object-fit:contain !important;
+  object-position:center !important;
+  padding:10px;
+  display:block;
+}
+
+.product-gallery-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:30px;
+  height:30px;
+  border:1px solid rgba(181,138,60,.35);
+  border-radius:50%;
+  background:rgba(255,255,255,.88);
+  color:#333;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  line-height:1;
+  z-index:5;
+  cursor:pointer;
+  opacity:0;
+  transition:.25s;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.product-gallery:hover .product-gallery-arrow{
+  opacity:1;
+}
+
+.product-gallery-arrow:hover{
+  background:var(--gold);
+  color:#fff;
+  border-color:var(--gold);
+}
+
+.product-gallery-prev{
+  left:8px;
+}
+
+.product-gallery-next{
+  right:8px;
+}
+
+.product-gallery-dots{
+  position:absolute;
+  left:50%;
+  bottom:8px;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:4px 7px;
+  border-radius:20px;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(5px);
+  z-index:6;
+}
+
+.product-gallery-dot{
+  width:6px;
+  height:6px;
+  padding:0;
+  border:1px solid var(--gold);
+  border-radius:50%;
+  background:#fff;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.product-gallery-dot.active{
+  width:14px;
+  border-radius:8px;
+  background:var(--gold);
+}
+
+.product-gallery-count{
+  position:absolute;
+  top:8px;
+  right:8px;
+  z-index:6;
+  padding:4px 7px;
+  border-radius:12px;
+  background:rgba(255,255,255,.82);
+  color:#555;
+  font-size:8px;
+  font-weight:bold;
+  letter-spacing:.5px;
+}
+
 
 .product-info{
   padding:16px 3px 3px;
@@ -1303,6 +1430,17 @@ footer{
 
   .price-box{
     gap:7px;
+  }
+
+  .product-gallery-arrow{
+    width:28px;
+    height:28px;
+    opacity:1;
+    font-size:15px;
+  }
+
+  .product-gallery-slide img{
+    padding:8px;
   }
 
 }
@@ -2050,7 +2188,7 @@ footer{
      SUPABASE
      ========================================= -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
 
 <script>
 
@@ -2104,17 +2242,47 @@ function toNumber(value){
 }
 
 
+/* =========================================
+   ALL PRODUCT IMAGES
+   ========================================= */
+
+function getProductImages(p){
+
+  if(!p) return [];
+
+  const images = [
+    p.image_url,
+    p.image_url_2,
+    p.image_url_3,
+    p.image_url_4
+  ];
+
+  return images
+    .map(url => String(url || "").trim())
+    .filter((url,index,array) => {
+
+      return (
+        url &&
+        array.indexOf(url) === index
+      );
+
+    });
+
+}
+
+
+/* =========================================
+   MAIN PRODUCT IMAGE
+   ========================================= */
+
 function getProductImage(p){
 
-  if(!p) return "";
+  const images =
+    getProductImages(p);
 
-  return p.image_url ||
-         p.photo_url ||
-         p.image ||
-         p.photo ||
-         p.product_image ||
-         p.imageUrl ||
-         "";
+  return images.length
+    ? images[0]
+    : "";
 
 }
 
@@ -2197,9 +2365,6 @@ function getOriginalPrice(p){
   const directOriginal =
     toNumber(value);
 
-  /*
-    First use a normal product-level MRP.
-  */
   if(
     directOriginal > salePrice &&
     salePrice > 0
@@ -2207,11 +2372,6 @@ function getOriginalPrice(p){
     return directOriginal;
   }
 
-  /*
-    Some Liara products keep sale/MRP inside variants.
-    If the current sale price matches a variant sale price,
-    use that variant's price as the original MRP.
-  */
   if(
     Array.isArray(p.variants) &&
     salePrice > 0
@@ -2313,16 +2473,10 @@ function getProductPriceHtml(product){
   const originalPrice =
     getOriginalPrice(product);
 
-
   const saleText =
     "₹" +
     salePrice.toLocaleString("en-IN");
 
-
-  /*
-    SALE display:
-    ₹Original MRP (line-through) → SALE → ₹Sale Price → XX% OFF
-  */
 
   if(
     originalPrice > salePrice &&
@@ -2431,7 +2585,6 @@ async function addToCart(product){
         localStorage.getItem("cart") || "[]"
       );
 
-
     if(!Array.isArray(cart)){
       cart=[];
     }
@@ -2511,12 +2664,10 @@ function renderHeroSlideshow(products){
       "heroSlideshow"
     );
 
-
   const dots =
     document.getElementById(
       "heroSlideDots"
     );
-
 
   if(!box) return;
 
@@ -2583,7 +2734,6 @@ function renderHeroSlideshow(products){
 
     box.innerHTML =
       '<div class="hero-product-placeholder"><span>LIARA</span></div>';
-
 
     if(dots)
       dots.innerHTML = "";
@@ -2666,7 +2816,6 @@ function renderHeroSlideshow(products){
   function rebuildHeroDots(){
 
     if(!dots) return;
-
 
     dots.innerHTML = "";
 
@@ -2838,6 +2987,247 @@ function renderHeroSlideshow(products){
 
 
 /* =========================================
+   PRODUCT GALLERY
+   ========================================= */
+
+function setupProductGallery(card){
+
+  const gallery =
+    card.querySelector(
+      ".product-gallery"
+    );
+
+  if(!gallery)
+    return;
+
+
+  function getSlides(){
+
+    return Array.from(
+      gallery.querySelectorAll(
+        ".product-gallery-slide"
+      )
+    );
+
+  }
+
+
+  const dots =
+    Array.from(
+      gallery.querySelectorAll(
+        ".product-gallery-dot"
+      )
+    );
+
+
+  const prev =
+    gallery.querySelector(
+      ".product-gallery-prev"
+    );
+
+
+  const next =
+    gallery.querySelector(
+      ".product-gallery-next"
+    );
+
+
+  const counter =
+    gallery.querySelector(
+      ".product-gallery-count"
+    );
+
+
+  let currentImage = 0;
+
+
+  function showProductImage(index){
+
+    const slides =
+      getSlides();
+
+
+    if(!slides.length){
+
+      gallery.style.display =
+        "none";
+
+      return;
+
+    }
+
+
+    currentImage =
+      (
+        index +
+        slides.length
+      ) %
+      slides.length;
+
+
+    slides.forEach(
+      (slide,i)=>{
+
+        slide.classList.toggle(
+          "active",
+          i === currentImage
+        );
+
+      }
+    );
+
+
+    dots.forEach(
+      (dot,i)=>{
+
+        dot.classList.toggle(
+          "active",
+          i === currentImage
+        );
+
+      }
+    );
+
+
+    if(counter){
+
+      counter.textContent =
+        (currentImage + 1) +
+        " / " +
+        slides.length;
+
+    }
+
+  }
+
+
+  if(prev){
+
+    prev.addEventListener(
+      "click",
+      function(e){
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        showProductImage(
+          currentImage - 1
+        );
+
+      }
+    );
+
+  }
+
+
+  if(next){
+
+    next.addEventListener(
+      "click",
+      function(e){
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        showProductImage(
+          currentImage + 1
+        );
+
+      }
+    );
+
+  }
+
+
+  dots.forEach(
+    (dot,index)=>{
+
+      dot.addEventListener(
+        "click",
+        function(e){
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          showProductImage(
+            index
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+  gallery.addEventListener(
+    "click",
+    function(e){
+
+      if(
+        e.target.closest(
+          ".product-gallery-arrow"
+        ) ||
+        e.target.closest(
+          ".product-gallery-dot"
+        )
+      ){
+        return;
+      }
+
+      const slide =
+        e.target.closest(
+          ".product-gallery-slide"
+        );
+
+
+      if(slide){
+
+        openProduct(
+          card.dataset.productId
+        );
+
+      }
+
+    }
+  );
+
+
+  gallery.addEventListener(
+    "keydown",
+    function(e){
+
+      if(e.key === "ArrowLeft"){
+
+        e.preventDefault();
+
+        showProductImage(
+          currentImage - 1
+        );
+
+      }
+
+
+      if(e.key === "ArrowRight"){
+
+        e.preventDefault();
+
+        showProductImage(
+          currentImage + 1
+        );
+
+      }
+
+    }
+  );
+
+
+  showProductImage(0);
+
+}
+
+
+/* =========================================
    LOAD PRODUCTS
    ========================================= */
 
@@ -2977,8 +3367,8 @@ async function loadHomepageProducts(){
           );
 
 
-        const image =
-          getProductImage(
+        const productImages =
+          getProductImages(
             product
           );
 
@@ -2993,20 +3383,111 @@ async function loadHomepageProducts(){
           "product-card";
 
 
+        card.dataset.productId =
+          String(id);
+
+
+        /* =====================================
+           MULTI IMAGE HTML
+           ===================================== */
+
         const imageHtml =
-          image
+          productImages.length
 
           ? `
 
-            <img
-              src="${escapeHtml(image)}"
-              alt="${escapeHtml(name)}"
-              loading="lazy"
-              onerror="
-                this.onerror=null;
-                this.style.display='none';
-              "
-            >
+            <div
+              class="product-gallery"
+              data-gallery-id="${escapeHtml(String(id))}">
+
+              ${productImages.map(
+                (url,index)=>`
+
+                  <div
+                    class="product-gallery-slide ${
+                      index === 0
+                      ? "active"
+                      : ""
+                    }"
+                    data-slide="${index}">
+
+                    <img
+                      src="${escapeHtml(url)}"
+                      alt="${escapeHtml(name)} — Image ${index + 1}"
+                      loading="${
+                        index === 0
+                        ? "eager"
+                        : "lazy"
+                      }"
+                      decoding="async"
+                    >
+
+                  </div>
+
+                `
+              ).join("")}
+
+
+              ${
+                productImages.length > 1
+
+                ? `
+
+                  <button
+                    type="button"
+                    class="product-gallery-arrow product-gallery-prev"
+                    aria-label="Previous image">
+
+                    ‹
+
+                  </button>
+
+
+                  <button
+                    type="button"
+                    class="product-gallery-arrow product-gallery-next"
+                    aria-label="Next image">
+
+                    ›
+
+                  </button>
+
+
+                  <div class="product-gallery-dots">
+
+                    ${productImages.map(
+                      (url,index)=>`
+
+                        <button
+                          type="button"
+                          class="product-gallery-dot ${
+                            index === 0
+                            ? "active"
+                            : ""
+                          }"
+                          data-index="${index}"
+                          aria-label="Show image ${index + 1}">
+                        </button>
+
+                      `
+                    ).join("")}
+
+                  </div>
+
+
+                  <div class="product-gallery-count">
+
+                    1 / ${productImages.length}
+
+                  </div>
+
+                `
+
+                : ""
+
+              }
+
+            </div>
 
           `
 
@@ -3022,6 +3503,10 @@ async function loadHomepageProducts(){
 
           `;
 
+
+        /* =====================================
+           CARD HTML
+           ===================================== */
 
         card.innerHTML = `
 
@@ -3108,11 +3593,24 @@ async function loadHomepageProducts(){
         `;
 
 
+        /* =====================================
+           PRODUCT GALLERY SETUP
+           ===================================== */
+
+        setupProductGallery(
+          card
+        );
+
+
+        /* =====================================
+           ADD TO CART / BUY NOW
+           ===================================== */
+
         if(stock > 0){
 
           const buttons =
             card.querySelectorAll(
-              "button"
+              ".product-actions button"
             );
 
 
@@ -3158,6 +3656,10 @@ async function loadHomepageProducts(){
         }
 
 
+        /* =====================================
+           PRODUCT IMAGE CLICK
+           ===================================== */
+
         const productImage =
           card.querySelector(
             ".product-image"
@@ -3172,7 +3674,21 @@ async function loadHomepageProducts(){
 
           productImage.addEventListener(
             "click",
-            function(){
+            function(e){
+
+              if(
+                e.target.closest(
+                  ".product-gallery-arrow"
+                ) ||
+                e.target.closest(
+                  ".product-gallery-dot"
+                )
+              ){
+
+                return;
+
+              }
+
 
               openProduct(
                 id
