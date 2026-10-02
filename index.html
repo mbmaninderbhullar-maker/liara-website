@@ -9,6 +9,7 @@
 <title>Liara Professional™ | Advanced Herbal</title>
 
 <style>
+
 :root{
   --green:#1d513e;
   --green-dark:#123a2d;
@@ -297,7 +298,9 @@ nav a:hover{
 }
 
 
-/* HERO PRODUCT */
+/* =========================
+   HERO PRODUCT
+========================= */
 
 .hero-product{
   position:relative;
@@ -491,14 +494,16 @@ nav a:hover{
 }
 
 
-/* PRODUCT CARD */
+/* =========================
+   PRODUCT CARD
+========================= */
 
 .product-card{
   position:relative;
   min-width:0;
   background:#fff;
-  border:1px solid #e2e5e0;
-  border-radius:9px;
+  border:1px solid #dfe5df;
+  border-radius:10px;
   overflow:hidden;
   transition:
     transform .25s ease,
@@ -508,28 +513,29 @@ nav a:hover{
 
 .product-card:hover{
   transform:translateY(-5px);
-  border-color:#d6c8a7;
-  box-shadow:0 18px 42px rgba(18,58,45,.10);
+  border-color:#c9b47e;
+  box-shadow:
+    0 18px 42px rgba(18,58,45,.11),
+    0 3px 10px rgba(0,0,0,.03);
 }
 
 
-/* PRODUCT IMAGE AREA */
+/* =========================
+   PRODUCT GALLERY
+========================= */
 
 .product-gallery{
   position:relative;
   background:
     linear-gradient(
       145deg,
-      #f5f7f2,
-      #e9f0e9
+      #f6f8f4 0%,
+      #e8f0e9 100%
     );
 }
 
 
-/*
-  IMPORTANT:
-  Compact height so cards don't become huge.
-*/
+/* MAIN PRODUCT IMAGE */
 
 .product-main-image{
   position:relative;
@@ -545,9 +551,11 @@ nav a:hover{
 .product-main-image img{
   width:100%;
   height:100%;
-  padding:8px;
+  padding:9px;
   object-fit:contain;
-  transition:transform .35s ease;
+  transition:
+    transform .35s ease,
+    opacity .2s ease;
 }
 
 .product-card:hover
@@ -562,28 +570,29 @@ nav a:hover{
   position:absolute;
   top:10px;
   left:10px;
-  z-index:12;
-  padding:6px 8px;
+  z-index:30;
+  padding:6px 9px;
   background:var(--gold);
   color:#fff;
-  border-radius:2px;
+  border-radius:3px;
   font-size:7px;
   font-weight:700;
   letter-spacing:1px;
+  box-shadow:0 3px 8px rgba(181,138,60,.2);
 }
 
 
-/* PHOTO COUNT */
+/* PHOTO COUNTER */
 
 .photo-counter{
   position:absolute;
   top:10px;
   right:10px;
-  z-index:12;
+  z-index:30;
   padding:4px 7px;
-  background:rgba(18,58,45,.86);
+  background:rgba(18,58,45,.88);
   color:#fff;
-  border-radius:10px;
+  border-radius:12px;
   font-size:7px;
   font-weight:700;
 }
@@ -594,24 +603,29 @@ nav a:hover{
 .gallery-arrow{
   position:absolute;
   top:50%;
-  z-index:15;
+  z-index:35;
   transform:translateY(-50%);
-  width:27px;
-  height:27px;
+  width:29px;
+  height:29px;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:0;
-  border:1px solid rgba(18,58,45,.12);
+  border:1px solid rgba(18,58,45,.14);
   border-radius:50%;
-  background:rgba(255,255,255,.9);
+  background:rgba(255,255,255,.94);
   color:var(--green);
-  font-size:16px;
+  font-size:17px;
+  line-height:1;
   opacity:0;
-  transition:.2s;
+  transition:
+    opacity .2s,
+    background .2s,
+    color .2s;
 }
 
-.product-card:hover .gallery-arrow{
+.product-card:hover
+.gallery-arrow{
   opacity:1;
 }
 
@@ -629,7 +643,9 @@ nav a:hover{
 }
 
 
-/* THUMBNAILS */
+/* =========================
+   THUMBNAILS
+========================= */
 
 .product-thumbnails{
   min-height:51px;
@@ -638,20 +654,24 @@ nav a:hover{
   align-items:center;
   justify-content:center;
   gap:5px;
-  border-top:1px solid #e7ebe6;
-  background:#fff;
+  border-top:1px solid #e0e7e1;
+  background:rgba(255,255,255,.96);
 }
 
 .product-thumb{
   width:38px;
   height:38px;
+  flex:0 0 38px;
   padding:0;
   overflow:hidden;
-  border:1px solid #dfe4de;
+  border:1px solid #d9e0da;
   border-radius:4px;
   background:#fff;
-  opacity:.6;
-  transition:.2s;
+  opacity:.58;
+  transition:
+    opacity .2s,
+    border-color .2s,
+    transform .2s;
 }
 
 .product-thumb img{
@@ -662,6 +682,7 @@ nav a:hover{
 
 .product-thumb:hover{
   opacity:1;
+  transform:translateY(-1px);
 }
 
 .product-thumb.active{
@@ -670,7 +691,9 @@ nav a:hover{
 }
 
 
-/* PRODUCT INFORMATION */
+/* =========================
+   PRODUCT INFORMATION
+========================= */
 
 .product-info{
   padding:14px 14px 13px;
@@ -694,7 +717,9 @@ nav a:hover{
 }
 
 
-/* PRICE */
+/* =========================
+   PRICE
+========================= */
 
 .product-meta{
   min-height:39px;
@@ -717,12 +742,14 @@ nav a:hover{
   color:#999;
   font-size:9px;
   text-decoration:line-through;
+  text-decoration-thickness:1px;
 }
 
 .sale-price{
   color:var(--gold);
   font-size:17px;
   font-weight:700;
+  line-height:1;
 }
 
 .sale-label{
@@ -756,7 +783,9 @@ nav a:hover{
 }
 
 
-/* BUTTONS */
+/* =========================
+   BUTTONS
+========================= */
 
 .product-actions{
   display:grid;
@@ -775,7 +804,10 @@ nav a:hover{
   font-size:7px;
   font-weight:700;
   letter-spacing:.6px;
-  transition:.2s;
+  transition:
+    background .2s,
+    border-color .2s,
+    transform .2s;
 }
 
 .product-actions .outline{
@@ -783,10 +815,15 @@ nav a:hover{
   color:var(--green);
 }
 
-.product-actions button:hover{
+.product-actions button:hover:not(:disabled){
   background:var(--gold);
   border-color:var(--gold);
   color:#fff;
+  transform:translateY(-1px);
+}
+
+.product-actions button:disabled{
+  cursor:not-allowed;
 }
 
 
@@ -1149,7 +1186,9 @@ footer{
 }
 
 
-/* LOADING */
+/* =========================
+   LOADING
+========================= */
 
 .loading,
 .empty{
@@ -1283,10 +1322,6 @@ footer{
     grid-template-columns:1fr;
   }
 
-  /*
-    Mobile product image still compact
-  */
-
   .product-main-image{
     height:285px;
   }
@@ -1318,6 +1353,7 @@ footer{
   }
 
 }
+
 </style>
 </head>
 
@@ -1325,14 +1361,18 @@ footer{
 <body>
 
 
-<!-- TOP BAR -->
+<!-- =========================
+     TOP BAR
+========================= -->
 
 <div class="topbar">
 LIARA PROFESSIONAL™ • ADVANCED HERBAL • QUALITY • CARE • CONFIDENCE
 </div>
 
 
-<!-- HEADER -->
+<!-- =========================
+     HEADER
+========================= -->
 
 <header>
 
@@ -2086,7 +2126,9 @@ LIARA PROFESSIONAL™
 
 
 
-<!-- SUPABASE -->
+<!-- =========================
+     SUPABASE
+========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -2125,28 +2167,44 @@ return String(value ?? "")
 function toNumber(value){
 
 if(
-value===null ||
-value===undefined ||
-value===""
+value === null ||
+value === undefined ||
+value === ""
 ){
 return 0;
 }
 
-const number=
+const number =
 Number(
 String(value)
 .replace(/[₹,\s]/g,"")
 );
 
 return Number.isFinite(number)
-?number
-:0;
+? number
+: 0;
 
 }
 
 
 /* =========================
-   PRODUCT IMAGE
+   SALE ACTIVE CHECK
+========================= */
+
+function isSaleActive(product){
+
+return (
+product?.sale_active === true ||
+product?.sale_active === "true" ||
+product?.sale_active === 1 ||
+product?.sale_active === "1"
+);
+
+}
+
+
+/* =========================
+   PRODUCT IMAGES
 ========================= */
 
 function getProductImages(product){
@@ -2156,10 +2214,15 @@ return [];
 
 
 /*
-   EXACTLY THE 4 ADMIN PHOTO FIELDS
+   EXACT ADMIN PHOTO FIELDS
+
+   image_url
+   image_url_2
+   image_url_3
+   image_url_4
 */
 
-const fields=[
+const fields = [
 
 product.image_url,
 product.image_url_2,
@@ -2168,13 +2231,16 @@ product.image_url_4
 
 ];
 
-const images=[];
+
+const images = [];
 
 
-fields.forEach(url=>{
+fields.forEach(
+url => {
 
-const clean=
+const clean =
 String(url || "").trim();
+
 
 if(
 clean &&
@@ -2185,22 +2251,24 @@ images.push(clean);
 
 }
 
-});
+}
+);
 
 
 /*
-   OLD FIELD FALLBACK
+   OLD DATA FALLBACK
 */
 
 if(!images.length){
 
-const oldImage=
+const oldImage =
 product.photo_url ||
 product.image ||
 product.photo ||
 product.product_image ||
 product.imageUrl ||
 "";
+
 
 if(oldImage){
 
@@ -2220,7 +2288,7 @@ return images;
 
 function getProductImage(product){
 
-const images=
+const images =
 getProductImages(product);
 
 return images[0] || "";
@@ -2229,89 +2297,152 @@ return images[0] || "";
 
 
 /* =========================
-   PRODUCT DATA
+   PRODUCT NAME
 ========================= */
 
 function getProductName(product){
 
-return product?.name ||
+return (
+product?.name ||
 product?.product_name ||
 product?.title ||
 product?.product_title ||
-"Liara Product";
+"Liara Product"
+);
 
 }
 
+
+/* =========================
+   PRODUCT DESCRIPTION
+========================= */
 
 function getProductDescription(product){
 
-return product?.description ||
+return (
+product?.description ||
 product?.details ||
 product?.product_description ||
-"Advanced Herbal beauty and personal care.";
-
-}
-
-
-function getSalePrice(product){
-
-return toNumber(
-
-product?.sale_price ??
-product?.salePrice ??
-product?.discount_price ??
-product?.discountPrice ??
-product?.discounted_price ??
-product?.discountedPrice ??
-product?.selling_price ??
-product?.sellingPrice ??
-product?.price ??
-0
-
+"Advanced Herbal beauty and personal care."
 );
 
 }
 
+
+/* =========================
+   EXACT MRP
+========================= */
 
 function getOriginalPrice(product){
 
-const sale=
-getSalePrice(product);
+/*
+   SUPABASE PRODUCTS TABLE:
 
-const original=
-toNumber(
+   price = MRP
 
-product?.original_price ??
-product?.originalPrice ??
-product?.mrp ??
-product?.MRP ??
-product?.compare_at_price ??
-product?.compareAtPrice ??
-product?.regular_price ??
-product?.regularPrice ??
-product?.old_price ??
-product?.mrp_price ??
-product?.mrpPrice ??
-0
+   DO NOT use sale_price here.
+*/
 
+return toNumber(
+product?.price
 );
-
-return original>sale
-?original
-:0;
 
 }
 
+
+/* =========================
+   EXACT SALE PRICE
+========================= */
+
+function getSalePrice(product){
+
+const mrp =
+getOriginalPrice(product);
+
+
+const sale =
+toNumber(
+product?.sale_price
+);
+
+
+/*
+   Sale price is valid ONLY when:
+
+   sale_active = true
+   sale_price > 0
+   sale_price < MRP
+*/
+
+if(
+isSaleActive(product) &&
+sale > 0 &&
+sale < mrp
+){
+
+return sale;
+
+}
+
+
+return mrp;
+
+}
+
+
+/* =========================
+   DISCOUNT
+========================= */
+
+function getDiscountPercent(product){
+
+const mrp =
+getOriginalPrice(product);
+
+const sale =
+getSalePrice(product);
+
+
+/*
+   Calculate automatically from
+   actual MRP and actual sale price.
+
+   This fixes cases where
+   discount_percent in database
+   is 0.
+*/
+
+if(
+mrp > 0 &&
+sale > 0 &&
+sale < mrp
+){
+
+return Math.round(
+((mrp - sale) / mrp) * 100
+);
+
+}
+
+
+/*
+   If there is no valid sale,
+   no discount.
+*/
+
+return 0;
+
+}
+
+
+/* =========================
+   STOCK
+========================= */
 
 function getProductStock(product){
 
 return toNumber(
-
-product?.stock ??
-product?.quantity ??
-product?.inventory ??
-1
-
+product?.stock
 );
 
 }
@@ -2323,24 +2454,29 @@ product?.inventory ??
 
 function getProductPriceHtml(product){
 
-const sale=
-getSalePrice(product);
-
-const mrp=
+const mrp =
 getOriginalPrice(product);
 
+const sale =
+getSalePrice(product);
 
-if(
-mrp>sale &&
-sale>0
-){
+const discount =
+getDiscountPercent(product);
 
-const discount=
-Math.round(
-((mrp-sale)/mrp)*100
-);
 
-return`
+const onSale =
+isSaleActive(product) &&
+sale > 0 &&
+mrp > sale;
+
+
+/*
+   SALE PRODUCT
+*/
+
+if(onSale){
+
+return `
 
 <div class="price-box">
 
@@ -2367,12 +2503,16 @@ ${discount}% OFF
 }
 
 
-return`
+/*
+   NORMAL PRODUCT
+*/
+
+return `
 
 <div class="price-box">
 
 <span class="sale-price">
-₹${sale.toLocaleString("en-IN")}
+₹${mrp.toLocaleString("en-IN")}
 </span>
 
 </div>
@@ -2388,14 +2528,19 @@ return`
 
 function addToCart(product){
 
-const id=
-product.id;
+const id =
+product?.id;
+
 
 if(!id)
 return;
 
 
-const item={
+const currentPrice =
+getSalePrice(product);
+
+
+const item = {
 
 id:id,
 
@@ -2403,7 +2548,7 @@ product_id:id,
 
 name:getProductName(product),
 
-price:getSalePrice(product),
+price:currentPrice,
 
 image:getProductImage(product),
 
@@ -2412,37 +2557,55 @@ quantity:1
 };
 
 
-let cart=[];
+let cart = [];
+
 
 try{
 
-cart=
+cart =
 JSON.parse(
 localStorage.getItem("cart") || "[]"
 );
 
+
 if(!Array.isArray(cart))
-cart=[];
+cart = [];
 
-}catch(e){
 
-cart=[];
+}catch(error){
+
+console.error(
+"Cart read error:",
+error
+);
+
+cart = [];
 
 }
 
 
-const existing=
+const existing =
 cart.find(
-item2=>
-String(item2.id)===String(id) ||
-String(item2.product_id)===String(id)
+item2 =>
+String(item2.id) === String(id) ||
+String(item2.product_id) === String(id)
 );
 
 
 if(existing){
 
-existing.quantity=
-Number(existing.quantity || 1)+1;
+existing.quantity =
+Number(existing.quantity || 1) + 1;
+
+
+/*
+   Important:
+   If product was previously saved
+   at old price, update to current sale.
+*/
+
+existing.price =
+currentPrice;
 
 }else{
 
@@ -2457,138 +2620,136 @@ JSON.stringify(cart)
 );
 
 
-window.location.href=
+window.location.href =
 "cart.html";
 
 }
 
+
+/* =========================
+   BUY NOW
+========================= */
 
 function buyNow(product){
 
 if(!product?.id)
 return;
 
+
 localStorage.setItem(
 "selectedProductId",
 product.id
 );
 
-window.location.href=
-"product.html";
 
-}
-
-
-function openProduct(productId){
-
-if(!productId)
-return;
-
-localStorage.setItem(
-"selectedProductId",
-productId
-);
-
-window.location.href=
+window.location.href =
 "product.html";
 
 }
 
 
 /* =========================
-   PRODUCT GALLERY
+   OPEN PRODUCT
+========================= */
+
+function openProduct(productId){
+
+if(!productId)
+return;
+
+
+localStorage.setItem(
+"selectedProductId",
+productId
+);
+
+
+window.location.href =
+"product.html";
+
+}
+
+
+/* =========================
+   PRODUCT CARD
 ========================= */
 
 function createProductCard(product){
 
-const images=
+const images =
 getProductImages(product);
 
-const name=
+
+const name =
 getProductName(product);
 
-const description=
+
+const description =
 getProductDescription(product);
 
-const stock=
+
+const stock =
 getProductStock(product);
 
-const mrp=
+
+const mrp =
 getOriginalPrice(product);
 
-const sale=
+
+const sale =
 getSalePrice(product);
 
-let saleBadge="";
+
+const onSale =
+isSaleActive(product) &&
+sale > 0 &&
+mrp > sale;
 
 
-if(
-mrp>sale &&
-sale>0
-){
+const discount =
+getDiscountPercent(product);
 
-saleBadge=`
+
+const card =
+document.createElement("article");
+
+
+card.className =
+"product-card";
+
+
+/* =========================
+   SALE BADGE
+========================= */
+
+const saleBadge =
+onSale
+
+? `
 
 <div class="product-sale-badge">
 SALE
 </div>
 
-`;
+`
 
-}
-
-
-const card=
-document.createElement("article");
-
-card.className=
-"product-card";
+: "";
 
 
-/*
-   GALLERY
-*/
+/* =========================
+   GALLERY HTML
+========================= */
 
-let galleryHtml="";
+let galleryHtml = "";
 
 
-if(images.length){
+if(images.length > 0){
 
-galleryHtml=`
+galleryHtml = `
 
 <div class="product-gallery">
 
 ${saleBadge}
-
-${
-images.length>1
-?`
-
-<div class="photo-counter">
-1 / ${images.length}
-</div>
-
-<button
-type="button"
-class="gallery-arrow gallery-prev"
-aria-label="Previous image">
-
-‹
-
-</button>
-
-<button
-type="button"
-class="gallery-arrow gallery-next"
-aria-label="Next image">
-
-›
-
-</button>
-
-`
-:""
-}
 
 
 <div class="product-main-image">
@@ -2604,21 +2765,48 @@ loading="lazy"
 
 
 ${
-images.length>1
-?`
+images.length > 1
+
+? `
+
+<div class="photo-counter">
+1 / ${images.length}
+</div>
+
+
+<button
+type="button"
+class="gallery-arrow gallery-prev"
+aria-label="Previous product photo">
+
+‹
+
+</button>
+
+
+<button
+type="button"
+class="gallery-arrow gallery-next"
+aria-label="Next product photo">
+
+›
+
+</button>
+
 
 <div class="product-thumbnails">
 
 ${images.map(
-(url,index)=>`
+
+(url,index) => `
 
 <button
 type="button"
 class="product-thumb ${
-index===0 ? "active":""
+index === 0 ? "active" : ""
 }"
 data-index="${index}"
-aria-label="Product photo ${index+1}">
+aria-label="Product photo ${index + 1}">
 
 <img
 src="${escapeHtml(url)}"
@@ -2629,12 +2817,15 @@ loading="lazy"
 </button>
 
 `
+
 ).join("")}
 
 </div>
 
 `
-:""
+
+: ""
+
 }
 
 </div>
@@ -2643,7 +2834,7 @@ loading="lazy"
 
 }else{
 
-galleryHtml=`
+galleryHtml = `
 
 <div class="product-gallery">
 
@@ -2669,9 +2860,13 @@ LIARA
 }
 
 
-card.innerHTML=
+/* =========================
+   PRODUCT INFORMATION
+========================= */
 
-galleryHtml+
+card.innerHTML =
+
+galleryHtml +
 
 `
 
@@ -2694,13 +2889,13 @@ ${getProductPriceHtml(product)}
 
 
 <span class="stock ${
-stock>0 ? "" : "out"
+stock > 0 ? "" : "out"
 }">
 
 ${
-stock>0
-?"IN STOCK"
-:"OUT OF STOCK"
+stock > 0
+? "IN STOCK"
+: "OUT OF STOCK"
 }
 
 </span>
@@ -2709,8 +2904,9 @@ stock>0
 
 
 ${
-stock>0
-?`
+stock > 0
+
+? `
 
 <div class="product-actions">
 
@@ -2721,6 +2917,7 @@ class="outline add-cart-btn">
 ADD TO CART
 
 </button>
+
 
 <button
 type="button"
@@ -2733,7 +2930,29 @@ BUY NOW
 </div>
 
 `
-:""
+
+: `
+
+<div class="product-actions">
+
+<button
+type="button"
+class="outline"
+disabled
+style="
+grid-column:1/-1;
+opacity:.55;
+cursor:not-allowed;
+">
+
+OUT OF STOCK
+
+</button>
+
+</div>
+
+`
+
 }
 
 
@@ -2742,26 +2961,37 @@ BUY NOW
 `;
 
 
-/* MAIN IMAGE */
+/* =========================
+   MAIN IMAGE CLICK
+========================= */
 
-const mainImage=
+const mainImage =
 card.querySelector(
 ".gallery-main-img"
 );
+
 
 if(mainImage){
 
 mainImage.addEventListener(
 "click",
-()=>openProduct(product.id)
+function(){
+
+openProduct(
+product.id
+);
+
+}
 );
 
 }
 
 
-/* GALLERY STATE */
+/* =========================
+   GALLERY STATE
+========================= */
 
-let current=0;
+let currentImage = 0;
 
 
 function showImage(index){
@@ -2769,39 +2999,62 @@ function showImage(index){
 if(!images.length)
 return;
 
-current=
-(index+images.length)%images.length;
+
+currentImage =
+(index + images.length) %
+images.length;
 
 
 if(mainImage){
 
-mainImage.src=
-images[current];
+mainImage.style.opacity =
+"0.35";
+
+
+setTimeout(
+function(){
+
+mainImage.src =
+images[currentImage];
+
+mainImage.style.opacity =
+"1";
+
+},
+80
+);
 
 }
 
 
-const counter=
+/* PHOTO COUNTER */
+
+const counter =
 card.querySelector(
 ".photo-counter"
 );
 
+
 if(counter){
 
-counter.textContent=
-`${current+1} / ${images.length}`;
+counter.textContent =
+`${currentImage + 1} / ${images.length}`;
 
 }
 
 
+/* ACTIVE THUMB */
+
 card
-.querySelectorAll(".product-thumb")
+.querySelectorAll(
+".product-thumb"
+)
 .forEach(
 (thumb,i)=>{
 
 thumb.classList.toggle(
 "active",
-i===current
+i === currentImage
 );
 
 }
@@ -2810,19 +3063,25 @@ i===current
 }
 
 
-/* THUMBNAILS */
+/* =========================
+   THUMBNAILS
+========================= */
 
 card
-.querySelectorAll(".product-thumb")
+.querySelectorAll(
+".product-thumb"
+)
 .forEach(
-thumb=>{
+thumb => {
 
 thumb.addEventListener(
 "click",
-function(e){
+function(event){
 
-e.preventDefault();
-e.stopPropagation();
+event.preventDefault();
+
+event.stopPropagation();
+
 
 showImage(
 Number(
@@ -2837,23 +3096,30 @@ this.dataset.index
 );
 
 
-/* PREVIOUS */
+/* =========================
+   PREVIOUS
+========================= */
 
-const previous=
+const previous =
 card.querySelector(
 ".gallery-prev"
 );
+
 
 if(previous){
 
 previous.addEventListener(
 "click",
-function(e){
+function(event){
 
-e.preventDefault();
-e.stopPropagation();
+event.preventDefault();
 
-showImage(current-1);
+event.stopPropagation();
+
+
+showImage(
+currentImage - 1
+);
 
 }
 );
@@ -2861,23 +3127,30 @@ showImage(current-1);
 }
 
 
-/* NEXT */
+/* =========================
+   NEXT
+========================= */
 
-const next=
+const next =
 card.querySelector(
 ".gallery-next"
 );
+
 
 if(next){
 
 next.addEventListener(
 "click",
-function(e){
+function(event){
 
-e.preventDefault();
-e.stopPropagation();
+event.preventDefault();
 
-showImage(current+1);
+event.stopPropagation();
+
+
+showImage(
+currentImage + 1
+);
 
 }
 );
@@ -2885,21 +3158,26 @@ showImage(current+1);
 }
 
 
-/* ADD CART */
+/* =========================
+   ADD TO CART
+========================= */
 
-const addButton=
+const addButton =
 card.querySelector(
 ".add-cart-btn"
 );
+
 
 if(addButton){
 
 addButton.addEventListener(
 "click",
-function(e){
+function(event){
 
-e.preventDefault();
-e.stopPropagation();
+event.preventDefault();
+
+event.stopPropagation();
+
 
 addToCart(product);
 
@@ -2909,21 +3187,26 @@ addToCart(product);
 }
 
 
-/* BUY NOW */
+/* =========================
+   BUY NOW
+========================= */
 
-const buyButton=
+const buyButton =
 card.querySelector(
 ".buy-now-btn"
 );
+
 
 if(buyButton){
 
 buyButton.addEventListener(
 "click",
-function(e){
+function(event){
 
-e.preventDefault();
-e.stopPropagation();
+event.preventDefault();
+
+event.stopPropagation();
+
 
 buyNow(product);
 
@@ -2939,22 +3222,25 @@ return card;
 
 
 /* =========================
-   HERO
+   HERO SLIDESHOW
 ========================= */
 
-let heroInterval=null;
+let heroInterval = null;
+
 
 function renderHero(products){
 
-const box=
+const box =
 document.getElementById(
 "heroSlideshow"
 );
 
-const dots=
+
+const dots =
 document.getElementById(
 "heroSlideDots"
 );
+
 
 if(!box || !dots)
 return;
@@ -2966,32 +3252,36 @@ clearInterval(
 heroInterval
 );
 
-heroInterval=null;
+heroInterval = null;
 
 }
 
 
-const images=[];
-
-
 /*
-  ONLY FIRST 4 UNIQUE PHOTOS
+   FIRST 4 UNIQUE PRODUCT PHOTOS
 */
+
+const images = [];
+
 
 for(
 const product of products
 ){
 
-if(images.length>=4)
+if(images.length >= 4)
 break;
 
 
+const productImages =
+getProductImages(product);
+
+
 for(
-const image of getProductImages(product)
+const image of productImages
 ){
 
 if(
-images.length<4 &&
+images.length < 4 &&
 !images.includes(image)
 ){
 
@@ -3004,9 +3294,11 @@ images.push(image);
 }
 
 
+/* NO IMAGE */
+
 if(!images.length){
 
-box.innerHTML=`
+box.innerHTML = `
 
 <div style="
 height:100%;
@@ -3025,27 +3317,35 @@ LIARA
 
 `;
 
-dots.innerHTML="";
+dots.innerHTML = "";
 
 return;
 
 }
 
 
-box.innerHTML="";
-dots.innerHTML="";
+box.innerHTML = "";
 
+dots.innerHTML = "";
+
+
+/* =========================
+   CREATE SLIDES
+========================= */
 
 images.forEach(
 (image,index)=>{
 
-
-const slide=
+const slide =
 document.createElement("div");
 
-slide.className=
-"hero-slide"+
-(index===0 ? " active":"");
+
+slide.className =
+"hero-slide" +
+(index === 0
+? " active"
+: "");
+
 
 slide.style.setProperty(
 "--hero-bg",
@@ -3053,70 +3353,105 @@ slide.style.setProperty(
 );
 
 
-const img=
+const img =
 document.createElement("img");
 
-img.src=image;
 
-img.alt=
+img.src =
+image;
+
+
+img.alt =
 "Liara Professional product";
 
-img.loading=
-index===0
-?"eager"
-:"lazy";
+
+img.loading =
+index === 0
+? "eager"
+: "lazy";
 
 
-img.onerror=
+img.onerror =
 function(){
 
-this.style.display="none";
+this.style.display =
+"none";
 
 };
 
 
-slide.appendChild(img);
+slide.appendChild(
+img
+);
 
-box.appendChild(slide);
+
+box.appendChild(
+slide
+);
 
 
-const dot=
+/* DOT */
+
+const dot =
 document.createElement("button");
 
-dot.type="button";
 
-dot.className=
-"hero-slide-dot"+
-(index===0 ? " active":"");
+dot.type =
+"button";
 
-dot.dataset.index=index;
 
-dots.appendChild(dot);
+dot.className =
+"hero-slide-dot" +
+(index === 0
+? " active"
+: "");
+
+
+dot.dataset.index =
+index;
+
+
+dot.setAttribute(
+"aria-label",
+`Hero image ${index + 1}`
+);
+
+
+dots.appendChild(
+dot
+);
 
 });
 
 
-let current=0;
+let current = 0;
 
+
+/* =========================
+   SHOW HERO
+========================= */
 
 function showHero(index){
 
-const slides=
+const slides =
 box.querySelectorAll(
 ".hero-slide"
 );
 
-const heroDots=
+
+const heroDots =
 dots.querySelectorAll(
 ".hero-slide-dot"
 );
+
 
 if(!slides.length)
 return;
 
 
-current=
-(index+slides.length)%slides.length;
+current =
+(index + slides.length) %
+slides.length;
 
 
 slides.forEach(
@@ -3124,7 +3459,7 @@ slides.forEach(
 
 slide.classList.toggle(
 "active",
-i===current
+i === current
 );
 
 }
@@ -3136,7 +3471,7 @@ heroDots.forEach(
 
 dot.classList.toggle(
 "active",
-i===current
+i === current
 );
 
 }
@@ -3145,31 +3480,45 @@ i===current
 }
 
 
-dots.addEventListener(
-"click",
-function(e){
+/* =========================
+   DOT CLICK
+========================= */
 
-const dot=
-e.target.closest(
+dots.onclick =
+function(event){
+
+const dot =
+event.target.closest(
 ".hero-slide-dot"
 );
 
+
 if(!dot)
 return;
+
 
 showHero(
 Number(dot.dataset.index)
 );
 
-}
+};
+
+
+/* =========================
+   AUTO SLIDE
+========================= */
+
+if(images.length > 1){
+
+heroInterval =
+setInterval(
+function(){
+
+showHero(
+current + 1
 );
 
-
-if(images.length>1){
-
-heroInterval=
-setInterval(
-()=>showHero(current+1),
+},
 3500
 );
 
@@ -3184,12 +3533,13 @@ setInterval(
 
 async function loadHomepageProducts(){
 
-const productBox=
+const productBox =
 document.getElementById(
 "dynamicProducts"
 );
 
-const productCount=
+
+const productCount =
 document.getElementById(
 "productCount"
 );
@@ -3197,17 +3547,29 @@ document.getElementById(
 
 try{
 
-supabaseClient=
+/* CREATE SUPABASE CLIENT */
+
+supabaseClient =
 window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY
 );
 
 
+/*
+   GET PRODUCTS
+
+   We intentionally keep all
+   products exactly like your
+   previous website.
+
+   No products are removed here.
+*/
+
 const {
 data,
 error
-}=
+} =
 await supabaseClient
 .from("products")
 .select("*");
@@ -3217,32 +3579,40 @@ if(error)
 throw error;
 
 
-const products=
+const products =
 Array.isArray(data)
-?data
-:[];
+? data
+: [];
 
 
-/* HERO */
+/* =========================
+   HERO
+========================= */
 
-renderHero(products);
+renderHero(
+products
+);
 
 
-/* COUNT */
+/* =========================
+   COUNT
+========================= */
 
-productCount.textContent=
+productCount.textContent =
 `${products.length} ${
-products.length===1
-?"product"
-:"products"
+products.length === 1
+? "product"
+: "products"
 }`;
 
 
-/* EMPTY */
+/* =========================
+   EMPTY
+========================= */
 
 if(!products.length){
 
-productBox.innerHTML=`
+productBox.innerHTML = `
 
 <div class="empty">
 
@@ -3259,19 +3629,25 @@ return;
 
 /*
    IMPORTANT:
-   DON'T REMOVE ANY PRODUCTS
+
+   ALL PRODUCTS ARE KEPT.
 */
 
-productBox.innerHTML="";
+productBox.innerHTML = "";
 
 
 products.forEach(
-product=>{
+product => {
 
-const card=
-createProductCard(product);
+const card =
+createProductCard(
+product
+);
 
-productBox.appendChild(card);
+
+productBox.appendChild(
+card
+);
 
 }
 );
@@ -3285,11 +3661,11 @@ error
 );
 
 
-productCount.textContent=
+productCount.textContent =
 "Products unavailable";
 
 
-productBox.innerHTML=`
+productBox.innerHTML = `
 
 <div class="empty">
 
