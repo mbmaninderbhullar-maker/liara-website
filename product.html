@@ -4239,6 +4239,56 @@ document.addEventListener("DOMContentLoaded", function(){
     #liaraPaymentPopup h2{font-size:20px;}
     #liaraPaymentPopup .liara-option-content small{font-size:10.5px;}
 }
+
+/* Compact Key Ingredients — inline row layout */
+.product-detail .ingredients-section{
+    min-height:0 !important;
+    height:auto !important;
+    padding:12px 14px !important;
+    margin:5px 0 18px !important;
+}
+.product-detail .ingredients-title{
+    margin:0 0 8px !important;
+}
+.product-detail .ingredients-list{
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:wrap !important;
+    align-items:center !important;
+    gap:5px 10px !important;
+    height:auto !important;
+}
+.product-detail .ingredient-item{
+    display:inline-flex !important;
+    flex:0 0 auto !important;
+    width:auto !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:2px 0 !important;
+    gap:4px !important;
+    background:transparent !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+}
+.product-detail .ingredient-name{
+    font-size:14px !important;
+    line-height:1.3 !important;
+    margin:0 !important;
+    white-space:nowrap !important;
+}
+.product-detail .ingredient-benefit{
+    font-size:12px !important;
+    line-height:1.3 !important;
+    margin:0 !important;
+    white-space:nowrap !important;
+}
+@media(max-width:600px){
+    .product-detail .ingredients-section{padding:10px 12px !important;}
+    .product-detail .ingredients-list{gap:4px 8px !important;}
+    .product-detail .ingredient-item{padding:1px 0 !important;}
+}
+
 </style>
 
 </body>
