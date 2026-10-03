@@ -1826,6 +1826,27 @@ h1{
 
 </style>
 
+
+<style id="liara-product-gallery-fix">
+.liara-product-gallery{width:100%;height:100%;display:flex;flex-direction:column;gap:10px}
+.liara-gallery-main{position:relative;flex:1;min-height:0;border-radius:inherit;overflow:hidden;background:#f7f2ea}
+.liara-gallery-main>img{width:100%;height:100%;object-fit:cover;display:block}
+.liara-gallery-thumbs{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 3px;scrollbar-width:thin}
+.liara-gallery-thumb{flex:0 0 58px;width:58px;height:58px;padding:0;border:1px solid #e4d8c7;border-radius:9px;background:#fff;overflow:hidden;cursor:pointer}
+.liara-gallery-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.liara-gallery-thumb.active{border-color:#b88427;box-shadow:0 0 0 2px rgba(184,132,39,.18)}
+.liara-gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.92);color:#8f6823;font-size:28px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);z-index:3}
+.liara-gallery-prev{left:10px}.liara-gallery-next{right:10px}
+@media(max-width:900px){
+  .liara-gallery-thumb{flex-basis:54px;width:54px;height:54px}
+}
+@media(max-width:480px){
+  .liara-gallery-thumbs{gap:6px}
+  .liara-gallery-thumb{flex-basis:48px;width:48px;height:48px}
+  .liara-gallery-arrow{width:32px;height:32px;font-size:24px}
+}
+</style>
+
 </head>
 
 
@@ -2479,9 +2500,8 @@ function updateDisplayedPrice() {
     const product = window.liaraCurrentProduct || {};
     const variant = getSelectedVariant();
 
-    const mrp = Number(variant?.mrp ?? variant?.price ?? product.mrp ?? product.price ?? 0);
-    const sale = Number(variant?.sale_price ?? product.sale_price ?? product.selling_price ?? 0);
-    const finalPrice = sale > 0 && mrp > 0 && sale < mrp ? sale : (Number(variant?.price ?? product.price ?? 0));
+    const finalPrice = liaraGetEffectivePrice(product, variant);
+    const mrp = liaraGetEffectiveMrp(product, variant, finalPrice);
 
     if (!(finalPrice > 0)) return;
 
@@ -2678,6 +2698,128 @@ function renderSideSizePriceOptions(product) {
     `).join("");
 }
 
+
+function liaraGetProductImages(product){
+    const values = [];
+    const add = (value) => {
+        if(value === null || value === undefined) return;
+        if(Array.isArray(value)){
+            value.forEach(add);
+            return;
+        }
+        const raw = String(value).trim();
+        if(!raw) return;
+
+        // Support JSON arrays stored in Supabase text/json fields.
+        if((raw.startsWith("[") && raw.endsWith("]")) || (raw.startsWith("{") && raw.endsWith("}"))){
+            try{
+                const parsed = JSON.parse(raw);
+                add(parsed);
+                return;
+            }catch(e){}
+        }
+
+        // Support comma/newline/pipe separated image URLs.
+        raw.split(/\r?\n|[|,]+/).map(v => v.trim()).filter(Boolean).forEach(v => values.push(v));
+    };
+
+    [
+        product?.image_urls,
+        product?.images,
+        product?.product_images,
+        product?.gallery_images,
+        product?.photo_urls,
+        product?.photos,
+        product?.image_gallery,
+        product?.gallery,
+        product?.image_url,
+        product?.photo_url,
+        product?.image,
+        product?.photo,
+        product?.image1, product?.image2, product?.image3, product?.image4,
+        product?.photo1, product?.photo2, product?.photo3, product?.photo4,
+        product?.image_url_1, product?.image_url_2, product?.image_url_3, product?.image_url_4,
+        product?.photo_url_1, product?.photo_url_2, product?.photo_url_3, product?.photo_url_4
+    ].forEach(add);
+
+    return [...new Set(values)].filter(Boolean);
+}
+
+function liaraRenderProductGallery(product, name){
+    const images = liaraGetProductImages(product);
+    const safeImages = images.length ? images : ["facewash.jpg"];
+    const main = safeImages[0];
+
+    return `
+        <div class="liara-product-gallery">
+            <div class="liara-gallery-main">
+                <img id="liaraMainProductImage"
+                     src="${escapeHtml(main)}"
+                     alt="${escapeHtml(name)}"
+                     onerror="this.src='facewash.jpg'">
+                ${safeImages.length > 1 ? `
+                    <button type="button" class="liara-gallery-arrow liara-gallery-prev"
+                            onclick="liaraGalleryMove(-1)" aria-label="Previous image">‹</button>
+                    <button type="button" class="liara-gallery-arrow liara-gallery-next"
+                            onclick="liaraGalleryMove(1)" aria-label="Next image">›</button>
+                ` : ""}
+            </div>
+            ${safeImages.length > 1 ? `
+                <div class="liara-gallery-thumbs" id="liaraGalleryThumbs">
+                    ${safeImages.map((src,index)=>`
+                        <button type="button"
+                                class="liara-gallery-thumb ${index===0 ? "active":""}"
+                                data-index="${index}"
+                                onclick="liaraGallerySelect(${index})">
+                            <img src="${escapeHtml(src)}" alt="${escapeHtml(name)} ${index+1}"
+                                 onerror="this.style.opacity='.35'">
+                        </button>
+                    `).join("")}
+                </div>
+            ` : ""}
+        </div>
+    `;
+}
+
+window.liaraGalleryImages = [];
+window.liaraGalleryIndex = 0;
+
+function liaraGallerySelect(index){
+    const images = window.liaraGalleryImages || [];
+    if(!images.length) return;
+    window.liaraGalleryIndex = (Number(index) + images.length) % images.length;
+
+    const main = document.getElementById("liaraMainProductImage");
+    if(main) main.src = images[window.liaraGalleryIndex];
+
+    document.querySelectorAll(".liara-gallery-thumb").forEach((btn,i)=>{
+        btn.classList.toggle("active", i === window.liaraGalleryIndex);
+    });
+}
+
+function liaraGalleryMove(step){
+    liaraGallerySelect((window.liaraGalleryIndex || 0) + Number(step || 0));
+}
+
+function liaraGetEffectivePrice(product, variant){
+    const sale = Number(variant?.sale_price ?? 0);
+    const variantPrice = Number(variant?.price ?? 0);
+    const productSale = Number(product?.sale_price ?? product?.selling_price ?? 0);
+    const productPrice = Number(product?.price ?? 0);
+
+    if(sale > 0) return sale;
+    if(variantPrice > 0) return variantPrice;
+    if(productSale > 0) return productSale;
+    return productPrice;
+}
+
+function liaraGetEffectiveMrp(product, variant, finalPrice){
+    const mrp = Number(variant?.mrp ?? product?.mrp ?? 0);
+    if(mrp > 0) return mrp;
+    return Number(finalPrice || 0);
+}
+
+
 async function loadProduct() {
 
     const container =
@@ -2791,12 +2933,7 @@ async function loadProduct() {
     const selectedVariant = getSelectedVariant();
 
 
-    const image =
-        product.image_url ||
-        product.photo_url ||
-        product.image ||
-        product.photo ||
-        "facewash.jpg";
+    const productImages = liaraGetProductImages(product);
 
 
     /*
@@ -2823,6 +2960,8 @@ async function loadProduct() {
         " | Liara Professional™";
 
     window.liaraCurrentProduct = product;
+    window.liaraGalleryImages = productImages.length ? productImages : ["facewash.jpg"];
+    window.liaraGalleryIndex = 0;
 
 
     /* =================================================
@@ -2837,13 +2976,7 @@ async function loadProduct() {
             <!-- PRODUCT IMAGE -->
 
             <div class="product-photo">
-
-                <img
-                    src="${escapeHtml(image)}"
-                    alt="${escapeHtml(name)}"
-                    onerror="this.src='facewash.jpg'"
-                >
-
+                ${liaraRenderProductGallery(product, name)}
             </div>
 
 
@@ -3670,20 +3803,20 @@ async function buyNow() {
             "Liara Product",
 
         price:
-            Number(selectedVariant?.sale_price ?? selectedVariant?.price ?? product.sale_price ?? product.price ?? 0),
+            liaraGetEffectivePrice(product, selectedVariant),
 
         mrp:
-            Number(selectedVariant?.mrp ?? selectedVariant?.price ?? product.mrp ?? product.price ?? 0),
+            liaraGetEffectiveMrp(
+                product,
+                selectedVariant,
+                liaraGetEffectivePrice(product, selectedVariant)
+            ),
 
         sale_price:
-            Number(selectedVariant?.sale_price ?? product.sale_price ?? 0) || null,
+            liaraGetEffectivePrice(product, selectedVariant),
 
         image:
-            product.image_url ||
-            product.photo_url ||
-            product.image ||
-            product.photo ||
-            "facewash.jpg",
+            liaraGetProductImages(product)[0] || "facewash.jpg",
 
         quantity:
             quantity,
@@ -3796,6 +3929,7 @@ function showLiaraPaymentPopup(item){
 
     // Keep the exact Buy Now item available until the customer selects a payment method.
     window.liaraPendingBuyNowItem = item;
+    localStorage.setItem("liaraBuyNow", JSON.stringify(item));
     selectLiaraPaymentMethod("cod");
 
     setTimeout(() => {
@@ -3804,7 +3938,7 @@ function showLiaraPaymentPopup(item){
 }
 
 function selectLiaraPaymentMethod(method){
-    const item = JSON.parse(localStorage.getItem("liaraBuyNow") || "null") || window.liaraPendingBuyNowItem;
+    const item = window.liaraPendingBuyNowItem || JSON.parse(localStorage.getItem("liaraBuyNow") || "null");
     if(!item) return;
 
     const result = updateLiaraPaymentTotal(item, method);
