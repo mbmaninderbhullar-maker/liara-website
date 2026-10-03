@@ -141,14 +141,14 @@ body {
 
 .ingredients-section {
     margin: 5px 0 28px;
-    padding: 25px;
+    padding: 16px 18px;
     background: #faf8f5;
     border: 1px solid #eee5d7;
     border-radius: 16px;
 }
 
 .ingredients-title {
-    margin: 0 0 18px;
+    margin: 0 0 10px;
     font-size: 22px;
     color: #222;
     font-weight: 700;
@@ -160,28 +160,35 @@ body {
 
 .ingredients-list {
     display: flex;
-    flex-direction: column;
-    gap: 13px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
 }
 
 .ingredient-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     background: #fff;
-    border-radius: 12px;
-    padding: 15px 16px;
+    border-radius: 8px;
+    padding: 6px 9px;
     border: 1px solid #eee;
+    width: auto;
 }
 
 .ingredient-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: #ad8232;
-    margin-bottom: 5px;
+    margin: 0;
+    white-space: nowrap;
 }
 
 .ingredient-benefit {
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.2;
     color: #666;
+    white-space: nowrap;
 }
 
 .no-ingredients {
@@ -2400,8 +2407,8 @@ function normalizeUnitPriceOptions(list) {
         if (!item || typeof item !== "object") return null;
         const size = item.size ?? item.value ?? item.quantity ?? item.weight ?? item.volume ?? "";
         const unit = normalizeUnit(item.unit ?? item.size_unit ?? item.volume_unit ?? item.weight_unit ?? "");
-        const mrp = parsePriceNumber(item.mrp ?? item.price ?? item.regular_price ?? item.original_price ?? item.rate ?? item.amount);
-        const salePriceRaw = item.sale_price ?? item.selling_price ?? item.sale ?? null;
+        const mrp = parsePriceNumber(item.mrp ?? item.regular_price ?? item.original_price ?? item.list_price ?? item.price ?? item.rate ?? item.amount);
+        const salePriceRaw = item.sale_price ?? item.selling_price ?? item.discount_price ?? item.special_price ?? item.sale ?? null;
         const salePrice = salePriceRaw !== null && salePriceRaw !== undefined && String(salePriceRaw).trim() !== ""
             ? parsePriceNumber(salePriceRaw)
             : mrp;
@@ -2801,24 +2808,28 @@ function liaraGalleryMove(step){
     liaraGallerySelect((window.liaraGalleryIndex || 0) + Number(step || 0));
 }
 
-function liaraGetEffectivePrice(product, variant){
-    const sale = Number(variant?.sale_price ?? 0);
-    const variantPrice = Number(variant?.price ?? 0);
-    const productSale = Number(product?.sale_price ?? product?.selling_price ?? 0);
-    const productPrice = Number(product?.price ?? 0);
-
-    if(sale > 0) return sale;
-    if(variantPrice > 0) return variantPrice;
-    if(productSale > 0) return productSale;
-    return productPrice;
-}
-
 function liaraGetEffectiveMrp(product, variant, finalPrice){
-    const mrp = Number(variant?.mrp ?? product?.mrp ?? 0);
-    if(mrp > 0) return mrp;
-    return Number(finalPrice || 0);
+    const raw = variant?.mrp ?? variant?.regular_price ?? variant?.original_price ??
+        product?.mrp ?? product?.regular_price ?? product?.original_price ?? product?.list_price ?? product?.price;
+    const mrp = parsePriceNumber(raw);
+    return mrp > 0 ? mrp : Number(finalPrice || 0);
 }
 
+function liaraGetEffectivePrice(product, variant){
+    // Sale price is the payable price. MRP is display-only and is never used
+    // in Buy Now totals when a valid lower sale price is available.
+    const variantSale = parsePriceNumber(variant?.sale_price ?? variant?.selling_price ?? variant?.discount_price ?? variant?.special_price ?? variant?.sale);
+    const variantMrp = liaraGetEffectiveMrp({}, variant, 0);
+    if(variantSale > 0 && (!variantMrp || variantSale < variantMrp)) return variantSale;
+
+    const productSale = parsePriceNumber(product?.sale_price ?? product?.selling_price ?? product?.discount_price ?? product?.special_price);
+    const productMrp = liaraGetEffectiveMrp(product, null, 0);
+    if(productSale > 0 && (!productMrp || productSale < productMrp)) return productSale;
+
+    const variantRegular = parsePriceNumber(variant?.mrp ?? variant?.price ?? variant?.regular_price ?? variant?.original_price);
+    if(variantRegular > 0) return variantRegular;
+    return parsePriceNumber(product?.mrp ?? product?.price ?? product?.regular_price ?? product?.original_price);
+}
 
 async function loadProduct() {
 
@@ -3813,7 +3824,9 @@ async function buyNow() {
             ),
 
         sale_price:
-            liaraGetEffectivePrice(product, selectedVariant),
+            liaraGetEffectivePrice(product, selectedVariant) < liaraGetEffectiveMrp(product, selectedVariant, liaraGetEffectivePrice(product, selectedVariant))
+                ? liaraGetEffectivePrice(product, selectedVariant)
+                : null,
 
         image:
             liaraGetProductImages(product)[0] || "facewash.jpg",
@@ -3913,7 +3926,8 @@ function showLiaraPaymentPopup(item){
                 </div>
 
                 <div class="liara-payment-summary">
-                    <div><span>Order Total</span><strong>${liaraMoney(subtotal)}</strong></div>
+                    ${Number(item.mrp || 0) > Number(item.price || 0) ? `<div><span>MRP</span><strong style="color:#999;text-decoration:line-through">${liaraMoney(Number(item.mrp) * Number(item.quantity || 1))}</strong></div>` : ``}
+                    <div><span>Sale Price</span><strong>${liaraMoney(subtotal)}</strong></div>
                     <div><span id="liaraPopupChargeLabel">Delivery Charge</span><strong id="liaraPopupDelivery">—</strong></div>
                     <div class="liara-final-row"><span>Final Total</span><strong id="liaraPopupFinalTotal">—</strong></div>
                 </div>
