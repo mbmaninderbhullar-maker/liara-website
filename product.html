@@ -3896,7 +3896,7 @@ function updateLiaraPaymentTotal(item, method){
         delivery = subtotal <= 199 ? 85 : 0;
         chargeLabel = "COD Charge";
     } else {
-        delivery = subtotal <= 199 ? 0 : 0;
+        delivery = subtotal <= 199 ? 65 : 0;
         chargeLabel = "Delivery Charge";
     }
 
@@ -3936,7 +3936,7 @@ function showLiaraPaymentPopup(item){
                         <span class="liara-option-icon">💵</span>
                         <span class="liara-option-content">
                             <strong>Cash on Delivery</strong>
-                            <small>Orders up to ₹999 → ₹120 COD Charge<br>Orders above ₹999 → ₹80 COD Charge</small>
+                            <small>Orders up to ₹199 → ₹85 COD Charge<br>Orders above ₹199 → FREE COD Charge</small>
                         </span>
                     </button>
 
