@@ -204,27 +204,6 @@ a{text-decoration:none;color:inherit}
   padding:16px;
   margin-top:15px
 }
-.shipway-order-id-line{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding-bottom:12px;
-  margin-bottom:12px;
-  border-bottom:1px solid var(--line)
-}
-.shipway-order-id-line small{
-  color:var(--muted);
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:1px
-}
-.shipway-order-id-line strong{
-  font-size:13px;
-  color:#8b6a2d;
-  word-break:break-word
-}
-
 .ship-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -318,81 +297,121 @@ footer{
 }
 .modal.show{display:flex}
 .invoice{
-  width:min(780px,100%);
-  max-height:92vh;
+  width:min(900px,100%);
+  max-height:94vh;
   overflow:auto;
   background:#fff;
-  padding:38px;
-  border-radius:5px
+  padding:42px;
+  border-radius:14px;
+  box-shadow:0 25px 90px rgba(0,0,0,.25)
 }
 .invoice-head{
   display:flex;
   justify-content:space-between;
-  gap:20px;
-  border-bottom:2px solid #111;
-  padding-bottom:18px
+  gap:30px;
+  border-bottom:1px solid #d8c8a6;
+  padding-bottom:22px
 }
 .invoice-brand{
-  font:27px Georgia,serif;
-  letter-spacing:4px
+  font:31px Georgia,serif;
+  letter-spacing:5px;
+  color:#111
 }
 .invoice-company{
   font-size:11px;
-  color:#666;
+  color:#555;
   line-height:1.7;
   text-align:right
 }
 .invoice-title{
   text-align:center;
-  font:24px Georgia,serif;
-  margin:25px 0
+  font:25px Georgia,serif;
+  letter-spacing:2px;
+  margin:24px 0 20px;
+  color:#111
 }
 .invoice-info{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-bottom:20px
+  grid-template-columns:1.35fr .9fr;
+  gap:24px;
+  margin-bottom:22px
 }
 .invoice-info div{
   font-size:12px;
-  line-height:1.7
+  line-height:1.75
 }
 .invoice-info b{
   display:block;
   text-transform:uppercase;
   font-size:9px;
-  letter-spacing:1px;
-  color:#888
+  letter-spacing:1.4px;
+  color:#8b6a2d;
+  margin-bottom:4px
 }
 .invoice table{
   width:100%;
   border-collapse:collapse;
   font-size:11px
 }
+.invoice th{
+  background:#f6f1e7;
+  color:#5c4b2a;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.7px
+}
 .invoice th,.invoice td{
-  border-bottom:1px solid #ddd;
-  padding:9px 6px;
+  border-bottom:1px solid #e7dfd0;
+  padding:10px 7px;
   text-align:left
 }
 .invoice th:last-child,.invoice td:last-child{text-align:right}
-
+.invoice .taxable-col,.invoice .tax-col{text-align:right}
 .totals{
   margin-left:auto;
-  width:280px;
-  margin-top:18px;
+  width:330px;
+  margin-top:20px;
   font-size:12px
 }
 .total-line{
   display:flex;
   justify-content:space-between;
+  gap:20px;
   padding:6px 0
+}
+.total-line.muted{
+  color:#666
 }
 .grand{
   border-top:2px solid #111;
   font-weight:700;
-  font-size:15px;
-  margin-top:5px;
-  padding-top:10px
+  font-size:16px;
+  margin-top:7px;
+  padding-top:11px
+}
+.amount-words{
+  margin-top:20px;
+  padding:12px 14px;
+  background:#faf8f3;
+  border:1px solid #eee5d5;
+  border-radius:10px;
+  font-size:11px
+}
+.invoice-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px solid #eee;
+  font-size:10px;
+  color:#777
+}
+.invoice-note{
+  font-size:10px;
+  color:#777;
+  line-height:1.6;
+  margin-top:18px
 }
 .modal-actions{
   display:flex;
@@ -824,7 +843,7 @@ function getCourier(order){
 
   return order.shipway_courier_name ||
          order.courier_name ||
-         "Not assigned yet";
+         "—";
 
 }
 
@@ -1092,6 +1111,10 @@ function renderOrders(){
       const awb =
         getAwb(o);
 
+      const shipwayOrderId =
+        o.shipway_order_id ||
+        "";
+
       const tracking =
         getTrackUrl(o);
 
@@ -1193,21 +1216,15 @@ function renderOrders(){
 
           <div class="shipbox">
 
-            ${
-              o.shipway_order_id
-              ? `
-                <div class="shipway-order-id-line">
-                  <small>Shipway Order ID</small>
-                  <strong>${esc(o.shipway_order_id)}</strong>
-                </div>
-              `
-              : ""
-            }
-
             <div class="ship-grid">
 
               <div class="ship-item">
-                <small>Shipment Tracking ID (AWB)</small>
+                <small>Shipway Order ID</small>
+                <strong>${esc(shipwayOrderId || "Not assigned yet")}</strong>
+              </div>
+
+              <div class="ship-item">
+                <small>Shipment Tracking ID</small>
 
                 <strong class="awb">
                   ${esc(
@@ -1527,17 +1544,103 @@ function getInvoiceShipping(order){
    GST INVOICE
 --------------------------------------- */
 
-function openInvoice(index){
+function amountWords(n){
+  const num = Math.round(Number(n || 0));
+  if(num === 0) return "Zero Rupees Only";
 
-  const o =
-    customerOrders[index];
+  const ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  const tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
 
+  function two(x){
+    if(x < 20) return ones[x];
+    return tens[Math.floor(x/10)] + (x%10 ? " " + ones[x%10] : "");
+  }
+  function three(x){
+    if(x < 100) return two(x);
+    return ones[Math.floor(x/100)] + " Hundred" + (x%100 ? " " + two(x%100) : "");
+  }
+
+  let x = num;
+  let out = "";
+
+  const crore = Math.floor(x/10000000); x %= 10000000;
+  const lakh = Math.floor(x/100000); x %= 100000;
+  const thousand = Math.floor(x/1000); x %= 1000;
+
+  if(crore) out += three(crore) + " Crore ";
+  if(lakh) out += three(lakh) + " Lakh ";
+  if(thousand) out += three(thousand) + " Thousand ";
+  if(x) out += three(x);
+
+  return out.trim() + " Rupees Only";
+}
+
+
+/* ---------------------------------------
+   GST INVOICE
+--------------------------------------- */
+
+async function openInvoice(index){
+
+  const o = customerOrders[index];
   if(!o) return;
 
+  /*
+    Invoice number is permanently stored in orders.
+    Existing invoice numbers are preserved.
+    New invoices use the unique Liara Order Number,
+    so the same invoice is always reproduced from DB.
+  */
+  let invoiceNumber = o.invoice_number || "";
 
-  const items =
-    getInvoiceItems(o);
+  if(!invoiceNumber){
+    invoiceNumber =
+      "LIARA-INV-" +
+      String(o.order_number || ("ORDER-" + Date.now()))
+        .replace(/^LIARA-/i,"");
 
+    try{
+      const upd =
+        await supabaseClient
+          .from("orders")
+          .update({
+            invoice_number: invoiceNumber,
+            invoice_date:
+              o.invoice_date ||
+              new Date().toISOString().slice(0,10),
+            invoice_issued_at:
+              o.invoice_issued_at ||
+              new Date().toISOString()
+          })
+          .eq("id",o.id)
+          .is("invoice_number",null)
+          .select("invoice_number,invoice_date,invoice_issued_at")
+          .maybeSingle();
+
+      if(upd?.data?.invoice_number){
+        invoiceNumber = upd.data.invoice_number;
+        o.invoice_number = upd.data.invoice_number;
+        o.invoice_date = upd.data.invoice_date;
+        o.invoice_issued_at = upd.data.invoice_issued_at;
+      }else{
+        const fresh =
+          await supabaseClient
+            .from("orders")
+            .select("invoice_number,invoice_date,invoice_issued_at")
+            .eq("id",o.id)
+            .maybeSingle();
+
+        if(fresh?.data?.invoice_number){
+          invoiceNumber = fresh.data.invoice_number;
+          Object.assign(o,fresh.data);
+        }
+      }
+    }catch(err){
+      console.warn("Invoice number save failed:",err);
+    }
+  }
+
+  const items = getInvoiceItems(o);
 
   const p =
     o.pricing &&
@@ -1545,62 +1648,51 @@ function openInvoice(index){
       ? o.pricing
       : {};
 
+  const raw = o.product || "";
 
-  const raw =
-    o.product || "";
-
-
-  const parsedGst =
-    parseOrderAmount(
-      raw,
-      "GST"
-    );
-
-
-  const parsedDiscount =
-    parseOrderAmount(
-      raw,
-      "DISCOUNT"
-    );
-
-
-  const parsedSubtotal =
-    parseOrderAmount(
-      raw,
-      "SALE SUBTOTAL"
-    );
-
-
-  const shipping =
-    getInvoiceShipping(o);
-
+  const parsedGst = parseOrderAmount(raw,"GST");
+  const parsedDiscount = parseOrderAmount(raw,"DISCOUNT");
+  const parsedSubtotal = parseOrderAmount(raw,"SALE SUBTOTAL");
+  const shipping = getInvoiceShipping(o);
 
   const gst =
     Number(
-      o.gst_amount ||
-      p.gst_total ||
-      parsedGst ||
+      o.gst_amount ??
+      p.gst_total ??
+      parsedGst ??
       0
     );
-
 
   const discount =
     Number(
-      o.discount ||
-      p.discount_total ||
-      parsedDiscount ||
+      o.discount ??
+      p.discount_total ??
+      parsedDiscount ??
       0
     );
-
 
   const subtotal =
     Number(
-      o.subtotal ||
-      p.sale_subtotal ||
-      parsedSubtotal ||
+      o.subtotal ??
+      p.sale_subtotal ??
+      parsedSubtotal ??
       0
     );
 
+  const itemSaleTotal = items.reduce((sum,it)=>{
+    const qty = Number(
+      it.quantity ??
+      it.product_quantity ??
+      it.qty ??
+      1
+    );
+    const price = Number(
+      it.sale_price ??
+      it.price ??
+      0
+    );
+    return sum + price * qty;
+  },0);
 
   const mrpStored = Number(
     o.mrp_total ??
@@ -1610,43 +1702,68 @@ function openInvoice(index){
     0
   );
 
-  const itemSaleTotal = items.reduce((sum,it)=>{
-    const qty = Number(it.quantity || it.product_quantity || it.qty || 1);
-    const price = Number(it.sale_price ?? it.price ?? 0);
-    return sum + (price * qty);
-  },0);
+  const mrpTotal =
+    mrpStored > 0
+      ? mrpStored
+      : items.reduce((sum,it)=>{
+          const qty = Number(
+            it.quantity ??
+            it.product_quantity ??
+            it.qty ??
+            1
+          );
+          const mrp = Number(
+            it.mrp ??
+            it.mrp_price ??
+            it.original_price ??
+            it.originalPrice ??
+            it.regular_price ??
+            it.compare_at_price ??
+            it.price_before_discount ??
+            it.sale_price ??
+            it.price ??
+            0
+          );
+          return sum + mrp * qty;
+        },0);
 
-  const mrpTotal = mrpStored > 0
-    ? mrpStored
-    : items.reduce((sum,it)=>{
-        const qty = Number(it.quantity || it.product_quantity || it.qty || 1);
-        const mrp = Number(
-          it.mrp ??
-          it.mrp_price ??
-          it.original_price ??
-          it.originalPrice ??
-          it.regular_price ??
-          it.compare_at_price ??
-          it.price_before_discount ??
-          it.sale_price ??
-          it.price ??
-          0
+  const finalDiscount =
+    discount > 0
+      ? discount
+      : Math.max(
+          0,
+          mrpTotal -
+          (subtotal > 0 ? subtotal : itemSaleTotal)
         );
-        return sum + (mrp * qty);
-      },0);
 
-  const finalDiscount = discount > 0
-    ? discount
-    : Math.max(0, mrpTotal - (subtotal > 0 ? subtotal : itemSaleTotal));
+  const productValue =
+    subtotal > 0
+      ? subtotal
+      : itemSaleTotal;
 
-  const hsn =
-    o.hsn_code || "";
+  const taxableValue =
+    gst > 0 && Number(o.gst_rate || items[0]?.gst_rate || parsedGst)
+      ? Math.max(
+          0,
+          productValue -
+          gst
+        )
+      : productValue;
 
+  const gstRate =
+    Number(
+      o.gst_rate ||
+      items[0]?.gst_rate ||
+      parseOrderGstRate(raw) ||
+      0
+    );
 
-  const customer =
-    o.customer_name ||
-    "Customer";
+  const cgst = gstRate > 0 ? gst / 2 : 0;
+  const sgst = gstRate > 0 ? gst / 2 : 0;
 
+  const hsn = o.hsn_code || items[0]?.hsn_code || "";
+
+  const customer = o.customer_name || "Customer";
 
   const address =
     o.shipping_address ||
@@ -1660,244 +1777,211 @@ function openInvoice(index){
     .filter(Boolean)
     .join(", ");
 
+  const grandTotal = Number(
+    o.total ??
+    productValue + shipping
+  );
 
-  document.getElementById(
-    "invoiceContent"
-  ).innerHTML = `
+  const courier =
+    getCourier(o);
+
+  document.getElementById("invoiceContent").innerHTML = `
 
     <div class="invoice-info">
 
       <div>
-
         <b>Bill To</b>
-
-        ${esc(customer)}<br>
-
+        <strong>${esc(customer)}</strong><br>
         ${esc(address || "—")}<br>
-
-        Phone:
-        ${esc(o.phone || "—")}
-
+        Phone: ${esc(o.phone || "—")}
       </div>
 
-
       <div>
-
         <b>Invoice Details</b>
-
-        Order:
-        ${esc(
-          o.order_number ||
-          "—"
-        )}<br>
-
-        Date:
-        ${dateText(o.created_at)}<br>
-
-        Payment:
-        ${esc(
-          o.payment_method ||
-          "—"
-        )}<br>
-
-        AWB:
-        ${esc(
-          getAwb(o) ||
-          "—"
-        )}
-
+        Invoice No.: <strong>${esc(invoiceNumber || "—")}</strong><br>
+        Invoice Date: ${dateText(o.invoice_date || o.created_at)}<br>
+        Order ID: ${esc(o.order_number || "—")}<br>
+        Payment: ${esc(o.payment_method || "—")}
       </div>
 
     </div>
 
-
     <table>
 
       <thead>
-
         <tr>
-          <th>Product</th>
+          <th>#</th>
+          <th>Product / Description</th>
           <th>HSN</th>
           <th>Qty</th>
-          <th>GST</th>
-          <th>MRP</th>
-          <th>Sale</th>
+          <th>Rate</th>
+          <th>Discount</th>
+          <th class="taxable-col">Taxable</th>
+          <th class="tax-col">GST</th>
+          <th>Total</th>
         </tr>
-
       </thead>
-
 
       <tbody>
 
-        ${
-          items.map(it=>{
+        ${items.map((it,idx)=>{
 
-            const qty =
-              Number(
-                it.quantity ||
-                it.product_quantity ||
-                1
-              );
+          const qty = Number(
+            it.quantity ??
+            it.product_quantity ??
+            it.qty ??
+            1
+          );
 
+          const rate = Number(
+            it.sale_price ??
+            it.price ??
+            0
+          );
 
-            const price =
-              Number(
-                it.sale_price ||
-                it.price ||
-                0
-              );
+          const itemMrp = Number(
+            it.mrp ??
+            it.mrp_price ??
+            it.original_price ??
+            it.originalPrice ??
+            it.regular_price ??
+            it.compare_at_price ??
+            it.price_before_discount ??
+            rate
+          );
 
-            const mrp =
-              Number(
-                it.mrp ??
-                it.mrp_price ??
-                it.original_price ??
-                it.originalPrice ??
-                it.regular_price ??
-                it.compare_at_price ??
-                it.price_before_discount ??
-                price
-              );
+          const itemDiscount =
+            Math.max(
+              0,
+              (itemMrp - rate) * qty
+            );
 
+          const itemTotal = rate * qty;
+          const itemRate = Number(
+            it.gst_rate ||
+            o.gst_rate ||
+            parseOrderGstRate(raw) ||
+            0
+          );
+          const itemGst =
+            itemRate > 0
+              ? itemTotal - (itemTotal / (1 + itemRate/100))
+              : 0;
+          const itemTaxable =
+            itemTotal - itemGst;
 
-            const rate =
-              Number(
-                it.gst_rate ||
-                0
-              );
+          return `
+            <tr>
+              <td>${idx + 1}</td>
+              <td>
+                <strong>${esc(
+                  it.name ||
+                  it.product ||
+                  "Liara Product"
+                )}</strong>
+                ${
+                  it.variant
+                    ? `<div style="font-size:9px;color:#777;margin-top:3px">${esc(it.variant)}</div>`
+                    : ""
+                }
+              </td>
+              <td>${esc(
+                it.hsn_code ||
+                it.hsn ||
+                hsn ||
+                "—"
+              )}</td>
+              <td>${qty}</td>
+              <td>${money(rate)}</td>
+              <td>${money(itemDiscount)}</td>
+              <td class="taxable-col">${money(itemTaxable)}</td>
+              <td class="tax-col">${money(itemGst)}</td>
+              <td>${money(itemTotal)}</td>
+            </tr>
+          `;
 
-
-            return `
-
-              <tr>
-
-                <td>
-                  ${esc(
-                    it.name ||
-                    it.product ||
-                    "Product"
-                  )}
-                </td>
-
-                <td>
-                  ${esc(
-                    it.hsn_code ||
-                    it.hsn ||
-                    hsn ||
-                    "—"
-                  )}
-                </td>
-
-                <td>
-                  ${qty}
-                </td>
-
-                <td>
-                  ${rate}%
-                </td>
-
-                <td>
-                  ${money(
-                    mrp * qty
-                  )}
-                </td>
-
-                <td>
-                  ${money(
-                    price * qty
-                  )}
-                </td>
-
-              </tr>
-
-            `;
-
-          }).join("")
-        }
+        }).join("")}
 
       </tbody>
 
     </table>
 
-
     <div class="totals">
 
       <div class="total-line">
         <span>MRP Total</span>
-        <b>
-          ${money(mrpTotal)}
-        </b>
+        <b>${money(mrpTotal)}</b>
       </div>
-
 
       <div class="total-line">
         <span>Discount</span>
-        <b>
-          - ${money(finalDiscount)}
-        </b>
+        <b>− ${money(finalDiscount)}</b>
       </div>
-
 
       <div class="total-line">
-        <span>Total After Discount</span>
-        <b>
-          ${money(subtotal > 0 ? subtotal : itemSaleTotal)}
-        </b>
+        <span>Taxable Value</span>
+        <b>${money(taxableValue)}</b>
       </div>
-
 
       <div class="total-line">
-        <span>GST (Included)</span>
-        <b>
-          ${money(gst)}
-        </b>
+        <span>CGST ${gstRate ? "(" + gstRate/2 + "%)" : ""}</span>
+        <b>${money(cgst)}</b>
       </div>
 
+      <div class="total-line">
+        <span>SGST ${gstRate ? "(" + gstRate/2 + "%)" : ""}</span>
+        <b>${money(sgst)}</b>
+      </div>
+
+      <div class="total-line">
+        <span>Product Total</span>
+        <b>${money(productValue)}</b>
+      </div>
 
       <div class="total-line">
         <span>Shipping</span>
-        <b>
-          ${
-            shipping > 0
-            ? money(shipping)
-            : "FREE"
-          }
-        </b>
+        <b>${shipping > 0 ? money(shipping) : "FREE"}</b>
       </div>
-
 
       <div class="total-line grand">
         <span>Grand Total</span>
-        <b>
-          ${money(o.total)}
-        </b>
+        <b>${money(grandTotal)}</b>
       </div>
 
     </div>
 
+    <div class="amount-words">
+      <b>Amount in Words:</b>
+      ${esc(amountWords(grandTotal))}
+    </div>
 
-    <p style="font-size:10px;color:#777;margin-top:28px">
-      This invoice is generated from the order information stored with Liara Professional™.
-    </p>
+    <div class="invoice-meta">
+      <span>Courier: ${esc(courier || "—")}</span>
+      <span>AWB: ${esc(getAwb(o) || "—")}</span>
+      <span>Order ID: ${esc(o.order_number || "—")}</span>
+    </div>
 
-
-    <button
-      class="btn btn-gold"
-      style="margin-top:12px"
-      onclick="shareOrderWhatsApp(${index})"
-    >
-      💬 Share Order on WhatsApp
-    </button>
+    <div class="invoice-note">
+      ${
+        hsn
+          ? "HSN/SAC and GST details are shown as recorded with this order. "
+          : ""
+      }
+      ${
+        o.payment_method
+          ? "Payment mode: " + esc(o.payment_method) + ". "
+          : ""
+      }
+      This is a computer-generated tax invoice. Please retain this invoice for your records.
+    </div>
 
   `;
-
 
   document
     .getElementById("invoiceModal")
     .classList.add("show");
 
 }
-
 
 /* ---------------------------------------
    WHATSAPP
