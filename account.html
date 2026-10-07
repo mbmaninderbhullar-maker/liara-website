@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-if (window.location.pathname.endsWith('/index.html')) {
-    const cleanPath = window.location.pathname.replace(/\/index\.html$/, '/');
-    window.history.replaceState({}, document.title, cleanPath + window.location.search + window.location.hash);
-}
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Liara Professional™ | My Account</title>
@@ -210,6 +204,27 @@ a{text-decoration:none;color:inherit}
   padding:16px;
   margin-top:15px
 }
+.shipway-order-id-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:12px;
+  margin-bottom:12px;
+  border-bottom:1px solid var(--line)
+}
+.shipway-order-id-line small{
+  color:var(--muted);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1px
+}
+.shipway-order-id-line strong{
+  font-size:13px;
+  color:#8b6a2d;
+  word-break:break-word
+}
+
 .ship-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -809,7 +824,7 @@ function getCourier(order){
 
   return order.shipway_courier_name ||
          order.courier_name ||
-         "—";
+         "Not assigned yet";
 
 }
 
@@ -1178,10 +1193,21 @@ function renderOrders(){
 
           <div class="shipbox">
 
+            ${
+              o.shipway_order_id
+              ? `
+                <div class="shipway-order-id-line">
+                  <small>Shipway Order ID</small>
+                  <strong>${esc(o.shipway_order_id)}</strong>
+                </div>
+              `
+              : ""
+            }
+
             <div class="ship-grid">
 
               <div class="ship-item">
-                <small>Shipment Tracking ID</small>
+                <small>Shipment Tracking ID (AWB)</small>
 
                 <strong class="awb">
                   ${esc(
