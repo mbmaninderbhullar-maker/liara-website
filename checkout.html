@@ -1124,11 +1124,11 @@ function getPaymentPopupCharge(subtotalValue, paymentMethod){
     const amount = Math.max(0, Number(subtotalValue) || 0);
 
     if(paymentMethod === "Cash on Delivery"){
-        return amount <= 999 ? 120 : 80;
+        return amount <= 199 ? 65 : 0;
     }
 
     if(paymentMethod === "Online Payment"){
-        return amount <= 499 ? 80 : 0;
+        return amount <= 149 ? 00 : 0;
     }
 
     return 0;
