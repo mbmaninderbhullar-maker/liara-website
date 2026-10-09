@@ -8,233 +8,63 @@
 
 <style>
 *{box-sizing:border-box}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f7f3eb;
-    color:#111;
-}
-
-header{
-    background:#fff;
-    border-bottom:1px solid #e8e1d5;
-    padding:22px 6%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.logo{
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:27px;
-    font-weight:700;
-    letter-spacing:6px;
-}
-
-nav a{
-    margin-left:20px;
-    text-decoration:none;
-    color:#444;
-    font-size:11px;
-    font-weight:bold;
-}
-
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7f3eb;color:#111}
+header{background:#fff;border-bottom:1px solid #e8e1d5;padding:22px 6%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:Georgia,"Times New Roman",serif;font-size:27px;font-weight:700;letter-spacing:6px}
+nav a{margin-left:20px;text-decoration:none;color:#444;font-size:11px;font-weight:bold}
 nav a:hover{color:#b58a3c}
-
-main{
-    min-height:calc(100vh - 100px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:60px 20px;
-}
-
-.card{
-    width:100%;
-    max-width:620px;
-    background:#fff;
-    border:1px solid #e8e1d5;
-    padding:45px;
-    box-shadow:0 20px 55px rgba(0,0,0,.08);
-}
-
-.kicker{
-    color:#b58a3c;
-    font-size:10px;
-    font-weight:bold;
-    letter-spacing:3px;
-    margin-bottom:10px;
-}
-
+main{min-height:calc(100vh - 100px);display:flex;align-items:center;justify-content:center;padding:60px 20px}
+.card{width:100%;max-width:620px;background:#fff;border:1px solid #e8e1d5;padding:45px;box-shadow:0 20px 55px rgba(0,0,0,.08)}
+.kicker{color:#b58a3c;font-size:10px;font-weight:bold;letter-spacing:3px;margin-bottom:10px}
 h1{margin:0 0 12px;font-size:38px}
-
 p{color:#777;font-size:13px;line-height:1.8}
-
-label{
-    display:block;
-    margin:25px 0 8px;
-    font-size:11px;
-    font-weight:bold;
-}
-
-input{
-    width:100%;
-    height:48px;
-    padding:0 14px;
-    border:1px solid #d8d0c2;
-    font-size:14px;
-    outline:none;
-}
-
+label{display:block;margin:25px 0 8px;font-size:11px;font-weight:bold}
+input{width:100%;height:48px;padding:0 14px;border:1px solid #d8d0c2;font-size:14px;outline:none}
 input:focus{border-color:#b58a3c}
-
-button{
-    width:100%;
-    height:48px;
-    margin-top:12px;
-    border:1px solid #191919;
-    background:#191919;
-    color:#fff;
-    font-size:11px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
+button{width:100%;height:48px;margin-top:12px;border:1px solid #191919;background:#191919;color:#fff;font-size:11px;font-weight:bold;cursor:pointer}
 button:hover{background:#b58a3c;border-color:#b58a3c}
 button:disabled{opacity:.65;cursor:wait}
-
-#result{
-    display:none;
-    margin-top:25px;
-    padding:20px;
-    background:#f7f3eb;
-    border:1px solid #e8e1d5;
-    font-size:12px;
-    line-height:1.7;
-}
-
-.result-title{
-    font-size:11px;
-    font-weight:bold;
-    letter-spacing:2px;
-    color:#b58a3c;
-    margin-bottom:14px;
-}
-
-.status-box{
-    background:#fff;
-    border:1px solid #e8e1d5;
-    padding:18px;
-    margin-bottom:15px;
-}
-
-.status-label{
-    font-size:9px;
-    letter-spacing:2px;
-    color:#888;
-    font-weight:bold;
-    margin-bottom:5px;
-}
-
-.status-value{
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:5px;
-}
-
-.info-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:12px;
-}
-
-.info-item{
-    background:#fff;
-    border:1px solid #e8e1d5;
-    padding:12px;
-}
-
-.info-label{
-    display:block;
-    font-size:8px;
-    color:#999;
-    letter-spacing:1.5px;
-    font-weight:bold;
-    margin-bottom:4px;
-}
-
-.info-value{
-    font-size:12px;
-    font-weight:bold;
-    word-break:break-word;
-}
-
-.track-link{
-    display:block;
-    margin-top:15px;
-    text-align:center;
-    padding:13px;
-    background:#191919;
-    color:#fff;
-    text-decoration:none;
-    font-size:10px;
-    font-weight:bold;
-    letter-spacing:1px;
-}
-
+#result{display:none;margin-top:25px;padding:20px;background:#f7f3eb;border:1px solid #e8e1d5;font-size:12px;line-height:1.7}
+.result-title{font-size:11px;font-weight:bold;letter-spacing:2px;color:#b58a3c;margin-bottom:14px}
+.status-box{background:#fff;border:1px solid #e8e1d5;padding:18px;margin-bottom:15px}
+.status-label{font-size:9px;letter-spacing:2px;color:#888;font-weight:bold;margin-bottom:5px}
+.status-value{font-size:22px;font-weight:bold;margin-bottom:5px;overflow-wrap:anywhere}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.info-item{background:#fff;border:1px solid #e8e1d5;padding:12px;min-width:0}
+.info-label{display:block;font-size:8px;color:#999;letter-spacing:1.5px;font-weight:bold;margin-bottom:4px}
+.info-value{font-size:12px;font-weight:bold;word-break:break-word}
+.track-link{display:block;margin-top:15px;text-align:center;padding:14px;background:#191919;color:#fff;text-decoration:none;font-size:10px;font-weight:bold;letter-spacing:1px}
 .track-link:hover{background:#b58a3c}
-
+.refresh-button{background:#fff;color:#191919;border:1px solid #d8d0c2;margin-top:10px}
+.refresh-button:hover{background:#f0e6d3;color:#191919;border-color:#b58a3c}
 .activity{margin-top:18px}
-
-.activity-title{
-    font-size:10px;
-    font-weight:bold;
-    letter-spacing:2px;
-    margin-bottom:10px;
-}
-
-.activity-item{
-    border-left:2px solid #b58a3c;
-    padding:8px 0 8px 12px;
-    margin-left:3px;
-}
-
+.activity-title{font-size:10px;font-weight:bold;letter-spacing:2px;margin-bottom:10px}
+.activity-item{border-left:2px solid #b58a3c;padding:8px 0 8px 12px;margin-left:3px}
 .activity-status{font-weight:bold}
 .activity-meta{color:#888;font-size:10px}
-
-.error-box{
-    color:#9b2c2c;
-    background:#fff5f5;
-    border:1px solid #e5caca;
-    padding:14px;
-}
-
-.loading{text-align:center;color:#777}
-
-.back{
-    display:inline-block;
-    margin-top:22px;
-    color:#b58a3c;
-    text-decoration:none;
-    font-size:11px;
-    font-weight:bold;
-}
-
+.error-box{color:#9b2c2c;background:#fff5f5;border:1px solid #e5caca;padding:14px}
+.loading{text-align:center;color:#777;padding:8px}
+.back{display:inline-block;margin-top:22px;color:#b58a3c;text-decoration:none;font-size:11px;font-weight:bold}
+.milestones{background:#fff;border:1px solid #e8e1d5;padding:18px;margin-top:15px}
+.milestone-heading{font-size:10px;font-weight:bold;letter-spacing:2px;margin-bottom:16px}
+.step{display:flex;gap:12px;position:relative;padding-bottom:18px}
+.step:last-child{padding-bottom:0}
+.step-marker{width:20px;height:20px;flex:0 0 20px;border-radius:50%;border:2px solid #d8d0c2;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;z-index:1}
+.step.done .step-marker,.step.current .step-marker{background:#b58a3c;border-color:#b58a3c}
+.step-copy{padding-top:1px}
+.step-name{font-size:11px;font-weight:bold;color:#999}
+.step.done .step-name,.step.current .step-name{color:#191919}
+.step-note{font-size:10px;color:#999;margin-top:2px}
+.auto-note{margin-top:12px;color:#888;font-size:10px;text-align:center}
 @media(max-width:600px){
-    header{
-        padding:18px 5%;
-        flex-direction:column;
-        gap:14px;
-        align-items:flex-start;
-    }
-
-    nav{width:100%;overflow:auto;white-space:nowrap}
-    nav a{margin-left:0;margin-right:16px}
-    .card{padding:30px 22px}
-    h1{font-size:32px}
-    .info-grid{grid-template-columns:1fr}
+ header{padding:18px 5%;flex-direction:column;gap:14px;align-items:flex-start}
+ nav{width:100%;overflow:auto;white-space:nowrap}
+ nav a{margin-left:0;margin-right:16px}
+ .card{padding:30px 22px}
+ h1{font-size:32px}
+ .info-grid{grid-template-columns:1fr}
+ main{padding:35px 14px}
+ #result{padding:14px}
 }
 </style>
 </head>
@@ -244,7 +74,6 @@ button:disabled{opacity:.65;cursor:wait}
     <a href="index.html" style="text-decoration:none;color:inherit">
         <div class="logo">LIARA</div>
     </a>
-
     <nav>
         <a href="index.html">HOME</a>
         <a href="index.html#products">SHOP</a>
@@ -254,58 +83,43 @@ button:disabled{opacity:.65;cursor:wait}
 
 <main>
 <section class="card">
-
     <div class="kicker">LIARA PROFESSIONAL™</div>
     <h1>Track Your Order</h1>
-
-    <p>
-        Enter your Order ID or AWB number below to check your latest
-        Shipway shipment status.
-    </p>
+    <p>Enter your Order ID or AWB number below to check your latest shipment status and open live courier tracking.</p>
 
     <label for="trackingNumber">ORDER ID / AWB NUMBER</label>
+    <input id="trackingNumber" type="text" placeholder="Enter Order ID or AWB" autocomplete="off">
 
-    <input
-        id="trackingNumber"
-        type="text"
-        placeholder="Enter Order ID or AWB"
-        autocomplete="off"
-        onkeydown="if(event.key==='Enter') trackOrder()"
-    >
-
-    <button id="trackButton" type="button" onclick="trackOrder()">
-        TRACK ORDER
-    </button>
-
-    <div id="result"></div>
+    <button id="trackButton" type="button">TRACK ORDER</button>
+    <div id="result" aria-live="polite"></div>
 
     <a class="back" href="index.html">← Back to Shopping</a>
-
 </section>
 </main>
 
 <script>
-/* =========================================================
-   SUPABASE CONFIG
-========================================================= */
+/* SUPABASE CONFIG */
+const SUPABASE_URL = "https://oinafbuicwhleudztzyz.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+const TRACK_FUNCTION = SUPABASE_URL + "/functions/v1/shipway-track-order";
 
-const SUPABASE_URL =
-    "https://oinafbuicwhleudztzyz.supabase.co";
+/* AUTO-REFRESH SETTINGS */
+const AUTO_REFRESH_MS = 60000;
+let refreshTimer = null;
+let lastTrackingValue = "";
+let requestInProgress = false;
 
-const SUPABASE_ANON_KEY =
-    "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
+const input = document.getElementById("trackingNumber");
+const button = document.getElementById("trackButton");
+const result = document.getElementById("result");
 
-const TRACK_FUNCTION =
-    SUPABASE_URL + "/functions/v1/shipway-track-order";
-
-
-/* =========================================================
-   TRACKING HELPERS
-========================================================= */
+button.addEventListener("click", () => trackOrder(false));
+input.addEventListener("keydown", event => {
+    if(event.key === "Enter") trackOrder(false);
+});
 
 function isFailedTrackingStatus(value){
     const text = String(value || "").trim().toLowerCase();
-
     return (
         text === "failed" ||
         text === "failure" ||
@@ -317,53 +131,216 @@ function isFailedTrackingStatus(value){
     );
 }
 
-function awbStatusFallback(order, data){
-    const awb =
-        order.awb ||
-        order.shipway_awb ||
-        data.awb ||
-        data.shipway_awb ||
-        "";
+function escapeHtml(value){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
 
+function safeTrackingUrl(value){
+    const url = String(value || "").trim();
+    if(!url) return "";
+
+    try{
+        const parsed = new URL(url);
+        if(parsed.protocol !== "https:" && parsed.protocol !== "http:") return "";
+        return parsed.href;
+    }catch(e){
+        return "";
+    }
+}
+
+function getCourierTrackingUrl(awb, courier, savedUrl){
+    const stored = safeTrackingUrl(savedUrl);
+    if(stored) return stored;
+
+    if(awb && awb !== "Not generated yet" && /xpressbees/i.test(courier)){
+        return "https://www.xpressbees.com/track?isawb=Yes&trackid=" +
+            encodeURIComponent(awb);
+    }
+
+    return "";
+}
+
+function getAwb(order, data){
+    return order.shipway_awb ||
+        order.awb ||
+        data.shipway_awb ||
+        data.awb ||
+        "";
+}
+
+function getCourier(order, data){
+    return order.shipway_courier_name ||
+        order.courier_name ||
+        order.courier ||
+        data.shipway_courier_name ||
+        data.courier ||
+        "Not assigned yet";
+}
+
+function getCurrentStatus(order, data, awb){
+    const candidates = [
+        data.tracking_status,
+        data.status,
+        data.shipping_status,
+        order.shipping_status,
+        order.status
+    ];
+
+    const real = candidates.find(item =>
+        String(item || "").trim() &&
+        !isFailedTrackingStatus(item)
+    );
+
+    if(real) return String(real).trim();
     return awb ? "Shipway Booked" : "Processing";
 }
 
+function normalizedStatus(status){
+    const s = String(status || "").toLowerCase().replace(/[_-]+/g," ").trim();
 
-/* =========================================================
-   MAIN TRACKING FUNCTION
-========================================================= */
+    if(s.includes("delivered")) return "delivered";
+    if(s.includes("out for delivery") || s.includes("outfordelivery")) return "out";
+    if(s.includes("undelivered") || s.includes("delivery failed")) return "undelivered";
+    if(s.includes("rto") || s.includes("return to origin") || s.includes("returned")) return "rto";
+    if(s.includes("cancel")) return "cancelled";
+    if(s.includes("transit") || s.includes("shipped") || s.includes("dispatched") || s.includes("picked")) return "transit";
+    if(s.includes("booked") || s.includes("manifest")) return "booked";
+    if(s.includes("packed")) return "packed";
+    if(s.includes("confirm")) return "confirmed";
 
-async function trackOrder(){
+    return "processing";
+}
 
-    const input = document.getElementById("trackingNumber");
-    const button = document.getElementById("trackButton");
-    const result = document.getElementById("result");
+function formatStatus(status){
+    return String(status || "Processing")
+        .replace(/[_-]+/g," ")
+        .replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function getStatusMessage(status){
+    const s = normalizedStatus(status);
+
+    if(s === "delivered") return "Your order has been delivered.";
+    if(s === "out") return "Your shipment is out for delivery.";
+    if(s === "transit") return "Your shipment is on the way.";
+    if(s === "undelivered") return "The courier could not complete delivery. Please check the courier's latest update.";
+    if(s === "rto") return "The shipment is marked as return to origin.";
+    if(s === "cancelled") return "This shipment is marked as cancelled.";
+    if(s === "booked") return "Your shipment has been booked with the courier.";
+    if(s === "packed") return "Your order is packed.";
+    if(s === "confirmed") return "Your order is confirmed.";
+    return "Your order is being processed.";
+}
+
+function formatDate(value){
+    if(!value) return "";
+    const date = new Date(value);
+    if(Number.isNaN(date.getTime())) return String(value);
+
+    return date.toLocaleString("en-IN",{
+        day:"2-digit",
+        month:"short",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+}
+
+function milestoneIndex(status){
+    const s = normalizedStatus(status);
+    if(s === "delivered") return 3;
+    if(s === "out") return 2;
+    if(s === "transit") return 1;
+    if(s === "undelivered" || s === "rto" || s === "cancelled") return -1;
+    return 0;
+}
+
+function buildMilestones(status){
+    const index = milestoneIndex(status);
+    const steps = [
+        ["Shipment Booked","Courier booking created"],
+        ["In Transit","Shipment moving through the courier network"],
+        ["Out for Delivery","Courier is attempting final delivery"],
+        ["Delivered","Order delivery completed"]
+    ];
+
+    const special = ["undelivered","rto","cancelled"].includes(normalizedStatus(status));
+
+    let html = '<div class="milestones"><div class="milestone-heading">DELIVERY PROGRESS</div>';
+
+    steps.forEach((step, i) => {
+        const done = index >= 0 && i < index;
+        const current = index >= 0 && i === index;
+        const cls = done ? "done" : (current ? "current" : "");
+
+        html += `
+            <div class="step ${cls}">
+                <div class="step-marker">${done ? "✓" : (current ? "•" : "")}</div>
+                <div class="step-copy">
+                    <div class="step-name">${escapeHtml(step[0])}</div>
+                    <div class="step-note">${escapeHtml(step[1])}</div>
+                </div>
+            </div>`;
+    });
+
+    if(special){
+        html += `<div class="error-box" style="margin-top:14px">
+            Current courier status: <strong>${escapeHtml(formatStatus(status))}</strong>.
+            Please open courier tracking for the latest instructions.
+        </div>`;
+    }
+
+    html += "</div>";
+    return html;
+}
+
+function startAutoRefresh(){
+    stopAutoRefresh();
+    if(!lastTrackingValue) return;
+
+    refreshTimer = setInterval(() => {
+        if(!document.hidden && !requestInProgress && input.value.trim() === lastTrackingValue){
+            trackOrder(true);
+        }
+    }, AUTO_REFRESH_MS);
+}
+
+function stopAutoRefresh(){
+    if(refreshTimer){
+        clearInterval(refreshTimer);
+        refreshTimer = null;
+    }
+}
+
+/* MAIN TRACKING */
+async function trackOrder(isAutomatic = false){
     const value = input.value.trim();
 
+    if(requestInProgress) return;
+
     if(!value){
+        stopAutoRefresh();
         result.style.display = "block";
-        result.innerHTML = `
-            <div class="error-box">
-                Please enter your Order ID or AWB number.
-            </div>
-        `;
+        result.innerHTML = '<div class="error-box">Please enter your Order ID or AWB number.</div>';
         input.focus();
         return;
     }
 
-    button.disabled = true;
-    button.textContent = "CHECKING...";
-
-    result.style.display = "block";
-    result.innerHTML = `
-        <div class="loading">
-            Checking Shipway tracking status...
-        </div>
-    `;
+    requestInProgress = true;
+    if(!isAutomatic){
+        stopAutoRefresh();
+        button.disabled = true;
+        button.textContent = "CHECKING...";
+        result.style.display = "block";
+        result.innerHTML = '<div class="loading">Checking shipment status...</div>';
+    }
 
     try{
-
-        /* Try full Order ID, then suffix for older order records. */
         const candidates = [value];
         const upperValue = value.toUpperCase();
 
@@ -374,7 +351,8 @@ async function trackOrder(){
         let response = null;
         let data = null;
 
-        for(const candidate of candidates){
+        for(let i = 0; i < candidates.length; i++){
+            const candidate = candidates[i];
 
             response = await fetch(TRACK_FUNCTION,{
                 method:"POST",
@@ -390,391 +368,197 @@ async function trackOrder(){
 
             data = await response.json().catch(() => ({}));
 
-            const errorText = String(
-                data?.error || data?.message || ""
-            ).toLowerCase();
-
-            const orderNotFound =
-                errorText.includes("order not found") ||
-                errorText.includes("no order found") ||
-                errorText.includes("not found");
+            const err = String(data?.error || data?.message || "").toLowerCase();
+            const notFound = err.includes("not found") || err.includes("no order");
 
             if(data?.success === true) break;
 
-            if(
-                orderNotFound &&
-                candidates.indexOf(candidate) < candidates.length - 1
-            ){
-                continue;
-            }
+            if(notFound && i < candidates.length - 1) continue;
 
-            if(response.ok && data?.success !== false && !data?.error){
-                break;
+            if(!response.ok || data?.success === false || data?.error){
+                throw new Error(data?.error || data?.message || "Unable to retrieve shipment details.");
             }
-
             break;
         }
 
-        if(!response || !response.ok || data?.success === false){
-            throw new Error(
-                data?.error ||
-                data?.message ||
-                "Unable to retrieve tracking information. Check the Order ID or AWB and try again."
-            );
+        if(!response || !response.ok || data?.success === false || data?.error){
+            throw new Error(data?.error || data?.message || "Unable to retrieve tracking information.");
         }
 
+        lastTrackingValue = value;
         showTrackingResult(data);
+        startAutoRefresh();
 
     }catch(error){
-
         console.error("Tracking error:",error);
 
-        result.innerHTML = `
-            <div class="error-box">
-                <strong>Tracking unavailable</strong><br><br>
-                ${escapeHtml(
-                    error.message ||
-                    "Something went wrong while checking your shipment."
-                )}
-            </div>
-        `;
-
+        if(isAutomatic){
+            const note = document.getElementById("refreshNote");
+            if(note) note.textContent = "Automatic refresh could not update just now. Will try again shortly.";
+        }else{
+            stopAutoRefresh();
+            result.style.display = "block";
+            result.innerHTML = `
+                <div class="error-box">
+                    <strong>Tracking unavailable</strong><br><br>
+                    ${escapeHtml(error.message || "Something went wrong while checking your shipment.")}
+                </div>`;
+        }
     }finally{
-
+        requestInProgress = false;
         button.disabled = false;
         button.textContent = "TRACK ORDER";
     }
 }
 
-
-/* =========================================================
-   DISPLAY TRACKING RESULT
-========================================================= */
-
+/* SHOW RESULT */
 function showTrackingResult(data){
+    result.style.display = "block";
 
-    const result = document.getElementById("result");
-    const order = data.order || data || {};
+    const order = data.order || {};
+    const awbRaw = getAwb(order, data);
+    const awb = awbRaw || "Not generated yet";
+    const courier = getCourier(order, data);
+    const status = getCurrentStatus(order, data, awbRaw);
 
-    const awb =
-        order.awb ||
-        order.shipway_awb ||
-        data.awb ||
-        data.shipway_awb ||
-        "Not generated yet";
-
-    const courier =
-        order.courier ||
-        order.shipway_courier_name ||
-        data.courier ||
-        data.shipway_courier_name ||
-        "Not assigned yet";
-
-    /*
-      Use the first real status available.
-      Ignore FAILED/ERROR messages as shipment statuses.
-    */
-    const possibleStatuses = [
-        order.status,
-        order.shipping_status,
-        data.status,
-        data.shipping_status
-    ];
-
-    let status = possibleStatuses.find(item =>
-        String(item || "").trim() &&
-        !isFailedTrackingStatus(item)
+    const trackingUrl = getCourierTrackingUrl(
+        awbRaw,
+        courier,
+        order.tracking_url ||
+        order.shipway_tracking_url ||
+        data.tracking_url ||
+        data.shipway_tracking_url
     );
 
-    if(!status){
-        status = awbStatusFallback(order, data);
-    }
+    const orderNumber =
+        order.order_number ||
+        data.order_number ||
+        data.order_id ||
+        data.id ||
+        "—";
 
-    const trackingUrl =
-        order.tracking_url ||
-        data.tracking_url ||
-        "";
+    const latestCandidate = order.latest_activity || data.latest_activity || (
+        data.raw_status && !isFailedTrackingStatus(data.raw_status)
+            ? {
+                status:data.raw_status,
+                location:data.location || "",
+                date:data.status_date || ""
+            }
+            : null
+    );
 
-    const latestCandidate =
-        order.latest_activity ||
-        (data.raw_status ? {
-            status:data.raw_status,
-            location:data.location || "",
-            date:data.status_date || ""
-        } : null);
-
-    const latestCandidateStatus = String(
+    const latestStatus = String(
         latestCandidate?.status ||
         latestCandidate?.activity ||
         latestCandidate?.shipment_status ||
         ""
     ).trim();
 
-    /* Hide failed/error activity instead of showing it as a courier scan. */
-    const latest =
-        latestCandidate &&
-        !isFailedTrackingStatus(latestCandidateStatus)
-            ? latestCandidate
-            : null;
+    const latest = latestCandidate &&
+        latestStatus &&
+        !isFailedTrackingStatus(latestStatus)
+        ? latestCandidate
+        : null;
 
     let html = `
-        <div class="result-title">
-            SHIPMENT TRACKING
-        </div>
+        <div class="result-title">SHIPMENT TRACKING</div>
 
         <div class="status-box">
             <div class="status-label">CURRENT STATUS</div>
-
-            <div class="status-value">
-                ${escapeHtml(formatStatus(status))}
-            </div>
-
-            <div style="color:#777;font-size:11px">
-                ${getStatusMessage(status)}
-            </div>
+            <div class="status-value">${escapeHtml(formatStatus(status))}</div>
+            <div style="color:#777;font-size:11px">${escapeHtml(getStatusMessage(status))}</div>
         </div>
 
-        <div class="info-grid">
+        ${buildMilestones(status)}
 
+        <div class="info-grid">
             <div class="info-item">
                 <span class="info-label">ORDER ID</span>
-                <span class="info-value">
-                    ${escapeHtml(
-                        order.order_number ||
-                        data.order_number ||
-                        data.order_id ||
-                        "—"
-                    )}
-                </span>
+                <span class="info-value">${escapeHtml(orderNumber)}</span>
             </div>
-
             <div class="info-item">
                 <span class="info-label">AWB NUMBER</span>
                 <span class="info-value">${escapeHtml(awb)}</span>
             </div>
-
             <div class="info-item">
                 <span class="info-label">COURIER</span>
                 <span class="info-value">${escapeHtml(courier)}</span>
             </div>
-
             <div class="info-item">
-                <span class="info-label">SOURCE</span>
-                <span class="info-value">
-                    ${escapeHtml(
-                        String(data.source || "").toLowerCase() === "shipway"
-                            ? "SHIPWAY"
-                            : "LIARA"
-                    )}
-                </span>
+                <span class="info-label">TRACKING SOURCE</span>
+                <span class="info-value">SHIPWAY / LIARA</span>
             </div>
-
-        </div>
-    `;
-
-
-    /* =====================================================
-       LATEST ACTIVITY
-    ===================================================== */
+        </div>`;
 
     if(latest){
-
-        const activityStatus =
-            latest.status ||
-            latest.activity ||
-            latest.shipment_status ||
-            "Shipment update";
-
-        const location =
-            latest.location ||
-            latest.city ||
-            "";
-
-        const date =
-            latest.date ||
-            latest.activity_date ||
-            latest.updated_at ||
-            "";
+        const activityStatus = latest.status || latest.activity || latest.shipment_status || "Shipment update";
+        const location = latest.location || latest.city || "";
+        const date = latest.date || latest.activity_date || latest.updated_at || "";
 
         html += `
             <div class="activity">
-
-                <div class="activity-title">
-                    LATEST SHIPMENT UPDATE
-                </div>
-
+                <div class="activity-title">LATEST SHIPMENT UPDATE</div>
                 <div class="activity-item">
-
-                    <div class="activity-status">
-                        ${escapeHtml(activityStatus)}
-                    </div>
-
-                    ${
-                        location
-                            ? `<div class="activity-meta">
-                                ${escapeHtml(location)}
-                               </div>`
-                            : ""
-                    }
-
-                    ${
-                        date
-                            ? `<div class="activity-meta">
-                                ${escapeHtml(formatDate(date))}
-                               </div>`
-                            : ""
-                    }
-
+                    <div class="activity-status">${escapeHtml(activityStatus)}</div>
+                    ${location ? `<div class="activity-meta">${escapeHtml(location)}</div>` : ""}
+                    ${date ? `<div class="activity-meta">${escapeHtml(formatDate(date))}</div>` : ""}
                 </div>
-            </div>
-        `;
-
-    }else if(awb !== "Not generated yet"){
-
+            </div>`;
+    }else if(awbRaw){
         html += `
             <div style="margin-top:15px;color:#777;font-size:11px">
-                Shipment booked. Live courier scan updates are not available yet.
-            </div>
-        `;
+                No new courier scan was provided by the tracking service in this response.
+                Open live courier tracking for the latest available update.
+            </div>`;
     }
-
-
-    /* =====================================================
-       SHIPWAY TRACKING LINK
-    ===================================================== */
 
     if(trackingUrl){
-
         html += `
-            <a
-                class="track-link"
-                href="${escapeAttribute(trackingUrl)}"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                VIEW SHIPWAY TRACKING
-            </a>
-        `;
-    }
-
-
-    /* =====================================================
-       SHIPMENT NOT CREATED YET
-    ===================================================== */
-
-    if(
-        (awb === "Not generated yet" || !awb) &&
-        data.message &&
-        !isFailedTrackingStatus(data.message)
-    ){
-
+            <a class="track-link"
+               href="${escapeHtml(trackingUrl)}"
+               target="_blank"
+               rel="noopener noreferrer">
+               VIEW LIVE COURIER TRACKING ↗
+            </a>`;
+    }else if(awbRaw){
         html += `
             <div style="margin-top:15px;color:#777;font-size:11px">
-                ${escapeHtml(data.message)}
-            </div>
-        `;
+                Courier tracking link was not provided. Please check the AWB number with your courier.
+            </div>`;
     }
+
+    html += `
+        <button type="button" class="refresh-button" id="refreshNowButton">
+            REFRESH TRACKING NOW
+        </button>
+        <div class="auto-note" id="refreshNote">
+            ${document.hidden ? "Automatic refresh pauses while this tab is hidden." : "Automatic refresh checks for updates every 60 seconds. Courier scan availability depends on the carrier."}
+        </div>`;
 
     result.innerHTML = html;
-}
 
-
-/* =========================================================
-   STATUS FORMAT
-========================================================= */
-
-function formatStatus(status){
-    return String(status)
-        .replace(/_/g," ")
-        .replace(/\b\w/g,function(char){
-            return char.toUpperCase();
-        });
-}
-
-function getStatusMessage(status){
-
-    const value = String(status).toLowerCase();
-
-    if(value.includes("delivered")){
-        return "Your order has been delivered.";
-    }
-
-    if(value.includes("out for delivery")){
-        return "Your order is out for delivery.";
-    }
-
-    if(
-        value.includes("transit") ||
-        value.includes("shipped")
-    ){
-        return "Your shipment is on the way.";
-    }
-
-    if(value.includes("cancel")){
-        return "This shipment has been cancelled.";
-    }
-
-    if(value.includes("pickup")){
-        return "The courier pickup process has started.";
-    }
-
-    if(
-        value.includes("shipway booked") ||
-        value.includes("booked")
-    ){
-        return "Your shipment has been booked with the courier.";
-    }
-
-    return "Your order is being processed.";
-}
-
-
-/* =========================================================
-   DATE FORMAT
-========================================================= */
-
-function formatDate(value){
-
-    try{
-
-        const date = new Date(value);
-
-        if(Number.isNaN(date.getTime())){
-            return value;
-        }
-
-        return date.toLocaleString("en-IN",{
-            day:"2-digit",
-            month:"short",
-            year:"numeric",
-            hour:"2-digit",
-            minute:"2-digit"
-        });
-
-    }catch(e){
-
-        return value;
+    const refreshNow = document.getElementById("refreshNowButton");
+    if(refreshNow){
+        refreshNow.addEventListener("click", () => trackOrder(false));
     }
 }
 
+/* PAUSE AUTOMATIC CHECKS WHEN TAB IS HIDDEN */
+document.addEventListener("visibilitychange", () => {
+    const note = document.getElementById("refreshNote");
+    if(note && document.hidden){
+        note.textContent = "Automatic refresh pauses while this tab is hidden.";
+    }else if(note && lastTrackingValue){
+        note.textContent = "Automatic refresh checks for updates every 60 seconds.";
+    }
+});
 
-/* =========================================================
-   SECURITY HELPERS
-========================================================= */
-
-function escapeHtml(value){
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-}
-
-function escapeAttribute(value){
-    return escapeHtml(value);
-}
+/* Stop refresh if the customer changes the searched order */
+input.addEventListener("input", () => {
+    if(input.value.trim() !== lastTrackingValue){
+        stopAutoRefresh();
+    }
+});
 </script>
-
 </body>
 </html>
