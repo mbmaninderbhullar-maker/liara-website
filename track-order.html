@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -40,9 +40,7 @@ nav a{
     font-weight:bold;
 }
 
-nav a:hover{
-    color:#b58a3c;
-}
+nav a:hover{color:#b58a3c}
 
 main{
     min-height:calc(100vh - 100px);
@@ -69,16 +67,9 @@ main{
     margin-bottom:10px;
 }
 
-h1{
-    margin:0 0 12px;
-    font-size:38px;
-}
+h1{margin:0 0 12px;font-size:38px}
 
-p{
-    color:#777;
-    font-size:13px;
-    line-height:1.8;
-}
+p{color:#777;font-size:13px;line-height:1.8}
 
 label{
     display:block;
@@ -96,9 +87,7 @@ input{
     outline:none;
 }
 
-input:focus{
-    border-color:#b58a3c;
-}
+input:focus{border-color:#b58a3c}
 
 button{
     width:100%;
@@ -112,19 +101,8 @@ button{
     cursor:pointer;
 }
 
-button:hover{
-    background:#b58a3c;
-    border-color:#b58a3c;
-}
-
-button:disabled{
-    opacity:.65;
-    cursor:wait;
-}
-
-/* =========================
-   RESULT
-========================= */
+button:hover{background:#b58a3c;border-color:#b58a3c}
+button:disabled{opacity:.65;cursor:wait}
 
 #result{
     display:none;
@@ -206,13 +184,9 @@ button:disabled{
     letter-spacing:1px;
 }
 
-.track-link:hover{
-    background:#b58a3c;
-}
+.track-link:hover{background:#b58a3c}
 
-.activity{
-    margin-top:18px;
-}
+.activity{margin-top:18px}
 
 .activity-title{
     font-size:10px;
@@ -227,14 +201,8 @@ button:disabled{
     margin-left:3px;
 }
 
-.activity-status{
-    font-weight:bold;
-}
-
-.activity-meta{
-    color:#888;
-    font-size:10px;
-}
+.activity-status{font-weight:bold}
+.activity-meta{color:#888;font-size:10px}
 
 .error-box{
     color:#9b2c2c;
@@ -243,10 +211,7 @@ button:disabled{
     padding:14px;
 }
 
-.loading{
-    text-align:center;
-    color:#777;
-}
+.loading{text-align:center;color:#777}
 
 .back{
     display:inline-block;
@@ -258,7 +223,6 @@ button:disabled{
 }
 
 @media(max-width:600px){
-
     header{
         padding:18px 5%;
         flex-direction:column;
@@ -266,89 +230,58 @@ button:disabled{
         align-items:flex-start;
     }
 
-    nav{
-        width:100%;
-        overflow:auto;
-        white-space:nowrap;
-    }
-
-    nav a{
-        margin-left:0;
-        margin-right:16px;
-    }
-
-    .card{
-        padding:30px 22px;
-    }
-
-    h1{
-        font-size:32px;
-    }
-
-    .info-grid{
-        grid-template-columns:1fr;
-    }
+    nav{width:100%;overflow:auto;white-space:nowrap}
+    nav a{margin-left:0;margin-right:16px}
+    .card{padding:30px 22px}
+    h1{font-size:32px}
+    .info-grid{grid-template-columns:1fr}
 }
 </style>
-
 </head>
 
 <body>
-
 <header>
     <a href="index.html" style="text-decoration:none;color:inherit">
         <div class="logo">LIARA</div>
     </a>
 
-<nav>
-    <a href="index.html">HOME</a>
-    <a href="index.html#products">SHOP</a>
-    <a href="account.html">MY ACCOUNT</a>
-</nav>
-
+    <nav>
+        <a href="index.html">HOME</a>
+        <a href="index.html#products">SHOP</a>
+        <a href="account.html">MY ACCOUNT</a>
+    </nav>
 </header>
 
 <main>
-
 <section class="card">
 
-<div class="kicker">LIARA PROFESSIONAL™</div>
+    <div class="kicker">LIARA PROFESSIONAL™</div>
+    <h1>Track Your Order</h1>
 
-<h1>Track Your Order</h1>
+    <p>
+        Enter your Order ID or AWB number below to check your latest
+        Shipway shipment status.
+    </p>
 
-<p>
-    Enter your Order ID or AWB number below to check your latest
-    Shipway shipment status.
-</p>
+    <label for="trackingNumber">ORDER ID / AWB NUMBER</label>
 
-<label for="trackingNumber">
-    ORDER ID / AWB NUMBER
-</label>
+    <input
+        id="trackingNumber"
+        type="text"
+        placeholder="Enter Order ID or AWB"
+        autocomplete="off"
+        onkeydown="if(event.key==='Enter') trackOrder()"
+    >
 
-<input
-    id="trackingNumber"
-    type="text"
-    placeholder="Enter Order ID or AWB"
-    autocomplete="off"
-    onkeydown="if(event.key==='Enter') trackOrder()"
->
+    <button id="trackButton" type="button" onclick="trackOrder()">
+        TRACK ORDER
+    </button>
 
-<button
-    id="trackButton"
-    type="button"
-    onclick="trackOrder()"
->
-    TRACK ORDER
-</button>
+    <div id="result"></div>
 
-<div id="result"></div>
-
-<a class="back" href="index.html">
-    ← Back to Shopping
-</a>
+    <a class="back" href="index.html">← Back to Shopping</a>
 
 </section>
-
 </main>
 
 <script>
@@ -367,33 +300,53 @@ const TRACK_FUNCTION =
 
 
 /* =========================================================
+   TRACKING HELPERS
+========================================================= */
+
+function isFailedTrackingStatus(value){
+    const text = String(value || "").trim().toLowerCase();
+
+    return (
+        text === "failed" ||
+        text === "failure" ||
+        text === "error" ||
+        text.includes("shipment update failed") ||
+        text.includes("latest shipment update failed") ||
+        text.includes("api failed") ||
+        text.includes("request failed")
+    );
+}
+
+function awbStatusFallback(order, data){
+    const awb =
+        order.awb ||
+        order.shipway_awb ||
+        data.awb ||
+        data.shipway_awb ||
+        "";
+
+    return awb ? "Shipway Booked" : "Processing";
+}
+
+
+/* =========================================================
    MAIN TRACKING FUNCTION
 ========================================================= */
 
 async function trackOrder(){
 
-    const input =
-        document.getElementById("trackingNumber");
-
-    const button =
-        document.getElementById("trackButton");
-
-    const result =
-        document.getElementById("result");
-
-    const value =
-        input.value.trim();
+    const input = document.getElementById("trackingNumber");
+    const button = document.getElementById("trackButton");
+    const result = document.getElementById("result");
+    const value = input.value.trim();
 
     if(!value){
-
         result.style.display = "block";
-
         result.innerHTML = `
             <div class="error-box">
                 Please enter your Order ID or AWB number.
             </div>
         `;
-
         input.focus();
         return;
     }
@@ -402,7 +355,6 @@ async function trackOrder(){
     button.textContent = "CHECKING...";
 
     result.style.display = "block";
-
     result.innerHTML = `
         <div class="loading">
             Checking Shipway tracking status...
@@ -411,52 +363,63 @@ async function trackOrder(){
 
     try{
 
-        /* Try the entered value first. If the older order system
-           stored only the suffix (for example D0D2DF), try that too. */
+        /* Try full Order ID, then suffix for older order records. */
         const candidates = [value];
         const upperValue = value.toUpperCase();
-        if (upperValue.startsWith("LIARA-") && upperValue.length > 6) {
+
+        if(upperValue.startsWith("LIARA-") && upperValue.length > 6){
             candidates.push(upperValue.slice(6));
         }
 
         let response = null;
         let data = null;
 
-        for (const candidate of candidates) {
-            response = await fetch(
-                TRACK_FUNCTION,
-                {
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json",
-                        "apikey":SUPABASE_ANON_KEY
-                    },
-                    body:JSON.stringify({
-                        order_id:candidate,
-                        tracking_number:candidate
-                    })
-                }
-            );
+        for(const candidate of candidates){
+
+            response = await fetch(TRACK_FUNCTION,{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "apikey":SUPABASE_ANON_KEY
+                },
+                body:JSON.stringify({
+                    order_id:candidate,
+                    tracking_number:candidate
+                })
+            });
 
             data = await response.json().catch(() => ({}));
 
-            const errorText = String(data?.error || data?.message || "").toLowerCase();
-            const orderNotFound = errorText.includes("order not found") ||
-                                  errorText.includes("no order found") ||
-                                  errorText.includes("not found");
+            const errorText = String(
+                data?.error || data?.message || ""
+            ).toLowerCase();
 
-            if (data?.success === true) break;
-            if (orderNotFound && candidates.indexOf(candidate) < candidates.length - 1) continue;
-            if (response.ok && data?.success !== false && !data?.error) break;
+            const orderNotFound =
+                errorText.includes("order not found") ||
+                errorText.includes("no order found") ||
+                errorText.includes("not found");
+
+            if(data?.success === true) break;
+
+            if(
+                orderNotFound &&
+                candidates.indexOf(candidate) < candidates.length - 1
+            ){
+                continue;
+            }
+
+            if(response.ok && data?.success !== false && !data?.error){
+                break;
+            }
+
             break;
         }
 
-        if(!response.ok || data?.success === false){
-
+        if(!response || !response.ok || data?.success === false){
             throw new Error(
                 data?.error ||
                 data?.message ||
-                "Unable to retrieve Shipway tracking information. Check the Order ID and confirm the Shipway tracking function is deployed."
+                "Unable to retrieve tracking information. Check the Order ID or AWB and try again."
             );
         }
 
@@ -490,40 +453,69 @@ async function trackOrder(){
 
 function showTrackingResult(data){
 
-    const result =
-        document.getElementById("result");
-
-    const order =
-        data.order || data || {};
-
-    const status =
-        order.status ||
-        data.status ||
-        "Processing";
+    const result = document.getElementById("result");
+    const order = data.order || data || {};
 
     const awb =
         order.awb ||
+        order.shipway_awb ||
         data.awb ||
+        data.shipway_awb ||
         "Not generated yet";
 
     const courier =
         order.courier ||
+        order.shipway_courier_name ||
         data.courier ||
+        data.shipway_courier_name ||
         "Not assigned yet";
+
+    /*
+      Use the first real status available.
+      Ignore FAILED/ERROR messages as shipment statuses.
+    */
+    const possibleStatuses = [
+        order.status,
+        order.shipping_status,
+        data.status,
+        data.shipping_status
+    ];
+
+    let status = possibleStatuses.find(item =>
+        String(item || "").trim() &&
+        !isFailedTrackingStatus(item)
+    );
+
+    if(!status){
+        status = awbStatusFallback(order, data);
+    }
 
     const trackingUrl =
         order.tracking_url ||
         data.tracking_url ||
         "";
 
-    const latest =
+    const latestCandidate =
         order.latest_activity ||
         (data.raw_status ? {
-            status: data.raw_status,
-            location: data.location || "",
-            date: data.status_date || ""
+            status:data.raw_status,
+            location:data.location || "",
+            date:data.status_date || ""
         } : null);
 
+    const latestCandidateStatus = String(
+        latestCandidate?.status ||
+        latestCandidate?.activity ||
+        latestCandidate?.shipment_status ||
+        ""
+    ).trim();
+
+    /* Hide failed/error activity instead of showing it as a courier scan. */
+    const latest =
+        latestCandidate &&
+        !isFailedTrackingStatus(latestCandidateStatus)
+            ? latestCandidate
+            : null;
 
     let html = `
         <div class="result-title">
@@ -531,10 +523,7 @@ function showTrackingResult(data){
         </div>
 
         <div class="status-box">
-
-            <div class="status-label">
-                CURRENT STATUS
-            </div>
+            <div class="status-label">CURRENT STATUS</div>
 
             <div class="status-value">
                 ${escapeHtml(formatStatus(status))}
@@ -543,53 +532,39 @@ function showTrackingResult(data){
             <div style="color:#777;font-size:11px">
                 ${getStatusMessage(status)}
             </div>
-
         </div>
 
         <div class="info-grid">
 
             <div class="info-item">
-                <span class="info-label">
-                    ORDER ID
-                </span>
-
+                <span class="info-label">ORDER ID</span>
                 <span class="info-value">
                     ${escapeHtml(
-                        order.order_number || data.order_number || data.order_id || "—"
+                        order.order_number ||
+                        data.order_number ||
+                        data.order_id ||
+                        "—"
                     )}
                 </span>
             </div>
 
             <div class="info-item">
-                <span class="info-label">
-                    AWB NUMBER
-                </span>
-
-                <span class="info-value">
-                    ${escapeHtml(awb)}
-                </span>
+                <span class="info-label">AWB NUMBER</span>
+                <span class="info-value">${escapeHtml(awb)}</span>
             </div>
 
             <div class="info-item">
-                <span class="info-label">
-                    COURIER
-                </span>
-
-                <span class="info-value">
-                    ${escapeHtml(courier)}
-                </span>
+                <span class="info-label">COURIER</span>
+                <span class="info-value">${escapeHtml(courier)}</span>
             </div>
 
             <div class="info-item">
-                <span class="info-label">
-                    SOURCE
-                </span>
-
+                <span class="info-label">SOURCE</span>
                 <span class="info-value">
                     ${escapeHtml(
                         String(data.source || "").toLowerCase() === "shipway"
-                        ? "SHIPWAY"
-                        : "LIARA"
+                            ? "SHIPWAY"
+                            : "LIARA"
                     )}
                 </span>
             </div>
@@ -631,29 +606,34 @@ function showTrackingResult(data){
                 <div class="activity-item">
 
                     <div class="activity-status">
-                        ${escapeHtml(
-                            activityStatus
-                        )}
+                        ${escapeHtml(activityStatus)}
                     </div>
 
                     ${
                         location
-                        ? `<div class="activity-meta">
-                            ${escapeHtml(location)}
-                           </div>`
-                        : ""
+                            ? `<div class="activity-meta">
+                                ${escapeHtml(location)}
+                               </div>`
+                            : ""
                     }
 
                     ${
                         date
-                        ? `<div class="activity-meta">
-                            ${escapeHtml(formatDate(date))}
-                           </div>`
-                        : ""
+                            ? `<div class="activity-meta">
+                                ${escapeHtml(formatDate(date))}
+                               </div>`
+                            : ""
                     }
 
                 </div>
+            </div>
+        `;
 
+    }else if(awb !== "Not generated yet"){
+
+        html += `
+            <div style="margin-top:15px;color:#777;font-size:11px">
+                Shipment booked. Live courier scan updates are not available yet.
             </div>
         `;
     }
@@ -683,21 +663,17 @@ function showTrackingResult(data){
     ===================================================== */
 
     if(
-        !order.awb &&
-        data.message
+        (awb === "Not generated yet" || !awb) &&
+        data.message &&
+        !isFailedTrackingStatus(data.message)
     ){
 
         html += `
-            <div style="
-                margin-top:15px;
-                color:#777;
-                font-size:11px;
-            ">
+            <div style="margin-top:15px;color:#777;font-size:11px">
                 ${escapeHtml(data.message)}
             </div>
         `;
     }
-
 
     result.innerHTML = html;
 }
@@ -708,7 +684,6 @@ function showTrackingResult(data){
 ========================================================= */
 
 function formatStatus(status){
-
     return String(status)
         .replace(/_/g," ")
         .replace(/\b\w/g,function(char){
@@ -716,21 +691,15 @@ function formatStatus(status){
         });
 }
 
-
 function getStatusMessage(status){
 
-    const value =
-        String(status).toLowerCase();
+    const value = String(status).toLowerCase();
 
-    if(
-        value.includes("delivered")
-    ){
+    if(value.includes("delivered")){
         return "Your order has been delivered.";
     }
 
-    if(
-        value.includes("out for delivery")
-    ){
+    if(value.includes("out for delivery")){
         return "Your order is out for delivery.";
     }
 
@@ -741,16 +710,19 @@ function getStatusMessage(status){
         return "Your shipment is on the way.";
     }
 
-    if(
-        value.includes("cancel")
-    ){
+    if(value.includes("cancel")){
         return "This shipment has been cancelled.";
     }
 
-    if(
-        value.includes("pickup")
-    ){
+    if(value.includes("pickup")){
         return "The courier pickup process has started.";
+    }
+
+    if(
+        value.includes("shipway booked") ||
+        value.includes("booked")
+    ){
+        return "Your shipment has been booked with the courier.";
     }
 
     return "Your order is being processed.";
@@ -765,27 +737,19 @@ function formatDate(value){
 
     try{
 
-        const date =
-            new Date(value);
+        const date = new Date(value);
 
-        if(
-            Number.isNaN(
-                date.getTime()
-            )
-        ){
+        if(Number.isNaN(date.getTime())){
             return value;
         }
 
-        return date.toLocaleString(
-            "en-IN",
-            {
-                day:"2-digit",
-                month:"short",
-                year:"numeric",
-                hour:"2-digit",
-                minute:"2-digit"
-            }
-        );
+        return date.toLocaleString("en-IN",{
+            day:"2-digit",
+            month:"short",
+            year:"numeric",
+            hour:"2-digit",
+            minute:"2-digit"
+        });
 
     }catch(e){
 
@@ -799,7 +763,6 @@ function formatDate(value){
 ========================================================= */
 
 function escapeHtml(value){
-
     return String(value)
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
@@ -808,9 +771,7 @@ function escapeHtml(value){
         .replace(/'/g,"&#039;");
 }
 
-
 function escapeAttribute(value){
-
     return escapeHtml(value);
 }
 </script>
