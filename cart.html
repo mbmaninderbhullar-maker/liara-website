@@ -465,11 +465,11 @@ function liaraGetCharge(subtotal, method) {
     subtotal = Math.max(0, Number(subtotal) || 0);
 
     if (method === "cod") {
-        return subtotal <= 999 ? 120 : 80;
+        return subtotal <= 199 ? 65 : 0;
     }
 
     if (method === "online") {
-        return subtotal <= 499 ? 80 : 0;
+        return subtotal <= 199 ? 45 : 0;
     }
 
     return 0;
@@ -547,8 +547,8 @@ function showLiaraPaymentPopup(subtotal, checkoutMode, buyNowProduct) {
                 </div>
 
                 <div class="liara-payment-option-text">
-                    Orders up to ₹999 → <strong>₹120 COD Charge</strong><br>
-                    Orders above ₹999 → <strong>₹80 COD Charge</strong>
+                    Orders up to ₹199 → <strong>₹65 COD Charge</strong><br>
+                    Orders above ₹199 → <strong>₹45 COD Charge</strong>
                 </div>
 
             </div>
