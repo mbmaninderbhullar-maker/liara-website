@@ -1128,7 +1128,7 @@ function getPaymentPopupCharge(subtotalValue, paymentMethod){
     }
 
     if(paymentMethod === "Online Payment"){
-        return amount <= 149 ? 00 : 0;
+        return amount <= 199 ? 45 : 0;
     }
 
     return 0;
