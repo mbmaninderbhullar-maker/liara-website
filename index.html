@@ -2562,23 +2562,22 @@ let cart = [];
 
 try{
 
-cart =
-JSON.parse(
-localStorage.getItem("cart") || "[]"
+/* The cart and checkout pages use "liaraCart" as the main key.
+   Read that first so homepage products appear in the same cart. */
+cart = JSON.parse(
+localStorage.getItem("liaraCart") || "null"
 );
 
+/* Backward compatibility: migrate older homepage cart data if needed. */
+if(!Array.isArray(cart)){
+  cart = JSON.parse(localStorage.getItem("cart") || "[]");
+}
 
-if(!Array.isArray(cart))
-cart = [];
-
+if(!Array.isArray(cart)) cart = [];
 
 }catch(error){
 
-console.error(
-"Cart read error:",
-error
-);
-
+console.error("Cart read error:", error);
 cart = [];
 
 }
@@ -2614,6 +2613,13 @@ cart.push(item);
 }
 
 
+/* Save to the key used by cart.html, checkout, and product.html. */
+localStorage.setItem(
+"liaraCart",
+JSON.stringify(cart)
+);
+
+/* Keep legacy pages compatible too. */
 localStorage.setItem(
 "cart",
 JSON.stringify(cart)
