@@ -318,7 +318,7 @@ button:disabled{
 
 <p>
     Enter your Order ID or AWB number below to check your latest
-    Shiprocket shipment status.
+    Shipway shipment status.
 </p>
 
 <label for="trackingNumber">
@@ -363,7 +363,7 @@ const SUPABASE_ANON_KEY =
     "sb_publishable_wXorRS0wOTHSsKcx_rXd8w_pfe62CIu";
 
 const TRACK_FUNCTION =
-    SUPABASE_URL + "/functions/v1/shiprocket-track-order";
+    SUPABASE_URL + "/functions/v1/shipway-track-order";
 
 
 /* =========================================================
@@ -405,7 +405,7 @@ async function trackOrder(){
 
     result.innerHTML = `
         <div class="loading">
-            Checking Shiprocket tracking status...
+            Checking Shipway tracking status...
         </div>
     `;
 
@@ -432,6 +432,7 @@ async function trackOrder(){
                         "apikey":SUPABASE_ANON_KEY
                     },
                     body:JSON.stringify({
+                        order_id:candidate,
                         tracking_number:candidate
                     })
                 }
@@ -439,17 +440,23 @@ async function trackOrder(){
 
             data = await response.json().catch(() => ({}));
 
-            if (response.ok || data?.success ||
-                !String(data?.error || "").toLowerCase().includes("order not found")) {
-                break;
-            }
+            const errorText = String(data?.error || data?.message || "").toLowerCase();
+            const orderNotFound = errorText.includes("order not found") ||
+                                  errorText.includes("no order found") ||
+                                  errorText.includes("not found");
+
+            if (data?.success === true) break;
+            if (orderNotFound && candidates.indexOf(candidate) < candidates.length - 1) continue;
+            if (response.ok && data?.success !== false && !data?.error) break;
+            break;
         }
 
-        if(!response.ok){
+        if(!response.ok || data?.success === false){
 
             throw new Error(
-                data.error ||
-                "Unable to retrieve tracking information."
+                data?.error ||
+                data?.message ||
+                "Unable to retrieve Shipway tracking information. Check the Order ID and confirm the Shipway tracking function is deployed."
             );
         }
 
@@ -487,27 +494,35 @@ function showTrackingResult(data){
         document.getElementById("result");
 
     const order =
-        data.order || {};
+        data.order || data || {};
 
     const status =
         order.status ||
+        data.status ||
         "Processing";
 
     const awb =
         order.awb ||
+        data.awb ||
         "Not generated yet";
 
     const courier =
         order.courier ||
+        data.courier ||
         "Not assigned yet";
 
     const trackingUrl =
         order.tracking_url ||
+        data.tracking_url ||
         "";
 
     const latest =
         order.latest_activity ||
-        null;
+        (data.raw_status ? {
+            status: data.raw_status,
+            location: data.location || "",
+            date: data.status_date || ""
+        } : null);
 
 
     let html = `
@@ -540,7 +555,7 @@ function showTrackingResult(data){
 
                 <span class="info-value">
                     ${escapeHtml(
-                        order.order_number || "—"
+                        order.order_number || data.order_number || data.order_id || "—"
                     )}
                 </span>
             </div>
@@ -572,8 +587,8 @@ function showTrackingResult(data){
 
                 <span class="info-value">
                     ${escapeHtml(
-                        data.source === "shiprocket"
-                        ? "SHIPROCKET"
+                        String(data.source || "").toLowerCase() === "shipway"
+                        ? "SHIPWAY"
                         : "LIARA"
                     )}
                 </span>
@@ -645,7 +660,7 @@ function showTrackingResult(data){
 
 
     /* =====================================================
-       SHIPROCKET TRACKING LINK
+       SHIPWAY TRACKING LINK
     ===================================================== */
 
     if(trackingUrl){
@@ -657,7 +672,7 @@ function showTrackingResult(data){
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                VIEW SHIPROCKET TRACKING
+                VIEW SHIPWAY TRACKING
             </a>
         `;
     }
